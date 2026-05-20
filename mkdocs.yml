@@ -1,6 +1,6 @@
 site_name: Kanama
 site_description: Kotlin GDExtension for Godot via Project Panama (FFM)
-site_url: https://multigesture.net/kanama/
+site_url: https://falcon4ever.github.io/kanama/
 repo_name: falcon4ever/kanama
 repo_url: https://github.com/falcon4ever/kanama
 theme:
