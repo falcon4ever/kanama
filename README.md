@@ -96,8 +96,11 @@ project addon together with the runtime jars.
 ## Example
 
 ```kotlin
+package com.example.game
+
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 import java.lang.foreign.MemorySegment
@@ -107,7 +110,7 @@ class HelloKanama(godotObject: MemorySegment) :
     KanamaScript<Node>(godotObject, ::Node) {
     @OnReady
     fun ready() {
-        self.print("Hello from Kotlin")
+        GD.print("Hello from Kotlin")
     }
 }
 ```
