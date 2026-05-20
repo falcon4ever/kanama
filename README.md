@@ -117,6 +117,9 @@ class HelloKanama(godotObject: MemorySegment) :
 
 ## Documentation
 
+The latest public documentation is published at
+[falcon4ever.github.io/kanama](https://falcon4ever.github.io/kanama/).
+
 - [Getting Started](docs/getting-started/index.md)
 - [The Editor Loop](docs/getting-started/editor-workflow.md)
 - [Writing Kotlin Scripts](docs/game-dev/scripts.md)
@@ -133,7 +136,12 @@ class HelloKanama(godotObject: MemorySegment) :
 - [Changelog](CHANGELOG.md)
 - [Contributor Guide](docs/contributing/index.md)
 
-MkDocs site: `pip install -r docs/requirements.txt && mkdocs serve`
+To preview documentation changes locally:
+
+```sh
+pip install -r docs/requirements.txt
+mkdocs serve
+```
 
 ## Demos
 
