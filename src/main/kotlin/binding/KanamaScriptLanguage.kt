@@ -60,6 +60,7 @@ object KanamaScriptLanguage {
     private var frameNameValue: Long = 0L
     private var debugGetCurrentStackInfoNameValue: Long = 0L
     private var getReservedWordsNameValue: Long = 0L
+    private var isControlFlowKeywordNameValue: Long = 0L
     private var getCommentDelimitersNameValue: Long = 0L
     private var getDocCommentDelimitersNameValue: Long = 0L
     private var getStringDelimitersNameValue: Long = 0L
@@ -97,6 +98,8 @@ object KanamaScriptLanguage {
     private lateinit var noopStub: MemorySegment
     private lateinit var frameStub: MemorySegment
     private lateinit var debugGetCurrentStackInfoStub: MemorySegment
+    private lateinit var reservedWordsStub: MemorySegment
+    private lateinit var isControlFlowKeywordStub: MemorySegment
     private lateinit var emptyPackedStringArrayStub: MemorySegment
     private lateinit var commentDelimitersStub: MemorySegment
     private lateinit var docCommentDelimitersStub: MemorySegment
@@ -113,6 +116,24 @@ object KanamaScriptLanguage {
     private const val ENGINE_REGISTER_SCRIPT_LANGUAGE_HASH = 1850254898L
     private const val ENGINE_UNREGISTER_SCRIPT_LANGUAGE_HASH = 1850254898L
     private const val ERROR_UNAVAILABLE = 2L
+    private val KOTLIN_RESERVED_WORDS = listOf(
+        "as", "break", "class", "continue", "do", "else", "false", "for",
+        "fun", "if", "in", "interface", "is", "null", "object", "package",
+        "return", "super", "this", "throw", "true", "try", "typealias",
+        "typeof", "val", "var", "when", "while",
+        "by", "catch", "constructor", "delegate", "dynamic", "field",
+        "file", "finally", "get", "import", "init", "param", "property",
+        "receiver", "set", "setparam", "value", "where",
+        "abstract", "actual", "annotation", "companion", "const",
+        "crossinline", "data", "enum", "expect", "external", "final",
+        "infix", "inline", "inner", "internal", "lateinit", "noinline",
+        "open", "operator", "out", "override", "private", "protected",
+        "public", "reified", "sealed", "suspend", "tailrec", "vararg",
+    )
+    private val KOTLIN_CONTROL_FLOW_WORDS = setOf(
+        "break", "continue", "do", "else", "for", "if", "return", "throw",
+        "try", "when", "while",
+    )
 
     fun register(library: MemorySegment) {
         // Intern virtual names.
@@ -139,6 +160,7 @@ object KanamaScriptLanguage {
         frameNameValue = GodotStrings.stringNameStorage("_frame")
         debugGetCurrentStackInfoNameValue = GodotStrings.stringNameStorage("_debug_get_current_stack_info")
         getReservedWordsNameValue = GodotStrings.stringNameStorage("_get_reserved_words")
+        isControlFlowKeywordNameValue = GodotStrings.stringNameStorage("_is_control_flow_keyword")
         getCommentDelimitersNameValue = GodotStrings.stringNameStorage("_get_comment_delimiters")
         getDocCommentDelimitersNameValue = GodotStrings.stringNameStorage("_get_doc_comment_delimiters")
         getStringDelimitersNameValue = GodotStrings.stringNameStorage("_get_string_delimiters")
@@ -182,6 +204,12 @@ object KanamaScriptLanguage {
         frameStub = Upcalls.stub(KanamaScriptLanguage::class.java, "callFrame", virtualType, virtualDesc)
         debugGetCurrentStackInfoStub = Upcalls.stub(
             KanamaScriptLanguage::class.java, "callDebugGetCurrentStackInfo", virtualType, virtualDesc,
+        )
+        reservedWordsStub = Upcalls.stub(
+            KanamaScriptLanguage::class.java, "callGetReservedWords", virtualType, virtualDesc,
+        )
+        isControlFlowKeywordStub = Upcalls.stub(
+            KanamaScriptLanguage::class.java, "callIsControlFlowKeyword", virtualType, virtualDesc,
         )
         emptyPackedStringArrayStub = Upcalls.stub(
             KanamaScriptLanguage::class.java, "callEmptyPackedStringArray", virtualType, virtualDesc,
@@ -372,8 +400,8 @@ object KanamaScriptLanguage {
             handlesGlobalClassTypeNameValue -> handlesGlobalClassTypeStub
             getGlobalClassNameNameValue  -> getGlobalClassNameStub
             getRecognizedExtensionsNameValue -> getRecognizedExtensionsStub
-            getReservedWordsNameValue,
-            -> emptyPackedStringArrayStub
+            getReservedWordsNameValue -> reservedWordsStub
+            isControlFlowKeywordNameValue -> isControlFlowKeywordStub
             getCommentDelimitersNameValue -> commentDelimitersStub
             getDocCommentDelimitersNameValue -> docCommentDelimitersStub
             getStringDelimitersNameValue -> stringDelimitersStub
@@ -535,6 +563,22 @@ object KanamaScriptLanguage {
     @JvmStatic
     fun callEmptyPackedStringArray(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
         BuiltinTypes.initPackedStringArray(rRet, emptyList())
+    }
+
+    @JvmStatic
+    fun callGetReservedWords(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+        BuiltinTypes.initPackedStringArray(rRet, KOTLIN_RESERVED_WORDS)
+    }
+
+    @JvmStatic
+    fun callIsControlFlowKeyword(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+        val argsArray = args.reinterpret(8)
+        val keyword = GodotStrings.readString(argsArray.get(ADDRESS, 0))
+        rRet.reinterpret(1).set(
+            JAVA_BYTE,
+            0,
+            if (keyword in KOTLIN_CONTROL_FLOW_WORDS) 1.toByte() else 0.toByte(),
+        )
     }
 
     @JvmStatic

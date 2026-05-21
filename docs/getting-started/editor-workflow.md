@@ -9,6 +9,11 @@ Kanama projects can include two addons:
 The tools plugin is not required at runtime. It exists to make the editor loop
 less manual while developing Kotlin scripts.
 
+When enabled, the plugin also registers a basic Kotlin syntax highlighter for
+`.kt` files in Godot's script editor. This is intended for quick inspection and
+small edits; IntelliJ IDEA remains the recommended editor for Kotlin navigation,
+completion, refactoring, and debugging.
+
 ```mermaid
 flowchart LR
     EDIT["Edit .kt in IntelliJ"]

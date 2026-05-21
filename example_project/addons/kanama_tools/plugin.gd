@@ -16,10 +16,12 @@ const SYNC_BUTTON_BUSY_TEXT := "Building..."
 const JAR_BUTTON_IDLE_TEXT := "Build Runtime"
 const JAR_BUTTON_BUSY_TEXT := "Building..."
 const KT_SCAN_INTERVAL_SEC := 0.6
+const KotlinSyntaxHighlighter := preload("res://addons/kanama_tools/kotlin_syntax_highlighter.gd")
 
 var _toolbar_container: HBoxContainer
 var _sync_button: Button
 var _jar_button: Button
+var _kotlin_syntax_highlighter: EditorSyntaxHighlighter
 var _scan_accum_sec := 0.0
 var _known_kt_mtimes: Dictionary = {}
 var _pending_auto_sync := false
@@ -34,6 +36,7 @@ func _enter_tree() -> void:
     if _is_developer_mode_enabled():
         add_tool_menu_item(MENU_BUILD_JAR, _on_build_jar_pressed)
         _jar_menu_added = true
+    call_deferred("_register_kotlin_syntax_highlighter")
     _install_toolbar_buttons()
     _known_kt_mtimes = _collect_kt_mtimes()
     set_process(true)
@@ -45,6 +48,7 @@ func _exit_tree() -> void:
     if _jar_menu_added:
         remove_tool_menu_item(MENU_BUILD_JAR)
         _jar_menu_added = false
+    _unregister_kotlin_syntax_highlighter()
     _remove_toolbar_buttons()
 
 
@@ -109,6 +113,28 @@ func _remove_toolbar_buttons() -> void:
     _toolbar_container = null
     _sync_button = null
     _jar_button = null
+
+
+func _register_kotlin_syntax_highlighter() -> void:
+    if _kotlin_syntax_highlighter != null:
+        return
+    var script_editor := get_editor_interface().get_script_editor()
+    if script_editor == null:
+        call_deferred("_register_kotlin_syntax_highlighter")
+        return
+    _kotlin_syntax_highlighter = KotlinSyntaxHighlighter.new()
+    script_editor.register_syntax_highlighter(_kotlin_syntax_highlighter)
+    for script_editor_base in script_editor.get_open_script_editors():
+        script_editor_base.add_syntax_highlighter(_kotlin_syntax_highlighter)
+
+
+func _unregister_kotlin_syntax_highlighter() -> void:
+    if _kotlin_syntax_highlighter == null:
+        return
+    var script_editor := get_editor_interface().get_script_editor()
+    if script_editor != null:
+        script_editor.unregister_syntax_highlighter(_kotlin_syntax_highlighter)
+    _kotlin_syntax_highlighter = null
 
 
 func _ensure_project_settings() -> void:
