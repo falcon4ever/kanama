@@ -11,7 +11,7 @@ After copy:
 3. Build/update Kanama jars with:
    `./gradlew installAddonJar -PkanamaProjectDir=/absolute/path/to/your_godot_project -PkanamaProjectScriptsDir=/absolute/path/to/your_godot_project`
 4. Optional: enable the `Kanama Tools` plugin from `Project -> Project Settings -> Plugins`
-   for the `Build Scripts` toolbar button and optional build-on-save.
+   for the `Build Scripts` toolbar button, `Open Kotlin` shortcut, and optional build-on-save.
 
 Use `HelloScript.kt` as the baseline for new script classes. It uses
 `@ClassName` and `@Tool` so the class is editor-facing and runs in editor mode

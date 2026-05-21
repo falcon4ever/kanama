@@ -144,8 +144,8 @@ res://addons/kanama_tools
 ```
 
 Enable **Kanama Tools** in Godot's plugin settings for a `Build Scripts`
-toolbar button, optional build-on-save, scene reload after sync, and JDWP
-debugging settings.
+toolbar button, `Open Kotlin` source-folder shortcut, optional build-on-save,
+scene reload after sync, and JDWP debugging settings.
 
 See [The Editor Loop](editor-workflow.md) for the build button, hot reload, and
 IntelliJ debugger workflow.

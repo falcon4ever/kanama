@@ -31,7 +31,10 @@ flowchart LR
 ## Build Scripts
 
 Enable `Kanama Tools` in **Project > Project Settings > Plugins** to add a
-`Build Scripts` toolbar button and matching tool-menu action.
+`Build Scripts` toolbar button and matching tool-menu action. The toolbar also
+includes `Open Kotlin`, which opens the configured Kotlin source folder in the
+operating system so you can jump back to IntelliJ IDEA or another external
+editor workflow quickly.
 
 For starter and external projects, `Build Scripts` runs:
 
@@ -66,6 +69,7 @@ Useful editor settings:
 
 | Setting | Purpose |
 | --- | --- |
+| `kanama/tools/kotlin_sources_dir` | Optional absolute or `res://` source folder opened by `Open Kotlin`. Empty defaults to the project root. |
 | `kanama/tools/auto_build_on_save` | Watches `.kt` files and runs a debounced script build. |
 | `kanama/tools/reload_scene_after_sync` | Reloads the current scene after a successful sync. |
 | `kanama/tools/developer_mode` | Shows runtime build actions intended for Kanama maintainers. |

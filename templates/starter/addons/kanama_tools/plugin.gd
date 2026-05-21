@@ -3,7 +3,9 @@ extends EditorPlugin
 
 const MENU_BUILD_SYNC := "Kanama Tools: Build Scripts"
 const MENU_BUILD_JAR := "Kanama Tools: Build Runtime Jar"
+const MENU_OPEN_KOTLIN_SOURCES := "Kanama Tools: Open Kotlin Sources"
 const SETTING_REPO_DIR := "kanama/tools/repo_dir"
+const SETTING_KOTLIN_SOURCES_DIR := "kanama/tools/kotlin_sources_dir"
 const SETTING_AUTO_BUILD_ON_SAVE := "kanama/tools/auto_build_on_save"
 const SETTING_AUTO_BUILD_DEBOUNCE_MS := "kanama/tools/auto_build_debounce_ms"
 const SETTING_RELOAD_SCENE_AFTER_SYNC := "kanama/tools/reload_scene_after_sync"
@@ -20,6 +22,7 @@ const KotlinSyntaxHighlighter := preload("res://addons/kanama_tools/kotlin_synta
 
 var _toolbar_container: HBoxContainer
 var _sync_button: Button
+var _sources_button: Button
 var _jar_button: Button
 var _kotlin_syntax_highlighter: EditorSyntaxHighlighter
 var _scan_accum_sec := 0.0
@@ -34,6 +37,7 @@ var _last_developer_mode_enabled := false
 func _enter_tree() -> void:
     _ensure_project_settings()
     add_tool_menu_item(MENU_BUILD_SYNC, _on_build_sync_pressed)
+    add_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES, _on_open_kotlin_sources_pressed)
     _last_developer_mode_enabled = _is_developer_mode_enabled()
     if _last_developer_mode_enabled:
         add_tool_menu_item(MENU_BUILD_JAR, _on_build_jar_pressed)
@@ -47,6 +51,7 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
     set_process(false)
     remove_tool_menu_item(MENU_BUILD_SYNC)
+    remove_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES)
     if _jar_menu_added:
         remove_tool_menu_item(MENU_BUILD_JAR)
         _jar_menu_added = false
@@ -60,6 +65,11 @@ func _on_build_sync_pressed() -> void:
 
 func _on_build_jar_pressed() -> void:
     _run_gradle_task("jar")
+
+
+func _on_open_kotlin_sources_pressed() -> void:
+    _open_kotlin_sources()
+
 
 func _process(delta: float) -> void:
     _refresh_developer_mode_controls()
@@ -99,6 +109,12 @@ func _install_toolbar_buttons() -> void:
     _sync_button.pressed.connect(_on_build_sync_pressed)
     _toolbar_container.add_child(_sync_button)
 
+    _sources_button = Button.new()
+    _sources_button.text = "Open Kotlin"
+    _sources_button.tooltip_text = "Open the configured Kotlin source folder"
+    _sources_button.pressed.connect(_on_open_kotlin_sources_pressed)
+    _toolbar_container.add_child(_sources_button)
+
     if _is_developer_mode_enabled():
         _jar_button = Button.new()
         _jar_button.text = JAR_BUTTON_IDLE_TEXT
@@ -116,6 +132,7 @@ func _remove_toolbar_buttons() -> void:
     _toolbar_container.queue_free()
     _toolbar_container = null
     _sync_button = null
+    _sources_button = null
     _jar_button = null
 
 
@@ -171,6 +188,8 @@ func _unregister_kotlin_syntax_highlighter() -> void:
 func _ensure_project_settings() -> void:
     if not ProjectSettings.has_setting(SETTING_REPO_DIR):
         ProjectSettings.set_setting(SETTING_REPO_DIR, "")
+    if not ProjectSettings.has_setting(SETTING_KOTLIN_SOURCES_DIR):
+        ProjectSettings.set_setting(SETTING_KOTLIN_SOURCES_DIR, "")
     if not ProjectSettings.has_setting(SETTING_AUTO_BUILD_ON_SAVE):
         ProjectSettings.set_setting(SETTING_AUTO_BUILD_ON_SAVE, false)
     if not ProjectSettings.has_setting(SETTING_AUTO_BUILD_DEBOUNCE_MS):
@@ -188,6 +207,11 @@ func _ensure_project_settings() -> void:
 
     ProjectSettings.add_property_info({
         "name": SETTING_REPO_DIR,
+        "type": TYPE_STRING,
+        "hint": PROPERTY_HINT_GLOBAL_DIR,
+    })
+    ProjectSettings.add_property_info({
+        "name": SETTING_KOTLIN_SOURCES_DIR,
         "type": TYPE_STRING,
         "hint": PROPERTY_HINT_GLOBAL_DIR,
     })
@@ -355,6 +379,29 @@ func _project_dir_with_gradle_wrapper() -> String:
     if FileAccess.file_exists(gradlew):
         return project_dir
     return ""
+
+
+func _open_kotlin_sources() -> void:
+    var dir := _resolve_kotlin_sources_dir()
+    if dir.is_empty():
+        push_error("[kanama:tools] Could not resolve Kotlin source directory.")
+        return
+    if not DirAccess.dir_exists_absolute(dir):
+        push_error("[kanama:tools] Kotlin source directory does not exist: %s" % dir)
+        return
+    var error := OS.shell_open(dir)
+    if error != OK:
+        push_error("[kanama:tools] Could not open Kotlin source directory: %s (error=%d)" % [dir, error])
+
+
+func _resolve_kotlin_sources_dir() -> String:
+    if ProjectSettings.has_setting(SETTING_KOTLIN_SOURCES_DIR):
+        var configured := String(ProjectSettings.get_setting(SETTING_KOTLIN_SOURCES_DIR, "")).strip_edges()
+        if not configured.is_empty():
+            if configured.begins_with("res://"):
+                return ProjectSettings.globalize_path(configured)
+            return configured
+    return ProjectSettings.globalize_path("res://")
 
 
 func _is_script_build_task(task_name: String) -> bool:
