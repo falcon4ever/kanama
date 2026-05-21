@@ -28,12 +28,14 @@ var _pending_auto_sync := false
 var _last_change_msec := 0
 var _is_build_running := false
 var _jar_menu_added := false
+var _last_developer_mode_enabled := false
 
 
 func _enter_tree() -> void:
     _ensure_project_settings()
     add_tool_menu_item(MENU_BUILD_SYNC, _on_build_sync_pressed)
-    if _is_developer_mode_enabled():
+    _last_developer_mode_enabled = _is_developer_mode_enabled()
+    if _last_developer_mode_enabled:
         add_tool_menu_item(MENU_BUILD_JAR, _on_build_jar_pressed)
         _jar_menu_added = true
     call_deferred("_register_kotlin_syntax_highlighter")
@@ -60,6 +62,8 @@ func _on_build_jar_pressed() -> void:
     _run_gradle_task("jar")
 
 func _process(delta: float) -> void:
+    _refresh_developer_mode_controls()
+
     _scan_accum_sec += delta
     if _scan_accum_sec < KT_SCAN_INTERVAL_SEC:
         return
@@ -113,6 +117,33 @@ func _remove_toolbar_buttons() -> void:
     _toolbar_container = null
     _sync_button = null
     _jar_button = null
+
+
+func _refresh_developer_mode_controls() -> void:
+    var enabled := _is_developer_mode_enabled()
+    if enabled == _last_developer_mode_enabled:
+        return
+    _last_developer_mode_enabled = enabled
+
+    if enabled and not _jar_menu_added:
+        add_tool_menu_item(MENU_BUILD_JAR, _on_build_jar_pressed)
+        _jar_menu_added = true
+    elif not enabled and _jar_menu_added:
+        remove_tool_menu_item(MENU_BUILD_JAR)
+        _jar_menu_added = false
+
+    if _toolbar_container == null:
+        return
+    if enabled and _jar_button == null:
+        _jar_button = Button.new()
+        _jar_button.text = JAR_BUTTON_IDLE_TEXT
+        _jar_button.tooltip_text = "Build the Kanama runtime jar (Kanama developers only)"
+        _jar_button.pressed.connect(_on_build_jar_pressed)
+        _toolbar_container.add_child(_jar_button)
+    elif not enabled and _jar_button != null:
+        _toolbar_container.remove_child(_jar_button)
+        _jar_button.queue_free()
+        _jar_button = null
 
 
 func _register_kotlin_syntax_highlighter() -> void:
