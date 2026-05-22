@@ -348,8 +348,23 @@ object ScriptBridge {
     ) {
         val methodLong = method.reinterpret(8).get(JAVA_LONG, 0)
         val instance = si(data)
-        val handled = instance?.dispatchDirectProcess(methodLong, args, argCount) == true ||
-            instance?.dispatchCall?.invoke(methodLong, args, argCount, rRet, rError) == true
+        val handled = try {
+            instance?.dispatchDirectProcess(methodLong, args, argCount) == true ||
+                instance?.dispatchCall?.invoke(methodLong, args, argCount, rRet, rError) == true
+        } catch (t: Throwable) {
+            System.err.println(
+                "[kanama:kt] script method failed method=0x${methodLong.toString(16)} " +
+                    "instance=0x${data.address().toString(16)}: ${t::class.qualifiedName}: ${t.message}",
+            )
+            t.printStackTrace(System.err)
+            if (rError.address() != 0L) {
+                // GDEXTENSION_CALL_ERROR_INVALID_METHOD = 1. GDExtension has no
+                // script-exception error type, but returning a call error keeps
+                // the exception from escaping the Panama upcall boundary.
+                rError.reinterpret(12).set(JAVA_INT, 0, 1)
+            }
+            return
+        }
         if (rError.address() != 0L) {
             if (handled) {
                 // GDEXTENSION_CALL_OK = 0

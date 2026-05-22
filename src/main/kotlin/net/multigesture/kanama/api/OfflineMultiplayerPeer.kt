@@ -17,6 +17,10 @@ class OfflineMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
         internal fun wrap(handle: MemorySegment): OfflineMultiplayerPeer? =
             if (handle.address() == 0L) null else OfflineMultiplayerPeer(handle)
 
+        @JvmStatic
+        fun create(): OfflineMultiplayerPeer =
+            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
+
         // No MethodBinds emitted yet.
     }
 }

@@ -24,7 +24,7 @@ flowchart TB
     end
 
     BOOT["bootstrap.c<br/>JNI_CreateJavaVM once"]
-    GODOT["Godot Engine 4.7 beta 2<br/>GDExtension ABI"]
+    GODOT["Godot Engine 4.7 beta 3<br/>GDExtension ABI"]
 
     USER -->|"compile-time metadata"| KSP
     KSP -->|"static registration"| BINDING

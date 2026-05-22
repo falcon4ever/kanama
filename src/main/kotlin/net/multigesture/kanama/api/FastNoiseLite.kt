@@ -340,6 +340,10 @@ class FastNoiseLite(handle: MemorySegment) : Noise(handle) {
             if (handle.address() == 0L) null else FastNoiseLite(handle)
 
         @JvmStatic
+        fun create(): FastNoiseLite =
+            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
+
+        @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
             if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
 

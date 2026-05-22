@@ -5,8 +5,8 @@ directly to a node.
 
 ## Requirements
 
-- Godot 4.7 beta 2 from the
-  [Godot 4.7 beta 2 archive](https://godotengine.org/download/archive/4.7-beta2/).
+- Godot 4.7 beta 3 from the
+  [Godot 4.7 beta 3 archive](https://godotengine.org/download/archive/4.7-beta3/).
 - JDK 25+ for desktop development and Gradle builds.
 - CMake 3.22.1+ and a platform C toolchain for the desktop native bootstrap.
 - A Kanama source checkout. The current preview installs addon artifacts from
@@ -26,10 +26,10 @@ desktop exports are tracked separately in
 | Platform | Setup notes |
 | --- | --- |
 | macOS arm64 | Install Temurin JDK 25 or another JDK 25 build, install CMake 3.22.1+ and Xcode command line tools, use `/Applications/Godot.app/Contents/MacOS/Godot` or a `PATH` entry for Godot, and run Gradle commands with `./gradlew`. This is the primary local maintainer workflow. |
-| Windows x64 | Use the 4.7 beta 2 Windows console binary for smoke runs, install Temurin JDK 25, set `JAVA_HOME` so `%JAVA_HOME%\bin\server\jvm.dll` exists, install Visual Studio 2022 with **Desktop development with C++** for native bootstrap builds, and run Gradle commands in PowerShell with `.\gradlew.bat`. Git Bash smoke scripts are supported for marker checks. |
+| Windows x64 | Use the 4.7 beta 3 Windows console binary for smoke runs, install Temurin JDK 25, set `JAVA_HOME` so `%JAVA_HOME%\bin\server\jvm.dll` exists, install Visual Studio 2022 with **Desktop development with C++** for native bootstrap builds, and run Gradle commands in PowerShell with `.\gradlew.bat`. Git Bash smoke scripts are supported for marker checks. |
 | Linux x64 | Install JDK 25, set `JAVA_HOME`, install CMake 3.22.1+, preflight `libkanama_bootstrap.so` with `file`, `ldd`, and `readelf` for release validation, set `XDG_DATA_HOME` to an isolated directory for repeatable headless/editor runs, and refresh demo addons with `installAddonJar`. |
 | Linux ARM64 | Use the same Linux setup with the ARM64 Godot binary. Validation currently covers local runtime, editor, and demo smoke workflows; packaged desktop exports are tracked separately. |
-| Android | Keep Android experimental. Use JDK 21 for Android Gradle/export tooling, Android SDK API 36 with build-tools 36.1.0 and NDK 29.0.14206865, matching Godot 4.7 beta 2 Android export templates, `installAndroidPluginAar`, and the emulator/Pixel 7 smoke path before updating release claims. |
+| Android | Keep Android experimental. Use JDK 21 for Android Gradle/export tooling, Android SDK API 36 with build-tools 36.1.0 and NDK 29.0.14206865, matching Godot 4.7 beta 3 Android export templates, `installAndroidPluginAar`, and the emulator/Pixel 7 smoke path before updating release claims. |
 
 Building Kanama from source does not require a Godot source checkout. The
 desktop native bootstrap uses the GDExtension headers tracked in this

@@ -8,9 +8,9 @@ stabilized.
 
 - Supported runtime target: desktop Godot editor/player processes with a
   regular JDK/JVM available.
-- Baseline engine target: Godot 4.7 beta 2 preview.
+- Baseline engine target: Godot 4.7 beta 3 preview.
 - Compatible binaries: the
-  [Godot 4.7 beta 2 archive](https://godotengine.org/download/archive/4.7-beta2/).
+  [Godot 4.7 beta 3 archive](https://godotengine.org/download/archive/4.7-beta3/).
 - Experimental runtime target: Android exports through a Godot Android plugin
   AAR and Android-specific PanamaPort/ART bootstrap path.
 - Not planned: Web exports.
@@ -57,10 +57,10 @@ The `.gdextension` file already names desktop library slots:
 
 | Platform | Library name | Current status |
 | --- | --- | --- |
-| macOS arm64 | `libkanama_bootstrap.dylib` | Current Godot 4.7 beta 2 preview baseline; local CI and all nine desktop demo smokes pass. |
-| Linux arm64 | `libkanama_bootstrap.so` | Local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. |
-| Linux x86_64 | `libkanama_bootstrap.so` | Local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. |
-| Windows x86_64 | `kanama_bootstrap.dll` | Local runtime/editor smoke validation passed with the 4.7 beta 2 console binary; use PowerShell Gradle commands and Git Bash smoke marker checks. |
+| macOS arm64 | `libkanama_bootstrap.dylib` | Current Godot 4.7 beta 3 preview baseline and primary local CI path. |
+| Linux arm64 | `libkanama_bootstrap.so` | Pending beta 3 revalidation; last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. |
+| Linux x86_64 | `libkanama_bootstrap.so` | Pending beta 3 revalidation; last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. |
+| Windows x86_64 | `kanama_bootstrap.dll` | Pending beta 3 revalidation; last local runtime/editor smoke validation passed with the 4.7 beta 2 console binary. Use PowerShell Gradle commands and Git Bash smoke marker checks. |
 
 Validated platform support claims require a native bootstrap library and JVM
 loading smoke path for that platform.
@@ -109,7 +109,7 @@ running smokes. The native bootstrap loads
 requires Visual Studio 2022 with the **Desktop development with C++** workload,
 including MSVC, the Windows SDK, and CMake tools for Windows.
 
-Use the Godot 4.7 beta 2 Windows console binary for smoke runs. Run Gradle
+Use the Godot 4.7 beta 3 Windows console binary for smoke runs. Run Gradle
 commands with `.\gradlew.bat` in PowerShell. When installing Kanama into a demo
 or project, quote the full Gradle property argument and point
 `kanamaProjectScriptsDir` at the Kotlin source directory when the project root
@@ -152,14 +152,14 @@ users to install JDK 25+.
 Run the same local CI shortcut used during development:
 
 ```sh
-scripts/local_ci.sh /absolute/path/to/godot-4.7-beta2
+scripts/local_ci.sh /absolute/path/to/godot-4.7-beta3
 ```
 
 When testing multiple engine versions:
 
 ```sh
 scripts/local_ci.sh \
-  /absolute/path/to/godot-4.7-beta2 \
+  /absolute/path/to/godot-4.7-beta3 \
   /absolute/path/to/godot-4.7-stable
 ```
 

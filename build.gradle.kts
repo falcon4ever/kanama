@@ -243,6 +243,8 @@ fun File.enableAndroidKanamaGdextensionMetadata() {
 tasks.named<Jar>("jar") {
     archiveFileName.set("kanama.jar")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
     // Bundle kotlin-stdlib (and any other runtime deps) into a single
     // self-contained jar. bootstrap.c puts this jar alone on the
     // classpath, so anything Kanama or its users need must be inside.
@@ -279,10 +281,10 @@ tasks.register<Copy>("installAddonJar") {
         file(it).resolve(".godot/extension_list.cfg")
     }
     val preserveAndroidExtensionMetadata = objects.property<Boolean>().convention(false)
+    val byteStableFiles = setOf("kanama.jar", "kanama-scripts.jar")
 
     dependsOn(tasks.named("jar"))
     dependsOn(":project-scripts:jar")
-    dependsOn(tasks.named("publishKanamaToMavenLocal"))
     dependsOn(buildNativeBootstrap)
 
     from(layout.projectDirectory.dir("example_project/addons/kanama")) {
@@ -292,6 +294,22 @@ tasks.register<Copy>("installAddonJar") {
     from(layout.projectDirectory.file("project-scripts/build/libs/kanama-scripts.jar"))
     into(targetProjectDir.map { file(it).resolve("addons/kanama") })
     outputs.file(extensionListFile)
+
+    eachFile(object : org.gradle.api.Action<org.gradle.api.file.FileCopyDetails> {
+        override fun execute(details: org.gradle.api.file.FileCopyDetails) {
+            if (details.name in byteStableFiles && targetProjectDir.isPresent) {
+                val installedFile: File = file(targetProjectDir.get())
+                    .resolve("addons/kanama")
+                    .resolve(details.path)
+                if (
+                    installedFile.isFile &&
+                    java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L
+                ) {
+                    details.exclude()
+                }
+            }
+        }
+    })
 
     doFirst {
         if (!targetProjectDir.isPresent) {

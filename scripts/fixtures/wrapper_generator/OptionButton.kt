@@ -24,11 +24,17 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         @JvmName("setAllowReselectProperty")
         set(value) = setAllowReselect(value)
 
-    var enableSearchBarOnItemCount: Int
-        @JvmName("enableSearchBarOnItemCountProperty")
-        get() = getSearchBarEnabledOnItemCount()
-        @JvmName("setEnableSearchBarOnItemCountProperty")
-        set(value) = setSearchBarEnabledOnItemCount(value)
+    var searchBarEnabled: Boolean
+        @JvmName("searchBarEnabledProperty")
+        get() = isSearchBarEnabled()
+        @JvmName("setSearchBarEnabledProperty")
+        set(value) = setSearchBarEnabled(value)
+
+    var searchBarMinItemCount: Int
+        @JvmName("searchBarMinItemCountProperty")
+        get() = getSearchBarMinItemCount()
+        @JvmName("setSearchBarMinItemCountProperty")
+        set(value) = setSearchBarMinItemCount(value)
 
     var searchBarFuzzySearchEnabled: Boolean
         @JvmName("searchBarFuzzySearchEnabledProperty")
@@ -84,8 +90,16 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, idx, mode)
     }
 
-    fun setSearchBarEnabledOnItemCount(counts: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarEnabledOnItemCountBind, handle, counts)
+    fun setSearchBarEnabled(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, handle, enabled)
+    }
+
+    fun setSearchBarMinItemCount(count: Int) {
+        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, handle, count)
+    }
+
+    fun getSearchBarMinItemCount(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, handle)
     }
 
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
@@ -142,10 +156,6 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
 
     fun isSearchBarEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, handle)
-    }
-
-    fun getSearchBarEnabledOnItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarEnabledOnItemCountBind, handle)
     }
 
     fun addSeparator(text: String = "") {
@@ -278,9 +288,19 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
             ObjectCalls.getMethodBind("OptionButton", "set_item_auto_translate_mode", SET_ITEM_AUTO_TRANSLATE_MODE_HASH)
         }
 
-        private const val SET_SEARCH_BAR_ENABLED_ON_ITEM_COUNT_HASH = 1286410249L
-        private val setSearchBarEnabledOnItemCountBind by lazy {
-            ObjectCalls.getMethodBind("OptionButton", "set_search_bar_enabled_on_item_count", SET_SEARCH_BAR_ENABLED_ON_ITEM_COUNT_HASH)
+        private const val SET_SEARCH_BAR_ENABLED_HASH = 2586408642L
+        private val setSearchBarEnabledBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "set_search_bar_enabled", SET_SEARCH_BAR_ENABLED_HASH)
+        }
+
+        private const val SET_SEARCH_BAR_MIN_ITEM_COUNT_HASH = 1286410249L
+        private val setSearchBarMinItemCountBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "set_search_bar_min_item_count", SET_SEARCH_BAR_MIN_ITEM_COUNT_HASH)
+        }
+
+        private const val GET_SEARCH_BAR_MIN_ITEM_COUNT_HASH = 3905245786L
+        private val getSearchBarMinItemCountBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "get_search_bar_min_item_count", GET_SEARCH_BAR_MIN_ITEM_COUNT_HASH)
         }
 
         private const val SET_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH = 2586408642L
@@ -351,11 +371,6 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         private const val IS_SEARCH_BAR_ENABLED_HASH = 36873697L
         private val isSearchBarEnabledBind by lazy {
             ObjectCalls.getMethodBind("OptionButton", "is_search_bar_enabled", IS_SEARCH_BAR_ENABLED_HASH)
-        }
-
-        private const val GET_SEARCH_BAR_ENABLED_ON_ITEM_COUNT_HASH = 3905245786L
-        private val getSearchBarEnabledOnItemCountBind by lazy {
-            ObjectCalls.getMethodBind("OptionButton", "get_search_bar_enabled_on_item_count", GET_SEARCH_BAR_ENABLED_ON_ITEM_COUNT_HASH)
         }
 
         private const val ADD_SEPARATOR_HASH = 3005725572L

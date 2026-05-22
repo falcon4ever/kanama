@@ -11427,6 +11427,31 @@ object ObjectCalls {
         }
     }
 
+    fun ptrcallWithStringAndArrayArgRetLongAndArray(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        text: String,
+        values: List<Any?>,
+    ): Pair<Long, List<Any?>> {
+        Arena.ofConfined().use { arena ->
+            val stringCell = arena.allocate(8L, 8L)
+            val argArray = arena.allocate(8L, 8L)
+            try {
+                GodotStrings.initString(stringCell, text)
+                BuiltinTypes.initArray(argArray, values)
+                val arr = arena.allocate(ADDRESS, 2)
+                arr.setAtIndex(ADDRESS, 0, stringCell)
+                arr.setAtIndex(ADDRESS, 1, argArray)
+                val ret = arena.allocate(JAVA_LONG)
+                objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+                return ret.get(JAVA_LONG, 0) to BuiltinTypes.readArrayScalars(argArray)
+            } finally {
+                BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
+                GodotStrings.destroyString(stringCell)
+            }
+        }
+    }
+
     fun ptrcallWithStringBoolArrayArgs(
         methodBind: MemorySegment,
         instance: MemorySegment,

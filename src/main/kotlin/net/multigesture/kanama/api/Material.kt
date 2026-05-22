@@ -106,6 +106,10 @@ open class Material(handle: MemorySegment) : Resource(handle) {
         fun fromHandle(handle: MemorySegment): Material? =
             wrap(handle)
 
+        @JvmStatic
+        fun fromResource(value: Resource?): Material? =
+            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
+
         internal fun wrap(handle: MemorySegment): Material? =
             if (handle.address() == 0L) null else Material(handle)
 

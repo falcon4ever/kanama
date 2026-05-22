@@ -1616,6 +1616,19 @@ object BuiltinTypes {
         }
     }
 
+    /** Initialize [dest] as a Variant containing a Dictionary value. */
+    fun initVariantDictionary(dest: MemorySegment, entries: Map<String, Any?>) {
+        Arena.ofConfined().use { arena ->
+            val dictionary = arena.allocate(8L, 8L)
+            initDictionary(dictionary, entries)
+            try {
+                VariantConverters.variantFromType(VariantType.DICTIONARY).invoke(dest, dictionary)
+            } finally {
+                destroyTyped(VariantType.DICTIONARY, dictionary)
+            }
+        }
+    }
+
     /**
      * Initialize [dest] as Array and append Dictionary entries represented
      * as scalar key/value maps.

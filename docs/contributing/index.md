@@ -24,5 +24,5 @@ before release-facing changes:
 mkdocs build --strict
 python3 scripts/check_wrapper_generator.py
 ./gradlew jar
-./scripts/local_ci.sh /path/to/godot-4.7-beta2
+./scripts/local_ci.sh /path/to/godot-4.7-beta3
 ```

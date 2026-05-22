@@ -9,6 +9,8 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: SceneTree
  */
 object SceneTree {
+    val root: Window
+        get() = Window(getRoot())
 
     private const val BOOL_NOARGS_HASH = 36873697L
     private const val SET_BOOL_HASH = 2586408642L

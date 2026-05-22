@@ -989,6 +989,18 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         (ObjectCalls.callWithVariantArgs(rpcBind, handle, listOf(method, *extraArgs)) as Number).toLong()
 
     /**
+     * Sends an RPC and falls back to a local method call if Godot reports that the RPC could not be sent.
+     *
+     * This is useful for `@Rpc(callLocal = true)` gameplay events that should also work while the node
+     * uses an offline or not-yet-connected multiplayer peer.
+     */
+    fun callLocalRpc(method: String, vararg extraArgs: Any?) {
+        if (rpc(method, *extraArgs) != 0L) {
+            call(method, *extraArgs)
+        }
+    }
+
+    /**
      * Sends a `rpc` to a specific peer identified by `peer_id` (see
      * `MultiplayerPeer.set_target_peer`). May return `OK` if the call is successful,
      * `ERR_INVALID_PARAMETER` if the arguments passed in the `method` do not match, `ERR_UNCONFIGURED`

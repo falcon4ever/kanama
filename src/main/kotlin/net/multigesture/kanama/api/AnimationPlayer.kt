@@ -650,6 +650,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
     object Signals {
         const val currentAnimationChanged: String = "current_animation_changed"
         const val animationChanged: String = "animation_changed"
+        const val animationFinished: String = "animation_finished"
     }
 
     companion object {

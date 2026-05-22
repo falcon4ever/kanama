@@ -36,6 +36,35 @@ annotation class RegisterFunction(val name: String = "")
 annotation class Method(val name: String = "")
 
 /**
+ * Marks a registered function as available for Godot high-level multiplayer RPC.
+ *
+ * Use with [RegisterFunction] or [Method]. The defaults match Godot's
+ * `@rpc` defaults.
+ */
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Rpc(
+    val mode: Int = RpcMode.AUTHORITY,
+    val callLocal: Boolean = false,
+    val transferMode: Int = RpcTransferMode.RELIABLE,
+    val channel: Int = 0,
+)
+
+/** Godot `MultiplayerAPI.RPCMode` values for [Rpc]. */
+object RpcMode {
+    const val DISABLED = 0
+    const val ANY_PEER = 1
+    const val AUTHORITY = 2
+}
+
+/** Godot `MultiplayerPeer.TransferMode` values for [Rpc]. */
+object RpcTransferMode {
+    const val UNRELIABLE = 0
+    const val UNRELIABLE_ORDERED = 1
+    const val RELIABLE = 2
+}
+
+/**
  * Marks a property on a [RegisterClass]-annotated class as an inspector-
  * visible, engine-accessible property. The generator emits backing
  * `get_<name>` / `set_<name>` methods and registers the property via

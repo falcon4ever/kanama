@@ -292,8 +292,17 @@ CUSTOM_MEMBER_SECTIONS = {
 CUSTOM_COMPANION_MEMBER_SECTIONS = {
     "FastNoiseLite": """
         @JvmStatic
+        fun create(): FastNoiseLite =
+            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
+
+        @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
             if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
+""".strip("\n"),
+    "OfflineMultiplayerPeer": """
+        @JvmStatic
+        fun create(): OfflineMultiplayerPeer =
+            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
 """.strip("\n"),
     "PlaneMesh": """
         @JvmStatic

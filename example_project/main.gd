@@ -65,6 +65,24 @@ func _ready() -> void:
 		print("[kanama:gd] kt script replace_smoke_scene = ", replace_smoke_scene)
 		if not replace_smoke_scene:
 			push_error("Kanama script smoke_scene replacement failed")
+		var rpc_config = kt_script.get_rpc_config()
+		var rpc_replace_config = rpc_config.get("replace_smoke_scene", {}) if rpc_config is Dictionary else {}
+		var rpc_config_ok = (
+			rpc_config is Dictionary
+			and rpc_replace_config is Dictionary
+			and int(rpc_replace_config.get("rpc_mode", -1)) == MultiplayerAPI.RPC_MODE_AUTHORITY
+			and bool(rpc_replace_config.get("call_local", false))
+			and int(rpc_replace_config.get("transfer_mode", -1)) == MultiplayerPeer.TRANSFER_MODE_RELIABLE
+			and int(rpc_replace_config.get("channel", -1)) == 0
+		)
+		print("[kanama:gd] kt script rpc config ok = ", rpc_config_ok)
+		if not rpc_config_ok:
+			push_error("Kanama script RPC config metadata missing or malformed")
+		multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
+		var rpc_error = $ScriptNode.rpc("replace_smoke_scene")
+		print("[kanama:gd] kt script rpc replace_smoke_scene error = ", rpc_error)
+		if rpc_error != OK:
+			push_error("Kanama script local RPC smoke failed")
 
 	#get_tree().quit()
 

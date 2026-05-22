@@ -10,6 +10,7 @@ import net.multigesture.kanama.annotations.ExportGroup
 import net.multigesture.kanama.annotations.ExportSubgroup
 import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.RegisterFunction
+import net.multigesture.kanama.annotations.Rpc
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
@@ -1680,6 +1681,7 @@ class HelloScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 	}
 
 	@RegisterFunction
+	@Rpc(callLocal = true)
 	fun replaceSmokeScene(): Boolean {
 		smokeScene = PackedScene.create()
 		return smokeScene != null

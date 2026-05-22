@@ -50,7 +50,7 @@ Typical validation:
 ```sh
 ./gradlew build
 python3 scripts/validate_godot_api.py --api extension_api.json
-./scripts/local_ci.sh /path/to/godot-4.7-beta2
+./scripts/local_ci.sh /path/to/godot-4.7-beta3
 ```
 
 For a consumer project:

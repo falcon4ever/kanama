@@ -15,6 +15,7 @@ import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
+import com.google.devtools.ksp.symbol.Nullability
 import java.io.File
 
 /**
@@ -188,6 +189,12 @@ class KanamaProcessor(
 
         for (fn in cls.getDeclaredFunctions()) {
             if (!fn.isPublic()) continue
+            val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
+            if ("Rpc" in annotationNames) {
+                throw IllegalArgumentException(
+                    "$simpleName.${fn.simpleName.asString()}: @Rpc is only supported on @ScriptClass methods",
+                )
+            }
             for (ann in fn.annotations) {
                 val callName = "call${capitalize(fn.simpleName.asString())}"
                 val kotlinName = fn.simpleName.asString()
@@ -244,9 +251,9 @@ class KanamaProcessor(
         val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
         val args = fn.parameters.map { p ->
             val name = p.name?.asString() ?: "arg"
-            val fq = p.type.resolve().declaration.qualifiedName?.asString()
-            val arg = fqToArgModel(name, fq) ?: throw IllegalArgumentException(
-                "$ownerSimpleName.$kotlinName: unsupported signal arg type '$fq' for '$name'",
+            val type = p.type.resolve()
+            val arg = fqToArgModel(name, type) ?: throw IllegalArgumentException(
+                "$ownerSimpleName.$kotlinName: unsupported signal arg type '${type.declaration.qualifiedName?.asString()}' for '$name'",
             )
             arg
         }
@@ -272,9 +279,9 @@ class KanamaProcessor(
 
         val args = fn.parameters.map { p ->
             val name = p.name?.asString() ?: "arg"
-            val fq = p.type.resolve().declaration.qualifiedName?.asString()
-            val arg = fqToArgModel(name, fq) ?: throw IllegalArgumentException(
-                "$ownerSimpleName.$kotlinName: unsupported parameter type '$fq' for '$name'",
+            val type = p.type.resolve()
+            val arg = fqToArgModel(name, type) ?: throw IllegalArgumentException(
+                "$ownerSimpleName.$kotlinName: unsupported parameter type '${type.declaration.qualifiedName?.asString()}' for '$name'",
             )
             arg.copy(hasDefault = p.hasDefault)
         }
@@ -291,7 +298,17 @@ class KanamaProcessor(
             returnType = returnType,
             args = args,
             kind = MethodKind.REGULAR,
+            rpc = buildRpcModel(fn),
         )
+    }
+
+    private fun buildRpcModel(fn: KSFunctionDeclaration): RpcModel? {
+        val ann = fn.annotations.firstOrNull { it.shortName.asString() == "Rpc" } ?: return null
+        val mode = ann.arguments.firstOrNull { it.name?.asString() == "mode" }?.value as? Int ?: 2
+        val callLocal = ann.arguments.firstOrNull { it.name?.asString() == "callLocal" }?.value as? Boolean ?: false
+        val transferMode = ann.arguments.firstOrNull { it.name?.asString() == "transferMode" }?.value as? Int ?: 2
+        val channel = ann.arguments.firstOrNull { it.name?.asString() == "channel" }?.value as? Int ?: 0
+        return RpcModel(mode, callLocal, transferMode, channel)
     }
 
     private fun buildPropertyModel(
@@ -368,6 +385,11 @@ class KanamaProcessor(
             if (!fn.isPublic()) continue
             val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
             warnOnLikelyUnregisteredSceneCallback(cls, fn, annotationNames)
+            if ("Rpc" in annotationNames && annotationNames.none { it == "RegisterFunction" || it == "Method" }) {
+                throw IllegalArgumentException(
+                    "$simpleName.${fn.simpleName.asString()}: @Rpc requires @RegisterFunction/@Method",
+                )
+            }
             if (annotationNames.any { it == "ToolButton" || it == "ExportToolButton" } &&
                 annotationNames.any { it == "RegisterFunction" || it == "Method" }
             ) {
@@ -612,17 +634,21 @@ class KanamaProcessor(
             "net.multigesture.kanama.types.Vector2i" -> TypeMapping.VECTOR2I
             "net.multigesture.kanama.types.Vector3" -> TypeMapping.VECTOR3
             "net.multigesture.kanama.types.Vector3i" -> TypeMapping.VECTOR3I
+            "net.multigesture.kanama.types.Quaternion" -> TypeMapping.QUATERNION
+            "net.multigesture.kanama.types.Basis" -> TypeMapping.BASIS
             "net.multigesture.kanama.types.NodePath" -> TypeMapping.NODE_PATH
             "net.multigesture.kanama.api.GodotObject" -> TypeMapping.OBJECT
             else             -> null
         }
 
-        internal fun fqToArgModel(name: String, fq: String?): ArgModel? {
+        internal fun fqToArgModel(name: String, type: KSType): ArgModel? {
+            val fq = type.declaration.qualifiedName?.asString()
+            val nullable = type.nullability == Nullability.NULLABLE
             val objectWrapper = fq?.takeIf { it in SUPPORTED_OBJECT_WRAPPERS }
             return if (objectWrapper != null) {
-                ArgModel(name, TypeMapping.OBJECT, objectWrapper)
+                ArgModel(name, TypeMapping.OBJECT, objectWrapper, nullable = nullable)
             } else {
-                fqToTypeMapping(fq)?.let { ArgModel(name, it) }
+                fqToTypeMapping(fq)?.let { ArgModel(name, it, nullable = nullable) }
             }
         }
 
@@ -632,6 +658,7 @@ class KanamaProcessor(
             "net.multigesture.kanama.api.Node2D",
             "net.multigesture.kanama.api.Node3D",
             "net.multigesture.kanama.api.Control",
+            "net.multigesture.kanama.api.ColorRect",
             "net.multigesture.kanama.api.CanvasLayer",
             "net.multigesture.kanama.api.Label",
             "net.multigesture.kanama.api.Button",
@@ -649,10 +676,12 @@ class KanamaProcessor(
             "net.multigesture.kanama.api.Sprite3D",
             "net.multigesture.kanama.api.AnimatedSprite3D",
             "net.multigesture.kanama.api.Camera3D",
+            "net.multigesture.kanama.api.Marker3D",
             "net.multigesture.kanama.api.SubViewport",
             "net.multigesture.kanama.api.GridMap",
             "net.multigesture.kanama.api.RayCast3D",
             "net.multigesture.kanama.api.MeshInstance3D",
+            "net.multigesture.kanama.api.CollisionShape3D",
             "net.multigesture.kanama.api.AnimationPlayer",
             "net.multigesture.kanama.api.AudioStreamPlayer",
             "net.multigesture.kanama.api.AudioStreamPlayer3D",
@@ -665,6 +694,10 @@ class KanamaProcessor(
             "net.multigesture.kanama.api.NoiseTexture2D",
             "net.multigesture.kanama.api.ShaderMaterial",
             "net.multigesture.kanama.api.Curve",
+            "net.multigesture.kanama.api.LightmapGIData",
+            "net.multigesture.kanama.api.Material",
+            "net.multigesture.kanama.api.ButtonGroup",
+            "net.multigesture.kanama.api.FastNoiseLite",
         )
 
         private fun scriptPropertyTypeModel(
@@ -750,6 +783,10 @@ class KanamaProcessor(
             "net.multigesture.kanama.api.NoiseTexture2D",
             "net.multigesture.kanama.api.ShaderMaterial",
             "net.multigesture.kanama.api.Curve",
+            "net.multigesture.kanama.api.LightmapGIData",
+            "net.multigesture.kanama.api.Material",
+            "net.multigesture.kanama.api.ButtonGroup",
+            "net.multigesture.kanama.api.FastNoiseLite",
         )
 
         private val SUPPORTED_NODE_WRAPPERS = setOf(
@@ -757,6 +794,7 @@ class KanamaProcessor(
             "net.multigesture.kanama.api.Node2D",
             "net.multigesture.kanama.api.Node3D",
             "net.multigesture.kanama.api.Control",
+            "net.multigesture.kanama.api.ColorRect",
             "net.multigesture.kanama.api.CanvasLayer",
             "net.multigesture.kanama.api.Label",
             "net.multigesture.kanama.api.Button",
@@ -774,10 +812,12 @@ class KanamaProcessor(
             "net.multigesture.kanama.api.Sprite3D",
             "net.multigesture.kanama.api.AnimatedSprite3D",
             "net.multigesture.kanama.api.Camera3D",
+            "net.multigesture.kanama.api.Marker3D",
             "net.multigesture.kanama.api.SubViewport",
             "net.multigesture.kanama.api.GridMap",
             "net.multigesture.kanama.api.RayCast3D",
             "net.multigesture.kanama.api.MeshInstance3D",
+            "net.multigesture.kanama.api.CollisionShape3D",
             "net.multigesture.kanama.api.AnimationPlayer",
             "net.multigesture.kanama.api.AudioStreamPlayer",
             "net.multigesture.kanama.api.AudioStreamPlayer3D",
@@ -806,6 +846,18 @@ private val KOTLIN_KEYWORDS = setOf(
 
 private fun kotlinStringLiteral(value: String): String =
     value.replace("\\", "\\\\").replace("\"", "\\\"")
+
+private val RESOURCE_WRAPPERS_WITH_FROM_HANDLE = setOf(
+    "net.multigesture.kanama.api.PackedScene",
+    "net.multigesture.kanama.api.Texture2D",
+    "net.multigesture.kanama.api.NoiseTexture2D",
+    "net.multigesture.kanama.api.ShaderMaterial",
+    "net.multigesture.kanama.api.Curve",
+    "net.multigesture.kanama.api.LightmapGIData",
+    "net.multigesture.kanama.api.Material",
+    "net.multigesture.kanama.api.ButtonGroup",
+    "net.multigesture.kanama.api.FastNoiseLite",
+)
 
 private fun constantIdentifier(name: String): String {
     val parts = name
@@ -861,8 +913,14 @@ private fun signalCallbackInvocation(args: List<ArgModel>): String =
 
 private fun signalArgumentValueExpr(arg: ArgModel, index: Int): String =
     when {
-        arg.objectWrapperFqName != null ->
-            "((args.getOrNull($index) as? ${arg.objectWrapperFqName}) ?: (args.getOrNull($index) as? net.multigesture.kanama.api.GodotObject)?.let { ${arg.objectWrapperFqName}(it.handle) } ?: error(\"Signal argument '${arg.name}' was not ${arg.kotlinType}\"))"
+        arg.objectWrapperFqName != null -> {
+            val fromGodotObject = if (arg.objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
+                "(args.getOrNull($index) as? net.multigesture.kanama.api.GodotObject)?.let { ${arg.objectWrapperFqName}.fromHandle(it.handle) }"
+            } else {
+                "(args.getOrNull($index) as? net.multigesture.kanama.api.GodotObject)?.let { ${arg.objectWrapperFqName}(it.handle) }"
+            }
+            "((args.getOrNull($index) as? ${arg.objectWrapperFqName}) ?: $fromGodotObject ?: error(\"Signal argument '${arg.name}' was not ${arg.kotlinType}\"))"
+        }
         arg.type == TypeMapping.INT -> "(args.getOrNull($index) as? Long ?: 0L)"
         arg.type == TypeMapping.FLOAT -> "((args.getOrNull($index) as? Number)?.toDouble() ?: 0.0)"
         arg.type == TypeMapping.BOOL -> "(args.getOrNull($index) as? Boolean ?: false)"
@@ -957,24 +1015,53 @@ internal data class MethodModel(
     val returnType: TypeMapping?,
     val args: List<ArgModel>,
     val kind: MethodKind,
+    val rpc: RpcModel? = null,
     /** For property accessors: the property's Kotlin name. */
     val propertyKotlinName: String? = null,
+)
+
+internal data class RpcModel(
+    val mode: Int,
+    val callLocal: Boolean,
+    val transferMode: Int,
+    val channel: Int,
 )
 
 internal data class ArgModel(
     val name: String,
     val type: TypeMapping,
     val objectWrapperFqName: String? = null,
+    val nullable: Boolean = false,
     val hasDefault: Boolean = false,
 ) {
     val kotlinType: String
-        get() = objectWrapperFqName ?: type.kotlinType
+        get() = (objectWrapperFqName ?: type.kotlinType) + if (nullable) "?" else ""
 
     fun readFromScratch(s: String): String =
-        if (objectWrapperFqName != null) "$objectWrapperFqName(${s}.get(ADDRESS, 0))" else type.readFromScratch(s)
+        if (objectWrapperFqName != null) {
+            if (objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
+                val value = "$objectWrapperFqName.fromHandle(${s}.get(ADDRESS, 0))"
+                if (nullable) value else "$value ?: error(\"Expected $objectWrapperFqName argument '$name'\")"
+            } else {
+                val handle = "${s}.get(ADDRESS, 0)"
+                if (nullable) "if ($handle.address() == 0L) null else $objectWrapperFqName($handle)" else "$objectWrapperFqName($handle)"
+            }
+        } else {
+            type.readFromScratch(s)
+        }
 
     fun readPtrcallArg(ptr: String): String =
-        if (objectWrapperFqName != null) "$objectWrapperFqName($ptr.reinterpret(${type.ptrcallSizeBytes}).get(ADDRESS, 0))" else type.readPtrcallArg(ptr)
+        if (objectWrapperFqName != null) {
+            if (objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
+                val value = "$objectWrapperFqName.fromHandle($ptr.reinterpret(${type.ptrcallSizeBytesExpr}).get(ADDRESS, 0))"
+                if (nullable) value else "$value ?: error(\"Expected $objectWrapperFqName argument '$name'\")"
+            } else {
+                val handle = "$ptr.reinterpret(${type.ptrcallSizeBytesExpr}).get(ADDRESS, 0)"
+                if (nullable) "if ($handle.address() == 0L) null else $objectWrapperFqName($handle)" else "$objectWrapperFqName($handle)"
+            }
+        } else {
+            type.readPtrcallArg(ptr)
+        }
 
     fun signalEmitValueExpr(): String =
         if (type == TypeMapping.NODE_PATH) "$name.path" else name
@@ -1190,6 +1277,8 @@ private fun normalizeScriptPropertyDefaultLiteral(initializer: String, type: Typ
             components = 3,
             componentPattern = intLiteral,
         )
+        TypeMapping.QUATERNION,
+        TypeMapping.BASIS -> null
     }
 }
 
@@ -1227,6 +1316,8 @@ internal enum class TypeMapping(
      * reading the scratch value or after variantFromType copies from it.
      */
     val needsScratchDestroy: Boolean = false,
+    val scratchAllocationExpr: String = valueLayout,
+    val ptrcallSizeBytesExpr: String = ptrcallSizeBytes.toString(),
 ) {
     INT("INT", "JAVA_LONG", 8, "0L", "Long"),
     FLOAT("FLOAT", "JAVA_DOUBLE", 8, "0.0", "Double"),
@@ -1236,6 +1327,24 @@ internal enum class TypeMapping(
     VECTOR2I("VECTOR2I", "JAVA_INT", 8, "net.multigesture.kanama.types.Vector2i(0, 0)", "net.multigesture.kanama.types.Vector2i"),
     VECTOR3("VECTOR3", "JAVA_FLOAT", 12, "net.multigesture.kanama.types.Vector3(0f, 0f, 0f)", "net.multigesture.kanama.types.Vector3"),
     VECTOR3I("VECTOR3I", "JAVA_INT", 12, "net.multigesture.kanama.types.Vector3i(0, 0, 0)", "net.multigesture.kanama.types.Vector3i"),
+    QUATERNION(
+        "QUATERNION",
+        "JAVA_FLOAT",
+        16,
+        "net.multigesture.kanama.types.Quaternion.IDENTITY",
+        "net.multigesture.kanama.types.Quaternion",
+        scratchAllocationExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+        ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L",
+    ),
+    BASIS(
+        "BASIS",
+        "JAVA_FLOAT",
+        36,
+        "net.multigesture.kanama.types.Basis.IDENTITY",
+        "net.multigesture.kanama.types.Basis",
+        scratchAllocationExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 9L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+        ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 9L",
+    ),
     NODE_PATH(
         "STRING",
         "JAVA_LONG",
@@ -1256,6 +1365,8 @@ internal enum class TypeMapping(
         VECTOR2I -> "net.multigesture.kanama.types.Vector2i($s.get(JAVA_INT, 0), $s.get(JAVA_INT, 4))"
         VECTOR3 -> "net.multigesture.kanama.types.Vector3($s.get(JAVA_FLOAT, 0), $s.get(JAVA_FLOAT, 4), $s.get(JAVA_FLOAT, 8))"
         VECTOR3I -> "net.multigesture.kanama.types.Vector3i($s.get(JAVA_INT, 0), $s.get(JAVA_INT, 4), $s.get(JAVA_INT, 8))"
+        QUATERNION -> "net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotReal.readIndex($s, 0), net.multigesture.kanama.types.GodotReal.readIndex($s, 1), net.multigesture.kanama.types.GodotReal.readIndex($s, 2), net.multigesture.kanama.types.GodotReal.readIndex($s, 3))"
+        BASIS -> "net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 0), net.multigesture.kanama.types.GodotReal.readIndex($s, 3), net.multigesture.kanama.types.GodotReal.readIndex($s, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 1), net.multigesture.kanama.types.GodotReal.readIndex($s, 4), net.multigesture.kanama.types.GodotReal.readIndex($s, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 2), net.multigesture.kanama.types.GodotReal.readIndex($s, 5), net.multigesture.kanama.types.GodotReal.readIndex($s, 8)))"
         NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($s))"
         OBJECT -> "net.multigesture.kanama.api.GodotObject($s.get(ADDRESS, 0))"
         ARRAY -> "emptyList<Any?>()"
@@ -1270,6 +1381,8 @@ internal enum class TypeMapping(
         VECTOR2I -> "{ $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y) }"
         VECTOR3 -> "{ $s.set(JAVA_FLOAT, 0, $v.x); $s.set(JAVA_FLOAT, 4, $v.y); $s.set(JAVA_FLOAT, 8, $v.z) }"
         VECTOR3I -> "{ $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y); $s.set(JAVA_INT, 8, $v.z) }"
+        QUATERNION -> "{ net.multigesture.kanama.types.GodotReal.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotReal.writeIndex($s, 3, $v.w) }"
+        BASIS -> "{ net.multigesture.kanama.types.GodotReal.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotReal.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotReal.writeIndex($s, 8, $v.z.z) }"
         NODE_PATH -> "GodotStrings.initString($s, $v.path)"
         OBJECT -> "$s.set(ADDRESS, 0, $v.handle)"
         ARRAY -> "{}"
@@ -1282,16 +1395,18 @@ internal enum class TypeMapping(
      * String ptrcall args are borrowed (not owned) — no destroy.
      */
     fun readPtrcallArg(ptr: String): String = when (this) {
-        BOOL   -> "$ptr.reinterpret($ptrcallSizeBytes).get(JAVA_BYTE, 0) != 0.toByte()"
+        BOOL   -> "$ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_BYTE, 0) != 0.toByte()"
         STRING -> "GodotStrings.readString($ptr)"
-        VECTOR2 -> "net.multigesture.kanama.types.Vector2($ptr.reinterpret($ptrcallSizeBytes).get(JAVA_FLOAT, 0), $ptr.reinterpret($ptrcallSizeBytes).get(JAVA_FLOAT, 4))"
-        VECTOR2I -> "net.multigesture.kanama.types.Vector2i($ptr.reinterpret($ptrcallSizeBytes).get(JAVA_INT, 0), $ptr.reinterpret($ptrcallSizeBytes).get(JAVA_INT, 4))"
-        VECTOR3 -> "net.multigesture.kanama.types.Vector3($ptr.reinterpret($ptrcallSizeBytes).get(JAVA_FLOAT, 0), $ptr.reinterpret($ptrcallSizeBytes).get(JAVA_FLOAT, 4), $ptr.reinterpret($ptrcallSizeBytes).get(JAVA_FLOAT, 8))"
-        VECTOR3I -> "net.multigesture.kanama.types.Vector3i($ptr.reinterpret($ptrcallSizeBytes).get(JAVA_INT, 0), $ptr.reinterpret($ptrcallSizeBytes).get(JAVA_INT, 4), $ptr.reinterpret($ptrcallSizeBytes).get(JAVA_INT, 8))"
+        VECTOR2 -> "net.multigesture.kanama.types.Vector2($ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_FLOAT, 0), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_FLOAT, 4))"
+        VECTOR2I -> "net.multigesture.kanama.types.Vector2i($ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 0), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 4))"
+        VECTOR3 -> "net.multigesture.kanama.types.Vector3($ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_FLOAT, 0), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_FLOAT, 4), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_FLOAT, 8))"
+        VECTOR3I -> "net.multigesture.kanama.types.Vector3i($ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 0), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 4), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 8))"
+        QUATERNION -> "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotReal.readIndex(p, 0), net.multigesture.kanama.types.GodotReal.readIndex(p, 1), net.multigesture.kanama.types.GodotReal.readIndex(p, 2), net.multigesture.kanama.types.GodotReal.readIndex(p, 3)) }"
+        BASIS -> "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 0), net.multigesture.kanama.types.GodotReal.readIndex(p, 3), net.multigesture.kanama.types.GodotReal.readIndex(p, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 1), net.multigesture.kanama.types.GodotReal.readIndex(p, 4), net.multigesture.kanama.types.GodotReal.readIndex(p, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 2), net.multigesture.kanama.types.GodotReal.readIndex(p, 5), net.multigesture.kanama.types.GodotReal.readIndex(p, 8))) }"
         NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($ptr))"
-        OBJECT -> "net.multigesture.kanama.api.GodotObject($ptr.reinterpret($ptrcallSizeBytes).get(ADDRESS, 0))"
+        OBJECT -> "net.multigesture.kanama.api.GodotObject($ptr.reinterpret($ptrcallSizeBytesExpr).get(ADDRESS, 0))"
         ARRAY -> "emptyList<Any?>()"
-        else   -> "$ptr.reinterpret($ptrcallSizeBytes).get($valueLayout, 0)"
+        else   -> "$ptr.reinterpret($ptrcallSizeBytesExpr).get($valueLayout, 0)"
     }
 
     /**
@@ -1299,16 +1414,18 @@ internal enum class TypeMapping(
      * For STRING, the caller (Godot) owns the returned String; no destroy.
      */
     fun writePtrcallReturn(v: String): String = when (this) {
-        BOOL   -> "rRet.reinterpret($ptrcallSizeBytes).set(JAVA_BYTE, 0, if ($v) 1.toByte() else 0.toByte())"
+        BOOL   -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_BYTE, 0, if ($v) 1.toByte() else 0.toByte())"
         STRING -> "GodotStrings.initString(rRet, $v)"
-        VECTOR2 -> "{ rRet.reinterpret($ptrcallSizeBytes).set(JAVA_FLOAT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytes).set(JAVA_FLOAT, 4, $v.y) }"
-        VECTOR2I -> "{ rRet.reinterpret($ptrcallSizeBytes).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytes).set(JAVA_INT, 4, $v.y) }"
-        VECTOR3 -> "{ rRet.reinterpret($ptrcallSizeBytes).set(JAVA_FLOAT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytes).set(JAVA_FLOAT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytes).set(JAVA_FLOAT, 8, $v.z) }"
-        VECTOR3I -> "{ rRet.reinterpret($ptrcallSizeBytes).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytes).set(JAVA_INT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytes).set(JAVA_INT, 8, $v.z) }"
+        VECTOR2 -> "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_FLOAT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_FLOAT, 4, $v.y) }"
+        VECTOR2I -> "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y) }"
+        VECTOR3 -> "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_FLOAT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_FLOAT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_FLOAT, 8, $v.z) }"
+        VECTOR3I -> "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 8, $v.z) }"
+        QUATERNION -> "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotReal.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotReal.writeIndex(p, 3, $v.w) }"
+        BASIS -> "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotReal.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotReal.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotReal.writeIndex(p, 8, $v.z.z) }"
         NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
-        OBJECT -> "rRet.reinterpret($ptrcallSizeBytes).set(ADDRESS, 0, $v.handle)"
+        OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle)"
         ARRAY -> "{}"
-        else   -> "rRet.reinterpret($ptrcallSizeBytes).set($valueLayout, 0, $v)"
+        else   -> "rRet.reinterpret($ptrcallSizeBytesExpr).set($valueLayout, 0, $v)"
     }
 }
 
@@ -1794,7 +1911,7 @@ internal class CodeEmitter(
                 m.args.forEachIndexed { i, arg ->
                     val scratch = "arg${i}Scratch"
                     val value = "arg${i}Value"
-                    sb.appendLine("            val $scratch = arena.allocate(${arg.type.valueLayout})")
+                    sb.appendLine("            val $scratch = arena.allocate(${arg.type.scratchAllocationExpr})")
                     sb.appendLine("            VariantConverters.variantToType(VariantType.${arg.type.variantTypeEnum})")
                     sb.appendLine("                .invoke($scratch, argsArray.get(ADDRESS, ${i * 8}L))")
                     sb.appendLine("            val $value = ${arg.readFromScratch(scratch)}")
@@ -1806,7 +1923,7 @@ internal class CodeEmitter(
             val invocation = invocationExpr(m, argVars)
             if (m.returnType != null) {
                 sb.appendLine("            val result = $invocation")
-                sb.appendLine("            val retScratch = arena.allocate(${m.returnType.valueLayout})")
+                sb.appendLine("            val retScratch = arena.allocate(${m.returnType.scratchAllocationExpr})")
                 sb.appendLine("            ${m.returnType.writeToScratch("retScratch", "result")}")
                 sb.appendLine("            VariantConverters.variantFromType(VariantType.${m.returnType.variantTypeEnum}).invoke(rReturn, retScratch)")
                 if (m.returnType.needsScratchDestroy)
@@ -2048,23 +2165,6 @@ internal class ScriptCodeEmitter(
             sb.appendLine("        propertyListPtr = ClassDB.buildPropertyList(listOf(")
             sb.appendLine("            $specs,")
             sb.appendLine("        ))")
-            val dynamicDefaultProperties = model.properties.filter { it.defaultLiteral == null }
-            if (dynamicDefaultProperties.isNotEmpty()) {
-                // KSP does not expose initializer expressions directly. The
-                // processor emits source-literal defaults for simple constants,
-                // then falls back to constructing a NULL-handle instance only
-                // for properties whose initializer could not be read safely.
-                sb.appendLine("        try {")
-                sb.appendLine("            val defaults = ${model.simpleName}(MemorySegment.NULL)")
-                for (p in dynamicDefaultProperties) {
-                    val defaultName = p.kotlinName.replaceFirstChar { it.uppercase() }
-                    sb.appendLine("            default$defaultName = defaults.${p.kotlinName}")
-                    sb.appendLine("            default${defaultName}Available = true")
-                }
-                sb.appendLine("        } catch (t: Throwable) {")
-                sb.appendLine("            System.err.println(\"[kanama:kt] ${model.simpleName}: dynamic default-property extraction skipped (constructor touched godotObject?): \${t.message}\")")
-                sb.appendLine("        }")
-            }
         }
         sb.appendLine("        KanamaScript.construct(")
         sb.appendLine("            instanceBaseType = \"${model.attachTo}\",")
@@ -2078,6 +2178,7 @@ internal class ScriptCodeEmitter(
         sb.appendLine("            writeScriptMethodList = $registrarName::writeScriptMethodList,")
         sb.appendLine("            writeScriptPropertyList = $registrarName::writeScriptPropertyList,")
         sb.appendLine("            writeScriptSignalList = $registrarName::writeScriptSignalList,")
+        sb.appendLine("            writeRpcConfig = $registrarName::writeRpcConfig,")
         sb.appendLine("            writeMethodInfo = $registrarName::writeMethodInfo,")
         if (model.properties.isNotEmpty()) {
             sb.appendLine("            hasPropertyDefault = $registrarName::hasPropertyDefault,")
@@ -2209,6 +2310,24 @@ internal class ScriptCodeEmitter(
                 val comma = if (index == model.signals.lastIndex) "" else ","
                 sb.appendLine(
                     "            mapOf(\"name\" to \"${s.godotName}\", \"args_count\" to ${s.args.size}, \"id\" to $index)$comma"
+                )
+            }
+            sb.appendLine("        ))")
+        }
+        sb.appendLine("    }")
+        sb.appendLine()
+
+        val rpcMethods = model.methods.filter { it.rpc != null }
+        sb.appendLine("    private fun writeRpcConfig(ret: MemorySegment) {")
+        if (rpcMethods.isEmpty()) {
+            sb.appendLine("        BuiltinTypes.initNilVariant(ret)")
+        } else {
+            sb.appendLine("        BuiltinTypes.initVariantDictionary(ret, mapOf(")
+            rpcMethods.forEachIndexed { index, method ->
+                val rpc = method.rpc ?: return@forEachIndexed
+                val comma = if (index == rpcMethods.lastIndex) "" else ","
+                sb.appendLine(
+                    "            \"${method.godotName}\" to mapOf(\"rpc_mode\" to ${rpc.mode}L, \"call_local\" to ${rpc.callLocal}, \"transfer_mode\" to ${rpc.transferMode}L, \"channel\" to ${rpc.channel}L)$comma"
                 )
             }
             sb.appendLine("        ))")
@@ -2568,6 +2687,8 @@ internal class ScriptCodeEmitter(
         TypeMapping.VECTOR2I -> "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(8L, 4L); VariantConverters.variantToType(VariantType.VECTOR2I).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector2i(d.get(JAVA_INT, 0), d.get(JAVA_INT, 4)) }"
         TypeMapping.VECTOR3 -> "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(12L, 4L); VariantConverters.variantToType(VariantType.VECTOR3).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3(d.get(JAVA_FLOAT, 0), d.get(JAVA_FLOAT, 4), d.get(JAVA_FLOAT, 8)) }"
         TypeMapping.VECTOR3I -> "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(12L, 4L); VariantConverters.variantToType(VariantType.VECTOR3I).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3i(d.get(JAVA_INT, 0), d.get(JAVA_INT, 4), d.get(JAVA_INT, 8)) }"
+        TypeMapping.QUATERNION -> "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Quaternion ?: net.multigesture.kanama.types.Quaternion.IDENTITY }"
+        TypeMapping.BASIS -> "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Basis ?: net.multigesture.kanama.types.Basis.IDENTITY }"
         TypeMapping.OBJECT -> "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(ADDRESS); VariantConverters.variantToType(VariantType.OBJECT).invoke(d, $variantPtr); net.multigesture.kanama.api.GodotObject(d.get(ADDRESS, 0)) }"
         TypeMapping.ARRAY -> "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? List<Any?> ?: emptyList() }"
     }
@@ -2604,9 +2725,19 @@ internal class ScriptCodeEmitter(
     private fun variantReadArgExpr(arg: ArgModel, variantPtr: String, localName: String): String =
         if (arg.objectWrapperFqName != null) {
             if (arg.objectWrapperFqName in RESOURCE_WRAPPER_FROM_HANDLE) {
-                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObject($variantPtr, a, ${arg.objectWrapperFqName}::fromHandle) ?: error(\"Expected ${arg.objectWrapperFqName} argument '${arg.name}'\") }"
+                val value = "BuiltinTypes.readVariantObject($variantPtr, a, ${arg.objectWrapperFqName}::fromHandle)"
+                if (arg.nullable) {
+                    "val $localName = Arena.ofConfined().use { a -> $value }"
+                } else {
+                    "val $localName = Arena.ofConfined().use { a -> $value ?: error(\"Expected ${arg.objectWrapperFqName} argument '${arg.name}'\") }"
+                }
             } else {
-                "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(ADDRESS); VariantConverters.variantToType(VariantType.OBJECT).invoke(d, $variantPtr); ${arg.objectWrapperFqName}(d.get(ADDRESS, 0)) }"
+                val value = "BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ${arg.objectWrapperFqName}(handle) }"
+                if (arg.nullable) {
+                    "val $localName = Arena.ofConfined().use { a -> $value }"
+                } else {
+                    "val $localName = Arena.ofConfined().use { a -> $value ?: error(\"Expected ${arg.objectWrapperFqName} argument '${arg.name}'\") }"
+                }
             }
         } else {
             variantReadExpr(arg.type, variantPtr, localName)
@@ -2626,6 +2757,8 @@ internal class ScriptCodeEmitter(
         TypeMapping.VECTOR2I -> "Arena.ofConfined().use { a -> val s = a.allocate(8L, 4L); s.set(JAVA_INT, 0, $valueExpr.x); s.set(JAVA_INT, 4, $valueExpr.y); VariantConverters.variantFromType(VariantType.VECTOR2I).invoke(ret, s) }"
         TypeMapping.VECTOR3 -> "Arena.ofConfined().use { a -> val s = a.allocate(12L, 4L); s.set(JAVA_FLOAT, 0, $valueExpr.x); s.set(JAVA_FLOAT, 4, $valueExpr.y); s.set(JAVA_FLOAT, 8, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3).invoke(ret, s) }"
         TypeMapping.VECTOR3I -> "Arena.ofConfined().use { a -> val s = a.allocate(12L, 4L); s.set(JAVA_INT, 0, $valueExpr.x); s.set(JAVA_INT, 4, $valueExpr.y); s.set(JAVA_INT, 8, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3I).invoke(ret, s) }"
+        TypeMapping.QUATERNION -> "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
+        TypeMapping.BASIS -> "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
         TypeMapping.OBJECT -> "Arena.ofConfined().use { a -> val s = a.allocate(ADDRESS); s.set(ADDRESS, 0, $valueExpr.handle); VariantConverters.variantFromType(VariantType.OBJECT).invoke(ret, s) }"
         TypeMapping.ARRAY -> "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
     }
@@ -2669,13 +2802,7 @@ internal class ScriptCodeEmitter(
         }
 
     companion object {
-        private val RESOURCE_WRAPPER_FROM_HANDLE = setOf(
-            "net.multigesture.kanama.api.PackedScene",
-            "net.multigesture.kanama.api.Texture2D",
-            "net.multigesture.kanama.api.NoiseTexture2D",
-            "net.multigesture.kanama.api.ShaderMaterial",
-            "net.multigesture.kanama.api.Curve",
-        )
+        private val RESOURCE_WRAPPER_FROM_HANDLE = RESOURCE_WRAPPERS_WITH_FROM_HANDLE
 
         /** Turns a godot name like "_ready" or "my_speed" into a valid Kotlin field name. */
         private fun nameVar(godotName: String): String =

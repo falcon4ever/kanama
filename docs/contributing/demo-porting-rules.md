@@ -397,7 +397,7 @@ Validate with the active Godot preview baseline and any compatibility build
 needed by the task:
 
 ```bash
-/path/to/godot-4.7-beta-2/bin/godot.macos.editor.arm64
+/path/to/godot-4.7-beta-3/bin/godot.macos.editor.arm64
 /path/to/godot-4.7-stable/bin/godot.macos.editor.arm64
 ```
 

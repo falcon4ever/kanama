@@ -16,19 +16,19 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | --- | ---: |
 | API classes | 1036 |
 | Classes with generated output | 844 |
-| Classes with complete method generation | 736 |
-| Methods generated | 15262/16817 (90.8%) |
-| Methods skipped | 1555 |
-| Properties generated | 3654/4159 (87.9%) |
+| Classes with complete method generation | 735 |
+| Methods generated | 15263/16820 (90.7%) |
+| Methods skipped | 1557 |
+| Properties generated | 3656/4161 (87.9%) |
 | Signals generated | 503/503 (100.0%) |
 
 ## Skip Categories
 
 | Category | Skipped Methods |
 | --- | ---: |
-| Virtual/internal | 1436 |
+| Virtual/internal | 1437 |
 | Other | 49 |
-| Missing helper shape | 22 |
+| Missing helper shape | 23 |
 | Array / typed array | 12 |
 | Dictionary | 11 |
 | Variant | 9 |
@@ -55,6 +55,7 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | `args=('int32', 'int32', 'enum', 'Color', 'bool') return=void` | 1 |
 | `args=('Rect2i', 'Object', 'Color', 'int32', 'Object') return=void` | 1 |
 | `args=('Rect2i', 'TypedObjectArray::Texture2D', 'TypedObjectArray::DrawableTexture2D', 'Color', 'int32', 'Object') return=void` | 1 |
+| `args=('Object', 'bool', 'String', 'bitfield', 'bool') return=enum` | 1 |
 | `args=('Dictionary', 'int32', 'float', 'Transform2D', 'int32', 'int32', 'int32', 'int32', 'float', 'int64', 'PackedColorArray') return=RID` | 1 |
 | `args=('int64',) return=PackedColorArray` | 1 |
 | `args=('String', 'Variant', 'int32') return=void` | 1 |
@@ -65,13 +66,12 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | `args=('String', 'bool', 'bool', 'float') return=enum` | 1 |
 | `args=('bool', 'bool', 'float') return=PackedByteArray` | 1 |
 | `args=('TypedObjectArray::ImporterMesh', 'TypedTransform3DArray', 'bool') return=Object` | 1 |
-| `args=('Object', 'PackedStringArray') return=Object` | 1 |
 
 ## Top Skip Reasons
 
 | Reason | Count |
 | --- | ---: |
-| `internal/virtual callback methods are not emitted as public wrappers` | 1436 |
+| `internal/virtual callback methods are not emitted as public wrappers` | 1437 |
 | `root Object methods are exposed through the hand-shaped GodotObject policy` | 49 |
 | `unsupported helper shape args=('Dictionary',) return=Array` | 8 |
 | `unsupported helper shape args=('Dictionary',) return=Variant` | 6 |
@@ -89,13 +89,13 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | `unsupported helper shape args=('int32', 'int32', 'enum', 'Color', 'bool') return=void` | 1 |
 | `unsupported helper shape args=('Rect2i', 'Object', 'Color', 'int32', 'Object') return=void` | 1 |
 | `unsupported helper shape args=('Rect2i', 'TypedObjectArray::Texture2D', 'TypedObjectArray::DrawableTexture2D', 'Color', 'int32', 'Object') return=void` | 1 |
+| `unsupported helper shape args=('Object', 'bool', 'String', 'bitfield', 'bool') return=enum` | 1 |
 | `unsupported helper shape args=('Dictionary', 'int32', 'float', 'Transform2D', 'int32', 'int32', 'int32', 'int32', 'float', 'int64', 'PackedColorArray') return=RID` | 1 |
 | `unsupported helper shape args=('int64',) return=PackedColorArray` | 1 |
 | `unsupported helper shape args=('String', 'Variant', 'int32') return=void` | 1 |
 | `unsupported helper shape args=('Object', 'String', 'PackedStringArray') return=void` | 1 |
 | `unsupported helper shape args=('Vector3i',) return=TypedVector3iArray` | 1 |
 | `unsupported helper shape args=('Vector3i', 'int32') return=TypedVector3iArray` | 1 |
-| `unsupported helper shape args=('Vector3i',) return=Vector3i` | 1 |
 
 ## Complete Method Classes
 
@@ -113,7 +113,7 @@ These classes have every method covered by the conservative generator. Promotion
 | TreeItem | 125/125 | 4/4 | 0/0 |
 | ParticleProcessMaterial | 116/116 | 53/124 | 1/1 |
 | FontFile | 106/106 | 17/22 | 0/0 |
-| PopupMenu | 101/101 | 13/13 | 4/4 |
+| PopupMenu | 102/102 | 14/14 | 4/4 |
 | LineEdit | 97/97 | 36/36 | 4/4 |
 | TileSet | 90/90 | 5/5 | 0/0 |
 | CPUParticles3D | 90/90 | 39/77 | 1/1 |
@@ -178,6 +178,7 @@ These classes have every method covered by the conservative generator. Promotion
 | TileMap | 61/63 (96.8%) | 5/5 | 1/1 | 2 |
 | Tween | 27/28 (96.4%) | 0/0 | 3/3 | 1 |
 | AnimationNodeBlendSpace1D | 26/27 (96.3%) | 8/8 | 0/0 | 1 |
+| EditorExportPlatform | 26/27 (96.3%) | 0/0 | 0/0 | 1 |
 | OpenXRSpatialEntityExtension | 25/26 (96.2%) | 0/0 | 1/1 | 1 |
 | ImporterMesh | 24/25 (96.0%) | 0/0 | 0/0 | 1 |
 | Range | 23/24 (95.8%) | 10/10 | 2/2 | 1 |
@@ -207,7 +208,6 @@ These classes have every method covered by the conservative generator. Promotion
 | CollisionObject2D | 34/41 (82.9%) | 5/5 | 5/5 | 7 |
 | CameraFeed | 17/21 (81.0%) | 3/3 | 2/2 | 4 |
 | EditorContextMenuPlugin | 4/5 (80.0%) | 0/0 | 0/0 | 1 |
-| PCKPacker | 4/5 (80.0%) | 0/0 | 0/0 | 1 |
 
 ## Largest Generated Drafts
 

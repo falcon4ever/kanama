@@ -9,6 +9,7 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: ResourceLoader
  */
 object ResourceLoader {
+    data class ThreadLoadStatus(val status: Long, val progress: Double?)
 
     private const val STRING_PACKED_STRING_ARRAY_HASH = 3538744774L
     private const val STRING_BOOL_HASH = 2323990056L
@@ -201,6 +202,17 @@ object ResourceLoader {
     fun loadThreadedGetStatus(path: String, progress: List<Any?> = emptyList()): Long =
         ObjectCalls.ptrcallWithStringAndArrayArgRetLong(loadThreadedGetStatusBind, singleton, path, progress)
 
+    @JvmStatic
+    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+        val (status, progress) = ObjectCalls.ptrcallWithStringAndArrayArgRetLongAndArray(
+            loadThreadedGetStatusBind,
+            singleton,
+            path,
+            listOf(0.0),
+        )
+        return ThreadLoadStatus(status, (progress.firstOrNull() as? Number)?.toDouble())
+    }
+
     /**
      * Returns the resource loaded by `load_threaded_request`. If this is called before the loading
      * thread is done (i.e. `load_threaded_get_status` is not `THREAD_LOAD_LOADED`), the calling thread
@@ -212,6 +224,10 @@ object ResourceLoader {
     @JvmStatic
     fun loadThreadedGet(path: String): Resource? =
         Resource.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadThreadedGetBind, singleton, path))
+
+    @JvmStatic
+    fun loadThreadedGetPackedScene(path: String): PackedScene? =
+        PackedScene.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadThreadedGetBind, singleton, path))
 
     /**
      * Loads a resource at the given `path`, caching the result for further access. The registered
@@ -255,6 +271,12 @@ object ResourceLoader {
     fun loadAudioStream(path: String, cacheMode: Long = CACHE_MODE_REUSE): AudioStream? =
         AudioStream.wrap(
             ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "AudioStream", cacheMode),
+        )
+
+    @JvmStatic
+    fun loadLightmapGIData(path: String, cacheMode: Long = CACHE_MODE_REUSE): LightmapGIData? =
+        LightmapGIData.wrap(
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "LightmapGIData", cacheMode),
         )
 
     /**

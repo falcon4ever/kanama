@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 
 /**
  * A node that provides a `Shape3D` to a `CollisionObject3D` parent.
@@ -10,6 +11,11 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: CollisionShape3D
  */
 class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
+    var disabled: Boolean
+        @JvmName("disabledProperty")
+        get() = isDisabled()
+        @JvmName("setDisabledProperty")
+        set(value) = setDisabled(value)
 
     /**
      * This method does nothing.

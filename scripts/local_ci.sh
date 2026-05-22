@@ -119,6 +119,9 @@ PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_wrapper_abi_poli
 echo "[local_ci] API wrapper inheritance audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_api_wrapper_inheritance.py"
 
+echo "[local_ci] singleton RefCounted lifetime audit"
+python3 "$ROOT_DIR/scripts/audit_singleton_refcounted_policy.py"
+
 echo "[local_ci] conservative wrapper generator fixture"
 python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
 
@@ -244,6 +247,10 @@ if ! rg -q 'cleanup = \{ cleanupKanamaOwnedProperties\(kt\) \}' "$hello_script_r
 fi
 if ! rg -q 'closeKanamaOwned\("smoke_scene", kt\.smokeScene\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property reassignment cleanup is missing" >&2
+  exit 1
+fi
+if ! rg -q 'BuiltinTypes\.initVariantDictionary\(ret, mapOf\(' "$hello_script_registrar"; then
+  echo "[local_ci] generated RPC config must return a Variant-wrapped Dictionary" >&2
   exit 1
 fi
 

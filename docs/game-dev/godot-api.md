@@ -153,6 +153,12 @@ the assignment is done. Kotlin/JVM does not have GDScript's deterministic local
 reference cleanup, so relying on garbage collection can leave extra Godot
 references alive until shutdown.
 
+Do not register `RefCounted` values as engine singletons. Godot 4.7 beta 3
+warns for `Engine.register_singleton` with `RefCounted` instances because the
+engine singleton table stores a raw `Object*`, not a `Ref<>`. Kanama's
+`Engine.registerSingleton` wrapper rejects this shape before calling Godot; use
+an `Object`-derived singleton instead.
+
 Prefer convenience APIs when they exist. For audio players, use:
 
 ```kotlin

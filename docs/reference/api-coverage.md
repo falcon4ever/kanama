@@ -12,10 +12,10 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 | --- | ---: | --- |
 | API classes | 1036 |  |
 | Classes with generated output | 844 | `██████████░░` 81.5% |
-| Classes with complete method generation | 736 | `█████████░░░` 71.0% |
-| Methods generated | 15262/16817 (90.8%) | `███████████░` 90.8% |
-| Methods skipped | 1555 |  |
-| Properties generated | 3654/4159 (87.9%) | `███████████░` 87.9% |
+| Classes with complete method generation | 735 | `█████████░░░` 70.9% |
+| Methods generated | 15263/16820 (90.7%) | `███████████░` 90.7% |
+| Methods skipped | 1557 |  |
+| Properties generated | 3656/4161 (87.9%) | `███████████░` 87.9% |
 | Signals generated | 503/503 (100.0%) | `████████████` 100.0% |
 
 See [Wrapper Generator Report](wrapper-generator-report.md) for skip categories, missing helper shapes, and complete generated classes.
@@ -26,24 +26,24 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1032 / 1036 `████████████` 99.6%
-- Methods: 14955 / 16817 `███████████░` 88.9%
+- Methods: 14955 / 16820 `███████████░` 88.9%
 
 ## Promoted Source By Area
 
 | Area | Classes | Class Coverage | Methods | Method Coverage |
 | --- | ---: | --- | ---: | --- |
 | Core | 224/226 | `████████████` 99.1% | 2760/3466 | `██████████░░` 79.6% |
-| Scene | 26/26 | `████████████` 100.0% | 905/935 | `████████████` 96.8% |
+| Scene | 26/26 | `████████████` 100.0% | 905/936 | `████████████` 96.7% |
 | Resources | 305/306 | `████████████` 99.7% | 2847/3040 | `███████████░` 93.7% |
 | Input | 20/20 | `████████████` 100.0% | 219/238 | `███████████░` 92.0% |
-| UI | 69/69 | `████████████` 100.0% | 1694/1774 | `███████████░` 95.5% |
+| UI | 69/69 | `████████████` 100.0% | 1694/1775 | `███████████░` 95.4% |
 | 2D | 112/112 | `████████████` 100.0% | 2001/2252 | `███████████░` 88.9% |
 | 3D | 170/171 | `████████████` 99.4% | 2975/3270 | `███████████░` 91.0% |
 | Physics | 6/6 | `████████████` 100.0% | 55/58 | `███████████░` 94.8% |
 | Rendering | 24/24 | `████████████` 100.0% | 764/796 | `████████████` 96.0% |
 | Audio | 14/14 | `████████████` 100.0% | 232/242 | `████████████` 95.9% |
 | Multiplayer | 8/8 | `████████████` 100.0% | 66/98 | `████████░░░░` 67.3% |
-| Editor | 54/54 | `████████████` 100.0% | 437/648 | `████████░░░░` 67.4% |
+| Editor | 54/54 | `████████████` 100.0% | 437/649 | `████████░░░░` 67.3% |
 
 ## Demo Port Signals
 
@@ -295,7 +295,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `EditorInspectorPlugin` | Editor | 3/9 | `███░░░░░` 33.3% |
 | `EditorInterface` | Editor | 70/71 | `████████` 98.6% |
 | `EditorNode3DGizmo` | Editor | 13/25 | `████░░░░` 52.0% |
-| `EditorNode3DGizmoPlugin` | Editor | 5/23 | `██░░░░░░` 21.7% |
+| `EditorNode3DGizmoPlugin` | Editor | 5/24 | `██░░░░░░` 20.8% |
 | `EditorPaths` | Editor | 6/6 | `████████` 100.0% |
 | `EditorPlugin` | Editor | 51/76 | `█████░░░` 67.1% |
 | `EditorProperty` | Editor | 35/37 | `████████` 94.6% |
@@ -609,7 +609,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `OpenXRStructureBase` | Core | 3/4 | `██████░░` 75.0% |
 | `OpenXRVisibilityMask` | 3D | 0/0 | inherited only |
 | `OptimizedTranslation` | Resources | 1/1 | `████████` 100.0% |
-| `OptionButton` | UI | 36/43 | `███████░` 83.7% |
+| `OptionButton` | UI | 36/44 | `███████░` 81.8% |
 | `PCKPacker` | Core | 4/5 | `██████░░` 80.0% |
 | `PackedDataContainer` | Resources | 2/2 | `████████` 100.0% |
 | `PackedDataContainerRef` | Core | 1/1 | `████████` 100.0% |
@@ -680,7 +680,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `PolygonOccluder3D` | 3D | 2/2 | `████████` 100.0% |
 | `PolygonPathFinder` | Resources | 8/8 | `████████` 100.0% |
 | `Popup` | Scene | 0/0 | inherited only |
-| `PopupMenu` | Scene | 93/101 | `███████░` 92.1% |
+| `PopupMenu` | Scene | 93/102 | `███████░` 91.2% |
 | `PopupPanel` | Scene | 0/0 | inherited only |
 | `PortableCompressedTexture2D` | 2D | 9/9 | `████████` 100.0% |
 | `PrimitiveMesh` | Resources | 12/13 | `███████░` 92.3% |

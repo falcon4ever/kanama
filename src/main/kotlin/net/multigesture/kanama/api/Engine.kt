@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 
 /**
  * Provides access to engine properties.
@@ -9,6 +10,11 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: Engine
  */
 object Engine {
+    var maxFps: Long
+        @JvmName("maxFpsProperty")
+        get() = getMaxFps()
+        @JvmName("setMaxFpsProperty")
+        set(value) = setMaxFps(value)
 
     private const val GET_INT_HASH = 3905245786L
     private const val GET_FLOAT_HASH = 1740695150L
@@ -619,6 +625,9 @@ object Engine {
      */
     @JvmStatic
     fun registerSingleton(name: String, objectArg: MemorySegment) {
+        if (objectArg.address() != 0L && GodotObject(objectArg).isClass("RefCounted")) {
+            error("Engine.registerSingleton does not accept RefCounted instances; use an Object-derived singleton")
+        }
         ObjectCalls.ptrcallWithStringNameAndObjectArg(registerSingletonBind, singleton, name, objectArg)
     }
 

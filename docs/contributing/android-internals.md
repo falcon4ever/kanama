@@ -1,7 +1,7 @@
 # Android Internals
 
 This page records the current Android implementation path. Android is an
-experimental Kanama target for the Godot 4.7 beta 2 preview baseline, and the
+experimental Kanama target for the Godot 4.7 beta 3 preview baseline, and the
 API/build flow is less settled than the desktop path.
 
 ## What Works
@@ -56,7 +56,7 @@ The build tools are also separate from the runtime:
 
 - Desktop development currently uses JDK 25.
 - Godot's Android Gradle export flow is run with JDK 21.
-- Godot 4.7 beta 2 Android export templates require Android SDK platform API
+- Godot 4.7 beta 3 Android export templates require Android SDK platform API
   36, build-tools 36.1.0, and NDK 29.0.14206865.
 - The exported Android game runs on ART and PanamaPort, not on a desktop JVM.
 

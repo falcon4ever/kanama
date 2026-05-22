@@ -44,6 +44,9 @@ class KanamaScript(
     var writeScriptSignalList: (MemorySegment) -> Unit = {
         BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, it)
     },
+    var writeRpcConfig: (MemorySegment) -> Unit = {
+        BuiltinTypes.initNilVariant(it)
+    },
     var writeMethodInfo: (Long, MemorySegment) -> Boolean = { _, _ -> false },
     var hasPropertyDefault: (Long) -> Boolean = { false },
     var writePropertyDefault: (Long, MemorySegment) -> Boolean = { _, _ -> false },
@@ -97,6 +100,7 @@ class KanamaScript(
             val writeScriptMethodList: (MemorySegment) -> Unit,
             val writeScriptPropertyList: (MemorySegment) -> Unit,
             val writeScriptSignalList: (MemorySegment) -> Unit,
+            val writeRpcConfig: (MemorySegment) -> Unit,
             val writeMethodInfo: (Long, MemorySegment) -> Boolean,
             val hasPropertyDefault: (Long) -> Boolean,
             val writePropertyDefault: (Long, MemorySegment) -> Boolean,
@@ -190,6 +194,7 @@ class KanamaScript(
         private lateinit var hasScriptSignalStub: MemorySegment
         private lateinit var getMethodInfoStub: MemorySegment
         private lateinit var getScriptSignalListStub: MemorySegment
+        private lateinit var getRpcConfigStub: MemorySegment
         private lateinit var hasPropertyDefaultValueStub: MemorySegment
         private lateinit var getPropertyDefaultValueStub: MemorySegment
         private lateinit var updateExportsStub: MemorySegment
@@ -277,6 +282,7 @@ class KanamaScript(
             hasScriptSignalStub = Upcalls.stub(KanamaScript::class.java, "callHasScriptSignal", virtualType, virtualDesc)
             getMethodInfoStub = Upcalls.stub(KanamaScript::class.java, "callGetMethodInfo", virtualType, virtualDesc)
             getScriptSignalListStub = Upcalls.stub(KanamaScript::class.java, "callGetScriptSignalList", virtualType, virtualDesc)
+            getRpcConfigStub = Upcalls.stub(KanamaScript::class.java, "callGetRpcConfig", virtualType, virtualDesc)
             hasPropertyDefaultValueStub = Upcalls.stub(
                 KanamaScript::class.java, "callHasPropertyDefaultValue", virtualType, virtualDesc,
             )
@@ -338,6 +344,9 @@ class KanamaScript(
             writeScriptSignalList: (MemorySegment) -> Unit = {
                 BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, it)
             },
+            writeRpcConfig: (MemorySegment) -> Unit = {
+                BuiltinTypes.initNilVariant(it)
+            },
             writeMethodInfo: (Long, MemorySegment) -> Boolean = { _, _ -> false },
             hasPropertyDefault: (Long) -> Boolean = { false },
             writePropertyDefault: (Long, MemorySegment) -> Boolean = { _, _ -> false },
@@ -366,6 +375,7 @@ class KanamaScript(
                 writeScriptMethodList,
                 writeScriptPropertyList,
                 writeScriptSignalList,
+                writeRpcConfig,
                 writeMethodInfo,
                 hasPropertyDefault,
                 writePropertyDefault,
@@ -394,6 +404,7 @@ class KanamaScript(
                 writeScriptMethodList = writeScriptMethodList,
                 writeScriptPropertyList = writeScriptPropertyList,
                 writeScriptSignalList = writeScriptSignalList,
+                writeRpcConfig = writeRpcConfig,
                 writeMethodInfo = writeMethodInfo,
                 hasPropertyDefault = hasPropertyDefault,
                 writePropertyDefault = writePropertyDefault,
@@ -445,6 +456,9 @@ class KanamaScript(
                 writeScriptSignalList = {
                     BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, it)
                 },
+                writeRpcConfig = {
+                    BuiltinTypes.initNilVariant(it)
+                },
                 writeMethodInfo = { _, _ -> false },
                 hasPropertyDefault = { false },
                 writePropertyDefault = { _, _ -> false },
@@ -484,6 +498,7 @@ class KanamaScript(
             writeScriptMethodList: (MemorySegment) -> Unit,
             writeScriptPropertyList: (MemorySegment) -> Unit,
             writeScriptSignalList: (MemorySegment) -> Unit,
+            writeRpcConfig: (MemorySegment) -> Unit,
             writeMethodInfo: (Long, MemorySegment) -> Boolean,
             hasPropertyDefault: (Long) -> Boolean,
             writePropertyDefault: (Long, MemorySegment) -> Boolean,
@@ -503,6 +518,7 @@ class KanamaScript(
                 writeScriptMethodList = writeScriptMethodList,
                 writeScriptPropertyList = writeScriptPropertyList,
                 writeScriptSignalList = writeScriptSignalList,
+                writeRpcConfig = writeRpcConfig,
                 writeMethodInfo = writeMethodInfo,
                 hasPropertyDefault = hasPropertyDefault,
                 writePropertyDefault = writePropertyDefault,
@@ -532,6 +548,7 @@ class KanamaScript(
             script.writeScriptMethodList = template.writeScriptMethodList
             script.writeScriptPropertyList = template.writeScriptPropertyList
             script.writeScriptSignalList = template.writeScriptSignalList
+            script.writeRpcConfig = template.writeRpcConfig
             script.writeMethodInfo = template.writeMethodInfo
             script.hasPropertyDefault = template.hasPropertyDefault
             script.writePropertyDefault = template.writePropertyDefault
@@ -742,7 +759,7 @@ class KanamaScript(
                 hasScriptSignalNameValue -> hasScriptSignalStub
                 hasPropertyDefaultValueNameValue -> hasPropertyDefaultValueStub
                 getScriptMethodArgumentCountNameValue -> getScriptMethodArgumentCountStub
-                getRpcConfigNameValue -> nilVariantStub
+                getRpcConfigNameValue -> getRpcConfigStub
                 getPropertyDefaultValueNameValue -> getPropertyDefaultValueStub
                 updateExportsNameValue -> updateExportsStub
                 getMethodInfoNameValue -> getMethodInfoStub
@@ -948,6 +965,16 @@ class KanamaScript(
                 return
             }
             script.writeScriptSignalList(rRet)
+        }
+
+        @JvmStatic
+        fun callGetRpcConfig(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+            val script = ObjectRegistry.get(instance.address()) as? KanamaScript
+            if (script == null) {
+                BuiltinTypes.initNilVariant(rRet)
+                return
+            }
+            script.writeRpcConfig(rRet)
         }
 
         @JvmStatic

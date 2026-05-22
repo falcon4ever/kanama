@@ -36,7 +36,7 @@ versioning once public releases begin.
 - Hot reload support for desktop editor workflows.
 - Generated Godot API wrappers with reproducibility checks and ABI policy
   audits.
-- Promoted Kotlin wrapper classes for the Godot 4.7 beta 2 API baseline, with
+- Promoted Kotlin wrapper classes for the Godot 4.7 beta 3 API baseline, with
   conservative method coverage documented in the wrapper coverage report.
 - Generated KDoc carried from Godot API documentation for wrapper classes and
   methods.

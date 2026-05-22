@@ -674,6 +674,10 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun create(): LightmapGI =
+            LightmapGI(ObjectCalls.constructObject("LightmapGI"))
+
         private const val SET_LIGHT_DATA_HASH = 1790597277L
         private val setLightDataBind by lazy {
             ObjectCalls.getMethodBind("LightmapGI", "set_light_data", SET_LIGHT_DATA_HASH)
