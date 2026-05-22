@@ -52,6 +52,10 @@ awaits. For a `coinCollected(value: Long)` signal, KSP emits
 The string-based `signal(PlayerNames.Signals.coinCollected)` style remains
 available when you need lower-level Godot API behavior.
 
+RPC methods follow the same generated-helper pattern. See
+[Multiplayer](multiplayer.md#rpc-methods) for `@Rpc` sender helpers such as
+`PlayerRpcs.rpcJump(...)` and `PlayerRpcs.callLocalJump(...)`.
+
 ## Connecting Signals
 
 For existing Godot signals, use `signal(name)` when you want a small handle:

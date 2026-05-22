@@ -156,6 +156,9 @@ fun hitEnemy(damage: Long) = Unit
 PlayerSignals.hitEnemy(this, 10L)
 ```
 
+For multiplayer RPC methods, KSP also generates typed `*Rpcs` helpers from
+`@Rpc` declarations. See [Multiplayer](multiplayer.md).
+
 ## Node Lookup
 
 GDScript's `$NodeName` shorthand does not exist in Kanama. Use exported
@@ -201,8 +204,8 @@ classes must be in the same project and the referenced class must be
   `@RegisterFunction` method has Kotlin default parameters, Godot still requires
   all arguments when calling it. Pass them explicitly or use overloads.
 - **KSP must run** before IntelliJ resolves generated helpers like
-  `PlayerSignals`. Run a Gradle sync or build after adding new `@Signal`
-  declarations.
+  `PlayerSignals` or `PlayerRpcs`. Run a Gradle sync or build after adding new
+  `@Signal` or `@Rpc` declarations.
 - **`@Tool` scripts run in the editor.** Guard editor-only code against
   partially initialized scenes — exported node references may be `null` during
   editor tool execution. From a `KanamaScript` subclass, use `isEditorHint()`

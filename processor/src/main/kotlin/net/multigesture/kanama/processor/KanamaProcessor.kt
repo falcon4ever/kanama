@@ -944,6 +944,37 @@ private fun signalAwaitReturnExpr(args: List<ArgModel>): String =
         else -> "args"
     }
 
+private fun StringBuilder.appendRpcHelpers(simpleName: String, methods: List<MethodModel>) {
+    val rpcMethods = methods.filter { it.kind == MethodKind.REGULAR && it.rpc != null }
+    if (rpcMethods.isEmpty()) return
+
+    appendLine()
+    appendLine("object ${simpleName}Rpcs {")
+    for (method in rpcMethods) {
+        val helperSuffix = signalHelperSuffix(method.godotName)
+        val kotlinParams = method.args.joinToString(", ") { "${it.name}: ${it.kotlinType}" }
+        val params = if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""
+        val args = method.args.joinToString(", ") { it.name }
+        val rpcArgs = if (args.isNotEmpty()) ", $args" else ""
+        val godotName = kotlinStringLiteral(method.godotName)
+
+        appendLine("    fun rpc$helperSuffix(instance: $simpleName$params): Long =")
+        appendLine("        net.multigesture.kanama.api.Node(instance.godotObject).rpc(\"$godotName\"$rpcArgs)")
+        appendLine()
+        appendLine("    fun rpcId$helperSuffix(instance: $simpleName, peerId: Long$params): Long =")
+        appendLine("        net.multigesture.kanama.api.Node(instance.godotObject).rpcId(peerId, \"$godotName\"$rpcArgs)")
+
+        if (method.rpc?.callLocal == true) {
+            appendLine()
+            appendLine("    fun callLocal$helperSuffix(instance: $simpleName$params) {")
+            appendLine("        net.multigesture.kanama.api.Node(instance.godotObject).callLocalRpc(\"$godotName\"$rpcArgs)")
+            appendLine("    }")
+        }
+        appendLine()
+    }
+    appendLine("}")
+}
+
 private data class ToolButtonAnnotationArgs(
     val text: String? = null,
     val icon: String? = null,
@@ -1451,6 +1482,7 @@ internal class CodeEmitter(
         propertyUpcalls()
         classClose()
         signalHelpers()
+        sb.appendRpcHelpers(model.simpleName, model.methods)
         nameConstants()
         return sb.toString()
     }
@@ -1987,6 +2019,7 @@ internal class ScriptCodeEmitter(
         emitCleanupHelpers()
         objectClose()
         signalHelpers()
+        sb.appendRpcHelpers(model.simpleName, model.methods)
         nameConstants()
         return sb.toString()
     }

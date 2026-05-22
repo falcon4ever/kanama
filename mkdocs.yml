@@ -42,6 +42,7 @@ nav:
       - Calling Godot APIs: game-dev/godot-api.md
       - Exports and Resources: game-dev/properties-resources.md
       - Signals and Callbacks: game-dev/signals.md
+      - Multiplayer: game-dev/multiplayer.md
       - Porting GDScript: game-dev/porting-gdscript.md
       - Kotlin Style: game-dev/style-guide.md
   - Exporting:

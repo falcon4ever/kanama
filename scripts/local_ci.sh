@@ -253,6 +253,22 @@ if ! rg -q 'BuiltinTypes\.initVariantDictionary\(ret, mapOf\(' "$hello_script_re
   echo "[local_ci] generated RPC config must return a Variant-wrapped Dictionary" >&2
   exit 1
 fi
+if ! rg -q 'object HelloScriptRpcs' "$hello_script_registrar"; then
+  echo "[local_ci] generated RPC sender helper object is missing" >&2
+  exit 1
+fi
+if ! rg -q 'fun rpcReplaceSmokeScene\(instance: HelloScript\): Long =' "$hello_script_registrar"; then
+  echo "[local_ci] generated RPC sender helper is missing" >&2
+  exit 1
+fi
+if ! rg -q 'fun rpcIdReplaceSmokeScene\(instance: HelloScript, peerId: Long\): Long =' "$hello_script_registrar"; then
+  echo "[local_ci] generated RPC peer-targeted sender helper is missing" >&2
+  exit 1
+fi
+if ! rg -q 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_script_registrar"; then
+  echo "[local_ci] generated call-local RPC sender helper is missing" >&2
+  exit 1
+fi
 
 echo "[local_ci] external addon install"
 install_check_dir="${TMPDIR:-/tmp}/kanama_local_ci_install"

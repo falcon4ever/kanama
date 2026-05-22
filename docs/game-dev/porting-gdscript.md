@@ -37,10 +37,21 @@ of leaving a project-specific workaround.
 - Keep `GodotObject.call(...)` at true mixed-language boundaries, such as a
   GDScript autoload kept during an incremental port. Use typed wrappers and
   direct Kotlin calls for known Kanama scripts.
+- For `@Rpc` methods on Kanama scripts, use generated `*Rpcs` sender helpers
+  instead of raw `rpc("method_name")` strings.
+- For scenes with `MultiplayerSynchronizer`, verify every replicated custom
+  `.:property` is exposed with `@ScriptProperty`.
 
 When a typed lookup fails, check the actual runtime class before changing the
 helper. Godot often imports GLB scene roots as `Node3D`, with the mesh attached
 as a descendant, even when the visual asset is conceptually a mesh.
+
+For multiplayer ports, run the static guardrails after the first working pass:
+
+```sh
+python3 scripts/audit_runtime_node_lookups.py /path/to/godot_project/kotlin-src
+python3 scripts/audit_replicated_script_properties.py /path/to/godot_project
+```
 
 ## Common Porting Patterns
 
