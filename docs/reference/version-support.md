@@ -1,6 +1,6 @@
 # Version Support
 
-Kanama `0.2.0` is the current public preview line. This page records the
+Kanama `0.2.1` is the current public preview line. This page records the
 platforms and engine versions validated for the current preview.
 
 ## Current Support Claims
@@ -29,7 +29,7 @@ Kotlin wrapper sources. For this preview, that API baseline is Godot 4.7 beta
 
 ## Kanama Version
 
-The current Gradle artifact version is `0.2.0`.
+The current Gradle artifact version is `0.2.1`.
 
 Release version changes should be paired with matching Gradle coordinates, docs
 snippets, demo project versions, badges, changelog headings, and a passing

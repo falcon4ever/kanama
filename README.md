@@ -32,20 +32,20 @@ separate project with a different runtime and export model.
 
 ## Status
 
-Kanama is experimental and desktop-first. The `0.2.0` preview baseline is
+Kanama is experimental and desktop-first. The `0.2.1` preview baseline is
 Godot 4.7 beta 3. Use the
 [Godot 4.7 beta 3 archive](https://godotengine.org/download/archive/4.7-beta3/)
 for compatible editor/player binaries and Android export templates. Native
 packaged desktop exports are not release claims for the current preview.
 
-Android support is experimental for the v0.2.0 line: the current workflow builds
+Android support is experimental for the v0.2.1 line: the current workflow builds
 a Godot Android plugin AAR, uses
 [PanamaPort](https://github.com/vova7878/PanamaPort) from Maven Central for the
 Android FFM layer, and has emulator/Pixel 7 smoke coverage for public demo APKs.
 Web export is not planned.
 
 See [Version Support](docs/reference/version-support.md) for the current test matrix and
-the `0.2.0` public preview criteria.
+the `0.2.1` public preview criteria.
 
 ## Highlights
 

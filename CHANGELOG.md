@@ -7,6 +7,26 @@ versioning once public releases begin.
 
 ## Unreleased
 
+## 0.2.1 - 2026-05-26
+
+### Added
+
+- Fresh-clone smoke validation for release checks and clean source checkouts.
+- A ready-to-run starter project creation task for first-time Kanama projects.
+
+### Changed
+
+- First-run documentation now starts from the new starter project flow and
+  source-install validation path.
+- Clean Gradle environments now get explicit JVM memory defaults.
+
+### Fixed
+
+- Local CI now creates the generated Godot GDExtension header when it is missing
+  from a fresh checkout.
+- Maven local validation now publishes/checks the current Kanama version in the
+  effective Maven local repository.
+
 ## 0.2.0 - 2026-05-26
 
 ### Added

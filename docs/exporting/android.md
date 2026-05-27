@@ -1,6 +1,6 @@
 # Android Experimental
 
-Kanama's Android path is experimental for the v0.2.0 line and currently tracks
+Kanama's Android path is experimental for the v0.2.1 line and currently tracks
 the Godot 4.7 beta 3 preview baseline. It proves that Kanama can run inside a
 stock Godot Android export through a Godot Android plugin AAR, without a Godot
 fork and without custom JNI in game code.
