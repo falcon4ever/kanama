@@ -14,8 +14,9 @@ import java.lang.invoke.MethodHandle
  * types we have to hand to almost every ClassDB call.
  *
  * Both types allocate their storage in [GodotFFI.arena] so it lives as
- * long as the JVM. We never destruct them; the engine treats them as
- * shared interned handles and godot-cpp does the same trick.
+ * long as the JVM. StringName values are cached by text because hot paths
+ * such as Object.set("parameters/...", value) can otherwise allocate the
+ * same native wrapper every frame.
  */
 object GodotStrings {
 
@@ -36,7 +37,7 @@ object GodotStrings {
         )
     }
 
-    private val ownedStringNames = mutableListOf<MemorySegment>()
+    private val ownedStringNames = LinkedHashMap<String, MemorySegment>()
 
     private val stringNew by lazy {
         GodotFFI.lookup(
@@ -46,13 +47,15 @@ object GodotStrings {
     }
 
     fun makeStringName(value: String): MemorySegment {
-        val storage = GodotFFI.arena.allocate(STRING_NAME_SIZE, 8)
-        val cString = GodotFFI.arena.allocateFrom(value)
-        stringNameNew.invoke(storage, cString)
-        synchronized(ownedStringNames) {
-            ownedStringNames += storage
+        return synchronized(ownedStringNames) {
+            ownedStringNames[value] ?: run {
+                val storage = GodotFFI.arena.allocate(STRING_NAME_SIZE, 8)
+                val cString = GodotFFI.arena.allocateFrom(value)
+                stringNameNew.invoke(storage, cString)
+                ownedStringNames[value] = storage
+                storage
+            }
         }
-        return storage
     }
 
     fun makeString(value: String): MemorySegment {
@@ -186,7 +189,7 @@ object GodotStrings {
     /** Release all StringName storage owned by this runtime. */
     fun destroyOwnedStringNames() {
         val snapshot = synchronized(ownedStringNames) {
-            ownedStringNames.toList().also { ownedStringNames.clear() }
+            ownedStringNames.values.toList().also { ownedStringNames.clear() }
         }
         if (snapshot.isEmpty()) return
         var destroyed = 0
