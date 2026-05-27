@@ -98,6 +98,14 @@ ignore `kanama_bootstrap.dll`, `libkanama_bootstrap.so`, and
 `libkanama_bootstrap.dylib`; rebuild the matching library locally for the
 platform under test instead of committing it.
 
+Current macOS GitHub artifacts are not Apple-notarized. If Gatekeeper reports
+`"libkanama_bootstrap.dylib" Not Opened` after unzipping a downloaded desktop
+kit or store addon, clear quarantine on the project copy you trust:
+
+```sh
+xattr -dr com.apple.quarantine /absolute/path/to/project
+```
+
 ## Exported Games
 
 Exported desktop game packaging is still a separate release-readiness track.

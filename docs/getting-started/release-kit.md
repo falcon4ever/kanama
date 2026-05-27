@@ -69,6 +69,7 @@ root project files such as `project.godot`, `build.gradle.kts`, and `gradlew`.
 | Symptom | Fix |
 | --- | --- |
 | Godot cannot find `libjvm`. | Install JDK 25+ and set `JAVA_HOME` to the JDK home directory. |
+| macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | The downloaded zip was quarantined by Gatekeeper. After unzipping a Kanama artifact you trust, run `xattr -dr com.apple.quarantine /absolute/path/to/project` before opening it in Godot. |
 | Godot still runs old Kotlin behavior. | Press **Build Scripts** or rerun `./gradlew buildScripts`. |
 | Gradle cannot resolve Kanama dependencies. | Confirm `addons/kanama/maven` exists; the release kit resolves Kanama from that local Maven repo. |
 | Godot reports missing `res://*.kt` scripts. | Confirm `.godot/extension_list.cfg` contains `res://addons/kanama/kanama.gdextension`, then reopen/import the project. |

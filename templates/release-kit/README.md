@@ -23,3 +23,13 @@ adds a `Build Scripts` button that runs the same Gradle task.
 
 - Godot 4.7 beta 3 or newer matching Kanama's supported Godot version.
 - JDK 25 or newer. Set `JAVA_HOME` if Kanama cannot find `libjvm`.
+
+## macOS Gatekeeper
+
+GitHub-downloaded Kanama zips may be quarantined by macOS. If Godot reports
+`"libkanama_bootstrap.dylib" Not Opened`, clear quarantine on the unzipped
+project copy you trust:
+
+```sh
+xattr -dr com.apple.quarantine /absolute/path/to/project
+```
