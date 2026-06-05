@@ -15,13 +15,17 @@ The current direction is:
 The spike builds debug and release iOS `.xcframework` artifacts with device
 `arm64` and Apple Silicon simulator `arm64` slices. The Kotlin/Native runtime
 currently proves the loader path, lifecycle callbacks, a main-loop frame
-callback, and one cached typed Godot call from Kotlin/Native:
+callback, one cached typed Godot call from Kotlin/Native, and a minimal
+built-in `.kt` script-resource probe:
 
 ```text
 Godot iOS export -> C shim -> Kotlin/Native runtime -> typed ptrcall
 ```
 
-It does not yet run Kanama scripts on iOS.
+The script probe registers a `ScriptLanguageExtension`, `ScriptExtension`, and
+`.kt` `ResourceFormatLoader`, attaches a test `.kt` resource to a `Label`, and
+uses a Kotlin/Native `_ready` callback to update that owner. It does not yet
+compile or run arbitrary Kanama project scripts on iOS.
 
 ## Build The iOS Artifacts
 
@@ -83,6 +87,8 @@ ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
 - Device export requires signing identities and provisioning and is a later
   validation target.
 - Hot reload is out of scope for the first iOS backend.
+- KSP metadata, user project script compilation, Kotlin Multiplatform source
+  layout, and real demo ports are still future work for the iOS backend.
 - The production path must port the runtime through backend-neutral wrappers
   and prefer cached typed calls over Variant-heavy or allocation-heavy paths.
 
@@ -93,7 +99,13 @@ install, app launch, and a simple Godot render path. With `--kanama-probe`, it
 also proves a Kotlin/Native main-loop frame callback can call back into Godot
 through the C shim and update a normal `Label` via typed `ptrcall`.
 
-Neither mode proves Kanama script execution yet.
+With `--kanama-script-probe`, it attaches a `.kt` script resource to a normal
+`Label` and proves that the iOS shim can create a script resource, create a
+Godot script instance, enter Kotlin/Native from `_ready`, and call back into
+Godot through a cached typed `ptrcall`.
+
+These modes still do not prove general Kanama script execution, KSP-generated
+registrars, project-specific Kotlin/Native compilation, or hot reload.
 
 ```sh
 scripts/ios_visual_smoke.sh \
@@ -108,6 +120,14 @@ scripts/ios_visual_smoke.sh \
   --kanama-probe
 ```
 
+Run the attached `.kt` script-resource probe with:
+
+```sh
+scripts/ios_visual_smoke.sh \
+  --godot /Applications/Godot.app/Contents/MacOS/Godot \
+  --kanama-script-probe
+```
+
 If the installed Godot iOS template is missing `arm64` simulator support, build
 a matching Godot simulator library and pass it explicitly:
 
@@ -118,7 +138,7 @@ scons platform=ios target=template_debug arch=arm64 simulator=yes precision=sing
 scripts/ios_visual_smoke.sh \
   --godot /Applications/Godot.app/Contents/MacOS/Godot \
   --godot-simulator-lib /absolute/path/to/libgodot.ios.template_debug.arm64.simulator.a \
-  --kanama-probe
+  --kanama-script-probe
 ```
 
 ## Apple Silicon Simulator Notes

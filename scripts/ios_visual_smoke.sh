@@ -23,6 +23,9 @@ Options:
   --kanama-probe               Add a normal Label to the kanama_ios_probe
                                group. The iOS runtime's main-loop callback
                                updates it from Kotlin/Native via ptrcall.
+  --kanama-script-probe        Attach a .kt script resource to a normal Label.
+                               The iOS runtime creates a ScriptInstance and
+                               updates the Label from Kotlin/Native _ready.
   --work-dir DIR               Smoke workspace. Defaults to a new /tmp dir.
   --keep-running               Leave the launched simulator app running.
   --help, -h                   Show this help.
@@ -39,6 +42,7 @@ godot_simulator_lib="${KANAMA_IOS_GODOT_SIMULATOR_LIB:-}"
 work_dir=""
 keep_running=0
 kanama_probe=0
+kanama_script_probe=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -60,6 +64,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --kanama-probe)
       kanama_probe=1
+      shift
+      ;;
+    --kanama-script-probe)
+      kanama_script_probe=1
       shift
       ;;
     --work-dir)
@@ -86,6 +94,11 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ "$kanama_probe" -eq 1 && "$kanama_script_probe" -eq 1 ]]; then
+  echo "[ios_visual_smoke] --kanama-probe and --kanama-script-probe are mutually exclusive" >&2
+  exit 2
+fi
 
 if [[ ! -x "$godot_bin" ]]; then
   echo "[ios_visual_smoke] Godot binary is not executable: $godot_bin" >&2
@@ -136,6 +149,8 @@ echo "[ios_visual_smoke] work dir: $work_dir"
 echo "[ios_visual_smoke] simulator: $device_udid"
 if [[ "$kanama_probe" -eq 1 ]]; then
   echo "[ios_visual_smoke] mode: grouped Label Kotlin/Native frame smoke"
+elif [[ "$kanama_script_probe" -eq 1 ]]; then
+  echo "[ios_visual_smoke] mode: attached .kt Kotlin/Native script smoke"
 else
   echo "[ios_visual_smoke] mode: pure Godot render smoke"
 fi
@@ -149,13 +164,27 @@ cp "$ROOT_DIR/docs/assets/kanama-logo.png" "$project_dir/icon.png"
 status_node_type="Label"
 status_node_groups=""
 status_text="Pure Godot iOS render smoke"
+scene_header="[gd_scene format=3]"
+script_resource_line=""
+status_script_line=""
 if [[ "$kanama_probe" -eq 1 ]]; then
   status_node_groups=' groups=["kanama_ios_probe"]'
   status_text="Waiting for Kanama iOS frame probe"
+elif [[ "$kanama_script_probe" -eq 1 ]]; then
+  status_text="Waiting for Kanama iOS script probe"
+  scene_header='[gd_scene load_steps=2 format=3]'
+  script_resource_line='[ext_resource type="Script" path="res://kanama_ios_probe.kt" id="1_probe"]'
+  status_script_line='script = ExtResource("1_probe")'
+  cat >"$project_dir/kanama_ios_probe.kt" <<'EOF'
+// Kanama iOS script smoke resource.
+// The experimental iOS backend binds this file to a built-in Kotlin/Native probe.
+EOF
 fi
 
 cat >"$project_dir/main.tscn" <<EOF
-[gd_scene format=3]
+$scene_header
+
+$script_resource_line
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -192,6 +221,7 @@ theme_override_font_sizes/font_size = 34
 text = "$status_text"
 horizontal_alignment = 1
 vertical_alignment = 1
+$status_script_line
 EOF
 
 if ! rg -q '^\[rendering\]' "$project_dir/project.godot"; then
@@ -401,6 +431,15 @@ if [[ "$kanama_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] grouped probe label update log detected"
   else
     echo "[ios_visual_smoke] grouped probe label update log missing" >&2
+    exit 1
+  fi
+fi
+
+if [[ "$kanama_script_probe" -eq 1 ]]; then
+  if rg -q 'script instance ready' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] script instance ready log detected"
+  else
+    echo "[ios_visual_smoke] script instance ready log missing" >&2
     exit 1
   fi
 fi

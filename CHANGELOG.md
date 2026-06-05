@@ -15,6 +15,10 @@ versioning once public releases begin.
 - Added iOS simulator validation tooling: a Godot iOS export-template preflight
   and a visual simulator smoke script with an optional Kotlin/Native frame
   probe that updates a Godot `Label` through a cached typed `ptrcall`.
+- Added an iOS simulator `.kt` script-resource probe that registers minimal
+  script-language/resource-loader shims, creates a Godot script instance, and
+  enters Kotlin/Native from `_ready`. This remains a spike and does not yet
+  support arbitrary Kanama project scripts on iOS.
 
 ### Changed
 
