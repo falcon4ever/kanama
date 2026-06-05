@@ -52,6 +52,7 @@ nav:
   - Exporting:
       - Desktop and Packaging: exporting/desktop.md
       - Android Experimental: exporting/android.md
+      - iOS Spike: exporting/ios.md
   - Reference:
       - Version Support: reference/version-support.md
       - API Coverage: reference/api-coverage.md

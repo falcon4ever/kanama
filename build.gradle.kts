@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.21" apply false
+    kotlin("multiplatform") version "2.3.21" apply false
     id("com.google.devtools.ksp") version "2.3.9" apply false
 }
 
@@ -233,6 +234,32 @@ fun File.enableAndroidKanamaGdextensionMetadata() {
         lines.add(insertIndex, "android_aar_plugin = true")
     }
 
+    val missingLibraryLines = requiredLibraryLines.filter { it !in lines }
+    if (missingLibraryLines.isNotEmpty()) {
+        val librariesIndex = lines.indexOf("[libraries]").takeIf { it >= 0 }
+            ?: run {
+                if (lines.lastOrNull()?.isNotBlank() == true) {
+                    lines.add("")
+                }
+                lines.add("[libraries]")
+                lines.lastIndex
+            }
+        val insertIndex = lines.withIndex()
+            .drop(librariesIndex + 1)
+            .firstOrNull { it.value.startsWith("[") }
+            ?.index
+            ?: lines.size
+        lines.addAll(insertIndex, missingLibraryLines)
+    }
+    writeText(lines.joinToString(System.lineSeparator()) + System.lineSeparator())
+}
+
+fun File.enableIosKanamaGdextensionMetadata() {
+    val requiredLibraryLines = listOf(
+        "ios.debug.arm64 = \"res://addons/kanama/bin/ios/kanama_ios.debug.xcframework\"",
+        "ios.release.arm64 = \"res://addons/kanama/bin/ios/kanama_ios.release.xcframework\"",
+    )
+    val lines = readLines().toMutableList()
     val missingLibraryLines = requiredLibraryLines.filter { it !in lines }
     if (missingLibraryLines.isNotEmpty()) {
         val librariesIndex = lines.indexOf("[libraries]").takeIf { it >= 0 }
@@ -667,6 +694,368 @@ tasks.register("packageDistributions") {
     group = "distribution"
     description = "Build the desktop kit, native store artifact, and local host store addon."
     dependsOn("packageDesktopKit", "packageStoreNativeArtifact", "packageStoreAddon")
+}
+
+val xcodeDeveloperDir = providers.gradleProperty("kanamaXcodeDeveloperDir")
+    .orElse("/Applications/Xcode.app/Contents/Developer")
+val godotIosTemplateZip = providers.gradleProperty("kanamaGodotIosTemplateZip")
+    .orElse(providers.environmentVariable("GODOT_IOS_TEMPLATE_ZIP"))
+    .orElse(
+        providers.provider {
+            "${System.getProperty("user.home")}/Library/Application Support/Godot/export_templates/4.7.beta5/ios.zip"
+        },
+    )
+val iosMinimumDeploymentTarget = providers.gradleProperty("kanamaIosMinVersion").orElse("14.0")
+val iosBuildDir = layout.buildDirectory.dir("ios")
+val iosShimSource = layout.projectDirectory.file("ios/bootstrap/kanama_ios_shim.c")
+val iosHeaderDir = layout.projectDirectory.dir("ios/include")
+val iosDebugXcframeworkDir = iosBuildDir.map { it.dir("xcframework/debug/kanama_ios.debug.xcframework") }
+val iosReleaseXcframeworkDir = iosBuildDir.map { it.dir("xcframework/release/kanama_ios.release.xcframework") }
+
+fun appleSdkPath(sdk: String): String {
+    return providers.exec {
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+        commandLine("xcrun", "--sdk", sdk, "--show-sdk-path")
+    }.standardOutput.asText.get().trim()
+}
+
+fun registerCompileIosShimTask(
+    name: String,
+    sdk: String,
+    minVersionFlag: String,
+    outputObjectPath: Provider<RegularFile>,
+) = tasks.register<Exec>(name) {
+    group = "ios"
+    description = "Compile the Kanama iOS GDExtension C shim for $sdk."
+
+    inputs.file(iosShimSource)
+    inputs.file(layout.projectDirectory.file("gdextension/gdextension_interface.h"))
+    inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
+    inputs.property("kanamaIosMinVersion", iosMinimumDeploymentTarget)
+    outputs.file(outputObjectPath)
+
+    doFirst {
+        val outputObject = outputObjectPath.get().asFile
+        outputObject.parentFile.mkdirs()
+        commandLine(
+            "xcrun",
+            "--sdk",
+            sdk,
+            "clang",
+            "-arch",
+            "arm64",
+            "-isysroot",
+            appleSdkPath(sdk),
+            "$minVersionFlag=${iosMinimumDeploymentTarget.get()}",
+            "-fvisibility=hidden",
+            "-I",
+            layout.projectDirectory.dir("gdextension").asFile.absolutePath,
+            "-c",
+            iosShimSource.asFile.absolutePath,
+            "-o",
+            outputObject.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+
+fun registerCreateIosXcframeworkTask(
+    name: String,
+    deviceLibTask: TaskProvider<Exec>,
+    simulatorLibTask: TaskProvider<Exec>,
+    deviceLibPath: Provider<RegularFile>,
+    simulatorLibPath: Provider<RegularFile>,
+    outputDir: Provider<Directory>,
+) = tasks.register<Exec>(name) {
+    group = "ios"
+    description = "Create the Kanama iOS ${name.removePrefix("createIos").removeSuffix("Xcframework").lowercase()} xcframework."
+
+    dependsOn(deviceLibTask)
+    dependsOn(simulatorLibTask)
+    inputs.file(deviceLibPath)
+    inputs.file(simulatorLibPath)
+    inputs.dir(iosHeaderDir)
+    inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
+    outputs.dir(outputDir)
+
+    doFirst {
+        val xcframeworkDir = outputDir.get().asFile
+        if (xcframeworkDir.exists()) {
+            xcframeworkDir.deleteRecursively()
+        }
+        commandLine(
+            "xcodebuild",
+            "-create-xcframework",
+            "-library",
+            deviceLibPath.get().asFile.absolutePath,
+            "-headers",
+            iosHeaderDir.asFile.absolutePath,
+            "-library",
+            simulatorLibPath.get().asFile.absolutePath,
+            "-headers",
+            iosHeaderDir.asFile.absolutePath,
+            "-output",
+            xcframeworkDir.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+
+fun iosRuntimeStaticLib(target: String, buildType: String): Provider<RegularFile> =
+    project(":ios-runtime").layout.buildDirectory.file("bin/$target/${buildType}Static/libkanama_ios_runtime.a")
+
+val compileIosDeviceDebugShim = registerCompileIosShimTask(
+    "compileIosDeviceDebugShim",
+    "iphoneos",
+    "-miphoneos-version-min",
+    iosBuildDir.map { it.file("shim/iphoneos/debug/kanama_ios_shim.o") },
+)
+val compileIosDeviceReleaseShim = registerCompileIosShimTask(
+    "compileIosDeviceReleaseShim",
+    "iphoneos",
+    "-miphoneos-version-min",
+    iosBuildDir.map { it.file("shim/iphoneos/release/kanama_ios_shim.o") },
+)
+val compileIosSimulatorDebugShim = registerCompileIosShimTask(
+    "compileIosSimulatorDebugShim",
+    "iphonesimulator",
+    "-mios-simulator-version-min",
+    iosBuildDir.map { it.file("shim/iphonesimulator/debug/kanama_ios_shim.o") },
+)
+val compileIosSimulatorReleaseShim = registerCompileIosShimTask(
+    "compileIosSimulatorReleaseShim",
+    "iphonesimulator",
+    "-mios-simulator-version-min",
+    iosBuildDir.map { it.file("shim/iphonesimulator/release/kanama_ios_shim.o") },
+)
+
+val combineIosDeviceDebugLib = tasks.register<Exec>("combineIosDeviceDebugLib") {
+    group = "ios"
+    description = "Combine the Kanama iOS device debug static library."
+    dependsOn(":ios-runtime:linkDebugStaticIosArm64")
+    dependsOn(compileIosDeviceDebugShim)
+    val outputLibPath = iosBuildDir.map { it.file("lib/iphoneos/debug/libkanama_ios.a") }
+    inputs.file(iosRuntimeStaticLib("iosArm64", "debug"))
+    inputs.file(iosBuildDir.map { it.file("shim/iphoneos/debug/kanama_ios_shim.o") })
+    outputs.file(outputLibPath)
+    doFirst {
+        val outputLib = outputLibPath.get().asFile
+        outputLib.parentFile.mkdirs()
+        commandLine(
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "libtool",
+            "-static",
+            "-o",
+            outputLib.absolutePath,
+            iosBuildDir.get().file("shim/iphoneos/debug/kanama_ios_shim.o").asFile.absolutePath,
+            iosRuntimeStaticLib("iosArm64", "debug").get().asFile.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+val combineIosDeviceReleaseLib = tasks.register<Exec>("combineIosDeviceReleaseLib") {
+    group = "ios"
+    description = "Combine the Kanama iOS device release static library."
+    dependsOn(":ios-runtime:linkReleaseStaticIosArm64")
+    dependsOn(compileIosDeviceReleaseShim)
+    val outputLibPath = iosBuildDir.map { it.file("lib/iphoneos/release/libkanama_ios.a") }
+    inputs.file(iosRuntimeStaticLib("iosArm64", "release"))
+    inputs.file(iosBuildDir.map { it.file("shim/iphoneos/release/kanama_ios_shim.o") })
+    outputs.file(outputLibPath)
+    doFirst {
+        val outputLib = outputLibPath.get().asFile
+        outputLib.parentFile.mkdirs()
+        commandLine(
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "libtool",
+            "-static",
+            "-o",
+            outputLib.absolutePath,
+            iosBuildDir.get().file("shim/iphoneos/release/kanama_ios_shim.o").asFile.absolutePath,
+            iosRuntimeStaticLib("iosArm64", "release").get().asFile.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+val combineIosSimulatorDebugLib = tasks.register<Exec>("combineIosSimulatorDebugLib") {
+    group = "ios"
+    description = "Combine the Kanama iOS simulator debug static library."
+    dependsOn(":ios-runtime:linkDebugStaticIosSimulatorArm64")
+    dependsOn(compileIosSimulatorDebugShim)
+    val outputLibPath = iosBuildDir.map { it.file("lib/iphonesimulator/debug/libkanama_ios.a") }
+    inputs.file(iosRuntimeStaticLib("iosSimulatorArm64", "debug"))
+    inputs.file(iosBuildDir.map { it.file("shim/iphonesimulator/debug/kanama_ios_shim.o") })
+    outputs.file(outputLibPath)
+    doFirst {
+        val outputLib = outputLibPath.get().asFile
+        outputLib.parentFile.mkdirs()
+        commandLine(
+            "xcrun",
+            "--sdk",
+            "iphonesimulator",
+            "libtool",
+            "-static",
+            "-o",
+            outputLib.absolutePath,
+            iosBuildDir.get().file("shim/iphonesimulator/debug/kanama_ios_shim.o").asFile.absolutePath,
+            iosRuntimeStaticLib("iosSimulatorArm64", "debug").get().asFile.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+val combineIosSimulatorReleaseLib = tasks.register<Exec>("combineIosSimulatorReleaseLib") {
+    group = "ios"
+    description = "Combine the Kanama iOS simulator release static library."
+    dependsOn(":ios-runtime:linkReleaseStaticIosSimulatorArm64")
+    dependsOn(compileIosSimulatorReleaseShim)
+    val outputLibPath = iosBuildDir.map { it.file("lib/iphonesimulator/release/libkanama_ios.a") }
+    inputs.file(iosRuntimeStaticLib("iosSimulatorArm64", "release"))
+    inputs.file(iosBuildDir.map { it.file("shim/iphonesimulator/release/kanama_ios_shim.o") })
+    outputs.file(outputLibPath)
+    doFirst {
+        val outputLib = outputLibPath.get().asFile
+        outputLib.parentFile.mkdirs()
+        commandLine(
+            "xcrun",
+            "--sdk",
+            "iphonesimulator",
+            "libtool",
+            "-static",
+            "-o",
+            outputLib.absolutePath,
+            iosBuildDir.get().file("shim/iphonesimulator/release/kanama_ios_shim.o").asFile.absolutePath,
+            iosRuntimeStaticLib("iosSimulatorArm64", "release").get().asFile.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+
+val createIosDebugXcframework = registerCreateIosXcframeworkTask(
+    "createIosDebugXcframework",
+    combineIosDeviceDebugLib,
+    combineIosSimulatorDebugLib,
+    iosBuildDir.map { it.file("lib/iphoneos/debug/libkanama_ios.a") },
+    iosBuildDir.map { it.file("lib/iphonesimulator/debug/libkanama_ios.a") },
+    iosDebugXcframeworkDir,
+)
+val createIosReleaseXcframework = registerCreateIosXcframeworkTask(
+    "createIosReleaseXcframework",
+    combineIosDeviceReleaseLib,
+    combineIosSimulatorReleaseLib,
+    iosBuildDir.map { it.file("lib/iphoneos/release/libkanama_ios.a") },
+    iosBuildDir.map { it.file("lib/iphonesimulator/release/libkanama_ios.a") },
+    iosReleaseXcframeworkDir,
+)
+
+tasks.register("assembleIosKanamaXcframework") {
+    group = "ios"
+    description = "Build the experimental Kanama iOS Kotlin/Native xcframeworks."
+    dependsOn(createIosDebugXcframework)
+    dependsOn(createIosReleaseXcframework)
+}
+
+tasks.register<Exec>("verifyIosGodotTemplate") {
+    group = "ios"
+    description = "Verify that the Godot iOS export template has arm64 simulator support."
+    doFirst {
+        commandLine(
+            layout.projectDirectory.file("scripts/ios_template_preflight.sh").asFile.absolutePath,
+            "--xcode-developer-dir",
+            xcodeDeveloperDir.get(),
+            godotIosTemplateZip.get(),
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+
+val iosGdextensionDescriptorFile = layout.buildDirectory.file("generated/ios/kanama.gdextension")
+val generateIosGdextensionDescriptor by tasks.registering {
+    outputs.file(iosGdextensionDescriptorFile)
+    doLast {
+        iosGdextensionDescriptorFile.get().asFile.apply {
+            parentFile.mkdirs()
+            writeText(
+                """
+                |[configuration]
+                |
+                |entry_symbol = "kanama_entry"
+                |compatibility_minimum = "4.3"
+                |
+                |[libraries]
+                |
+                |macos.debug = "res://addons/kanama/libkanama_bootstrap.dylib"
+                |macos.release = "res://addons/kanama/libkanama_bootstrap.dylib"
+                |linux.debug.x86_64 = "res://addons/kanama/libkanama_bootstrap.so"
+                |linux.release.x86_64 = "res://addons/kanama/libkanama_bootstrap.so"
+                |linux.debug.arm64 = "res://addons/kanama/libkanama_bootstrap.so"
+                |linux.release.arm64 = "res://addons/kanama/libkanama_bootstrap.so"
+                |windows.debug.x86_64 = "res://addons/kanama/kanama_bootstrap.dll"
+                |windows.release.x86_64 = "res://addons/kanama/kanama_bootstrap.dll"
+                |ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
+                |ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
+                |""".trimMargin() + System.lineSeparator(),
+            )
+        }
+    }
+}
+
+tasks.register<Copy>("installIosAddon") {
+    group = "ios"
+    description = "Install the experimental iOS Kanama addon artifacts into a Godot project."
+    val targetProjectDir = providers.gradleProperty("kanamaIosProjectDir")
+        .orElse(providers.gradleProperty("kanamaProjectDir"))
+    val extensionListFile = targetProjectDir.map {
+        file(it).resolve(".godot/extension_list.cfg")
+    }
+
+    dependsOn("assembleIosKanamaXcframework")
+    dependsOn(generateIosGdextensionDescriptor)
+    dependsOn(buildNativeBootstrap)
+    dependsOn(tasks.named("jar"))
+    dependsOn(":project-scripts:jar")
+
+    from(layout.projectDirectory.dir("example_project/addons/kanama")) {
+        include("*.uid", "*.dylib", "*.so", "*.dll")
+    }
+    from(iosGdextensionDescriptorFile) {
+        rename { "kanama.gdextension" }
+    }
+    from(layout.buildDirectory.file("libs/kanama.jar"))
+    from(project(":project-scripts").tasks.named<Jar>("jar").flatMap { it.archiveFile })
+    from(iosDebugXcframeworkDir) {
+        into("bin/ios/kanama_ios.debug.xcframework")
+    }
+    from(iosReleaseXcframeworkDir) {
+        into("bin/ios/kanama_ios.release.xcframework")
+    }
+    into(targetProjectDir.map { file(it).resolve("addons/kanama") })
+    outputs.file(extensionListFile)
+
+    doFirst {
+        if (!targetProjectDir.isPresent) {
+            throw GradleException(
+                "Missing -PkanamaIosProjectDir=/absolute/path/to/godot_project for installIosAddon",
+            )
+        }
+        file(targetProjectDir.get()).resolve("addons/kanama/bin/ios").deleteRecursively()
+    }
+
+    doLast {
+        val extensionList = extensionListFile.get()
+        val extensionPath = "res://addons/kanama/kanama.gdextension"
+        extensionList.parentFile.mkdirs()
+        val existing = if (extensionList.isFile) extensionList.readLines() else emptyList()
+        if (extensionPath !in existing) {
+            extensionList.writeText((existing + extensionPath).joinToString(System.lineSeparator()) + System.lineSeparator())
+        }
+
+        val extensionFile = file(targetProjectDir.get()).resolve("addons/kanama/kanama.gdextension")
+        extensionFile.enableIosKanamaGdextensionMetadata()
+    }
 }
 
 tasks.register<Copy>("installAddonJar") {

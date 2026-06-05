@@ -1,0 +1,2 @@
+package = net.multigesture.kanama.ios.cinterop
+headers = kanama_ios.h

@@ -12,7 +12,7 @@ platforms and engine versions validated for the current preview.
 | Linux arm64 | Pending beta 5 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. Packaged desktop exports remain a separate release-readiness track. |
 | Linux x86_64 | Pending beta 5 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. Packaged desktop exports remain a separate release-readiness track. |
 | Windows x86_64 | Pending beta 5 revalidation | Last local runtime/editor smoke validation passed with the 4.7 beta 2 console binary. PowerShell Gradle commands and Git Bash smoke marker checks are the documented path. |
-| iOS | Unsupported | No current runtime path. |
+| iOS | Unsupported; spike branch only | The `spike/ios-kotlin-native-backend` path is proving a C shim plus Kotlin/Native static `.xcframework` loader, frame callback, and typed Godot call for simulator-first validation. It does not yet run Kanama scripts or claim supported exports. |
 | Web | Not planned | Kanama depends on a JVM/FFM-style runtime path. |
 
 Validated support is only claimed after the matching smoke path passes.
@@ -61,6 +61,16 @@ support wording experimental until the matching APK smoke path passes again.
 See [Android Experimental](../exporting/android.md) for the build/export
 workflow and [Android Internals](../contributing/android-internals.md) for
 implementation details.
+
+## iOS
+
+iOS work is isolated to the Kotlin/Native backend spike until exported apps can
+run real Kanama scripts. The current spike uses a static `.xcframework`, a C
+GDExtension shim, and a Kotlin/Native runtime entry point to prove loader,
+lifecycle, frame-callback, and typed-call wiring on the simulator.
+
+See [iOS Spike](../exporting/ios.md) for the experimental build/install
+workflow.
 
 ## Local Validation
 

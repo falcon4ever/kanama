@@ -7,11 +7,22 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added
+
+- Added an experimental iOS Kotlin/Native backend spike with a C GDExtension
+  shim, static `.xcframework` build tasks, install task, and docs. This does
+  not yet claim iOS script support.
+- Added iOS simulator validation tooling: a Godot iOS export-template preflight
+  and a visual simulator smoke script with an optional Kotlin/Native frame
+  probe that updates a Godot `Label` through a cached typed `ptrcall`.
+
 ### Changed
 
 - Updated the build toolchain to Kotlin 2.3.21, KSP 2.3.9, and
   kotlinx.coroutines 1.11.0, with Gradle build cache enabled for the main and
   Android plugin builds.
+- Enabled Kotlin Multiplatform cinterop commonization for the experimental
+  iOS runtime.
 
 ## 0.2.2 - 2026-06-05
 
