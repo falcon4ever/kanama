@@ -3,6 +3,8 @@ package net.multigesture.kanama.ios
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.get
+import kotlinx.cinterop.set
 import kotlinx.cinterop.toKString
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
@@ -10,17 +12,46 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_g
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.CName
 
+internal data class KanamaIosScriptMethod(
+    val name: String,
+    val argumentCount: Int = 0,
+)
+
+internal data class KanamaIosScriptDescriptor(
+    val path: String,
+    val baseType: String,
+    val methods: List<KanamaIosScriptMethod>,
+    val factory: (Long) -> KanamaIosScriptBridge?,
+)
+
+internal interface KanamaIosScriptBridge {
+    fun call(methodName: String, firstArg: Double): Boolean
+}
+
+internal object KanamaIosProjectRegistry {
+    private val descriptors = linkedMapOf<String, KanamaIosScriptDescriptor>()
+
+    fun register(descriptor: KanamaIosScriptDescriptor) {
+        descriptors[descriptor.path] = descriptor
+    }
+
+    fun descriptor(path: String): KanamaIosScriptDescriptor? =
+        descriptors[path]
+}
+
 private object KanamaIosRuntime {
     private const val PROBE_GROUP = "kanama_ios_probe"
+    private const val PROBE_SCRIPT_PATH = "res://kanama_ios_probe.kt"
     private const val LABEL_SET_TEXT_HASH = 83702148L
 
     private var initialized = false
     private var frameCount = 0
     private var probeLabelUpdated = false
+    private var projectRegistryLoaded = false
     private var nextHandle = 1L
     private var labelSetTextBind = 0L
-    private val scriptResources = linkedMapOf<Long, ProbeScriptResource>()
-    private val scriptInstances = linkedMapOf<Long, ProbeScriptInstance>()
+    private val scriptResources = linkedMapOf<Long, IosScriptResource>()
+    private val scriptInstances = linkedMapOf<Long, IosScriptInstance>()
 
     fun entry(getProcAddress: Long, library: Long, initialization: Long): Int {
         if (initialized) {
@@ -47,7 +78,7 @@ private object KanamaIosRuntime {
             val resources = scriptResources.size
             scriptInstances.clear()
             scriptResources.clear()
-            log("cleared iOS script probe state instances=$instances resources=$resources")
+            log("cleared iOS script state instances=$instances resources=$resources")
         }
     }
 
@@ -65,9 +96,21 @@ private object KanamaIosRuntime {
     }
 
     fun createScriptResource(path: String?): Long {
+        val normalizedPath = path.orEmpty().ifBlank { PROBE_SCRIPT_PATH }
+        val descriptor = descriptorForPath(normalizedPath)
         val handle = nextHandle++
-        scriptResources[handle] = ProbeScriptResource(path = path.orEmpty())
-        log("created script resource handle=$handle path=${path.orEmpty()}")
+        scriptResources[handle] = IosScriptResource(
+            path = normalizedPath,
+            descriptor = descriptor,
+        )
+        if (descriptor == null) {
+            log("created script resource handle=$handle path=$normalizedPath without iOS descriptor")
+        } else {
+            log(
+                "created script resource handle=$handle path=$normalizedPath " +
+                    "base=${descriptor.baseType} methods=${descriptor.methods.map { it.name }}",
+            )
+        }
         return handle
     }
 
@@ -76,18 +119,42 @@ private object KanamaIosRuntime {
         log("freed script resource handle=$handle")
     }
 
+    fun scriptResourceBaseType(handle: Long): String =
+        scriptResources[handle]?.descriptor?.baseType ?: "Node"
+
+    fun scriptResourceMethodCount(handle: Long): Int =
+        scriptResources[handle]?.descriptor?.methods?.size ?: 0
+
+    fun scriptResourceMethodName(handle: Long, methodIndex: Int): String =
+        scriptResources[handle]?.descriptor?.methods?.getOrNull(methodIndex)?.name.orEmpty()
+
+    fun scriptResourceMethodArgumentCount(handle: Long, methodIndex: Int): Int =
+        scriptResources[handle]?.descriptor?.methods?.getOrNull(methodIndex)?.argumentCount ?: 0
+
     fun createScriptInstance(scriptHandle: Long, ownerObject: Long): Long {
         if (ownerObject == 0L) {
             log("refusing script instance for null owner script=$scriptHandle")
             return 0
         }
+        val resource = scriptResources[scriptHandle]
+        if (resource?.descriptor == null) {
+            log("refusing script instance for script without iOS descriptor handle=$scriptHandle")
+            return 0
+        }
+        val bridge = resource.descriptor.factory(ownerObject)
+        if (bridge == null) {
+            log("refusing script instance after null bridge script=$scriptHandle path=${resource.path}")
+            return 0
+        }
         val handle = nextHandle++
-        scriptInstances[handle] = ProbeScriptInstance(
+        scriptInstances[handle] = IosScriptInstance(
             scriptHandle = scriptHandle,
             ownerObject = ownerObject,
+            resource = resource,
+            bridge = bridge,
         )
         log(
-            "created script instance handle=$handle script=$scriptHandle " +
+            "created script instance handle=$handle script=$scriptHandle path=${resource.path} " +
                 "owner=0x${ownerObject.toULong().toString(16)}",
         )
         return handle
@@ -99,21 +166,41 @@ private object KanamaIosRuntime {
             log("ready skipped for missing script instance handle=$handle")
             return
         }
-        if (instance.readyCalled) {
-            return
+        callScriptInstance(handle, "_ready", 0.0)
+    }
+
+    fun callScriptInstance(handle: Long, methodIndex: Int, firstArg: Double): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("call skipped for missing script instance handle=$handle")
+            return false
         }
-        instance.readyCalled = true
-        if (KanamaIosGodot.setObjectText(instance.ownerObject, "Kanama iOS Kotlin/Native script ready")) {
-            log(
-                "script instance ready handle=$handle " +
-                    "owner=0x${instance.ownerObject.toULong().toString(16)}",
-            )
-        } else {
-            log(
-                "script instance ready failed to update owner handle=$handle " +
-                    "owner=0x${instance.ownerObject.toULong().toString(16)}",
-            )
+        val method = instance.resource.descriptor?.methods?.getOrNull(methodIndex)
+        if (method == null) {
+            log("call skipped for missing method index=$methodIndex handle=$handle")
+            return false
         }
+        return callScriptInstance(handle, method.name, firstArg)
+    }
+
+    fun callScriptInstance(handle: Long, methodName: String, firstArg: Double): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("call skipped for missing script instance handle=$handle")
+            return false
+        }
+        if (methodName == "_ready") {
+            if (instance.readyCalled) {
+                return true
+            }
+            instance.readyCalled = true
+        }
+        val ok = instance.bridge.call(methodName, firstArg)
+        if (ok) {
+            val kind = if (instance.resource.path == PROBE_SCRIPT_PATH) "built-in probe" else "project script"
+            log("$kind method call handle=$handle path=${instance.resource.path} method=$methodName")
+        }
+        return ok
     }
 
     fun freeScriptInstance(handle: Long) {
@@ -121,26 +208,78 @@ private object KanamaIosRuntime {
         log("freed script instance handle=$handle")
     }
 
-    private fun log(message: String) {
-        println("[kanama][ios][kn] $message")
-    }
-
-    private data class ProbeScriptResource(
-        val path: String,
-    )
-
-    private data class ProbeScriptInstance(
-        val scriptHandle: Long,
-        val ownerObject: Long,
-        var readyCalled: Boolean = false,
-    )
-
     fun labelSetTextBind(): Long {
         if (labelSetTextBind == 0L) {
             labelSetTextBind = KanamaIosGodot.getMethodBind("Label", "set_text", LABEL_SET_TEXT_HASH)
         }
         return labelSetTextBind
     }
+
+    private fun descriptorForPath(path: String): KanamaIosScriptDescriptor? {
+        ensureProjectRegistryLoaded()
+        return KanamaIosProjectRegistry.descriptor(path) ?: builtInProbeDescriptor(path)
+    }
+
+    private fun ensureProjectRegistryLoaded() {
+        if (projectRegistryLoaded) {
+            return
+        }
+        registerKanamaIosProjectScripts()
+        projectRegistryLoaded = true
+    }
+
+    private fun builtInProbeDescriptor(path: String): KanamaIosScriptDescriptor? {
+        if (path != PROBE_SCRIPT_PATH) {
+            return null
+        }
+        return KanamaIosScriptDescriptor(
+            path = path,
+            baseType = "Label",
+            methods = listOf(KanamaIosScriptMethod("_ready")),
+            factory = { ownerObject -> BuiltInProbeScript(ownerObject) },
+        )
+    }
+
+    private fun log(message: String) {
+        println("[kanama][ios][kn] $message")
+    }
+
+    private data class IosScriptResource(
+        val path: String,
+        val descriptor: KanamaIosScriptDescriptor?,
+    )
+
+    private data class IosScriptInstance(
+        val scriptHandle: Long,
+        val ownerObject: Long,
+        val resource: IosScriptResource,
+        val bridge: KanamaIosScriptBridge,
+        var readyCalled: Boolean = false,
+    )
+
+    private class BuiltInProbeScript(
+        private val ownerObject: Long,
+    ) : KanamaIosScriptBridge {
+        override fun call(methodName: String, firstArg: Double): Boolean {
+            if (methodName != "_ready") {
+                return false
+            }
+            return KanamaIosGodot.setObjectText(ownerObject, "Kanama iOS Kotlin/Native script ready")
+        }
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun writeCString(value: String, buffer: CPointer<ByteVar>?, bufferSize: Int) {
+    if (buffer == null || bufferSize <= 0) {
+        return
+    }
+    val bytes = value.encodeToByteArray()
+    val count = minOf(bytes.size, bufferSize - 1)
+    for (i in 0 until count) {
+        buffer[i] = bytes[i]
+    }
+    buffer[count] = 0.toByte()
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -195,6 +334,33 @@ fun kanamaIosRuntimeScriptResourceFree(scriptHandle: Long) {
     KanamaIosRuntime.freeScriptResource(scriptHandle)
 }
 
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_base_type")
+fun kanamaIosRuntimeScriptResourceBaseType(scriptHandle: Long, buffer: CPointer<ByteVar>?, bufferSize: Int) {
+    writeCString(KanamaIosRuntime.scriptResourceBaseType(scriptHandle), buffer, bufferSize)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_method_count")
+fun kanamaIosRuntimeScriptResourceMethodCount(scriptHandle: Long): Int =
+    KanamaIosRuntime.scriptResourceMethodCount(scriptHandle)
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_method_name")
+fun kanamaIosRuntimeScriptResourceMethodName(
+    scriptHandle: Long,
+    methodIndex: Int,
+    buffer: CPointer<ByteVar>?,
+    bufferSize: Int,
+) {
+    writeCString(KanamaIosRuntime.scriptResourceMethodName(scriptHandle, methodIndex), buffer, bufferSize)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_method_argument_count")
+fun kanamaIosRuntimeScriptResourceMethodArgumentCount(scriptHandle: Long, methodIndex: Int): Int =
+    KanamaIosRuntime.scriptResourceMethodArgumentCount(scriptHandle, methodIndex)
+
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_create")
 fun kanamaIosRuntimeScriptInstanceCreate(scriptHandle: Long, ownerObject: Long): Long =
@@ -205,6 +371,11 @@ fun kanamaIosRuntimeScriptInstanceCreate(scriptHandle: Long, ownerObject: Long):
 fun kanamaIosRuntimeScriptInstanceReady(instanceHandle: Long) {
     KanamaIosRuntime.readyScriptInstance(instanceHandle)
 }
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_call")
+fun kanamaIosRuntimeScriptInstanceCall(instanceHandle: Long, methodIndex: Int, firstArg: Double): Int =
+    if (KanamaIosRuntime.callScriptInstance(instanceHandle, methodIndex, firstArg)) 1 else 0
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")

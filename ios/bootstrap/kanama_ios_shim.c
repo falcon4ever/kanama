@@ -19,8 +19,25 @@ extern void kanama_ios_runtime_deinitialize(int32_t level);
 extern void kanama_ios_runtime_frame(void);
 extern int64_t kanama_ios_runtime_script_resource_create(const char *path);
 extern void kanama_ios_runtime_script_resource_free(int64_t script_handle);
+extern void kanama_ios_runtime_script_resource_base_type(int64_t script_handle, char *buffer, int32_t buffer_size);
+extern int32_t kanama_ios_runtime_script_resource_method_count(int64_t script_handle);
+extern void kanama_ios_runtime_script_resource_method_name(
+    int64_t script_handle,
+    int32_t method_index,
+    char *buffer,
+    int32_t buffer_size
+);
+extern int32_t kanama_ios_runtime_script_resource_method_argument_count(
+    int64_t script_handle,
+    int32_t method_index
+);
 extern int64_t kanama_ios_runtime_script_instance_create(int64_t script_handle, int64_t owner_object);
 extern void kanama_ios_runtime_script_instance_ready(int64_t instance_handle);
+extern int32_t kanama_ios_runtime_script_instance_call(
+    int64_t instance_handle,
+    int32_t method_index,
+    double first_arg
+);
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
 
 typedef enum {
@@ -49,6 +66,7 @@ typedef enum {
     KANAMA_IOS_VIRTUAL_VOID,
     KANAMA_IOS_VIRTUAL_LANGUAGE_CREATE_SCRIPT,
     KANAMA_IOS_VIRTUAL_SCRIPT_GET_LANGUAGE,
+    KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_BASE_TYPE,
     KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_CREATE,
     KANAMA_IOS_VIRTUAL_SCRIPT_HAS_METHOD,
     KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT,
@@ -60,12 +78,19 @@ typedef struct {
     KanamaIosClassKind kind;
     GDExtensionObjectPtr godot_object;
     int64_t script_handle;
+    char *script_path;
+    char *script_base_type_text;
+    uint64_t script_base_type;
+    uint64_t *script_method_names;
+    char **script_method_name_texts;
+    int32_t script_method_count;
 } KanamaIosExtensionInstance;
 
 typedef struct {
     int64_t runtime_handle;
     GDExtensionObjectPtr owner_object;
     GDExtensionObjectPtr script_object;
+    KanamaIosExtensionInstance *script;
 } KanamaIosScriptInstance;
 
 static int g_kanama_ios_initialized = 0;
@@ -74,10 +99,14 @@ static GDExtensionClassLibraryPtr g_library = NULL;
 
 static GDExtensionInterfaceStringNameNewWithUtf8Chars g_string_name_new = NULL;
 static GDExtensionInterfaceStringNewWithUtf8Chars g_string_new = NULL;
+static GDExtensionInterfaceStringToUtf8Chars g_string_to_utf8_chars = NULL;
 static GDExtensionInterfaceVariantGetPtrDestructor g_variant_get_ptr_destructor = NULL;
 static GDExtensionInterfaceVariantGetPtrConstructor g_variant_get_ptr_constructor = NULL;
 static GDExtensionInterfaceVariantGetPtrBuiltinMethod g_variant_get_ptr_builtin_method = NULL;
 static GDExtensionInterfaceGetVariantFromTypeConstructor g_get_variant_from_type_constructor = NULL;
+static GDExtensionInterfaceGetVariantToTypeConstructor g_get_variant_to_type_constructor = NULL;
+static GDExtensionInterfaceVariantDestroy g_variant_destroy = NULL;
+static GDExtensionInterfaceVariantGetType g_variant_get_type = NULL;
 static GDExtensionInterfaceVariantNewNil g_variant_new_nil = NULL;
 static GDExtensionPtrDestructor g_string_name_destructor = NULL;
 static GDExtensionPtrDestructor g_string_destructor = NULL;
@@ -87,6 +116,7 @@ static GDExtensionInterfaceClassdbConstructObject3 g_classdb_construct_object = 
 static GDExtensionInterfaceClassdbRegisterExtensionClass6 g_classdb_register_extension_class = NULL;
 static GDExtensionInterfaceClassdbUnregisterExtensionClass g_classdb_unregister_extension_class = NULL;
 static GDExtensionInterfaceObjectSetInstance g_object_set_instance = NULL;
+static GDExtensionInterfaceObjectMethodBindCall g_object_method_bind_call = NULL;
 static GDExtensionInterfaceObjectMethodBindPtrcall g_object_method_bind_ptrcall = NULL;
 static GDExtensionInterfaceScriptInstanceCreate3 g_script_instance_create = NULL;
 static GDExtensionInterfaceRegisterMainLoopCallbacks g_register_main_loop_callbacks = NULL;
@@ -103,11 +133,25 @@ static GDExtensionMethodBindPtr g_resource_loader_add_format_loader_bind = NULL;
 static GDExtensionMethodBindPtr g_resource_loader_remove_format_loader_bind = NULL;
 static GDExtensionMethodBindPtr g_scene_tree_get_first_node_in_group_bind = NULL;
 static GDExtensionMethodBindPtr g_label_set_text_bind = NULL;
+static GDExtensionMethodBindPtr g_node_add_child_bind = NULL;
+static GDExtensionMethodBindPtr g_node_remove_child_bind = NULL;
+static GDExtensionMethodBindPtr g_node_get_child_count_bind = NULL;
+static GDExtensionMethodBindPtr g_node_get_child_bind = NULL;
+static GDExtensionMethodBindPtr g_node_queue_free_bind = NULL;
+static GDExtensionMethodBindPtr g_node2d_set_position_bind = NULL;
+static GDExtensionMethodBindPtr g_node2d_get_position_bind = NULL;
+static GDExtensionMethodBindPtr g_canvas_item_get_viewport_rect_bind = NULL;
+static GDExtensionMethodBindPtr g_resource_loader_load_bind = NULL;
+static GDExtensionMethodBindPtr g_sprite2d_set_texture_bind = NULL;
+static GDExtensionMethodBindPtr g_object_emit_signal_bind = NULL;
 static GDExtensionPtrConstructor g_packed_string_array_constructor = NULL;
 static GDExtensionPtrConstructor g_array_constructor = NULL;
 static GDExtensionPtrConstructor g_dictionary_constructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_float = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_object = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string_name = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
 static int g_main_loop_callbacks_registered = 0;
 static int g_main_loop_callbacks_active = 0;
 static int g_ios_script_classes_registered = 0;
@@ -161,11 +205,16 @@ static uint64_t g_name__get_resource_type = 0;
 static uint64_t g_name__load = 0;
 static uint64_t g_name__debug_get_current_stack_info = 0;
 static uint64_t g_name_push_back = 0;
+static const char *g_pending_script_resource_path = NULL;
 
 enum {
     KANAMA_IOS_VARIANT_TYPE_NIL = 0,
     KANAMA_IOS_VARIANT_TYPE_BOOL = 1,
+    KANAMA_IOS_VARIANT_TYPE_INT = 2,
+    KANAMA_IOS_VARIANT_TYPE_FLOAT = 3,
     KANAMA_IOS_VARIANT_TYPE_STRING = 4,
+    KANAMA_IOS_VARIANT_TYPE_VECTOR2 = 5,
+    KANAMA_IOS_VARIANT_TYPE_RECT2 = 7,
     KANAMA_IOS_VARIANT_TYPE_STRING_NAME = 21,
     KANAMA_IOS_VARIANT_TYPE_OBJECT = 24,
     KANAMA_IOS_VARIANT_TYPE_DICTIONARY = 27,
@@ -179,6 +228,17 @@ enum {
     KANAMA_IOS_RESOURCE_LOADER_REMOVE_FORMAT_LOADER_HASH = 405397102U,
     KANAMA_IOS_SCENE_TREE_GET_FIRST_NODE_IN_GROUP_HASH = 4071044623U,
     KANAMA_IOS_LABEL_SET_TEXT_HASH = 83702148U,
+    KANAMA_IOS_NODE_ADD_CHILD_HASH = 3863233950U,
+    KANAMA_IOS_NODE_REMOVE_CHILD_HASH = 1078189570U,
+    KANAMA_IOS_NODE_GET_CHILD_COUNT_HASH = 894402480U,
+    KANAMA_IOS_NODE_GET_CHILD_HASH = 541253412U,
+    KANAMA_IOS_NODE_QUEUE_FREE_HASH = 3218959716U,
+    KANAMA_IOS_NODE2D_SET_POSITION_HASH = 743155724U,
+    KANAMA_IOS_NODE2D_GET_POSITION_HASH = 3341600327U,
+    KANAMA_IOS_CANVAS_ITEM_GET_VIEWPORT_RECT_HASH = 1639390495U,
+    KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH = 3358495409U,
+    KANAMA_IOS_SPRITE2D_SET_TEXTURE_HASH = 4051416890U,
+    KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH = 4047867050U,
     KANAMA_IOS_PACKED_STRING_ARRAY_PUSH_BACK_HASH = 816187996U,
     KANAMA_IOS_NOTIFICATION_POSTINITIALIZE = 0,
     KANAMA_IOS_NOTIFICATION_READY = 13,
@@ -202,6 +262,9 @@ static int kanama_ios_resolve_godot_api(void) {
     g_string_new = (GDExtensionInterfaceStringNewWithUtf8Chars)kanama_ios_lookup(
         "string_new_with_utf8_chars"
     );
+    g_string_to_utf8_chars = (GDExtensionInterfaceStringToUtf8Chars)kanama_ios_lookup(
+        "string_to_utf8_chars"
+    );
     g_variant_get_ptr_destructor = (GDExtensionInterfaceVariantGetPtrDestructor)kanama_ios_lookup(
         "variant_get_ptr_destructor"
     );
@@ -214,6 +277,11 @@ static int kanama_ios_resolve_godot_api(void) {
     g_get_variant_from_type_constructor = (GDExtensionInterfaceGetVariantFromTypeConstructor)kanama_ios_lookup(
         "get_variant_from_type_constructor"
     );
+    g_get_variant_to_type_constructor = (GDExtensionInterfaceGetVariantToTypeConstructor)kanama_ios_lookup(
+        "get_variant_to_type_constructor"
+    );
+    g_variant_destroy = (GDExtensionInterfaceVariantDestroy)kanama_ios_lookup("variant_destroy");
+    g_variant_get_type = (GDExtensionInterfaceVariantGetType)kanama_ios_lookup("variant_get_type");
     g_variant_new_nil = (GDExtensionInterfaceVariantNewNil)kanama_ios_lookup("variant_new_nil");
     g_global_get_singleton = (GDExtensionInterfaceGlobalGetSingleton)kanama_ios_lookup(
         "global_get_singleton"
@@ -233,6 +301,9 @@ static int kanama_ios_resolve_godot_api(void) {
     g_object_set_instance = (GDExtensionInterfaceObjectSetInstance)kanama_ios_lookup(
         "object_set_instance"
     );
+    g_object_method_bind_call = (GDExtensionInterfaceObjectMethodBindCall)kanama_ios_lookup(
+        "object_method_bind_call"
+    );
     g_object_method_bind_ptrcall = (GDExtensionInterfaceObjectMethodBindPtrcall)kanama_ios_lookup(
         "object_method_bind_ptrcall"
     );
@@ -246,10 +317,14 @@ static int kanama_ios_resolve_godot_api(void) {
     if (
         g_string_name_new == NULL ||
         g_string_new == NULL ||
+        g_string_to_utf8_chars == NULL ||
         g_variant_get_ptr_destructor == NULL ||
         g_variant_get_ptr_constructor == NULL ||
         g_variant_get_ptr_builtin_method == NULL ||
         g_get_variant_from_type_constructor == NULL ||
+        g_get_variant_to_type_constructor == NULL ||
+        g_variant_destroy == NULL ||
+        g_variant_get_type == NULL ||
         g_variant_new_nil == NULL ||
         g_global_get_singleton == NULL ||
         g_classdb_get_method_bind == NULL ||
@@ -257,6 +332,7 @@ static int kanama_ios_resolve_godot_api(void) {
         g_classdb_register_extension_class == NULL ||
         g_classdb_unregister_extension_class == NULL ||
         g_object_set_instance == NULL ||
+        g_object_method_bind_call == NULL ||
         g_object_method_bind_ptrcall == NULL ||
         g_script_instance_create == NULL ||
         g_register_main_loop_callbacks == NULL
@@ -273,7 +349,10 @@ static int kanama_ios_resolve_godot_api(void) {
     );
     g_array_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY, 0);
     g_dictionary_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY, 0);
+    g_variant_to_float = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
     g_variant_from_object = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
+    g_variant_from_string_name = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
+    g_variant_from_int = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
 
     if (
         g_string_name_destructor == NULL ||
@@ -281,7 +360,10 @@ static int kanama_ios_resolve_godot_api(void) {
         g_packed_string_array_constructor == NULL ||
         g_array_constructor == NULL ||
         g_dictionary_constructor == NULL ||
-        g_variant_from_object == NULL
+        g_variant_to_float == NULL ||
+        g_variant_from_object == NULL ||
+        g_variant_from_string_name == NULL ||
+        g_variant_from_int == NULL
     ) {
         fprintf(stderr, "[kanama][ios][c] error: failed to resolve Godot builtin helpers\n");
         return 0;
@@ -314,6 +396,36 @@ static void kanama_ios_destroy_string(uint64_t *storage) {
     }
 }
 
+static char *kanama_ios_strdup(const char *value) {
+    if (value == NULL) {
+        return NULL;
+    }
+    size_t length = strlen(value);
+    char *copy = malloc(length + 1);
+    if (copy == NULL) {
+        return NULL;
+    }
+    memcpy(copy, value, length + 1);
+    return copy;
+}
+
+static char *kanama_ios_string_to_utf8_dup(GDExtensionConstStringPtr value) {
+    if (value == NULL || g_string_to_utf8_chars == NULL) {
+        return NULL;
+    }
+    GDExtensionInt length = g_string_to_utf8_chars(value, NULL, 0);
+    if (length < 0) {
+        return NULL;
+    }
+    char *buffer = calloc((size_t)length + 1, sizeof(char));
+    if (buffer == NULL) {
+        return NULL;
+    }
+    g_string_to_utf8_chars(value, buffer, length + 1);
+    buffer[length] = '\0';
+    return buffer;
+}
+
 static void kanama_ios_cache_name(uint64_t *storage, const char *value) {
     if (*storage == 0) {
         kanama_ios_init_string_name(storage, value);
@@ -329,6 +441,121 @@ static uint64_t kanama_ios_string_name_value(GDExtensionConstStringNamePtr name)
 
 static int kanama_ios_string_name_eq(GDExtensionConstStringNamePtr name, uint64_t cached) {
     return cached != 0 && kanama_ios_string_name_value(name) == cached;
+}
+
+static int32_t kanama_ios_script_method_index(
+    const KanamaIosExtensionInstance *script,
+    GDExtensionConstStringNamePtr name
+) {
+    if (script == NULL || name == NULL || script->script_method_names == NULL) {
+        return -1;
+    }
+    uint64_t value = kanama_ios_string_name_value(name);
+    for (int32_t i = 0; i < script->script_method_count; i++) {
+        if (script->script_method_names[i] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static const char *kanama_ios_script_method_name_text(
+    const KanamaIosExtensionInstance *script,
+    int32_t method_index
+) {
+    if (
+        script == NULL ||
+        method_index < 0 ||
+        method_index >= script->script_method_count ||
+        script->script_method_name_texts == NULL
+    ) {
+        return "";
+    }
+    return script->script_method_name_texts[method_index] != NULL
+        ? script->script_method_name_texts[method_index]
+        : "";
+}
+
+static int32_t kanama_ios_script_method_arg_count(
+    const KanamaIosExtensionInstance *script,
+    int32_t method_index
+) {
+    if (script == NULL || method_index < 0 || method_index >= script->script_method_count) {
+        return 0;
+    }
+    return kanama_ios_runtime_script_resource_method_argument_count(script->script_handle, method_index);
+}
+
+static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance *instance) {
+    if (instance == NULL || instance->kind != KANAMA_IOS_CLASS_SCRIPT || instance->script_handle == 0) {
+        return;
+    }
+
+    char base_type[128];
+    base_type[0] = '\0';
+    kanama_ios_runtime_script_resource_base_type(instance->script_handle, base_type, (int32_t)sizeof(base_type));
+    if (base_type[0] == '\0') {
+        snprintf(base_type, sizeof(base_type), "%s", "Node");
+    }
+    instance->script_base_type_text = kanama_ios_strdup(base_type);
+    kanama_ios_init_string_name(&instance->script_base_type, base_type);
+
+    int32_t method_count = kanama_ios_runtime_script_resource_method_count(instance->script_handle);
+    if (method_count <= 0) {
+        return;
+    }
+    instance->script_method_names = calloc((size_t)method_count, sizeof(uint64_t));
+    instance->script_method_name_texts = calloc((size_t)method_count, sizeof(char *));
+    if (instance->script_method_names == NULL || instance->script_method_name_texts == NULL) {
+        free(instance->script_method_names);
+        free(instance->script_method_name_texts);
+        instance->script_method_names = NULL;
+        instance->script_method_name_texts = NULL;
+        return;
+    }
+
+    instance->script_method_count = method_count;
+    for (int32_t i = 0; i < method_count; i++) {
+        char method_name[128];
+        method_name[0] = '\0';
+        kanama_ios_runtime_script_resource_method_name(
+            instance->script_handle,
+            i,
+            method_name,
+            (int32_t)sizeof(method_name)
+        );
+        if (method_name[0] == '\0') {
+            continue;
+        }
+        kanama_ios_init_string_name(&instance->script_method_names[i], method_name);
+        instance->script_method_name_texts[i] = kanama_ios_strdup(method_name);
+    }
+}
+
+static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance *instance) {
+    if (instance == NULL) {
+        return;
+    }
+    kanama_ios_destroy_string_name(&instance->script_base_type);
+    if (instance->script_method_names != NULL) {
+        for (int32_t i = 0; i < instance->script_method_count; i++) {
+            kanama_ios_destroy_string_name(&instance->script_method_names[i]);
+        }
+    }
+    if (instance->script_method_name_texts != NULL) {
+        for (int32_t i = 0; i < instance->script_method_count; i++) {
+            free(instance->script_method_name_texts[i]);
+        }
+    }
+    free(instance->script_method_names);
+    free(instance->script_method_name_texts);
+    free(instance->script_base_type_text);
+    free(instance->script_path);
+    instance->script_method_names = NULL;
+    instance->script_method_name_texts = NULL;
+    instance->script_base_type_text = NULL;
+    instance->script_path = NULL;
+    instance->script_method_count = 0;
 }
 
 static void kanama_ios_cache_names(void) {
@@ -540,6 +767,27 @@ static void kanama_ios_godot_ptrcall_object_bool_arg(
     g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
 }
 
+static void kanama_ios_godot_ptrcall_object_bool_int_arg(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    GDExtensionObjectPtr object_arg,
+    GDExtensionBool bool_arg,
+    int32_t int_arg
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return;
+    }
+    GDExtensionObjectPtr object_cell = object_arg;
+    GDExtensionBool bool_cell = bool_arg;
+    int32_t int_cell = int_arg;
+    const GDExtensionConstTypePtr args[3] = {
+        (GDExtensionConstTypePtr)&object_cell,
+        (GDExtensionConstTypePtr)&bool_cell,
+        (GDExtensionConstTypePtr)&int_cell,
+    };
+    g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
+}
+
 static void kanama_ios_godot_ptrcall_object_arg(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance,
@@ -553,6 +801,43 @@ static void kanama_ios_godot_ptrcall_object_arg(
         (GDExtensionConstTypePtr)&object_cell,
     };
     g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
+}
+
+static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int_bool_arg_ret_object(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    int32_t int_arg,
+    GDExtensionBool bool_arg
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return NULL;
+    }
+    int32_t int_cell = int_arg;
+    GDExtensionBool bool_cell = bool_arg;
+    const GDExtensionConstTypePtr args[2] = {
+        (GDExtensionConstTypePtr)&int_cell,
+        (GDExtensionConstTypePtr)&bool_cell,
+    };
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);
+    return ret;
+}
+
+static int32_t kanama_ios_godot_ptrcall_bool_arg_ret_int(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    GDExtensionBool bool_arg
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return 0;
+    }
+    GDExtensionBool bool_cell = bool_arg;
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&bool_cell,
+    };
+    int32_t ret = 0;
+    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);
+    return ret;
 }
 
 static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) {
@@ -572,6 +857,257 @@ static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) 
         (GDExtensionConstTypePtr)&reversed,
     };
     g_object_method_bind_ptrcall(notification_bind, object, args, NULL);
+}
+
+int64_t kanama_ios_godot_construct_object(const char *class_name) {
+    if (!kanama_ios_resolve_godot_api() || class_name == NULL) {
+        return 0;
+    }
+
+    uint64_t class_name_storage = 0;
+    kanama_ios_init_string_name(&class_name_storage, class_name);
+    GDExtensionObjectPtr object = g_classdb_construct_object(
+        (GDExtensionConstStringNamePtr)&class_name_storage
+    );
+    kanama_ios_destroy_string_name(&class_name_storage);
+    kanama_ios_godot_notify_postinitialize(object);
+    return (int64_t)(intptr_t)object;
+}
+
+void kanama_ios_godot_object_queue_free(int64_t object) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_queue_free_bind,
+        "Node",
+        "queue_free",
+        KANAMA_IOS_NODE_QUEUE_FREE_HASH
+    );
+    if (object == 0 || method_bind == NULL) {
+        return;
+    }
+    g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)object, NULL, NULL);
+}
+
+void kanama_ios_godot_node_add_child(int64_t parent, int64_t child) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_add_child_bind,
+        "Node",
+        "add_child",
+        KANAMA_IOS_NODE_ADD_CHILD_HASH
+    );
+    kanama_ios_godot_ptrcall_object_bool_int_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)parent,
+        (GDExtensionObjectPtr)(intptr_t)child,
+        0,
+        0
+    );
+}
+
+void kanama_ios_godot_node_remove_child(int64_t parent, int64_t child) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_remove_child_bind,
+        "Node",
+        "remove_child",
+        KANAMA_IOS_NODE_REMOVE_CHILD_HASH
+    );
+    kanama_ios_godot_ptrcall_object_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)parent,
+        (GDExtensionObjectPtr)(intptr_t)child
+    );
+}
+
+int64_t kanama_ios_godot_node_get_child_count(int64_t node) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_get_child_count_bind,
+        "Node",
+        "get_child_count",
+        KANAMA_IOS_NODE_GET_CHILD_COUNT_HASH
+    );
+    return kanama_ios_godot_ptrcall_bool_arg_ret_int(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node,
+        0
+    );
+}
+
+int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_get_child_bind,
+        "Node",
+        "get_child",
+        KANAMA_IOS_NODE_GET_CHILD_HASH
+    );
+    GDExtensionObjectPtr child = kanama_ios_godot_ptrcall_int_bool_arg_ret_object(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node,
+        index,
+        0
+    );
+    return (int64_t)(intptr_t)child;
+}
+
+void kanama_ios_godot_node2d_get_position(int64_t node, double *x, double *y) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node2d_get_position_bind,
+        "Node2D",
+        "get_position",
+        KANAMA_IOS_NODE2D_GET_POSITION_HASH
+    );
+    float ret[2] = {0.0f, 0.0f};
+    if (node != 0 && method_bind != NULL) {
+        g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)node, NULL, ret);
+    }
+    if (x != NULL) {
+        *x = ret[0];
+    }
+    if (y != NULL) {
+        *y = ret[1];
+    }
+}
+
+void kanama_ios_godot_node2d_set_position(int64_t node, double x, double y) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node2d_set_position_bind,
+        "Node2D",
+        "set_position",
+        KANAMA_IOS_NODE2D_SET_POSITION_HASH
+    );
+    if (node == 0 || method_bind == NULL) {
+        return;
+    }
+    float value[2] = {(float)x, (float)y};
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)value,
+    };
+    g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)node, args, NULL);
+}
+
+void kanama_ios_godot_canvas_item_get_viewport_rect(
+    int64_t object,
+    double *x,
+    double *y,
+    double *width,
+    double *height
+) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_canvas_item_get_viewport_rect_bind,
+        "CanvasItem",
+        "get_viewport_rect",
+        KANAMA_IOS_CANVAS_ITEM_GET_VIEWPORT_RECT_HASH
+    );
+    float ret[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    if (object != 0 && method_bind != NULL) {
+        g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)object, NULL, ret);
+    }
+    if (x != NULL) {
+        *x = ret[0];
+    }
+    if (y != NULL) {
+        *y = ret[1];
+    }
+    if (width != NULL) {
+        *width = ret[2];
+    }
+    if (height != NULL) {
+        *height = ret[3];
+    }
+}
+
+int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint) {
+    if (!kanama_ios_resolve_godot_api() || path == NULL) {
+        return 0;
+    }
+    GDExtensionObjectPtr resource_loader = kanama_ios_resource_loader_singleton();
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_resource_loader_load_bind,
+        "ResourceLoader",
+        "load",
+        KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH
+    );
+    if (resource_loader == NULL || method_bind == NULL) {
+        return 0;
+    }
+
+    uint64_t path_storage = 0;
+    uint64_t type_hint_storage = 0;
+    int32_t cache_mode = 1;
+    kanama_ios_init_string(&path_storage, path);
+    kanama_ios_init_string(&type_hint_storage, type_hint != NULL ? type_hint : "");
+    const GDExtensionConstTypePtr args[3] = {
+        (GDExtensionConstTypePtr)&path_storage,
+        (GDExtensionConstTypePtr)&type_hint_storage,
+        (GDExtensionConstTypePtr)&cache_mode,
+    };
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, resource_loader, args, &ret);
+    kanama_ios_destroy_string(&type_hint_storage);
+    kanama_ios_destroy_string(&path_storage);
+    return (int64_t)(intptr_t)ret;
+}
+
+void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_sprite2d_set_texture_bind,
+        "Sprite2D",
+        "set_texture",
+        KANAMA_IOS_SPRITE2D_SET_TEXTURE_HASH
+    );
+    kanama_ios_godot_ptrcall_object_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)sprite,
+        (GDExtensionObjectPtr)(intptr_t)texture
+    );
+}
+
+int32_t kanama_ios_godot_object_emit_signal_int(
+    int64_t object,
+    const char *signal_name,
+    int64_t value
+) {
+    if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL) {
+        return -1;
+    }
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_object_emit_signal_bind,
+        "Object",
+        "emit_signal",
+        KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH
+    );
+    if (method_bind == NULL) {
+        return -1;
+    }
+
+    uint64_t signal_name_storage = 0;
+    kanama_ios_init_string_name(&signal_name_storage, signal_name);
+    int64_t value_cell = value;
+    uint8_t signal_variant[24];
+    uint8_t value_variant[24];
+    uint8_t ret_variant[24];
+    memset(signal_variant, 0, sizeof(signal_variant));
+    memset(value_variant, 0, sizeof(value_variant));
+    memset(ret_variant, 0, sizeof(ret_variant));
+    g_variant_from_string_name(signal_variant, &signal_name_storage);
+    g_variant_from_int(value_variant, &value_cell);
+    const GDExtensionConstVariantPtr args[2] = {
+        (GDExtensionConstVariantPtr)signal_variant,
+        (GDExtensionConstVariantPtr)value_variant,
+    };
+    GDExtensionCallError error;
+    memset(&error, 0, sizeof(error));
+    g_object_method_bind_call(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)object,
+        args,
+        2,
+        ret_variant,
+        &error
+    );
+    g_variant_destroy(ret_variant);
+    g_variant_destroy(value_variant);
+    g_variant_destroy(signal_variant);
+    kanama_ios_destroy_string_name(&signal_name_storage);
+    return ((int32_t *)&error)[0] == 0 ? 0 : -1;
 }
 
 int32_t kanama_ios_godot_set_first_node_in_group_text(
@@ -672,7 +1208,9 @@ static void *kanama_ios_virtual_for_script(GDExtensionConstStringNamePtr name) {
     if (kanama_ios_string_name_eq(name, g_name__is_valid)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_TRUE;
     if (kanama_ios_string_name_eq(name, g_name__can_instantiate)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_TRUE;
     if (kanama_ios_string_name_eq(name, g_name__get_language)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_GET_LANGUAGE;
-    if (kanama_ios_string_name_eq(name, g_name__get_instance_base_type)) return (void *)KANAMA_IOS_VIRTUAL_STRING_NAME_LABEL;
+    if (kanama_ios_string_name_eq(name, g_name__get_instance_base_type)) {
+        return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_BASE_TYPE;
+    }
     if (kanama_ios_string_name_eq(name, g_name__instance_create)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_CREATE;
     if (kanama_ios_string_name_eq(name, g_name__placeholder_instance_create)) return (void *)KANAMA_IOS_VIRTUAL_VARIANT_NIL;
     if (kanama_ios_string_name_eq(name, g_name__has_source_code)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_TRUE;
@@ -820,6 +1358,14 @@ static void kanama_ios_call_virtual_with_data(
         case KANAMA_IOS_VIRTUAL_SCRIPT_GET_LANGUAGE:
             *((GDExtensionObjectPtr *)ret) = g_script_language_object;
             break;
+        case KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_BASE_TYPE:
+            kanama_ios_init_string_name(
+                (uint64_t *)ret,
+                extension_instance != NULL && extension_instance->script_base_type_text != NULL
+                    ? extension_instance->script_base_type_text
+                    : "Node"
+            );
+            break;
         case KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_CREATE: {
             GDExtensionObjectPtr owner_object = NULL;
             if (args != NULL && args[0] != NULL) {
@@ -833,7 +1379,7 @@ static void kanama_ios_call_virtual_with_data(
             uint8_t has_method = 0;
             if (args != NULL && args[0] != NULL) {
                 GDExtensionConstStringNamePtr method_name = *((GDExtensionConstStringNamePtr const *)args[0]);
-                has_method = kanama_ios_string_name_eq(method_name, g_name__ready) ? 1 : 0;
+                has_method = kanama_ios_script_method_index(extension_instance, method_name) >= 0 ? 1 : 0;
             }
             *((uint8_t *)ret) = has_method;
             break;
@@ -845,7 +1391,14 @@ static void kanama_ios_call_virtual_with_data(
             kanama_ios_init_string((uint64_t *)ret, "Script");
             break;
         case KANAMA_IOS_VIRTUAL_RESOURCE_LOAD: {
+            char *path = NULL;
+            if (args != NULL && args[0] != NULL) {
+                path = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)args[0]);
+            }
+            g_pending_script_resource_path = path != NULL ? path : "res://kanama_ios_probe.kt";
             GDExtensionObjectPtr script_object = kanama_ios_construct_extension_object(KANAMA_IOS_CLASS_SCRIPT);
+            g_pending_script_resource_path = NULL;
+            free(path);
             kanama_ios_init_object_variant((GDExtensionUninitializedVariantPtr)ret, script_object);
             fprintf(stderr, "[kanama][ios][c] ResourceFormatLoader loaded probe script object=%p\n", script_object);
             break;
@@ -886,11 +1439,20 @@ static GDExtensionObjectPtr kanama_ios_extension_create_instance(
     }
     instance->kind = kind;
     if (kind == KANAMA_IOS_CLASS_SCRIPT) {
-        instance->script_handle = kanama_ios_runtime_script_resource_create("res://kanama_ios_probe.kt");
+        const char *path = g_pending_script_resource_path != NULL
+            ? g_pending_script_resource_path
+            : "res://kanama_ios_probe.kt";
+        instance->script_path = kanama_ios_strdup(path);
+        instance->script_handle = kanama_ios_runtime_script_resource_create(path);
+        kanama_ios_script_resource_init_metadata(instance);
     }
 
     GDExtensionObjectPtr object = g_classdb_construct_object((GDExtensionConstStringNamePtr)parent_name);
     if (object == NULL) {
+        if (instance->kind == KANAMA_IOS_CLASS_SCRIPT && instance->script_handle != 0) {
+            kanama_ios_runtime_script_resource_free(instance->script_handle);
+        }
+        kanama_ios_script_resource_clear_metadata(instance);
         free(instance);
         return NULL;
     }
@@ -915,6 +1477,7 @@ static void kanama_ios_extension_free_instance(
     if (instance->kind == KANAMA_IOS_CLASS_SCRIPT && instance->script_handle != 0) {
         kanama_ios_runtime_script_resource_free(instance->script_handle);
     }
+    kanama_ios_script_resource_clear_metadata(instance);
     free(instance);
 }
 
@@ -1027,8 +1590,8 @@ static GDExtensionBool kanama_ios_script_instance_has_method(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name
 ) {
-    (void)data;
-    return kanama_ios_string_name_eq(name, g_name__ready) ? 1 : 0;
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    return kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, name) >= 0 ? 1 : 0;
 }
 
 static GDExtensionInt kanama_ios_script_instance_get_method_argument_count(
@@ -1036,12 +1599,26 @@ static GDExtensionInt kanama_ios_script_instance_get_method_argument_count(
     GDExtensionConstStringNamePtr name,
     GDExtensionBool *is_valid
 ) {
-    (void)data;
-    GDExtensionBool valid = kanama_ios_string_name_eq(name, g_name__ready) ? 1 : 0;
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, name);
+    GDExtensionBool valid = method_index >= 0 ? 1 : 0;
     if (is_valid != NULL) {
         *is_valid = valid;
     }
-    return 0;
+    return valid ? kanama_ios_script_method_arg_count(instance->script, method_index) : 0;
+}
+
+static double kanama_ios_variant_to_double(GDExtensionConstVariantPtr variant) {
+    if (variant == NULL || g_variant_to_float == NULL) {
+        return 0.0;
+    }
+    GDExtensionVariantType type = g_variant_get_type != NULL ? g_variant_get_type(variant) : KANAMA_IOS_VARIANT_TYPE_NIL;
+    if (type != KANAMA_IOS_VARIANT_TYPE_FLOAT && type != KANAMA_IOS_VARIANT_TYPE_INT) {
+        return 0.0;
+    }
+    double value = 0.0;
+    g_variant_to_float(&value, (GDExtensionVariantPtr)variant);
+    return value;
 }
 
 static void kanama_ios_script_instance_call(
@@ -1052,17 +1629,24 @@ static void kanama_ios_script_instance_call(
     GDExtensionVariantPtr ret,
     GDExtensionCallError *error
 ) {
-    (void)args;
-    (void)argument_count;
     if (ret != NULL) {
         kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)ret);
     }
-    if (kanama_ios_string_name_eq(method, g_name__ready)) {
-        KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
-        if (instance != NULL) {
-            kanama_ios_runtime_script_instance_ready(instance->runtime_handle);
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, method);
+    if (instance != NULL && method_index >= 0) {
+        double first_arg = 0.0;
+        if (argument_count > 0 && args != NULL && args[0] != NULL) {
+            first_arg = kanama_ios_variant_to_double(args[0]);
         }
-        kanama_ios_script_instance_set_ok(error, 1);
+        int32_t ok = kanama_ios_runtime_script_instance_call(instance->runtime_handle, method_index, first_arg);
+        kanama_ios_script_instance_set_ok(error, ok);
+        if (!ok) {
+            fprintf(stderr,
+                    "[kanama][ios][c] script method call failed runtime=%lld method=%s\n",
+                    (long long)instance->runtime_handle,
+                    kanama_ios_script_method_name_text(instance->script, method_index));
+        }
     } else {
         kanama_ios_script_instance_set_ok(error, 0);
     }
@@ -1164,6 +1748,7 @@ static GDExtensionScriptInstancePtr kanama_ios_create_script_instance(
     }
     instance->owner_object = owner_object;
     instance->script_object = script->godot_object;
+    instance->script = script;
     instance->runtime_handle = kanama_ios_runtime_script_instance_create(
         script->script_handle,
         (int64_t)(intptr_t)owner_object

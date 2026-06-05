@@ -26,6 +26,14 @@ Options:
   --kanama-script-probe        Attach a .kt script resource to a normal Label.
                                The iOS runtime creates a ScriptInstance and
                                updates the Label from Kotlin/Native _ready.
+  --kanama-user-script-probe   Compile kotlin-src/IosSmokeScript.kt into the
+                               iOS Kotlin/Native runtime, attach it to a Label,
+                               and update the Label from the project script.
+  --kanama-bunnymark-probe     Compile the Bunnymark V1 sprite Kanama script
+                               into the iOS Kotlin/Native runtime and run a
+                               small add/process/finish smoke scene.
+  --bunnymark-demo-dir DIR     Bunnymark demo checkout. Defaults to
+                               ../kanama-demos/Bunnymark relative to this repo.
   --work-dir DIR               Smoke workspace. Defaults to a new /tmp dir.
   --keep-running               Leave the launched simulator app running.
   --help, -h                   Show this help.
@@ -43,6 +51,9 @@ work_dir=""
 keep_running=0
 kanama_probe=0
 kanama_script_probe=0
+kanama_user_script_probe=0
+kanama_bunnymark_probe=0
+bunnymark_demo_dir="$ROOT_DIR/../kanama-demos/Bunnymark"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -70,6 +81,18 @@ while [[ $# -gt 0 ]]; do
       kanama_script_probe=1
       shift
       ;;
+    --kanama-user-script-probe)
+      kanama_user_script_probe=1
+      shift
+      ;;
+    --kanama-bunnymark-probe)
+      kanama_bunnymark_probe=1
+      shift
+      ;;
+    --bunnymark-demo-dir)
+      bunnymark_demo_dir="${2:-}"
+      shift 2
+      ;;
     --work-dir)
       work_dir="${2:-}"
       shift 2
@@ -95,8 +118,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ "$kanama_probe" -eq 1 && "$kanama_script_probe" -eq 1 ]]; then
-  echo "[ios_visual_smoke] --kanama-probe and --kanama-script-probe are mutually exclusive" >&2
+probe_count=$((kanama_probe + kanama_script_probe + kanama_user_script_probe + kanama_bunnymark_probe))
+if [[ "$probe_count" -gt 1 ]]; then
+  echo "[ios_visual_smoke] --kanama-probe, --kanama-script-probe, --kanama-user-script-probe, and --kanama-bunnymark-probe are mutually exclusive" >&2
   exit 2
 fi
 
@@ -110,6 +134,10 @@ if [[ ! -d "$xcode_developer_dir" ]]; then
 fi
 if [[ -n "$godot_simulator_lib" && ! -f "$godot_simulator_lib" ]]; then
   echo "[ios_visual_smoke] Godot simulator lib does not exist: $godot_simulator_lib" >&2
+  exit 2
+fi
+if [[ "$kanama_bunnymark_probe" -eq 1 && ! -d "$bunnymark_demo_dir" ]]; then
+  echo "[ios_visual_smoke] Bunnymark demo dir does not exist: $bunnymark_demo_dir" >&2
   exit 2
 fi
 
@@ -151,6 +179,10 @@ if [[ "$kanama_probe" -eq 1 ]]; then
   echo "[ios_visual_smoke] mode: grouped Label Kotlin/Native frame smoke"
 elif [[ "$kanama_script_probe" -eq 1 ]]; then
   echo "[ios_visual_smoke] mode: attached .kt Kotlin/Native script smoke"
+elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
+  echo "[ios_visual_smoke] mode: compiled kotlin-src Kotlin/Native script smoke"
+elif [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
+  echo "[ios_visual_smoke] mode: Bunnymark V1 sprite Kotlin/Native script smoke"
 else
   echo "[ios_visual_smoke] mode: pure Godot render smoke"
 fi
@@ -166,7 +198,9 @@ status_node_groups=""
 status_text="Pure Godot iOS render smoke"
 scene_header="[gd_scene format=3]"
 script_resource_line=""
+main_script_line=""
 status_script_line=""
+launch_sleep=3
 if [[ "$kanama_probe" -eq 1 ]]; then
   status_node_groups=' groups=["kanama_ios_probe"]'
   status_text="Waiting for Kanama iOS frame probe"
@@ -178,6 +212,78 @@ elif [[ "$kanama_script_probe" -eq 1 ]]; then
   cat >"$project_dir/kanama_ios_probe.kt" <<'EOF'
 // Kanama iOS script smoke resource.
 // The experimental iOS backend binds this file to a built-in Kotlin/Native probe.
+EOF
+elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
+  status_text="Waiting for Kanama iOS project script"
+  scene_header='[gd_scene load_steps=2 format=3]'
+  script_resource_line='[ext_resource type="Script" path="res://kotlin-src/IosSmokeScript.kt" id="1_probe"]'
+  status_script_line='script = ExtResource("1_probe")'
+  mkdir -p "$project_dir/kotlin-src"
+  cat >"$project_dir/kotlin-src/IosSmokeScript.kt" <<'EOF'
+package net.multigesture.kanama.iossmoke
+
+import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.annotations.OnReady
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Label
+
+@ScriptClass(attachTo = "Label")
+class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObject, ::Label) {
+    @OnReady
+    fun ready() {
+        self.text = "Kanama iOS project script ready"
+    }
+}
+EOF
+elif [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
+  status_text="Running Kanama iOS Bunnymark"
+  scene_header='[gd_scene load_steps=2 format=3]'
+  script_resource_line='[ext_resource type="Script" path="res://main.gd" id="1_main"]'
+  main_script_line='script = ExtResource("1_main")'
+  launch_sleep=5
+  mkdir -p "$project_dir/kotlin-src" "$project_dir/images"
+  cp "$bunnymark_demo_dir/images/godot_bunny.png" "$project_dir/images/godot_bunny.png"
+  cp "$bunnymark_demo_dir/kotlin-src/BunnymarkV1SpritesKanama.kt" "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+  perl -0pi -e 's/\A/package net.multigesture.kanama.iosbunnymark\n\n/' \
+    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+  perl -0pi -e 's/\n}\s*\z/\n\n    \@RegisterFunction("signal_ack")\n    fun signalAck() {\n        println("[kanama][ios][kn] bunnymark signal ack")\n    }\n}\n/' \
+    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+  cat >"$project_dir/main.gd" <<'EOF'
+extends Control
+
+var benchmark_node: Node2D
+var elapsed := 0.0
+var finished := false
+
+func _ready():
+    call_deferred("_start_bunnymark")
+
+func _start_bunnymark():
+    var script = load("res://kotlin-src/BunnymarkV1SpritesKanama.kt")
+    benchmark_node = Node2D.new()
+    benchmark_node.set_script(script)
+    benchmark_node.add_user_signal("benchmark_finished", [{"name": "output", "type": TYPE_INT}])
+    benchmark_node.connect("benchmark_finished", Callable(self, "_on_benchmark_finished"))
+    add_child(benchmark_node)
+    await get_tree().process_frame
+    benchmark_node.set_process(true)
+    for i in range(25):
+        benchmark_node.call("add_bunny")
+    set_process(true)
+
+func _process(delta):
+    if finished:
+        return
+    elapsed += delta
+    if elapsed >= 2.0:
+        benchmark_node.call("finish")
+        finished = true
+
+func _on_benchmark_finished(output):
+    $Status.text = "Bunnymark output: %s" % output
+    benchmark_node.call("signal_ack")
+    print("bunnymark output: ", output)
 EOF
 fi
 
@@ -191,6 +297,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+$main_script_line
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -236,9 +343,19 @@ textures/vram_compression/import_etc2_astc=true
 EOF
 fi
 
-DEVELOPER_DIR="$xcode_developer_dir" "$ROOT_DIR/gradlew" installIosAddon \
-  -PkanamaIosProjectDir="$project_dir" \
-  -PkanamaXcodeDeveloperDir="$xcode_developer_dir"
+install_ios_addon_args=(
+  installIosAddon
+  "-PkanamaIosProjectDir=$project_dir"
+  "-PkanamaXcodeDeveloperDir=$xcode_developer_dir"
+)
+if [[ "$kanama_user_script_probe" -eq 1 ]]; then
+  install_ios_addon_args+=("-PkanamaIosProjectScriptsDir=$project_dir/kotlin-src")
+fi
+if [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
+  install_ios_addon_args+=("-PkanamaIosProjectScriptsDir=$project_dir/kotlin-src")
+fi
+
+DEVELOPER_DIR="$xcode_developer_dir" "$ROOT_DIR/gradlew" "${install_ios_addon_args[@]}"
 
 cat >"$project_dir/export_presets.cfg" <<EOF
 [preset.0]
@@ -412,7 +529,7 @@ DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch \
 launch_pid="$!"
 printf '%s\n' "$launch_pid" >"$launch_pid_file"
 
-sleep 3
+sleep "$launch_sleep"
 DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl io "$device_udid" screenshot "$screenshot_path"
 
 kill "$launch_pid" >/dev/null 2>&1 || true
@@ -440,6 +557,41 @@ if [[ "$kanama_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] script instance ready log detected"
   else
     echo "[ios_visual_smoke] script instance ready log missing" >&2
+    exit 1
+  fi
+fi
+
+if [[ "$kanama_user_script_probe" -eq 1 ]]; then
+  if rg -q 'project script method call.*_ready' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] project script ready log detected"
+  else
+    echo "[ios_visual_smoke] project script ready log missing" >&2
+    exit 1
+  fi
+fi
+
+if [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
+  bunnymark_add_calls="$(
+    {
+      rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" || true
+    } | wc -l | tr -d '[:space:]'
+  )"
+  if [[ "$bunnymark_add_calls" -lt 25 ]]; then
+    echo "[ios_visual_smoke] Bunnymark add_bunny call count too low: $bunnymark_add_calls" >&2
+    exit 1
+  fi
+  if ! rg -q 'project script method call.*method=_process' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] Bunnymark _process log missing" >&2
+    exit 1
+  fi
+  if ! rg -q 'project script method call.*method=finish' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] Bunnymark finish log missing" >&2
+    exit 1
+  fi
+  if rg -q 'bunnymark signal ack' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] Bunnymark add/process/finish/signal logs detected"
+  else
+    echo "[ios_visual_smoke] Bunnymark signal ack log missing" >&2
     exit 1
   fi
 fi

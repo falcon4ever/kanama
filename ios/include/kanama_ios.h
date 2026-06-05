@@ -28,6 +28,40 @@ void kanama_ios_godot_ptrcall_string_arg(
     const char *value
 );
 
+int64_t kanama_ios_godot_construct_object(const char *class_name);
+
+void kanama_ios_godot_object_queue_free(int64_t object);
+
+void kanama_ios_godot_node_add_child(int64_t parent, int64_t child);
+
+void kanama_ios_godot_node_remove_child(int64_t parent, int64_t child);
+
+int64_t kanama_ios_godot_node_get_child_count(int64_t node);
+
+int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index);
+
+void kanama_ios_godot_node2d_get_position(int64_t node, double *x, double *y);
+
+void kanama_ios_godot_node2d_set_position(int64_t node, double x, double y);
+
+void kanama_ios_godot_canvas_item_get_viewport_rect(
+    int64_t object,
+    double *x,
+    double *y,
+    double *width,
+    double *height
+);
+
+int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint);
+
+void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture);
+
+int32_t kanama_ios_godot_object_emit_signal_int(
+    int64_t object,
+    const char *signal_name,
+    int64_t value
+);
+
 int32_t kanama_ios_godot_set_first_node_in_group_text(
     const char *group_name,
     const char *value
