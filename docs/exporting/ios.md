@@ -8,12 +8,13 @@ The current direction is:
 - Godot GDExtension entry point in a small C shim,
 - Kotlin/Native static library linked into the same iOS `.xcframework`,
 - no desktop JVM, GraalVM, or TeaVM in the iOS app, and
-- simulator-first validation before physical-device signing.
+- physical-device validation first; simulator builds are optional compile/link
+  checks and are not used as a performance signal.
 
 ## Current Status
 
 The spike builds debug and release iOS `.xcframework` artifacts with device
-`arm64` and Apple Silicon simulator `arm64` slices. The Kotlin/Native runtime
+`arm64` and optional Apple Silicon simulator `arm64` slices. The Kotlin/Native runtime
 currently proves the loader path, lifecycle callbacks, a main-loop frame
 callback, one cached typed Godot call from Kotlin/Native, and a minimal
 built-in `.kt` script-resource probe:
@@ -24,33 +25,39 @@ Godot iOS export -> C shim -> Kotlin/Native runtime -> typed ptrcall
 
 The script probe registers a `ScriptLanguageExtension`, `ScriptExtension`, and
 `.kt` `ResourceFormatLoader`, attaches a test `.kt` resource to a `Label`, and
-uses a Kotlin/Native `_ready` callback to update that owner. It does not yet
-compile or run arbitrary Kanama project scripts on iOS.
+uses a Kotlin/Native `_ready` callback to update that owner. The spike can also
+compile selected project scripts into the Kotlin/Native iOS runtime, but it does
+not yet prove full demo gameplay or arbitrary Kanama project scripts on iOS.
 
 ## Build The iOS Artifacts
 
-Use Xcode 26.5 or newer enough to provide the installed iOS SDK and simulator.
-If `xcode-select` points at Command Line Tools, set `DEVELOPER_DIR` for the
-Gradle process. Kotlin/Native's Apple linker checks this environment variable
+Use Xcode 26.5 or newer enough to provide the installed iOS SDK. If
+`xcode-select` points at Command Line Tools, set `DEVELOPER_DIR` for the Gradle
+process. Kotlin/Native's Apple linker checks this environment variable
 directly.
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-./gradlew assembleIosKanamaXcframework \
+./gradlew assembleIosDeviceKanamaXcframework \
   -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
 ```
 
 The task writes:
 
 ```text
-build/ios/xcframework/debug/kanama_ios.debug.xcframework
-build/ios/xcframework/release/kanama_ios.release.xcframework
+build/ios/xcframework-device/debug/kanama_ios.debug.xcframework
+build/ios/xcframework-device/release/kanama_ios.release.xcframework
 ```
 
-## Check The Godot iOS Template
+`installIosAddon` also defaults to the device-only xcframeworks. Pass
+`-PkanamaIosXcframeworkMode=full` when intentionally building the optional
+device plus simulator xcframeworks.
 
-Before simulator work on Apple Silicon, verify that the installed Godot iOS
-export template has an `arm64` simulator engine archive:
+## Optional Simulator Template Check
+
+Only do this when deliberately using the simulator path. Before simulator work
+on Apple Silicon, verify that the installed Godot iOS export template has an
+`arm64` simulator engine archive:
 
 ```sh
 ./gradlew verifyIosGodotTemplate \
@@ -73,6 +80,8 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
 ```
 
+For simulator experiments, add `-PkanamaIosXcframeworkMode=full`.
+
 This installs the iOS descriptor entries:
 
 ```ini
@@ -83,18 +92,19 @@ ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
 
 ## Boundaries
 
-- Simulator startup is the first validation target.
-- Device export requires signing identities and provisioning and is a later
-  validation target.
+- Physical-device export and launch are the first validation target.
+- Simulator startup is optional for compile/link debugging and should not be
+  used to judge iOS frame rate or gameplay feel.
 - Hot reload is out of scope for the first iOS backend.
-- KSP metadata, user project script compilation, Kotlin Multiplatform source
-  layout, and real demo ports are still future work for the iOS backend.
+- Full KSP metadata parity, Kotlin Multiplatform source layout, generated
+  runtime wrappers, and real demo gameplay are still future work for the iOS
+  backend.
 - The production path must port the runtime through backend-neutral wrappers
   and prefer cached typed calls over Variant-heavy or allocation-heavy paths.
 
-## Visual Simulator Smoke
+## Physical Device Smoke
 
-The visual smoke script proves the native loader, Xcode simulator build, app
+The visual smoke script proves the native loader, Xcode device build, app
 install, app launch, and a simple Godot render path. With `--kanama-probe`, it
 also proves a Kotlin/Native main-loop frame callback can call back into Godot
 through the C shim and update a normal `Label` via typed `ptrcall`.
@@ -108,25 +118,39 @@ These modes still do not prove general Kanama script execution, KSP-generated
 registrars, project-specific Kotlin/Native compilation, or hot reload.
 
 ```sh
+KANAMA_IOS_DEVICE=00008101-000E109E3C63001E \
+KANAMA_IOS_TEAM=DVZT29Q4QT \
 scripts/ios_visual_smoke.sh \
-  --godot /Applications/Godot.app/Contents/MacOS/Godot
+  --godot /Applications/Godot.app/Contents/MacOS/Godot \
+  --allow-provisioning-updates
 ```
 
 Run the Kotlin/Native frame probe with:
 
 ```sh
+KANAMA_IOS_DEVICE=00008101-000E109E3C63001E \
+KANAMA_IOS_TEAM=DVZT29Q4QT \
 scripts/ios_visual_smoke.sh \
   --godot /Applications/Godot.app/Contents/MacOS/Godot \
-  --kanama-probe
+  --kanama-probe \
+  --allow-provisioning-updates
 ```
 
 Run the attached `.kt` script-resource probe with:
 
 ```sh
+KANAMA_IOS_DEVICE=00008101-000E109E3C63001E \
+KANAMA_IOS_TEAM=DVZT29Q4QT \
 scripts/ios_visual_smoke.sh \
   --godot /Applications/Godot.app/Contents/MacOS/Godot \
-  --kanama-script-probe
+  --kanama-script-probe \
+  --allow-provisioning-updates
 ```
+
+## Optional Simulator Smoke
+
+The simulator path remains available for Xcode link checks and loader-debug
+experiments, but it is not a performance gate for Kanama iOS.
 
 If the installed Godot iOS template is missing `arm64` simulator support, build
 a matching Godot simulator library and pass it explicitly:
@@ -137,6 +161,7 @@ scons platform=ios target=template_debug arch=arm64 simulator=yes precision=sing
 
 scripts/ios_visual_smoke.sh \
   --godot /Applications/Godot.app/Contents/MacOS/Godot \
+  --simulator \
   --godot-simulator-lib /absolute/path/to/libgodot.ios.template_debug.arm64.simulator.a \
   --kanama-script-probe
 ```
@@ -146,6 +171,9 @@ scripts/ios_visual_smoke.sh \
 Apple Silicon iOS simulators build and run `arm64` simulator binaries. That is
 separate from real-device `arm64`, which uses the `iphoneos` SDK instead of the
 `iphonesimulator` SDK.
+
+Simulator frame rate is not treated as representative for this spike. Use a
+real iPhone for any playability or performance read.
 
 If Xcode fails while linking the exported project with many warnings about
 `libgodot.a` objects being `x86_64` when `arm64` is required, the installed

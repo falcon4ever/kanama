@@ -44,6 +44,28 @@ void kanama_ios_godot_node2d_get_position(int64_t node, double *x, double *y);
 
 void kanama_ios_godot_node2d_set_position(int64_t node, double x, double y);
 
+void kanama_ios_godot_node2d_get_scale(int64_t node, double *x, double *y);
+
+void kanama_ios_godot_node2d_set_scale(int64_t node, double x, double y);
+
+void kanama_ios_godot_node3d_get_position(int64_t node, double *x, double *y, double *z);
+
+void kanama_ios_godot_node3d_set_position(int64_t node, double x, double y, double z);
+
+void kanama_ios_godot_node3d_get_rotation(int64_t node, double *x, double *y, double *z);
+
+void kanama_ios_godot_node3d_set_rotation(int64_t node, double x, double y, double z);
+
+void kanama_ios_godot_node3d_get_scale(int64_t node, double *x, double *y, double *z);
+
+void kanama_ios_godot_node3d_set_scale(int64_t node, double x, double y, double z);
+
+void kanama_ios_godot_node3d_get_global_position(int64_t node, double *x, double *y, double *z);
+
+void kanama_ios_godot_node3d_set_global_position(int64_t node, double x, double y, double z);
+
+void kanama_ios_godot_node3d_rotate_y(int64_t node, double angle);
+
 void kanama_ios_godot_canvas_item_get_viewport_rect(
     int64_t object,
     double *x,

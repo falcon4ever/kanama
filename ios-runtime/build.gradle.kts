@@ -9,6 +9,23 @@ data class IosScriptMethodModel(
     val godotName: String,
     val kotlinName: String,
     val argumentCount: Int,
+    val bridgeKind: IosScriptBridgeKind,
+)
+
+enum class IosScriptBridgeKind {
+    ZERO_ARG,
+    DOUBLE_ARG,
+    UNSUPPORTED,
+}
+
+data class IosScriptPropertyModel(
+    val godotName: String,
+    val kotlinName: String,
+)
+
+data class IosScriptSignalModel(
+    val godotName: String,
+    val kotlinName: String,
 )
 
 data class IosScriptModel(
@@ -18,6 +35,8 @@ data class IosScriptModel(
     val className: String,
     val baseType: String,
     val methods: List<IosScriptMethodModel>,
+    val properties: List<IosScriptPropertyModel>,
+    val signals: List<IosScriptSignalModel>,
 )
 
 fun iosScriptDirs(raw: String?): List<String> =
@@ -60,8 +79,51 @@ fun resourcePathFor(root: File, sourceFile: File): String {
 
 fun registeredMethodName(annotation: String, functionName: String): String {
     val explicit = Regex(""""([^"]+)"""").find(annotation)?.groupValues?.get(1)
-    return explicit?.takeIf { it.isNotBlank() } ?: functionName
+    return explicit?.takeIf { it.isNotBlank() } ?: camelToSnake(functionName)
 }
+
+fun camelToSnake(name: String): String =
+    buildString {
+        name.forEachIndexed { index, ch ->
+            if (index > 0 && ch.isUpperCase()) append('_')
+            append(ch.lowercaseChar())
+        }
+    }
+
+fun constantIdentifier(name: String): String {
+    val stripped = name.trim('_')
+    if (stripped.isBlank()) return "value"
+    val words = stripped
+        .split('_', '-', ' ')
+        .filter { it.isNotBlank() }
+    val candidate = words.drop(1).fold(words.first()) { acc, part ->
+        acc + part.replaceFirstChar { it.uppercaseChar() }
+    }
+    return candidate.replace(Regex("""[^A-Za-z0-9_]"""), "_")
+        .let { if (it.firstOrNull()?.isDigit() == true) "_$it" else it }
+}
+
+fun functionParams(raw: String): List<String> {
+    val trimmed = raw.trim()
+    if (trimmed.isBlank()) return emptyList()
+    return trimmed
+        .split(",")
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+}
+
+fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind =
+    when {
+        params.isEmpty() -> IosScriptBridgeKind.ZERO_ARG
+        params.size == 1 && (godotName == "_process" || godotName == "_physics_process") ->
+            IosScriptBridgeKind.DOUBLE_ARG
+        else -> IosScriptBridgeKind.UNSUPPORTED
+    }
+
+fun isIosScriptPropertyAnnotation(annotation: String): Boolean =
+    annotation.contains("ScriptProperty") ||
+        Regex("""@\s*(?:net\.multigesture\.kanama\.annotations\.)?Export\s*(?:\(|$)""")
+            .containsMatchIn(annotation)
 
 fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
     val text = sourceFile.readText()
@@ -84,6 +146,8 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
         ?: return null
 
     val methods = mutableListOf<IosScriptMethodModel>()
+    val properties = mutableListOf<IosScriptPropertyModel>()
+    val signals = mutableListOf<IosScriptSignalModel>()
     val pendingAnnotations = mutableListOf<String>()
     text.lineSequence().forEach { rawLine ->
         val line = rawLine.trim()
@@ -93,26 +157,47 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                 val functionMatch = Regex("""\bfun\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)""").find(line)
                 if (functionMatch != null) {
                     val functionName = functionMatch.groupValues[1]
-                    val params = functionMatch.groupValues[2].trim()
-                    val functionArgCount = if (params.isBlank()) 0 else params.split(",").size
+                    val params = functionParams(functionMatch.groupValues[2])
                     pendingAnnotations.forEach { annotation ->
                         when {
                             annotation.contains("OnReady") || annotation.contains("@Ready") ->
-                                methods += IosScriptMethodModel("_ready", functionName, 0)
+                                methods += IosScriptMethodModel("_ready", functionName, 0, IosScriptBridgeKind.ZERO_ARG)
                             annotation.contains("OnExitTree") || annotation.contains("@ExitTree") ->
-                                methods += IosScriptMethodModel("_exit_tree", functionName, 0)
+                                methods += IosScriptMethodModel("_exit_tree", functionName, 0, IosScriptBridgeKind.ZERO_ARG)
                             annotation.contains("OnProcess") || annotation.contains("@Process") ->
-                                methods += IosScriptMethodModel("_process", functionName, 1)
+                                methods += IosScriptMethodModel("_process", functionName, 1, IosScriptBridgeKind.DOUBLE_ARG)
                             annotation.contains("OnPhysicsProcess") || annotation.contains("@PhysicsProcess") ->
-                                methods += IosScriptMethodModel("_physics_process", functionName, 1)
+                                methods += IosScriptMethodModel("_physics_process", functionName, 1, IosScriptBridgeKind.DOUBLE_ARG)
+                            annotation.contains("OnInput") || annotation.contains("@Input") ->
+                                methods += IosScriptMethodModel("_input", functionName, 1, IosScriptBridgeKind.UNSUPPORTED)
                             annotation.contains("RegisterFunction") || annotation.contains("@Method") ->
-                                methods += IosScriptMethodModel(
+                                registeredMethodName(annotation, functionName).let { godotName ->
+                                    methods += IosScriptMethodModel(
+                                        godotName,
+                                        functionName,
+                                        params.size,
+                                        bridgeKindFor(godotName, params),
+                                    )
+                                }
+                            annotation.contains("Signal") ->
+                                signals += IosScriptSignalModel(
                                     registeredMethodName(annotation, functionName),
                                     functionName,
-                                    functionArgCount,
                                 )
                         }
                     }
+                }
+                pendingAnnotations.clear()
+            }
+            line.startsWith("var ") || line.startsWith("val ") || line.contains(" var ") || line.contains(" val ") -> {
+                val propertyMatch = Regex("""\b(?:var|val)\s+([A-Za-z_][A-Za-z0-9_]*)\b""").find(line)
+                if (propertyMatch != null && pendingAnnotations.any(::isIosScriptPropertyAnnotation)) {
+                    val propertyName = propertyMatch.groupValues[1]
+                    val annotation = pendingAnnotations.firstOrNull(::isIosScriptPropertyAnnotation).orEmpty()
+                    properties += IosScriptPropertyModel(
+                        godotName = registeredMethodName(annotation, propertyName),
+                        kotlinName = propertyName,
+                    )
                 }
                 pendingAnnotations.clear()
             }
@@ -121,6 +206,8 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
     }
 
     val dedupedMethods = methods.distinctBy { it.godotName }
+    val dedupedProperties = properties.distinctBy { it.godotName }
+    val dedupedSignals = signals.distinctBy { it.godotName }
     return IosScriptModel(
         sourceFile = sourceFile,
         resourcePath = resourcePathFor(sourceRoot, sourceFile),
@@ -128,6 +215,8 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
         className = className,
         baseType = baseType,
         methods = dedupedMethods,
+        properties = dedupedProperties,
+        signals = dedupedSignals,
     )
 }
 
@@ -180,12 +269,14 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         builder.appendLine(") : KanamaIosScriptBridge {")
         builder.appendLine("    override fun call(methodName: String, firstArg: Double): Boolean = when (methodName) {")
         model.methods.forEach { method ->
-            val invocation = if (method.argumentCount == 1) {
-                "script.${method.kotlinName}(firstArg)"
-            } else {
-                "script.${method.kotlinName}()"
+            val invocation = when (method.bridgeKind) {
+                IosScriptBridgeKind.ZERO_ARG -> "script.${method.kotlinName}()"
+                IosScriptBridgeKind.DOUBLE_ARG -> "script.${method.kotlinName}(firstArg)"
+                IosScriptBridgeKind.UNSUPPORTED -> null
             }
-            builder.appendLine("        ${kotlinString(method.godotName)} -> { $invocation; true }")
+            if (invocation != null) {
+                builder.appendLine("        ${kotlinString(method.godotName)} -> { $invocation; true }")
+            }
         }
         builder.appendLine("        else -> false")
         builder.appendLine("    }")
@@ -193,6 +284,115 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
     }
     return builder.toString()
 }
+
+fun generateIosGeneratedConstantsSource(models: List<IosScriptModel>): String {
+    val builder = StringBuilder()
+    builder.appendLine("package net.multigesture.kanama.generated")
+    builder.appendLine()
+    builder.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")
+    builder.appendLine()
+    builder.appendLine("@Suppress(\"unused\")")
+    builder.appendLine("private fun emitIosSignal(instance: Any, signalName: String, args: Array<out Any?>) {")
+    builder.appendLine("    val script = instance as? net.multigesture.kanama.api.KanamaScript<*> ?: return")
+    builder.appendLine("    net.multigesture.kanama.api.GodotObject(script.godotObject).emitSignal(signalName, *args)")
+    builder.appendLine("}")
+    models.forEach { model ->
+        if (model.signals.isNotEmpty()) {
+            builder.appendLine()
+            builder.appendLine("object ${model.className}Signals {")
+            model.signals.forEach { signal ->
+                val functionName = constantIdentifier(signal.kotlinName)
+                val signalLiteral = kotlinString(signal.godotName)
+                val fqClassName = "${model.packageName}.${model.className}"
+                builder.appendLine("    fun $functionName(instance: $fqClassName, vararg args: Any?) {")
+                builder.appendLine("        emitIosSignal(instance, $signalLiteral, args)")
+                builder.appendLine("    }")
+            }
+            builder.appendLine("}")
+        }
+        val helperMethods = model.methods
+            .filter { it.argumentCount == 0 && !it.godotName.startsWith("_") }
+        if (helperMethods.isNotEmpty()) {
+            val fqClassName = "${model.packageName}.${model.className}"
+            builder.appendLine()
+            builder.appendLine("object ${model.className}Methods {")
+            helperMethods.forEach { method ->
+                val functionName = constantIdentifier(method.kotlinName)
+                builder.appendLine("    fun $functionName(instance: $fqClassName) {")
+                builder.appendLine("        instance.${method.kotlinName}()")
+                builder.appendLine("    }")
+                builder.appendLine()
+                builder.appendLine("    fun $functionName(target: net.multigesture.kanama.api.GodotObject): Boolean {")
+                builder.appendLine("        val instance = target.kotlinScriptInstance<$fqClassName>() ?: return false")
+                builder.appendLine("        $functionName(instance)")
+                builder.appendLine("        return true")
+                builder.appendLine("    }")
+            }
+            builder.appendLine("}")
+        }
+        val methods = model.methods
+        val properties = model.properties
+        val signals = model.signals
+        if (methods.isNotEmpty() || properties.isNotEmpty() || signals.isNotEmpty()) {
+            builder.appendLine()
+            builder.appendLine("object ${model.className}Names {")
+            if (methods.isNotEmpty()) {
+                builder.appendLine("    object Methods {")
+                methods.forEach { method ->
+                    builder.appendLine(
+                        "        const val ${constantIdentifier(method.kotlinName)}: String = ${kotlinString(method.godotName)}",
+                    )
+                }
+                builder.appendLine("    }")
+            }
+            if (properties.isNotEmpty()) {
+                builder.appendLine("    object Properties {")
+                properties.forEach { property ->
+                    builder.appendLine(
+                        "        const val ${constantIdentifier(property.kotlinName)}: String = ${kotlinString(property.godotName)}",
+                    )
+                }
+                builder.appendLine("    }")
+            }
+            if (signals.isNotEmpty()) {
+                builder.appendLine("    object Signals {")
+                signals.forEach { signal ->
+                    builder.appendLine(
+                        "        const val ${constantIdentifier(signal.kotlinName)}: String = ${kotlinString(signal.godotName)}",
+                    )
+                }
+                builder.appendLine("    }")
+            }
+            builder.appendLine("}")
+        }
+    }
+    return builder.toString()
+}
+
+fun generateIosCompatibilitySources(models: List<IosScriptModel>): Map<String, String> =
+    models
+        .mapNotNull { it.packageName }
+        .distinct()
+        .sorted()
+        .associate { packageName ->
+            val relativePath = "${packageName.replace('.', '/')}/KanamaIosCompatibility.generated.kt"
+            val source = buildString {
+                appendLine("package $packageName")
+                appendLine()
+                appendLine("@Suppress(\"unused\")")
+                appendLine("internal fun <T> MutableCollection<T>.removeIf(predicate: (T) -> Boolean): Boolean {")
+                appendLine("    val originalSize = size")
+                appendLine("    removeAll(predicate)")
+                appendLine("    return size != originalSize")
+                appendLine("}")
+                appendLine()
+                appendLine("@Suppress(\"unused\")")
+                appendLine("internal object System {")
+                appendLine("    fun getenv(name: String): String? = null")
+                appendLine("}")
+            }
+            relativePath to source
+        }
 
 val configuredIosScriptDirs =
     providers.gradleProperty("kanamaIosProjectScriptsDirs")
@@ -206,11 +406,19 @@ val generateIosProjectScriptRegistry by tasks.registering {
     val outputFile = generatedIosProjectScriptsDir.map {
         it.file("net/multigesture/kanama/ios/KanamaIosProjectRegistry.generated.kt")
     }
+    val constantsOutputFile = generatedIosProjectScriptsDir.map {
+        it.file("net/multigesture/kanama/generated/KanamaIosScriptConstants.generated.kt")
+    }
+    val compatibilityOutputDir = generatedIosProjectScriptsDir.map {
+        it.dir("kanama-ios-compat")
+    }
     inputs.property("kanamaIosProjectScriptsDirs", activeIosScriptDirs)
     inputs.files(activeIosScriptDirs.map { raw ->
         iosScriptDirs(raw).map { file(it) }
     })
     outputs.file(outputFile)
+    outputs.file(constantsOutputFile)
+    outputs.dir(compatibilityOutputDir)
     doLast {
         val sourceRoots = iosScriptDirs(activeIosScriptDirs.get()).map { file(it) }.filter { it.exists() }
         val models = sourceRoots
@@ -230,6 +438,18 @@ val generateIosProjectScriptRegistry by tasks.registering {
         outputFile.get().asFile.apply {
             parentFile.mkdirs()
             writeText(generateIosRegistrySource(models))
+        }
+        constantsOutputFile.get().asFile.apply {
+            parentFile.mkdirs()
+            writeText(generateIosGeneratedConstantsSource(models))
+        }
+        val compatibilityRoot = compatibilityOutputDir.get().asFile
+        compatibilityRoot.deleteRecursively()
+        generateIosCompatibilitySources(models).forEach { (relativePath, source) ->
+            compatibilityRoot.resolve(relativePath).apply {
+                parentFile.mkdirs()
+                writeText(source)
+            }
         }
     }
 }
@@ -259,6 +479,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
             }
         }
         val iosMain by creating {

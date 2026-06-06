@@ -12,10 +12,13 @@ versioning once public releases begin.
 - Added an experimental iOS Kotlin/Native backend spike with a C GDExtension
   shim, static `.xcframework` build tasks, install task, and docs. This does
   not yet claim iOS script support.
-- Added iOS simulator validation tooling: a Godot iOS export-template preflight
-  and a visual simulator smoke script with an optional Kotlin/Native frame
-  probe that updates a Godot `Label` through a cached typed `ptrcall`.
-- Added an iOS simulator `.kt` script-resource probe that registers minimal
+- Added iOS physical-device validation tooling: a visual smoke script with an
+  optional Kotlin/Native frame probe that updates a Godot `Label` through a
+  cached typed `ptrcall`. Simulator checks remain available for compile/link
+  debugging only.
+- Made the iOS install path build device-only xcframeworks by default, with an
+  explicit `kanamaIosXcframeworkMode=full` escape hatch for simulator work.
+- Added an iOS `.kt` script-resource probe that registers minimal
   script-language/resource-loader shims, creates a Godot script instance, and
   enters Kotlin/Native from `_ready`. This remains a spike and does not yet
   support arbitrary Kanama project scripts on iOS.

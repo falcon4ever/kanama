@@ -1,5 +1,6 @@
 package net.multigesture.kanama.types
 
+import kotlin.math.atan2
 import kotlin.math.sqrt
 
 data class Vector2(
@@ -29,7 +30,15 @@ data class Vector2(
     fun length(): Double =
         sqrt(lengthSquared())
 
+    fun angle(): Double =
+        atan2(y, x)
+
+    fun withX(value: Number): Vector2 = Vector2(value, y)
+
+    fun withY(value: Number): Vector2 = Vector2(x, value)
+
     companion object {
         val ZERO = Vector2(0.0, 0.0)
+        val ONE = Vector2(1.0, 1.0)
     }
 }

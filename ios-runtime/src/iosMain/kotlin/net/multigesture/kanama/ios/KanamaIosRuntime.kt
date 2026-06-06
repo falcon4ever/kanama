@@ -196,7 +196,7 @@ private object KanamaIosRuntime {
             instance.readyCalled = true
         }
         val ok = instance.bridge.call(methodName, firstArg)
-        if (ok) {
+        if (ok && shouldLogScriptMethodCall(methodName)) {
             val kind = if (instance.resource.path == PROBE_SCRIPT_PATH) "built-in probe" else "project script"
             log("$kind method call handle=$handle path=${instance.resource.path} method=$methodName")
         }
@@ -239,6 +239,9 @@ private object KanamaIosRuntime {
             factory = { ownerObject -> BuiltInProbeScript(ownerObject) },
         )
     }
+
+    private fun shouldLogScriptMethodCall(methodName: String): Boolean =
+        methodName != "_process" && methodName != "_physics_process"
 
     private fun log(message: String) {
         println("[kanama][ios][kn] $message")

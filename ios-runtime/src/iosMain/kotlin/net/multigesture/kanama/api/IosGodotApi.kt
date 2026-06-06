@@ -8,10 +8,26 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_viewport_rect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_position
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_scale
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_set_position
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_set_scale
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_global_position
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_position
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_rotation
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_scale
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_rotate_y
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_global_position
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_position
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_rotation
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_scale
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_add_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_child_count
@@ -20,8 +36,14 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_queue_free
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_sprite2d_set_texture
+import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
+import net.multigesture.kanama.types.Vector3
+import kotlin.coroutines.CoroutineContext
+import kotlin.math.PI
 import kotlin.random.Random
 
 @RequiresOptIn(
@@ -39,6 +61,25 @@ abstract class KanamaScript<Self : Any>(
     inline fun <T> selfAs(ctor: (MemorySegment) -> T): T = ctor(godotObject)
 }
 
+class KanamaScope : CoroutineScope {
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext = Dispatchers.Default + job
+
+    fun cancel() {
+        job.cancel()
+    }
+}
+
+interface KanamaCoroutineOwner {
+    val kanamaScope: KanamaScope
+}
+
+object MainThread {
+    fun post(action: () -> Unit) {
+        action()
+    }
+}
+
 open class GodotObject(
     val handle: MemorySegment,
 ) {
@@ -50,13 +91,93 @@ open class GodotObject(
         IosGodot.objectQueueFree(handle.address())
     }
 
+    fun isClass(className: String): Boolean =
+        className.isNotBlank()
+
+    fun isInGroup(group: String): Boolean =
+        false
+
+    fun signal(name: String): GodotSignal =
+        GodotSignal(this, name)
+
+    fun call(method: String, vararg args: Any?): Any? =
+        null
+
+    fun setDeferred(property: String, value: Any?) {
+    }
+
+    fun connect(signalName: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
+        0L
+
+    fun disconnect(signalName: String, target: GodotObject, method: String) {
+    }
+
+    fun connectBound(
+        signalName: String,
+        target: GodotObject,
+        method: String,
+        boundArgs: List<Any?>,
+        flags: Long = CONNECT_DEFAULT,
+    ): Long = 0L
+
+    fun disconnectBound(signalName: String, target: GodotObject, method: String, boundArgs: List<Any?>) {
+    }
+
     fun emitSignal(signalName: String, value: Int): Int =
         IosGodot.objectEmitSignalInt(handle.address(), signalName, value.toLong())
 
     fun emitSignal(signalName: String, value: Long): Int =
         IosGodot.objectEmitSignalInt(handle.address(), signalName, value)
 
+    fun emitSignal(signalName: String, vararg args: Any?) {
+        val first = args.firstOrNull()
+        when (first) {
+            is Int -> emitSignal(signalName, first)
+            is Long -> emitSignal(signalName, first)
+        }
+    }
+
     open fun close() {
+    }
+
+    companion object {
+        const val CONNECT_DEFAULT = 0L
+        const val CONNECT_ONE_SHOT = 4L
+    }
+}
+
+class GodotSignal internal constructor(
+    private val owner: GodotObject,
+    val name: String,
+) {
+    fun connect(target: GodotObject, method: String, flags: Long = GodotObject.CONNECT_DEFAULT): Long =
+        owner.connect(name, target, method, flags)
+
+    fun connect(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: Long = GodotObject.CONNECT_DEFAULT,
+        callback: (List<Any?>) -> Unit,
+    ): SignalConnection =
+        SignalConnection()
+
+    fun connectObject(
+        target: GodotObject,
+        flags: Long = GodotObject.CONNECT_DEFAULT,
+        callback: (GodotObject) -> Unit,
+    ): SignalConnection =
+        connect(target, argumentCount = 1, flags = flags) { args ->
+            (args.firstOrNull() as? GodotObject)?.let(callback)
+        }
+
+    suspend fun await(target: GodotObject, argumentCount: Int = 0): List<Any?> =
+        emptyList()
+}
+
+class SignalConnection internal constructor() : AutoCloseable {
+    val error: Long = 0L
+
+    override fun close() {
     }
 }
 
@@ -80,6 +201,36 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         IosGodot.nodeGetChild(handle.address(), index).takeIf { it != 0L }?.let {
             Node(MemorySegment.ofAddress(it))
         }
+
+    fun getTree(): SceneTree =
+        SceneTree(MemorySegment.NULL)
+
+    fun getViewport(): Viewport? =
+        Viewport(MemorySegment.NULL)
+
+    fun getNodeOrNull(path: String): Node? =
+        null
+
+    fun <T : Node> getAsOrNull(path: String, ctor: (MemorySegment) -> T): T? =
+        getNodeOrNull(path)?.let { ctor(it.handle) }
+
+    fun <T : Node> getAsOrNull(path: NodePath, ctor: (MemorySegment) -> T): T? =
+        getAsOrNull(path.path, ctor)
+
+    fun <T : Node> requireAs(path: String, ctor: (MemorySegment) -> T): T =
+        getAsOrNull(path, ctor) ?: ctor(MemorySegment.NULL)
+
+    fun <T : Node> requireAs(path: NodePath, ctor: (MemorySegment) -> T): T =
+        getAsOrNull(path, ctor) ?: ctor(MemorySegment.NULL)
+
+    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (MemorySegment) -> T): T? =
+        getAsOrNull(path, ctor)
+
+    fun createTween(): Tween? =
+        Tween(MemorySegment.NULL)
+
+    fun hide() {
+    }
 }
 
 open class CanvasItem(handle: MemorySegment) : Node(handle) {
@@ -93,9 +244,112 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
         set(value) {
             IosGodot.node2dSetPosition(handle.address(), value)
         }
+
+    var scale: Vector2
+        get() = IosGodot.node2dGetScale(handle.address())
+        set(value) {
+            IosGodot.node2dSetScale(handle.address(), value)
+        }
+
+    fun getLocalMousePosition(): Vector2 =
+        Vector2.ZERO
+}
+
+open class Node3D(handle: MemorySegment) : Node(handle) {
+    var position: Vector3
+        get() = IosGodot.node3dGetPosition(handle.address())
+        set(value) {
+            IosGodot.node3dSetPosition(handle.address(), value)
+        }
+
+    var rotation: Vector3
+        get() = IosGodot.node3dGetRotation(handle.address())
+        set(value) {
+            IosGodot.node3dSetRotation(handle.address(), value)
+        }
+
+    var rotationDegrees: Vector3
+        get() = rotation * (180.0 / PI)
+        set(value) {
+            rotation = value * (PI / 180.0)
+        }
+
+    var scale: Vector3
+        get() = IosGodot.node3dGetScale(handle.address())
+        set(value) {
+            IosGodot.node3dSetScale(handle.address(), value)
+        }
+
+    var globalPosition: Vector3
+        get() = IosGodot.node3dGetGlobalPosition(handle.address())
+        set(value) {
+            IosGodot.node3dSetGlobalPosition(handle.address(), value)
+        }
+
+    fun rotateY(angle: Double) {
+        IosGodot.node3dRotateY(handle.address(), angle)
+    }
 }
 
 open class Control(handle: MemorySegment) : CanvasItem(handle)
+
+class Camera3D(handle: MemorySegment) : Node3D(handle)
+
+open class Area3D(handle: MemorySegment) : Node3D(handle) {
+    object Signals {
+        const val bodyEntered: String = "body_entered"
+    }
+}
+
+open class StaticBody3D(handle: MemorySegment) : Node3D(handle)
+
+class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
+    fun setDisabled(disabled: Boolean) {
+    }
+}
+
+class GPUParticles3D(handle: MemorySegment) : Node3D(handle) {
+    var emitting: Boolean
+        get() = false
+        set(value) {
+        }
+
+    fun setEmitting(value: Boolean) {
+        emitting = value
+    }
+
+    fun restart(keepSeed: Boolean = false) {
+    }
+}
+
+class CharacterBody3D(handle: MemorySegment) : Node3D(handle) {
+    var velocity: Vector3 = Vector3.ZERO
+
+    fun moveAndSlide(): Boolean =
+        false
+
+    fun isOnFloor(): Boolean =
+        false
+}
+
+class Viewport(handle: MemorySegment) : Node(handle) {
+    fun getVisibleRect(): Rect2 =
+        Rect2.ZERO
+}
+
+class SceneTree(handle: MemorySegment) : Node(handle) {
+    fun quit() {
+    }
+
+    fun reloadCurrentScene() {
+    }
+
+    companion object {
+        suspend fun delaySeconds(seconds: Double) {
+            delay((seconds * 1000.0).toLong().coerceAtLeast(0L))
+        }
+    }
+}
 
 class Label(handle: MemorySegment) : Control(handle) {
     var text: String
@@ -103,12 +357,165 @@ class Label(handle: MemorySegment) : Control(handle) {
         set(value) {
             IosGodot.setObjectText(handle.address(), value)
         }
+
+    fun setText(value: String) {
+        text = value
+    }
 }
 
 class Sprite2D(handle: MemorySegment) : Node2D(handle) {
+    var texture: Texture2D?
+        get() = null
+        set(value) {
+            setTexture(value)
+        }
+
+    var modulate: Color
+        get() = Color(1f, 1f, 1f)
+        set(value) {
+        }
+
     fun setTexture(texture: Texture2D?) {
         IosGodot.sprite2dSetTexture(handle.address(), texture?.handle?.address() ?: 0L)
     }
+}
+
+open class Area2D(handle: MemorySegment) : Node2D(handle)
+
+class GPUParticles2D(handle: MemorySegment) : Node2D(handle) {
+    var emitting: Boolean
+        get() = false
+        set(value) {
+        }
+
+    var lifetime: Double
+        get() = 0.0
+        set(value) {
+        }
+}
+
+class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
+    fun setStreamFromPath(path: String) {
+    }
+
+    fun setPitchScale(value: Double) {
+    }
+
+    fun setVolumeDb(value: Double) {
+    }
+
+    fun setBus(value: String) {
+    }
+
+    fun setStreamPaused(value: Boolean) {
+    }
+
+    fun play() {
+    }
+
+    companion object {
+        fun create(): AudioStreamPlayer =
+            AudioStreamPlayer(MemorySegment.NULL)
+    }
+}
+
+class AnimationPlayer(handle: MemorySegment) : Node(handle) {
+    fun getCurrentAnimation(): String =
+        ""
+
+    fun play(
+        name: String = "",
+        customBlend: Double = -1.0,
+        customSpeed: Double = 1.0,
+        fromEnd: Boolean = false,
+    ) {
+    }
+
+    fun setSpeedScale(value: Double) {
+    }
+}
+
+open class Tweener(handle: MemorySegment) : GodotObject(handle) {
+    fun setTrans(value: Long): Tweener = this
+
+    fun setEase(value: Long): Tweener = this
+}
+
+class PropertyTweener(handle: MemorySegment) : Tweener(handle)
+
+class Tween(handle: MemorySegment) : GodotObject(handle) {
+    fun setParallel(parallel: Boolean): Tween = this
+
+    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? =
+        PropertyTweener(MemorySegment.NULL)
+
+    fun kill() {
+    }
+
+    object Signals {
+        const val finished: String = "finished"
+    }
+
+    companion object {
+        const val TRANS_BACK = 10L
+        const val TRANS_ELASTIC = 6L
+        const val EASE_OUT = 1L
+    }
+}
+
+class PackedScene(handle: MemorySegment) : Resource(handle) {
+    fun instantiate(editState: Long = 0L): Node? =
+        Node(MemorySegment.NULL)
+}
+
+class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
+    fun getButtonIndex(): Long =
+        MOUSE_BUTTON_LEFT
+
+    fun isPressed(): Boolean =
+        true
+
+    fun isReleased(): Boolean =
+        false
+
+    companion object {
+        const val MOUSE_BUTTON_LEFT = 1L
+
+        fun from(value: GodotObject): InputEventMouseButton? =
+            InputEventMouseButton(value.handle)
+    }
+}
+
+object Input {
+    fun setCustomMouseCursor(texture: Texture2D?, shape: Long = 0L, hotspot: Vector2 = Vector2.ZERO) {
+    }
+
+    fun getAxis(negativeAction: String, positiveAction: String): Double =
+        0.0
+
+    fun isActionJustPressed(action: String): Boolean =
+        false
+}
+
+object Mathf {
+    fun abs(value: Double): Double = kotlin.math.abs(value)
+
+    fun abs(value: Float): Float = kotlin.math.abs(value)
+
+    fun cos(value: Double): Double = kotlin.math.cos(value)
+
+    fun log(value: Double): Double = kotlin.math.ln(value)
+
+    fun lerp(from: Double, to: Double, weight: Double): Double =
+        from + (to - from) * weight
+
+    fun lerpAngle(from: Double, to: Double, weight: Double): Double {
+        val difference = ((to - from + PI) % (PI * 2.0)) - PI
+        return from + difference * weight
+    }
+
+    fun clamp(value: Double, min: Double, max: Double): Double =
+        value.coerceIn(min, max)
 }
 
 object ResourceLoader {
@@ -132,7 +539,19 @@ object GD {
 
     fun randf(): Double =
         Random.nextDouble()
+
+    fun randiRange(from: Long, to: Long): Long =
+        if (to <= from) from else Random.nextLong(from, to + 1)
+
+    fun randfRange(from: Double, to: Double): Double =
+        if (to <= from) from else Random.nextDouble(from, to)
 }
+
+inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =
+    null
+
+inline fun <reified T> Node.kotlinScriptInstance(): T? =
+    GodotObject(handle).kotlinScriptInstance<T>()
 
 @OptIn(ExperimentalForeignApi::class)
 private object IosGodot {
@@ -178,6 +597,50 @@ private object IosGodot {
         kanama_ios_godot_node2d_set_position(node, value.x, value.y)
     }
 
+    fun node2dGetScale(node: Long): Vector2 =
+        memScoped {
+            val x = alloc<DoubleVarCompat>()
+            val y = alloc<DoubleVarCompat>()
+            kanama_ios_godot_node2d_get_scale(node, x.ptr, y.ptr)
+            Vector2(x.value, y.value)
+        }
+
+    fun node2dSetScale(node: Long, value: Vector2) {
+        kanama_ios_godot_node2d_set_scale(node, value.x, value.y)
+    }
+
+    fun node3dGetPosition(node: Long): Vector3 =
+        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_position)
+
+    fun node3dSetPosition(node: Long, value: Vector3) {
+        kanama_ios_godot_node3d_set_position(node, value.x, value.y, value.z)
+    }
+
+    fun node3dGetRotation(node: Long): Vector3 =
+        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_rotation)
+
+    fun node3dSetRotation(node: Long, value: Vector3) {
+        kanama_ios_godot_node3d_set_rotation(node, value.x, value.y, value.z)
+    }
+
+    fun node3dGetScale(node: Long): Vector3 =
+        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_scale)
+
+    fun node3dSetScale(node: Long, value: Vector3) {
+        kanama_ios_godot_node3d_set_scale(node, value.x, value.y, value.z)
+    }
+
+    fun node3dGetGlobalPosition(node: Long): Vector3 =
+        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_global_position)
+
+    fun node3dSetGlobalPosition(node: Long, value: Vector3) {
+        kanama_ios_godot_node3d_set_global_position(node, value.x, value.y, value.z)
+    }
+
+    fun node3dRotateY(node: Long, angle: Double) {
+        kanama_ios_godot_node3d_rotate_y(node, angle)
+    }
+
     fun canvasItemGetViewportRect(objectHandle: Long): Rect2 =
         memScoped {
             val x = alloc<DoubleVarCompat>()
@@ -214,6 +677,18 @@ private object IosGodot {
         }
         return labelSetTextBind
     }
+
+    private inline fun node3dGetVector3(
+        node: Long,
+        getter: (Long, kotlinx.cinterop.CPointer<DoubleVarCompat>?, kotlinx.cinterop.CPointer<DoubleVarCompat>?, kotlinx.cinterop.CPointer<DoubleVarCompat>?) -> Unit,
+    ): Vector3 =
+        memScoped {
+            val x = alloc<DoubleVarCompat>()
+            val y = alloc<DoubleVarCompat>()
+            val z = alloc<DoubleVarCompat>()
+            getter(node, x.ptr, y.ptr, z.ptr)
+            Vector3(x.value, y.value, z.value)
+        }
 }
 
 @OptIn(ExperimentalForeignApi::class)

@@ -12,7 +12,7 @@ platforms and engine versions validated for the current preview.
 | Linux arm64 | Pending beta 5 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. Packaged desktop exports remain a separate release-readiness track. |
 | Linux x86_64 | Pending beta 5 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. Packaged desktop exports remain a separate release-readiness track. |
 | Windows x86_64 | Pending beta 5 revalidation | Last local runtime/editor smoke validation passed with the 4.7 beta 2 console binary. PowerShell Gradle commands and Git Bash smoke marker checks are the documented path. |
-| iOS | Unsupported; spike branch only | The `spike/ios-kotlin-native-backend` path proves a C shim plus Kotlin/Native static `.xcframework` loader, lifecycle, frame callback, typed Godot call, and built-in `.kt` script-resource probe on the simulator. It does not yet run arbitrary Kanama project scripts or claim supported exports. |
+| iOS | Unsupported; spike branch only | The `spike/ios-kotlin-native-backend` path proves a C shim plus Kotlin/Native static `.xcframework` loader, lifecycle, frame callback, typed Godot call, and built-in `.kt` script-resource probe. Physical-device export and launch are the validation target; simulator checks are optional and not used for performance claims. It does not yet run arbitrary Kanama project scripts or claim supported exports. |
 | Web | Not planned | Kanama depends on a JVM/FFM-style runtime path. |
 
 Validated support is only claimed after the matching smoke path passes.
@@ -68,7 +68,9 @@ iOS work is isolated to the Kotlin/Native backend spike until exported apps can
 run real Kanama project scripts. The current spike uses a static
 `.xcframework`, a C GDExtension shim, and a Kotlin/Native runtime entry point
 to prove loader, lifecycle, frame-callback, typed-call, and built-in `.kt`
-script-resource wiring on the simulator.
+script-resource wiring. Physical-device export and launch are the current iOS
+validation target; simulator runs are optional compile/link checks and are not
+used as a frame-rate signal.
 
 See [iOS Spike](../exporting/ios.md) for the experimental build/install
 workflow.

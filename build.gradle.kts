@@ -706,9 +706,14 @@ val godotIosTemplateZip = providers.gradleProperty("kanamaGodotIosTemplateZip")
         },
     )
 val iosMinimumDeploymentTarget = providers.gradleProperty("kanamaIosMinVersion").orElse("14.0")
+val iosXcframeworkMode = providers.gradleProperty("kanamaIosXcframeworkMode")
+    .orElse(providers.environmentVariable("KANAMA_IOS_XCFRAMEWORK_MODE"))
+    .orElse("device")
 val iosBuildDir = layout.buildDirectory.dir("ios")
 val iosShimSource = layout.projectDirectory.file("ios/bootstrap/kanama_ios_shim.c")
 val iosHeaderDir = layout.projectDirectory.dir("ios/include")
+val iosDeviceDebugXcframeworkDir = iosBuildDir.map { it.dir("xcframework-device/debug/kanama_ios.debug.xcframework") }
+val iosDeviceReleaseXcframeworkDir = iosBuildDir.map { it.dir("xcframework-device/release/kanama_ios.release.xcframework") }
 val iosDebugXcframeworkDir = iosBuildDir.map { it.dir("xcframework/debug/kanama_ios.debug.xcframework") }
 val iosReleaseXcframeworkDir = iosBuildDir.map { it.dir("xcframework/release/kanama_ios.release.xcframework") }
 
@@ -792,6 +797,40 @@ fun registerCreateIosXcframeworkTask(
             iosHeaderDir.asFile.absolutePath,
             "-library",
             simulatorLibPath.get().asFile.absolutePath,
+            "-headers",
+            iosHeaderDir.asFile.absolutePath,
+            "-output",
+            xcframeworkDir.absolutePath,
+        )
+        environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+}
+
+fun registerCreateIosDeviceXcframeworkTask(
+    name: String,
+    deviceLibTask: TaskProvider<Exec>,
+    deviceLibPath: Provider<RegularFile>,
+    outputDir: Provider<Directory>,
+) = tasks.register<Exec>(name) {
+    group = "ios"
+    description = "Create the Kanama iOS device-only ${name.removePrefix("createIosDevice").removeSuffix("Xcframework").lowercase()} xcframework."
+
+    dependsOn(deviceLibTask)
+    inputs.file(deviceLibPath)
+    inputs.dir(iosHeaderDir)
+    inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
+    outputs.dir(outputDir)
+
+    doFirst {
+        val xcframeworkDir = outputDir.get().asFile
+        if (xcframeworkDir.exists()) {
+            xcframeworkDir.deleteRecursively()
+        }
+        commandLine(
+            "xcodebuild",
+            "-create-xcframework",
+            "-library",
+            deviceLibPath.get().asFile.absolutePath,
             "-headers",
             iosHeaderDir.asFile.absolutePath,
             "-output",
@@ -951,11 +990,31 @@ val createIosReleaseXcframework = registerCreateIosXcframeworkTask(
     iosReleaseXcframeworkDir,
 )
 
+val createIosDeviceDebugXcframework = registerCreateIosDeviceXcframeworkTask(
+    "createIosDeviceDebugXcframework",
+    combineIosDeviceDebugLib,
+    iosBuildDir.map { it.file("lib/iphoneos/debug/libkanama_ios.a") },
+    iosDeviceDebugXcframeworkDir,
+)
+val createIosDeviceReleaseXcframework = registerCreateIosDeviceXcframeworkTask(
+    "createIosDeviceReleaseXcframework",
+    combineIosDeviceReleaseLib,
+    iosBuildDir.map { it.file("lib/iphoneos/release/libkanama_ios.a") },
+    iosDeviceReleaseXcframeworkDir,
+)
+
 tasks.register("assembleIosKanamaXcframework") {
     group = "ios"
-    description = "Build the experimental Kanama iOS Kotlin/Native xcframeworks."
+    description = "Build the experimental Kanama iOS Kotlin/Native device and simulator xcframeworks."
     dependsOn(createIosDebugXcframework)
     dependsOn(createIosReleaseXcframework)
+}
+
+tasks.register("assembleIosDeviceKanamaXcframework") {
+    group = "ios"
+    description = "Build the experimental Kanama iOS Kotlin/Native device-only xcframeworks."
+    dependsOn(createIosDeviceDebugXcframework)
+    dependsOn(createIosDeviceReleaseXcframework)
 }
 
 tasks.register<Exec>("verifyIosGodotTemplate") {
@@ -1011,8 +1070,20 @@ tasks.register<Copy>("installIosAddon") {
     val extensionListFile = targetProjectDir.map {
         file(it).resolve(".godot/extension_list.cfg")
     }
+    val selectedIosXcframeworkMode = iosXcframeworkMode.get().lowercase()
+    val useFullIosXcframework = when (selectedIosXcframeworkMode) {
+        "device", "iphoneos" -> false
+        "full", "all", "simulator", "iphonesimulator" -> true
+        else -> throw GradleException(
+            "Unsupported kanamaIosXcframeworkMode=$selectedIosXcframeworkMode. Use device or full.",
+        )
+    }
+    val selectedDebugXcframeworkDir =
+        if (useFullIosXcframework) iosDebugXcframeworkDir else iosDeviceDebugXcframeworkDir
+    val selectedReleaseXcframeworkDir =
+        if (useFullIosXcframework) iosReleaseXcframeworkDir else iosDeviceReleaseXcframeworkDir
 
-    dependsOn("assembleIosKanamaXcframework")
+    dependsOn(if (useFullIosXcframework) "assembleIosKanamaXcframework" else "assembleIosDeviceKanamaXcframework")
     dependsOn(generateIosGdextensionDescriptor)
     dependsOn(buildNativeBootstrap)
     dependsOn(tasks.named("jar"))
@@ -1026,10 +1097,10 @@ tasks.register<Copy>("installIosAddon") {
     }
     from(layout.buildDirectory.file("libs/kanama.jar"))
     from(project(":project-scripts").tasks.named<Jar>("jar").flatMap { it.archiveFile })
-    from(iosDebugXcframeworkDir) {
+    from(selectedDebugXcframeworkDir) {
         into("bin/ios/kanama_ios.debug.xcframework")
     }
-    from(iosReleaseXcframeworkDir) {
+    from(selectedReleaseXcframeworkDir) {
         into("bin/ios/kanama_ios.release.xcframework")
     }
     into(targetProjectDir.map { file(it).resolve("addons/kanama") })
