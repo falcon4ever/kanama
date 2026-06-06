@@ -40,6 +40,18 @@ int64_t kanama_ios_godot_node_get_child_count(int64_t node);
 
 int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index);
 
+int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
+
+int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name);
+
+int64_t kanama_ios_godot_node_get_node_or_null(int64_t node, const char *path);
+
+int64_t kanama_ios_godot_node_get_tree(int64_t node);
+
+int64_t kanama_ios_godot_node_get_viewport(int64_t node);
+
+int64_t kanama_ios_godot_node_create_tween(int64_t node);
+
 void kanama_ios_godot_node2d_get_position(int64_t node, double *x, double *y);
 
 void kanama_ios_godot_node2d_set_position(int64_t node, double x, double y);
@@ -73,6 +85,32 @@ void kanama_ios_godot_canvas_item_get_viewport_rect(
     double *width,
     double *height
 );
+
+void kanama_ios_godot_canvas_item_hide(int64_t object);
+
+void kanama_ios_godot_canvas_item_show(int64_t object);
+
+void kanama_ios_godot_canvas_item_set_modulate(
+    int64_t object,
+    double r,
+    double g,
+    double b,
+    double a
+);
+
+int64_t kanama_ios_godot_packed_scene_instantiate(int64_t packed_scene, int64_t edit_state);
+
+void kanama_ios_godot_gpu_particles2d_set_emitting(int64_t particles, int32_t value);
+
+void kanama_ios_godot_gpu_particles2d_set_lifetime(int64_t particles, double value);
+
+void kanama_ios_godot_gpu_particles2d_restart(int64_t particles, int32_t keep_seed);
+
+void kanama_ios_godot_gpu_particles3d_set_emitting(int64_t particles, int32_t value);
+
+void kanama_ios_godot_gpu_particles3d_restart(int64_t particles, int32_t keep_seed);
+
+void kanama_ios_godot_collision_shape3d_set_disabled(int64_t shape, int32_t disabled);
 
 int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint);
 

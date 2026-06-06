@@ -137,9 +137,15 @@ static GDExtensionMethodBindPtr g_node_add_child_bind = NULL;
 static GDExtensionMethodBindPtr g_node_remove_child_bind = NULL;
 static GDExtensionMethodBindPtr g_node_get_child_count_bind = NULL;
 static GDExtensionMethodBindPtr g_node_get_child_bind = NULL;
+static GDExtensionMethodBindPtr g_node_get_node_or_null_bind = NULL;
+static GDExtensionMethodBindPtr g_node_get_tree_bind = NULL;
+static GDExtensionMethodBindPtr g_node_get_viewport_bind = NULL;
+static GDExtensionMethodBindPtr g_node_create_tween_bind = NULL;
 static GDExtensionMethodBindPtr g_node_queue_free_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_process_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_physics_process_bind = NULL;
+static GDExtensionMethodBindPtr g_object_is_class_bind = NULL;
+static GDExtensionMethodBindPtr g_node_is_in_group_bind = NULL;
 static GDExtensionMethodBindPtr g_node2d_set_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node2d_get_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node2d_set_scale_bind = NULL;
@@ -154,12 +160,24 @@ static GDExtensionMethodBindPtr g_node3d_set_global_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node3d_get_global_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node3d_rotate_y_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_get_viewport_rect_bind = NULL;
+static GDExtensionMethodBindPtr g_canvas_item_hide_bind = NULL;
+static GDExtensionMethodBindPtr g_canvas_item_show_bind = NULL;
+static GDExtensionMethodBindPtr g_canvas_item_set_modulate_bind = NULL;
+static GDExtensionMethodBindPtr g_packed_scene_instantiate_bind = NULL;
+static GDExtensionMethodBindPtr g_gpu_particles2d_set_emitting_bind = NULL;
+static GDExtensionMethodBindPtr g_gpu_particles2d_set_lifetime_bind = NULL;
+static GDExtensionMethodBindPtr g_gpu_particles2d_restart_bind = NULL;
+static GDExtensionMethodBindPtr g_gpu_particles3d_set_emitting_bind = NULL;
+static GDExtensionMethodBindPtr g_gpu_particles3d_restart_bind = NULL;
+static GDExtensionMethodBindPtr g_collision_shape3d_set_disabled_bind = NULL;
 static GDExtensionMethodBindPtr g_resource_loader_load_bind = NULL;
 static GDExtensionMethodBindPtr g_sprite2d_set_texture_bind = NULL;
 static GDExtensionMethodBindPtr g_object_emit_signal_bind = NULL;
+static GDExtensionPtrConstructor g_node_path_from_string_constructor = NULL;
 static GDExtensionPtrConstructor g_packed_string_array_constructor = NULL;
 static GDExtensionPtrConstructor g_array_constructor = NULL;
 static GDExtensionPtrConstructor g_dictionary_constructor = NULL;
+static GDExtensionPtrDestructor g_node_path_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_float = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_object = NULL;
@@ -232,6 +250,7 @@ enum {
     KANAMA_IOS_VARIANT_TYPE_VECTOR2 = 5,
     KANAMA_IOS_VARIANT_TYPE_RECT2 = 7,
     KANAMA_IOS_VARIANT_TYPE_STRING_NAME = 21,
+    KANAMA_IOS_VARIANT_TYPE_NODE_PATH = 22,
     KANAMA_IOS_VARIANT_TYPE_OBJECT = 24,
     KANAMA_IOS_VARIANT_TYPE_DICTIONARY = 27,
     KANAMA_IOS_VARIANT_TYPE_ARRAY = 28,
@@ -248,9 +267,14 @@ enum {
     KANAMA_IOS_NODE_REMOVE_CHILD_HASH = 1078189570U,
     KANAMA_IOS_NODE_GET_CHILD_COUNT_HASH = 894402480U,
     KANAMA_IOS_NODE_GET_CHILD_HASH = 541253412U,
+    KANAMA_IOS_NODE_GET_NODE_OR_NULL_HASH = 2734337346U,
+    KANAMA_IOS_NODE_GET_TREE_HASH = 2958820483U,
+    KANAMA_IOS_NODE_GET_VIEWPORT_HASH = 3596683776U,
+    KANAMA_IOS_NODE_CREATE_TWEEN_HASH = 3426978995U,
     KANAMA_IOS_NODE_QUEUE_FREE_HASH = 3218959716U,
     KANAMA_IOS_NODE_SET_PROCESS_HASH = 2586408642U,
     KANAMA_IOS_NODE_SET_PHYSICS_PROCESS_HASH = 2586408642U,
+    KANAMA_IOS_OBJECT_STRING_NAME_BOOL_HASH = 2619796661U,
     KANAMA_IOS_NODE2D_SET_POSITION_HASH = 743155724U,
     KANAMA_IOS_NODE2D_GET_POSITION_HASH = 3341600327U,
     KANAMA_IOS_NODE2D_SET_SCALE_HASH = 743155724U,
@@ -265,6 +289,12 @@ enum {
     KANAMA_IOS_NODE3D_GET_GLOBAL_POSITION_HASH = 3360562783U,
     KANAMA_IOS_NODE3D_ROTATE_Y_HASH = 373806689U,
     KANAMA_IOS_CANVAS_ITEM_GET_VIEWPORT_RECT_HASH = 1639390495U,
+    KANAMA_IOS_CANVAS_ITEM_NOARGS_HASH = 3218959716U,
+    KANAMA_IOS_CANVAS_ITEM_SET_MODULATE_HASH = 2920490490U,
+    KANAMA_IOS_PACKED_SCENE_INSTANTIATE_HASH = 2628778455U,
+    KANAMA_IOS_BOOL_ARG_HASH = 2586408642U,
+    KANAMA_IOS_DOUBLE_ARG_HASH = 373806689U,
+    KANAMA_IOS_GPU_PARTICLES_RESTART_HASH = 107499316U,
     KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH = 3358495409U,
     KANAMA_IOS_SPRITE2D_SET_TEXTURE_HASH = 4051416890U,
     KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH = 4047867050U,
@@ -373,6 +403,8 @@ static int kanama_ios_resolve_godot_api(void) {
 
     g_string_name_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
     g_string_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_STRING);
+    g_node_path_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
+    g_node_path_from_string_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH, 2);
     g_packed_string_array_constructor = g_variant_get_ptr_constructor(
         KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY,
         0
@@ -387,6 +419,8 @@ static int kanama_ios_resolve_godot_api(void) {
     if (
         g_string_name_destructor == NULL ||
         g_string_destructor == NULL ||
+        g_node_path_destructor == NULL ||
+        g_node_path_from_string_constructor == NULL ||
         g_packed_string_array_constructor == NULL ||
         g_array_constructor == NULL ||
         g_dictionary_constructor == NULL ||
@@ -422,6 +456,27 @@ static void kanama_ios_init_string(uint64_t *storage, const char *value) {
 static void kanama_ios_destroy_string(uint64_t *storage) {
     if (*storage != 0 && g_string_destructor != NULL) {
         g_string_destructor((GDExtensionStringPtr)storage);
+        *storage = 0;
+    }
+}
+
+static void kanama_ios_init_node_path(uint64_t *storage, const char *value) {
+    *storage = 0;
+    if (g_node_path_from_string_constructor == NULL) {
+        return;
+    }
+    uint64_t string_storage = 0;
+    kanama_ios_init_string(&string_storage, value);
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&string_storage,
+    };
+    g_node_path_from_string_constructor((GDExtensionUninitializedTypePtr)storage, args);
+    kanama_ios_destroy_string(&string_storage);
+}
+
+static void kanama_ios_destroy_node_path(uint64_t *storage) {
+    if (*storage != 0 && g_node_path_destructor != NULL) {
+        g_node_path_destructor((GDExtensionTypePtr)storage);
         *storage = 0;
     }
 }
@@ -887,6 +942,101 @@ static void kanama_ios_godot_ptrcall_bool_arg(
     g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
 }
 
+static int32_t kanama_ios_godot_ptrcall_string_name_arg_ret_bool(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    const char *value
+) {
+    if (method_bind == NULL || instance == NULL || value == NULL) {
+        return 0;
+    }
+    uint64_t name_storage = 0;
+    kanama_ios_init_string_name(&name_storage, value);
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&name_storage,
+    };
+    GDExtensionBool ret = 0;
+    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);
+    kanama_ios_destroy_string_name(&name_storage);
+    return ret != 0 ? 1 : 0;
+}
+
+static GDExtensionObjectPtr kanama_ios_godot_ptrcall_noargs_ret_object(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return NULL;
+    }
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, instance, NULL, &ret);
+    return ret;
+}
+
+static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int64_arg_ret_object(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    int64_t value
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return NULL;
+    }
+    int64_t value_cell = value;
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&value_cell,
+    };
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);
+    return ret;
+}
+
+static void kanama_ios_godot_ptrcall_noargs(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return;
+    }
+    g_object_method_bind_ptrcall(method_bind, instance, NULL, NULL);
+}
+
+static void kanama_ios_godot_ptrcall_double_arg_direct(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    double value
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return;
+    }
+    double value_cell = value;
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&value_cell,
+    };
+    g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
+}
+
+static GDExtensionObjectPtr kanama_ios_godot_ptrcall_node_path_arg_ret_object(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    const char *path
+) {
+    if (method_bind == NULL || instance == NULL || path == NULL) {
+        return NULL;
+    }
+    uint64_t path_storage = 0;
+    kanama_ios_init_node_path(&path_storage, path);
+    if (path_storage == 0) {
+        return NULL;
+    }
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&path_storage,
+    };
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);
+    kanama_ios_destroy_node_path(&path_storage);
+    return ret;
+}
+
 static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) {
     GDExtensionMethodBindPtr notification_bind = kanama_ios_get_method_bind_cached(
         &g_object_notification_bind,
@@ -992,6 +1142,91 @@ int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index) {
         0
     );
     return (int64_t)(intptr_t)child;
+}
+
+int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_object_is_class_bind,
+        "Object",
+        "is_class",
+        KANAMA_IOS_OBJECT_STRING_NAME_BOOL_HASH
+    );
+    return kanama_ios_godot_ptrcall_string_name_arg_ret_bool(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)object,
+        class_name
+    );
+}
+
+int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_is_in_group_bind,
+        "Node",
+        "is_in_group",
+        KANAMA_IOS_OBJECT_STRING_NAME_BOOL_HASH
+    );
+    return kanama_ios_godot_ptrcall_string_name_arg_ret_bool(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node,
+        group_name
+    );
+}
+
+int64_t kanama_ios_godot_node_get_node_or_null(int64_t node, const char *path) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_get_node_or_null_bind,
+        "Node",
+        "get_node_or_null",
+        KANAMA_IOS_NODE_GET_NODE_OR_NULL_HASH
+    );
+    GDExtensionObjectPtr child = kanama_ios_godot_ptrcall_node_path_arg_ret_object(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node,
+        path
+    );
+    return (int64_t)(intptr_t)child;
+}
+
+int64_t kanama_ios_godot_node_get_tree(int64_t node) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_get_tree_bind,
+        "Node",
+        "get_tree",
+        KANAMA_IOS_NODE_GET_TREE_HASH
+    );
+    GDExtensionObjectPtr tree = kanama_ios_godot_ptrcall_noargs_ret_object(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node
+    );
+    return (int64_t)(intptr_t)tree;
+}
+
+int64_t kanama_ios_godot_node_get_viewport(int64_t node) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_get_viewport_bind,
+        "Node",
+        "get_viewport",
+        KANAMA_IOS_NODE_GET_VIEWPORT_HASH
+    );
+    GDExtensionObjectPtr viewport = kanama_ios_godot_ptrcall_noargs_ret_object(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node
+    );
+    return (int64_t)(intptr_t)viewport;
+}
+
+int64_t kanama_ios_godot_node_create_tween(int64_t node) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_create_tween_bind,
+        "Node",
+        "create_tween",
+        KANAMA_IOS_NODE_CREATE_TWEEN_HASH
+    );
+    GDExtensionObjectPtr tween = kanama_ios_godot_ptrcall_noargs_ret_object(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)node
+    );
+    return (int64_t)(intptr_t)tween;
 }
 
 static void kanama_ios_godot_ptrcall_vector2_get(
@@ -1331,6 +1566,148 @@ void kanama_ios_godot_canvas_item_get_viewport_rect(
     if (height != NULL) {
         *height = ret[3];
     }
+}
+
+void kanama_ios_godot_canvas_item_hide(int64_t object) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_canvas_item_hide_bind,
+        "CanvasItem",
+        "hide",
+        KANAMA_IOS_CANVAS_ITEM_NOARGS_HASH
+    );
+    kanama_ios_godot_ptrcall_noargs(method_bind, (GDExtensionObjectPtr)(intptr_t)object);
+}
+
+void kanama_ios_godot_canvas_item_show(int64_t object) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_canvas_item_show_bind,
+        "CanvasItem",
+        "show",
+        KANAMA_IOS_CANVAS_ITEM_NOARGS_HASH
+    );
+    kanama_ios_godot_ptrcall_noargs(method_bind, (GDExtensionObjectPtr)(intptr_t)object);
+}
+
+void kanama_ios_godot_canvas_item_set_modulate(
+    int64_t object,
+    double r,
+    double g,
+    double b,
+    double a
+) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_canvas_item_set_modulate_bind,
+        "CanvasItem",
+        "set_modulate",
+        KANAMA_IOS_CANVAS_ITEM_SET_MODULATE_HASH
+    );
+    if (object == 0 || method_bind == NULL) {
+        return;
+    }
+    float color[4] = {(float)r, (float)g, (float)b, (float)a};
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)color,
+    };
+    g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)object, args, NULL);
+}
+
+int64_t kanama_ios_godot_packed_scene_instantiate(int64_t packed_scene, int64_t edit_state) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_packed_scene_instantiate_bind,
+        "PackedScene",
+        "instantiate",
+        KANAMA_IOS_PACKED_SCENE_INSTANTIATE_HASH
+    );
+    GDExtensionObjectPtr node = kanama_ios_godot_ptrcall_int64_arg_ret_object(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)packed_scene,
+        edit_state
+    );
+    return (int64_t)(intptr_t)node;
+}
+
+void kanama_ios_godot_gpu_particles2d_set_emitting(int64_t particles, int32_t value) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_gpu_particles2d_set_emitting_bind,
+        "GPUParticles2D",
+        "set_emitting",
+        KANAMA_IOS_BOOL_ARG_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)particles,
+        value != 0 ? 1 : 0
+    );
+}
+
+void kanama_ios_godot_gpu_particles2d_set_lifetime(int64_t particles, double value) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_gpu_particles2d_set_lifetime_bind,
+        "GPUParticles2D",
+        "set_lifetime",
+        KANAMA_IOS_DOUBLE_ARG_HASH
+    );
+    kanama_ios_godot_ptrcall_double_arg_direct(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)particles,
+        value
+    );
+}
+
+void kanama_ios_godot_gpu_particles2d_restart(int64_t particles, int32_t keep_seed) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_gpu_particles2d_restart_bind,
+        "GPUParticles2D",
+        "restart",
+        KANAMA_IOS_GPU_PARTICLES_RESTART_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)particles,
+        keep_seed != 0 ? 1 : 0
+    );
+}
+
+void kanama_ios_godot_gpu_particles3d_set_emitting(int64_t particles, int32_t value) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_gpu_particles3d_set_emitting_bind,
+        "GPUParticles3D",
+        "set_emitting",
+        KANAMA_IOS_BOOL_ARG_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)particles,
+        value != 0 ? 1 : 0
+    );
+}
+
+void kanama_ios_godot_gpu_particles3d_restart(int64_t particles, int32_t keep_seed) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_gpu_particles3d_restart_bind,
+        "GPUParticles3D",
+        "restart",
+        KANAMA_IOS_GPU_PARTICLES_RESTART_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)particles,
+        keep_seed != 0 ? 1 : 0
+    );
+}
+
+void kanama_ios_godot_collision_shape3d_set_disabled(int64_t shape, int32_t disabled) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_collision_shape3d_set_disabled_bind,
+        "CollisionShape3D",
+        "set_disabled",
+        KANAMA_IOS_BOOL_ARG_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)shape,
+        disabled != 0 ? 1 : 0
+    );
 }
 
 int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint) {

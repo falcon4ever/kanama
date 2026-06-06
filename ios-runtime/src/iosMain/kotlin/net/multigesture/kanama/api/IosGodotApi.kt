@@ -13,8 +13,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_hide
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_viewport_rect
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_set_modulate
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_show
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_collision_shape3d_set_disabled
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_restart
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_set_emitting
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_set_lifetime
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles3d_restart
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles3d_set_emitting
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_create_tween
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_position
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_scale
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_set_position
@@ -31,9 +41,15 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_scale
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_add_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_child_count
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_node_or_null
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_tree
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_viewport
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_is_in_group
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_remove_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_class
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_queue_free
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_packed_scene_instantiate
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_sprite2d_set_texture
 import net.multigesture.kanama.types.Color
@@ -92,10 +108,10 @@ open class GodotObject(
     }
 
     fun isClass(className: String): Boolean =
-        className.isNotBlank()
+        className.isNotBlank() && IosGodot.objectIsClass(handle.address(), className)
 
     fun isInGroup(group: String): Boolean =
-        false
+        group.isNotBlank() && IosGodot.nodeIsInGroup(handle.address(), group)
 
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
@@ -203,13 +219,17 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         }
 
     fun getTree(): SceneTree =
-        SceneTree(MemorySegment.NULL)
+        SceneTree(MemorySegment.ofAddress(IosGodot.nodeGetTree(handle.address())))
 
     fun getViewport(): Viewport? =
-        Viewport(MemorySegment.NULL)
+        IosGodot.nodeGetViewport(handle.address()).takeIf { it != 0L }?.let {
+            Viewport(MemorySegment.ofAddress(it))
+        }
 
     fun getNodeOrNull(path: String): Node? =
-        null
+        IosGodot.nodeGetNodeOrNull(handle.address(), path).takeIf { it != 0L }?.let {
+            Node(MemorySegment.ofAddress(it))
+        }
 
     fun <T : Node> getAsOrNull(path: String, ctor: (MemorySegment) -> T): T? =
         getNodeOrNull(path)?.let { ctor(it.handle) }
@@ -218,18 +238,25 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         getAsOrNull(path.path, ctor)
 
     fun <T : Node> requireAs(path: String, ctor: (MemorySegment) -> T): T =
-        getAsOrNull(path, ctor) ?: ctor(MemorySegment.NULL)
+        getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
 
     fun <T : Node> requireAs(path: NodePath, ctor: (MemorySegment) -> T): T =
-        getAsOrNull(path, ctor) ?: ctor(MemorySegment.NULL)
+        requireAs(path.path, ctor)
 
     fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (MemorySegment) -> T): T? =
-        getAsOrNull(path, ctor)
+        getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
 
     fun createTween(): Tween? =
-        Tween(MemorySegment.NULL)
+        IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
+            Tween(MemorySegment.ofAddress(it))
+        }
 
     fun hide() {
+        IosGodot.canvasItemHide(handle.address())
+    }
+
+    fun show() {
+        IosGodot.canvasItemShow(handle.address())
     }
 }
 
@@ -305,6 +332,7 @@ open class StaticBody3D(handle: MemorySegment) : Node3D(handle)
 
 class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
     fun setDisabled(disabled: Boolean) {
+        IosGodot.collisionShape3dSetDisabled(handle.address(), disabled)
     }
 }
 
@@ -312,6 +340,7 @@ class GPUParticles3D(handle: MemorySegment) : Node3D(handle) {
     var emitting: Boolean
         get() = false
         set(value) {
+            IosGodot.gpuParticles3dSetEmitting(handle.address(), value)
         }
 
     fun setEmitting(value: Boolean) {
@@ -319,6 +348,7 @@ class GPUParticles3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     fun restart(keepSeed: Boolean = false) {
+        IosGodot.gpuParticles3dRestart(handle.address(), keepSeed)
     }
 }
 
@@ -373,6 +403,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
     var modulate: Color
         get() = Color(1f, 1f, 1f)
         set(value) {
+            IosGodot.canvasItemSetModulate(handle.address(), value)
         }
 
     fun setTexture(texture: Texture2D?) {
@@ -386,12 +417,18 @@ class GPUParticles2D(handle: MemorySegment) : Node2D(handle) {
     var emitting: Boolean
         get() = false
         set(value) {
+            IosGodot.gpuParticles2dSetEmitting(handle.address(), value)
         }
 
     var lifetime: Double
         get() = 0.0
         set(value) {
+            IosGodot.gpuParticles2dSetLifetime(handle.address(), value)
         }
+
+    fun restart(keepSeed: Boolean = false) {
+        IosGodot.gpuParticles2dRestart(handle.address(), keepSeed)
+    }
 }
 
 class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
@@ -465,7 +502,9 @@ class Tween(handle: MemorySegment) : GodotObject(handle) {
 
 class PackedScene(handle: MemorySegment) : Resource(handle) {
     fun instantiate(editState: Long = 0L): Node? =
-        Node(MemorySegment.NULL)
+        IosGodot.packedSceneInstantiate(handle.address(), editState).takeIf { it != 0L }?.let {
+            Node(MemorySegment.ofAddress(it))
+        }
 }
 
 class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
@@ -571,6 +610,12 @@ private object IosGodot {
         kanama_ios_godot_object_queue_free(objectHandle)
     }
 
+    fun objectIsClass(objectHandle: Long, className: String): Boolean =
+        kanama_ios_godot_object_is_class(objectHandle, className) != 0
+
+    fun nodeIsInGroup(node: Long, groupName: String): Boolean =
+        kanama_ios_godot_node_is_in_group(node, groupName) != 0
+
     fun nodeAddChild(parent: Long, child: Long) {
         kanama_ios_godot_node_add_child(parent, child)
     }
@@ -584,6 +629,18 @@ private object IosGodot {
 
     fun nodeGetChild(node: Long, index: Int): Long =
         kanama_ios_godot_node_get_child(node, index)
+
+    fun nodeGetNodeOrNull(node: Long, path: String): Long =
+        kanama_ios_godot_node_get_node_or_null(node, path)
+
+    fun nodeGetTree(node: Long): Long =
+        kanama_ios_godot_node_get_tree(node)
+
+    fun nodeGetViewport(node: Long): Long =
+        kanama_ios_godot_node_get_viewport(node)
+
+    fun nodeCreateTween(node: Long): Long =
+        kanama_ios_godot_node_create_tween(node)
 
     fun node2dGetPosition(node: Long): Vector2 =
         memScoped {
@@ -656,6 +713,51 @@ private object IosGodot {
             )
             Rect2(Vector2(x.value, y.value), Vector2(width.value, height.value))
         }
+
+    fun canvasItemHide(objectHandle: Long) {
+        kanama_ios_godot_canvas_item_hide(objectHandle)
+    }
+
+    fun canvasItemShow(objectHandle: Long) {
+        kanama_ios_godot_canvas_item_show(objectHandle)
+    }
+
+    fun canvasItemSetModulate(objectHandle: Long, color: Color) {
+        kanama_ios_godot_canvas_item_set_modulate(
+            objectHandle,
+            color.r.toDouble(),
+            color.g.toDouble(),
+            color.b.toDouble(),
+            color.a.toDouble(),
+        )
+    }
+
+    fun packedSceneInstantiate(packedScene: Long, editState: Long): Long =
+        kanama_ios_godot_packed_scene_instantiate(packedScene, editState)
+
+    fun gpuParticles2dSetEmitting(particles: Long, value: Boolean) {
+        kanama_ios_godot_gpu_particles2d_set_emitting(particles, if (value) 1 else 0)
+    }
+
+    fun gpuParticles2dSetLifetime(particles: Long, value: Double) {
+        kanama_ios_godot_gpu_particles2d_set_lifetime(particles, value)
+    }
+
+    fun gpuParticles2dRestart(particles: Long, keepSeed: Boolean) {
+        kanama_ios_godot_gpu_particles2d_restart(particles, if (keepSeed) 1 else 0)
+    }
+
+    fun gpuParticles3dSetEmitting(particles: Long, value: Boolean) {
+        kanama_ios_godot_gpu_particles3d_set_emitting(particles, if (value) 1 else 0)
+    }
+
+    fun gpuParticles3dRestart(particles: Long, keepSeed: Boolean) {
+        kanama_ios_godot_gpu_particles3d_restart(particles, if (keepSeed) 1 else 0)
+    }
+
+    fun collisionShape3dSetDisabled(shape: Long, disabled: Boolean) {
+        kanama_ios_godot_collision_shape3d_set_disabled(shape, if (disabled) 1 else 0)
+    }
 
     fun resourceLoaderLoad(path: String, typeHint: String): Long =
         kanama_ios_godot_resource_loader_load(path, typeHint)
