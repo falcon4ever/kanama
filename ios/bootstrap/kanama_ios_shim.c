@@ -38,6 +38,11 @@ extern int32_t kanama_ios_runtime_script_instance_call(
     int32_t method_index,
     double first_arg
 );
+extern int32_t kanama_ios_runtime_script_instance_call_object(
+    int64_t instance_handle,
+    int32_t method_index,
+    int64_t object_arg
+);
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
 
 typedef enum {
@@ -144,8 +149,12 @@ static GDExtensionMethodBindPtr g_node_create_tween_bind = NULL;
 static GDExtensionMethodBindPtr g_node_queue_free_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_process_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_physics_process_bind = NULL;
+static GDExtensionMethodBindPtr g_node_set_process_input_bind = NULL;
 static GDExtensionMethodBindPtr g_object_is_class_bind = NULL;
 static GDExtensionMethodBindPtr g_node_is_in_group_bind = NULL;
+static GDExtensionMethodBindPtr g_input_event_is_pressed_bind = NULL;
+static GDExtensionMethodBindPtr g_input_event_is_released_bind = NULL;
+static GDExtensionMethodBindPtr g_input_event_mouse_button_get_button_index_bind = NULL;
 static GDExtensionMethodBindPtr g_node2d_set_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node2d_get_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node2d_set_scale_bind = NULL;
@@ -160,6 +169,7 @@ static GDExtensionMethodBindPtr g_node3d_set_global_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node3d_get_global_position_bind = NULL;
 static GDExtensionMethodBindPtr g_node3d_rotate_y_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_get_viewport_rect_bind = NULL;
+static GDExtensionMethodBindPtr g_canvas_item_get_local_mouse_position_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_hide_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_show_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_set_modulate_bind = NULL;
@@ -180,6 +190,7 @@ static GDExtensionPtrConstructor g_dictionary_constructor = NULL;
 static GDExtensionPtrDestructor g_node_path_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_float = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_object = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_object = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string_name = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
@@ -198,6 +209,7 @@ static uint64_t g_name_Label = 0;
 static uint64_t g_name__ready = 0;
 static uint64_t g_name__process = 0;
 static uint64_t g_name__physics_process = 0;
+static uint64_t g_name__input = 0;
 static uint64_t g_name__get_name = 0;
 static uint64_t g_name__get_type = 0;
 static uint64_t g_name__get_extension = 0;
@@ -274,7 +286,10 @@ enum {
     KANAMA_IOS_NODE_QUEUE_FREE_HASH = 3218959716U,
     KANAMA_IOS_NODE_SET_PROCESS_HASH = 2586408642U,
     KANAMA_IOS_NODE_SET_PHYSICS_PROCESS_HASH = 2586408642U,
+    KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH = 2586408642U,
     KANAMA_IOS_OBJECT_STRING_NAME_BOOL_HASH = 2619796661U,
+    KANAMA_IOS_NOARGS_BOOL_HASH = 36873697U,
+    KANAMA_IOS_INPUT_EVENT_MOUSE_BUTTON_GET_BUTTON_INDEX_HASH = 1132662608U,
     KANAMA_IOS_NODE2D_SET_POSITION_HASH = 743155724U,
     KANAMA_IOS_NODE2D_GET_POSITION_HASH = 3341600327U,
     KANAMA_IOS_NODE2D_SET_SCALE_HASH = 743155724U,
@@ -289,6 +304,7 @@ enum {
     KANAMA_IOS_NODE3D_GET_GLOBAL_POSITION_HASH = 3360562783U,
     KANAMA_IOS_NODE3D_ROTATE_Y_HASH = 373806689U,
     KANAMA_IOS_CANVAS_ITEM_GET_VIEWPORT_RECT_HASH = 1639390495U,
+    KANAMA_IOS_CANVAS_ITEM_GET_LOCAL_MOUSE_POSITION_HASH = 3341600327U,
     KANAMA_IOS_CANVAS_ITEM_NOARGS_HASH = 3218959716U,
     KANAMA_IOS_CANVAS_ITEM_SET_MODULATE_HASH = 2920490490U,
     KANAMA_IOS_PACKED_SCENE_INSTANTIATE_HASH = 2628778455U,
@@ -412,6 +428,7 @@ static int kanama_ios_resolve_godot_api(void) {
     g_array_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY, 0);
     g_dictionary_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY, 0);
     g_variant_to_float = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
+    g_variant_to_object = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
     g_variant_from_object = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
     g_variant_from_string_name = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
     g_variant_from_int = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
@@ -425,6 +442,7 @@ static int kanama_ios_resolve_godot_api(void) {
         g_array_constructor == NULL ||
         g_dictionary_constructor == NULL ||
         g_variant_to_float == NULL ||
+        g_variant_to_object == NULL ||
         g_variant_from_object == NULL ||
         g_variant_from_string_name == NULL ||
         g_variant_from_int == NULL
@@ -654,6 +672,7 @@ static void kanama_ios_cache_names(void) {
     kanama_ios_cache_name(&g_name__ready, "_ready");
     kanama_ios_cache_name(&g_name__process, "_process");
     kanama_ios_cache_name(&g_name__physics_process, "_physics_process");
+    kanama_ios_cache_name(&g_name__input, "_input");
     kanama_ios_cache_name(&g_name__get_name, "_get_name");
     kanama_ios_cache_name(&g_name__get_type, "_get_type");
     kanama_ios_cache_name(&g_name__get_extension, "_get_extension");
@@ -973,6 +992,30 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_noargs_ret_object(
     return ret;
 }
 
+static int32_t kanama_ios_godot_ptrcall_noargs_ret_bool(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return 0;
+    }
+    GDExtensionBool ret = 0;
+    g_object_method_bind_ptrcall(method_bind, instance, NULL, &ret);
+    return ret != 0 ? 1 : 0;
+}
+
+static int64_t kanama_ios_godot_ptrcall_noargs_ret_int64(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return 0;
+    }
+    int64_t ret = 0;
+    g_object_method_bind_ptrcall(method_bind, instance, NULL, &ret);
+    return ret;
+}
+
 static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int64_arg_ret_object(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance,
@@ -1169,6 +1212,45 @@ int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name) 
         method_bind,
         (GDExtensionObjectPtr)(intptr_t)node,
         group_name
+    );
+}
+
+int32_t kanama_ios_godot_input_event_is_pressed(int64_t event) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_input_event_is_pressed_bind,
+        "InputEvent",
+        "is_pressed",
+        KANAMA_IOS_NOARGS_BOOL_HASH
+    );
+    return kanama_ios_godot_ptrcall_noargs_ret_bool(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)event
+    );
+}
+
+int32_t kanama_ios_godot_input_event_is_released(int64_t event) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_input_event_is_released_bind,
+        "InputEvent",
+        "is_released",
+        KANAMA_IOS_NOARGS_BOOL_HASH
+    );
+    return kanama_ios_godot_ptrcall_noargs_ret_bool(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)event
+    );
+}
+
+int64_t kanama_ios_godot_input_event_mouse_button_get_button_index(int64_t event) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_input_event_mouse_button_get_button_index_bind,
+        "InputEventMouseButton",
+        "get_button_index",
+        KANAMA_IOS_INPUT_EVENT_MOUSE_BUTTON_GET_BUTTON_INDEX_HASH
+    );
+    return kanama_ios_godot_ptrcall_noargs_ret_int64(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)event
     );
 }
 
@@ -1566,6 +1648,18 @@ void kanama_ios_godot_canvas_item_get_viewport_rect(
     if (height != NULL) {
         *height = ret[3];
     }
+}
+
+void kanama_ios_godot_canvas_item_get_local_mouse_position(int64_t object, double *x, double *y) {
+    kanama_ios_godot_ptrcall_vector2_get(
+        &g_canvas_item_get_local_mouse_position_bind,
+        "CanvasItem",
+        "get_local_mouse_position",
+        KANAMA_IOS_CANVAS_ITEM_GET_LOCAL_MOUSE_POSITION_HASH,
+        object,
+        x,
+        y
+    );
 }
 
 void kanama_ios_godot_canvas_item_hide(int64_t object) {
@@ -2317,6 +2411,19 @@ static double kanama_ios_variant_to_double(GDExtensionConstVariantPtr variant) {
     return value;
 }
 
+static GDExtensionObjectPtr kanama_ios_variant_to_object(GDExtensionConstVariantPtr variant) {
+    if (variant == NULL || g_variant_to_object == NULL) {
+        return NULL;
+    }
+    GDExtensionVariantType type = g_variant_get_type != NULL ? g_variant_get_type(variant) : KANAMA_IOS_VARIANT_TYPE_NIL;
+    if (type != KANAMA_IOS_VARIANT_TYPE_OBJECT) {
+        return NULL;
+    }
+    GDExtensionObjectPtr object = NULL;
+    g_variant_to_object(&object, (GDExtensionVariantPtr)variant);
+    return object;
+}
+
 static void kanama_ios_script_instance_call(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr method,
@@ -2332,10 +2439,18 @@ static void kanama_ios_script_instance_call(
     int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, method);
     if (instance != NULL && method_index >= 0) {
         double first_arg = 0.0;
+        GDExtensionObjectPtr object_arg = NULL;
         if (argument_count > 0 && args != NULL && args[0] != NULL) {
+            object_arg = kanama_ios_variant_to_object(args[0]);
             first_arg = kanama_ios_variant_to_double(args[0]);
         }
-        int32_t ok = kanama_ios_runtime_script_instance_call(instance->runtime_handle, method_index, first_arg);
+        int32_t ok = object_arg != NULL
+            ? kanama_ios_runtime_script_instance_call_object(
+                instance->runtime_handle,
+                method_index,
+                (int64_t)(intptr_t)object_arg
+            )
+            : kanama_ios_runtime_script_instance_call(instance->runtime_handle, method_index, first_arg);
         kanama_ios_script_instance_set_ok(error, ok);
         if (!ok) {
             fprintf(stderr,
@@ -2371,6 +2486,15 @@ static void kanama_ios_script_instance_configure_lifecycle_processing(KanamaIosS
             KANAMA_IOS_NODE_SET_PROCESS_HASH
         );
         kanama_ios_godot_ptrcall_bool_arg(set_process, instance->owner_object, 1);
+    }
+    if (kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input) >= 0) {
+        GDExtensionMethodBindPtr set_process_input = kanama_ios_get_method_bind_cached(
+            &g_node_set_process_input_bind,
+            "Node",
+            "set_process_input",
+            KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
+        );
+        kanama_ios_godot_ptrcall_bool_arg(set_process_input, instance->owner_object, 1);
     }
 }
 

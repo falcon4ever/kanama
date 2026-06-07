@@ -14,6 +14,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_hide
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_local_mouse_position
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_viewport_rect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_set_modulate
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_show
@@ -24,6 +25,9 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_set
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_set_lifetime
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles3d_restart
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles3d_set_emitting
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_input_event_is_pressed
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_input_event_is_released
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_input_event_mouse_button_get_button_index
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_create_tween
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_position
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_scale
@@ -263,6 +267,9 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
 open class CanvasItem(handle: MemorySegment) : Node(handle) {
     fun getViewportRect(): Rect2 =
         IosGodot.canvasItemGetViewportRect(handle.address())
+
+    fun getLocalMousePosition(): Vector2 =
+        IosGodot.canvasItemGetLocalMousePosition(handle.address())
 }
 
 open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
@@ -278,8 +285,6 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
             IosGodot.node2dSetScale(handle.address(), value)
         }
 
-    fun getLocalMousePosition(): Vector2 =
-        Vector2.ZERO
 }
 
 open class Node3D(handle: MemorySegment) : Node(handle) {
@@ -509,19 +514,19 @@ class PackedScene(handle: MemorySegment) : Resource(handle) {
 
 class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
     fun getButtonIndex(): Long =
-        MOUSE_BUTTON_LEFT
+        IosGodot.inputEventMouseButtonGetButtonIndex(handle.address())
 
     fun isPressed(): Boolean =
-        true
+        IosGodot.inputEventIsPressed(handle.address())
 
     fun isReleased(): Boolean =
-        false
+        IosGodot.inputEventIsReleased(handle.address())
 
     companion object {
         const val MOUSE_BUTTON_LEFT = 1L
 
         fun from(value: GodotObject): InputEventMouseButton? =
-            InputEventMouseButton(value.handle)
+            if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle) else null
     }
 }
 
@@ -615,6 +620,15 @@ private object IosGodot {
 
     fun nodeIsInGroup(node: Long, groupName: String): Boolean =
         kanama_ios_godot_node_is_in_group(node, groupName) != 0
+
+    fun inputEventIsPressed(event: Long): Boolean =
+        kanama_ios_godot_input_event_is_pressed(event) != 0
+
+    fun inputEventIsReleased(event: Long): Boolean =
+        kanama_ios_godot_input_event_is_released(event) != 0
+
+    fun inputEventMouseButtonGetButtonIndex(event: Long): Long =
+        kanama_ios_godot_input_event_mouse_button_get_button_index(event)
 
     fun nodeAddChild(parent: Long, child: Long) {
         kanama_ios_godot_node_add_child(parent, child)
@@ -712,6 +726,14 @@ private object IosGodot {
                 height.ptr,
             )
             Rect2(Vector2(x.value, y.value), Vector2(width.value, height.value))
+        }
+
+    fun canvasItemGetLocalMousePosition(objectHandle: Long): Vector2 =
+        memScoped {
+            val x = alloc<DoubleVarCompat>()
+            val y = alloc<DoubleVarCompat>()
+            kanama_ios_godot_canvas_item_get_local_mouse_position(objectHandle, x.ptr, y.ptr)
+            Vector2(x.value, y.value)
         }
 
     fun canvasItemHide(objectHandle: Long) {

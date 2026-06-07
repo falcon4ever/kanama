@@ -26,6 +26,9 @@ internal data class KanamaIosScriptDescriptor(
 
 internal interface KanamaIosScriptBridge {
     fun call(methodName: String, firstArg: Double): Boolean
+
+    fun callObject(methodName: String, objectArg: Long): Boolean =
+        false
 }
 
 internal object KanamaIosProjectRegistry {
@@ -183,6 +186,20 @@ private object KanamaIosRuntime {
         return callScriptInstance(handle, method.name, firstArg)
     }
 
+    fun callScriptInstanceObject(handle: Long, methodIndex: Int, objectArg: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("object call skipped for missing script instance handle=$handle")
+            return false
+        }
+        val method = instance.resource.descriptor?.methods?.getOrNull(methodIndex)
+        if (method == null) {
+            log("object call skipped for missing method index=$methodIndex handle=$handle")
+            return false
+        }
+        return callScriptInstanceObject(handle, method.name, objectArg)
+    }
+
     fun callScriptInstance(handle: Long, methodName: String, firstArg: Double): Boolean {
         val instance = scriptInstances[handle]
         if (instance == null) {
@@ -199,6 +216,24 @@ private object KanamaIosRuntime {
         if (ok && shouldLogScriptMethodCall(methodName)) {
             val kind = if (instance.resource.path == PROBE_SCRIPT_PATH) "built-in probe" else "project script"
             log("$kind method call handle=$handle path=${instance.resource.path} method=$methodName")
+        }
+        return ok
+    }
+
+    fun callScriptInstanceObject(handle: Long, methodName: String, objectArg: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("object call skipped for missing script instance handle=$handle")
+            return false
+        }
+        if (objectArg == 0L) {
+            log("object call skipped for null object method=$methodName handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.callObject(methodName, objectArg)
+        if (ok && shouldLogScriptMethodCall(methodName)) {
+            val kind = if (instance.resource.path == PROBE_SCRIPT_PATH) "built-in probe" else "project script"
+            log("$kind object method call handle=$handle path=${instance.resource.path} method=$methodName")
         }
         return ok
     }
@@ -379,6 +414,11 @@ fun kanamaIosRuntimeScriptInstanceReady(instanceHandle: Long) {
 @CName("kanama_ios_runtime_script_instance_call")
 fun kanamaIosRuntimeScriptInstanceCall(instanceHandle: Long, methodIndex: Int, firstArg: Double): Int =
     if (KanamaIosRuntime.callScriptInstance(instanceHandle, methodIndex, firstArg)) 1 else 0
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_call_object")
+fun kanamaIosRuntimeScriptInstanceCallObject(instanceHandle: Long, methodIndex: Int, objectArg: Long): Int =
+    if (KanamaIosRuntime.callScriptInstanceObject(instanceHandle, methodIndex, objectArg)) 1 else 0
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")

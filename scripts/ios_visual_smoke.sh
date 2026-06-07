@@ -601,11 +601,14 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
+import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Control
+import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.InputEventMouseButton
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.Sprite2D
@@ -687,6 +690,21 @@ class Match3IosSmoke(godotObject: MemorySegment) : KanamaScript<Control>(godotOb
             println("[kanama][ios][kn] match3 smoke fps=${fps.toInt()} moves=$moveCount")
             fpsTime = 0.0
             fpsFrames = 0
+        }
+    }
+
+    @OnInput
+    fun input(event: GodotObject) {
+        val mouseButton = InputEventMouseButton.from(event) ?: return
+        if (mouseButton.getButtonIndex() != InputEventMouseButton.MOUSE_BUTTON_LEFT) {
+            return
+        }
+        val position = self.getLocalMousePosition()
+        if (mouseButton.isPressed()) {
+            touchStart(encodePosition(position))
+        } else if (mouseButton.isReleased()) {
+            touchEnd(encodePosition(position))
+            println("[kanama][ios][kn] match3 smoke input release pos=$position")
         }
     }
 
@@ -1037,6 +1055,9 @@ class Match3IosSmoke(godotObject: MemorySegment) : KanamaScript<Control>(godotOb
         return Vector2((raw / 10000L).toDouble(), (raw % 10000L).toDouble())
     }
 
+    private fun encodePosition(position: Vector2): Double =
+        (position.x.toLong() * 10000L + position.y.toLong()).toDouble()
+
     private fun screenToGrid(position: Vector2): Pair<Int, Int>? {
         val left = startX - spacing / 2.0
         val top = startY - spacing / 2.0
@@ -1097,9 +1118,6 @@ EOF
   cat >"$project_dir/scripts/touch_probe.gd" <<'EOF'
 extends Control
 
-var touch_count := 0
-var active := false
-var last_position := Vector2.ZERO
 var fps_frames := 0
 var fps_start_msec := 0
 var last_fps := 0
@@ -1121,39 +1139,8 @@ func _process(_delta: float) -> void:
         fps_start_msec = now
         _update_status()
 
-func _input(event: InputEvent) -> void:
-    if event is InputEventScreenTouch:
-        if event.pressed:
-            active = true
-            last_position = event.position
-            _send("kanama_touch_start", event.position)
-        else:
-            var final_position: Vector2 = event.position
-            if active:
-                final_position = last_position
-            active = false
-            _record_swipe(final_position)
-    elif event is InputEventScreenDrag:
-        if active:
-            last_position = event.position
-
-func _record_swipe(position: Vector2) -> void:
-    touch_count += 1
-    _update_status()
-    _send("kanama_touch_end", position)
-    print("[kanama][ios][godot] match3 swipe count=%d pos=%s" % [touch_count, position])
-
 func _update_status() -> void:
-    status.text = "Swipe %d  FPS %d" % [touch_count, last_fps]
-
-func _send(method_name: String, position: Vector2) -> void:
-    var parent := get_parent()
-    if parent == null or not parent.has_method(method_name):
-        return
-    parent.call(method_name, _encode_position(position))
-
-func _encode_position(position: Vector2) -> float:
-    return float(int(round(position.x)) * 10000 + int(round(position.y)))
+    status.text = "Kanama input  FPS %d" % last_fps
 EOF
   cat >"$project_dir/main.tscn" <<'EOF'
 [gd_scene load_steps=4 format=3]

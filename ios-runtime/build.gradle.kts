@@ -15,6 +15,7 @@ data class IosScriptMethodModel(
 enum class IosScriptBridgeKind {
     ZERO_ARG,
     DOUBLE_ARG,
+    OBJECT_ARG,
     UNSUPPORTED,
 }
 
@@ -117,6 +118,8 @@ fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind 
         params.isEmpty() -> IosScriptBridgeKind.ZERO_ARG
         params.size == 1 && (godotName == "_process" || godotName == "_physics_process") ->
             IosScriptBridgeKind.DOUBLE_ARG
+        params.size == 1 && godotName == "_input" ->
+            IosScriptBridgeKind.OBJECT_ARG
         else -> IosScriptBridgeKind.UNSUPPORTED
     }
 
@@ -169,7 +172,7 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                             annotation.contains("OnPhysicsProcess") || annotation.contains("@PhysicsProcess") ->
                                 methods += IosScriptMethodModel("_physics_process", functionName, 1, IosScriptBridgeKind.DOUBLE_ARG)
                             annotation.contains("OnInput") || annotation.contains("@Input") ->
-                                methods += IosScriptMethodModel("_input", functionName, 1, IosScriptBridgeKind.UNSUPPORTED)
+                                methods += IosScriptMethodModel("_input", functionName, 1, IosScriptBridgeKind.OBJECT_ARG)
                             annotation.contains("RegisterFunction") || annotation.contains("@Method") ->
                                 registeredMethodName(annotation, functionName).let { godotName ->
                                     methods += IosScriptMethodModel(
@@ -272,10 +275,22 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
             val invocation = when (method.bridgeKind) {
                 IosScriptBridgeKind.ZERO_ARG -> "script.${method.kotlinName}()"
                 IosScriptBridgeKind.DOUBLE_ARG -> "script.${method.kotlinName}(firstArg)"
+                IosScriptBridgeKind.OBJECT_ARG -> null
                 IosScriptBridgeKind.UNSUPPORTED -> null
             }
             if (invocation != null) {
                 builder.appendLine("        ${kotlinString(method.godotName)} -> { $invocation; true }")
+            }
+        }
+        builder.appendLine("        else -> false")
+        builder.appendLine("    }")
+        builder.appendLine()
+        builder.appendLine("    override fun callObject(methodName: String, objectArg: Long): Boolean = when (methodName) {")
+        model.methods.forEach { method ->
+            if (method.bridgeKind == IosScriptBridgeKind.OBJECT_ARG) {
+                builder.appendLine(
+                    "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(objectArg))); true }",
+                )
             }
         }
         builder.appendLine("        else -> false")

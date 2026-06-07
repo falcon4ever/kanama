@@ -44,6 +44,12 @@ int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name)
 
 int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name);
 
+int32_t kanama_ios_godot_input_event_is_pressed(int64_t event);
+
+int32_t kanama_ios_godot_input_event_is_released(int64_t event);
+
+int64_t kanama_ios_godot_input_event_mouse_button_get_button_index(int64_t event);
+
 int64_t kanama_ios_godot_node_get_node_or_null(int64_t node, const char *path);
 
 int64_t kanama_ios_godot_node_get_tree(int64_t node);
@@ -85,6 +91,8 @@ void kanama_ios_godot_canvas_item_get_viewport_rect(
     double *width,
     double *height
 );
+
+void kanama_ios_godot_canvas_item_get_local_mouse_position(int64_t object, double *x, double *y);
 
 void kanama_ios_godot_canvas_item_hide(int64_t object);
 
