@@ -544,7 +544,8 @@ class PackedScene(handle: MemorySegment) : Resource(handle) {
 
 class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
     fun getButtonIndex(): Long =
-        IosGodot.inputEventMouseButtonGetButtonIndex(handle.address())
+        if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(handle.address())
+        else MOUSE_BUTTON_LEFT
 
     fun isPressed(): Boolean =
         IosGodot.inputEventIsPressed(handle.address())
@@ -556,7 +557,9 @@ class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
         const val MOUSE_BUTTON_LEFT = 1L
 
         fun from(value: GodotObject): InputEventMouseButton? =
-            if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle) else null
+            if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle)
+            else if (value.isClass("InputEventScreenTouch")) InputEventMouseButton(value.handle)
+            else null
     }
 }
 
