@@ -3026,23 +3026,8 @@ static void kanama_ios_script_instance_configure_lifecycle_processing(KanamaIosS
         kanama_ios_godot_ptrcall_bool_arg(set_process, instance->owner_object, 1);
     }
     if (kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input) >= 0) {
-        GDExtensionMethodBindPtr set_process_input = kanama_ios_get_method_bind_cached(
-            &g_node_set_process_input_bind,
-            "Node",
-            "set_process_input",
-            KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
-        );
-        kanama_ios_godot_ptrcall_bool_arg(set_process_input, instance->owner_object, 1);
-        kanama_ios_godot_ptrcall_bool_arg(
-            kanama_ios_get_method_bind_cached(
-                &g_node_set_process_unhandled_input_bind,
-                "Node",
-                "set_process_unhandled_input",
-                KANAMA_IOS_NODE_SET_PROCESS_UNHANDLED_INPUT_HASH
-            ),
-            instance->owner_object,
-            1
-        );
+        // set_process_input / set_process_unhandled_input are auto-enabled
+        // by Godot's Node::NOTIFICATION_READY via GDVIRTUAL_IS_OVERRIDDEN.
     }
 }
 
