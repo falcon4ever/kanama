@@ -3051,21 +3051,21 @@ static void kanama_ios_script_instance_free(GDExtensionScriptInstanceDataPtr dat
     }
 }
 
-static void kanama_ios_script_instance_set_property(
+static GDExtensionBool kanama_ios_script_instance_set_property(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name,
     GDExtensionConstVariantPtr value
 ) {
     if (data == NULL || name == NULL || value == NULL) {
-        return;
+        return 0;
     }
     KanamaIosScriptInstance *instance = (KanamaIosScriptInstance *)data;
     if (instance->script == NULL) {
-        return;
+        return 0;
     }
     int32_t property_index = kanama_ios_script_property_index(instance->script, name);
     if (property_index < 0) {
-        return;
+        return 0;
     }
     GDExtensionVariantType type = g_variant_get_type != NULL
         ? g_variant_get_type(value)
@@ -3079,13 +3079,14 @@ static void kanama_ios_script_instance_set_property(
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NIL) {
         arg = 0;
     } else {
-        return;
+        return 0;
     }
-    kanama_ios_runtime_script_instance_set_property(
+    int32_t ok = kanama_ios_runtime_script_instance_set_property(
         instance->runtime_handle,
         property_index,
         arg
     );
+    return (GDExtensionBool)ok;
 }
 
 static GDExtensionScriptInstanceInfo3 g_script_instance_info = {
