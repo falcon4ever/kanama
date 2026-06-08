@@ -300,12 +300,22 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         builder.appendLine("    private val script: ${model.className},")
         builder.appendLine(") : KanamaIosScriptBridge {")
         builder.appendLine("    override val scriptInstance: Any get() = script")
+        val hasInput = model.methods.any { it.godotName == "_input" }
+        if (hasInput) {
+            builder.appendLine("    private var inputToggled = false")
+        }
         builder.appendLine()
         builder.appendLine("    override fun call(methodName: String, firstArg: Double): Boolean = when (methodName) {")
         model.methods.forEach { method ->
             val invocation = when (method.bridgeKind) {
                 IosScriptBridgeKind.ZERO_ARG -> "script.${method.kotlinName}()"
-                IosScriptBridgeKind.DOUBLE_ARG -> "script.${method.kotlinName}(firstArg)"
+                IosScriptBridgeKind.DOUBLE_ARG -> {
+                    if (hasInput && method.godotName == "_process") {
+                        "if (!inputToggled) { script.self.setProcessInput(false); script.self.setProcessInput(true); inputToggled = true }; script.${method.kotlinName}(firstArg)"
+                    } else {
+                        "script.${method.kotlinName}(firstArg)"
+                    }
+                }
                 IosScriptBridgeKind.OBJECT_ARG -> null
                 IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG -> null
                 IosScriptBridgeKind.VECTOR2I_ARG -> null
