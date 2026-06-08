@@ -2842,7 +2842,15 @@ static GDExtensionBool kanama_ios_script_instance_has_method(
     GDExtensionConstStringNamePtr name
 ) {
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
-    return kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, name) >= 0 ? 1 : 0;
+    int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, name);
+    GDExtensionBool result = method_index >= 0 ? 1 : 0;
+    if (instance != NULL && instance->script != NULL && method_index >= 0) {
+        const char *name_text = kanama_ios_script_method_name_text(instance->script, method_index);
+        if (name_text != NULL && name_text[0] == '_') {
+            fprintf(stderr, "[kanama][ios][c] HAS_METHOD %s = %d\n", name_text, result);
+        }
+    }
+    return result;
 }
 
 static GDExtensionInt kanama_ios_script_instance_get_method_argument_count(
