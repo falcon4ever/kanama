@@ -1427,6 +1427,16 @@ int64_t kanama_ios_godot_node_create_tween(int64_t node) {
     return (int64_t)(intptr_t)tween;
 }
 
+void kanama_ios_godot_node_set_process_input(int64_t node, int32_t enabled) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_set_process_input_bind,
+        "Node",
+        "set_process_input",
+        KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)node, enabled);
+}
+
 static void kanama_ios_godot_ptrcall_vector2_get(
     GDExtensionMethodBindPtr *cache,
     const char *class_name,

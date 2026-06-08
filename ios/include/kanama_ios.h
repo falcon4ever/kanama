@@ -58,6 +58,8 @@ int64_t kanama_ios_godot_node_get_viewport(int64_t node);
 
 int64_t kanama_ios_godot_node_create_tween(int64_t node);
 
+void kanama_ios_godot_node_set_process_input(int64_t node, int32_t enabled);
+
 void kanama_ios_godot_node2d_get_position(int64_t node, double *x, double *y);
 
 void kanama_ios_godot_node2d_set_position(int64_t node, double x, double y);

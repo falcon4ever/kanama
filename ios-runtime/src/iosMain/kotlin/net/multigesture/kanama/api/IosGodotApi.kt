@@ -50,6 +50,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_tree
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_viewport
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_is_in_group
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_remove_child
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_input
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
@@ -267,6 +268,10 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
             Tween(MemorySegment.ofAddress(it))
         }
+
+    fun setProcessInput(enable: Boolean) {
+        IosGodot.nodeSetProcessInput(handle.address(), enable)
+    }
 
     fun hide() {
         IosGodot.canvasItemHide(handle.address())
@@ -688,6 +693,10 @@ private object IosGodot {
 
     fun nodeCreateTween(node: Long): Long =
         kanama_ios_godot_node_create_tween(node)
+
+    fun nodeSetProcessInput(node: Long, enabled: Boolean) {
+        kanama_ios_godot_node_set_process_input(node, if (enabled) 1 else 0)
+    }
 
     fun node2dGetPosition(node: Long): Vector2 =
         memScoped {
