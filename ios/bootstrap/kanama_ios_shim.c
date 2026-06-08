@@ -202,6 +202,7 @@ static GDExtensionMethodBindPtr g_tween_set_parallel_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_kill_bind = NULL;
 static GDExtensionMethodBindPtr g_property_tweener_set_trans_bind = NULL;
 static GDExtensionMethodBindPtr g_property_tweener_set_ease_bind = NULL;
+static GDExtensionMethodBindPtr g_viewport_get_visible_rect_bind = NULL;
 static GDExtensionPtrConstructor g_node_path_from_string_constructor = NULL;
 static GDExtensionPtrConstructor g_packed_string_array_constructor = NULL;
 static GDExtensionPtrConstructor g_array_constructor = NULL;
@@ -350,6 +351,7 @@ enum {
     KANAMA_IOS_TWEEN_KILL_HASH = 3218959716U,
     KANAMA_IOS_PROPERTY_TWEENER_SET_TRANS_HASH = 1899107404U,
     KANAMA_IOS_PROPERTY_TWEENER_SET_EASE_HASH = 1080455622U,
+    KANAMA_IOS_VIEWPORT_GET_VISIBLE_RECT_HASH = 1639390495U,
     KANAMA_IOS_PACKED_STRING_ARRAY_PUSH_BACK_HASH = 816187996U,
     KANAMA_IOS_NOTIFICATION_POSTINITIALIZE = 0,
     KANAMA_IOS_NOTIFICATION_ENTER_TREE = 10,
@@ -2248,6 +2250,29 @@ int64_t kanama_ios_godot_tweener_set_ease(int64_t tweener, int64_t ease) {
     GDExtensionObjectPtr result = NULL;
     g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tweener, args, &result);
     return (int64_t)(intptr_t)result;
+}
+
+void kanama_ios_godot_viewport_get_visible_rect(
+    int64_t viewport,
+    double *x,
+    double *y,
+    double *width,
+    double *height
+) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_viewport_get_visible_rect_bind,
+        "Viewport",
+        "get_visible_rect",
+        KANAMA_IOS_VIEWPORT_GET_VISIBLE_RECT_HASH
+    );
+    float ret[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    if (viewport != 0 && method_bind != NULL) {
+        g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)viewport, NULL, ret);
+    }
+    if (x != NULL) *x = ret[0];
+    if (y != NULL) *y = ret[1];
+    if (width != NULL) *width = ret[2];
+    if (height != NULL) *height = ret[3];
 }
 
 int32_t kanama_ios_godot_set_first_node_in_group_text(

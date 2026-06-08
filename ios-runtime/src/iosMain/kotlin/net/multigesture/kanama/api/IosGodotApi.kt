@@ -64,6 +64,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_propert
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_property_vector2
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_ease
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_trans
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_viewport_get_visible_rect
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
@@ -381,7 +382,7 @@ class CharacterBody3D(handle: MemorySegment) : Node3D(handle) {
 
 class Viewport(handle: MemorySegment) : Node(handle) {
     fun getVisibleRect(): Rect2 =
-        Rect2.ZERO
+        IosGodot.viewportGetVisibleRect(handle.address())
 }
 
 class SceneTree(handle: MemorySegment) : Node(handle) {
@@ -844,6 +845,16 @@ private object IosGodot {
 
     fun tweenerSetEase(tweener: Long, ease: Long): Long =
         kanama_ios_godot_tweener_set_ease(tweener, ease)
+
+    fun viewportGetVisibleRect(viewport: Long): Rect2 =
+        memScoped {
+            val x = alloc<DoubleVarCompat>()
+            val y = alloc<DoubleVarCompat>()
+            val w = alloc<DoubleVarCompat>()
+            val h = alloc<DoubleVarCompat>()
+            kanama_ios_godot_viewport_get_visible_rect(viewport, x.ptr, y.ptr, w.ptr, h.ptr)
+            Rect2(Vector2(x.value, y.value), Vector2(w.value, h.value))
+        }
 
     private fun labelSetTextBind(): Long {
         if (labelSetTextBind == 0L) {

@@ -173,6 +173,14 @@ int64_t kanama_ios_godot_tweener_set_trans(int64_t tweener, int64_t trans);
 
 int64_t kanama_ios_godot_tweener_set_ease(int64_t tweener, int64_t ease);
 
+void kanama_ios_godot_viewport_get_visible_rect(
+    int64_t viewport,
+    double *x,
+    double *y,
+    double *width,
+    double *height
+);
+
 int32_t kanama_ios_godot_set_first_node_in_group_text(
     const char *group_name,
     const char *value
