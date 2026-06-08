@@ -123,6 +123,7 @@ typedef struct {
     GDExtensionObjectPtr owner_object;
     GDExtensionObjectPtr script_object;
     KanamaIosExtensionInstance *script;
+    int input_toggled;
 } KanamaIosScriptInstance;
 
 static int g_kanama_ios_initialized = 0;
@@ -2949,6 +2950,22 @@ static void kanama_ios_script_instance_call(
     if (method_index < 0 && instance != NULL && instance->script != NULL &&
         kanama_ios_string_name_value(method) == kanama_ios_string_name_value((GDExtensionConstStringNamePtr)&g_name__unhandled_input)) {
         method_index = kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input);
+    }
+    if (instance != NULL && method_index >= 0 && !instance->input_toggled) {
+        const char *name = kanama_ios_script_method_name_text(instance->script, method_index);
+        if (name != NULL && strcmp(name, "_process") == 0 &&
+            kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input) >= 0) {
+            // Toggle set_process_input at first _process to fix iOS group reg.
+            GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
+                &g_node_set_process_input_bind,
+                "Node",
+                "set_process_input",
+                KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
+            );
+            kanama_ios_godot_ptrcall_bool_arg(bind, instance->owner_object, 0);
+            kanama_ios_godot_ptrcall_bool_arg(bind, instance->owner_object, 1);
+            instance->input_toggled = 1;
+        }
     }
     if (instance != NULL && method_index >= 0) {
         double first_arg = 0.0;
