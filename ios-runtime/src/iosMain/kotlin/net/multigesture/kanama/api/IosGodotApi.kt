@@ -50,12 +50,20 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_tree
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_viewport
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_is_in_group
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_remove_child
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_class
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_queue_free
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_packed_scene_instantiate
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_sprite2d_set_texture
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_kill
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_set_parallel
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_property_color
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_property_vector2
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_ease
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_trans
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
@@ -127,7 +135,7 @@ open class GodotObject(
     }
 
     fun connect(signalName: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
-        0L
+        IosGodot.objectConnect(handle.address(), signalName, target.handle.address(), method, flags)
 
     fun disconnect(signalName: String, target: GodotObject, method: String) {
     }
@@ -149,11 +157,15 @@ open class GodotObject(
     fun emitSignal(signalName: String, value: Long): Int =
         IosGodot.objectEmitSignalInt(handle.address(), signalName, value)
 
+    fun emitSignal(signalName: String, value: Vector2i): Int =
+        IosGodot.objectEmitSignalVector2i(handle.address(), signalName, value.x.toLong(), value.y.toLong())
+
     fun emitSignal(signalName: String, vararg args: Any?) {
         val first = args.firstOrNull()
         when (first) {
             is Int -> emitSignal(signalName, first)
             is Long -> emitSignal(signalName, first)
+            is Vector2i -> emitSignal(signalName, first)
         }
     }
 
@@ -478,20 +490,37 @@ class AnimationPlayer(handle: MemorySegment) : Node(handle) {
 }
 
 open class Tweener(handle: MemorySegment) : GodotObject(handle) {
-    fun setTrans(value: Long): Tweener = this
+    fun setTrans(value: Long): Tweener {
+        IosGodot.tweenerSetTrans(handle.address(), value)
+        return this
+    }
 
-    fun setEase(value: Long): Tweener = this
+    fun setEase(value: Long): Tweener {
+        IosGodot.tweenerSetEase(handle.address(), value)
+        return this
+    }
 }
 
 class PropertyTweener(handle: MemorySegment) : Tweener(handle)
 
 class Tween(handle: MemorySegment) : GodotObject(handle) {
-    fun setParallel(parallel: Boolean): Tween = this
+    fun setParallel(parallel: Boolean): Tween {
+        IosGodot.tweenSetParallel(handle.address(), if (parallel) 1 else 0)
+        return this
+    }
 
-    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? =
-        PropertyTweener(MemorySegment.NULL)
+    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? {
+        val addr = handle.address()
+        val targetAddr = target.handle.address()
+        return when (finalValue) {
+            is Vector2 -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, finalValue.x.toDouble(), finalValue.y.toDouble(), duration)
+            is Color -> IosGodot.tweenTweenPropertyColor(addr, targetAddr, property, finalValue.r, finalValue.g, finalValue.b, finalValue.a, duration)
+            else -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, 0.0, 0.0, duration)
+        }.takeIf { it != 0L }?.let { PropertyTweener(MemorySegment.ofAddress(it)) }
+    }
 
     fun kill() {
+        IosGodot.tweenKill(handle.address())
     }
 
     object Signals {
@@ -592,7 +621,7 @@ object GD {
 }
 
 inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =
-    null
+    net.multigesture.kanama.ios.iosScriptInstanceForOwner(handle.address()) as? T
 
 inline fun <reified T> Node.kotlinScriptInstance(): T? =
     GodotObject(handle).kotlinScriptInstance<T>()
@@ -790,6 +819,31 @@ private object IosGodot {
 
     fun objectEmitSignalInt(objectHandle: Long, signalName: String, value: Long): Int =
         kanama_ios_godot_object_emit_signal_int(objectHandle, signalName, value)
+
+    fun objectEmitSignalVector2i(objectHandle: Long, signalName: String, x: Long, y: Long): Int =
+        kanama_ios_godot_object_emit_signal_vector2i(objectHandle, signalName, x, y)
+
+    fun objectConnect(sourceObject: Long, signalName: String, targetObject: Long, method: String, flags: Long): Long =
+        kanama_ios_godot_object_connect(sourceObject, signalName, targetObject, method, flags)
+
+    fun tweenTweenPropertyVector2(tween: Long, target: Long, property: String, x: Double, y: Double, duration: Double): Long =
+        kanama_ios_godot_tween_tween_property_vector2(tween, target, property, x, y, duration)
+
+    fun tweenTweenPropertyColor(tween: Long, target: Long, property: String, r: Double, g: Double, b: Double, a: Double, duration: Double): Long =
+        kanama_ios_godot_tween_tween_property_color(tween, target, property, r, g, b, a, duration)
+
+    fun tweenSetParallel(tween: Long, parallel: Int): Long =
+        kanama_ios_godot_tween_set_parallel(tween, parallel)
+
+    fun tweenKill(tween: Long) {
+        kanama_ios_godot_tween_kill(tween)
+    }
+
+    fun tweenerSetTrans(tweener: Long, trans: Long): Long =
+        kanama_ios_godot_tweener_set_trans(tweener, trans)
+
+    fun tweenerSetEase(tweener: Long, ease: Long): Long =
+        kanama_ios_godot_tweener_set_ease(tweener, ease)
 
     private fun labelSetTextBind(): Long {
         if (labelSetTextBind == 0L) {

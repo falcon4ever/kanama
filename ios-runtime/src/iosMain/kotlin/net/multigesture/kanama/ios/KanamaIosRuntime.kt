@@ -29,6 +29,15 @@ internal interface KanamaIosScriptBridge {
 
     fun callObject(methodName: String, objectArg: Long): Boolean =
         false
+
+    fun callArgs(methodName: String, arg1: Long, arg2: Long, arg3: Long): Boolean =
+        false
+
+    fun callVector2i(methodName: String, x: Long, y: Long): Boolean =
+        false
+
+    val scriptInstance: Any?
+        get() = null
 }
 
 internal object KanamaIosProjectRegistry {
@@ -42,7 +51,7 @@ internal object KanamaIosProjectRegistry {
         descriptors[path]
 }
 
-private object KanamaIosRuntime {
+internal object KanamaIosRuntime {
     private const val PROBE_GROUP = "kanama_ios_probe"
     private const val PROBE_SCRIPT_PATH = "res://kanama_ios_probe.kt"
     private const val LABEL_SET_TEXT_HASH = 83702148L
@@ -55,6 +64,7 @@ private object KanamaIosRuntime {
     private var labelSetTextBind = 0L
     private val scriptResources = linkedMapOf<Long, IosScriptResource>()
     private val scriptInstances = linkedMapOf<Long, IosScriptInstance>()
+    private val ownerObjectToInstance = linkedMapOf<Long, Long>()
 
     fun entry(getProcAddress: Long, library: Long, initialization: Long): Int {
         if (initialized) {
@@ -81,6 +91,7 @@ private object KanamaIosRuntime {
             val resources = scriptResources.size
             scriptInstances.clear()
             scriptResources.clear()
+            ownerObjectToInstance.clear()
             log("cleared iOS script state instances=$instances resources=$resources")
         }
     }
@@ -156,6 +167,7 @@ private object KanamaIosRuntime {
             resource = resource,
             bridge = bridge,
         )
+        ownerObjectToInstance[ownerObject] = handle
         log(
             "created script instance handle=$handle script=$scriptHandle path=${resource.path} " +
                 "owner=0x${ownerObject.toULong().toString(16)}",
@@ -238,9 +250,76 @@ private object KanamaIosRuntime {
         return ok
     }
 
+    fun callScriptInstanceArgs(handle: Long, methodIndex: Int, arg1: Long, arg2: Long, arg3: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("args call skipped for missing script instance handle=$handle")
+            return false
+        }
+        val method = instance.resource.descriptor?.methods?.getOrNull(methodIndex)
+        if (method == null) {
+            log("args call skipped for missing method index=$methodIndex handle=$handle")
+            return false
+        }
+        return callScriptInstanceArgs(handle, method.name, arg1, arg2, arg3)
+    }
+
+    fun callScriptInstanceArgs(handle: Long, methodName: String, arg1: Long, arg2: Long, arg3: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("args call skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.callArgs(methodName, arg1, arg2, arg3)
+        if (ok && shouldLogScriptMethodCall(methodName)) {
+            val kind = if (instance.resource.path == PROBE_SCRIPT_PATH) "built-in probe" else "project script"
+            log("$kind args method call handle=$handle path=${instance.resource.path} method=$methodName")
+        }
+        return ok
+    }
+
+    fun callScriptInstanceVector2i(handle: Long, methodIndex: Int, x: Long, y: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("vector2i call skipped for missing script instance handle=$handle")
+            return false
+        }
+        val method = instance.resource.descriptor?.methods?.getOrNull(methodIndex)
+        if (method == null) {
+            log("vector2i call skipped for missing method index=$methodIndex handle=$handle")
+            return false
+        }
+        return callScriptInstanceVector2i(handle, method.name, x, y)
+    }
+
+    fun callScriptInstanceVector2i(handle: Long, methodName: String, x: Long, y: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("vector2i call skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.callVector2i(methodName, x, y)
+        if (ok && shouldLogScriptMethodCall(methodName)) {
+            val kind = if (instance.resource.path == PROBE_SCRIPT_PATH) "built-in probe" else "project script"
+            log("$kind vector2i method call handle=$handle path=${instance.resource.path} method=$methodName")
+        }
+        return ok
+    }
+
     fun freeScriptInstance(handle: Long) {
+        val instance = scriptInstances[handle]
+        if (instance != null) {
+            ownerObjectToInstance.remove(instance.ownerObject)
+        }
         scriptInstances.remove(handle)
         log("freed script instance handle=$handle")
+    }
+
+    @PublishedApi
+    internal fun scriptInstanceForOwner(ownerObject: Long): Any? {
+        val instanceHandle = ownerObjectToInstance[ownerObject] ?: return null
+        val instance = scriptInstances[instanceHandle] ?: return null
+        return instance.bridge.scriptInstance
     }
 
     fun labelSetTextBind(): Long {
@@ -421,7 +500,32 @@ fun kanamaIosRuntimeScriptInstanceCallObject(instanceHandle: Long, methodIndex: 
     if (KanamaIosRuntime.callScriptInstanceObject(instanceHandle, methodIndex, objectArg)) 1 else 0
 
 @OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_call_args")
+fun kanamaIosRuntimeScriptInstanceCallArgs(
+    instanceHandle: Long,
+    methodIndex: Int,
+    arg1: Long,
+    arg2: Long,
+    arg3: Long,
+): Int =
+    if (KanamaIosRuntime.callScriptInstanceArgs(instanceHandle, methodIndex, arg1, arg2, arg3)) 1 else 0
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_call_vector2i")
+fun kanamaIosRuntimeScriptInstanceCallVector2i(
+    instanceHandle: Long,
+    methodIndex: Int,
+    x: Long,
+    y: Long,
+): Int =
+    if (KanamaIosRuntime.callScriptInstanceVector2i(instanceHandle, methodIndex, x, y)) 1 else 0
+
+@OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")
 fun kanamaIosRuntimeScriptInstanceFree(instanceHandle: Long) {
     KanamaIosRuntime.freeScriptInstance(instanceHandle)
 }
+
+@PublishedApi
+internal fun iosScriptInstanceForOwner(ownerObject: Long): Any? =
+    KanamaIosRuntime.scriptInstanceForOwner(ownerObject)

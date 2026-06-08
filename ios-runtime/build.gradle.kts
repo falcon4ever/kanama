@@ -16,6 +16,8 @@ enum class IosScriptBridgeKind {
     ZERO_ARG,
     DOUBLE_ARG,
     OBJECT_ARG,
+    OBJECT_OBJECT_LONG_ARG,
+    VECTOR2I_ARG,
     UNSUPPORTED,
 }
 
@@ -120,6 +122,10 @@ fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind 
             IosScriptBridgeKind.DOUBLE_ARG
         params.size == 1 && godotName == "_input" ->
             IosScriptBridgeKind.OBJECT_ARG
+        params.size == 3 && godotName == "_input_event" ->
+            IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG
+        params.size == 1 && params[0].contains("Vector2i") ->
+            IosScriptBridgeKind.VECTOR2I_ARG
         else -> IosScriptBridgeKind.UNSUPPORTED
     }
 
@@ -270,12 +276,16 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         builder.appendLine("private class $bridgeName(")
         builder.appendLine("    private val script: ${model.className},")
         builder.appendLine(") : KanamaIosScriptBridge {")
+        builder.appendLine("    override val scriptInstance: Any get() = script")
+        builder.appendLine()
         builder.appendLine("    override fun call(methodName: String, firstArg: Double): Boolean = when (methodName) {")
         model.methods.forEach { method ->
             val invocation = when (method.bridgeKind) {
                 IosScriptBridgeKind.ZERO_ARG -> "script.${method.kotlinName}()"
                 IosScriptBridgeKind.DOUBLE_ARG -> "script.${method.kotlinName}(firstArg)"
                 IosScriptBridgeKind.OBJECT_ARG -> null
+                IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG -> null
+                IosScriptBridgeKind.VECTOR2I_ARG -> null
                 IosScriptBridgeKind.UNSUPPORTED -> null
             }
             if (invocation != null) {
@@ -290,6 +300,28 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
             if (method.bridgeKind == IosScriptBridgeKind.OBJECT_ARG) {
                 builder.appendLine(
                     "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(objectArg))); true }",
+                )
+            }
+        }
+        builder.appendLine("        else -> false")
+        builder.appendLine("    }")
+        builder.appendLine()
+        builder.appendLine("    override fun callArgs(methodName: String, arg1: Long, arg2: Long, arg3: Long): Boolean = when (methodName) {")
+        model.methods.forEach { method ->
+            if (method.bridgeKind == IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG) {
+                builder.appendLine(
+                    "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(arg1)), net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(arg2)), arg3); true }",
+                )
+            }
+        }
+        builder.appendLine("        else -> false")
+        builder.appendLine("    }")
+        builder.appendLine()
+        builder.appendLine("    override fun callVector2i(methodName: String, x: Long, y: Long): Boolean = when (methodName) {")
+        model.methods.forEach { method ->
+            if (method.bridgeKind == IosScriptBridgeKind.VECTOR2I_ARG) {
+                builder.appendLine(
+                    "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.types.Vector2i(x.toInt(), y.toInt())); true }",
                 )
             }
         }

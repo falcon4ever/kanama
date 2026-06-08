@@ -43,6 +43,19 @@ extern int32_t kanama_ios_runtime_script_instance_call_object(
     int32_t method_index,
     int64_t object_arg
 );
+extern int32_t kanama_ios_runtime_script_instance_call_args(
+    int64_t instance_handle,
+    int32_t method_index,
+    int64_t arg1,
+    int64_t arg2,
+    int64_t arg3
+);
+extern int32_t kanama_ios_runtime_script_instance_call_vector2i(
+    int64_t instance_handle,
+    int32_t method_index,
+    int64_t x,
+    int64_t y
+);
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
 
 typedef enum {
@@ -183,6 +196,12 @@ static GDExtensionMethodBindPtr g_collision_shape3d_set_disabled_bind = NULL;
 static GDExtensionMethodBindPtr g_resource_loader_load_bind = NULL;
 static GDExtensionMethodBindPtr g_sprite2d_set_texture_bind = NULL;
 static GDExtensionMethodBindPtr g_object_emit_signal_bind = NULL;
+static GDExtensionMethodBindPtr g_object_connect_bind = NULL;
+static GDExtensionMethodBindPtr g_tween_tween_property_bind = NULL;
+static GDExtensionMethodBindPtr g_tween_set_parallel_bind = NULL;
+static GDExtensionMethodBindPtr g_tween_kill_bind = NULL;
+static GDExtensionMethodBindPtr g_property_tweener_set_trans_bind = NULL;
+static GDExtensionMethodBindPtr g_property_tweener_set_ease_bind = NULL;
 static GDExtensionPtrConstructor g_node_path_from_string_constructor = NULL;
 static GDExtensionPtrConstructor g_packed_string_array_constructor = NULL;
 static GDExtensionPtrConstructor g_array_constructor = NULL;
@@ -191,6 +210,14 @@ static GDExtensionPtrDestructor g_node_path_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_float = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_object = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_int = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_vector2i = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2i = NULL;
+static GDExtensionPtrConstructor g_callable_object_method_constructor = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2 = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_color = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_node_path = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_float = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_object = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string_name = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
@@ -260,10 +287,14 @@ enum {
     KANAMA_IOS_VARIANT_TYPE_FLOAT = 3,
     KANAMA_IOS_VARIANT_TYPE_STRING = 4,
     KANAMA_IOS_VARIANT_TYPE_VECTOR2 = 5,
+    KANAMA_IOS_VARIANT_TYPE_VECTOR2 = 5,
+    KANAMA_IOS_VARIANT_TYPE_VECTOR2I = 6,
     KANAMA_IOS_VARIANT_TYPE_RECT2 = 7,
+    KANAMA_IOS_VARIANT_TYPE_COLOR = 20,
     KANAMA_IOS_VARIANT_TYPE_STRING_NAME = 21,
     KANAMA_IOS_VARIANT_TYPE_NODE_PATH = 22,
     KANAMA_IOS_VARIANT_TYPE_OBJECT = 24,
+    KANAMA_IOS_VARIANT_TYPE_CALLABLE = 25,
     KANAMA_IOS_VARIANT_TYPE_DICTIONARY = 27,
     KANAMA_IOS_VARIANT_TYPE_ARRAY = 28,
     KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY = 34,
@@ -314,6 +345,12 @@ enum {
     KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH = 3358495409U,
     KANAMA_IOS_SPRITE2D_SET_TEXTURE_HASH = 4051416890U,
     KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH = 4047867050U,
+    KANAMA_IOS_OBJECT_CONNECT_HASH = 1518946055U,
+    KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH = 4049770449U,
+    KANAMA_IOS_TWEEN_SET_PARALLEL_HASH = 1942052223U,
+    KANAMA_IOS_TWEEN_KILL_HASH = 3218959716U,
+    KANAMA_IOS_PROPERTY_TWEENER_SET_TRANS_HASH = 1899107404U,
+    KANAMA_IOS_PROPERTY_TWEENER_SET_EASE_HASH = 1080455622U,
     KANAMA_IOS_PACKED_STRING_ARRAY_PUSH_BACK_HASH = 816187996U,
     KANAMA_IOS_NOTIFICATION_POSTINITIALIZE = 0,
     KANAMA_IOS_NOTIFICATION_ENTER_TREE = 10,
@@ -429,6 +466,14 @@ static int kanama_ios_resolve_godot_api(void) {
     g_dictionary_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY, 0);
     g_variant_to_float = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
     g_variant_to_object = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
+    g_variant_to_int = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
+    g_variant_to_vector2i = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2I);
+    g_variant_from_vector2i = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2I);
+    g_callable_object_method_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE, 2);
+    g_variant_from_vector2 = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2);
+    g_variant_from_color = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_COLOR);
+    g_variant_from_node_path = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
+    g_variant_from_float = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
     g_variant_from_object = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
     g_variant_from_string_name = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
     g_variant_from_int = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
@@ -443,6 +488,14 @@ static int kanama_ios_resolve_godot_api(void) {
         g_dictionary_constructor == NULL ||
         g_variant_to_float == NULL ||
         g_variant_to_object == NULL ||
+        g_variant_to_int == NULL ||
+        g_variant_to_vector2i == NULL ||
+        g_variant_from_vector2i == NULL ||
+        g_callable_object_method_constructor == NULL ||
+        g_variant_from_vector2 == NULL ||
+        g_variant_from_color == NULL ||
+        g_variant_from_node_path == NULL ||
+        g_variant_from_float == NULL ||
         g_variant_from_object == NULL ||
         g_variant_from_string_name == NULL ||
         g_variant_from_int == NULL
@@ -1900,6 +1953,304 @@ int32_t kanama_ios_godot_object_emit_signal_int(
     return ((int32_t *)&error)[0] == 0 ? 0 : -1;
 }
 
+int32_t kanama_ios_godot_object_emit_signal_vector2i(
+    int64_t object,
+    const char *signal_name,
+    int64_t x,
+    int64_t y
+) {
+    if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL) {
+        return -1;
+    }
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_object_emit_signal_bind,
+        "Object",
+        "emit_signal",
+        KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH
+    );
+    if (method_bind == NULL) {
+        return -1;
+    }
+
+    uint64_t signal_name_storage = 0;
+    kanama_ios_init_string_name(&signal_name_storage, signal_name);
+    int32_t raw_vec[2] = { (int32_t)x, (int32_t)y };
+    uint8_t signal_variant[24];
+    uint8_t value_variant[24];
+    uint8_t ret_variant[24];
+    memset(signal_variant, 0, sizeof(signal_variant));
+    memset(value_variant, 0, sizeof(value_variant));
+    memset(ret_variant, 0, sizeof(ret_variant));
+    g_variant_from_string_name(signal_variant, &signal_name_storage);
+    g_variant_from_vector2i(value_variant, raw_vec);
+    const GDExtensionConstVariantPtr args[2] = {
+        (GDExtensionConstVariantPtr)signal_variant,
+        (GDExtensionConstVariantPtr)value_variant,
+    };
+    GDExtensionCallError error;
+    memset(&error, 0, sizeof(error));
+    g_object_method_bind_call(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)object,
+        args,
+        2,
+        ret_variant,
+        &error
+    );
+    g_variant_destroy(ret_variant);
+    g_variant_destroy(value_variant);
+    g_variant_destroy(signal_variant);
+    kanama_ios_destroy_string_name(&signal_name_storage);
+    return ((int32_t *)&error)[0] == 0 ? 0 : -1;
+}
+
+int64_t kanama_ios_godot_object_connect(
+    int64_t object,
+    const char *signal_name,
+    int64_t target_object,
+    const char *method_name,
+    int64_t flags
+) {
+    if (!kanama_ios_resolve_godot_api() || object == 0 || target_object == 0 ||
+        signal_name == NULL || method_name == NULL) {
+        return -1;
+    }
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_object_connect_bind,
+        "Object",
+        "connect",
+        KANAMA_IOS_OBJECT_CONNECT_HASH
+    );
+    if (method_bind == NULL) {
+        return -1;
+    }
+
+    uint64_t signal_name_storage = 0;
+    uint64_t method_name_storage = 0;
+    kanama_ios_init_string_name(&signal_name_storage, signal_name);
+    kanama_ios_init_string_name(&method_name_storage, method_name);
+
+    GDExtensionObjectPtr target = (GDExtensionObjectPtr)(intptr_t)target_object;
+    const void *callable_args[2] = { &target, &method_name_storage };
+    uint8_t callable_variant[24];
+    memset(callable_variant, 0, sizeof(callable_variant));
+    g_callable_object_method_constructor(callable_variant, callable_args);
+
+    int64_t flags_cell = flags;
+    uint8_t signal_variant[24];
+    uint8_t flags_variant[24];
+    uint8_t ret_variant[24];
+    memset(signal_variant, 0, sizeof(signal_variant));
+    memset(flags_variant, 0, sizeof(flags_variant));
+    memset(ret_variant, 0, sizeof(ret_variant));
+    g_variant_from_string_name(signal_variant, &signal_name_storage);
+    g_variant_from_int(flags_variant, &flags_cell);
+    const GDExtensionConstVariantPtr args[3] = {
+        (GDExtensionConstVariantPtr)signal_variant,
+        (GDExtensionConstVariantPtr)callable_variant,
+        (GDExtensionConstVariantPtr)flags_variant,
+    };
+    GDExtensionCallError error;
+    memset(&error, 0, sizeof(error));
+    g_object_method_bind_call(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)object,
+        args,
+        3,
+        ret_variant,
+        &error
+    );
+    g_variant_destroy(ret_variant);
+    g_variant_destroy(flags_variant);
+    g_variant_destroy(signal_variant);
+    g_variant_destroy(callable_variant);
+    kanama_ios_destroy_string_name(&method_name_storage);
+    kanama_ios_destroy_string_name(&signal_name_storage);
+    return ((int32_t *)&error)[0] == 0 ? 0 : -1;
+}
+
+int64_t kanama_ios_godot_tween_tween_property_vector2(
+    int64_t tween,
+    int64_t target,
+    const char *property,
+    double x,
+    double y,
+    double duration
+) {
+    if (!kanama_ios_resolve_godot_api() || tween == 0 || target == 0 || property == NULL) {
+        return 0;
+    }
+    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
+        &g_tween_tween_property_bind,
+        "Tween",
+        "tween_property",
+        KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH
+    );
+    if (mb == NULL) return 0;
+
+    GDExtensionObjectPtr tween_obj = (GDExtensionObjectPtr)(intptr_t)tween;
+    GDExtensionObjectPtr target_obj = (GDExtensionObjectPtr)(intptr_t)target;
+
+    uint64_t node_path_storage[2] = { 0 };
+    kanama_ios_init_node_path(node_path_storage, property);
+    float vec[2] = { (float)x, (float)y };
+    double dur = duration;
+
+    uint8_t obj_v[24], prop_v[24], val_v[24], dur_v[24], ret_v[24];
+    memset(obj_v, 0, 24); memset(prop_v, 0, 24); memset(val_v, 0, 24);
+    memset(dur_v, 0, 24); memset(ret_v, 0, 24);
+
+    g_variant_from_object(obj_v, &target_obj);
+    g_variant_from_node_path(prop_v, node_path_storage);
+    g_variant_from_vector2(val_v, vec);
+    g_variant_from_float(dur_v, &dur);
+
+    const GDExtensionConstVariantPtr args[4] = {
+        (GDExtensionConstVariantPtr)obj_v,
+        (GDExtensionConstVariantPtr)prop_v,
+        (GDExtensionConstVariantPtr)val_v,
+        (GDExtensionConstVariantPtr)dur_v,
+    };
+    GDExtensionCallError error;
+    memset(&error, 0, sizeof(error));
+    g_object_method_bind_call(mb, tween_obj, args, 4, ret_v, &error);
+
+    GDExtensionObjectPtr result = NULL;
+    if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
+        GDExtensionVariantType rt = g_variant_get_type(ret_v);
+        if (rt == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
+            g_variant_to_object(&result, ret_v);
+        }
+    }
+
+    g_variant_destroy(ret_v);
+    g_variant_destroy(dur_v);
+    g_variant_destroy(val_v);
+    g_variant_destroy(prop_v);
+    g_variant_destroy(obj_v);
+    kanama_ios_destroy_node_path(node_path_storage);
+    return (int64_t)(intptr_t)result;
+}
+
+int64_t kanama_ios_godot_tween_tween_property_color(
+    int64_t tween,
+    int64_t target,
+    const char *property,
+    double r,
+    double g,
+    double b,
+    double a,
+    double duration
+) {
+    if (!kanama_ios_resolve_godot_api() || tween == 0 || target == 0 || property == NULL) {
+        return 0;
+    }
+    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
+        &g_tween_tween_property_bind,
+        "Tween",
+        "tween_property",
+        KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH
+    );
+    if (mb == NULL) return 0;
+
+    GDExtensionObjectPtr tween_obj = (GDExtensionObjectPtr)(intptr_t)tween;
+    GDExtensionObjectPtr target_obj = (GDExtensionObjectPtr)(intptr_t)target;
+
+    uint64_t node_path_storage[2] = { 0 };
+    kanama_ios_init_node_path(node_path_storage, property);
+    float color[4] = { (float)r, (float)g, (float)b, (float)a };
+    double dur = duration;
+
+    uint8_t obj_v[24], prop_v[24], val_v[24], dur_v[24], ret_v[24];
+    memset(obj_v, 0, 24); memset(prop_v, 0, 24); memset(val_v, 0, 24);
+    memset(dur_v, 0, 24); memset(ret_v, 0, 24);
+
+    g_variant_from_object(obj_v, &target_obj);
+    g_variant_from_node_path(prop_v, node_path_storage);
+    g_variant_from_color(val_v, color);
+    g_variant_from_float(dur_v, &dur);
+
+    const GDExtensionConstVariantPtr args[4] = {
+        (GDExtensionConstVariantPtr)obj_v,
+        (GDExtensionConstVariantPtr)prop_v,
+        (GDExtensionConstVariantPtr)val_v,
+        (GDExtensionConstVariantPtr)dur_v,
+    };
+    GDExtensionCallError error;
+    memset(&error, 0, sizeof(error));
+    g_object_method_bind_call(mb, tween_obj, args, 4, ret_v, &error);
+
+    GDExtensionObjectPtr result = NULL;
+    if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
+        GDExtensionVariantType rt = g_variant_get_type(ret_v);
+        if (rt == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
+            g_variant_to_object(&result, ret_v);
+        }
+    }
+
+    g_variant_destroy(ret_v);
+    g_variant_destroy(dur_v);
+    g_variant_destroy(val_v);
+    g_variant_destroy(prop_v);
+    g_variant_destroy(obj_v);
+    kanama_ios_destroy_node_path(node_path_storage);
+    return (int64_t)(intptr_t)result;
+}
+
+int64_t kanama_ios_godot_tween_set_parallel(int64_t tween, int32_t parallel) {
+    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
+        &g_tween_set_parallel_bind,
+        "Tween",
+        "set_parallel",
+        KANAMA_IOS_TWEEN_SET_PARALLEL_HASH
+    );
+    if (mb == NULL || tween == 0) return 0;
+    GDExtensionBool b = (GDExtensionBool)parallel;
+    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&b };
+    GDExtensionObjectPtr result = NULL;
+    g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tween, args, &result);
+    return (int64_t)(intptr_t)result;
+}
+
+void kanama_ios_godot_tween_kill(int64_t tween) {
+    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
+        &g_tween_kill_bind,
+        "Tween",
+        "kill",
+        KANAMA_IOS_TWEEN_KILL_HASH
+    );
+    if (mb == NULL || tween == 0) return;
+    g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tween, NULL, NULL);
+}
+
+int64_t kanama_ios_godot_tweener_set_trans(int64_t tweener, int64_t trans) {
+    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
+        &g_property_tweener_set_trans_bind,
+        "PropertyTweener",
+        "set_trans",
+        KANAMA_IOS_PROPERTY_TWEENER_SET_TRANS_HASH
+    );
+    if (mb == NULL || tweener == 0) return 0;
+    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&trans };
+    GDExtensionObjectPtr result = NULL;
+    g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tweener, args, &result);
+    return (int64_t)(intptr_t)result;
+}
+
+int64_t kanama_ios_godot_tweener_set_ease(int64_t tweener, int64_t ease) {
+    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
+        &g_property_tweener_set_ease_bind,
+        "PropertyTweener",
+        "set_ease",
+        KANAMA_IOS_PROPERTY_TWEENER_SET_EASE_HASH
+    );
+    if (mb == NULL || tweener == 0) return 0;
+    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&ease };
+    GDExtensionObjectPtr result = NULL;
+    g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tweener, args, &result);
+    return (int64_t)(intptr_t)result;
+}
+
 int32_t kanama_ios_godot_set_first_node_in_group_text(
     const char *group_name,
     const char *value
@@ -2424,6 +2775,35 @@ static GDExtensionObjectPtr kanama_ios_variant_to_object(GDExtensionConstVariant
     return object;
 }
 
+static int64_t kanama_ios_variant_to_int64(GDExtensionConstVariantPtr variant) {
+    if (variant == NULL || g_variant_to_int == NULL) {
+        return 0;
+    }
+    GDExtensionVariantType type = g_variant_get_type != NULL ? g_variant_get_type(variant) : KANAMA_IOS_VARIANT_TYPE_NIL;
+    if (type != KANAMA_IOS_VARIANT_TYPE_INT) {
+        return 0;
+    }
+    int64_t value = 0;
+    g_variant_to_int(&value, (GDExtensionVariantPtr)variant);
+    return value;
+}
+
+static void kanama_ios_variant_to_vector2i(GDExtensionConstVariantPtr variant, int64_t *x, int64_t *y) {
+    *x = 0;
+    *y = 0;
+    if (variant == NULL || g_variant_to_vector2i == NULL || g_variant_get_type == NULL) {
+        return;
+    }
+    GDExtensionVariantType type = g_variant_get_type(variant);
+    if (type != KANAMA_IOS_VARIANT_TYPE_VECTOR2I) {
+        return;
+    }
+    int32_t vec[2] = { 0, 0 };
+    g_variant_to_vector2i(vec, (GDExtensionVariantPtr)variant);
+    *x = vec[0];
+    *y = vec[1];
+}
+
 static void kanama_ios_script_instance_call(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr method,
@@ -2440,17 +2820,47 @@ static void kanama_ios_script_instance_call(
     if (instance != NULL && method_index >= 0) {
         double first_arg = 0.0;
         GDExtensionObjectPtr object_arg = NULL;
-        if (argument_count > 0 && args != NULL && args[0] != NULL) {
-            object_arg = kanama_ios_variant_to_object(args[0]);
-            first_arg = kanama_ios_variant_to_double(args[0]);
+        int32_t ok = 0;
+        if (argument_count >= 3 && args != NULL && args[0] != NULL && args[1] != NULL && args[2] != NULL) {
+            GDExtensionObjectPtr arg1 = kanama_ios_variant_to_object(args[0]);
+            GDExtensionObjectPtr arg2 = kanama_ios_variant_to_object(args[1]);
+            int64_t arg3 = kanama_ios_variant_to_int64(args[2]);
+            if (arg1 != NULL && arg2 != NULL) {
+                ok = kanama_ios_runtime_script_instance_call_args(
+                    instance->runtime_handle,
+                    method_index,
+                    (int64_t)(intptr_t)arg1,
+                    (int64_t)(intptr_t)arg2,
+                    arg3
+                );
+            }
+        } else if (argument_count > 0 && args != NULL && args[0] != NULL) {
+            GDExtensionVariantType arg_type = g_variant_get_type != NULL
+                ? g_variant_get_type(args[0])
+                : KANAMA_IOS_VARIANT_TYPE_NIL;
+            if (arg_type == KANAMA_IOS_VARIANT_TYPE_VECTOR2I) {
+                int64_t vx = 0, vy = 0;
+                kanama_ios_variant_to_vector2i(args[0], &vx, &vy);
+                ok = kanama_ios_runtime_script_instance_call_vector2i(
+                    instance->runtime_handle,
+                    method_index,
+                    vx,
+                    vy
+                );
+            } else {
+                object_arg = kanama_ios_variant_to_object(args[0]);
+                first_arg = kanama_ios_variant_to_double(args[0]);
+                ok = object_arg != NULL
+                    ? kanama_ios_runtime_script_instance_call_object(
+                        instance->runtime_handle,
+                        method_index,
+                        (int64_t)(intptr_t)object_arg
+                    )
+                    : kanama_ios_runtime_script_instance_call(instance->runtime_handle, method_index, first_arg);
+            }
+        } else {
+            ok = kanama_ios_runtime_script_instance_call(instance->runtime_handle, method_index, 0.0);
         }
-        int32_t ok = object_arg != NULL
-            ? kanama_ios_runtime_script_instance_call_object(
-                instance->runtime_handle,
-                method_index,
-                (int64_t)(intptr_t)object_arg
-            )
-            : kanama_ios_runtime_script_instance_call(instance->runtime_handle, method_index, first_arg);
         kanama_ios_script_instance_set_ok(error, ok);
         if (!ok) {
             fprintf(stderr,

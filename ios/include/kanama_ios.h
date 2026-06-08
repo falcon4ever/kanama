@@ -130,6 +130,49 @@ int32_t kanama_ios_godot_object_emit_signal_int(
     int64_t value
 );
 
+int32_t kanama_ios_godot_object_emit_signal_vector2i(
+    int64_t object,
+    const char *signal_name,
+    int64_t x,
+    int64_t y
+);
+
+int64_t kanama_ios_godot_object_connect(
+    int64_t object,
+    const char *signal_name,
+    int64_t target_object,
+    const char *method_name,
+    int64_t flags
+);
+
+int64_t kanama_ios_godot_tween_tween_property_vector2(
+    int64_t tween,
+    int64_t target,
+    const char *property,
+    double x,
+    double y,
+    double duration
+);
+
+int64_t kanama_ios_godot_tween_tween_property_color(
+    int64_t tween,
+    int64_t target,
+    const char *property,
+    double r,
+    double g,
+    double b,
+    double a,
+    double duration
+);
+
+int64_t kanama_ios_godot_tween_set_parallel(int64_t tween, int32_t parallel);
+
+void kanama_ios_godot_tween_kill(int64_t tween);
+
+int64_t kanama_ios_godot_tweener_set_trans(int64_t tweener, int64_t trans);
+
+int64_t kanama_ios_godot_tweener_set_ease(int64_t tweener, int64_t ease);
+
 int32_t kanama_ios_godot_set_first_node_in_group_text(
     const char *group_name,
     const char *value
