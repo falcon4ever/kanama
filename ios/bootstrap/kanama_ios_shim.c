@@ -2965,6 +2965,7 @@ static void kanama_ios_script_instance_call(
             kanama_ios_godot_ptrcall_bool_arg(bind, instance->owner_object, 0);
             kanama_ios_godot_ptrcall_bool_arg(bind, instance->owner_object, 1);
             instance->input_toggled = 1;
+            fprintf(stderr, "[kanama][ios][c] INPUT TOGGLE for _process node\n");
         }
     }
     if (instance != NULL && method_index >= 0) {
