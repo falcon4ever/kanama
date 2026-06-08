@@ -2927,6 +2927,12 @@ static void kanama_ios_script_instance_call(
     }
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, method);
+    if (method_index >= 0 && instance != NULL && instance->script != NULL) {
+        const char *name = kanama_ios_script_method_name_text(instance->script, method_index);
+        if (name != NULL && name[0] == '_') {
+            fprintf(stderr, "[kanama][ios][c] CALL method=%s args=%d\n", name, argument_count);
+        }
+    }
     if (method_index < 0 && instance != NULL && instance->script != NULL &&
         kanama_ios_string_name_value(method) == kanama_ios_string_name_value((GDExtensionConstStringNamePtr)&g_name__unhandled_input)) {
         method_index = kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input);
