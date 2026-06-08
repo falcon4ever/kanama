@@ -242,6 +242,7 @@ static int g_main_loop_callbacks_active = 0;
 static int g_main_loop_callback_frame_count = 0;
 static int g_input_toggle_pending = 0;
 static int g_input_toggle_done = 0;
+static int g_input_toggle_frame = 0;
 static GDExtensionObjectPtr g_input_toggle_nodes[64];
 static int g_input_toggle_node_count = 0;
 static int g_ios_script_classes_registered = 0;
@@ -3346,6 +3347,8 @@ static void kanama_ios_frame(void) {
     }
     g_main_loop_callback_frame_count++;
     if (g_input_toggle_pending && !g_input_toggle_done) {
+        g_input_toggle_frame++;
+        if (g_input_toggle_frame >= 2) {
         GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
             &g_node_set_process_input_bind,
             "Node",
@@ -3356,7 +3359,8 @@ static void kanama_ios_frame(void) {
             kanama_ios_godot_ptrcall_bool_arg(bind, g_input_toggle_nodes[i], 0);
             kanama_ios_godot_ptrcall_bool_arg(bind, g_input_toggle_nodes[i], 1);
         }
-        g_input_toggle_done = 1;
+            g_input_toggle_done = 1;
+        }
     }
     kanama_ios_runtime_frame();
 }
