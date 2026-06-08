@@ -240,6 +240,10 @@ static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
 static int g_main_loop_callbacks_registered = 0;
 static int g_main_loop_callbacks_active = 0;
 static int g_main_loop_callback_frame_count = 0;
+static int g_input_toggle_pending = 0;
+static int g_input_toggle_done = 0;
+static GDExtensionObjectPtr g_input_toggle_nodes[64];
+static int g_input_toggle_node_count = 0;
 static int g_ios_script_classes_registered = 0;
 
 static uint64_t g_name_KanamaIosScriptLanguage = 0;
@@ -3026,8 +3030,12 @@ static void kanama_ios_script_instance_configure_lifecycle_processing(KanamaIosS
         kanama_ios_godot_ptrcall_bool_arg(set_process, instance->owner_object, 1);
     }
     if (kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input) >= 0) {
-        // set_process_input / set_process_unhandled_input are auto-enabled
-        // by Godot's Node::NOTIFICATION_READY via GDVIRTUAL_IS_OVERRIDDEN.
+        // On iOS, the _vp_input group registration at NOTIFICATION_READY
+        // doesn't stick. Defer toggle to the first main loop frame.
+        if (g_input_toggle_node_count < 64) {
+            g_input_toggle_nodes[g_input_toggle_node_count++] = instance->owner_object;
+        }
+        g_input_toggle_pending = 1;
     }
 }
 
@@ -3337,6 +3345,19 @@ static void kanama_ios_frame(void) {
         return;
     }
     g_main_loop_callback_frame_count++;
+    if (g_input_toggle_pending && !g_input_toggle_done) {
+        GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
+            &g_node_set_process_input_bind,
+            "Node",
+            "set_process_input",
+            KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
+        );
+        for (int i = 0; i < g_input_toggle_node_count; i++) {
+            kanama_ios_godot_ptrcall_bool_arg(bind, g_input_toggle_nodes[i], 0);
+            kanama_ios_godot_ptrcall_bool_arg(bind, g_input_toggle_nodes[i], 1);
+        }
+        g_input_toggle_done = 1;
+    }
     kanama_ios_runtime_frame();
 }
 
