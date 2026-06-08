@@ -177,6 +177,7 @@ static GDExtensionMethodBindPtr g_node_queue_free_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_process_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_physics_process_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_process_input_bind = NULL;
+static GDExtensionMethodBindPtr g_node_set_process_unhandled_input_bind = NULL;
 static GDExtensionMethodBindPtr g_object_is_class_bind = NULL;
 static GDExtensionMethodBindPtr g_node_is_in_group_bind = NULL;
 static GDExtensionMethodBindPtr g_input_event_is_pressed_bind = NULL;
@@ -252,6 +253,7 @@ static uint64_t g_name__ready = 0;
 static uint64_t g_name__process = 0;
 static uint64_t g_name__physics_process = 0;
 static uint64_t g_name__input = 0;
+static uint64_t g_name__unhandled_input = 0;
 static uint64_t g_name__get_name = 0;
 static uint64_t g_name__get_type = 0;
 static uint64_t g_name__get_extension = 0;
@@ -332,6 +334,7 @@ enum {
     KANAMA_IOS_NODE_SET_PROCESS_HASH = 2586408642U,
     KANAMA_IOS_NODE_SET_PHYSICS_PROCESS_HASH = 2586408642U,
     KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH = 2586408642U,
+    KANAMA_IOS_NODE_SET_PROCESS_UNHANDLED_INPUT_HASH = 2586408642U,
     KANAMA_IOS_OBJECT_STRING_NAME_BOOL_HASH = 2619796661U,
     KANAMA_IOS_NOARGS_BOOL_HASH = 36873697U,
     KANAMA_IOS_INPUT_EVENT_MOUSE_BUTTON_GET_BUTTON_INDEX_HASH = 1132662608U,
@@ -789,6 +792,7 @@ static void kanama_ios_cache_names(void) {
     kanama_ios_cache_name(&g_name__process, "_process");
     kanama_ios_cache_name(&g_name__physics_process, "_physics_process");
     kanama_ios_cache_name(&g_name__input, "_input");
+    kanama_ios_cache_name(&g_name__unhandled_input, "_unhandled_input");
     kanama_ios_cache_name(&g_name__get_name, "_get_name");
     kanama_ios_cache_name(&g_name__get_type, "_get_type");
     kanama_ios_cache_name(&g_name__get_extension, "_get_extension");
@@ -1433,6 +1437,16 @@ void kanama_ios_godot_node_set_process_input(int64_t node, int32_t enabled) {
         "Node",
         "set_process_input",
         KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)node, enabled);
+}
+
+void kanama_ios_godot_node_set_process_unhandled_input(int64_t node, int32_t enabled) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_node_set_process_unhandled_input_bind,
+        "Node",
+        "set_process_unhandled_input",
+        KANAMA_IOS_NODE_SET_PROCESS_UNHANDLED_INPUT_HASH
     );
     kanama_ios_godot_ptrcall_bool_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)node, enabled);
 }
@@ -2913,6 +2927,10 @@ static void kanama_ios_script_instance_call(
     }
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, method);
+    if (method_index < 0 && instance != NULL && instance->script != NULL &&
+        kanama_ios_string_name_value(method) == kanama_ios_string_name_value((GDExtensionConstStringNamePtr)&g_name__unhandled_input)) {
+        method_index = kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input);
+    }
     if (instance != NULL && method_index >= 0) {
         double first_arg = 0.0;
         GDExtensionObjectPtr object_arg = NULL;
@@ -3001,6 +3019,16 @@ static void kanama_ios_script_instance_configure_lifecycle_processing(KanamaIosS
             KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
         );
         kanama_ios_godot_ptrcall_bool_arg(set_process_input, instance->owner_object, 1);
+        kanama_ios_godot_ptrcall_bool_arg(
+            kanama_ios_get_method_bind_cached(
+                &g_node_set_process_unhandled_input_bind,
+                "Node",
+                "set_process_unhandled_input",
+                KANAMA_IOS_NODE_SET_PROCESS_UNHANDLED_INPUT_HASH
+            ),
+            instance->owner_object,
+            1
+        );
     }
 }
 

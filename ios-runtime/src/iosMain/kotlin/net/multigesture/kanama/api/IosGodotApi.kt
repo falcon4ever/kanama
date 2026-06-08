@@ -51,6 +51,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_viewport
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_is_in_group
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_remove_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_input
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_unhandled_input
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
@@ -271,6 +272,10 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
 
     fun setProcessInput(enable: Boolean) {
         IosGodot.nodeSetProcessInput(handle.address(), enable)
+    }
+
+    fun setProcessUnhandledInput(enable: Boolean) {
+        IosGodot.nodeSetProcessUnhandledInput(handle.address(), enable)
     }
 
     fun hide() {
@@ -696,6 +701,10 @@ private object IosGodot {
 
     fun nodeSetProcessInput(node: Long, enabled: Boolean) {
         kanama_ios_godot_node_set_process_input(node, if (enabled) 1 else 0)
+    }
+
+    fun nodeSetProcessUnhandledInput(node: Long, enabled: Boolean) {
+        kanama_ios_godot_node_set_process_unhandled_input(node, if (enabled) 1 else 0)
     }
 
     fun node2dGetPosition(node: Long): Vector2 =
