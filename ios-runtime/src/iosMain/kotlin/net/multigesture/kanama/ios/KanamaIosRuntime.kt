@@ -17,10 +17,15 @@ internal data class KanamaIosScriptMethod(
     val argumentCount: Int = 0,
 )
 
+internal data class KanamaIosScriptProperty(
+    val name: String,
+)
+
 internal data class KanamaIosScriptDescriptor(
     val path: String,
     val baseType: String,
     val methods: List<KanamaIosScriptMethod>,
+    val properties: List<KanamaIosScriptProperty>,
     val factory: (Long) -> KanamaIosScriptBridge?,
 )
 
@@ -34,6 +39,9 @@ internal interface KanamaIosScriptBridge {
         false
 
     fun callVector2i(methodName: String, x: Long, y: Long): Boolean =
+        false
+
+    fun setProperty(propertyIndex: Int, value: Long): Boolean =
         false
 
     val scriptInstance: Any?
@@ -144,6 +152,12 @@ internal object KanamaIosRuntime {
 
     fun scriptResourceMethodArgumentCount(handle: Long, methodIndex: Int): Int =
         scriptResources[handle]?.descriptor?.methods?.getOrNull(methodIndex)?.argumentCount ?: 0
+
+    fun scriptResourcePropertyCount(handle: Long): Int =
+        scriptResources[handle]?.descriptor?.properties?.size ?: 0
+
+    fun scriptResourcePropertyName(handle: Long, propertyIndex: Int): String =
+        scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.name.orEmpty()
 
     fun createScriptInstance(scriptHandle: Long, ownerObject: Long): Long {
         if (ownerObject == 0L) {
@@ -306,6 +320,19 @@ internal object KanamaIosRuntime {
         return ok
     }
 
+    fun setScriptInstanceProperty(handle: Long, propertyIndex: Int, value: Long): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("property set skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.setProperty(propertyIndex, value)
+        if (ok) {
+            log("property set handle=$handle index=$propertyIndex path=${instance.resource.path}")
+        }
+        return ok
+    }
+
     fun freeScriptInstance(handle: Long) {
         val instance = scriptInstances[handle]
         if (instance != null) {
@@ -350,6 +377,7 @@ internal object KanamaIosRuntime {
             path = path,
             baseType = "Label",
             methods = listOf(KanamaIosScriptMethod("_ready")),
+            properties = emptyList(),
             factory = { ownerObject -> BuiltInProbeScript(ownerObject) },
         )
     }
@@ -479,6 +507,22 @@ fun kanamaIosRuntimeScriptResourceMethodArgumentCount(scriptHandle: Long, method
     KanamaIosRuntime.scriptResourceMethodArgumentCount(scriptHandle, methodIndex)
 
 @OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_count")
+fun kanamaIosRuntimeScriptResourcePropertyCount(scriptHandle: Long): Int =
+    KanamaIosRuntime.scriptResourcePropertyCount(scriptHandle)
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_name")
+fun kanamaIosRuntimeScriptResourcePropertyName(
+    scriptHandle: Long,
+    propertyIndex: Int,
+    buffer: CPointer<ByteVar>?,
+    bufferSize: Int,
+) {
+    writeCString(KanamaIosRuntime.scriptResourcePropertyName(scriptHandle, propertyIndex), buffer, bufferSize)
+}
+
+@OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_create")
 fun kanamaIosRuntimeScriptInstanceCreate(scriptHandle: Long, ownerObject: Long): Long =
     KanamaIosRuntime.createScriptInstance(scriptHandle, ownerObject)
@@ -519,6 +563,15 @@ fun kanamaIosRuntimeScriptInstanceCallVector2i(
     y: Long,
 ): Int =
     if (KanamaIosRuntime.callScriptInstanceVector2i(instanceHandle, methodIndex, x, y)) 1 else 0
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property")
+fun kanamaIosRuntimeScriptInstanceSetProperty(
+    instanceHandle: Long,
+    propertyIndex: Int,
+    value: Long,
+): Int =
+    if (KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)) 1 else 0
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")

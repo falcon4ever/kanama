@@ -24,6 +24,8 @@ enum class IosScriptBridgeKind {
 data class IosScriptPropertyModel(
     val godotName: String,
     val kotlinName: String,
+    val isObjectType: Boolean = false,
+    val godotClassName: String = "",
 )
 
 data class IosScriptSignalModel(
@@ -199,13 +201,27 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                 pendingAnnotations.clear()
             }
             line.startsWith("var ") || line.startsWith("val ") || line.contains(" var ") || line.contains(" val ") -> {
-                val propertyMatch = Regex("""\b(?:var|val)\s+([A-Za-z_][A-Za-z0-9_]*)\b""").find(line)
+                val propertyMatch = Regex("""\b(?:var|val)\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*([A-Za-z][A-Za-z0-9_<>,\s?]*)\s*(?:=\s*.*)?$""").find(line)
                 if (propertyMatch != null && pendingAnnotations.any(::isIosScriptPropertyAnnotation)) {
                     val propertyName = propertyMatch.groupValues[1]
+                    val propertyType = propertyMatch.groupValues[2].trim()
+                    val isList = propertyType.startsWith("List") || propertyType.startsWith("MutableList")
+                    val isObject = !isList && (propertyType.endsWith("?") || propertyType.contains("Texture") ||
+                        propertyType.contains("PackedScene") || propertyType.contains("Resource"))
+                    val isScalar = !isList && !isObject && 
+                        listOf("Long", "Double", "String", "Boolean", "Int").contains(propertyType)
+                    val className = when {
+                        isList -> ""  // skip: can't set via simple dispatch
+                        isObject -> propertyType.removeSuffix("?").trim()
+                        isScalar -> propertyType  // e.g., "Long" — use as marker
+                        else -> ""
+                    }
                     val annotation = pendingAnnotations.firstOrNull(::isIosScriptPropertyAnnotation).orEmpty()
                     properties += IosScriptPropertyModel(
                         godotName = registeredMethodName(annotation, propertyName),
                         kotlinName = propertyName,
+                        isObjectType = isObject,
+                        godotClassName = className,
                     )
                 }
                 pendingAnnotations.clear()
@@ -254,6 +270,13 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         model.methods.forEach { method ->
             builder.appendLine(
                 "                KanamaIosScriptMethod(${kotlinString(method.godotName)}, ${method.argumentCount}),",
+            )
+        }
+        builder.appendLine("            ),")
+        builder.appendLine("            properties = listOf(")
+        model.properties.forEach { property ->
+            builder.appendLine(
+                "                KanamaIosScriptProperty(${kotlinString(property.godotName)}),",
             )
         }
         builder.appendLine("            ),")
@@ -323,6 +346,17 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
                 builder.appendLine(
                     "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.types.Vector2i(x.toInt(), y.toInt())); true }",
                 )
+            }
+        }
+        builder.appendLine("        else -> false")
+        builder.appendLine("    }")
+        builder.appendLine()
+        builder.appendLine("    override fun setProperty(propertyIndex: Int, value: Long): Boolean = when (propertyIndex) {")
+        model.properties.forEachIndexed { index, property ->
+            if (property.isObjectType && property.godotClassName.isNotEmpty()) {
+                builder.appendLine("        $index -> { script.${property.kotlinName} = if (value != 0L) net.multigesture.kanama.api.${property.godotClassName}(java.lang.foreign.MemorySegment.ofAddress(value)) else null; true }")
+            } else if (!property.isObjectType && property.godotClassName.isNotEmpty()) {
+                builder.appendLine("        $index -> { script.${property.kotlinName} = value; true }")
             }
         }
         builder.appendLine("        else -> false")
