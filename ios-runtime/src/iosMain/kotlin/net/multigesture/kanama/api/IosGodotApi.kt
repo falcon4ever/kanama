@@ -514,7 +514,7 @@ class Tween(handle: MemorySegment) : GodotObject(handle) {
         val targetAddr = target.handle.address()
         return when (finalValue) {
             is Vector2 -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, finalValue.x.toDouble(), finalValue.y.toDouble(), duration)
-            is Color -> IosGodot.tweenTweenPropertyColor(addr, targetAddr, property, finalValue.r, finalValue.g, finalValue.b, finalValue.a, duration)
+            is Color -> IosGodot.tweenTweenPropertyColor(addr, targetAddr, property, finalValue.r.toDouble(), finalValue.g.toDouble(), finalValue.b.toDouble(), finalValue.a.toDouble(), duration)
             else -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, 0.0, 0.0, duration)
         }.takeIf { it != 0L }?.let { PropertyTweener(MemorySegment.ofAddress(it)) }
     }
