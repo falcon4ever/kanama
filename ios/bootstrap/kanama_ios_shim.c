@@ -3090,7 +3090,7 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
 }
 
 static GDExtensionScriptInstanceInfo3 g_script_instance_info = {
-    kanama_ios_script_instance_set_property,
+    kanama_ios_script_instance_false_3,
     (GDExtensionScriptInstanceGet)kanama_ios_script_instance_false_3,
     kanama_ios_script_instance_get_property_list,
     kanama_ios_script_instance_free_property_list,
