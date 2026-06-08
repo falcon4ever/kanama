@@ -92,7 +92,7 @@ abstract class KanamaScript<Self : Any>(
 
 class KanamaScope : CoroutineScope {
     private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext = Dispatchers.Default + job
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + job
 
     fun cancel() {
         job.cancel()
