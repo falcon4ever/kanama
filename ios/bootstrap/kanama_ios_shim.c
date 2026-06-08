@@ -68,6 +68,17 @@ extern int32_t kanama_ios_runtime_script_instance_set_property(
     int32_t property_index,
     int64_t value
 );
+extern int32_t kanama_ios_runtime_script_instance_set_property_array(
+    int64_t instance_handle,
+    int32_t property_index,
+    const int64_t *objects,
+    int32_t count
+);
+extern int32_t kanama_ios_runtime_script_instance_set_property_string(
+    int64_t instance_handle,
+    int32_t property_index,
+    const char *value
+);
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
 
 typedef enum {
@@ -123,7 +134,6 @@ typedef struct {
     GDExtensionObjectPtr owner_object;
     GDExtensionObjectPtr script_object;
     KanamaIosExtensionInstance *script;
-    int input_toggled;
 } KanamaIosScriptInstance;
 
 static int g_kanama_ios_initialized = 0;
@@ -225,10 +235,15 @@ static GDExtensionPtrConstructor g_array_constructor = NULL;
 static GDExtensionPtrConstructor g_dictionary_constructor = NULL;
 static GDExtensionPtrDestructor g_node_path_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_bool = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_string = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_float = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_object = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_int = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_vector2i = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_array = NULL;
+static GDExtensionPtrBuiltInMethod g_array_size_method = NULL;
+static GDExtensionPtrBuiltInMethod g_array_get_method = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2i = NULL;
 static GDExtensionPtrConstructor g_callable_object_method_constructor = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2 = NULL;
@@ -361,6 +376,8 @@ enum {
     KANAMA_IOS_CANVAS_ITEM_GET_LOCAL_MOUSE_POSITION_HASH = 3341600327U,
     KANAMA_IOS_CANVAS_ITEM_NOARGS_HASH = 3218959716U,
     KANAMA_IOS_CANVAS_ITEM_SET_MODULATE_HASH = 2920490490U,
+    KANAMA_IOS_ARRAY_SIZE_HASH = 3173160232U,
+    KANAMA_IOS_ARRAY_GET_HASH = 708700221U,
     KANAMA_IOS_PACKED_SCENE_INSTANTIATE_HASH = 2628778455U,
     KANAMA_IOS_BOOL_ARG_HASH = 2586408642U,
     KANAMA_IOS_DOUBLE_ARG_HASH = 373806689U,
@@ -488,10 +505,13 @@ static int kanama_ios_resolve_godot_api(void) {
     );
     g_array_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY, 0);
     g_dictionary_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY, 0);
+    g_variant_to_bool = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_BOOL);
+    g_variant_to_string = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING);
     g_variant_to_float = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
     g_variant_to_object = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
     g_variant_to_int = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
     g_variant_to_vector2i = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2I);
+    g_variant_to_array = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY);
     g_variant_from_vector2i = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2I);
     g_callable_object_method_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE, 2);
     g_variant_from_vector2 = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2);
@@ -2944,17 +2964,12 @@ static void kanama_ios_script_instance_call(
     if (method_index >= 0 && instance != NULL && instance->script != NULL) {
         const char *name = kanama_ios_script_method_name_text(instance->script, method_index);
         if (name != NULL && name[0] == '_') {
-            fprintf(stderr, "[kanama][ios][c] CALL method=%s args=%d\n", name, argument_count);
+            fprintf(stderr, "[kanama][ios][c] CALL method=%s args=%lld\n", name, (long long)argument_count);
         }
     }
     if (method_index < 0 && instance != NULL && instance->script != NULL &&
         kanama_ios_string_name_value(method) == kanama_ios_string_name_value((GDExtensionConstStringNamePtr)&g_name__unhandled_input)) {
         method_index = kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input);
-    }
-    if (instance != NULL && method_index >= 0 && !instance->input_toggled) {
-        // REMOVED: C-level toggle interferes with Kotlin bridge toggle.
-        // The bridge handles this via script.self.setProcessInput in _process.
-        instance->input_toggled = 1;
     }
     if (instance != NULL && method_index >= 0) {
         double first_arg = 0.0;
@@ -3037,7 +3052,13 @@ static void kanama_ios_script_instance_configure_lifecycle_processing(KanamaIosS
         kanama_ios_godot_ptrcall_bool_arg(set_process, instance->owner_object, 1);
     }
     if (kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input) >= 0) {
-        // Input enabled automatically by Godot via GDVIRTUAL_IS_OVERRIDDEN.
+        GDExtensionMethodBindPtr set_process_input = kanama_ios_get_method_bind_cached(
+            &g_node_set_process_input_bind,
+            "Node",
+            "set_process_input",
+            KANAMA_IOS_NODE_SET_PROCESS_INPUT_HASH
+        );
+        kanama_ios_godot_ptrcall_bool_arg(set_process_input, instance->owner_object, 1);
     }
 }
 
@@ -3098,6 +3119,35 @@ static void kanama_ios_script_instance_free(GDExtensionScriptInstanceDataPtr dat
     }
 }
 
+static void kanama_ios_cache_array_methods(void) {
+    if (g_array_size_method != NULL && g_array_get_method != NULL) {
+        return;
+    }
+    if (g_variant_get_ptr_builtin_method == NULL) {
+        return;
+    }
+    if (g_array_size_method == NULL) {
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, "size");
+        g_array_size_method = g_variant_get_ptr_builtin_method(
+            KANAMA_IOS_VARIANT_TYPE_ARRAY,
+            (GDExtensionConstStringNamePtr)&name_storage,
+            (GDExtensionInt)KANAMA_IOS_ARRAY_SIZE_HASH
+        );
+        kanama_ios_destroy_string_name(&name_storage);
+    }
+    if (g_array_get_method == NULL) {
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, "get");
+        g_array_get_method = g_variant_get_ptr_builtin_method(
+            KANAMA_IOS_VARIANT_TYPE_ARRAY,
+            (GDExtensionConstStringNamePtr)&name_storage,
+            (GDExtensionInt)KANAMA_IOS_ARRAY_GET_HASH
+        );
+        kanama_ios_destroy_string_name(&name_storage);
+    }
+}
+
 static GDExtensionBool kanama_ios_script_instance_set_property(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name,
@@ -3123,8 +3173,61 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         arg = (int64_t)(intptr_t)obj;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_INT) {
         arg = kanama_ios_variant_to_int64(value);
+    } else if (type == KANAMA_IOS_VARIANT_TYPE_BOOL && g_variant_to_bool != NULL) {
+        uint8_t b = 0;
+        g_variant_to_bool(&b, (GDExtensionVariantPtr)(intptr_t)value);
+        arg = (int64_t)b;
+    } else if (type == KANAMA_IOS_VARIANT_TYPE_FLOAT && g_variant_to_float != NULL) {
+        double d = 0.0;
+        g_variant_to_float(&d, (GDExtensionVariantPtr)(intptr_t)value);
+        memcpy(&arg, &d, sizeof(arg));
+    } else if (type == KANAMA_IOS_VARIANT_TYPE_STRING && g_variant_to_string != NULL) {
+        uint64_t raw_str = 0;
+        g_variant_to_string(&raw_str, (GDExtensionVariantPtr)(intptr_t)value);
+        char *utf8 = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
+        if (g_string_destructor != NULL) {
+            g_string_destructor((GDExtensionStringPtr)&raw_str);
+        }
+        int32_t ok = kanama_ios_runtime_script_instance_set_property_string(
+            instance->runtime_handle, property_index, utf8 != NULL ? utf8 : "");
+        free(utf8);
+        return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NIL) {
         arg = 0;
+    } else if (type == KANAMA_IOS_VARIANT_TYPE_ARRAY && g_variant_to_array != NULL) {
+        kanama_ios_cache_array_methods();
+        if (g_array_size_method == NULL || g_array_get_method == NULL) { return 0; }
+        uint8_t raw_array[8] = {0};
+        g_variant_to_array(raw_array, (GDExtensionVariantPtr)(intptr_t)value);
+        int64_t size = 0;
+        g_array_size_method(raw_array, NULL, &size, 0);
+        if (size <= 0) {
+            int32_t ok = kanama_ios_runtime_script_instance_set_property_array(
+                instance->runtime_handle, property_index, NULL, 0);
+            return (GDExtensionBool)ok;
+        }
+        int64_t *objects = (int64_t *)calloc((size_t)size, sizeof(int64_t));
+        if (objects == NULL) { return 0; }
+        for (int64_t i = 0; i < size; i++) {
+            uint8_t ret_variant[24] = {0};
+            const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&i };
+            g_array_get_method(raw_array, args, ret_variant, 1);
+            GDExtensionVariantType elem_type = g_variant_get_type != NULL
+                ? g_variant_get_type((GDExtensionConstVariantPtr)ret_variant)
+                : KANAMA_IOS_VARIANT_TYPE_NIL;
+            if (elem_type == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
+                GDExtensionObjectPtr obj_ptr = NULL;
+                g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
+                objects[i] = (int64_t)(intptr_t)obj_ptr;
+            }
+            if (g_variant_destroy != NULL) {
+                g_variant_destroy((GDExtensionVariantPtr)ret_variant);
+            }
+        }
+        int32_t ok = kanama_ios_runtime_script_instance_set_property_array(
+            instance->runtime_handle, property_index, objects, (int32_t)size);
+        free(objects);
+        return (GDExtensionBool)ok;
     } else {
         return 0;
     }

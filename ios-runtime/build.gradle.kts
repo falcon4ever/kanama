@@ -10,6 +10,7 @@ data class IosScriptMethodModel(
     val kotlinName: String,
     val argumentCount: Int,
     val bridgeKind: IosScriptBridgeKind,
+    val objectArgType: String = "GodotObject",
 )
 
 enum class IosScriptBridgeKind {
@@ -26,6 +27,9 @@ data class IosScriptPropertyModel(
     val kotlinName: String,
     val isObjectType: Boolean = false,
     val godotClassName: String = "",
+    val isList: Boolean = false,
+    val listElementClassName: String = "",
+    val isNullable: Boolean = true,
 )
 
 data class IosScriptSignalModel(
@@ -117,19 +121,28 @@ fun functionParams(raw: String): List<String> {
         .filter { it.isNotEmpty() }
 }
 
-fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind =
-    when {
-        params.isEmpty() -> IosScriptBridgeKind.ZERO_ARG
-        params.size == 1 && (godotName == "_process" || godotName == "_physics_process") ->
-            IosScriptBridgeKind.DOUBLE_ARG
-        params.size == 1 && godotName == "_input" ->
-            IosScriptBridgeKind.OBJECT_ARG
-        params.size == 3 && godotName == "_input_event" ->
-            IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG
-        params.size == 1 && params[0].contains("Vector2i") ->
-            IosScriptBridgeKind.VECTOR2I_ARG
-        else -> IosScriptBridgeKind.UNSUPPORTED
+fun paramType(param: String): String =
+    if (':' in param) param.substringAfter(":").trim().removeSuffix("?").trim() else ""
+
+fun objectArgTypeFor(params: List<String>): String {
+    if (params.size != 1) return "GodotObject"
+    val t = paramType(params[0])
+    return if (t.isBlank()) "GodotObject" else t
+}
+
+fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind {
+    if (params.isEmpty()) return IosScriptBridgeKind.ZERO_ARG
+    if (params.size == 1) {
+        val t = paramType(params[0])
+        return when {
+            t == "Vector2i" -> IosScriptBridgeKind.VECTOR2I_ARG
+            t == "Double" || t == "Float" -> IosScriptBridgeKind.DOUBLE_ARG
+            else -> IosScriptBridgeKind.OBJECT_ARG
+        }
     }
+    if (params.size == 3 && godotName == "_input_event") return IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG
+    return IosScriptBridgeKind.UNSUPPORTED
+}
 
 fun isIosScriptPropertyAnnotation(annotation: String): Boolean =
     annotation.contains("ScriptProperty") ||
@@ -180,14 +193,16 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                             annotation.contains("OnPhysicsProcess") || annotation.contains("@PhysicsProcess") ->
                                 methods += IosScriptMethodModel("_physics_process", functionName, 1, IosScriptBridgeKind.DOUBLE_ARG)
                             annotation.contains("OnInput") || annotation.contains("@Input") ->
-                                methods += IosScriptMethodModel("_input", functionName, 1, IosScriptBridgeKind.OBJECT_ARG)
+                                methods += IosScriptMethodModel("_input", functionName, 1, IosScriptBridgeKind.OBJECT_ARG, objectArgTypeFor(params))
                             annotation.contains("RegisterFunction") || annotation.contains("@Method") ->
                                 registeredMethodName(annotation, functionName).let { godotName ->
+                                    val kind = bridgeKindFor(godotName, params)
                                     methods += IosScriptMethodModel(
                                         godotName,
                                         functionName,
                                         params.size,
-                                        bridgeKindFor(godotName, params),
+                                        kind,
+                                        if (kind == IosScriptBridgeKind.OBJECT_ARG) objectArgTypeFor(params) else "GodotObject",
                                     )
                                 }
                             annotation.contains("Signal") ->
@@ -206,22 +221,24 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                     val propertyName = propertyMatch.groupValues[1]
                     val propertyType = propertyMatch.groupValues[2].trim()
                     val isList = propertyType.startsWith("List") || propertyType.startsWith("MutableList")
-                    val isObject = !isList && (propertyType.endsWith("?") || propertyType.contains("Texture") ||
-                        propertyType.contains("PackedScene") || propertyType.contains("Resource"))
-                    val isScalar = !isList && !isObject && 
-                        listOf("Long", "Double", "String", "Boolean", "Int").contains(propertyType)
-                    val className = when {
-                        isList -> ""  // skip: can't set via simple dispatch
-                        isObject -> propertyType.removeSuffix("?").trim()
-                        isScalar -> propertyType  // e.g., "Long" — use as marker
-                        else -> ""
-                    }
+                    val listElemClass = if (isList) {
+                        Regex("""(?:Mutable)?List<([A-Za-z][A-Za-z0-9_?]*)>""").find(propertyType)?.groupValues?.get(1)
+                            ?.removeSuffix("?")?.trim().orEmpty()
+                    } else ""
+                    val baseType = propertyType.removeSuffix("?").trim()
+                    val isNullable = propertyType.endsWith("?")
+                    val isScalar = !isList && listOf("Long", "Double", "Float", "String", "Boolean", "Int").contains(baseType)
+                    val isObject = !isList && !isScalar
+                    val className = if (isList) "" else baseType
                     val annotation = pendingAnnotations.firstOrNull(::isIosScriptPropertyAnnotation).orEmpty()
                     properties += IosScriptPropertyModel(
                         godotName = registeredMethodName(annotation, propertyName),
                         kotlinName = propertyName,
                         isObjectType = isObject,
                         godotClassName = className,
+                        isList = isList,
+                        listElementClassName = listElemClass,
+                        isNullable = isNullable,
                     )
                 }
                 pendingAnnotations.clear()
@@ -300,26 +317,19 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         builder.appendLine("    private val script: ${model.className},")
         builder.appendLine(") : KanamaIosScriptBridge {")
         builder.appendLine("    override val scriptInstance: Any get() = script")
-        val hasInput = model.methods.any { it.godotName == "_input" }
-        if (hasInput) {
-            builder.appendLine("    private var inputToggled = false")
-        }
         builder.appendLine()
         builder.appendLine("    override fun call(methodName: String, firstArg: Double): Boolean = when (methodName) {")
         model.methods.forEach { method ->
             val invocation = when (method.bridgeKind) {
                 IosScriptBridgeKind.ZERO_ARG -> "script.${method.kotlinName}()"
-                IosScriptBridgeKind.DOUBLE_ARG -> {
-                    if (hasInput && method.godotName == "_process") {
-                        "if (!inputToggled) { script.self.setProcessInput(false); script.self.setProcessInput(true); inputToggled = true }; script.${method.kotlinName}(firstArg)"
-                    } else {
-                        "script.${method.kotlinName}(firstArg)"
-                    }
-                }
+                IosScriptBridgeKind.DOUBLE_ARG -> "script.${method.kotlinName}(firstArg)"
                 IosScriptBridgeKind.OBJECT_ARG -> null
                 IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG -> null
                 IosScriptBridgeKind.VECTOR2I_ARG -> null
-                IosScriptBridgeKind.UNSUPPORTED -> null
+                IosScriptBridgeKind.UNSUPPORTED -> {
+                    println("WARNING: [kanama-ios] ${model.className}.${method.kotlinName} (godot: ${method.godotName}) has ${method.argumentCount} args — no iOS bridge kind, will not be dispatched")
+                    null
+                }
             }
             if (invocation != null) {
                 builder.appendLine("        ${kotlinString(method.godotName)} -> { $invocation; true }")
@@ -331,8 +341,12 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         builder.appendLine("    override fun callObject(methodName: String, objectArg: Long): Boolean = when (methodName) {")
         model.methods.forEach { method ->
             if (method.bridgeKind == IosScriptBridgeKind.OBJECT_ARG) {
+                val argExpr = if (method.objectArgType == "GodotObject")
+                    "net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(objectArg))"
+                else
+                    "net.multigesture.kanama.api.${method.objectArgType}(MemorySegment.ofAddress(objectArg))"
                 builder.appendLine(
-                    "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(objectArg))); true }",
+                    "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}($argExpr); true }",
                 )
             }
         }
@@ -364,13 +378,46 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
         builder.appendLine("    override fun setProperty(propertyIndex: Int, value: Long): Boolean = when (propertyIndex) {")
         model.properties.forEachIndexed { index, property ->
             if (property.isObjectType && property.godotClassName.isNotEmpty()) {
-                builder.appendLine("        $index -> { script.${property.kotlinName} = if (value != 0L) net.multigesture.kanama.api.${property.godotClassName}(java.lang.foreign.MemorySegment.ofAddress(value)) else null; true }")
-            } else if (!property.isObjectType && property.godotClassName.isNotEmpty()) {
-                builder.appendLine("        $index -> { script.${property.kotlinName} = value; true }")
+                if (property.isNullable) {
+                    builder.appendLine("        $index -> { script.${property.kotlinName} = if (value != 0L) net.multigesture.kanama.api.${property.godotClassName}(java.lang.foreign.MemorySegment.ofAddress(value)) else null; true }")
+                } else {
+                    builder.appendLine("        $index -> { script.${property.kotlinName} = net.multigesture.kanama.api.${property.godotClassName}(java.lang.foreign.MemorySegment.ofAddress(value)); true }")
+                }
+            } else if (!property.isObjectType && !property.isList && property.godotClassName.isNotEmpty() && property.godotClassName != "String") {
+                val rhs = when (property.godotClassName) {
+                    "Double", "Float" -> "Double.fromBits(value)"
+                    "Boolean" -> "value != 0L"
+                    "Int" -> "value.toInt()"
+                    else -> "value"
+                }
+                builder.appendLine("        $index -> { script.${property.kotlinName} = $rhs; true }")
             }
         }
         builder.appendLine("        else -> false")
         builder.appendLine("    }")
+        val stringProperties = model.properties.filter { !it.isObjectType && !it.isList && it.godotClassName == "String" }
+        if (stringProperties.isNotEmpty()) {
+            builder.appendLine()
+            builder.appendLine("    override fun setPropertyString(propertyIndex: Int, value: String): Boolean = when (propertyIndex) {")
+            stringProperties.forEach { property ->
+                val index = model.properties.indexOf(property)
+                builder.appendLine("        $index -> { script.${property.kotlinName} = value; true }")
+            }
+            builder.appendLine("        else -> false")
+            builder.appendLine("    }")
+        }
+        val listProperties = model.properties.filter { it.isList && it.listElementClassName.isNotEmpty() }
+        if (listProperties.isNotEmpty()) {
+            builder.appendLine()
+            builder.appendLine("    override fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean = when (propertyIndex) {")
+            model.properties.forEachIndexed { index, property ->
+                if (property.isList && property.listElementClassName.isNotEmpty()) {
+                    builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { net.multigesture.kanama.api.${property.listElementClassName}(java.lang.foreign.MemorySegment.ofAddress(it)) }; true }")
+                }
+            }
+            builder.appendLine("        else -> false")
+            builder.appendLine("    }")
+        }
         builder.appendLine("}")
     }
     return builder.toString()

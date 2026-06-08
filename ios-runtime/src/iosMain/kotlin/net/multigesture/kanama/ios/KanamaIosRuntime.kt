@@ -3,6 +3,7 @@ package net.multigesture.kanama.ios
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.LongVar
 import kotlinx.cinterop.get
 import kotlinx.cinterop.set
 import kotlinx.cinterop.toKString
@@ -42,6 +43,12 @@ internal interface KanamaIosScriptBridge {
         false
 
     fun setProperty(propertyIndex: Int, value: Long): Boolean =
+        false
+
+    fun setPropertyString(propertyIndex: Int, value: String): Boolean =
+        false
+
+    fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean =
         false
 
     val scriptInstance: Any?
@@ -333,6 +340,32 @@ internal object KanamaIosRuntime {
         return ok
     }
 
+    fun setScriptInstancePropertyString(handle: Long, propertyIndex: Int, value: String): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("property string set skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.setPropertyString(propertyIndex, value)
+        if (ok) {
+            log("property string set handle=$handle index=$propertyIndex path=${instance.resource.path}")
+        }
+        return ok
+    }
+
+    fun setScriptInstancePropertyArray(handle: Long, propertyIndex: Int, values: LongArray): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("property array set skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.setPropertyObjectArray(propertyIndex, values)
+        if (ok) {
+            log("property array set handle=$handle index=$propertyIndex count=${values.size} path=${instance.resource.path}")
+        }
+        return ok
+    }
+
     fun freeScriptInstance(handle: Long) {
         val instance = scriptInstances[handle]
         if (instance != null) {
@@ -572,6 +605,33 @@ fun kanamaIosRuntimeScriptInstanceSetProperty(
     value: Long,
 ): Int =
     if (KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)) 1 else 0
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_string")
+fun kanamaIosRuntimeScriptInstanceSetPropertyString(
+    instanceHandle: Long,
+    propertyIndex: Int,
+    value: CPointer<ByteVar>?,
+): Int {
+    val str = value?.toKString() ?: ""
+    return if (KanamaIosRuntime.setScriptInstancePropertyString(instanceHandle, propertyIndex, str)) 1 else 0
+}
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_array")
+fun kanamaIosRuntimeScriptInstanceSetPropertyArray(
+    instanceHandle: Long,
+    propertyIndex: Int,
+    objects: CPointer<LongVar>?,
+    count: Int,
+): Int {
+    val values = if (objects == null || count <= 0) {
+        LongArray(0)
+    } else {
+        LongArray(count) { i -> objects[i] }
+    }
+    return if (KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values)) 1 else 0
+}
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")
