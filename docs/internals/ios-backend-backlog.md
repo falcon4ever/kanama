@@ -8,20 +8,25 @@ work. Architecture context: [ios-backend-architecture.md](./ios-backend-architec
 
 ## Open
 
-### Audio not audible — Kanama chain proven correct; remaining issue is iOS audio OUTPUT
-- **Kanama side is validated end-to-end (2026-06-09):** with temporary AUDIODBG logs,
-  34 sounds each loaded a **nonzero stream** (`set_stream`) and called `play()` on a
-  valid player. So scripts dispatch, the play queue drains, `.ogg` resources load,
-  and playback is invoked correctly. The scalar-float `set_volume_db` width bug was
-  also fixed (see T2.1) so volume is no longer garbage.
-- **So the no-audio is NOT a Kanama/marshalling/dispatch bug** — sound is triggered
-  but not output. Remaining suspects (iOS platform audio, in order):
-  1. Device in **silent mode** (Ring/Silent switch / Action Button) — Godot's iOS
-     `AVAudioSession` category may respect it. Check first (free).
-  2. Godot iOS **audio session category** not set to playback (project/export setting
-     / `AVAudioSession`); or the iOS audio driver not initialized in the export.
-- **Next step if not silent mode:** inspect Godot's iOS `AudioDriverCoreAudio` /
-  `AVAudioSession` setup and any `audio/...` project settings in the export.
+### Audio — RESOLVED 2026-06-09 (was device silent mode)
+- **Outcome:** audio works once the device is off silent mode with volume up. The
+  Kanama chain was correct all along — validated end-to-end (34 sounds loaded nonzero
+  streams via `set_stream` and called `play()` on valid players); the scalar-float
+  `set_volume_db` width fix (T2.1) made volume correct. The silence was purely the
+  iPhone's Ring/Silent switch.
+- **Confirmed root cause = GODOT ENGINE, not Kanama.** Godot's iOS audio driver
+  (`drivers/coreaudio/audio_driver_coreaudio.mm`) **never calls `AVAudioSession
+  setCategory:`** (grep: no `setCategory`/`AVAudioSessionCategory` anywhere in
+  `drivers/coreaudio/` or `platform/ios/`). So it inherits iOS's default
+  `AVAudioSessionCategorySoloAmbient`, which is silenced by the Ring/Silent switch.
+  Apps like Spotify/most games explicitly set `AVAudioSessionCategoryPlayback`
+  (ignores the mute switch) — which is why they play in silent mode and Godot
+  doesn't. Affects ALL Godot iOS games, not just Kanama.
+- **Fix location (engine):** `AudioDriverCoreAudio::init()` (~line 78 of
+  audio_driver_coreaudio.mm) — set the session category to `Playback` (ideally behind
+  a project setting) before activating. Alternatively a Kanama-side workaround: set
+  the category from the iOS shim at startup via `AVAudioSession`. Product/engine
+  decision; not required for the spike (audio works with silent off).
 
 ### Non-object signal payloads to lambda callbacks
 - **What:** the custom-Callable dispatch forwards only **object-typed** signal args to
