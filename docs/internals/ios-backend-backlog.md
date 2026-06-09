@@ -35,11 +35,12 @@ work. Architecture context: [ios-backend-architecture.md](./ios-backend-architec
 - **Why low priority:** irrelevant on-device. Pick up if/when editor integration is
   pursued. Needs building a Godot `Array<Dictionary>` in C (no array-push helpers yet).
 
-### Profile the generated call path on 3D physics
-- **What:** confirm the cached-bind/ptrcall path holds up under the platformer's
-  per-frame `_physics_process` (multiple calls/frame).
-- **To do:** profile on iPhone 15 Pro; apply the perf guidance in the architecture doc
-  (cache binds, avoid per-call StringName alloc, prefer ptrcall over Variant `call`).
+### 3D performance review — now tracked as Phase 5
+- Promoted from backlog to an explicit milestone: see **Phase 5** in
+  [ios-backend-implementation-plan.md](./ios-backend-implementation-plan.md). Measure
+  Godot rendering/GPU vs Kanama scripting/binding overhead separately, on iPhone 12
+  **and** 15 Pro, with per-frame debug logging off. The 60fps baseline was 2D Match3;
+  3D is unverified.
 
 ## Notes
 - Latent: the generic ClassDB `.create()` pattern is stubbed for engine classes other

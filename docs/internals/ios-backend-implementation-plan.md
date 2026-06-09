@@ -87,6 +87,20 @@ pattern-following), O = Opus (contract design + risky marshalling / crash debugg
 | T4.1 Replace hand-written classes in `IosGodotApi.kt` with generated output; delete dead stubs | S (+O review) | ☐ | | Grep finds no empty-body / `return false\|0.0\|null` stub methods left; `installIosAddon` compiles clean | no-silent-stubs |
 | T4.2 Re-run Match3 on device (2D regression) | S | ☐ | | Matches known-good baseline: tiles spawn, swipe swaps, 0 SIGSEGV / 0 connect failures | guardrail clean |
 
+## Phase 5 — 3D performance review
+
+The 60fps baseline was **Match3 (2D, sprite-based)**. 3D is a separate, unverified
+question. Measure two distinct things and keep them apart: **(a) Godot rendering/GPU**
+(Metal/MoltenVK — mostly Godot's concern) and **(b) the Kanama scripting/binding
+overhead** (per-frame C↔Kotlin/Native crossings in `_physics_process`:
+`move_and_slide` + velocity + `is_on_floor` + input + animation, per character).
+Test the **iPhone 12** (honest floor) and **iPhone 15 Pro**.
+
+| Task | Owner | Status | Done by | Validate | Guardrail |
+|---|---|---|---|---|---|
+| T5.1 Measure platformer frame time + per-frame script/binding time (instrument `_physics_process`, e.g. monotonic timestamps around the script call path) on iPhone 12 **and** 15 Pro | S | ☐ | | Frame time + script-time captured and recorded for both devices over a representative play window | Measure with per-frame debug logging OFF (fprintf/fflush per frame skews timing — a known past pitfall); consistent scene + device not thermally throttled |
+| T5.2 Compare vs targets; if over budget apply the architecture-doc perf guidance (cache `MethodBind`, avoid per-call `StringName` alloc, prefer ptrcall over Variant `call`, fewer boundary crossings) and re-measure | O | ☐ | | **Targets:** sustained 60fps on 15 Pro and a documented acceptable framerate on iPhone 12; binding/script time a small fraction of the 16.6ms frame budget. Findings written to the backlog/architecture doc | re-measure after each optimization; no regression to Match3 |
+
 ---
 
 ## Done already (this session, pre-pivot — for reference)
