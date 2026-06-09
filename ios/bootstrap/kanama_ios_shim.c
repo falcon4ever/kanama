@@ -351,6 +351,36 @@ static uint64_t g_name__debug_get_current_stack_info = 0;
 static uint64_t g_name_push_back = 0;
 static const char *g_pending_script_resource_path = NULL;
 
+// ptrcall argument/return type tags for the generic dispatch
+// (kanama_ios_godot_ptrcall). These describe the ptrcall NATIVE representation,
+// not the Variant type — the generated ObjectCalls helpers pick the tag from the
+// method's extension_api.json type + `meta` (e.g. float vs double, int32 vs int64).
+// Kotlin lays out the POD/struct/object arg bytes; the dispatch passes them through
+// unchanged, and only CONSTRUCT-tagged types (StringName/String/NodePath) are built
+// C-side. Returns are written raw by ptrcall into a Kotlin-sized buffer.
+#define KANAMA_IOS_PTRCALL_MAX_ARGS 16
+enum {
+    KANAMA_IOS_PT_VOID = 0,
+    KANAMA_IOS_PT_BOOL,        // uint8 (1 byte)
+    KANAMA_IOS_PT_INT32,       // int32
+    KANAMA_IOS_PT_INT64,       // int64
+    KANAMA_IOS_PT_FLOAT32,     // float
+    KANAMA_IOS_PT_FLOAT64,     // double
+    KANAMA_IOS_PT_VECTOR2,     // 2x float32
+    KANAMA_IOS_PT_VECTOR2I,    // 2x int32
+    KANAMA_IOS_PT_VECTOR3,     // 3x float32
+    KANAMA_IOS_PT_VECTOR3I,    // 3x int32
+    KANAMA_IOS_PT_VECTOR4,     // 4x float32
+    KANAMA_IOS_PT_COLOR,       // 4x float32
+    KANAMA_IOS_PT_RECT2,       // 4x float32
+    KANAMA_IOS_PT_OBJECT,      // pointer-sized handle (passthrough)
+    KANAMA_IOS_PT_RID,         // pointer/uint64 (passthrough)
+    // CONSTRUCT-tagged: arg ptr is a C string; the dispatch builds the value.
+    KANAMA_IOS_PT_STRING_NAME,
+    KANAMA_IOS_PT_STRING,      // (arg construction TODO in T2.2; reserved)
+    KANAMA_IOS_PT_NODE_PATH,   // (arg construction TODO in T2.2; reserved)
+};
+
 enum {
     KANAMA_IOS_VARIANT_TYPE_NIL = 0,
     KANAMA_IOS_VARIANT_TYPE_BOOL = 1,
@@ -1050,6 +1080,72 @@ int64_t kanama_ios_godot_get_method_bind(
     kanama_ios_destroy_string_name(&method_name_storage);
     kanama_ios_destroy_string_name(&class_name_storage);
     return (int64_t)(intptr_t)method_bind;
+}
+
+// Generic typed ptrcall dispatch — the single marshalling chokepoint that every
+// generated ObjectCalls helper routes through (see docs/internals/
+// ios-backend-architecture.md §"Contract: generic ptrcall dispatch").
+//   arg_types[i]  : KANAMA_IOS_PT_* tag describing arg i's ptrcall representation
+//   arg_ptrs[i]   : pointer to arg i's value, laid out by the caller (Kotlin). For
+//                   POD/struct/object the bytes ARE the ptrcall value and pass
+//                   through unchanged; for STRING_NAME the pointer is a C string and
+//                   the StringName is constructed here (and destroyed after).
+//   ret_type      : KANAMA_IOS_PT_* (VOID for no return)
+//   ret_out       : caller-allocated buffer sized for ret_type; ptrcall writes the
+//                   raw native return value into it. NULL when VOID.
+void kanama_ios_godot_ptrcall(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    void *ret_out
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return;
+    }
+    if (arg_count < 0) {
+        arg_count = 0;
+    }
+    if (arg_count > KANAMA_IOS_PTRCALL_MAX_ARGS) {
+        arg_count = KANAMA_IOS_PTRCALL_MAX_ARGS;
+    }
+
+    const void *args[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    uint64_t string_name_cells[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    int constructed[KANAMA_IOS_PTRCALL_MAX_ARGS];
+
+    for (int32_t i = 0; i < arg_count; i++) {
+        constructed[i] = 0;
+        int32_t tag = (arg_types != NULL) ? arg_types[i] : KANAMA_IOS_PT_VOID;
+        switch (tag) {
+            case KANAMA_IOS_PT_STRING_NAME: {
+                string_name_cells[i] = 0;
+                kanama_ios_init_string_name(&string_name_cells[i],
+                    arg_ptrs != NULL ? (const char *)arg_ptrs[i] : "");
+                args[i] = (const void *)&string_name_cells[i];
+                constructed[i] = 1;
+                break;
+            }
+            default:
+                // POD / struct / object: the caller-laid bytes are the ptrcall value.
+                args[i] = (arg_ptrs != NULL ? arg_ptrs[i] : NULL);
+                break;
+        }
+    }
+
+    g_object_method_bind_ptrcall(
+        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
+        (GDExtensionObjectPtr)(intptr_t)instance,
+        (const GDExtensionConstTypePtr *)args,
+        (ret_type == KANAMA_IOS_PT_VOID) ? NULL : ret_out);
+
+    for (int32_t i = 0; i < arg_count; i++) {
+        if (constructed[i]) {
+            kanama_ios_destroy_string_name(&string_name_cells[i]);
+        }
+    }
 }
 
 void kanama_ios_godot_ptrcall_string_arg(

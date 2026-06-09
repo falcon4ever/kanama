@@ -16,6 +16,16 @@
 extern "C" {
 #endif
 
+void kanama_ios_godot_ptrcall(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    void *ret_out
+);
+
 int64_t kanama_ios_godot_get_method_bind(
     const char *class_name,
     const char *method_name,

@@ -68,7 +68,7 @@ pattern-following), O = Opus (contract design + risky marshalling / crash debugg
 
 | Task | Owner | Status | Done by | Validate | Guardrail |
 |---|---|---|---|---|---|
-| T2.1 Design + implement the generic C-shim ptrcall/marshalling dispatch (arg cells, return reading, Variant fallback) | O | ☐ | | On-device probe calls representative shapes (no-arg→bool/double/object, with-double/object/vector3) and asserts round-trip results | `check_call_error`/`check_variant_arg` clean |
+| T2.1 Design + implement the generic C-shim ptrcall/marshalling dispatch (arg cells, return reading, Variant fallback) | O | ✅ | Opus orchestrator 2026-06-09 | On-device self-test PASSED on iPhone 15 Pro: Node3D Vector3 set/get_position + bool set/is_visible round-trip exact; 0 SIGSEGV. `kanama_ios_godot_ptrcall` + `KANAMA_IOS_PT_*` tags (temp self-test removed after confirming) | clean |
 | T2.2 Add typed arg/return marshallers per the T2.1 pattern; wire/generate `ObjectCalls` helper bodies | S | ☐ | | Per-marshaller set→get round-trip probe asserts equality on device | guardrail logs clean |
 
 ## Phase 3 — Generator target + platformer
