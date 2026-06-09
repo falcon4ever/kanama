@@ -8,15 +8,16 @@ work. Architecture context: [ios-backend-architecture.md](./ios-backend-architec
 
 ## Open
 
-### Audio not audible
-- **What:** AudioStreamPlayer playback is wired and the machinery is device-verified
-  (sounds play and the player pool recycles — ~138 `finished` dispatches / 137 frees
-  in one Match3 session), but **no audio is heard** on device.
-- **Likely causes (unverified):** master bus / `AudioServer` not initialized on iOS;
-  `.ogg` stream resource not actually loading on device (resource import); volume/bus
-  routing; player not effectively in the tree.
-- **First step:** log the loaded stream handle in `setStreamFromPath` (non-zero?) and
-  the bus; check `AudioServer` init. Localizes quickly.
+### Audio not audible — LIKELY FIXED 2026-06-09 (confirm by ear)
+- **What it was:** AudioStreamPlayer machinery ran (play + pool recycle) but no sound.
+- **Root cause found via the T2.1 self-test matrix:** scalar `float` args marshal as
+  8-byte `double` at ptrcall (`PtrToArg<float>=convert<float,double>`), but the audio
+  binding used a 4-byte `float` cell — so `set_volume_db` got a garbage dB (→ silence).
+  Fixed by making `kanama_ios_godot_ptrcall_float_arg` pass a `double`
+  (also covers `set_pitch_scale`, `play`).
+- **Status:** needs an on-device by-ear confirmation (swipe Match3 → swap/match
+  sounds). If still silent, fall back to the other suspects: master bus /
+  `AudioServer` init / `.ogg` import / player in tree.
 
 ### Non-object signal payloads to lambda callbacks
 - **What:** the custom-Callable dispatch forwards only **object-typed** signal args to

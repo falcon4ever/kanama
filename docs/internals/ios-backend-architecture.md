@@ -170,5 +170,15 @@ platformer):
 - **GDExtension virtual `args[i]` is already a pointer to the argument** — do not
   double-dereference StringName args (a past bug; see the connect/signal history in
   `kanama-ios-support.md`).
+- **Scalar `float` arg/return ⇒ 8-byte `double` at ptrcall.** Godot's
+  `PtrToArg<float>` is `PtrToArgConvert<float,double>`, so a *scalar* float method
+  parameter/return is encoded as a `double` (8 bytes) and converted float↔double
+  internally — regardless of the API's `meta: "float"`. The generated `ObjectCalls`
+  helper for a scalar float must therefore marshal 8 bytes (Kotlin `Double`,
+  narrowing to/from `Float` at the API edge), NOT 4. **Only Vector/Color/struct
+  *components* (`real_t`) are 4 bytes** in single-precision builds. Passing 4 bytes
+  for a scalar float makes Godot read 8 from a 4-byte cell → garbage. (Found by the
+  T2.1 self-test matrix; was also the inaudible-audio root cause — `set_volume_db` is
+  a scalar float.) `int` follows `meta` (int32 vs int64) directly.
 - **Validate on device.** Every change ends with an on-device run (0 SIGSEGV baseline,
   guardrail logs clean).

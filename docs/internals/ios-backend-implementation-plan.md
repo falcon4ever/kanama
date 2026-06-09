@@ -68,7 +68,7 @@ pattern-following), O = Opus (contract design + risky marshalling / crash debugg
 
 | Task | Owner | Status | Done by | Validate | Guardrail |
 |---|---|---|---|---|---|
-| T2.1 Design + implement the generic C-shim ptrcall/marshalling dispatch (arg cells, return reading, Variant fallback) | O | ✅ | Opus orchestrator 2026-06-09 | On-device self-test PASSED on iPhone 15 Pro: Node3D Vector3 set/get_position + bool set/is_visible round-trip exact; 0 SIGSEGV. `kanama_ios_godot_ptrcall` + `KANAMA_IOS_PT_*` tags (temp self-test removed after confirming) | clean |
+| T2.1 Design + implement the generic C-shim ptrcall/marshalling dispatch (arg cells, return reading, Variant fallback) | O | ✅ | Opus orchestrator 2026-06-09 | **Type-coverage matrix self-test 11/11 PASS on iPhone 15 Pro** (bool, int32, int64, scalar-float, Vector2/3, Color, StringName-arg, Object-arg+multiarg+Object-ret); 0 SIGSEGV. Matrix kept as a debug-gated guardrail (`KANAMA_IOS_DEBUG_VARIANT_CHECKS`). Correctness is arm64-ABI-determined so one device suffices; iPhone 12 is a Phase-5 perf concern (and was locked/WiFi-only). **Matrix caught a real bug:** scalar `float` must marshal as 8-byte double (PtrToArg<float>=convert<float,double>) — fixed; also fixes inaudible audio | matrix is the guardrail; 0 SIGSEGV |
 | T2.2 Add typed arg/return marshallers per the T2.1 pattern; wire/generate `ObjectCalls` helper bodies | S | ☐ | | Per-marshaller set→get round-trip probe asserts equality on device | guardrail logs clean |
 
 ## Phase 3 — Generator target + platformer

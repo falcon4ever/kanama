@@ -1372,7 +1372,11 @@ static void kanama_ios_godot_ptrcall_float_arg(
     if (method_bind == NULL || instance == NULL) {
         return;
     }
-    float value_cell = (float)value;
+    // SCALAR float methods take a `double` (8 bytes) at the ptrcall boundary:
+    // Godot's PtrToArg<float> == PtrToArgConvert<float,double>. Passing a 4-byte
+    // float here made Godot read 8 bytes from a 4-byte cell → garbage (this was the
+    // inaudible-audio bug: set_volume_db got a garbage dB). Pass the full double.
+    double value_cell = value;
     const GDExtensionConstTypePtr args[1] = {
         (GDExtensionConstTypePtr)&value_cell,
     };
@@ -4031,6 +4035,190 @@ static void kanama_ios_register_main_loop_callbacks(void) {
     fprintf(stderr, "[kanama][ios][c] registered main loop frame callback\n");
 }
 
+#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
+// Debug-build guardrail: the generic ptrcall dispatch has no runtime error check of
+// its own (a wrong type tag silently reads/writes the wrong bytes), so we validate
+// it at scene init with a type-coverage round-trip matrix against real Godot —
+// every PT tag the platformer needs, with known expected values. Critically covers
+// the float32-vs-float64 and int32 width distinctions (the AudioStreamPlayer-class
+// bug). Runs once at startup; debug builds only. Test objects are intentionally
+// leaked (a handful, one-time) to keep the probe simple and safe.
+static void kanama_ios_ptrcall_selftest(void) {
+    int pass = 0;
+    int fail = 0;
+#define KANAMA_IOS_ST_CHECK(label, cond) \
+    do { if (cond) { pass++; } else { fail++; \
+        fprintf(stderr, "[kanama][ios][c] SELFTEST FAIL: %s\n", (label)); fflush(stderr); } } while (0)
+
+    int64_t node3d = kanama_ios_godot_construct_object("Node3D");
+    if (node3d == 0) {
+        fprintf(stderr, "[kanama][ios][c] PTRCALL SELFTEST: construct Node3D FAILED — aborting matrix\n");
+        fflush(stderr);
+        return;
+    }
+
+    // bool: Node3D.set_visible(false) -> is_visible()
+    {
+        uint8_t v = 0;
+        const void *a[1] = { &v };
+        int32_t t[1] = { KANAMA_IOS_PT_BOOL };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node3D","set_visible",2586408642),
+            node3d, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
+        uint8_t got = 1;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node3D","is_visible",36873697),
+            node3d, NULL, NULL, 0, KANAMA_IOS_PT_BOOL, &got);
+        KANAMA_IOS_ST_CHECK("bool", got == 0);
+    }
+
+    // Vector3 (3x f32): Node3D.set_position(1,2,3) -> get_position()
+    {
+        float in[3] = { 1.0f, 2.0f, 3.0f };
+        const void *a[1] = { in };
+        int32_t t[1] = { KANAMA_IOS_PT_VECTOR3 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node3D","set_position",3460891852),
+            node3d, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
+        float out[3] = { 0, 0, 0 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node3D","get_position",3360562783),
+            node3d, NULL, NULL, 0, KANAMA_IOS_PT_VECTOR3, out);
+        KANAMA_IOS_ST_CHECK("vector3", out[0]==1.0f && out[1]==2.0f && out[2]==3.0f);
+    }
+
+    // int64 return: Object.get_instance_id() -> nonzero
+    {
+        uint64_t id = 0;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Object","get_instance_id",3905245786),
+            node3d, NULL, NULL, 0, KANAMA_IOS_PT_INT64, &id);
+        KANAMA_IOS_ST_CHECK("int64-ret", id != 0);
+    }
+
+    // StringName arg -> bool: Object.has_method("set_visible")==true, ("__nope__")==false
+    {
+        uint8_t yes = 0, no = 1;
+        const void *ay[1] = { "set_visible" };
+        const void *an[1] = { "__nope__" };
+        int32_t t[1] = { KANAMA_IOS_PT_STRING_NAME };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Object","has_method",2619796661),
+            node3d, t, ay, 1, KANAMA_IOS_PT_BOOL, &yes);
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Object","has_method",2619796661),
+            node3d, t, an, 1, KANAMA_IOS_PT_BOOL, &no);
+        KANAMA_IOS_ST_CHECK("stringname-arg", yes == 1 && no == 0);
+    }
+
+    // scalar float: AudioStreamPlayer.set_volume_db(0.5) -> get_volume_db()
+    // Godot's PtrToArg<float> == PtrToArgConvert<float,double>, so a SCALAR float arg
+    // /return is 8 bytes (double) at the ptrcall boundary (converted float<->double
+    // internally). Marshal scalar floats as FLOAT64. (Vector/Color components are
+    // real_t and ARE 4 bytes — see those tests.)
+    {
+        int64_t asp = kanama_ios_godot_construct_object("AudioStreamPlayer");
+        if (asp == 0) {
+            fprintf(stderr, "[kanama][ios][c] SELFTEST note: AudioStreamPlayer construct returned 0\n");
+            fflush(stderr);
+        }
+        double in = 0.5;
+        const void *a[1] = { &in };
+        int32_t t[1] = { KANAMA_IOS_PT_FLOAT64 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("AudioStreamPlayer","set_volume_db",373806689),
+            asp, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
+        double out = -1.0;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("AudioStreamPlayer","get_volume_db",1740695150),
+            asp, NULL, NULL, 0, KANAMA_IOS_PT_FLOAT64, &out);
+        KANAMA_IOS_ST_CHECK("scalar-float(volume_db) as double", out == 0.5);
+    }
+
+    // float64: Timer.set_wait_time(2.5) -> get_wait_time()  (same hashes as the float32
+    // pair above — proves meta-driven width, not hash, selects the marshalling)
+    {
+        int64_t timer = kanama_ios_godot_construct_object("Timer");
+        double in = 2.5;
+        const void *a[1] = { &in };
+        int32_t t[1] = { KANAMA_IOS_PT_FLOAT64 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Timer","set_wait_time",373806689),
+            timer, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
+        double out = -1.0;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Timer","get_wait_time",1740695150),
+            timer, NULL, NULL, 0, KANAMA_IOS_PT_FLOAT64, &out);
+        KANAMA_IOS_ST_CHECK("float64", out == 2.5);
+    }
+
+    // int32: GPUParticles3D.set_amount(64) -> get_amount()
+    {
+        int64_t parts = kanama_ios_godot_construct_object("GPUParticles3D");
+        int32_t in = 64;
+        const void *a[1] = { &in };
+        int32_t t[1] = { KANAMA_IOS_PT_INT32 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("GPUParticles3D","set_amount",1286410249),
+            parts, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
+        int32_t out = 0;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("GPUParticles3D","get_amount",3905245786),
+            parts, NULL, NULL, 0, KANAMA_IOS_PT_INT32, &out);
+        KANAMA_IOS_ST_CHECK("int32", out == 64);
+    }
+
+    // Vector2 (2x f32): Node2D.set_position(3,4) -> get_position()
+    {
+        int64_t node2d = kanama_ios_godot_construct_object("Node2D");
+        float in[2] = { 3.0f, 4.0f };
+        const void *a[1] = { in };
+        int32_t t[1] = { KANAMA_IOS_PT_VECTOR2 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node2D","set_position",743155724),
+            node2d, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
+        float out[2] = { 0, 0 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node2D","get_position",3341600327),
+            node2d, NULL, NULL, 0, KANAMA_IOS_PT_VECTOR2, out);
+        KANAMA_IOS_ST_CHECK("vector2", out[0]==3.0f && out[1]==4.0f);
+
+        // scalar float (Node2D.set_rotation/get_rotation) — also 8-byte double at ptrcall
+        double rin = 0.5;
+        const void *ra[1] = { &rin };
+        int32_t rt[1] = { KANAMA_IOS_PT_FLOAT64 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node2D","set_rotation",373806689),
+            node2d, rt, ra, 1, KANAMA_IOS_PT_VOID, NULL);
+        double rout = -1.0;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node2D","get_rotation",1740695150),
+            node2d, NULL, NULL, 0, KANAMA_IOS_PT_FLOAT64, &rout);
+        KANAMA_IOS_ST_CHECK("scalar-float(rotation) as double", rout == 0.5);
+
+        // Color (4x f32): CanvasItem.set_modulate -> get_modulate (Node2D is a CanvasItem)
+        float cin[4] = { 0.25f, 0.5f, 0.75f, 1.0f };
+        const void *ca[1] = { cin };
+        int32_t ct[1] = { KANAMA_IOS_PT_COLOR };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("CanvasItem","set_modulate",2920490490),
+            node2d, ct, ca, 1, KANAMA_IOS_PT_VOID, NULL);
+        float cout[4] = { 0, 0, 0, 0 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("CanvasItem","get_modulate",3444240500),
+            node2d, NULL, NULL, 0, KANAMA_IOS_PT_COLOR, cout);
+        KANAMA_IOS_ST_CHECK("color", cout[0]==0.25f && cout[1]==0.5f && cout[2]==0.75f && cout[3]==1.0f);
+    }
+
+    // Object arg + multi-arg + Object return:
+    // parent.add_child(child,false,0) then parent.get_child(0,false) == child
+    {
+        int64_t parent = kanama_ios_godot_construct_object("Node3D");
+        int64_t child = kanama_ios_godot_construct_object("Node3D");
+        int64_t child_cell = child;
+        uint8_t force_readable = 0;
+        int32_t internal_mode = 0;
+        const void *aca[3] = { &child_cell, &force_readable, &internal_mode };
+        int32_t act[3] = { KANAMA_IOS_PT_OBJECT, KANAMA_IOS_PT_BOOL, KANAMA_IOS_PT_INT32 };
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node","add_child",3863233950),
+            parent, act, aca, 3, KANAMA_IOS_PT_VOID, NULL);
+        int32_t idx = 0;
+        uint8_t include_internal = 0;
+        const void *gca[2] = { &idx, &include_internal };
+        int32_t gct[2] = { KANAMA_IOS_PT_INT32, KANAMA_IOS_PT_BOOL };
+        int64_t got_child = 0;
+        kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node","get_child",541253412),
+            parent, gct, gca, 2, KANAMA_IOS_PT_OBJECT, &got_child);
+        KANAMA_IOS_ST_CHECK("object-arg+multiarg+object-ret", got_child == child);
+    }
+
+    fprintf(stderr, "[kanama][ios][c] PTRCALL SELFTEST MATRIX: %d passed, %d failed\n", pass, fail);
+    fflush(stderr);
+#undef KANAMA_IOS_ST_CHECK
+}
+#endif // KANAMA_IOS_DEBUG_VARIANT_CHECKS
+
 static void kanama_ios_initialize(void *userdata, GDExtensionInitializationLevel level) {
     (void)userdata;
     fprintf(stderr, "[kanama][ios][c] initialize: level=%d\n", (int)level);
@@ -4039,6 +4227,9 @@ static void kanama_ios_initialize(void *userdata, GDExtensionInitializationLevel
         kanama_ios_register_script_language();
         kanama_ios_register_resource_loader();
         kanama_ios_register_main_loop_callbacks();
+#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
+        kanama_ios_ptrcall_selftest();
+#endif
     }
     kanama_ios_runtime_initialize((int32_t)level);
 }
