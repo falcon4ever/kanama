@@ -1,0 +1,143 @@
+# iOS Backend Architecture
+
+How Kanama runs Kotlin game scripts on iOS, and the target architecture for scaling
+the Godot API surface. For the active work plan see
+[ios-backend-implementation-plan.md](./ios-backend-implementation-plan.md); for open
+items see [ios-backend-backlog.md](./ios-backend-backlog.md).
+
+## Why iOS is different from desktop/Android
+
+Kanama desktop uses the JVM + Panama (FFM) to call into Godot. iOS forbids JIT, so
+the JVM model does not apply. The iOS backend is **Kotlin/Native** (AOT-compiled)
+plus a **C shim** (`ios/bootstrap/kanama_ios_shim.c`) that implements the GDExtension
+entry points and bridges to the Kotlin/Native runtime via `@CName` exports.
+
+What works today (verified on iPhone 12 + iPhone 15 Pro): script loading + lifecycle,
+`@OnReady`/`@OnProcess`/`@OnPhysicsProcess`/`@OnInput`/`@RegisterFunction`,
+`@ScriptProperty` (incl. List/object types), `@Signal` registration, named + lambda
+signal connections (custom Godot Callable), `await`, and AudioStreamPlayer playback.
+Match3 runs at 60fps.
+
+## Components
+
+```
+Godot (iOS, GDExtension)
+        │
+        ▼
+ios/bootstrap/kanama_ios_shim.c  ── C shim ──────────────────────────────────┐
+  • GDExtension entry, class/loader/language registration                    │
+  • ScriptInstance lifecycle, property set, method/signal dispatch           │
+  • Marshalling helpers: get_method_bind (cached), ptrcall_* helpers,        │
+    Variant boxing, StringName helpers, custom-Callable trampoline           │
+  • Guardrails: kanama_ios_check_call_error, kanama_ios_check_variant_arg     │
+        │  @CName <-> extern bridge                                          │
+        ▼                                                                    │
+ios-runtime (Kotlin/Native)                                                  │
+  • KanamaIosRuntime.kt — script registry, instance bridges, dispatch        │
+  • IosCallableRegistry — lambda/bound signal callbacks                      │
+  • binding/runtime/ObjectCalls.kt — the API call abstraction  <─────────────┘
+  • api/IosGodotApi.kt — Godot API wrappers (TODAY: hand-written stubs)
+        ▲
+        │  build.gradle.kts + KSP processor
+Generated per-project script registry (methods/properties/signals of USER scripts)
+```
+
+Two distinct codegen concerns, do not confuse them:
+1. **Project-script registry** (already generated): the user's `@ScriptClass` scripts'
+   methods/properties/signals, emitted by the KSP processor + `ios-runtime/build.gradle.kts`.
+2. **Godot API wrappers** (the pivot, see below): the `Node3D`/`CharacterBody3D`/…
+   classes that user scripts call into.
+
+## The scalability problem (current state)
+
+The Godot API surface on iOS is **hand-written** in one file,
+`ios-runtime/.../api/IosGodotApi.kt` (~1000 lines, ~30 classes), where most methods
+are **no-op stubs** that compile and silently return defaults. Adding one Godot
+method takes ~6 manual edits across 3 files (`extension_api.json` hash lookup → C
+`g_*_bind` + binding function → `kanama_ios.h` decl → `IosGodot` wrapper → Kotlin API
+method). This is slow, and it is the root of an entire bug class:
+
+- **Silent no-op stubs**: `AudioStreamPlayer` and `CharacterBody3D` were fully stubbed
+  (`moveAndSlide()` → `false`, `velocity` a dead field) — they compiled and "ran" but
+  did nothing. These are invisible until something downstream misbehaves.
+- **Hand-marshalling bugs**: the Match3 SIGSEGV (a raw `Callable` passed where a boxed
+  `Variant` was required), a StringName over-dereference in script virtuals, and
+  Variant type-tag mismatches all came from hand-written marshalling.
+
+This does not scale to the full API that real demos (3D platformer, FPS, racing,
+city-builder) need.
+
+## Target architecture: generated wrappers + ObjectCalls
+
+The desktop/Android backend already solved this. Its full ~1086-class API in
+`src/main/kotlin/.../api/` is **generated** ("Generated from Godot docs") by
+`scripts/generate_api_wrapper.py` from `extension_api.json`. Each generated wrapper
+caches a `MethodBind` and calls a typed helper on a runtime abstraction `ObjectCalls`:
+
+```kotlin
+// generated CharacterBody3D.kt (desktop)
+fun moveAndSlide(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(moveAndSlideBind, handle)
+fun setVelocity(velocity: Vector3) = ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, handle, velocity)
+```
+
+`ObjectCalls` is the platform seam: desktop implements it with Panama/FFM; **iOS
+implements it with the C shim** (`get_method_bind` + `ptrcall_*` primitives). iOS is
+already half-wired for this — `ios-runtime/.../binding/runtime/ObjectCalls.kt` exists
+(currently 1 helper), and `kanama_ios_godot_get_method_bind` exists in the shim. The
+generated wrappers depend only on `ObjectCalls` + types + `java.lang.foreign.MemorySegment`,
+all of which iOS already provides (it shims `MemorySegment`).
+
+```
+extension_api.json
+   │  generate_api_wrapper.py (+ iOS emission target)
+   ▼
+Generated wrappers (Node3D, CharacterBody3D, …)
+   │  ObjectCalls.ptrcall*/call*  (cached MethodBind + typed ptrcall)
+   ▼
+ObjectCalls  ──┬── desktop actual → Panama/FFM
+               └── iOS actual → C shim (get_method_bind + ptrcall/method_bind_call)
+```
+
+**Keep the proven runtime; replace the hand-written API with generated wrappers.**
+
+### Migration shape
+
+- Reuse the desktop generator's `extension_api.json` model, its `CallShape`
+  signature taxonomy (the finite `(argtypes→return)` → helper-name map), its
+  conservative skip logic (`--skip-report`), and its fixture-based check harness
+  (`scripts/check_wrapper_generator.py`). See `docs/contributing/wrapper-maintenance.md`.
+- Add an iOS emission target: the generated wrappers (initially copied into `iosMain`;
+  longer term shared via `commonMain` + `expect/actual ObjectCalls`) and the matching
+  `ObjectCalls` helper bodies (themselves generatable from the CallShape set).
+- The hand-written `IosGodotApi.kt` shrinks to genuinely bespoke runtime pieces:
+  `KanamaScript` base, `KanamaScope`, `Input`/InputMap glue, the signal/Callable
+  registry, lifecycle. Everything else is generated.
+
+## Performance
+
+This is the **fast** path, not generic reflection: a `MethodBind` is resolved once
+per method (cached in the wrapper, like desktop's `*Bind` fields) and calls go through
+typed `ptrcall` — the same mechanism as desktop and as the current hand-written iOS
+binding functions. Per-call cost is the C↔Kotlin/Native FFI crossing plus argument
+marshalling. Guidance (confirm by profiling per-frame `_physics_process` on the 3D
+platformer):
+
+- Cache `MethodBind` per generated method; never re-resolve per call.
+- Avoid per-call `StringName` allocation (intern/cache method + arg names).
+- Prefer `ptrcall` over the Variant `call` path; reserve `call` for varargs/signals.
+- Minimize boundary crossings in hot loops.
+
+## Rules
+
+- **No silent stubs.** Every API method must call through `ObjectCalls`. A method with
+  an empty body or a bare `return false/0.0/null` is a bug — it hides missing
+  functionality. Prefer generating the method (or omitting it) over stubbing it.
+- **Marshalling goes through guardrails.** Variant-based calls
+  (`object_method_bind_call`) must use `kanama_ios_check_call_error`; argument
+  Variants are checked with `kanama_ios_check_variant_arg` in debug builds. Both must
+  log zero in a healthy run.
+- **GDExtension virtual `args[i]` is already a pointer to the argument** — do not
+  double-dereference StringName args (a past bug; see the connect/signal history in
+  `kanama-ios-support.md`).
+- **Validate on device.** Every change ends with an on-device run (0 SIGSEGV baseline,
+  guardrail logs clean).
