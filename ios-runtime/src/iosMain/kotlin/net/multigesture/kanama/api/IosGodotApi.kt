@@ -51,6 +51,13 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_viewport
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_is_in_group
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_remove_child
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_input
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_play
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_bus
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_pitch_scale
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_stream
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_stream_paused
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_volume_db
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_unhandled_input
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
@@ -461,26 +468,35 @@ class GPUParticles2D(handle: MemorySegment) : Node2D(handle) {
 
 class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
     fun setStreamFromPath(path: String) {
+        val stream = IosGodot.resourceLoaderLoad(path, "")
+        if (stream != 0L) {
+            IosGodot.audioStreamPlayerSetStream(handle.address(), stream)
+        }
     }
 
     fun setPitchScale(value: Double) {
+        IosGodot.audioStreamPlayerSetPitchScale(handle.address(), value)
     }
 
     fun setVolumeDb(value: Double) {
+        IosGodot.audioStreamPlayerSetVolumeDb(handle.address(), value)
     }
 
     fun setBus(value: String) {
+        IosGodot.audioStreamPlayerSetBus(handle.address(), value)
     }
 
     fun setStreamPaused(value: Boolean) {
+        IosGodot.audioStreamPlayerSetStreamPaused(handle.address(), value)
     }
 
     fun play() {
+        IosGodot.audioStreamPlayerPlay(handle.address(), 0.0)
     }
 
     companion object {
         fun create(): AudioStreamPlayer =
-            AudioStreamPlayer(MemorySegment.NULL)
+            AudioStreamPlayer(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer")))
     }
 }
 
@@ -837,6 +853,33 @@ private object IosGodot {
 
     fun sprite2dSetTexture(sprite: Long, texture: Long) {
         kanama_ios_godot_sprite2d_set_texture(sprite, texture)
+    }
+
+    fun constructObject(className: String): Long =
+        kanama_ios_godot_construct_object(className)
+
+    fun audioStreamPlayerSetStream(player: Long, stream: Long) {
+        kanama_ios_godot_audio_stream_player_set_stream(player, stream)
+    }
+
+    fun audioStreamPlayerSetVolumeDb(player: Long, volumeDb: Double) {
+        kanama_ios_godot_audio_stream_player_set_volume_db(player, volumeDb)
+    }
+
+    fun audioStreamPlayerSetPitchScale(player: Long, pitchScale: Double) {
+        kanama_ios_godot_audio_stream_player_set_pitch_scale(player, pitchScale)
+    }
+
+    fun audioStreamPlayerSetBus(player: Long, bus: String) {
+        kanama_ios_godot_audio_stream_player_set_bus(player, bus)
+    }
+
+    fun audioStreamPlayerSetStreamPaused(player: Long, paused: Boolean) {
+        kanama_ios_godot_audio_stream_player_set_stream_paused(player, if (paused) 1 else 0)
+    }
+
+    fun audioStreamPlayerPlay(player: Long, fromPosition: Double) {
+        kanama_ios_godot_audio_stream_player_play(player, fromPosition)
     }
 
     fun objectEmitSignalInt(objectHandle: Long, signalName: String, value: Long): Int =

@@ -128,6 +128,13 @@ int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type
 
 void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture);
 
+void kanama_ios_godot_audio_stream_player_set_stream(int64_t player, int64_t stream);
+void kanama_ios_godot_audio_stream_player_set_volume_db(int64_t player, double volume_db);
+void kanama_ios_godot_audio_stream_player_set_pitch_scale(int64_t player, double pitch_scale);
+void kanama_ios_godot_audio_stream_player_set_bus(int64_t player, const char *bus);
+void kanama_ios_godot_audio_stream_player_set_stream_paused(int64_t player, int32_t paused);
+void kanama_ios_godot_audio_stream_player_play(int64_t player, double from_position);
+
 int32_t kanama_ios_godot_object_emit_signal_int(
     int64_t object,
     const char *signal_name,

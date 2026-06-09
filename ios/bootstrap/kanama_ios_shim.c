@@ -236,6 +236,12 @@ static GDExtensionMethodBindPtr g_gpu_particles3d_restart_bind = NULL;
 static GDExtensionMethodBindPtr g_collision_shape3d_set_disabled_bind = NULL;
 static GDExtensionMethodBindPtr g_resource_loader_load_bind = NULL;
 static GDExtensionMethodBindPtr g_sprite2d_set_texture_bind = NULL;
+static GDExtensionMethodBindPtr g_audio_set_stream_bind = NULL;
+static GDExtensionMethodBindPtr g_audio_set_volume_db_bind = NULL;
+static GDExtensionMethodBindPtr g_audio_set_pitch_scale_bind = NULL;
+static GDExtensionMethodBindPtr g_audio_set_bus_bind = NULL;
+static GDExtensionMethodBindPtr g_audio_set_stream_paused_bind = NULL;
+static GDExtensionMethodBindPtr g_audio_play_bind = NULL;
 static GDExtensionMethodBindPtr g_object_emit_signal_bind = NULL;
 static GDExtensionMethodBindPtr g_object_connect_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_tween_property_bind = NULL;
@@ -402,6 +408,11 @@ enum {
     KANAMA_IOS_GPU_PARTICLES_RESTART_HASH = 107499316U,
     KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH = 3358495409U,
     KANAMA_IOS_SPRITE2D_SET_TEXTURE_HASH = 4051416890U,
+    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_HASH = 2210767741U,
+    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_FLOAT_HASH = 373806689U, // set_volume_db / set_pitch_scale (float)->void
+    KANAMA_IOS_AUDIO_STREAM_PLAYER_PLAY_HASH = 1958160172U,
+    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_BUS_HASH = 3304788590U,
+    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_PAUSED_HASH = 2586408642U,
     KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH = 4047867050U,
     KANAMA_IOS_OBJECT_CONNECT_HASH = 1518946055U,
     KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH = 4049770449U,
@@ -1240,6 +1251,42 @@ static void kanama_ios_godot_ptrcall_bool_arg(
         (GDExtensionConstTypePtr)&bool_cell,
     };
     g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
+}
+
+// Single 32-bit float argument. Godot methods like set_volume_db(float) take a
+// C++ float (4 bytes) in ptrcall, so the incoming double must be narrowed.
+static void kanama_ios_godot_ptrcall_float_arg(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    double value
+) {
+    if (method_bind == NULL || instance == NULL) {
+        return;
+    }
+    float value_cell = (float)value;
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&value_cell,
+    };
+    g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
+}
+
+// Single StringName argument (void return). Builds the StringName, ptrcalls with
+// a pointer to it, then destroys it.
+static void kanama_ios_godot_ptrcall_string_name_arg(
+    GDExtensionMethodBindPtr method_bind,
+    GDExtensionObjectPtr instance,
+    const char *value
+) {
+    if (method_bind == NULL || instance == NULL || value == NULL) {
+        return;
+    }
+    uint64_t storage = 0;
+    kanama_ios_init_string_name(&storage, value);
+    const GDExtensionConstTypePtr args[1] = {
+        (GDExtensionConstTypePtr)&storage,
+    };
+    g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
+    kanama_ios_destroy_string_name(&storage);
 }
 
 static int32_t kanama_ios_godot_ptrcall_string_name_arg_ret_bool(
@@ -2149,6 +2196,74 @@ void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture) {
         (GDExtensionObjectPtr)(intptr_t)sprite,
         (GDExtensionObjectPtr)(intptr_t)texture
     );
+}
+
+void kanama_ios_godot_audio_stream_player_set_stream(int64_t player, int64_t stream) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_audio_set_stream_bind,
+        "AudioStreamPlayer",
+        "set_stream",
+        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_HASH
+    );
+    kanama_ios_godot_ptrcall_object_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)player,
+        (GDExtensionObjectPtr)(intptr_t)stream
+    );
+}
+
+void kanama_ios_godot_audio_stream_player_set_volume_db(int64_t player, double volume_db) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_audio_set_volume_db_bind,
+        "AudioStreamPlayer",
+        "set_volume_db",
+        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_FLOAT_HASH
+    );
+    kanama_ios_godot_ptrcall_float_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, volume_db);
+}
+
+void kanama_ios_godot_audio_stream_player_set_pitch_scale(int64_t player, double pitch_scale) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_audio_set_pitch_scale_bind,
+        "AudioStreamPlayer",
+        "set_pitch_scale",
+        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_FLOAT_HASH
+    );
+    kanama_ios_godot_ptrcall_float_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, pitch_scale);
+}
+
+void kanama_ios_godot_audio_stream_player_set_bus(int64_t player, const char *bus) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_audio_set_bus_bind,
+        "AudioStreamPlayer",
+        "set_bus",
+        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_BUS_HASH
+    );
+    kanama_ios_godot_ptrcall_string_name_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, bus);
+}
+
+void kanama_ios_godot_audio_stream_player_set_stream_paused(int64_t player, int32_t paused) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_audio_set_stream_paused_bind,
+        "AudioStreamPlayer",
+        "set_stream_paused",
+        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_PAUSED_HASH
+    );
+    kanama_ios_godot_ptrcall_bool_arg(
+        method_bind,
+        (GDExtensionObjectPtr)(intptr_t)player,
+        paused != 0 ? 1 : 0
+    );
+}
+
+void kanama_ios_godot_audio_stream_player_play(int64_t player, double from_position) {
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_audio_play_bind,
+        "AudioStreamPlayer",
+        "play",
+        KANAMA_IOS_AUDIO_STREAM_PLAYER_PLAY_HASH
+    );
+    kanama_ios_godot_ptrcall_float_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, from_position);
 }
 
 int32_t kanama_ios_godot_object_emit_signal_int(
