@@ -10,6 +10,7 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -223,8 +224,16 @@ class GodotSignal internal constructor(
             (args.firstOrNull() as? GodotObject)?.let(callback)
         }
 
-    suspend fun await(target: GodotObject, argumentCount: Int = 0): List<Any?> =
-        emptyList()
+    suspend fun await(target: GodotObject, argumentCount: Int = 0): List<Any?> {
+        // Connect a one-shot callable that completes the deferred when the signal
+        // fires, then suspend until then. CONNECT_ONE_SHOT makes Godot drop the
+        // connection after it fires, which releases the registry entry via free_func.
+        val deferred = CompletableDeferred<List<Any?>>()
+        connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) { args ->
+            deferred.complete(args)
+        }
+        return deferred.await()
+    }
 }
 
 class SignalConnection internal constructor() : AutoCloseable {
