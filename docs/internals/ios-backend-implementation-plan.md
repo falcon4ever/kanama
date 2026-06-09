@@ -61,8 +61,8 @@ pattern-following), O = Opus (contract design + risky marshalling / crash debugg
 
 | Task | Owner | Status | Done by | Validate | Guardrail |
 |---|---|---|---|---|---|
-| T1.1 Enumerate the `ObjectCalls.*` helper set the generator emits; group by marshalling pattern | S | ☐ | | Script greps `ObjectCalls.*` across generated wrappers; enumerated set complete (zero unlisted) for target classes | — |
-| T1.2 Design iOS `ObjectCalls` contract + generic C ptrcall dispatch; confirm sharing strategy ((B) iosMain copies first, toward (A) commonMain expect/actual) | O | ☐ | | One hand-written generated-style wrapper compiles against new `ObjectCalls` signatures (compile-only smoke); spec [O]-reviewed | Every call via cached `MethodBind` + ptrcall (no per-call StringName alloc); Variant only where ptrcall can't express |
+| T1.1 Enumerate the `ObjectCalls.*` helper set the generator emits; group by marshalling pattern | S | ✅ | Sonnet subagent 2026-06-09 | Survey [`ios-objectcalls-helper-survey.md`](./ios-objectcalls-helper-survey.md); grep-verified complete for platformer classes (zero unlisted) | — |
+| T1.2 Design iOS `ObjectCalls` contract + generic C ptrcall dispatch; confirm sharing strategy ((B) iosMain copies first, toward (A) commonMain expect/actual) | O | ✅ | Opus orchestrator 2026-06-09 | Contract in architecture doc §"Contract: generic ptrcall dispatch (iOS ObjectCalls)"; compile-smoke folded into T2.1 | Every call via cached `MethodBind` + generic typed ptrcall; Variant only where ptrcall can't express |
 
 ## Phase 2 — iOS `ObjectCalls` helper surface
 

@@ -113,6 +113,37 @@ ObjectCalls  ──┬── desktop actual → Panama/FFM
   `KanamaScript` base, `KanamaScope`, `Input`/InputMap glue, the signal/Callable
   registry, lifecycle. Everything else is generated.
 
+## Contract: generic ptrcall dispatch (iOS ObjectCalls)
+
+Decided in T1.2, informed by the helper survey
+([ios-objectcalls-helper-survey.md](./ios-objectcalls-helper-survey.md)): the
+generated wrappers reference ~1467 distinct `ObjectCalls.*` helper shapes (121 for
+the platformer's classes alone), of which only ~7% map to an existing iOS C
+primitive. Hand-writing a C function per shape is untenable, so:
+
+- **One generic typed ptrcall dispatch in the C shim** drives all ptrcall shapes:
+  `kanama_ios_godot_ptrcall(bind, instance, argTypes[], argValues[], argCount, retType, retOut)`.
+  A small `type tag` enum selects each arg's cell layout (bool/int32/int64/uint32/
+  float/double/Object/Vector2/Vector2i/Vector3/Vector4/Color/Rect2/Transform2D/
+  Transform3D/Basis/Quaternion/AABB/Projection/RID/StringName/NodePath/String/
+  typed-list…) and the return read-back. New shapes need **no new C function** —
+  only a Kotlin `ObjectCalls` helper body that packs the right arg/return tags.
+- **`ObjectCalls` (iOS)** exposes the typed helpers the generated wrappers call
+  (`ptrcallNoArgsRetBool`, `ptrcallWithVector3Arg`, …); each is a thin wrapper over
+  the generic dispatch and caches its `MethodBind` (via the existing
+  `kanama_ios_godot_get_method_bind`, resolved once per wrapper method). These helper
+  bodies are themselves **generated** from the survey's CallShape set so the surface
+  stays in sync with the generator.
+- **Marshalling lives in one place** (the generic dispatch), guarded by
+  `kanama_ios_check_call_error` / `kanama_ios_check_variant_arg`. This is the
+  error-prone code; concentrating it there (vs scattered per-method functions) is how
+  we avoid repeating the SIGSEGV / over-deref / boxing bug class.
+- **Varargs / shapes ptrcall can't express** fall back to the Variant
+  `object_method_bind_call` path (already used by connect/emit/tween).
+- **Sharing strategy**: start (B) — generate iOS wrapper copies into `iosMain`
+  (no module restructure), designing toward (A) — shared wrappers in `commonMain`
+  with `expect/actual ObjectCalls` — once the contract is proven on the platformer.
+
 ## Performance
 
 This is the **fast** path, not generic reflection: a `MethodBind` is resolved once
