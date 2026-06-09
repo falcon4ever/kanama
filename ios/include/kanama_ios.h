@@ -156,6 +156,13 @@ int64_t kanama_ios_godot_object_connect(
     int64_t flags
 );
 
+int64_t kanama_ios_godot_object_connect_callable(
+    int64_t object,
+    const char *signal_name,
+    int64_t callback_id,
+    int64_t flags
+);
+
 int64_t kanama_ios_godot_tween_tween_property_vector2(
     int64_t tween,
     int64_t target,

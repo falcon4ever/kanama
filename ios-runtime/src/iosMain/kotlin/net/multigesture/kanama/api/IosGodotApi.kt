@@ -3,6 +3,8 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.CName
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -60,6 +62,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_unhandled_input
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect_callable
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_class
@@ -200,8 +203,16 @@ class GodotSignal internal constructor(
         argumentCount: Int,
         flags: Long = GodotObject.CONNECT_DEFAULT,
         callback: (List<Any?>) -> Unit,
-    ): SignalConnection =
-        SignalConnection()
+    ): SignalConnection {
+        val callbackId = IosCallableRegistry.register(callback)
+        val result = IosGodot.objectConnectCallable(owner.handle.address(), name, callbackId, flags)
+        if (result != 0L) {
+            // connect failed; Godot freed the callable (which released the entry),
+            // but release defensively in case it never reached the trampoline path.
+            IosCallableRegistry.release(callbackId)
+        }
+        return SignalConnection()
+    }
 
     fun connectObject(
         target: GodotObject,
@@ -891,6 +902,9 @@ private object IosGodot {
     fun objectConnect(sourceObject: Long, signalName: String, targetObject: Long, method: String, flags: Long): Long =
         kanama_ios_godot_object_connect(sourceObject, signalName, targetObject, method, flags)
 
+    fun objectConnectCallable(sourceObject: Long, signalName: String, callbackId: Long, flags: Long): Long =
+        kanama_ios_godot_object_connect_callable(sourceObject, signalName, callbackId, flags)
+
     fun tweenTweenPropertyVector2(tween: Long, target: Long, property: String, x: Double, y: Double, duration: Double): Long =
         kanama_ios_godot_tween_tween_property_vector2(tween, target, property, x, y, duration)
 
@@ -946,3 +960,53 @@ private object IosGodot {
 
 @OptIn(ExperimentalForeignApi::class)
 private typealias DoubleVarCompat = kotlinx.cinterop.DoubleVar
+
+// Registry backing lambda/bound signal connections. A connection registers its
+// callback here and passes the integer id to the C shim, which binds it to a
+// custom Godot Callable. When the signal fires the shim calls back into
+// kanamaIosRuntimeDispatchCallable; when Godot drops the connection it calls
+// kanamaIosRuntimeReleaseCallable so the entry can be collected.
+internal object IosCallableRegistry {
+    private var nextId = 1L
+    private val callbacks = HashMap<Long, (List<Any?>) -> Unit>()
+
+    fun register(callback: (List<Any?>) -> Unit): Long {
+        val id = nextId++
+        callbacks[id] = callback
+        return id
+    }
+
+    fun dispatch(callbackId: Long, args: List<Any?>) {
+        callbacks[callbackId]?.invoke(args)
+    }
+
+    fun release(callbackId: Long) {
+        callbacks.remove(callbackId)
+    }
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_dispatch_callable")
+fun kanamaIosRuntimeDispatchCallable(
+    callbackId: Long,
+    argumentCount: Int,
+    arg0: Long,
+    arg1: Long,
+    arg2: Long,
+    arg3: Long,
+) {
+    val handles = longArrayOf(arg0, arg1, arg2, arg3)
+    val count = argumentCount.coerceIn(0, handles.size)
+    val args = ArrayList<Any?>(count)
+    for (i in 0 until count) {
+        val handle = handles[i]
+        args.add(if (handle != 0L) GodotObject(handle) else null)
+    }
+    IosCallableRegistry.dispatch(callbackId, args)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_release_callable")
+fun kanamaIosRuntimeReleaseCallable(callbackId: Long) {
+    IosCallableRegistry.release(callbackId)
+}
