@@ -22,11 +22,16 @@ internal data class KanamaIosScriptProperty(
     val name: String,
 )
 
+internal data class KanamaIosScriptSignal(
+    val name: String,
+)
+
 internal data class KanamaIosScriptDescriptor(
     val path: String,
     val baseType: String,
     val methods: List<KanamaIosScriptMethod>,
     val properties: List<KanamaIosScriptProperty>,
+    val signals: List<KanamaIosScriptSignal>,
     val factory: (Long) -> KanamaIosScriptBridge?,
 )
 
@@ -165,6 +170,12 @@ internal object KanamaIosRuntime {
 
     fun scriptResourcePropertyName(handle: Long, propertyIndex: Int): String =
         scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.name.orEmpty()
+
+    fun scriptResourceSignalCount(handle: Long): Int =
+        scriptResources[handle]?.descriptor?.signals?.size ?: 0
+
+    fun scriptResourceSignalName(handle: Long, signalIndex: Int): String =
+        scriptResources[handle]?.descriptor?.signals?.getOrNull(signalIndex)?.name.orEmpty()
 
     fun createScriptInstance(scriptHandle: Long, ownerObject: Long): Long {
         if (ownerObject == 0L) {
@@ -411,6 +422,7 @@ internal object KanamaIosRuntime {
             baseType = "Label",
             methods = listOf(KanamaIosScriptMethod("_ready")),
             properties = emptyList(),
+            signals = emptyList(),
             factory = { ownerObject -> BuiltInProbeScript(ownerObject) },
         )
     }
@@ -553,6 +565,22 @@ fun kanamaIosRuntimeScriptResourcePropertyName(
     bufferSize: Int,
 ) {
     writeCString(KanamaIosRuntime.scriptResourcePropertyName(scriptHandle, propertyIndex), buffer, bufferSize)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_signal_count")
+fun kanamaIosRuntimeScriptResourceSignalCount(scriptHandle: Long): Int =
+    KanamaIosRuntime.scriptResourceSignalCount(scriptHandle)
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_signal_name")
+fun kanamaIosRuntimeScriptResourceSignalName(
+    scriptHandle: Long,
+    signalIndex: Int,
+    buffer: CPointer<ByteVar>?,
+    bufferSize: Int,
+) {
+    writeCString(KanamaIosRuntime.scriptResourceSignalName(scriptHandle, signalIndex), buffer, bufferSize)
 }
 
 @OptIn(ExperimentalNativeApi::class)

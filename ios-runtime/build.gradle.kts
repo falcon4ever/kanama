@@ -297,6 +297,13 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
             )
         }
         builder.appendLine("            ),")
+        builder.appendLine("            signals = listOf(")
+        model.signals.forEach { signal ->
+            builder.appendLine(
+                "                KanamaIosScriptSignal(${kotlinString(signal.godotName)}),",
+            )
+        }
+        builder.appendLine("            ),")
         builder.appendLine("            factory = { ownerObject ->")
         builder.appendLine(
             "                $bridgeName(${model.className}(MemorySegment.ofAddress(ownerObject)))",

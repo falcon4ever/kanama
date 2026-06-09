@@ -38,6 +38,13 @@ extern void kanama_ios_runtime_script_resource_property_name(
     char *buffer,
     int32_t buffer_size
 );
+extern int32_t kanama_ios_runtime_script_resource_signal_count(int64_t script_handle);
+extern void kanama_ios_runtime_script_resource_signal_name(
+    int64_t script_handle,
+    int32_t signal_index,
+    char *buffer,
+    int32_t buffer_size
+);
 extern int64_t kanama_ios_runtime_script_instance_create(int64_t script_handle, int64_t owner_object);
 extern void kanama_ios_runtime_script_instance_ready(int64_t instance_handle);
 extern int32_t kanama_ios_runtime_script_instance_call(
@@ -110,6 +117,7 @@ typedef enum {
     KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_BASE_TYPE,
     KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_CREATE,
     KANAMA_IOS_VIRTUAL_SCRIPT_HAS_METHOD,
+    KANAMA_IOS_VIRTUAL_SCRIPT_HAS_SIGNAL,
     KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT,
     KANAMA_IOS_VIRTUAL_RESOURCE_GET_TYPE,
     KANAMA_IOS_VIRTUAL_RESOURCE_LOAD,
@@ -127,6 +135,9 @@ typedef struct {
     int32_t script_method_count;
     uint64_t *script_property_names;
     int32_t script_property_count;
+    uint64_t *script_signal_names;
+    char **script_signal_name_texts;
+    int32_t script_signal_count;
 } KanamaIosExtensionInstance;
 
 typedef struct {
@@ -134,6 +145,8 @@ typedef struct {
     GDExtensionObjectPtr owner_object;
     GDExtensionObjectPtr script_object;
     KanamaIosExtensionInstance *script;
+    GDExtensionObjectPtr referenced_objects[16];
+    int referenced_object_count;
 } KanamaIosScriptInstance;
 
 static int g_kanama_ios_initialized = 0;
@@ -213,6 +226,8 @@ static GDExtensionMethodBindPtr g_canvas_item_hide_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_show_bind = NULL;
 static GDExtensionMethodBindPtr g_canvas_item_set_modulate_bind = NULL;
 static GDExtensionMethodBindPtr g_packed_scene_instantiate_bind = NULL;
+static GDExtensionMethodBindPtr g_ref_counted_reference_bind = NULL;
+static GDExtensionMethodBindPtr g_ref_counted_unreference_bind = NULL;
 static GDExtensionMethodBindPtr g_gpu_particles2d_set_emitting_bind = NULL;
 static GDExtensionMethodBindPtr g_gpu_particles2d_set_lifetime_bind = NULL;
 static GDExtensionMethodBindPtr g_gpu_particles2d_restart_bind = NULL;
@@ -246,6 +261,8 @@ static GDExtensionPtrBuiltInMethod g_array_size_method = NULL;
 static GDExtensionPtrBuiltInMethod g_array_get_method = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2i = NULL;
 static GDExtensionPtrConstructor g_callable_object_method_constructor = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_callable = NULL;
+static GDExtensionPtrDestructor g_callable_destructor = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2 = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_color = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_node_path = NULL;
@@ -379,6 +396,7 @@ enum {
     KANAMA_IOS_ARRAY_SIZE_HASH = 3173160232U,
     KANAMA_IOS_ARRAY_GET_HASH = 708700221U,
     KANAMA_IOS_PACKED_SCENE_INSTANTIATE_HASH = 2628778455U,
+    KANAMA_IOS_REF_COUNTED_NOARGS_HASH = 2240911060U,
     KANAMA_IOS_BOOL_ARG_HASH = 2586408642U,
     KANAMA_IOS_DOUBLE_ARG_HASH = 373806689U,
     KANAMA_IOS_GPU_PARTICLES_RESTART_HASH = 107499316U,
@@ -514,6 +532,8 @@ static int kanama_ios_resolve_godot_api(void) {
     g_variant_to_array = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY);
     g_variant_from_vector2i = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2I);
     g_callable_object_method_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE, 2);
+    g_variant_from_callable = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE);
+    g_callable_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE);
     g_variant_from_vector2 = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2);
     g_variant_from_color = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_COLOR);
     g_variant_from_node_path = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
@@ -536,6 +556,8 @@ static int kanama_ios_resolve_godot_api(void) {
         g_variant_to_vector2i == NULL ||
         g_variant_from_vector2i == NULL ||
         g_callable_object_method_constructor == NULL ||
+        g_variant_from_callable == NULL ||
+        g_callable_destructor == NULL ||
         g_variant_from_vector2 == NULL ||
         g_variant_from_color == NULL ||
         g_variant_from_node_path == NULL ||
@@ -554,6 +576,59 @@ static int kanama_ios_resolve_godot_api(void) {
 static void kanama_ios_init_string_name(uint64_t *storage, const char *value) {
     *storage = 0;
     g_string_name_new((GDExtensionUninitializedStringNamePtr)storage, value);
+}
+
+// Guardrail: a Variant-based method_bind_call silently returns a non-OK
+// GDExtensionCallError when an argument Variant is malformed (e.g. a raw type
+// value passed where a boxed Variant was expected). Without surfacing this, the
+// failure is invisible right up until a later variant_destroy crashes on the
+// garbage type tag. Log loudly so marshalling mistakes are caught immediately.
+static int kanama_ios_check_call_error(const char *what, const GDExtensionCallError *error) {
+    if (error == NULL || error->error == GDEXTENSION_CALL_OK) {
+        return 1;
+    }
+    fprintf(stderr,
+            "[kanama][ios][c] CALL ERROR in %s: error=%d argument=%d expected=%d\n",
+            what ? what : "(unknown)", (int)error->error,
+            (int)error->argument, (int)error->expected);
+    fflush(stderr);
+    return 0;
+}
+
+// Debug-build guardrail: verify that an argument Variant actually carries the
+// type we intend before handing it to object_method_bind_call. This catches the
+// whole class of "raw type value passed where a boxed Variant was expected"
+// mistakes (the connect() SIGSEGV of 2026-06-09) structurally, at the call site
+// that introduced it, instead of as an opaque crash in a later variant_destroy.
+// Compiled in by default; define KANAMA_IOS_DEBUG_VARIANT_CHECKS=0 for release
+// builds to remove the per-argument type lookups entirely.
+#ifndef KANAMA_IOS_DEBUG_VARIANT_CHECKS
+#define KANAMA_IOS_DEBUG_VARIANT_CHECKS 1
+#endif
+
+static int kanama_ios_check_variant_arg(
+    const char *what,
+    int index,
+    GDExtensionConstVariantPtr arg,
+    GDExtensionVariantType expected
+) {
+#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
+    if (g_variant_get_type == NULL || arg == NULL) {
+        return 1;
+    }
+    GDExtensionVariantType actual = g_variant_get_type(arg);
+    if (actual != (GDExtensionVariantType)expected) {
+        fprintf(stderr,
+                "[kanama][ios][c] VARIANT ARG MISMATCH in %s: arg %d is type %d, expected %d "
+                "(likely a raw type value passed where a boxed Variant was required)\n",
+                what ? what : "(unknown)", index, (int)actual, (int)expected);
+        fflush(stderr);
+        return 0;
+    }
+#else
+    (void)what; (void)index; (void)arg; (void)expected;
+#endif
+    return 1;
 }
 
 static void kanama_ios_destroy_string_name(uint64_t *storage) {
@@ -675,6 +750,22 @@ static int32_t kanama_ios_script_property_index(
     return -1;
 }
 
+static int32_t kanama_ios_script_signal_index(
+    const KanamaIosExtensionInstance *script,
+    GDExtensionConstStringNamePtr name
+) {
+    if (script == NULL || name == NULL || script->script_signal_names == NULL) {
+        return -1;
+    }
+    uint64_t value = kanama_ios_string_name_value(name);
+    for (int32_t i = 0; i < script->script_signal_count; i++) {
+        if (script->script_signal_names[i] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 static const char *kanama_ios_script_method_name_text(
     const KanamaIosExtensionInstance *script,
     int32_t method_index
@@ -769,6 +860,35 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
             kanama_ios_init_string_name(&instance->script_property_names[i], property_name);
         }
     }
+
+    int32_t signal_count = kanama_ios_runtime_script_resource_signal_count(instance->script_handle);
+    if (signal_count > 0) {
+        instance->script_signal_names = calloc((size_t)signal_count, sizeof(uint64_t));
+        instance->script_signal_name_texts = calloc((size_t)signal_count, sizeof(char *));
+        if (instance->script_signal_names == NULL || instance->script_signal_name_texts == NULL) {
+            free(instance->script_signal_names);
+            free(instance->script_signal_name_texts);
+            instance->script_signal_names = NULL;
+            instance->script_signal_name_texts = NULL;
+            return;
+        }
+        instance->script_signal_count = signal_count;
+        for (int32_t i = 0; i < signal_count; i++) {
+            char signal_name[128];
+            signal_name[0] = '\0';
+            kanama_ios_runtime_script_resource_signal_name(
+                instance->script_handle,
+                i,
+                signal_name,
+                (int32_t)sizeof(signal_name)
+            );
+            if (signal_name[0] == '\0') {
+                continue;
+            }
+            kanama_ios_init_string_name(&instance->script_signal_names[i], signal_name);
+            instance->script_signal_name_texts[i] = kanama_ios_strdup(signal_name);
+        }
+    }
 }
 
 static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance *instance) {
@@ -796,12 +916,27 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
         }
         free(instance->script_property_names);
     }
+    if (instance->script_signal_names != NULL) {
+        for (int32_t i = 0; i < instance->script_signal_count; i++) {
+            kanama_ios_destroy_string_name(&instance->script_signal_names[i]);
+        }
+        free(instance->script_signal_names);
+    }
+    if (instance->script_signal_name_texts != NULL) {
+        for (int32_t i = 0; i < instance->script_signal_count; i++) {
+            free(instance->script_signal_name_texts[i]);
+        }
+        free(instance->script_signal_name_texts);
+    }
     instance->script_method_names = NULL;
     instance->script_method_name_texts = NULL;
     instance->script_base_type_text = NULL;
     instance->script_path = NULL;
     instance->script_property_names = NULL;
     instance->script_property_count = 0;
+    instance->script_signal_names = NULL;
+    instance->script_signal_name_texts = NULL;
+    instance->script_signal_count = 0;
     instance->script_path = NULL;
     instance->script_method_count = 0;
 }
@@ -2045,6 +2180,8 @@ int32_t kanama_ios_godot_object_emit_signal_int(
     memset(ret_variant, 0, sizeof(ret_variant));
     g_variant_from_string_name(signal_variant, &signal_name_storage);
     g_variant_from_int(value_variant, &value_cell);
+    kanama_ios_check_variant_arg("Object::emit_signal", 0, signal_variant, KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
+    kanama_ios_check_variant_arg("Object::emit_signal", 1, value_variant, KANAMA_IOS_VARIANT_TYPE_INT);
     const GDExtensionConstVariantPtr args[2] = {
         (GDExtensionConstVariantPtr)signal_variant,
         (GDExtensionConstVariantPtr)value_variant,
@@ -2059,11 +2196,12 @@ int32_t kanama_ios_godot_object_emit_signal_int(
         ret_variant,
         &error
     );
+    kanama_ios_check_call_error("Object::emit_signal", &error);
     g_variant_destroy(ret_variant);
     g_variant_destroy(value_variant);
     g_variant_destroy(signal_variant);
     kanama_ios_destroy_string_name(&signal_name_storage);
-    return ((int32_t *)&error)[0] == 0 ? 0 : -1;
+    return error.error == GDEXTENSION_CALL_OK ? 0 : -1;
 }
 
 int32_t kanama_ios_godot_object_emit_signal_vector2i(
@@ -2096,6 +2234,8 @@ int32_t kanama_ios_godot_object_emit_signal_vector2i(
     memset(ret_variant, 0, sizeof(ret_variant));
     g_variant_from_string_name(signal_variant, &signal_name_storage);
     g_variant_from_vector2i(value_variant, raw_vec);
+    kanama_ios_check_variant_arg("Object::emit_signal", 0, signal_variant, KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
+    kanama_ios_check_variant_arg("Object::emit_signal", 1, value_variant, KANAMA_IOS_VARIANT_TYPE_VECTOR2I);
     const GDExtensionConstVariantPtr args[2] = {
         (GDExtensionConstVariantPtr)signal_variant,
         (GDExtensionConstVariantPtr)value_variant,
@@ -2110,11 +2250,12 @@ int32_t kanama_ios_godot_object_emit_signal_vector2i(
         ret_variant,
         &error
     );
+    kanama_ios_check_call_error("Object::emit_signal", &error);
     g_variant_destroy(ret_variant);
     g_variant_destroy(value_variant);
     g_variant_destroy(signal_variant);
     kanama_ios_destroy_string_name(&signal_name_storage);
-    return ((int32_t *)&error)[0] == 0 ? 0 : -1;
+    return error.error == GDEXTENSION_CALL_OK ? 0 : -1;
 }
 
 int64_t kanama_ios_godot_object_connect(
@@ -2145,9 +2286,16 @@ int64_t kanama_ios_godot_object_connect(
 
     GDExtensionObjectPtr target = (GDExtensionObjectPtr)(intptr_t)target_object;
     const void *callable_args[2] = { &target, &method_name_storage };
+    // Build the raw Callable value, then box it into a Variant. The previous code
+    // passed the raw Callable directly where a Variant was expected, which made
+    // Object::connect read a garbage Variant type tag (INVALID_ARGUMENT) and then
+    // crash when variant_destroy dispatched on that garbage tag.
+    uint8_t callable_value[24];
     uint8_t callable_variant[24];
+    memset(callable_value, 0, sizeof(callable_value));
     memset(callable_variant, 0, sizeof(callable_variant));
-    g_callable_object_method_constructor(callable_variant, callable_args);
+    g_callable_object_method_constructor(callable_value, callable_args);
+    g_variant_from_callable(callable_variant, callable_value);
 
     int64_t flags_cell = flags;
     uint8_t signal_variant[24];
@@ -2158,6 +2306,9 @@ int64_t kanama_ios_godot_object_connect(
     memset(ret_variant, 0, sizeof(ret_variant));
     g_variant_from_string_name(signal_variant, &signal_name_storage);
     g_variant_from_int(flags_variant, &flags_cell);
+    kanama_ios_check_variant_arg("Object::connect", 0, signal_variant, KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
+    kanama_ios_check_variant_arg("Object::connect", 1, callable_variant, KANAMA_IOS_VARIANT_TYPE_CALLABLE);
+    kanama_ios_check_variant_arg("Object::connect", 2, flags_variant, KANAMA_IOS_VARIANT_TYPE_INT);
     const GDExtensionConstVariantPtr args[3] = {
         (GDExtensionConstVariantPtr)signal_variant,
         (GDExtensionConstVariantPtr)callable_variant,
@@ -2173,13 +2324,30 @@ int64_t kanama_ios_godot_object_connect(
         ret_variant,
         &error
     );
+    int call_ok = kanama_ios_check_call_error("Object::connect", &error);
+    // Object::connect returns a Godot Error enum (0 == OK) in ret_variant. The
+    // call-level GDExtensionCallError only tells us the method dispatched — a
+    // failed connection (e.g. unknown signal) surfaces here, not there. Surface
+    // it so silently-dropped connections are visible.
+    int64_t connect_error = 0;
+    if (call_ok && g_variant_to_int != NULL) {
+        g_variant_to_int(&connect_error, ret_variant);
+        if (connect_error != 0) {
+            fprintf(stderr,
+                    "[kanama][ios][c] connect FAILED: signal=%s target_method=%s returned Error=%lld "
+                    "(is the signal registered? see _has_script_signal)\n",
+                    signal_name, method_name, (long long)connect_error);
+            fflush(stderr);
+        }
+    }
     g_variant_destroy(ret_variant);
     g_variant_destroy(flags_variant);
     g_variant_destroy(signal_variant);
     g_variant_destroy(callable_variant);
+    g_callable_destructor(callable_value);
     kanama_ios_destroy_string_name(&method_name_storage);
     kanama_ios_destroy_string_name(&signal_name_storage);
-    return ((int32_t *)&error)[0] == 0 ? 0 : -1;
+    return (call_ok && connect_error == 0) ? 0 : -1;
 }
 
 int64_t kanama_ios_godot_tween_tween_property_vector2(
@@ -2217,6 +2385,10 @@ int64_t kanama_ios_godot_tween_tween_property_vector2(
     g_variant_from_node_path(prop_v, node_path_storage);
     g_variant_from_vector2(val_v, vec);
     g_variant_from_float(dur_v, &dur);
+    kanama_ios_check_variant_arg("Tween::tween_property", 0, obj_v, KANAMA_IOS_VARIANT_TYPE_OBJECT);
+    kanama_ios_check_variant_arg("Tween::tween_property", 1, prop_v, KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
+    kanama_ios_check_variant_arg("Tween::tween_property", 2, val_v, KANAMA_IOS_VARIANT_TYPE_VECTOR2);
+    kanama_ios_check_variant_arg("Tween::tween_property", 3, dur_v, KANAMA_IOS_VARIANT_TYPE_FLOAT);
 
     const GDExtensionConstVariantPtr args[4] = {
         (GDExtensionConstVariantPtr)obj_v,
@@ -2227,6 +2399,7 @@ int64_t kanama_ios_godot_tween_tween_property_vector2(
     GDExtensionCallError error;
     memset(&error, 0, sizeof(error));
     g_object_method_bind_call(mb, tween_obj, args, 4, ret_v, &error);
+    kanama_ios_check_call_error("Tween::tween_property", &error);
 
     GDExtensionObjectPtr result = NULL;
     if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
@@ -2282,6 +2455,10 @@ int64_t kanama_ios_godot_tween_tween_property_color(
     g_variant_from_node_path(prop_v, node_path_storage);
     g_variant_from_color(val_v, color);
     g_variant_from_float(dur_v, &dur);
+    kanama_ios_check_variant_arg("Tween::tween_property", 0, obj_v, KANAMA_IOS_VARIANT_TYPE_OBJECT);
+    kanama_ios_check_variant_arg("Tween::tween_property", 1, prop_v, KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
+    kanama_ios_check_variant_arg("Tween::tween_property", 2, val_v, KANAMA_IOS_VARIANT_TYPE_COLOR);
+    kanama_ios_check_variant_arg("Tween::tween_property", 3, dur_v, KANAMA_IOS_VARIANT_TYPE_FLOAT);
 
     const GDExtensionConstVariantPtr args[4] = {
         (GDExtensionConstVariantPtr)obj_v,
@@ -2292,6 +2469,7 @@ int64_t kanama_ios_godot_tween_tween_property_color(
     GDExtensionCallError error;
     memset(&error, 0, sizeof(error));
     g_object_method_bind_call(mb, tween_obj, args, 4, ret_v, &error);
+    kanama_ios_check_call_error("Tween::tween_property", &error);
 
     GDExtensionObjectPtr result = NULL;
     if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
@@ -2504,7 +2682,7 @@ static void *kanama_ios_virtual_for_script(GDExtensionConstStringNamePtr name) {
     }
     if (kanama_ios_string_name_eq(name, g_name__get_method_info)) return (void *)KANAMA_IOS_VIRTUAL_DICTIONARY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__is_tool)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
-    if (kanama_ios_string_name_eq(name, g_name__has_script_signal)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
+    if (kanama_ios_string_name_eq(name, g_name__has_script_signal)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_HAS_SIGNAL;
     if (kanama_ios_string_name_eq(name, g_name__has_property_default_value)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
     if (kanama_ios_string_name_eq(name, g_name__get_property_default_value)) return (void *)KANAMA_IOS_VIRTUAL_VARIANT_NIL;
     if (kanama_ios_string_name_eq(name, g_name__update_exports)) return (void *)KANAMA_IOS_VIRTUAL_VOID;
@@ -2571,7 +2749,6 @@ static void kanama_ios_call_virtual_with_data(
     const GDExtensionConstTypePtr *args,
     GDExtensionTypePtr ret
 ) {
-    (void)name;
     KanamaIosVirtualId id = (KanamaIosVirtualId)(intptr_t)virtual_call_userdata;
     KanamaIosExtensionInstance *extension_instance = (KanamaIosExtensionInstance *)instance;
 
@@ -2655,10 +2832,28 @@ static void kanama_ios_call_virtual_with_data(
         case KANAMA_IOS_VIRTUAL_SCRIPT_HAS_METHOD: {
             uint8_t has_method = 0;
             if (args != NULL && args[0] != NULL) {
-                GDExtensionConstStringNamePtr method_name = *((GDExtensionConstStringNamePtr const *)args[0]);
+                // args[0] is already a pointer to the StringName argument; do not
+                // dereference again (see _has_script_signal — the extra deref read
+                // into the StringName's _Data struct and compared garbage).
+                GDExtensionConstStringNamePtr method_name = (GDExtensionConstStringNamePtr)args[0];
                 has_method = kanama_ios_script_method_index(extension_instance, method_name) >= 0 ? 1 : 0;
             }
             *((uint8_t *)ret) = has_method;
+            break;
+        }
+        case KANAMA_IOS_VIRTUAL_SCRIPT_HAS_SIGNAL: {
+            // Report script-declared @Signal names so Object::connect accepts them
+            // and registers the connection. Without this, connect() fails with
+            // ERR_INVALID_PARAMETER and emitted signals reach no handlers.
+            uint8_t has_signal = 0;
+            if (args != NULL && args[0] != NULL) {
+                // args[0] is already a pointer to the StringName argument; do not
+                // dereference it again (that would read into the StringName's
+                // internal _Data struct and compare garbage).
+                GDExtensionConstStringNamePtr signal_name = (GDExtensionConstStringNamePtr)args[0];
+                has_signal = kanama_ios_script_signal_index(extension_instance, signal_name) >= 0 ? 1 : 0;
+            }
+            *((uint8_t *)ret) = has_signal;
             break;
         }
         case KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT:
@@ -2870,12 +3065,6 @@ static GDExtensionBool kanama_ios_script_instance_has_method(
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, name);
     GDExtensionBool result = method_index >= 0 ? 1 : 0;
-    if (instance != NULL && instance->script != NULL && method_index >= 0) {
-        const char *name_text = kanama_ios_script_method_name_text(instance->script, method_index);
-        if (name_text != NULL && name_text[0] == '_') {
-            fprintf(stderr, "[kanama][ios][c] HAS_METHOD %s = %d\n", name_text, result);
-        }
-    }
     return result;
 }
 
@@ -2961,12 +3150,6 @@ static void kanama_ios_script_instance_call(
     }
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     int32_t method_index = kanama_ios_script_method_index(instance != NULL ? instance->script : NULL, method);
-    if (method_index >= 0 && instance != NULL && instance->script != NULL) {
-        const char *name = kanama_ios_script_method_name_text(instance->script, method_index);
-        if (name != NULL && name[0] == '_') {
-            fprintf(stderr, "[kanama][ios][c] CALL method=%s args=%lld\n", name, (long long)argument_count);
-        }
-    }
     if (method_index < 0 && instance != NULL && instance->script != NULL &&
         kanama_ios_string_name_value(method) == kanama_ios_string_name_value((GDExtensionConstStringNamePtr)&g_name__unhandled_input)) {
         method_index = kanama_ios_script_method_index(instance->script, (GDExtensionConstStringNamePtr)&g_name__input);
@@ -3111,9 +3294,37 @@ static GDExtensionScriptLanguagePtr kanama_ios_script_instance_get_language(GDEx
     return (GDExtensionScriptLanguagePtr)g_script_language_object;
 }
 
+static void kanama_ios_ref_retain(KanamaIosScriptInstance *instance, GDExtensionObjectPtr obj) {
+    if (obj == NULL || instance == NULL) return;
+    GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
+        &g_ref_counted_reference_bind, "RefCounted", "reference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+    if (bind != NULL) {
+        GDExtensionBool result = 0;
+        g_object_method_bind_ptrcall(bind, obj, NULL, &result);
+    }
+    if (instance->referenced_object_count < 16) {
+        instance->referenced_objects[instance->referenced_object_count++] = obj;
+    }
+}
+
+static void kanama_ios_ref_release_all(KanamaIosScriptInstance *instance) {
+    if (instance == NULL) return;
+    GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
+        &g_ref_counted_unreference_bind, "RefCounted", "unreference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+    for (int i = 0; i < instance->referenced_object_count; i++) {
+        if (instance->referenced_objects[i] != NULL && bind != NULL) {
+            GDExtensionBool result = 0;
+            g_object_method_bind_ptrcall(bind, instance->referenced_objects[i], NULL, &result);
+        }
+        instance->referenced_objects[i] = NULL;
+    }
+    instance->referenced_object_count = 0;
+}
+
 static void kanama_ios_script_instance_free(GDExtensionScriptInstanceDataPtr data) {
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     if (instance != NULL) {
+        kanama_ios_ref_release_all(instance);
         kanama_ios_runtime_script_instance_free(instance->runtime_handle);
         free(instance);
     }
@@ -3171,6 +3382,7 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
     if (type == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
         GDExtensionObjectPtr obj = kanama_ios_variant_to_object(value);
         arg = (int64_t)(intptr_t)obj;
+        kanama_ios_ref_retain(instance, obj);
     } else if (type == KANAMA_IOS_VARIANT_TYPE_INT) {
         arg = kanama_ios_variant_to_int64(value);
     } else if (type == KANAMA_IOS_VARIANT_TYPE_BOOL && g_variant_to_bool != NULL) {
@@ -3219,6 +3431,7 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
                 GDExtensionObjectPtr obj_ptr = NULL;
                 g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
                 objects[i] = (int64_t)(intptr_t)obj_ptr;
+                kanama_ios_ref_retain(instance, obj_ptr);
             }
             if (g_variant_destroy != NULL) {
                 g_variant_destroy((GDExtensionVariantPtr)ret_variant);
@@ -3283,10 +3496,16 @@ static GDExtensionScriptInstancePtr kanama_ios_create_script_instance(
     instance->owner_object = owner_object;
     instance->script_object = script->godot_object;
     instance->script = script;
+    fprintf(stderr, "[kanama][ios][c] create_script_instance: script=%lld owner=%p\n",
+            (long long)script->script_handle, owner_object);
+    fflush(stderr);
     instance->runtime_handle = kanama_ios_runtime_script_instance_create(
         script->script_handle,
         (int64_t)(intptr_t)owner_object
     );
+    fprintf(stderr, "[kanama][ios][c] create_script_instance: runtime_handle=%lld\n",
+            (long long)instance->runtime_handle);
+    fflush(stderr);
     if (instance->runtime_handle == 0) {
         free(instance);
         return NULL;
@@ -3299,6 +3518,7 @@ static GDExtensionScriptInstancePtr kanama_ios_create_script_instance(
             owner_object,
             (long long)instance->runtime_handle,
             script_instance);
+    fflush(stderr);
     return script_instance;
 }
 
