@@ -10,9 +10,9 @@ and what to do next** so a cold agent doesn't re-derive context.
 
 - Repo: `/Users/lmuller/dev/kanama`
 - Branch: `spike/ios-kotlin-native-backend`
-- Last commit: `e009829` — "docs(ios): complete the authoritative ptrcall type-width
-  audit + generator guardrail"
-- Working tree: clean.
+- Last commit: `138b41b` — "ios: T3.1 — generated ObjectCalls helpers for
+  CharacterBody3D, device-validated" (T3.1 done; `8977708` is the generator+fixture).
+- Working tree: docs updates in progress (this note + tracker + handoff log).
 - Commit discipline: commit incrementally; never modify Kotlin demo code
   (`Main.kt`, `Tile.kt`, anything in `kanama-demos/`). iOS fixes go **only** in
   `ios/bootstrap/kanama_ios_shim.c`, `ios/include/kanama_ios.h`,
@@ -33,41 +33,48 @@ and what to do next** so a cold agent doesn't re-derive context.
   bool 1B); structs/containers are native bytes (Vector real_t = float32, int structs
   = int32, Color = 4×float32). Generator must emit only audited types, skip the rest.
 
-## NEXT TASK — T3.1 (Owner: Opus) — generator emission target
+## T3.1 ✅ DONE (Opus, device iPhone 12, 2026-06-10)
 
-**Goal:** add an iOS emission target to `scripts/generate_api_wrapper.py` so iOS gets
-generated Godot API wrappers + matching `ObjectCalls` helper bodies, instead of
-hand-stubbing. The risky type-mapping foundation is DONE; T3.1 is now the mechanical
-application of the audited width table.
+The iOS emission target is in `scripts/generate_api_wrapper.py`:
+- `--ios-emit-class CLASS` renders the platform-agnostic wrapper (plus a
+  `binding.runtime.*` import so generated extension helpers resolve);
+  `--ios-output-dir` is the staging dir (do NOT point at the compiled facade —
+  it would collide with the hand-written classes in `IosGodotApi.kt`; Phase 4 swaps).
+- `--ios-objectcalls FILE` generates `ObjectCallsGenerated.kt`: one **extension on
+  `object ObjectCalls`** per used `CallShape.function`, each marshalling through the
+  generic `kanama_ios_godot_ptrcall` with the audited width table. Hand-written
+  ObjectCalls.kt helpers are the override set (`IOS_HANDWRITTEN_HELPERS`) — not
+  re-emitted.
+- `--ios-skip-report FILE` + `IOS_AUDIT_ONLY`: conservative guardrail. Audited kinds
+  today = `IOS_ARG_KINDS` {bool,int32/64,uint32,enum,bitfield,float,Object,Vector2/3,
+  StringName} and `IOS_RET_KOTLIN` {Unit,Boolean,Int,Long,Double,Vector2/3,
+  MemorySegment}. Anything else (Transform3D/Basis/Quaternion/Color/RID/NodePath/
+  Vector*i/typed-arrays/varargs) is skipped, never guessed. **To widen coverage: add
+  the kind to those sets AND add a width-sensitive self-test matrix row + an
+  ObjectCalls probe row — only then is it "audited".**
+- Regression: `check_wrapper_generator.py` locks a Node3D iOS fixture in
+  `scripts/fixtures/wrapper_generator/ios/`.
 
-Approach (recorded in architecture doc §"T3.1 generator approach"):
-1. During generation, collect a registry: `shape.function -> (arg godot-types,
-   return godot-type)` from the existing `CallShape` taxonomy
-   (`candidate_for(method, object_types)` in the generator).
-2. Reuse the platform-agnostic generated wrapper classes (they call
-   `ObjectCalls.<helper>(bind, receiver, args)`) — emit copies into `iosMain`
-   (strategy (B): iosMain copies first, design toward (A) commonMain expect/actual).
-3. Emit iOS `ObjectCalls` helper bodies for the used shape set, applying the
-   authoritative width table: scalar float→double/8B, scalar int→int64/8B,
-   Vector real_t→float32, int structs→int32, Color→4×float32, Object/RID→8B ptr,
-   StringName-family constructed C-side, opaque types via Variant fallback.
-4. **Conservative guardrail:** emit only audited types; skip un-audited shapes (don't
-   silently emit wrong marshalling). Mirror desktop's `--skip-report`.
-5. Validate: generate `CharacterBody3D`, compile via `installIosAddon`, round-trip on
-   device; matrix + ObjectCalls probe stay clean.
+Compiled `ObjectCallsGenerated.kt` (CharacterBody3D ancestry, 23 helpers) into
+`ios-runtime/.../binding/runtime/`; probe extended in `ObjectCalls.kt`. Device
+(iPhone 12): generated `ptrcallWithVector3ArgRetVector3` g=(10,20,30), SELFTEST 6/6,
+MATRIX 11/11, 0 guardrail hits, Match3 60fps.
 
-Key generator internals to reuse (don't reinvent):
-- `scripts/generate_api_wrapper.py` (~1470 lines): `candidate_for(method,
-  object_types)` returns `CallShape(function, kotlin_return, default)`;
-  `render_method` emits `ObjectCalls.{shape.function}(bind, receiver, args)`.
-- Imports `ApiMethod`/`ApiClass` from `wrapper_model`, `CallShape` from
-  `api_wrapper_candidates`.
-- Regression harness: `scripts/check_wrapper_generator.py` +
-  `scripts/fixtures/wrapper_generator/` — extend with an iOS fixture.
+## ⚠️ Blocker found for T3.2/T3.4 (platformer on device)
 
-## After T3.1
+`:ios-runtime:compileKotlinIosArm64` with the **3D-Platformer** demo's kotlin-src
+FAILS — not in any T3.1 code, but in the regex-generated project registry
+`build/generated/iosProjectScripts/.../KanamaIosProjectRegistry.generated.kt`:
+`Unresolved reference 'Long'` and `'NodePath'`. This is the incomplete-iOS-regex-parser
+backlog item (the parser doesn't import/qualify those types for the platformer
+scripts). The **Match3** demo compiles + runs clean (used for T3.1 device validation).
+T3.2/T3.4 must fix the platformer registry generation first (extend the
+`build.gradle.kts` parser, or fully-qualify Long/NodePath in its codegen), else the
+platformer won't compile regardless of the generated API wrappers.
 
-- **T3.2 [S]** generate platformer classes (Node3D, CharacterBody3D, Camera3D,
+## NEXT TASK — T3.2 [S] — generate platformer classes
+
+- Generate platformer classes (Node3D, CharacterBody3D, Camera3D,
   AnimationPlayer, Area3D, CollisionShape3D, GPUParticles3D + bases).
 - **T3.3 [O]** wire `Input`/InputMap (`get_axis`/`get_vector`/`is_action_just_pressed`).
 - **T3.4 [S]** deploy + validate platformer on device.
@@ -80,7 +87,16 @@ Key generator internals to reuse (don't reinvent):
   `cd /Users/lmuller/dev/kanama && ./gradlew installIosAddon -PkanamaIosProjectDir=...`
 - Device install needs `xcodebuild -destination 'id=<udid>' -allowProvisioningUpdates`
   (else error 3002 for an unregistered device). Device must be **unlocked** to launch.
-- iPhone 15 Pro id: `8AABADCB-7A0E-5A94-91B8-7B7629DBACC4`.
+- Device ids: iPhone 15 Pro `8AABADCB-7A0E-5A94-91B8-7B7629DBACC4`,
+  iPhone 12 `48DF9662-42F3-541F-9F88-7FA2AB870F86` (USB; preferred for device runs).
+  `xcrun devicectl list devices` to confirm what's connected.
+- **Capturing the self-test on device:** `ios_visual_smoke.sh --kanama-match3-probe`
+  builds+installs+launches but on a physical device launches WITHOUT console
+  streaming, so the SELFTEST/MATRIX lines don't reach its stdout log. After the smoke
+  reports `OK`, relaunch with console to capture them:
+  `xcrun devicectl device process launch --console --terminate-existing --device <id>
+  net.multigesture.kanama.iosvisualsmoke` (streams forever — the game keeps running;
+  grep its output for `SELFTEST|MATRIX`, then kill it).
 - Guardrails (debug builds, `KANAMA_IOS_DEBUG_VARIANT_CHECKS=1`):
   `kanama_ios_check_call_error` + `kanama_ios_check_variant_arg` must log **zero**
   hits; ptrcall self-test matrix + ObjectCalls probe run at scene-init. Any nonzero
