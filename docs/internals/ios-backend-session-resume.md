@@ -60,25 +60,58 @@ Compiled `ObjectCallsGenerated.kt` (CharacterBody3D ancestry, 23 helpers) into
 (iPhone 12): generated `ptrcallWithVector3ArgRetVector3` g=(10,20,30), SELFTEST 6/6,
 MATRIX 11/11, 0 guardrail hits, Match3 60fps.
 
-## ⚠️ Blocker found for T3.2/T3.4 (platformer on device)
+## Blocker #1 — FIXED 2026-06-10 (`ec4db4b`)
 
-`:ios-runtime:compileKotlinIosArm64` with the **3D-Platformer** demo's kotlin-src
-FAILS — not in any T3.1 code, but in the regex-generated project registry
-`build/generated/iosProjectScripts/.../KanamaIosProjectRegistry.generated.kt`:
-`Unresolved reference 'Long'` and `'NodePath'`. This is the incomplete-iOS-regex-parser
-backlog item (the parser doesn't import/qualify those types for the platformer
-scripts). The **Match3** demo compiles + runs clean (used for T3.1 device validation).
-T3.2/T3.4 must fix the platformer registry generation first (extend the
-`build.gradle.kts` parser, or fully-qualify Long/NodePath in its codegen), else the
-platformer won't compile regardless of the generated API wrappers.
+The 3D-Platformer iOS runtime failed to compile: the `build.gradle.kts` registry
+codegen mis-classified value types as object wrappers, emitting invalid
+`net.multigesture.kanama.api.NodePath(...)` (view/target NodePath props) and
+`api.Long(...)` (onCoinCollected(Long) signal handler). Fixed with `IOS_VALUE_TYPES`:
+value-typed single method args with no typed bridge → UNSUPPORTED (warn+skip);
+value-typed `@ScriptProperty`s that aren't settable scalars → skipped (warn, keep
+Kotlin default). Both demos now compile. **Backlog (not blockers):** deliver NodePath
+`@ScriptProperty` + typed value-arg signal dispatch (the coin-count `onCoinCollected`)
+end-to-end — until then the platformer's NodePath props keep their defaults (scripts
+recompute) and the coin counter won't update.
 
-## NEXT TASK — T3.2 [S] — generate platformer classes
+## NEXT TASK — Phase 4 (reordered before T3.2, user decision 2026-06-10)
 
-- Generate platformer classes (Node3D, CharacterBody3D, Camera3D,
-  AnimationPlayer, Area3D, CollisionShape3D, GPUParticles3D + bases).
+Migrate the hand-written `IosGodotApi.kt` Godot-API wrapper classes to GENERATED
+wrappers (via the T3.1 `--ios-emit-class`/`--ios-objectcalls` target), deleting the
+silent stubs. This resolves the **facade collision** (generated `CharacterBody3D.kt`
+etc. can't compile next to the hand-written classes) so generated wrappers can be
+compiled into the runtime. **Scoping (read before starting):**
+
+- **Replace** (pure Godot-API wrappers, many are silent stubs): Resource, Texture2D,
+  Node, CanvasItem, Node2D, Node3D, Control, Camera3D, Area3D, StaticBody3D,
+  CollisionShape3D, GPUParticles3D, CharacterBody3D, Viewport, Label, Sprite2D, Area2D,
+  GPUParticles2D, AudioStreamPlayer, AnimationPlayer, Tween, PropertyTweener, Tweener,
+  PackedScene, InputEventMouseButton. Generate the TRUE Godot inheritance chains
+  (CharacterBody3D : PhysicsBody3D : CollisionObject3D : Node3D — the facade shortcuts
+  these) + their `--ios-objectcalls` helpers (union → one ObjectCallsGenerated.kt).
+- **KEEP (bespoke runtime, NOT generated)**: GodotObject (base — generated wrappers
+  extend it; it provides `handle`/`requireOpenHandle`/connect/emit/signal), KanamaScope,
+  KanamaCoroutineOwner, MainThread, GodotSignal, SignalConnection, Input, Mathf,
+  ResourceLoader, GD, IosCallableRegistry.
+- **Preserve the Kanama sugar** the demos/runtime call that the generator does NOT emit:
+  `Node.requireAs/getAsOrNull/getNodeAsOrNull/createTween/getNodeOrNull`,
+  `Node3D.rotationDegrees` (computed), `SceneTree.delaySeconds`, `Tween.tweenProperty`
+  + TRANS/EASE consts, `AudioStreamPlayer.create/setStreamFromPath`,
+  `PackedScene.instantiate`, the `Signals` objects. Move these to extension functions /
+  a small hand layer so the generated class bodies stay generated.
+- **Conflicts to reconcile**: generated Node3D has `position`/`setPosition` etc. that
+  overlap the hand sugar — keep generated, drop the hand dup; check every demo + runtime
+  call site still resolves (esp. `velocity`, `moveAndSlide`, `isOnFloor` which are
+  currently STUBS and become real generated calls).
+- **Validate**: `installIosAddon` compiles clean; grep shows no empty-body /
+  `return false|0.0|null` stub API methods left; **Match3 device regression** (iPhone 12)
+  AND now the **platformer device run** (blocker #1 fixed) with matrix 11/11 + ObjectCalls
+  probe clean + 0 guardrail hits. Owner T4.1 [S +O review], T4.2 [S].
+
+## After Phase 4 — T3.2/T3.3/T3.4
+
+- **T3.2 [S]** generate any remaining platformer classes beyond the Phase-4 set.
 - **T3.3 [O]** wire `Input`/InputMap (`get_axis`/`get_vector`/`is_action_just_pressed`).
-- **T3.4 [S]** deploy + validate platformer on device.
-- **Phase 4 [S]** migrate `IosGodotApi.kt` to generated, delete stubs, Match3 regression.
+- **T3.4 [S]** deploy + validate platformer movement/jump/animation + coin pickup on device.
 - **Phase 5** 3D perf review on iPhone 12 + 15 Pro.
 
 ## Build / device cheatsheet
