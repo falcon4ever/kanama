@@ -144,6 +144,36 @@ primitive. Hand-writing a C function per shape is untenable, so:
   (no module restructure), designing toward (A) — shared wrappers in `commonMain`
   with `expect/actual ObjectCalls` — once the contract is proven on the platformer.
 
+## T3.1 generator approach (decided)
+
+The desktop generator (`scripts/generate_api_wrapper.py`) renders each wrapper method
+as `ObjectCalls.<shape.function>(bind, receiver, args)` (see `render_method`) — this
+wrapper code is **platform-agnostic**. So the iOS target does NOT need different
+wrapper output:
+
+- **Reuse the generated wrapper classes unchanged** (start by emitting copies into
+  `iosMain`; toward shared `commonMain` later). They depend only on `ObjectCalls` +
+  types + `MemorySegment`, all present on iOS.
+- **Generate the iOS `ObjectCalls` helper bodies** for the set of `shape.function`
+  names the wrappers use. As the generator picks each method's `CallShape` it knows
+  the structured arg types + return type; collect a registry `shape.function ->
+  (arg godot-types, return godot-type)` (deduped by name) and emit an iOS helper that
+  marshals via the generic `kanama_ios_godot_ptrcall` (T2.1). The hand-written iOS
+  helpers in `ObjectCalls.kt` (T2.2) are the reference template + the override set.
+- **Type → PT-tag mapping (the risky core)** — apply exactly:
+  scalar `float`/`double` → `PT_FLOAT64` (8 bytes); `int` per `meta` (int32/int64);
+  Vector/Color components → float32 (single-precision); Object → `PT_OBJECT`;
+  StringName/String/NodePath → CONSTRUCT tags (built C-side from a C string);
+  `bool` → `PT_BOOL`. Shapes ptrcall can't express (varargs) → the Variant
+  `callWithVariantArgs` path.
+- **Validation:** generate one real class (e.g. `CharacterBody3D`), compile via
+  `installIosAddon`, and round-trip its key methods on device (extend the ObjectCalls
+  self-test) before generating the rest.
+
+Owner: T3.1 is [O] (this mapping is the single point where a marshalling mistake
+propagates across the whole API). T3.2+ (per-class generation, deploy, validate) is
+[S], guarded by the ptrcall matrix + the ObjectCalls Kotlin probe.
+
 ## Performance
 
 This is the **fast** path, not generic reflection: a `MethodBind` is resolved once

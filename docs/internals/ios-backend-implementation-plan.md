@@ -75,7 +75,7 @@ pattern-following), O = Opus (contract design + risky marshalling / crash debugg
 
 | Task | Owner | Status | Done by | Validate | Guardrail |
 |---|---|---|---|---|---|
-| T3.1 Add iOS emission target to `scripts/generate_api_wrapper.py`; extend fixtures/check | O (+S fixtures) | ☐ | | `check_wrapper_generator.py` passes with iOS fixtures; sample class diffs clean vs fixture | skip-report reviewed |
+| T3.1 Add iOS emission target to `scripts/generate_api_wrapper.py`; extend fixtures/check | O (+S fixtures) | ☐ | | Approach decided (architecture doc §"T3.1 generator approach"): reuse the platform-agnostic generated wrappers; generate iOS `ObjectCalls` helper bodies for the used shape set via the type→PT-tag mapping. Validate: generate `CharacterBody3D`, compile, round-trip on device | scalar-float→double + real_t→float32 mapping correct; matrix + ObjectCalls probe clean |
 | T3.2 Generate platformer classes (Node3D, CharacterBody3D, Camera3D, AnimationPlayer, Area3D, CollisionShape3D, GPUParticles3D + bases) | S | ☐ | | `installIosAddon` compiles clean; generated method set matches `extension_api.json` per class | no needed method dropped |
 | T3.3 Wire `Input`/InputMap (`get_axis`/`get_vector`/`is_action_just_pressed`) | O | ☐ | | On-device `get_axis` nonzero under active input; player responds; temp log then removed | guardrail clean |
 | T3.4 Deploy to iPhone 15 Pro; verify movement/jump/animation + coin pickup (Area3D signals via custom-Callable) | S (→O on bug) | ☐ | | Device checklist: player moves/jumps/animates, coins collect, 0 SIGSEGV / 0 connect / 0 VARIANT-mismatch | guardrail clean |
