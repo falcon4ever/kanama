@@ -305,6 +305,55 @@ def check_adopted_source(output_dir: Path, class_name: str, allow_virtual_skips:
     return 0
 
 
+IOS_FIXTURE_CLASS = "Node3D"
+
+
+def check_ios_fixture(output_dir: Path) -> int:
+    """Lock the iOS emission target: generated ObjectCalls helper bodies, the iOS
+    wrapper (with its extension-import injection), and the conservative skip report."""
+    ios_dir = output_dir / "ios"
+    ios_dir.mkdir(parents=True, exist_ok=True)
+    objectcalls = ios_dir / "ObjectCallsGenerated.kt"
+    skip_report = ios_dir / f"{IOS_FIXTURE_CLASS}.ios.skips.txt"
+    subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/generate_api_wrapper.py"),
+            "--ios-emit-class",
+            IOS_FIXTURE_CLASS,
+            "--ios-output-dir",
+            str(ios_dir),
+            "--ios-objectcalls",
+            str(objectcalls),
+            "--ios-skip-report",
+            str(skip_report),
+        ],
+        cwd=ROOT,
+        check=True,
+    )
+
+    fixture_ios = FIXTURE_DIR / "ios"
+    checks = [
+        (f"{IOS_FIXTURE_CLASS}.kt", True),
+        ("ObjectCallsGenerated.kt", False),
+        (f"{IOS_FIXTURE_CLASS}.ios.skips.txt", False),
+    ]
+    for name, sync_kdoc in checks:
+        actual = (ios_dir / name).read_text(encoding="utf-8")
+        expected = (fixture_ios / name).read_text(encoding="utf-8")
+        if sync_kdoc:
+            actual, expected = comparable_source(actual), comparable_source(expected)
+        if actual != expected:
+            print(f"[wrapper_generator] FAIL iOS fixture ios/{name} is stale", file=sys.stderr)
+            print(
+                "[wrapper_generator] re-run generate_api_wrapper.py --ios-emit-class "
+                f"{IOS_FIXTURE_CLASS} and update scripts/fixtures/wrapper_generator/ios/",
+                file=sys.stderr,
+            )
+            return 1
+    return 0
+
+
 def main() -> int:
     name_constants = subprocess.run(
         [sys.executable, str(ROOT / "scripts/generate_name_constants.py"), "--check"],
@@ -328,6 +377,8 @@ def main() -> int:
         for class_name in ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS:
             if check_adopted_source(output_dir, class_name, allow_virtual_skips=True) != 0:
                 return 1
+        if check_ios_fixture(output_dir) != 0:
+            return 1
 
     adopted = (
         ADOPTED_CLASSES

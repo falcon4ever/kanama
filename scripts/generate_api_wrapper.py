@@ -154,6 +154,61 @@ RESERVED_WORDS = {
     "while",
 }
 VARARG_RETURN_TYPES = {"void", "Variant", "enum"}
+
+# --- iOS emission target (T3.1) -------------------------------------------------
+# The iOS backend reuses the SAME platform-agnostic wrapper output as desktop, but
+# its ObjectCalls helper bodies marshal through the single generic C ptrcall
+# dispatch (`kanama_ios_godot_ptrcall`). Conservative guardrail: emit ONLY the
+# arg/return kinds whose ptrcall width + layout are audited AND validated on device
+# (the self-test matrix + ObjectCalls probe). Un-audited shapes are skipped, never
+# guessed — see docs/internals/ios-backend-architecture.md §"Rules".
+#
+# Set by main() when any --ios-* flag is passed; when True, `unsupported_reason`
+# additionally rejects any method the iOS helper generator can't marshal, so the
+# emitted iOS wrapper only contains methods whose ObjectCalls helper is also emitted.
+IOS_AUDIT_ONLY = False
+
+# Logical arg kinds the iOS generic dispatch + Kotlin layout marshal today. Scalars
+# widen per the width table (int*->int64/8B, float->double/8B); Vector2/3 components
+# are float32; Object is an 8B handle; StringName is constructed C-side from a C
+# string. Extended as new types gain a width-sensitive self-test matrix row.
+IOS_ARG_KINDS = {
+    "bool",
+    "int32",
+    "int64",
+    "uint32",
+    "enum",
+    "bitfield",
+    "float",
+    "Object",
+    "Vector2",
+    "Vector3",
+    "StringName",
+}
+# Return shapes the iOS helpers can read back (keyed by CallShape.kotlin_return, the
+# stable per-helper return-type token). StringName/String/RID/Color/List/Map returns
+# are intentionally absent until their read-back is wired + validated.
+IOS_RET_KOTLIN = {"Unit", "Boolean", "Int", "Long", "Double", "Vector2", "Vector3", "MemorySegment"}
+
+# Helpers already hand-written in ios-runtime ObjectCalls.kt (the reference template +
+# override set). The generator must NOT re-emit these (they'd clash with the members).
+IOS_HANDWRITTEN_HELPERS = {
+    "ptrcallNoArgs",
+    "ptrcallNoArgsRetBool",
+    "ptrcallNoArgsRetInt",
+    "ptrcallNoArgsRetLong",
+    "ptrcallNoArgsRetDouble",
+    "ptrcallNoArgsRetObject",
+    "ptrcallNoArgsRetVector2",
+    "ptrcallNoArgsRetVector3",
+    "ptrcallWithBoolArg",
+    "ptrcallWithIntArg",
+    "ptrcallWithLongArg",
+    "ptrcallWithDoubleArg",
+    "ptrcallWithVector2Arg",
+    "ptrcallWithVector3Arg",
+    "ptrcallWithObjectArgs",
+}
 PARAMETER_NAME_OVERRIDES = {
     ("Time", "get_datetime_dict_from_unix_time", "unix_time_val"): "unixTime",
     ("Time", "get_date_dict_from_unix_time", "unix_time_val"): "unixTime",
@@ -734,6 +789,20 @@ def is_supported_vararg_method(method: ApiMethod, object_types: set[str]) -> boo
     return "Callable" not in logical_args and logical_return != "Callable"
 
 
+def ios_method_supported(method: ApiMethod, object_types: set[str]) -> bool:
+    """True iff the iOS ObjectCalls helper generator can marshal this method.
+
+    Independent of desktop emittability — callers AND `unsupported_reason` together
+    gate emission. Varargs (Variant `call` path) are not generated for iOS yet.
+    """
+    if method.is_vararg:
+        return False
+    shape = candidate_for(method, object_types)
+    if shape is None or shape.kotlin_return not in IOS_RET_KOTLIN:
+        return False
+    return all(kind in IOS_ARG_KINDS for kind in method.logical_arg_kinds(object_types))
+
+
 def unsupported_reason(
     class_name: str,
     method: ApiMethod,
@@ -749,6 +818,8 @@ def unsupported_reason(
     if method.name.startswith("_"):
         return "internal/virtual callback methods are not emitted as public wrappers"
     if method.is_vararg and is_supported_vararg_method(method, object_types):
+        if IOS_AUDIT_ONLY:
+            return "iOS: vararg/Variant-path methods are not generated yet"
         return None
     if method.is_vararg:
         return "vararg methods must use dynamic Object.call policy"
@@ -789,6 +860,11 @@ def unsupported_reason(
         return "object return wrapper Callable is ownership/builtin-sensitive and must stay unsupported"
     if candidate_for(method, object_types) is None:
         return f"unsupported helper shape args={logical_args} return={logical_return}"
+    if IOS_AUDIT_ONLY and not ios_method_supported(method, object_types):
+        return (
+            f"iOS: un-audited helper shape args={logical_args} return={logical_return} "
+            "(conservative iOS guardrail — only audited ptrcall widths are emitted)"
+        )
     return None
 
 
@@ -1406,6 +1482,214 @@ def render_draft(
     return content, skips
 
 
+# --- iOS ObjectCalls helper-body generation (T3.1) -----------------------------
+
+IOS_OBJECTCALLS_HEADER = '''@file:OptIn(ExperimentalForeignApi::class)
+
+package net.multigesture.kanama.binding.runtime
+
+import java.lang.foreign.MemorySegment
+import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.COpaquePointerVar
+import kotlinx.cinterop.DoubleVar
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.FloatVar
+import kotlinx.cinterop.IntVar
+import kotlinx.cinterop.LongVar
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.allocArray
+import kotlinx.cinterop.cstr
+import kotlinx.cinterop.get
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.reinterpret
+import kotlinx.cinterop.set
+import kotlinx.cinterop.value
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
+import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector3
+
+/**
+ * GENERATED iOS ObjectCalls helper bodies (scripts/generate_api_wrapper.py --ios-*).
+ * DO NOT EDIT BY HAND. Re-run the generator instead.
+ *
+ * Each helper is an extension on the hand-written `object ObjectCalls`, so the
+ * generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls resolve here. Every
+ * helper marshals through the single generic C dispatch `kanama_ios_godot_ptrcall`,
+ * applying the authoritative ptrcall width table (scalar float->double/8B, scalar
+ * int->int64/8B, Vector components->float32, Object->8B handle, StringName built
+ * C-side). Helpers already hand-written in ObjectCalls.kt are the override set and
+ * are NOT regenerated here.
+ */
+'''
+
+# ptrcall type tag name -> numeric value (must match KANAMA_IOS_PT_* in the C shim
+# and the PT_* constants in ios-runtime ObjectCalls.kt).
+IOS_PT_TAG_VALUES = {
+    "PT_VOID": 0,
+    "PT_BOOL": 1,
+    "PT_INT32": 2,
+    "PT_INT64": 3,
+    "PT_FLOAT32": 4,
+    "PT_FLOAT64": 5,
+    "PT_VECTOR2": 6,
+    "PT_VECTOR3": 8,
+    "PT_OBJECT": 13,
+    "PT_STRING_NAME": 15,
+}
+
+
+def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
+    """(kotlin_param_type, pt_tag, cell_decl_lines, arg_ptr_expr) for one arg.
+
+    `arg_ptr_expr` is what gets stored into the ptrs[] cell (a COpaquePointer).
+    """
+    a = f"a{index}"
+    c = f"c{index}"
+    if kind == "bool":
+        return ("Boolean", "PT_BOOL", [f"val {c} = alloc<ByteVar>(); {c}.value = if ({a}) 1 else 0"], f"{c}.ptr.reinterpret<CPointed>()")
+    if kind == "int32":
+        return ("Int", "PT_INT64", [f"val {c} = alloc<LongVar>(); {c}.value = {a}.toLong()"], f"{c}.ptr.reinterpret<CPointed>()")
+    if kind in {"int64", "uint32", "enum", "bitfield"}:
+        return ("Long", "PT_INT64", [f"val {c} = alloc<LongVar>(); {c}.value = {a}"], f"{c}.ptr.reinterpret<CPointed>()")
+    if kind == "float":
+        return ("Double", "PT_FLOAT64", [f"val {c} = alloc<DoubleVar>(); {c}.value = {a}"], f"{c}.ptr.reinterpret<CPointed>()")
+    if kind == "Object":
+        return ("MemorySegment", "PT_OBJECT", [f"val {c} = alloc<LongVar>(); {c}.value = {a}.address()"], f"{c}.ptr.reinterpret<CPointed>()")
+    if kind == "Vector2":
+        return (
+            "Vector2",
+            "PT_VECTOR2",
+            [f"val {c} = allocArray<FloatVar>(2); {c}[0] = {a}.x.toFloat(); {c}[1] = {a}.y.toFloat()"],
+            f"{c}.reinterpret<CPointed>()",
+        )
+    if kind == "Vector3":
+        return (
+            "Vector3",
+            "PT_VECTOR3",
+            [f"val {c} = allocArray<FloatVar>(3); {c}[0] = {a}.x.toFloat(); {c}[1] = {a}.y.toFloat(); {c}[2] = {a}.z.toFloat()"],
+            f"{c}.reinterpret<CPointed>()",
+        )
+    if kind == "StringName":
+        # CONSTRUCT tag: the dispatch builds a StringName from this C string.
+        return ("String", "PT_STRING_NAME", [], f"{a}.cstr.ptr.reinterpret<CPointed>()")
+    raise ValueError(f"iOS arg kind not audited: {kind}")
+
+
+def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str, str | None]:
+    """(kotlin_ret_type|None, pt_tag, ret_decl_lines, ret_ptr_expr, read_expr|None)."""
+    if kotlin_return == "Unit":
+        return (None, "PT_VOID", [], "null", None)
+    if kotlin_return == "Boolean":
+        return ("Boolean", "PT_BOOL", ["val ret = alloc<ByteVar>()"], "ret.ptr", "ret.value.toInt() != 0")
+    if kotlin_return == "Int":
+        return ("Int", "PT_INT64", ["val ret = alloc<LongVar>()"], "ret.ptr", "ret.value.toInt()")
+    if kotlin_return == "Long":
+        return ("Long", "PT_INT64", ["val ret = alloc<LongVar>()"], "ret.ptr", "ret.value")
+    if kotlin_return == "Double":
+        return ("Double", "PT_FLOAT64", ["val ret = alloc<DoubleVar>()"], "ret.ptr", "ret.value")
+    if kotlin_return == "Vector2":
+        return ("Vector2", "PT_VECTOR2", ["val ret = allocArray<FloatVar>(2)"], "ret", "Vector2(ret[0].toDouble(), ret[1].toDouble())")
+    if kotlin_return == "Vector3":
+        return (
+            "Vector3",
+            "PT_VECTOR3",
+            ["val ret = allocArray<FloatVar>(3)"],
+            "ret",
+            "Vector3(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble())",
+        )
+    if kotlin_return == "MemorySegment":
+        return ("MemorySegment", "PT_OBJECT", ["val ret = alloc<LongVar>(); ret.value = 0"], "ret.ptr", "MemorySegment.ofAddress(ret.value)")
+    raise ValueError(f"iOS return kind not audited: {kotlin_return}")
+
+
+def render_ios_helper(function: str, logical_args: tuple[str, ...], kotlin_return: str, tags_used: set[str]) -> str:
+    ret_type, ret_tag, ret_decl, ret_ptr, read_expr = ios_ret_layout(kotlin_return)
+    tags_used.add(ret_tag)
+    params = ["methodBind: MemorySegment", "instance: MemorySegment"]
+    arg_tags: list[str] = []
+    arg_ptr_exprs: list[str] = []
+    cell_decls: list[str] = []
+    for i, kind in enumerate(logical_args):
+        param_type, tag, decls, ptr_expr = ios_arg_layout(kind, i)
+        tags_used.add(tag)
+        params.append(f"a{i}: {param_type}")
+        arg_tags.append(tag)
+        arg_ptr_exprs.append(ptr_expr)
+        cell_decls.extend(decls)
+    n = len(logical_args)
+
+    body: list[str] = list(ret_decl)
+    body.extend(cell_decls)
+    if n > 0:
+        types_inits = "; ".join(f"types[{i}] = {tag}" for i, tag in enumerate(arg_tags))
+        ptrs_inits = "; ".join(f"ptrs[{i}] = {expr}" for i, expr in enumerate(arg_ptr_exprs))
+        body.append(f"val types = allocArray<IntVar>({n}); {types_inits}")
+        body.append(f"val ptrs = allocArray<COpaquePointerVar>({n}); {ptrs_inits}")
+        types_arg, ptrs_arg = "types", "ptrs"
+    else:
+        types_arg, ptrs_arg = "null", "null"
+    body.append(
+        f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "
+        f"{types_arg}, {ptrs_arg}, {n}, {ret_tag}, {ret_ptr})"
+    )
+    body.append("Unit" if read_expr is None else read_expr)
+
+    signature_ret = "" if ret_type is None else f": {ret_type}"
+    indented_body = "\n".join(f"        {line}" for line in body)
+    return (
+        f"fun ObjectCalls.{function}({', '.join(params)}){signature_ret} =\n"
+        f"    memScoped {{\n{indented_body}\n    }}"
+    )
+
+
+def collect_ios_shapes(
+    classes: list[ApiClass],
+    object_types: set[str],
+    wrapper_classes: set[str],
+    api_classes: dict[str, ApiClass],
+    api_dir: Path,
+) -> dict[str, tuple[tuple[str, ...], str]]:
+    """shape.function -> (logical_args, kotlin_return) for the emitted iOS wrappers.
+
+    Relies on IOS_AUDIT_ONLY being set: `unsupported_reason` then guarantees every
+    surviving method is iOS-marshalable, so the collected shapes are too. Hand-written
+    override helpers are excluded.
+    """
+    registry: dict[str, tuple[tuple[str, ...], str]] = {}
+    for cls in classes:
+        for method_list in cls.methods.values():
+            for method in method_list:
+                if unsupported_reason(cls.name, method, object_types, wrapper_classes, api_classes, api_dir) is not None:
+                    continue
+                shape = candidate_for(method, object_types)
+                if shape is None or shape.function in IOS_HANDWRITTEN_HELPERS:
+                    continue
+                registry.setdefault(shape.function, (method.logical_arg_kinds(object_types), shape.kotlin_return))
+    return registry
+
+
+def render_ios_objectcalls(registry: dict[str, tuple[tuple[str, ...], str]]) -> str:
+    tags_used: set[str] = set()
+    helpers = [
+        render_ios_helper(function, logical_args, kotlin_return, tags_used)
+        for function, (logical_args, kotlin_return) in sorted(registry.items())
+    ]
+    const_lines = [
+        f"private const val {tag} = {IOS_PT_TAG_VALUES[tag]}"
+        for tag in sorted(tags_used, key=lambda name: IOS_PT_TAG_VALUES[name])
+    ]
+    sections = [IOS_OBJECTCALLS_HEADER.rstrip("\n")]
+    if const_lines:
+        sections.append("\n".join(const_lines))
+    if helpers:
+        sections.append("\n\n".join(helpers))
+    else:
+        sections.append("// No conservative iOS helper shapes emitted.")
+    return "\n\n".join(sections) + "\n"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api", type=Path, default=Path("extension_api.json"))
@@ -1421,9 +1705,27 @@ def main() -> int:
     parser.add_argument("--allow-overwrite", action="store_true", help="Allow --emit-class to replace an existing source file.")
     parser.add_argument("--output-dir", type=Path, help="Write drafts to this directory. Defaults to stdout.")
     parser.add_argument("--skip-report", type=Path, help="Write unsupported method reasons to this file.")
+    parser.add_argument(
+        "--ios-emit-class",
+        dest="ios_classes",
+        action="append",
+        default=[],
+        help="Class to render as an iOS wrapper (conservative iOS guardrail); repeatable.",
+    )
+    parser.add_argument(
+        "--ios-output-dir",
+        type=Path,
+        help="Write iOS wrapper drafts here (staging; do not point at the compiled facade). Defaults to stdout.",
+    )
+    parser.add_argument(
+        "--ios-objectcalls",
+        type=Path,
+        help="Write the generated iOS ObjectCalls helper bodies for the --ios-emit-class shape set to this file.",
+    )
+    parser.add_argument("--ios-skip-report", type=Path, help="Write iOS unsupported method reasons to this file.")
     args = parser.parse_args()
-    if not args.classes and not args.emit_classes:
-        parser.error("at least one --class or --emit-class is required")
+    if not args.classes and not args.emit_classes and not args.ios_classes:
+        parser.error("at least one --class, --emit-class, or --ios-emit-class is required")
 
     api_classes = load_api_classes(args.api)
     singleton_names = load_api_singletons(args.api)
@@ -1462,6 +1764,40 @@ def main() -> int:
         print("// Unsupported methods:")
         for line in skip_lines:
             print(f"// - {line}")
+
+    if args.ios_classes:
+        global IOS_AUDIT_ONLY
+        IOS_AUDIT_ONLY = True
+        ios_skip_lines: list[str] = []
+        ios_classes: list[ApiClass] = []
+        for class_name in args.ios_classes:
+            cls = api_classes.get(class_name)
+            if cls is None:
+                raise SystemExit(f"{class_name}: not found in {args.api}")
+            ios_classes.append(cls)
+            content, skips = render_draft(cls, object_types, wrapper_classes, api_classes, args.api_dir, singleton_names)
+            # The generated wrappers are byte-identical to desktop except the
+            # ObjectCalls import must also pull in the generated extension helpers.
+            content = content.replace(
+                "import net.multigesture.kanama.binding.runtime.ObjectCalls\n",
+                "import net.multigesture.kanama.binding.runtime.ObjectCalls\n"
+                "import net.multigesture.kanama.binding.runtime.*\n",
+            )
+            ios_skip_lines.extend(f"{class_name}: {skip}" for skip in skips)
+            if args.ios_output_dir:
+                args.ios_output_dir.mkdir(parents=True, exist_ok=True)
+                (args.ios_output_dir / f"{class_name}.kt").write_text(content, encoding="utf-8")
+            else:
+                print(content)
+
+        if args.ios_objectcalls:
+            registry = collect_ios_shapes(ios_classes, object_types, wrapper_classes, api_classes, args.api_dir)
+            args.ios_objectcalls.parent.mkdir(parents=True, exist_ok=True)
+            args.ios_objectcalls.write_text(render_ios_objectcalls(registry), encoding="utf-8")
+
+        if args.ios_skip_report:
+            args.ios_skip_report.parent.mkdir(parents=True, exist_ok=True)
+            args.ios_skip_report.write_text("\n".join(ios_skip_lines) + ("\n" if ios_skip_lines else ""), encoding="utf-8")
 
     return 0
 
