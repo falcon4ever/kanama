@@ -119,7 +119,36 @@ Platformer3d, both SELFTEST 6/6 / MATRIX 11/11 / 0 guardrail hits.
 Hand-augmented generated files (carry a `// Kanama sugar` member block — re-add on
 regenerate): Node, AnimationPlayer, CanvasItem, Label, Viewport.
 
-## NEXT TASK — T3.3 [O]: wire Input/InputMap for the platformer
+## T3.3 DONE 2026-06-10 (`ba0143c`, device iPhone 15 Pro)
+
+`Input.getAxis`/`isActionJustPressed` were silent stubs (0.0/false) — now real. Added
+`kanama_ios_godot_get_singleton` (C shim export) + `ObjectCalls.getSingleton`; bespoke
+`Input` resolves the singleton + calls the generated StringName helpers
+(`ptrcallWithTwoStringNameArgsRetDouble` get_axis 1958752504,
+`ptrcallWithStringNameAndBoolArgRetBool` is_action_just_pressed 1558498928 — added Input
+to the `--ios-emit-class` union so those helpers emit; Input stays bespoke, Input.kt not
+written). `IosGodotApi.kt` now imports `binding.runtime.*` (extension helpers).
+SELFTEST 9/9 (added input-singleton/get_axis/is_action_just_pressed), MATRIX 11/11, 0 hits.
+`get_vector` not needed by the demo (add when required). setCustomMouseCursor still a
+no-op stub (cosmetic, Match3-only).
+
+GOTCHA (device): the smoke (`ios_visual_smoke.sh`) DOES install (`devicectl device
+install app` then launch), but a manual `--console` relaunch can RACE ahead of the
+smoke's install → "not installed"/stale app. If the console shows the wrong probe or
+"not installed", reinstall the smoke's built `.app`
+(`$WORKDIR/derived/Build/Products/Debug-iphoneos/KanamaIosVisualSmoke.app`) then
+`devicectl device process launch --console`.
+
+## NEXT TASK — T3.4 [S→O]: deploy the FULL platformer demo + interactive input
+
+Build/install the FULL Kenney 3D platformer (not the smoke probe) on the iPhone 15 Pro
+and verify on-device with live input (USER must drive input — agent can't simulate):
+player moves/jumps (CharacterBody3D.moveAndSlide + Input.getAxis now real), animates
+(AnimationPlayer), camera follows, coins collect (Area3D body_entered via custom-
+Callable). Watch: `get_axis` nonzero under input, 0 SIGSEGV / 0 connect / 0 VARIANT
+mismatch. Known gaps that may surface (backlog, not blockers): NodePath `@ScriptProperty`
+(view/target keep defaults), coin counter (`onCoinCollected(Long)` value-arg signal
+dispatch not wired). Then **Phase 5** perf (iPhone 12 + 15 Pro).
 
 Now that the 3D classes are real, the platformer needs polling input to actually move:
 `Input.getVector`/`get_axis`/`is_action_pressed`/`is_action_just_pressed` (action-based,
