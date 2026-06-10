@@ -213,6 +213,18 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Node3D", "get_position", 3360562783L), n3)
     check("vector3", p.x == 1.0 && p.y == 2.0 && p.z == 3.0)
 
+    // Generated-helper round-trip (T3.1): ptrcallWithVector3ArgRetVector3 lives in the
+    // GENERATED ObjectCallsGenerated.kt (extension on ObjectCalls), not hand-written —
+    // it exercises the generator's Vector3 arg-in + Vector3 ret-out codegen against real
+    // Godot. Use a FRESH Node3D (identity transform) so to_global is the identity map
+    // and the assertion is independent of in-tree global-transform semantics; this
+    // isolates the marshalling (arg float32 layout in, ret float32 layout out).
+    val n3b = ObjectCalls.constructObject("Node3D")
+    val g = ObjectCalls.ptrcallWithVector3ArgRetVector3(
+        ObjectCalls.getMethodBind("Node3D", "to_global", 192990374L), n3b, Vector3(10.0, 20.0, 30.0))
+    println("[kanama][ios][kn] OBJECTCALLS SELFTEST generated-vector3 g=(${g.x}, ${g.y}, ${g.z})")
+    check("generated-vector3-arg-ret", g.x == 10.0 && g.y == 20.0 && g.z == 30.0)
+
     ObjectCalls.ptrcallWithBoolArg(
         ObjectCalls.getMethodBind("Node3D", "set_visible", 2586408642L), n3, false)
     check("bool", !ObjectCalls.ptrcallNoArgsRetBool(
