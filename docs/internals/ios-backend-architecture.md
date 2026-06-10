@@ -213,13 +213,32 @@ platformer):
   | `double` | direct | 8 | double |
   | Object/RID | direct ptr | 8 | `PT_OBJECT` |
 
-  **Key gotchas:** *scalar* `float` AND all *scalar* `int`s are **8 bytes** at ptrcall
-  (converted from the smaller C++ type), regardless of `meta`. The 4-byte sizes only
-  apply to **struct components** — Vector2/3/Color use `real_t`(=float32 single-prec)
-  components, Vector2i/3i use int32 components — because `PtrToArg<VectorN>` is direct
-  on the struct. So `set_amount(int)` and `set_volume_db(float)` both take 8-byte
-  cells, but `Vector2i(x,y)` lays two 4-byte int32s. Passing the wrong width makes
-  Godot read past a too-small cell → garbage. (The scalar-float case was the
-  inaudible-audio bug; the scalar-int case was masked by a small-value self-test.)
+  **Key gotcha — only SCALARS widen.** *scalar* `float` AND all *scalar* `int`s are
+  **8 bytes** at ptrcall (converted from the smaller C++ type), regardless of `meta`.
+  Struct/container types are `PtrToArgDirect`/`PtrToArgByReference` — passed as their
+  **native bytes, NOT widened**:
+
+  | Godot type group | ptrcall layout | notes |
+  |---|---|---|
+  | real_t structs: Vector2/3/4, Rect2, Plane, Quaternion, AABB, Basis, Transform2D/3D, Projection | N× **float32** (single-prec) | components are `real_t` (centralize like desktop `GodotReal`) |
+  | int structs: Vector2i/3i/4i, Rect2i | N× **int32** (4B) | NOT widened — unlike scalar ints |
+  | Color | 4× **float32** | always float32 (not real_t) |
+  | Object, RID | 8B pointer/handle | |
+  | String, StringName, NodePath | constructed C-side from a string | CONSTRUCT tag |
+  | Callable, Signal, Dictionary, Array, Packed* | opaque handle | defer / skip initially |
+
+  So `set_amount(int)`/`set_volume_db(float)` take 8-byte cells, but `Vector2i(x,y)`
+  lays two 4-byte int32s and `Vector3(x,y,z)` three 4-byte float32s. Source:
+  `core/variant/method_ptrcall.h`. (The scalar-float case was the inaudible-audio bug;
+  the scalar-int case was masked by int32 conversion + small self-test values.)
+
+- **Guardrail: the generator emits ONLY audited types.** Like the desktop generator's
+  `--skip-report`, the iOS emission must refuse any method whose arg/return types
+  aren't in the audited table above — skipped, never guessed. An un-audited type can
+  therefore never silently produce a wrong-width helper. As each new type is added to
+  the table it also gets a **width-sensitive** row in the debug-gated self-test matrix
+  (use values where a wrong width fails — a small value can mask it, as the int bug
+  showed). The matrix + ObjectCalls probe are the ptrcall path's only runtime check
+  (`check_call_error`/`check_variant_arg` only cover the Variant path).
 - **Validate on device.** Every change ends with an on-device run (0 SIGSEGV baseline,
   guardrail logs clean).
