@@ -200,15 +200,26 @@ platformer):
 - **GDExtension virtual `args[i]` is already a pointer to the argument** — do not
   double-dereference StringName args (a past bug; see the connect/signal history in
   `kanama-ios-support.md`).
-- **Scalar `float` arg/return ⇒ 8-byte `double` at ptrcall.** Godot's
-  `PtrToArg<float>` is `PtrToArgConvert<float,double>`, so a *scalar* float method
-  parameter/return is encoded as a `double` (8 bytes) and converted float↔double
-  internally — regardless of the API's `meta: "float"`. The generated `ObjectCalls`
-  helper for a scalar float must therefore marshal 8 bytes (Kotlin `Double`,
-  narrowing to/from `Float` at the API edge), NOT 4. **Only Vector/Color/struct
-  *components* (`real_t`) are 4 bytes** in single-precision builds. Passing 4 bytes
-  for a scalar float makes Godot read 8 from a 4-byte cell → garbage. (Found by the
-  T2.1 self-test matrix; was also the inaudible-audio root cause — `set_volume_db` is
-  a scalar float.) `int` follows `meta` (int32 vs int64) directly.
+- **Authoritative ptrcall scalar width table** (from Godot `core/variant/method_ptrcall.h`).
+  This is THE type→PT-tag mapping for the generator; getting it wrong corrupts that
+  type across the whole API:
+
+  | Godot scalar type | ptrcall encoding | bytes | iOS handling |
+  |---|---|---|---|
+  | `bool` | `convert<bool,uint8_t>` | 1 | `PT_BOOL` (uint8) |
+  | `int8/16/32`, `uint8/16/32` | `convert<…,int64_t>` | **8** | lay int64 (widen) |
+  | `int64`, `uint64` | direct | 8 | int64 |
+  | `float` | `convert<float,double>` | **8** | lay double (widen Float→Double) |
+  | `double` | direct | 8 | double |
+  | Object/RID | direct ptr | 8 | `PT_OBJECT` |
+
+  **Key gotchas:** *scalar* `float` AND all *scalar* `int`s are **8 bytes** at ptrcall
+  (converted from the smaller C++ type), regardless of `meta`. The 4-byte sizes only
+  apply to **struct components** — Vector2/3/Color use `real_t`(=float32 single-prec)
+  components, Vector2i/3i use int32 components — because `PtrToArg<VectorN>` is direct
+  on the struct. So `set_amount(int)` and `set_volume_db(float)` both take 8-byte
+  cells, but `Vector2i(x,y)` lays two 4-byte int32s. Passing the wrong width makes
+  Godot read past a too-small cell → garbage. (The scalar-float case was the
+  inaudible-audio bug; the scalar-int case was masked by a small-value self-test.)
 - **Validate on device.** Every change ends with an on-device run (0 SIGSEGV baseline,
   guardrail logs clean).

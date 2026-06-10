@@ -69,11 +69,13 @@ object ObjectCalls {
             ret.value.toInt() != 0
         }
 
+    // All Godot scalar ints are 8 bytes (int64) at ptrcall (PtrToArg<int32_t> =
+    // convert<int32_t,int64_t>), so int returns read 8 bytes then narrow.
     fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int =
         memScoped {
-            val ret = alloc<IntVar>()
-            kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_INT32, ret.ptr)
-            ret.value
+            val ret = alloc<LongVar>()
+            kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_INT64, ret.ptr)
+            ret.value.toInt()
         }
 
     fun ptrcallNoArgsRetLong(methodBind: MemorySegment, instance: MemorySegment): Long =
@@ -122,10 +124,11 @@ object ObjectCalls {
             Unit
         }
 
+    // Scalar int args are 8 bytes (int64) at ptrcall — widen the Kotlin Int.
     fun ptrcallWithIntArg(methodBind: MemorySegment, instance: MemorySegment, value: Int) =
         memScoped {
-            val cell = alloc<IntVar>(); cell.value = value
-            val types = allocArray<IntVar>(1); types[0] = PT_INT32
+            val cell = alloc<LongVar>(); cell.value = value.toLong()
+            val types = allocArray<IntVar>(1); types[0] = PT_INT64
             val ptrs = allocArray<COpaquePointerVar>(1); ptrs[0] = cell.ptr.reinterpret<CPointed>()
             kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
             Unit
@@ -224,6 +227,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Node2D", "set_rotation", 373806689L), n2, 0.5)
     check("scalar-float-as-double", ObjectCalls.ptrcallNoArgsRetDouble(
         ObjectCalls.getMethodBind("Node2D", "get_rotation", 1740695150L), n2) == 0.5)
+
+    val parts = ObjectCalls.constructObject("GPUParticles3D")
+    ObjectCalls.ptrcallWithIntArg(
+        ObjectCalls.getMethodBind("GPUParticles3D", "set_amount", 1286410249L), parts, 1234567)
+    check("scalar-int(8-byte)", ObjectCalls.ptrcallNoArgsRetInt(
+        ObjectCalls.getMethodBind("GPUParticles3D", "get_amount", 3905245786L), parts) == 1234567)
 
     println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
 }

@@ -4142,18 +4142,19 @@ static void kanama_ios_ptrcall_selftest(void) {
         KANAMA_IOS_ST_CHECK("float64", out == 2.5);
     }
 
-    // int32: GPUParticles3D.set_amount(64) -> get_amount()
+    // scalar int (GPUParticles3D.set_amount) — 8 bytes at ptrcall
+    // (PtrToArg<int32_t>=convert<int32_t,int64_t>), so lay/read int64.
     {
         int64_t parts = kanama_ios_godot_construct_object("GPUParticles3D");
-        int32_t in = 64;
+        int64_t in = 1234567;
         const void *a[1] = { &in };
-        int32_t t[1] = { KANAMA_IOS_PT_INT32 };
+        int32_t t[1] = { KANAMA_IOS_PT_INT64 };
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("GPUParticles3D","set_amount",1286410249),
             parts, t, a, 1, KANAMA_IOS_PT_VOID, NULL);
-        int32_t out = 0;
+        int64_t out = 0;
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("GPUParticles3D","get_amount",3905245786),
-            parts, NULL, NULL, 0, KANAMA_IOS_PT_INT32, &out);
-        KANAMA_IOS_ST_CHECK("int32", out == 64);
+            parts, NULL, NULL, 0, KANAMA_IOS_PT_INT64, &out);
+        KANAMA_IOS_ST_CHECK("scalar-int(amount) as int64", out == 1234567);
     }
 
     // Vector2 (2x f32): Node2D.set_position(3,4) -> get_position()
@@ -4199,15 +4200,15 @@ static void kanama_ios_ptrcall_selftest(void) {
         int64_t child = kanama_ios_godot_construct_object("Node3D");
         int64_t child_cell = child;
         uint8_t force_readable = 0;
-        int32_t internal_mode = 0;
+        int64_t internal_mode = 0; // enum arg — scalar int, 8 bytes at ptrcall
         const void *aca[3] = { &child_cell, &force_readable, &internal_mode };
-        int32_t act[3] = { KANAMA_IOS_PT_OBJECT, KANAMA_IOS_PT_BOOL, KANAMA_IOS_PT_INT32 };
+        int32_t act[3] = { KANAMA_IOS_PT_OBJECT, KANAMA_IOS_PT_BOOL, KANAMA_IOS_PT_INT64 };
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node","add_child",3863233950),
             parent, act, aca, 3, KANAMA_IOS_PT_VOID, NULL);
-        int32_t idx = 0;
+        int64_t idx = 0; // scalar int, 8 bytes at ptrcall
         uint8_t include_internal = 0;
         const void *gca[2] = { &idx, &include_internal };
-        int32_t gct[2] = { KANAMA_IOS_PT_INT32, KANAMA_IOS_PT_BOOL };
+        int32_t gct[2] = { KANAMA_IOS_PT_INT64, KANAMA_IOS_PT_BOOL };
         int64_t got_child = 0;
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node","get_child",541253412),
             parent, gct, gca, 2, KANAMA_IOS_PT_OBJECT, &got_child);
