@@ -139,7 +139,42 @@ smoke's install → "not installed"/stale app. If the console shows the wrong pr
 (`$WORKDIR/derived/Build/Products/Debug-iphoneos/KanamaIosVisualSmoke.app`) then
 `devicectl device process launch --console`.
 
-## NEXT TASK — T3.4 [S→O]: deploy the FULL platformer demo + interactive input
+## T3.4 DONE 2026-06-10 (`d1cd42c`, full platformer user-verified on iPhone 15 Pro)
+
+Full Kenney 3D platformer deployed via `kanama-demos/scripts/ios_device_run.sh`
+(Godot 4.7 beta5, built-in VirtualJoystick; env `KANAMA_IOS_DEVICE`/`KANAMA_IOS_TEAM`,
+args `<godot> <demoDir> net.multigesture.kanama.platformer3d Platformer3D`). User-verified:
+3D renders, joystick movement + jump (real `Input.getAxis`/`moveAndSlide`), animation
+smooth, coins collect, fall→respawn. 0 guardrail/crash. **3 device-found bugs fixed** (all
+silent-stub / iOS-impl bugs):
+- **Vector3.rotated** handedness (off-diagonal terms negated → rotated by -angle) →
+  mirrored camera-relative movement. Replaced with Rodrigues form.
+- **AnimationPlayer.getCurrentAnimation** `""` stub → demo re-fired `play()` every frame
+  (leg jitter + character looked low + block-break hitch). Now caches last `play()` name.
+- **SceneTree.reloadCurrentScene/quit** empty stubs → wired to real ptrcalls (respawn).
+
+Deploy gotchas: `ios_device_run.sh` exit/notification lags (use a watcher loop for PASS);
+a manual `--console` relaunch can race the install; devicectl `--console` only captures
+~1s before detaching (throttle any per-frame diagnostic to <30-frame interval).
+
+Known remaining (backlog, non-blocking): real String-return ptrcall (getCurrentAnimation
+is a cache workaround; also unblocks Label.text get etc.), NodePath `@ScriptProperty`
+delivery (view/target use defaults), coin-counter `onCoinCollected(Long)` value-arg
+signal dispatch, `Input.setCustomMouseCursor`.
+
+## NEXT TASK — Phase 5: 3D perf review (iPhone 12 + 15 Pro)
+
+Measure (a) Godot rendering/GPU vs (b) Kanama scripting/binding overhead separately, on
+BOTH devices, per-frame in `_physics_process` (move_and_slide + velocity + is_on_floor +
+input + animation per character). Get the actual fps (the user asked — deferred here).
+Targets: sustained 60fps on 15 Pro + a documented floor on iPhone 12; binding/script time
+a small fraction of the 16.6ms budget. Measure with per-frame debug logging OFF (it skews
+timing). If over budget, apply the architecture-doc perf guidance (cache MethodBind — done;
+avoid per-call StringName alloc; prefer ptrcall over Variant; fewer crossings) + the
+per-call buffer-alloc reduction (pool/preallocate the memScoped arg/ret buffers — the
+known FFM-vs-iOS gap). See implementation-plan Phase 5.
+
+## (historical) earlier T3.4 brief
 
 Build/install the FULL Kenney 3D platformer (not the smoke probe) on the iPhone 15 Pro
 and verify on-device with live input (USER must drive input — agent can't simulate):
