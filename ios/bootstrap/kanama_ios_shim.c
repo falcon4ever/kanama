@@ -96,6 +96,7 @@ extern void kanama_ios_runtime_dispatch_callable(
     int64_t arg3
 );
 extern void kanama_ios_runtime_release_callable(int64_t callback_id);
+extern void kanama_ios_runtime_objectcalls_selftest(void);
 
 typedef enum {
     KANAMA_IOS_CLASS_SCRIPT_LANGUAGE = 1,
@@ -4216,6 +4217,9 @@ static void kanama_ios_ptrcall_selftest(void) {
     fprintf(stderr, "[kanama][ios][c] PTRCALL SELFTEST MATRIX: %d passed, %d failed\n", pass, fail);
     fflush(stderr);
 #undef KANAMA_IOS_ST_CHECK
+
+    // Also exercise the full Kotlin ObjectCalls path (Kotlin -> generic dispatch -> Godot).
+    kanama_ios_runtime_objectcalls_selftest();
 }
 #endif // KANAMA_IOS_DEBUG_VARIANT_CHECKS
 

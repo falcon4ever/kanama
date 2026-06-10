@@ -70,6 +70,21 @@ work. Architecture context: [ios-backend-architecture.md](./ios-backend-architec
   to the full annotation set as demos need them.
 - **Note:** NOT the cause of the audio bug (Audio's annotations are all recognized).
 
+### real_t precision: iOS hardcodes float32 (single-precision) — centralize like desktop
+- **What:** iOS `ObjectCalls` marshals Vector/struct components as 4-byte float32.
+  Correct for the **standard single-precision** Godot iOS template (confirmed
+  on-device: the T2.1 matrix round-trips Vector2/3 as float32). But real_t width
+  **depends on how Godot was compiled** — a double-precision build makes real_t 8
+  bytes, which would break the hardcoded float32.
+- **Desktop reference:** centralizes this in `net.multigesture.kanama.types.GodotReal`
+  (`SIZE_BYTES`/`writeIndex`, precision-aware). Scalar floats are always `JAVA_DOUBLE`
+  (8 bytes — our scalar-float→double rule); `Color` is always `JAVA_FLOAT` (4 bytes,
+  NOT real_t).
+- **Direction:** introduce an iOS `GodotReal`-equivalent (single point of truth for
+  real_t width, ideally detecting double-precision builds) instead of scattering
+  `toFloat()` / `FloatVar` in the Vector helpers. Low priority while we target the
+  single-precision template.
+
 ## Notes
 - Latent: the generic ClassDB `.create()` pattern is stubbed for engine classes other
   than `AudioStreamPlayer`; use `IosGodot.constructObject(name)` (or the generated
