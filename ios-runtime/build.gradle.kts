@@ -130,6 +130,21 @@ fun objectArgTypeFor(params: List<String>): String {
     return if (t.isBlank()) "GodotObject" else t
 }
 
+// Non-object Kotlin types in demo scripts. A single arg / property of one of these
+// is a VALUE, not a Godot object handle, so it must NOT be wrapped as
+// `net.multigesture.kanama.api.<T>(MemorySegment.ofAddress(...))`. Anything NOT in
+// this set is treated as a Godot object wrapper class.
+val IOS_VALUE_TYPES = setOf(
+    "Long", "Int", "Double", "Float", "Boolean", "String",
+    "NodePath", "StringName", "RID", "Callable",
+    "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", "Vector4i",
+    "Color", "Rect2", "Rect2i", "Transform2D", "Transform3D", "Basis",
+    "Quaternion", "Plane", "AABB",
+)
+
+// Scalar property types the C set_property path delivers + setProperty can assign.
+val IOS_SETTABLE_SCALARS = setOf("Long", "Double", "Float", "String", "Boolean", "Int")
+
 fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind {
     if (params.isEmpty()) return IosScriptBridgeKind.ZERO_ARG
     if (params.size == 1) {
@@ -137,6 +152,11 @@ fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind 
         return when {
             t == "Vector2i" -> IosScriptBridgeKind.VECTOR2I_ARG
             t == "Double" || t == "Float" -> IosScriptBridgeKind.DOUBLE_ARG
+            // Only object-typed single args use the object bridge. A non-object value
+            // arg (e.g. a `Long` signal payload) has no typed bridge yet, so skip it
+            // rather than mis-wrapping it as an object handle (was emitting invalid
+            // `net.multigesture.kanama.api.Long(...)`). Backlog: typed value-arg bridges.
+            t in IOS_VALUE_TYPES -> IosScriptBridgeKind.UNSUPPORTED
             else -> IosScriptBridgeKind.OBJECT_ARG
         }
     }
@@ -227,15 +247,28 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                     } else ""
                     val baseType = propertyType.removeSuffix("?").trim()
                     val isNullable = propertyType.endsWith("?")
-                    val isScalar = !isList && listOf("Long", "Double", "Float", "String", "Boolean", "Int").contains(baseType)
-                    val isObject = !isList && !isScalar
-                    val className = if (isList) "" else baseType
+                    val isScalar = !isList && IOS_SETTABLE_SCALARS.contains(baseType)
+                    // Value types (NodePath/Vector*/Color/...) are NOT Godot object
+                    // handles and are not delivered by the C set_property path, so they
+                    // are neither object nor settable-scalar: skip them (leave the Kotlin
+                    // default; scripts that use NodePath defaults tolerate this). This
+                    // also stops the old bug of emitting
+                    // `net.multigesture.kanama.api.NodePath(MemorySegment.ofAddress(value))`.
+                    val isValueType = !isList && IOS_VALUE_TYPES.contains(baseType)
+                    val isSkippedValue = isValueType && !isScalar
+                    val isObject = !isList && !isValueType
+                    if (isSkippedValue) {
+                        println("WARNING: [kanama-ios] $className.$propertyName ($baseType) — no iOS @ScriptProperty path for this value type, will keep its Kotlin default")
+                    }
+                    // godotClassName left empty for skipped value types so setProperty
+                    // emits no case for them (index numbering is preserved).
+                    val propertyGodotClass = if (isList || isSkippedValue) "" else baseType
                     val annotation = pendingAnnotations.firstOrNull(::isIosScriptPropertyAnnotation).orEmpty()
                     properties += IosScriptPropertyModel(
                         godotName = registeredMethodName(annotation, propertyName),
                         kotlinName = propertyName,
                         isObjectType = isObject,
-                        godotClassName = className,
+                        godotClassName = propertyGodotClass,
                         isList = isList,
                         listElementClassName = listElemClass,
                         isNullable = isNullable,
