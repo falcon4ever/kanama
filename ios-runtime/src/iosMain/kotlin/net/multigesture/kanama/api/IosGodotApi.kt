@@ -240,41 +240,7 @@ class SignalConnection internal constructor() : AutoCloseable {
     }
 }
 
-open class Resource(handle: MemorySegment) : GodotObject(handle)
-
-open class Texture2D(handle: MemorySegment) : Resource(handle)
-
-open class CanvasItem(handle: MemorySegment) : Node(handle) {
-    fun getViewportRect(): Rect2 =
-        IosGodot.canvasItemGetViewportRect(handle.address())
-
-    fun getLocalMousePosition(): Vector2 =
-        IosGodot.canvasItemGetLocalMousePosition(handle.address())
-}
-
-open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
-    var position: Vector2
-        get() = IosGodot.node2dGetPosition(handle.address())
-        set(value) {
-            IosGodot.node2dSetPosition(handle.address(), value)
-        }
-
-    var scale: Vector2
-        get() = IosGodot.node2dGetScale(handle.address())
-        set(value) {
-            IosGodot.node2dSetScale(handle.address(), value)
-        }
-
-}
-
-open class Control(handle: MemorySegment) : CanvasItem(handle)
-
 open class StaticBody3D(handle: MemorySegment) : Node3D(handle)
-
-class Viewport(handle: MemorySegment) : Node(handle) {
-    fun getVisibleRect(): Rect2 =
-        IosGodot.viewportGetVisibleRect(handle.address())
-}
 
 class SceneTree(handle: MemorySegment) : Node(handle) {
     fun quit() {
@@ -287,56 +253,6 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
         suspend fun delaySeconds(seconds: Double) {
             delay((seconds * 1000.0).toLong().coerceAtLeast(0L))
         }
-    }
-}
-
-class Label(handle: MemorySegment) : Control(handle) {
-    var text: String
-        get() = ""
-        set(value) {
-            IosGodot.setObjectText(handle.address(), value)
-        }
-
-    fun setText(value: String) {
-        text = value
-    }
-}
-
-class Sprite2D(handle: MemorySegment) : Node2D(handle) {
-    var texture: Texture2D?
-        get() = null
-        set(value) {
-            setTexture(value)
-        }
-
-    var modulate: Color
-        get() = Color(1f, 1f, 1f)
-        set(value) {
-            IosGodot.canvasItemSetModulate(handle.address(), value)
-        }
-
-    fun setTexture(texture: Texture2D?) {
-        IosGodot.sprite2dSetTexture(handle.address(), texture?.handle?.address() ?: 0L)
-    }
-}
-
-open class Area2D(handle: MemorySegment) : Node2D(handle)
-
-class GPUParticles2D(handle: MemorySegment) : Node2D(handle) {
-    var emitting: Boolean
-        get() = false
-        set(value) {
-            IosGodot.gpuParticles2dSetEmitting(handle.address(), value)
-        }
-
-    var lifetime: Double
-        get() = 0.0
-        set(value) {
-            IosGodot.gpuParticles2dSetLifetime(handle.address(), value)
-        }
-
-    fun restart(keepSeed: Boolean = false) {
-        IosGodot.gpuParticles2dRestart(handle.address(), keepSeed)
     }
 }
 
@@ -417,13 +333,6 @@ class Tween(handle: MemorySegment) : GodotObject(handle) {
         const val TRANS_ELASTIC = 6L
         const val EASE_OUT = 1L
     }
-}
-
-class PackedScene(handle: MemorySegment) : Resource(handle) {
-    fun instantiate(editState: Long = 0L): Node? =
-        IosGodot.packedSceneInstantiate(handle.address(), editState).takeIf { it != 0L }?.let {
-            Node(MemorySegment.ofAddress(it))
-        }
 }
 
 class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
