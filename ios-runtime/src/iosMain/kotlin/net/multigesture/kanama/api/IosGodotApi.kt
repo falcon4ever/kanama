@@ -3,6 +3,8 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.* // generated ObjectCalls.* extension helpers
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.CName
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -357,14 +359,21 @@ class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
 }
 
 object Input {
+    private val singleton: MemorySegment by lazy { ObjectCalls.getSingleton("Input") }
+    private val getAxisBind by lazy { ObjectCalls.getMethodBind("Input", "get_axis", 1958752504L) }
+    private val isActionJustPressedBind by lazy {
+        ObjectCalls.getMethodBind("Input", "is_action_just_pressed", 1558498928L)
+    }
+
+    // Cosmetic; not wired on iOS yet (needs Texture2D arg marshalling). Backlog.
     fun setCustomMouseCursor(texture: Texture2D?, shape: Long = 0L, hotspot: Vector2 = Vector2.ZERO) {
     }
 
     fun getAxis(negativeAction: String, positiveAction: String): Double =
-        0.0
+        ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getAxisBind, singleton, negativeAction, positiveAction)
 
-    fun isActionJustPressed(action: String): Boolean =
-        false
+    fun isActionJustPressed(action: String, exactMatch: Boolean = false): Boolean =
+        ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionJustPressedBind, singleton, action, exactMatch)
 }
 
 object Mathf {

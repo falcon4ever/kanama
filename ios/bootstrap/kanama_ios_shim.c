@@ -1556,6 +1556,16 @@ int64_t kanama_ios_godot_construct_object(const char *class_name) {
     return (int64_t)(intptr_t)object;
 }
 
+// Public cinterop export: resolve a Godot engine singleton by name (Input, Engine, …)
+// for the generated/bespoke wrappers (ObjectCalls.getSingleton). Mirrors desktop's
+// global_get_singleton; the returned handle is borrowed (engine-owned, do not free).
+int64_t kanama_ios_godot_get_singleton(const char *name) {
+    if (name == NULL) {
+        return 0;
+    }
+    return (int64_t)(intptr_t)kanama_ios_global_singleton(name);
+}
+
 void kanama_ios_godot_object_queue_free(int64_t object) {
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_node_queue_free_bind,

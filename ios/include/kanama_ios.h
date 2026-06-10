@@ -40,6 +40,8 @@ void kanama_ios_godot_ptrcall_string_arg(
 
 int64_t kanama_ios_godot_construct_object(const char *class_name);
 
+int64_t kanama_ios_godot_get_singleton(const char *name);
+
 void kanama_ios_godot_object_queue_free(int64_t object);
 
 void kanama_ios_godot_node_add_child(int64_t parent, int64_t child);

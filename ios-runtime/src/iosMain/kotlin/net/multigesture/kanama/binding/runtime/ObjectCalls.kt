@@ -24,6 +24,7 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.value
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -56,6 +57,11 @@ object ObjectCalls {
 
     fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =
         MemorySegment.ofAddress(kanama_ios_godot_get_method_bind(className, methodName, hash))
+
+    // Resolve a Godot engine singleton (Input, Engine, …). Mirrors desktop ObjectCalls;
+    // used by the bespoke Input glue (and generated singleton wrappers, longer term).
+    fun getSingleton(className: String): MemorySegment =
+        MemorySegment.ofAddress(kanama_ios_godot_get_singleton(className))
 
     // ---- no-arg ----
     fun ptrcallNoArgs(methodBind: MemorySegment, instance: MemorySegment) {
@@ -245,6 +251,19 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("GPUParticles3D", "set_amount", 1286410249L), parts, 1234567)
     check("scalar-int(8-byte)", ObjectCalls.ptrcallNoArgsRetInt(
         ObjectCalls.getMethodBind("GPUParticles3D", "get_amount", 3905245786L), parts) == 1234567)
+
+    // T3.3: Input singleton + action polling marshalling. With no live input the values
+    // are 0.0/false, but this validates getSingleton + the generated StringName-arg
+    // helpers (ptrcallWithTwoStringNameArgsRetDouble / ptrcallWithStringNameAndBoolArgRetBool)
+    // on device. The gameplay assertion (nonzero under input) is T3.4's full-demo run.
+    val inputSingleton = ObjectCalls.getSingleton("Input")
+    check("input-singleton", inputSingleton.address() != 0L)
+    val axis = ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(
+        ObjectCalls.getMethodBind("Input", "get_axis", 1958752504L), inputSingleton, "ui_left", "ui_right")
+    check("input-get_axis(no-input==0)", axis == 0.0)
+    val jumped = ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(
+        ObjectCalls.getMethodBind("Input", "is_action_just_pressed", 1558498928L), inputSingleton, "ui_accept", false)
+    check("input-is_action_just_pressed(no-input==false)", !jumped)
 
     println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
 }
