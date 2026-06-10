@@ -245,13 +245,19 @@ class SignalConnection internal constructor() : AutoCloseable {
 open class StaticBody3D(handle: MemorySegment) : Node3D(handle)
 
 class SceneTree(handle: MemorySegment) : Node(handle) {
-    fun quit() {
+    fun quit(exitCode: Int = 0) {
+        ObjectCalls.ptrcallWithIntArg(quitBind, handle, exitCode)
     }
 
-    fun reloadCurrentScene() {
-    }
+    fun reloadCurrentScene(): Long =
+        ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, handle)
 
     companion object {
+        private val quitBind by lazy { ObjectCalls.getMethodBind("SceneTree", "quit", 1995695955L) }
+        private val reloadCurrentSceneBind by lazy {
+            ObjectCalls.getMethodBind("SceneTree", "reload_current_scene", 166280745L)
+        }
+
         suspend fun delaySeconds(seconds: Double) {
             delay((seconds * 1000.0).toLong().coerceAtLeast(0L))
         }

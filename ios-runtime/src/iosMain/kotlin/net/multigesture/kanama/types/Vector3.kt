@@ -54,11 +54,26 @@ data class Vector3(
         return if (len > maxLength && len > 0.0) normalized() * maxLength else this
     }
 
+    /**
+     * Rotates this vector about [axis] by [angle] radians, matching Godot's
+     * `Vector3.rotated` (right-handed, same handedness as the engine). General
+     * axis-angle (Rodrigues) form so any axis is correct — the previous iOS impl only
+     * handled UP and rotated by the WRONG sign (off-diagonal terms negated), which
+     * mirrored camera-relative movement on device.
+     */
     fun rotated(axis: Vector3, angle: Double): Vector3 {
-        if (axis.normalized() != UP) return this
+        val a = axis.normalized()
         val c = cos(angle)
         val s = sin(angle)
-        return Vector3(x * c - z * s, y, x * s + z * c)
+        val dot = x * a.x + y * a.y + z * a.z
+        val cx = a.y * z - a.z * y
+        val cy = a.z * x - a.x * z
+        val cz = a.x * y - a.y * x
+        return Vector3(
+            x * c + cx * s + a.x * dot * (1.0 - c),
+            y * c + cy * s + a.y * dot * (1.0 - c),
+            z * c + cz * s + a.z * dot * (1.0 - c),
+        )
     }
 
     companion object {

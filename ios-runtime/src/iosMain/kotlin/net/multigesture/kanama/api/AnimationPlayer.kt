@@ -88,6 +88,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, handle)
     }
     fun play(name: String, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
+        currentAnimationName = name // Kanama sugar (hand): track for getCurrentAnimation
         ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(playBind, handle, name, customBlend, customSpeed, fromEnd)
     }
     fun playSectionWithMarkers(name: String, startMarker: String, endMarker: String, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
@@ -192,10 +193,14 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
 
     // ── Kanama sugar (not generated from Godot docs) ──────────────────────────
 
-    // get_current_animation() returns StringName — String-return ptrcall not wired yet.
-    // Bespoke stub (returns "") until that path is implemented.
-    // Backlog: docs/internals/ios-backend-backlog.md.
-    fun getCurrentAnimation(): String = ""
+    // get_current_animation() returns StringName — a String-return ptrcall isn't wired
+    // yet. Track the last name passed to play() instead (the demos only change animation
+    // via play()), so `if (getCurrentAnimation() != "walk") play("walk")` stops
+    // re-triggering every frame (which caused the walk/idle animation to jitter).
+    // Backlog: real String-return ptrcall (then read Godot's actual current_animation).
+    private var currentAnimationName: String = ""
+
+    fun getCurrentAnimation(): String = currentAnimationName
 
     object Signals {
         const val currentAnimationChanged: String = "current_animation_changed"
