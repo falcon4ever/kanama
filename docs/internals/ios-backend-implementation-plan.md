@@ -84,8 +84,8 @@ pattern-following), O = Opus (contract design + risky marshalling / crash debugg
 
 | Task | Owner | Status | Done by | Validate | Guardrail |
 |---|---|---|---|---|---|
-| T4.1 Replace hand-written classes in `IosGodotApi.kt` with generated output; delete dead stubs | S (+O review) | ☐ | | Grep finds no empty-body / `return false\|0.0\|null` stub methods left; `installIosAddon` compiles clean | no-silent-stubs |
-| T4.2 Re-run Match3 on device (2D regression) | S | ☐ | | Matches known-good baseline: tiles spawn, swipe swaps, 0 SIGSEGV / 0 connect failures | guardrail clean |
+| T4.1 Replace hand-written classes in `IosGodotApi.kt` with generated output; delete dead stubs | S (+O review) | ▶ | Opus+Sonnet 2026-06-10 (**3D slice done**) | **3D slice ✅** (`48d436f`): generated Node/Node3D/CharacterBody3D/Camera3D/Area3D/CollisionShape3D/GPUParticles3D/AnimationPlayer + bases (VisualInstance3D/GeometryInstance3D/CollisionObject3D/PhysicsBody3D/AnimationMixer) replace hand stubs; velocity/moveAndSlide/isOnFloor now real. Generator hardened (no @JvmStatic on iOS, closed-island `IOS_EMIT_CLASSES`, custom-section suppression). Both demos compile; harness green. **2D slice remaining** (CanvasItem/Node2D/Sprite2D/Area2D/GPUParticles2D/Label/Control/Viewport/PackedScene/Texture2D/Resource). Then grep no-silent-stubs (excl. kept bespoke getCurrentAnimation/Tween). | no-silent-stubs |
+| T4.2 Re-run Match3 on device (2D regression) | S | ▶ | Opus 2026-06-10 (3D-slice gate) | **3D-slice gate ✅ iPhone 15 Pro:** Match3 SELFTEST 6/6 + MATRIX 11/11 + 60fps + 0 guardrail hits, and Platformer3d scene clean. Re-run after the 2D slice. | guardrail clean |
 
 ## Phase 5 — 3D performance review
 

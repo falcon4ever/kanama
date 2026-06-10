@@ -73,7 +73,42 @@ Kotlin default). Both demos now compile. **Backlog (not blockers):** deliver Nod
 end-to-end — until then the platformer's NodePath props keep their defaults (scripts
 recompute) and the coin counter won't update.
 
-## NEXT TASK — Phase 4 (reordered before T3.2, user decision 2026-06-10)
+## Phase 4 — 3D slice DONE 2026-06-10 (`48d436f`, device iPhone 15 Pro)
+
+Generated 3D wrappers replaced the hand stubs (Node, Node3D, VisualInstance3D,
+GeometryInstance3D, CollisionObject3D, PhysicsBody3D, CharacterBody3D, Camera3D, Area3D,
+CollisionShape3D, GPUParticles3D, AnimationMixer, AnimationPlayer). `velocity`/
+`moveAndSlide`/`isOnFloor` are now real. Device: Match3 + Platformer3d both SELFTEST 6/6,
+MATRIX 11/11, 0 guardrail hits, 60fps. Generator hardening landed (reuse for 2D slice):
+- **No `@JvmStatic` on iOS** (`render_wrap_helpers`/singleton gated on `IOS_AUDIT_ONLY`)
+  — K/N rejects it; `@JvmName` is fine.
+- **Closed-island guardrail** `IOS_EMIT_CLASSES`: a method is skipped unless every Object
+  arg/return wrapper type is also emitted (or root Object→GodotObject). So pass the FULL
+  ancestry + every referenced peer type to `--ios-emit-class`, else methods silently skip.
+- **Desktop CUSTOM_MEMBER_SECTIONS suppressed on iOS**.
+
+**GOTCHAS for the 2D slice:**
+- Generated `Node`/`AnimationPlayer` are **hand-augmented** (Kanama sugar as members,
+  under a `// Kanama sugar` block) — mirrors desktop `Node.kt`. When you re-emit Node
+  (2D slice re-passes `--ios-emit-class Node`), the generator OVERWRITES it → you must
+  re-add the sugar block. The sugar: requireAs/getNodeOrNull/getAsOrNull(x2)/
+  getNodeAsOrNull/createTween/getViewport/getTree/setProcessInput/setProcessUnhandledInput/
+  hide/show (bodies call `IosGodot.*`, which is now `internal`). See `48d436f` Node.kt.
+- `GodotObject` base lost `queueFree()`/`isInGroup()` (now Node-level generated) + gained
+  `fromHandle`/`wrap` companion. Keep that.
+- Demos call these on 2D types — preserve or generate: `Node2D.position/scale` (Vector2),
+  `Sprite2D.texture`(Texture2D?)/`modulate`(Color)/`setTexture`, `Label.text`/`setText`,
+  `Viewport.getVisibleRect():Rect2` (Rect2 NOT audited → bespoke sugar), CanvasItem
+  `getViewportRect`(Rect2)/`getLocalMousePosition`(Vector2). Color/Rect2 returns are NOT
+  in the audited set → those methods generate-skip; keep bespoke (they already work via
+  `IosGodot.*`). `PackedScene.instantiate`, `Tween` family stay bespoke (Variant).
+- Workflow: generate the 2D set to `/tmp`, copy PRISTINE files in, hand-augment the ones
+  needing sugar, delete the matching hand classes from IosGodotApi.kt, compile BOTH demos,
+  Match3 device-regress. Then grep no-silent-stubs.
+
+## NEXT TASK — Phase 4 2D slice (then the original T3.2/T3.3/T3.4)
+
+## (historical) Phase 4 plan (reordered before T3.2, user decision 2026-06-10)
 
 Migrate the hand-written `IosGodotApi.kt` Godot-API wrapper classes to GENERATED
 wrappers (via the T3.1 `--ios-emit-class`/`--ios-objectcalls` target), deleting the
