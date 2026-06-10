@@ -79,7 +79,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_ease
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_trans
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_viewport_get_visible_rect
 import net.multigesture.kanama.types.Color
-import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -129,15 +128,8 @@ open class GodotObject(
 
     fun requireOpenHandle(): MemorySegment = handle
 
-    fun queueFree() {
-        IosGodot.objectQueueFree(handle.address())
-    }
-
     fun isClass(className: String): Boolean =
         className.isNotBlank() && IosGodot.objectIsClass(handle.address(), className)
-
-    fun isInGroup(group: String): Boolean =
-        group.isNotBlank() && IosGodot.nodeIsInGroup(handle.address(), group)
 
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
@@ -189,6 +181,11 @@ open class GodotObject(
     companion object {
         const val CONNECT_DEFAULT = 0L
         const val CONNECT_ONE_SHOT = 4L
+
+        fun fromHandle(handle: MemorySegment): GodotObject? = wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): GodotObject? =
+            if (handle.address() == 0L) null else GodotObject(handle)
     }
 }
 
@@ -247,73 +244,6 @@ open class Resource(handle: MemorySegment) : GodotObject(handle)
 
 open class Texture2D(handle: MemorySegment) : Resource(handle)
 
-open class Node(handle: MemorySegment) : GodotObject(handle) {
-    fun addChild(child: Node) {
-        IosGodot.nodeAddChild(handle.address(), child.handle.address())
-    }
-
-    fun removeChild(child: Node) {
-        IosGodot.nodeRemoveChild(handle.address(), child.handle.address())
-    }
-
-    fun getChildCount(): Long =
-        IosGodot.nodeGetChildCount(handle.address())
-
-    fun getChild(index: Int): Node? =
-        IosGodot.nodeGetChild(handle.address(), index).takeIf { it != 0L }?.let {
-            Node(MemorySegment.ofAddress(it))
-        }
-
-    fun getTree(): SceneTree =
-        SceneTree(MemorySegment.ofAddress(IosGodot.nodeGetTree(handle.address())))
-
-    fun getViewport(): Viewport? =
-        IosGodot.nodeGetViewport(handle.address()).takeIf { it != 0L }?.let {
-            Viewport(MemorySegment.ofAddress(it))
-        }
-
-    fun getNodeOrNull(path: String): Node? =
-        IosGodot.nodeGetNodeOrNull(handle.address(), path).takeIf { it != 0L }?.let {
-            Node(MemorySegment.ofAddress(it))
-        }
-
-    fun <T : Node> getAsOrNull(path: String, ctor: (MemorySegment) -> T): T? =
-        getNodeOrNull(path)?.let { ctor(it.handle) }
-
-    fun <T : Node> getAsOrNull(path: NodePath, ctor: (MemorySegment) -> T): T? =
-        getAsOrNull(path.path, ctor)
-
-    fun <T : Node> requireAs(path: String, ctor: (MemorySegment) -> T): T =
-        getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
-
-    fun <T : Node> requireAs(path: NodePath, ctor: (MemorySegment) -> T): T =
-        requireAs(path.path, ctor)
-
-    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (MemorySegment) -> T): T? =
-        getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
-
-    fun createTween(): Tween? =
-        IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
-            Tween(MemorySegment.ofAddress(it))
-        }
-
-    fun setProcessInput(enable: Boolean) {
-        IosGodot.nodeSetProcessInput(handle.address(), enable)
-    }
-
-    fun setProcessUnhandledInput(enable: Boolean) {
-        IosGodot.nodeSetProcessUnhandledInput(handle.address(), enable)
-    }
-
-    fun hide() {
-        IosGodot.canvasItemHide(handle.address())
-    }
-
-    fun show() {
-        IosGodot.canvasItemShow(handle.address())
-    }
-}
-
 open class CanvasItem(handle: MemorySegment) : Node(handle) {
     fun getViewportRect(): Rect2 =
         IosGodot.canvasItemGetViewportRect(handle.address())
@@ -337,85 +267,9 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
 
 }
 
-open class Node3D(handle: MemorySegment) : Node(handle) {
-    var position: Vector3
-        get() = IosGodot.node3dGetPosition(handle.address())
-        set(value) {
-            IosGodot.node3dSetPosition(handle.address(), value)
-        }
-
-    var rotation: Vector3
-        get() = IosGodot.node3dGetRotation(handle.address())
-        set(value) {
-            IosGodot.node3dSetRotation(handle.address(), value)
-        }
-
-    var rotationDegrees: Vector3
-        get() = rotation * (180.0 / PI)
-        set(value) {
-            rotation = value * (PI / 180.0)
-        }
-
-    var scale: Vector3
-        get() = IosGodot.node3dGetScale(handle.address())
-        set(value) {
-            IosGodot.node3dSetScale(handle.address(), value)
-        }
-
-    var globalPosition: Vector3
-        get() = IosGodot.node3dGetGlobalPosition(handle.address())
-        set(value) {
-            IosGodot.node3dSetGlobalPosition(handle.address(), value)
-        }
-
-    fun rotateY(angle: Double) {
-        IosGodot.node3dRotateY(handle.address(), angle)
-    }
-}
-
 open class Control(handle: MemorySegment) : CanvasItem(handle)
 
-class Camera3D(handle: MemorySegment) : Node3D(handle)
-
-open class Area3D(handle: MemorySegment) : Node3D(handle) {
-    object Signals {
-        const val bodyEntered: String = "body_entered"
-    }
-}
-
 open class StaticBody3D(handle: MemorySegment) : Node3D(handle)
-
-class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
-    fun setDisabled(disabled: Boolean) {
-        IosGodot.collisionShape3dSetDisabled(handle.address(), disabled)
-    }
-}
-
-class GPUParticles3D(handle: MemorySegment) : Node3D(handle) {
-    var emitting: Boolean
-        get() = false
-        set(value) {
-            IosGodot.gpuParticles3dSetEmitting(handle.address(), value)
-        }
-
-    fun setEmitting(value: Boolean) {
-        emitting = value
-    }
-
-    fun restart(keepSeed: Boolean = false) {
-        IosGodot.gpuParticles3dRestart(handle.address(), keepSeed)
-    }
-}
-
-class CharacterBody3D(handle: MemorySegment) : Node3D(handle) {
-    var velocity: Vector3 = Vector3.ZERO
-
-    fun moveAndSlide(): Boolean =
-        false
-
-    fun isOnFloor(): Boolean =
-        false
-}
 
 class Viewport(handle: MemorySegment) : Node(handle) {
     fun getVisibleRect(): Rect2 =
@@ -517,22 +371,6 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
     companion object {
         fun create(): AudioStreamPlayer =
             AudioStreamPlayer(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer")))
-    }
-}
-
-class AnimationPlayer(handle: MemorySegment) : Node(handle) {
-    fun getCurrentAnimation(): String =
-        ""
-
-    fun play(
-        name: String = "",
-        customBlend: Double = -1.0,
-        customSpeed: Double = 1.0,
-        fromEnd: Boolean = false,
-    ) {
-    }
-
-    fun setSpeedScale(value: Double) {
     }
 }
 
@@ -677,7 +515,7 @@ inline fun <reified T> Node.kotlinScriptInstance(): T? =
     GodotObject(handle).kotlinScriptInstance<T>()
 
 @OptIn(ExperimentalForeignApi::class)
-private object IosGodot {
+internal object IosGodot {
     private const val LABEL_SET_TEXT_HASH = 83702148L
     private var labelSetTextBind = 0L
 

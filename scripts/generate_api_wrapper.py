@@ -168,6 +168,14 @@ VARARG_RETURN_TYPES = {"void", "Variant", "enum"}
 # emitted iOS wrapper only contains methods whose ObjectCalls helper is also emitted.
 IOS_AUDIT_ONLY = False
 
+# The set of class names emitted in this iOS run. A generated wrapper references its
+# peer wrapper types (Object arg/return types call `Peer.wrap(...)` / use `Peer` as the
+# param/return type), so a method is only emittable if EVERY object type it touches is
+# also emitted (or is the root Object -> GodotObject, which always exists on iOS).
+# Otherwise the generated island won't compile (unresolved peer type / missing
+# `.wrap`). None = no constraint (desktop / single-class fixture default is set in main).
+IOS_EMIT_CLASSES: set[str] | None = None
+
 # Logical arg kinds the iOS generic dispatch + Kotlin layout marshal today. Scalars
 # widen per the width table (int*->int64/8B, float->double/8B); Vector2/3 components
 # are float32; Object is an 8B handle; StringName is constructed C-side from a C
@@ -800,7 +808,20 @@ def ios_method_supported(method: ApiMethod, object_types: set[str]) -> bool:
     shape = candidate_for(method, object_types)
     if shape is None or shape.kotlin_return not in IOS_RET_KOTLIN:
         return False
-    return all(kind in IOS_ARG_KINDS for kind in method.logical_arg_kinds(object_types))
+    logical_args = method.logical_arg_kinds(object_types)
+    if not all(kind in IOS_ARG_KINDS for kind in logical_args):
+        return False
+    # Every referenced object wrapper type must also be emitted on iOS (or be the root
+    # Object -> GodotObject). Keeps the generated island self-contained / compilable.
+    if IOS_EMIT_CLASSES is not None:
+        for kind, arg_type in zip(logical_args, method.argument_types, strict=True):
+            if kind == "Object" and arg_type != "Object" and arg_type not in IOS_EMIT_CLASSES:
+                return False
+        if method.logical_return_kind(object_types) == "Object":
+            return_type = method.return_type
+            if return_type != "Object" and return_type not in IOS_EMIT_CLASSES:
+                return False
+    return True
 
 
 def unsupported_reason(
@@ -986,7 +1007,7 @@ def render_method(
     )
     lines = []
     if singleton:
-        lines.append("    @JvmStatic")
+        (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
     lines.extend(
         [
             f"    fun {function_name}({params}){return_type_text} {{",
@@ -1040,7 +1061,7 @@ def render_vararg_method(
     if return_kind == "void":
         lines = []
         if singleton:
-            lines.append("    @JvmStatic")
+            (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
         lines.extend(
             [
                 f"    fun {function_name}({params}) {{",
@@ -1053,7 +1074,7 @@ def render_vararg_method(
     return_expression = f"({call} as Number).toLong()" if return_kind == "enum" else call
     lines = []
     if singleton:
-        lines.append("    @JvmStatic")
+        (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
     lines.extend(
         [
             f"    fun {function_name}({params}): {return_type_text} {{",
@@ -1219,9 +1240,11 @@ def has_api_subclasses(class_name: str, api_classes: dict[str, ApiClass]) -> boo
 
 
 def render_wrap_helpers(class_name: str) -> str:
-    return "\n".join(
+    # @JvmStatic is a JVM-only annotation; Kotlin/Native (iOS) rejects it. Omit it for
+    # the iOS target — fromHandle works the same without it.
+    lines = [] if IOS_AUDIT_ONLY else ["        @JvmStatic"]
+    lines.extend(
         [
-            "        @JvmStatic",
             f"        fun fromHandle(handle: MemorySegment): {class_name}? =",
             "            wrap(handle)",
             "",
@@ -1229,12 +1252,13 @@ def render_wrap_helpers(class_name: str) -> str:
             f"            if (handle.address() == 0L) null else {class_name}(handle)",
         ],
     )
+    return "\n".join(lines)
 
 
 def render_singleton_wrap_helpers(class_name: str) -> str:
-    return "\n".join(
+    lines = [] if IOS_AUDIT_ONLY else ["    @JvmStatic"]
+    lines.extend(
         [
-            "    @JvmStatic",
             f"    fun fromHandle(handle: MemorySegment): {class_name}? =",
             "        wrap(handle)",
             "",
@@ -1242,6 +1266,7 @@ def render_singleton_wrap_helpers(class_name: str) -> str:
             "        if (handle.address() == 0L) null else this",
         ],
     )
+    return "\n".join(lines)
 
 
 def render_draft(
@@ -1415,7 +1440,11 @@ def render_draft(
     if properties:
         body_sections.append("\n\n".join(properties))
     body_sections.append("\n\n".join(methods) if methods else "    // No conservative instance methods emitted yet.")
-    custom_members = CUSTOM_MEMBER_SECTIONS.get(cls.name)
+    # Desktop hand-written custom sections reference desktop-only types/methods
+    # (e.g. AnimationMixer.getStateMachinePlayback -> AnimationNodeStateMachinePlayback,
+    # getIndexed/setIndexed). They are not part of the conservative iOS surface, so the
+    # iOS target omits them; any iOS equivalent lives in the bespoke sugar layer.
+    custom_members = None if IOS_AUDIT_ONLY else CUSTOM_MEMBER_SECTIONS.get(cls.name)
     if custom_members:
         body_sections.append(custom_members)
     signal_constants = render_signal_constants(cls)
@@ -1456,7 +1485,7 @@ def render_draft(
         if companion_constants:
             companion_sections.append(companion_constants)
         companion_sections.append(render_wrap_helpers(cls.name))
-        custom_companion_members = CUSTOM_COMPANION_MEMBER_SECTIONS.get(cls.name)
+        custom_companion_members = None if IOS_AUDIT_ONLY else CUSTOM_COMPANION_MEMBER_SECTIONS.get(cls.name)
         if custom_companion_members:
             companion_sections.append(custom_companion_members)
         companion_sections.append("\n\n".join(binds) if binds else "        // No MethodBinds emitted yet.")
@@ -1766,8 +1795,9 @@ def main() -> int:
             print(f"// - {line}")
 
     if args.ios_classes:
-        global IOS_AUDIT_ONLY
+        global IOS_AUDIT_ONLY, IOS_EMIT_CLASSES
         IOS_AUDIT_ONLY = True
+        IOS_EMIT_CLASSES = set(args.ios_classes)
         ios_skip_lines: list[str] = []
         ios_classes: list[ApiClass] = []
         for class_name in args.ios_classes:
