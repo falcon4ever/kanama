@@ -106,7 +106,30 @@ MATRIX 11/11, 0 guardrail hits, 60fps. Generator hardening landed (reuse for 2D 
   needing sugar, delete the matching hand classes from IosGodotApi.kt, compile BOTH demos,
   Match3 device-regress. Then grep no-silent-stubs.
 
-## NEXT TASK — Phase 4 2D slice (then the original T3.2/T3.3/T3.4)
+## Phase 4 — DONE 2026-06-10 (3D `48d436f` + 2D `1171190`, device iPhone 15 Pro)
+
+Full facade migration complete: every Godot-API wrapper class in the iOS api package is
+now GENERATED; `IosGodotApi.kt` holds only bespoke runtime (GodotObject base, Input, GD,
+Mathf, ResourceLoader, MainThread/KanamaScope, GodotSignal/SignalConnection/
+IosCallableRegistry, Tween/Tweener/PropertyTweener, AudioStreamPlayer, SceneTree, the
+`IosGodot` cinterop object). `ObjectCallsGenerated.kt` = 76 helper extensions (3D+2D
+union). Device-validated: Match3 (2D, generated Control/Node2D/Sprite2D) 64 tiles 60fps +
+Platformer3d, both SELFTEST 6/6 / MATRIX 11/11 / 0 guardrail hits.
+
+Hand-augmented generated files (carry a `// Kanama sugar` member block — re-add on
+regenerate): Node, AnimationPlayer, CanvasItem, Label, Viewport.
+
+## NEXT TASK — T3.3 [O]: wire Input/InputMap for the platformer
+
+Now that the 3D classes are real, the platformer needs polling input to actually move:
+`Input.getVector`/`get_axis`/`is_action_pressed`/`is_action_just_pressed` (action-based,
+not `@OnInput`). Add a C-shim `Input` singleton access + expose in the bespoke `Input`
+object in IosGodotApi.kt. Then **T3.4 [S]**: deploy the FULL platformer demo (not the
+smoke probe) on device — verify movement/jump/animation + coin pickup. (The platformer
+*runtime* compiles; full gameplay needs T3.3 + the value-arg signal dispatch for the coin
+counter — see backlog.) Then **Phase 5** 3D perf review (iPhone 12 + 15 Pro).
+
+## (historical) earlier T3.2/T3.4 ordering
 
 ## (historical) Phase 4 plan (reordered before T3.2, user decision 2026-06-10)
 
