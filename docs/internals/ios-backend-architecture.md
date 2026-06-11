@@ -1,9 +1,10 @@
 # iOS Backend Architecture
 
 How Kanama runs Kotlin game scripts on iOS, and the target architecture for scaling
-the Godot API surface. For the active work plan see
-[ios-backend-implementation-plan.md](./ios-backend-implementation-plan.md); for open
-items see [ios-backend-backlog.md](./ios-backend-backlog.md).
+the Godot API surface. For guardrails, how to stay in sync with desktop/Android, the
+backlog, and per-demo coverage see [ios-backend-roadmap.md](./ios-backend-roadmap.md);
+for the hand-written/stub registry see
+[ios-backend-handwritten.md](./ios-backend-handwritten.md).
 
 ## Why iOS is different from desktop/Android
 
@@ -115,9 +116,9 @@ ObjectCalls  ──┬── desktop actual → Panama/FFM
 
 ## Contract: generic ptrcall dispatch (iOS ObjectCalls)
 
-Decided in T1.2, informed by the helper survey
-([ios-objectcalls-helper-survey.md](./ios-objectcalls-helper-survey.md)): the
-generated wrappers reference ~1467 distinct `ObjectCalls.*` helper shapes (121 for
+Decided in T1.2, informed by a survey of the desktop `ObjectCalls.*` helper shapes
+(regenerable with `grep -rhoE "ObjectCalls\.[A-Za-z0-9_]+" src/main/.../api/ | sort -u`):
+the generated wrappers reference ~1467 distinct `ObjectCalls.*` helper shapes (121 for
 the platformer's classes alone), of which only ~7% map to an existing iOS C
 primitive. Hand-writing a C function per shape is untenable, so:
 
@@ -198,8 +199,7 @@ platformer):
   Variants are checked with `kanama_ios_check_variant_arg` in debug builds. Both must
   log zero in a healthy run.
 - **GDExtension virtual `args[i]` is already a pointer to the argument** — do not
-  double-dereference StringName args (a past bug; see the connect/signal history in
-  `kanama-ios-support.md`).
+  double-dereference StringName args (a past bug in the connect/signal path).
 - **Authoritative ptrcall scalar width table** (from Godot `core/variant/method_ptrcall.h`).
   This is THE type→PT-tag mapping for the generator; getting it wrong corrupts that
   type across the whole API:

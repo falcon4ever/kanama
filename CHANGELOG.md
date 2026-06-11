@@ -9,19 +9,24 @@ versioning once public releases begin.
 
 ### Added
 
-- Added an experimental iOS Kotlin/Native backend spike with a C GDExtension
-  shim, static `.xcframework` build tasks, install task, and docs. This does
-  not yet claim iOS script support.
+- Added an experimental iOS Kotlin/Native backend that runs full Kanama project
+  scripts: a C GDExtension shim plus GENERATED Godot API wrappers (the same
+  wrapper generator as desktop/Android) over a C-shim generic `ptrcall`. Match3
+  and the Kenney 3D platformer are device-validated end to end (live input,
+  signals, animation, scene reload); per-frame Kanama binding overhead measured
+  ~0.63 ms on iPhone 12. iOS remains experimental, not a supported export — see
+  `docs/internals/ios-backend-roadmap.md` for the gaps.
+- Added an iOS hand-written/stub registry: `// KANAMA-IOS-{STUB,HANDWRITTEN,SUGAR}`
+  markers, `scripts/ios_handwritten_report.py` (generates
+  `docs/internals/ios-backend-handwritten.md`), and `scripts/check_ios_no_silent_stubs.py`
+  (fails CI on an un-annotated silent stub). The iOS script parser now warns when a demo
+  uses a Kanama annotation that iOS does not wire (e.g. `@OnUnhandledInput`, `@Rpc`).
 - Added iOS physical-device validation tooling: a visual smoke script with an
   optional Kotlin/Native frame probe that updates a Godot `Label` through a
   cached typed `ptrcall`. Simulator checks remain available for compile/link
   debugging only.
 - Made the iOS install path build device-only xcframeworks by default, with an
   explicit `kanamaIosXcframeworkMode=full` escape hatch for simulator work.
-- Added an iOS `.kt` script-resource probe that registers minimal
-  script-language/resource-loader shims, creates a Godot script instance, and
-  enters Kotlin/Native from `_ready`. This remains a spike and does not yet
-  support arbitrary Kanama project scripts on iOS.
 
 ### Changed
 
@@ -30,6 +35,10 @@ versioning once public releases begin.
   Android plugin builds.
 - Enabled Kotlin Multiplatform cinterop commonization for the experimental
   iOS runtime.
+- `installIosAddon` now preserves a project's Android (and desktop)
+  `kanama.gdextension` library entries instead of overwriting them, so installing
+  the iOS addon no longer regresses Android support (it mirrors `installAddonJar`'s
+  Android-metadata preservation and asserts the entries survive).
 
 ## 0.2.2 - 2026-06-05
 

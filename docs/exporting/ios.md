@@ -14,20 +14,20 @@ The current direction is:
 ## Current Status
 
 The spike builds debug and release iOS `.xcframework` artifacts with device
-`arm64` and optional Apple Silicon simulator `arm64` slices. The Kotlin/Native runtime
-currently proves the loader path, lifecycle callbacks, a main-loop frame
-callback, one cached typed Godot call from Kotlin/Native, and a minimal
-built-in `.kt` script-resource probe:
+`arm64` and optional Apple Silicon simulator `arm64` slices, and runs **full Kanama
+project scripts** through GENERATED Godot API wrappers (the same wrapper generator as
+desktop/Android) over a C-shim generic `ptrcall`:
 
 ```text
-Godot iOS export -> C shim -> Kotlin/Native runtime -> typed ptrcall
+Godot iOS export -> C shim -> Kotlin/Native runtime -> generated wrappers -> ObjectCalls -> ptrcall
 ```
 
-The script probe registers a `ScriptLanguageExtension`, `ScriptExtension`, and
-`.kt` `ResourceFormatLoader`, attaches a test `.kt` resource to a `Label`, and
-uses a Kotlin/Native `_ready` callback to update that owner. The spike can also
-compile selected project scripts into the Kotlin/Native iOS runtime, but it does
-not yet prove full demo gameplay or arbitrary Kanama project scripts on iOS.
+Match3 and the Kenney 3D platformer are device-validated end to end — live virtual-joystick
+input, signals (incl. the platformer coin scoring), animation, and scene reload — with a
+ptrcall self-test matrix and 0 guardrail hits, and ~0.63 ms/frame Kanama binding overhead on
+iPhone 12. iOS is still **experimental, not a supported export**: the audited type set is
+conservative (see the [iOS roadmap](../internals/ios-backend-roadmap.md) for the
+type/bridge gaps that gate broader demos).
 
 ## Build The iOS Artifacts
 
