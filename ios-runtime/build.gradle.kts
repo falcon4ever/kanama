@@ -19,6 +19,7 @@ enum class IosScriptBridgeKind {
     OBJECT_ARG,
     OBJECT_OBJECT_LONG_ARG,
     VECTOR2I_ARG,
+    LONG_ARG,
     UNSUPPORTED,
 }
 
@@ -152,6 +153,9 @@ fun bridgeKindFor(godotName: String, params: List<String>): IosScriptBridgeKind 
         return when {
             t == "Vector2i" -> IosScriptBridgeKind.VECTOR2I_ARG
             t == "Double" || t == "Float" -> IosScriptBridgeKind.DOUBLE_ARG
+            // Single Long/Int value arg (e.g. a coin-count signal payload) -> typed
+            // long bridge (was UNSUPPORTED, which dropped the dispatch -> scoring etc).
+            t == "Long" || t == "Int" -> IosScriptBridgeKind.LONG_ARG
             // Only object-typed single args use the object bridge. A non-object value
             // arg (e.g. a `Long` signal payload) has no typed bridge yet, so skip it
             // rather than mis-wrapping it as an object handle (was emitting invalid
@@ -222,7 +226,7 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                                         functionName,
                                         params.size,
                                         kind,
-                                        if (kind == IosScriptBridgeKind.OBJECT_ARG) objectArgTypeFor(params) else "GodotObject",
+                                        if (kind == IosScriptBridgeKind.OBJECT_ARG || kind == IosScriptBridgeKind.LONG_ARG) objectArgTypeFor(params) else "GodotObject",
                                     )
                                 }
                             annotation.contains("Signal") ->
@@ -366,6 +370,7 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
                 IosScriptBridgeKind.OBJECT_ARG -> null
                 IosScriptBridgeKind.OBJECT_OBJECT_LONG_ARG -> null
                 IosScriptBridgeKind.VECTOR2I_ARG -> null
+                IosScriptBridgeKind.LONG_ARG -> null
                 IosScriptBridgeKind.UNSUPPORTED -> {
                     println("WARNING: [kanama-ios] ${model.className}.${method.kotlinName} (godot: ${method.godotName}) has ${method.argumentCount} args — no iOS bridge kind, will not be dispatched")
                     null
@@ -410,6 +415,16 @@ fun generateIosRegistrySource(models: List<IosScriptModel>): String {
                 builder.appendLine(
                     "        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}(net.multigesture.kanama.types.Vector2i(x.toInt(), y.toInt())); true }",
                 )
+            }
+        }
+        builder.appendLine("        else -> false")
+        builder.appendLine("    }")
+        builder.appendLine()
+        builder.appendLine("    override fun callLong(methodName: String, value: Long): Boolean = when (methodName) {")
+        model.methods.forEach { method ->
+            if (method.bridgeKind == IosScriptBridgeKind.LONG_ARG) {
+                val arg = if (method.objectArgType == "Int") "value.toInt()" else "value"
+                builder.appendLine("        ${kotlinString(method.godotName)} -> { script.${method.kotlinName}($arg); true }")
             }
         }
         builder.appendLine("        else -> false")

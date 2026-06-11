@@ -70,6 +70,11 @@ extern int32_t kanama_ios_runtime_script_instance_call_vector2i(
     int64_t x,
     int64_t y
 );
+extern int32_t kanama_ios_runtime_script_instance_call_long(
+    int64_t instance_handle,
+    int32_t method_index,
+    int64_t value
+);
 extern int32_t kanama_ios_runtime_script_instance_set_property(
     int64_t instance_handle,
     int32_t property_index,
@@ -3536,6 +3541,14 @@ static void kanama_ios_script_instance_call(
                     method_index,
                     vx,
                     vy
+                );
+            } else if (arg_type == KANAMA_IOS_VARIANT_TYPE_INT) {
+                // Single int/long value arg (e.g. a coin-count signal payload).
+                int64_t value = kanama_ios_variant_to_int64(args[0]);
+                ok = kanama_ios_runtime_script_instance_call_long(
+                    instance->runtime_handle,
+                    method_index,
+                    value
                 );
             } else {
                 object_arg = kanama_ios_variant_to_object(args[0]);

@@ -47,6 +47,9 @@ internal interface KanamaIosScriptBridge {
     fun callVector2i(methodName: String, x: Long, y: Long): Boolean =
         false
 
+    fun callLong(methodName: String, value: Long): Boolean =
+        false
+
     fun setProperty(propertyIndex: Int, value: Long): Boolean =
         false
 
@@ -338,6 +341,17 @@ internal object KanamaIosRuntime {
         return ok
     }
 
+    fun callScriptInstanceLong(handle: Long, methodIndex: Int, value: Long): Boolean {
+        val instance = scriptInstances[handle] ?: return false
+        val method = instance.resource.descriptor?.methods?.getOrNull(methodIndex) ?: return false
+        return callScriptInstanceLong(handle, method.name, value)
+    }
+
+    fun callScriptInstanceLong(handle: Long, methodName: String, value: Long): Boolean {
+        val instance = scriptInstances[handle] ?: return false
+        return instance.bridge.callLong(methodName, value)
+    }
+
     fun setScriptInstanceProperty(handle: Long, propertyIndex: Int, value: Long): Boolean {
         val instance = scriptInstances[handle]
         if (instance == null) {
@@ -624,6 +638,15 @@ fun kanamaIosRuntimeScriptInstanceCallVector2i(
     y: Long,
 ): Int =
     if (KanamaIosRuntime.callScriptInstanceVector2i(instanceHandle, methodIndex, x, y)) 1 else 0
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_call_long")
+fun kanamaIosRuntimeScriptInstanceCallLong(
+    instanceHandle: Long,
+    methodIndex: Int,
+    value: Long,
+): Int =
+    if (KanamaIosRuntime.callScriptInstanceLong(instanceHandle, methodIndex, value)) 1 else 0
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_set_property")
