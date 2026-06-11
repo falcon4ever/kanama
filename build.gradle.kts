@@ -1070,6 +1070,11 @@ tasks.register<Copy>("installIosAddon") {
     val extensionListFile = targetProjectDir.map {
         file(it).resolve(".godot/extension_list.cfg")
     }
+    // Mirror installAddonJar: the iOS install overwrites kanama.gdextension with the
+    // iOS+desktop descriptor, which would DROP a project's Android library entries. Detect
+    // existing Android metadata before the copy and re-apply it after, so installing the
+    // iOS addon never regresses Android support (Match3 / 3D-Platformer ship Android).
+    val preserveAndroidExtensionMetadata = objects.property<Boolean>().convention(false)
     val selectedIosXcframeworkMode = iosXcframeworkMode.get().lowercase()
     val useFullIosXcframework = when (selectedIosXcframeworkMode) {
         "device", "iphoneos" -> false
@@ -1112,7 +1117,13 @@ tasks.register<Copy>("installIosAddon") {
                 "Missing -PkanamaIosProjectDir=/absolute/path/to/godot_project for installIosAddon",
             )
         }
-        file(targetProjectDir.get()).resolve("addons/kanama/bin/ios").deleteRecursively()
+        val targetProject = file(targetProjectDir.get())
+        val existingExtension = targetProject.resolve("addons/kanama/kanama.gdextension")
+        preserveAndroidExtensionMetadata.set(
+            targetProject.resolve("android/plugins/KanamaAndroid.gdap").isFile ||
+                (existingExtension.isFile && existingExtension.readText().contains("android_aar_plugin = true")),
+        )
+        targetProject.resolve("addons/kanama/bin/ios").deleteRecursively()
     }
 
     doLast {
@@ -1126,6 +1137,13 @@ tasks.register<Copy>("installIosAddon") {
 
         val extensionFile = file(targetProjectDir.get()).resolve("addons/kanama/kanama.gdextension")
         extensionFile.enableIosKanamaGdextensionMetadata()
+        if (preserveAndroidExtensionMetadata.get()) {
+            extensionFile.enableAndroidKanamaGdextensionMetadata()
+            check(extensionFile.readText().contains("android.debug.arm64")) {
+                "installIosAddon dropped Android gdextension entries for an Android-enabled project " +
+                    "(${extensionFile.absolutePath}) — the iOS install must not regress Android."
+            }
+        }
     }
 }
 
