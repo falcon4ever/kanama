@@ -172,8 +172,17 @@ ptrcall, comparable to C#, can beat interpreted GDScript). No optimization neede
 per-call memScoped buffer-alloc, the FFM gap, never bit). Instrumented temporarily in
 `KanamaIosRuntime.frame()` with `TimeSource.Monotonic` (aggregate-only; per-call logging
 silenced — must measure with logging OFF; the instrument was reverted, not committed).
-**TODO: measure the 15 Pro too** (will be ≤ the 12) and re-capture a clean fps-total
-number (silence the one-time init logs; the console `--console` window is short).
+**15 Pro re-measure attempted, BLOCKED by tooling:** `xcrun devicectl device process
+launch --console` only captures the **startup output burst** then detaches — it does NOT
+stream the ongoing frame loop, so per-frame `PERF` lines (which start after init) are
+never captured for a heavy scene. Gating the C-shim init logs (`39e1415`,
+`g_kanama_log_lifecycle`) shrank the burst but the window then detaches even sooner.
+`idevicesyslog` doesn't help either (app stderr doesn't reach the iOS unified syslog).
+**For future perf work, capture differently:** show fps/ms on an on-screen Label (read
+from a screenshot), or route the perf line through `os_log`/`NSLog` (which `log stream` /
+Console.app CAN read), not `fprintf(stderr)`. The 15 Pro number is logically ≤ the iPhone
+12's 0.63 ms (faster CPU) and the user confirmed it plays smooth; the viability verdict
+(binding cheap) stands without it.
 
 ## Coin scoring FIXED 2026-06-10 (`8ff26c5`) + T3.4 gameplay fixes (`d1cd42c`)
 
@@ -186,10 +195,14 @@ reload/quit stubs (respawn).
 ## Remaining / backlog (none blocking — the spike's core is proven end-to-end)
 
 - **15 Pro perf** measurement + clean fps-total capture (above).
-- **Demo (kanama-demos) config, not Kanama:** auto-rotate both landscape sides →
-  `display/window/handheld/orientation="sensor_landscape"` in the platformer `project.godot`,
-  re-export (writes both Landscape orientations to Info.plist). iPhone-12-warm = normal 3D
-  GPU load (MoltenVK), not Kanama.
+- **Demo orientation (kanama-demos, not Kanama):** set
+  `display/window/handheld/orientation="sensor_landscape"` in the platformer
+  `project.godot` (done, uncommitted in kanama-demos) BUT Godot 4.7 beta5's iOS export
+  still wrote only `UIInterfaceOrientationLandscapeLeft` to the Info.plist → iOS locks the
+  app, no auto-rotate to the other landscape side. **Fix is Godot-export-level** (force
+  BOTH `LandscapeLeft`+`LandscapeRight` into UISupportedInterfaceOrientations — e.g. a
+  post-export Info.plist edit / export-preset additional-plist, or a newer Godot). Not a
+  Kanama issue. iPhone-12-warm = normal 3D GPU load (MoltenVK).
 - **Real String-return ptrcall** (getCurrentAnimation uses a last-play() cache; this would
   make it read Godot's actual current_animation + unblock `Label.text` get,
   `Viewport`/`CanvasItem` string getters).
