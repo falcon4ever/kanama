@@ -356,6 +356,10 @@ static uint64_t g_name__load = 0;
 static uint64_t g_name__debug_get_current_stack_info = 0;
 static uint64_t g_name_push_back = 0;
 static const char *g_pending_script_resource_path = NULL;
+// Per-resource/per-instance lifecycle logging is off by default: it spams startup (one
+// fflush'd line per node — heavy for big scenes), skews perf timing, and floods the
+// device-console capture before the frame loop. Flip to 1 for lifecycle debugging.
+static int g_kanama_log_lifecycle = 0;
 
 // ptrcall argument/return type tags for the generic dispatch
 // (kanama_ios_godot_ptrcall). These describe the ptrcall NATIVE representation,
@@ -3116,7 +3120,9 @@ static void kanama_ios_call_virtual_with_data(
             g_pending_script_resource_path = NULL;
             free(path);
             kanama_ios_init_object_variant((GDExtensionUninitializedVariantPtr)ret, script_object);
-            fprintf(stderr, "[kanama][ios][c] ResourceFormatLoader loaded probe script object=%p\n", script_object);
+            if (g_kanama_log_lifecycle) {
+                fprintf(stderr, "[kanama][ios][c] ResourceFormatLoader loaded probe script object=%p\n", script_object);
+            }
             break;
         }
         default:
@@ -3862,29 +3868,35 @@ static GDExtensionScriptInstancePtr kanama_ios_create_script_instance(
     instance->owner_object = owner_object;
     instance->script_object = script->godot_object;
     instance->script = script;
-    fprintf(stderr, "[kanama][ios][c] create_script_instance: script=%lld owner=%p\n",
-            (long long)script->script_handle, owner_object);
-    fflush(stderr);
+    if (g_kanama_log_lifecycle) {
+        fprintf(stderr, "[kanama][ios][c] create_script_instance: script=%lld owner=%p\n",
+                (long long)script->script_handle, owner_object);
+        fflush(stderr);
+    }
     instance->runtime_handle = kanama_ios_runtime_script_instance_create(
         script->script_handle,
         (int64_t)(intptr_t)owner_object
     );
-    fprintf(stderr, "[kanama][ios][c] create_script_instance: runtime_handle=%lld\n",
-            (long long)instance->runtime_handle);
-    fflush(stderr);
+    if (g_kanama_log_lifecycle) {
+        fprintf(stderr, "[kanama][ios][c] create_script_instance: runtime_handle=%lld\n",
+                (long long)instance->runtime_handle);
+        fflush(stderr);
+    }
     if (instance->runtime_handle == 0) {
         free(instance);
         return NULL;
     }
 
     GDExtensionScriptInstancePtr script_instance = g_script_instance_create(&g_script_instance_info, instance);
-    fprintf(stderr,
-            "[kanama][ios][c] created ScriptInstance script=%lld owner=%p runtime=%lld ptr=%p\n",
-            (long long)script->script_handle,
-            owner_object,
-            (long long)instance->runtime_handle,
-            script_instance);
-    fflush(stderr);
+    if (g_kanama_log_lifecycle) {
+        fprintf(stderr,
+                "[kanama][ios][c] created ScriptInstance script=%lld owner=%p runtime=%lld ptr=%p\n",
+                (long long)script->script_handle,
+                owner_object,
+                (long long)instance->runtime_handle,
+                script_instance);
+        fflush(stderr);
+    }
     return script_instance;
 }
 
