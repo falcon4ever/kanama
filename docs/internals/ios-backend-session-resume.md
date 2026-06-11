@@ -162,7 +162,51 @@ is a cache workaround; also unblocks Label.text get etc.), NodePath `@ScriptProp
 delivery (view/target use defaults), coin-counter `onCoinCollected(Long)` value-arg
 signal dispatch, `Input.setCustomMouseCursor`.
 
-## NEXT TASK — Phase 5: 3D perf review (iPhone 12 + 15 Pro)
+## Phase 5 perf — iPhone 12 measured 2026-06-10 (PASS); 15 Pro pending
+
+**Result (iPhone 12, A14, the honest floor): Kanama per-frame script+binding overhead =
+~0.63 ms/frame** (≈28 script-calls/frame, ~22 µs/call incl. the user Kotlin body; pure
+binding crossing sub-µs) = **~3.8% of the 16.6 ms 60fps budget**. User-confirmed smooth.
+**Verdict: the binding is NOT a bottleneck** — FFM-class (AOT Kotlin/Native + cached typed
+ptrcall, comparable to C#, can beat interpreted GDScript). No optimization needed (the
+per-call memScoped buffer-alloc, the FFM gap, never bit). Instrumented temporarily in
+`KanamaIosRuntime.frame()` with `TimeSource.Monotonic` (aggregate-only; per-call logging
+silenced — must measure with logging OFF; the instrument was reverted, not committed).
+**TODO: measure the 15 Pro too** (will be ≤ the 12) and re-capture a clean fps-total
+number (silence the one-time init logs; the console `--console` window is short).
+
+## Coin scoring FIXED 2026-06-10 (`8ff26c5`) + T3.4 gameplay fixes (`d1cd42c`)
+
+Scoring (`coinCollected(Long)` signal → `Hud._on_coin_collected(Long)`) now works — added a
+typed **LONG_ARG** bridge end-to-end (build.gradle codegen + C-shim VARIANT_TYPE_INT branch
++ runtime `callLong` + `@CName`), mirroring VECTOR2I_ARG. Plus the 3 earlier device-found
+fixes: Vector3.rotated handedness (movement), getCurrentAnimation stub (jitter), SceneTree
+reload/quit stubs (respawn).
+
+## Remaining / backlog (none blocking — the spike's core is proven end-to-end)
+
+- **15 Pro perf** measurement + clean fps-total capture (above).
+- **Demo (kanama-demos) config, not Kanama:** auto-rotate both landscape sides →
+  `display/window/handheld/orientation="sensor_landscape"` in the platformer `project.godot`,
+  re-export (writes both Landscape orientations to Info.plist). iPhone-12-warm = normal 3D
+  GPU load (MoltenVK), not Kanama.
+- **Real String-return ptrcall** (getCurrentAnimation uses a last-play() cache; this would
+  make it read Godot's actual current_animation + unblock `Label.text` get,
+  `Viewport`/`CanvasItem` string getters).
+- **NodePath `@ScriptProperty`** delivery (Player.view / View.target keep their defaults).
+- **Broaden the audited type set** for "standard Kanama" (Transform3D/Basis/Color/RID/
+  Vector*i/Variant/typed-arrays/varargs — each + a self-test matrix row); move iosMain
+  wrapper copies toward `commonMain` + `expect/actual ObjectCalls`; the hand-augmented
+  generated files (Node/AnimationPlayer/CanvasItem/Label/Viewport) want a sustainable
+  custom-section mechanism; project-script regex parser → KSP model.
+- `Input.setCustomMouseCursor`, audio silent-mode AVAudioSession category (engine-side).
+
+## VIABILITY: the spike has proven iOS works + scales the desktop way + is fast enough
+(smooth on the A14 floor, 0.63ms binding). "Make it standard Kanama" is now a
+productionization SCOPE decision (the backlog above), not a research risk. Consider a
+short viability-assessment doc for the go/no-go.
+
+## (historical) Phase 5 brief
 
 Measure (a) Godot rendering/GPU vs (b) Kanama scripting/binding overhead separately, on
 BOTH devices, per-frame in `_physics_process` (move_and_slide + velocity + is_on_floor +
