@@ -104,6 +104,7 @@ abstract class KanamaScript<Self : Any>(
     inline fun <T> selfAs(ctor: (MemorySegment) -> T): T = ctor(godotObject)
 }
 
+// KANAMA-IOS-HANDWRITTEN: KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json.
 class KanamaScope : CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
@@ -117,6 +118,7 @@ interface KanamaCoroutineOwner {
     val kanamaScope: KanamaScope
 }
 
+// KANAMA-IOS-HANDWRITTEN: MainThread.post is a no-op shim; on iOS main thread dispatch is handled by Godot's frame loop, not a JVM executor.
 object MainThread {
     fun post(action: () -> Unit) {
         action()
@@ -133,21 +135,27 @@ open class GodotObject(
     fun isClass(className: String): Boolean =
         className.isNotBlank() && IosGodot.objectIsClass(handle.address(), className)
 
+    // KANAMA-IOS-HANDWRITTEN: signal/connect/emitSignal/await use the custom GDExtension
+    // Callable + IosCallableRegistry (lambda/bound dispatch); bespoke runtime, not generated.
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
 
+    // KANAMA-IOS-STUB: should dispatch via the Variant Object.call path; not wired yet. Backlog.
     fun call(method: String, vararg args: Any?): Any? =
         null
 
+    // KANAMA-IOS-STUB: should call Object.set_deferred via Variant dispatch; not wired yet. Backlog.
     fun setDeferred(property: String, value: Any?) {
     }
 
     fun connect(signalName: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
         IosGodot.objectConnect(handle.address(), signalName, target.handle.address(), method, flags)
 
+    // KANAMA-IOS-STUB: should call Object.disconnect; not wired yet. Backlog.
     fun disconnect(signalName: String, target: GodotObject, method: String) {
     }
 
+    // KANAMA-IOS-STUB: connectBound should call Object.connect with bound args Callable; not wired yet. Backlog.
     fun connectBound(
         signalName: String,
         target: GodotObject,
@@ -156,6 +164,7 @@ open class GodotObject(
         flags: Long = CONNECT_DEFAULT,
     ): Long = 0L
 
+    // KANAMA-IOS-STUB: should call Object.disconnect; not wired yet. Backlog.
     fun disconnectBound(signalName: String, target: GodotObject, method: String, boundArgs: List<Any?>) {
     }
 
@@ -177,6 +186,7 @@ open class GodotObject(
         }
     }
 
+    // KANAMA-IOS-HANDWRITTEN: AutoCloseable no-op base; Godot object lifetime is managed externally, not by Kotlin's close().
     open fun close() {
     }
 
@@ -236,8 +246,10 @@ class GodotSignal internal constructor(
 }
 
 class SignalConnection internal constructor() : AutoCloseable {
+    // KANAMA-IOS-STUB: should carry the real connect() return Error; hardcoded OK. Backlog.
     val error: Long = 0L
 
+    // KANAMA-IOS-STUB: close() should disconnect the connection; not wired yet. Backlog.
     override fun close() {
     }
 }
@@ -298,6 +310,8 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
     }
 }
 
+// KANAMA-IOS-HANDWRITTEN: Tweener/PropertyTweener/Tween use the Variant tween_property path
+// (final-value is a Variant), not generatable via the audited ptrcall set. Bespoke by design.
 open class Tweener(handle: MemorySegment) : GodotObject(handle) {
     fun setTrans(value: Long): Tweener {
         IosGodot.tweenerSetTrans(handle.address(), value)
@@ -364,6 +378,8 @@ class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
     }
 }
 
+// KANAMA-IOS-HANDWRITTEN: Input is the bespoke singleton glue (getSingleton + cached binds);
+// getAxis/isActionJustPressed are real ptrcalls. Kept hand-written (not a generated wrapper).
 object Input {
     private val singleton: MemorySegment by lazy { ObjectCalls.getSingleton("Input") }
     private val getAxisBind by lazy { ObjectCalls.getMethodBind("Input", "get_axis", 1958752504L) }
@@ -371,7 +387,7 @@ object Input {
         ObjectCalls.getMethodBind("Input", "is_action_just_pressed", 1558498928L)
     }
 
-    // Cosmetic; not wired on iOS yet (needs Texture2D arg marshalling). Backlog.
+    // KANAMA-IOS-STUB: cosmetic; needs Texture2D arg marshalling to call set_custom_mouse_cursor. Backlog.
     fun setCustomMouseCursor(texture: Texture2D?, shape: Long = 0L, hotspot: Vector2 = Vector2.ZERO) {
     }
 
@@ -382,6 +398,7 @@ object Input {
         ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionJustPressedBind, singleton, action, exactMatch)
 }
 
+// KANAMA-IOS-HANDWRITTEN: pure-Kotlin math helpers (no Godot call). Bespoke utility.
 object Mathf {
     fun abs(value: Double): Double = kotlin.math.abs(value)
 
@@ -403,6 +420,7 @@ object Mathf {
         value.coerceIn(min, max)
 }
 
+// KANAMA-IOS-HANDWRITTEN: ResourceLoader singleton glue over the C shim resource loader.
 object ResourceLoader {
     fun load(path: String): Resource? =
         IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
@@ -415,6 +433,7 @@ object ResourceLoader {
         }
 }
 
+// KANAMA-IOS-HANDWRITTEN: GD global helpers (rand*, print) — Kotlin/native impls, bespoke.
 object GD {
     fun randomize() {
     }
@@ -439,6 +458,8 @@ inline fun <reified T> Node.kotlinScriptInstance(): T? =
     GodotObject(handle).kotlinScriptInstance<T>()
 
 @OptIn(ExperimentalForeignApi::class)
+// KANAMA-IOS-HANDWRITTEN: thin cinterop facade over the C shim helpers used by the bespoke
+// classes above. Predates the generated ObjectCalls path; kept for the bespoke runtime.
 internal object IosGodot {
     private const val LABEL_SET_TEXT_HASH = 83702148L
     private var labelSetTextBind = 0L

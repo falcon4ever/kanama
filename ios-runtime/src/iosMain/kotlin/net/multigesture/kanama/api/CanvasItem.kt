@@ -528,12 +528,14 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
         }
     }
 
+    // KANAMA-IOS-SUGAR: hand-added to a generated file; re-add after regeneration.
     // ── Kanama sugar (hand) - preserve on regenerate ──────────────────────────
 
     fun getViewportRect(): net.multigesture.kanama.types.Rect2 =
         IosGodot.canvasItemGetViewportRect(handle.address())
 
     var modulate: net.multigesture.kanama.types.Color
+        // KANAMA-IOS-STUB: get_modulate not read (Color return not audited); set is real. Backlog.
         get() = net.multigesture.kanama.types.Color(1f, 1f, 1f)
         set(value) { IosGodot.canvasItemSetModulate(handle.address(), value) }
 }

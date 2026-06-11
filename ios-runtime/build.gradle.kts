@@ -173,6 +173,17 @@ fun isIosScriptPropertyAnnotation(annotation: String): Boolean =
         Regex("""@\s*(?:net\.multigesture\.kanama\.annotations\.)?Export\s*(?:\(|$)""")
             .containsMatchIn(annotation)
 
+// Kanama annotations the iOS script parser does NOT wire — using one on a script member is a
+// silent no-op on iOS. We warn at build time so it surfaces instead of becoming a deep-debug
+// hunt (the class of bug that bit us before with unwired signals/lifecycle hooks).
+val IOS_UNWIRED_FUNCTION_ANNOTATIONS = listOf(
+    "OnEnterTree", "EnterTree", "OnUnhandledInput", "UnhandledInput",
+    "OnShortcutInput", "ShortcutInput", "OnUnhandledKeyInput", "UnhandledKeyInput", "Rpc",
+)
+
+fun unwiredIosFunctionAnnotation(annotation: String): String? =
+    IOS_UNWIRED_FUNCTION_ANNOTATIONS.firstOrNull { annotation.contains(it) }
+
 fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
     val text = sourceFile.readText()
     if (!text.contains("@ScriptClass")) {
@@ -234,6 +245,12 @@ fun parseIosScript(sourceRoot: File, sourceFile: File): IosScriptModel? {
                                     registeredMethodName(annotation, functionName),
                                     functionName,
                                 )
+                            else -> {
+                                val unwired = unwiredIosFunctionAnnotation(annotation)
+                                if (unwired != null) {
+                                    println("WARNING: [kanama-ios] ${sourceFile.name} fun $functionName: @$unwired is not wired on iOS (silent no-op)")
+                                }
+                            }
                         }
                     }
                 }

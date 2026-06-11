@@ -387,8 +387,10 @@ enum {
     KANAMA_IOS_PT_RID,         // pointer/uint64 (passthrough)
     // CONSTRUCT-tagged: arg ptr is a C string; the dispatch builds the value.
     KANAMA_IOS_PT_STRING_NAME,
-    KANAMA_IOS_PT_STRING,      // (arg construction TODO in T2.2; reserved)
-    KANAMA_IOS_PT_NODE_PATH,   // (arg construction TODO in T2.2; reserved)
+    // KANAMA-IOS-STUB: PT_STRING / PT_NODE_PATH arg construction not implemented in the
+    // generic dispatch (only PT_STRING_NAME is built C-side). Reserved. Backlog.
+    KANAMA_IOS_PT_STRING,      // (arg construction TODO; reserved)
+    KANAMA_IOS_PT_NODE_PATH,   // (arg construction TODO; reserved)
 };
 
 enum {

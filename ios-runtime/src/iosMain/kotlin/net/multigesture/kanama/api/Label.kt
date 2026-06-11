@@ -413,9 +413,11 @@ class Label(handle: MemorySegment) : Control(handle) {
         }
     }
 
+    // KANAMA-IOS-SUGAR: hand-added to a generated file; re-add after regeneration.
     // ── Kanama sugar (hand) - preserve on regenerate ──────────────────────────
 
     var text: String
+        // KANAMA-IOS-STUB: get_text not read (String-return ptrcall not wired); set is real. Backlog.
         get() = ""
         set(value) { IosGodot.setObjectText(handle.address(), value) }
 

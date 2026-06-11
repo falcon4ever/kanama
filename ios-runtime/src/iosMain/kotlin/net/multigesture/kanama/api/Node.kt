@@ -303,6 +303,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         ObjectCalls.ptrcallWithIntArg(notifyThreadSafeBind, handle, what)
     }
 
+    // KANAMA-IOS-SUGAR: hand-added to a generated file; re-add after regeneration.
     // ── Kanama sugar (not generated from Godot docs) ──────────────────────────
 
     fun getTree(): SceneTree =

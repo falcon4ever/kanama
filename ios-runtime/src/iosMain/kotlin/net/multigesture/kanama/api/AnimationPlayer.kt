@@ -191,8 +191,11 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, handle)
     }
 
+    // KANAMA-IOS-SUGAR: hand-added to a generated file; re-add after regeneration.
     // ── Kanama sugar (not generated from Godot docs) ──────────────────────────
 
+    // KANAMA-IOS-STUB: getCurrentAnimation returns the last play() name, not Godot's live
+    // current_animation (String-return ptrcall not wired). Backlog.
     // get_current_animation() returns StringName — a String-return ptrcall isn't wired
     // yet. Track the last name passed to play() instead (the demos only change animation
     // via play()), so `if (getCurrentAnimation() != "walk") play("walk")` stops

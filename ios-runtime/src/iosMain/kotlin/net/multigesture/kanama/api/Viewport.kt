@@ -1307,6 +1307,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         }
     }
 
+    // KANAMA-IOS-SUGAR: hand-added to a generated file; re-add after regeneration.
     // ── Kanama sugar (hand) - preserve on regenerate ──────────────────────────
 
     fun getVisibleRect(): net.multigesture.kanama.types.Rect2 =
