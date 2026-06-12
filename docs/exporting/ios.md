@@ -18,9 +18,18 @@ The spike builds debug and release iOS `.xcframework` artifacts with device
 project scripts** through GENERATED Godot API wrappers (the same wrapper generator as
 desktop/Android) over a C-shim generic `ptrcall`:
 
-```text
-Godot iOS export -> C shim -> Kotlin/Native runtime -> generated wrappers -> ObjectCalls -> ptrcall
+```mermaid
+flowchart LR
+    EXPORT["Godot iOS export"] --> SHIM["C shim"]
+    SHIM --> KN["Kotlin/Native runtime"]
+    KN --> WRAP["Generated wrappers"]
+    WRAP --> OC["ObjectCalls"]
+    OC --> PTR["generic ptrcall<br/>dispatch (C shim)"]
+    PTR <--> GODOT["Godot Engine iOS"]
 ```
+
+See [Architecture → iOS](../contributing/architecture.md#ios-experimental) for
+how this maps onto the desktop/Android runtime model.
 
 Match3 and the Kenney 3D platformer are device-validated end to end — live virtual-joystick
 input, signals (incl. the platformer coin scoring), animation, and scene reload — with a

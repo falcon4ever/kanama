@@ -9,6 +9,12 @@ registered through generated metadata, the binding layer implements Godot's
 script/resource contracts, and an FFM layer calls the GDExtension ABI. The
 platform split is the runtime underneath that FFM layer.
 
+iOS (experimental) reuses the same generated-wrapper API surface but swaps the
+runtime entirely: no JVM and no FFM. A Kotlin/Native static library linked into
+the app's `.xcframework` calls a C GDExtension shim, and `ObjectCalls` is
+implemented over the shim's generic `ptrcall` dispatch instead of Panama. See
+[iOS](#ios-experimental).
+
 ### Desktop
 
 ```mermaid
@@ -24,7 +30,7 @@ flowchart TB
     end
 
     BOOT["bootstrap.c<br/>JNI_CreateJavaVM once"]
-    GODOT["Godot Engine 4.7 beta 5<br/>GDExtension ABI"]
+    GODOT["Godot Engine 4.7 rc 2<br/>GDExtension ABI"]
 
     USER -->|"compile-time metadata"| KSP
     KSP -->|"static registration"| BINDING
@@ -72,6 +78,43 @@ uses [PanamaPort](https://github.com/vova7878/PanamaPort) as the FFM layer. The
 Android plugin AAR packages the native bootstrap, Kanama runtime, project
 scripts, and generated registrars so Godot can initialize the same script
 language/resource-loader model inside the APK.
+
+### iOS (experimental)
+
+```mermaid
+flowchart TB
+    subgraph PROJECT["Godot iOS project"]
+        USER["User Kotlin code<br/>demo scripts + generated KSP registrars"]
+        EXPORT["Godot iOS export<br/>GDExtension entry"]
+    end
+
+    subgraph APP["Exported iOS app (.xcframework, device arm64)"]
+        KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, MemorySegment shim"]
+        WRAP["Generated wrappers<br/>same generator as desktop/Android"]
+        OC["ObjectCalls (iOS actual)<br/>typed ptrcall helpers"]
+        SHIM["C GDExtension shim<br/>entry, get_method_bind, generic ptrcall dispatch"]
+    end
+
+    GODOT["Godot Engine iOS<br/>GDExtension ABI"]
+
+    USER -->|"compiled into Kotlin/Native lib"| KN
+    EXPORT -->|"packs xcframework into iOS app"| APP
+    GODOT -->|"loads iOS GDExtension entry symbol"| SHIM
+    SHIM -->|"initializes Kanama on Kotlin/Native"| KN
+    KN -->|"registration, resources, script instances"| WRAP
+    WRAP -->|"cached MethodBind + typed ptrcall"| OC
+    OC -->|"one generic typed ptrcall dispatch"| SHIM
+    SHIM <-->|"C ABI: ptrcall / object_method_bind_call"| GODOT
+```
+
+iOS embeds no JVM and no Panama/FFM. A Kotlin/Native static library is linked
+into the app's `.xcframework`, and the C shim exposes a single generic typed
+`ptrcall` dispatch that drives every wrapper shape — so the same generated
+wrapper API as desktop/Android runs on device with the platform seam isolated in
+`ObjectCalls`. iOS remains experimental, not a supported export; see the
+[iOS Spike](../exporting/ios.md) and
+[iOS backend architecture](../internals/ios-backend-architecture.md) for the
+audited-type and bridge gaps.
 
 ## Initialization (one-time, when Godot loads us)
 
