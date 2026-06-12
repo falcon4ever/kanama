@@ -702,7 +702,7 @@ val godotIosTemplateZip = providers.gradleProperty("kanamaGodotIosTemplateZip")
     .orElse(providers.environmentVariable("GODOT_IOS_TEMPLATE_ZIP"))
     .orElse(
         providers.provider {
-            "${System.getProperty("user.home")}/Library/Application Support/Godot/export_templates/4.7.beta5/ios.zip"
+            "${System.getProperty("user.home")}/Library/Application Support/Godot/export_templates/4.7.rc2/ios.zip"
         },
     )
 val iosMinimumDeploymentTarget = providers.gradleProperty("kanamaIosMinVersion").orElse("14.0")

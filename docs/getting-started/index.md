@@ -19,8 +19,8 @@ is running.
 
 Desktop Kanama projects use:
 
-- Godot 4.7 beta 5 from the
-  [Godot 4.7 beta 5 archive](https://godotengine.org/download/archive/4.7-beta5/).
+- Godot 4.7 rc 2 from the
+  [Godot 4.7 rc 2 archive](https://godotengine.org/download/archive/4.7-rc2/).
 - JDK 25+ for desktop runtime and Gradle builds.
 - macOS arm64, Windows x64, Linux x64, or Linux ARM64 for the current desktop
   package targets.

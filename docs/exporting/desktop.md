@@ -43,7 +43,7 @@ Validate a kit from a temporary project:
 ```sh
 scripts/package_install_smoke.sh \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 ```
 
 The smoke unzips the kit, runs `./gradlew buildScripts`, confirms
@@ -84,7 +84,7 @@ scripts/package_install_smoke.sh \
   --store-addon \
   --require-all-store-platforms \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 ```
 
 For a local host-only `packageStoreAddon` build, omit

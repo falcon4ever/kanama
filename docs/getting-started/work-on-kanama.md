@@ -21,13 +21,13 @@ mkdocs build --strict
 Run local CI with a Godot binary:
 
 ```sh
-scripts/local_ci.sh /absolute/path/to/godot-4.7-beta5
+scripts/local_ci.sh /absolute/path/to/godot-4.7-rc2
 ```
 
 For a release-facing source check, run the isolated clone gate:
 
 ```sh
-scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-beta5
+scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-rc2
 ```
 
 ## Package Builds
@@ -50,7 +50,7 @@ Validate a desktop kit without a sibling Kanama checkout:
 scripts/package_install_smoke.sh \
   --desktop-kit \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 ```
 
 Validate a store addon through the same temporary-project smoke:
@@ -59,7 +59,7 @@ Validate a store addon through the same temporary-project smoke:
 scripts/package_install_smoke.sh \
   --store-addon \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 ```
 
 GitHub Actions builds the release matrix for macOS arm64, Linux x64, Linux

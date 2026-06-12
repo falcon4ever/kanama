@@ -30,6 +30,10 @@ versioning once public releases begin.
 
 ### Changed
 
+- Updated the Kanama preview baseline to Godot 4.7 rc 2. Re-dumped
+  `extension_api.json` and regenerated Godot API name constants for the rc 2
+  version metadata; the rc 2 GDExtension interface header and API body are
+  byte-identical to beta 5, so generated bindings and wrappers are unchanged.
 - Updated the build toolchain to Kotlin 2.3.21, KSP 2.3.9, and
   kotlinx.coroutines 1.11.0, with Gradle build cache enabled for the main and
   Android plugin builds.

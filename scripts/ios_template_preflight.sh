@@ -13,7 +13,7 @@ Options:
   --xcode-developer-dir DIR  Xcode Developer dir. Defaults to DEVELOPER_DIR or
                              /Applications/Xcode.app/Contents/Developer.
   --godot-version VERSION    Version folder for the default template lookup.
-                             Defaults to 4.7.beta5.
+                             Defaults to 4.7.rc2.
   --work-dir DIR             Existing or new temporary extraction directory.
   --keep-work-dir            Keep the temporary extraction directory.
   --debug-only               Check only the debug template.
@@ -25,7 +25,7 @@ EOF
 }
 
 xcode_developer_dir="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-godot_version="4.7.beta5"
+godot_version="4.7.rc2"
 work_dir=""
 keep_work_dir=0
 debug_only=0

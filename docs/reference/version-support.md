@@ -7,25 +7,25 @@ platforms and engine versions validated for the current preview.
 
 | Target | Status | Notes |
 | --- | --- | --- |
-| Godot 4.7 beta 5, macOS arm64 | Baseline preview | API/header inputs, generated wrappers, KDoc, local CI, and desktop demo smokes target this preview baseline. |
-| Android export, Godot 4.7 beta 5 | Pending beta 5 revalidation | Android toolchain uses matching Godot export templates with Android SDK API 36, build-tools 36.1.0, and NDK 29.0.14206865; APK export plus emulator/Pixel 7 smoke remain validation gates before updating Android support claims. |
-| Linux arm64 | Pending beta 5 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. Packaged desktop exports remain a separate release-readiness track. |
-| Linux x86_64 | Pending beta 5 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. Packaged desktop exports remain a separate release-readiness track. |
-| Windows x86_64 | Pending beta 5 revalidation | Last local runtime/editor smoke validation passed with the 4.7 beta 2 console binary. PowerShell Gradle commands and Git Bash smoke marker checks are the documented path. |
+| Godot 4.7 rc 2, macOS arm64 | Baseline preview | API/header inputs, generated wrappers, KDoc, local CI, and desktop demo smokes target this preview baseline. |
+| Android export, Godot 4.7 rc 2 | Pending rc 2 revalidation | Android toolchain uses matching Godot export templates with Android SDK API 36, build-tools 36.1.0, and NDK 29.0.14206865; APK export plus emulator/Pixel 7 smoke remain validation gates before updating Android support claims. |
+| Linux arm64 | Pending rc 2 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. Packaged desktop exports remain a separate release-readiness track. |
+| Linux x86_64 | Pending rc 2 revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. Packaged desktop exports remain a separate release-readiness track. |
+| Windows x86_64 | Pending rc 2 revalidation | Last local runtime/editor smoke validation passed with the 4.7 beta 2 console binary. PowerShell Gradle commands and Git Bash smoke marker checks are the documented path. |
 | iOS | Experimental (Kotlin/Native backend); not a supported export | The `spike/ios-kotlin-native-backend` path runs full Kanama project scripts via a C shim + Kotlin/Native static `.xcframework`, using the same wrapper generator as desktop/Android. Match3 and the Kenney 3D platformer are device-validated (real input, signals, scene reload); per-frame Kanama binding overhead measured ~0.63 ms on iPhone 12. Physical-device export/launch is the validation target. Still experimental — see the [iOS roadmap](../internals/ios-backend-roadmap.md) for the audited-type/bridge gaps before broader demos or a supported export. |
 | Web | Not planned | Kanama depends on a JVM/FFM-style runtime path. |
 
 Validated support is only claimed after the matching smoke path passes.
 Use the
-[Godot 4.7 beta 5 archive](https://godotengine.org/download/archive/4.7-beta5/)
+[Godot 4.7 rc 2 archive](https://godotengine.org/download/archive/4.7-rc2/)
 for compatible desktop binaries and Android export templates.
 
 ## API Baseline
 
 The checked-in wrapper surface is generated from the current
 `extension_api.json`, `gdextension_interface.h`, generated Panama bindings, and
-Kotlin wrapper sources. For this preview, that API baseline is Godot 4.7 beta
-5.
+Kotlin wrapper sources. For this preview, that API baseline is Godot 4.7 rc
+2.
 
 ## Kanama Version
 
@@ -46,7 +46,7 @@ build and the experimental Android plugin build.
 Android is tracked separately from the desktop matrix. The current Android path
 uses:
 
-- Godot 4.7 beta 5 Android export,
+- Godot 4.7 rc 2 Android export,
 - Android SDK API 36, build-tools 36.1.0, and NDK 29.0.14206865 for the
   matching Godot export templates,
 - a Godot Android plugin AAR,
@@ -55,7 +55,7 @@ uses:
 - emulator smoke tests, and
 - Pixel 7 smoke and playability checks for the Android-enabled demos.
 
-The Godot 4.7 beta 5 Android matrix is pending revalidation; keep Android
+The Godot 4.7 rc 2 Android matrix is pending revalidation; keep Android
 support wording experimental until the matching APK smoke path passes again.
 
 See [Android Experimental](../exporting/android.md) for the build/export
@@ -82,14 +82,14 @@ with desktop/Android, backlog, per-demo coverage).
 Run the local CI shortcut with one or more Godot binaries:
 
 ```sh
-scripts/local_ci.sh /absolute/path/to/godot-4.7-beta5
+scripts/local_ci.sh /absolute/path/to/godot-4.7-rc2
 ```
 
 Before tagging a release, run the isolated source-and-demo gate from a clean
 temporary clone:
 
 ```sh
-scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-beta5
+scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-rc2
 ```
 
 For package validation, build the packaged artifacts and smoke them without a
@@ -100,16 +100,16 @@ sibling Kanama checkout:
 scripts/package_install_smoke.sh \
   --desktop-kit \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 scripts/package_install_smoke.sh \
   --store-addon \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 ```
 
 ```sh
 scripts/local_ci.sh \
-  /absolute/path/to/godot-4.7-beta5 \
+  /absolute/path/to/godot-4.7-rc2 \
   /absolute/path/to/godot-4.7-stable
 ```
 
@@ -129,19 +129,19 @@ loads Kotlin scripts, and runs the example project far enough to verify the
 expected markers.
 
 For Linux desktop validation, use a matching Linux Godot binary from the Godot
-4.7 beta 5 archive and set `JAVA_HOME` to JDK 25+:
+4.7 rc 2 archive and set `JAVA_HOME` to JDK 25+:
 
 ```sh
 cd /path/to/kanama-demos
 JAVA_HOME=/path/to/jdk-25 \
 XDG_DATA_HOME=/tmp/kanama-godot-state-linux \
 KANAMA_DESKTOP_SMOKE_LOG_DIR=/tmp/kanama-desktop-smokes-linux \
-scripts/desktop_smoke_all.sh /path/to/Godot_v4.7-beta5_linux.arm64
+scripts/desktop_smoke_all.sh /path/to/Godot_v4.7-rc2_linux.arm64
 ```
 
 Use the Godot binary for the architecture under test, such as
-`Godot_v4.7-beta5_linux.arm64` or
-`Godot_v4.7-beta5_linux.x86_64`. The demo smoke script uses Godot's OpenGL
+`Godot_v4.7-rc2_linux.arm64` or
+`Godot_v4.7-rc2_linux.x86_64`. The demo smoke script uses Godot's OpenGL
 Compatibility renderer on desktop. Before refreshing demo addons, rebuild the
 native bootstrap from a clean checkout and preflight `libkanama_bootstrap.so`
 with `file`, `ldd`, and `readelf`.
@@ -150,7 +150,7 @@ For Windows validation, launch Godot from an environment with `JAVA_HOME` set
 to JDK 25+ so Kanama can load `%JAVA_HOME%\bin\server\jvm.dll`. Build the
 native bootstrap from a Visual Studio 2022 C++ developer environment, and use
 PowerShell/`.\gradlew.bat` for Gradle commands. Existing Bash smoke scripts can
-hit CRLF-related false negatives on Windows; use the 4.7 beta 5 console binary,
+hit CRLF-related false negatives on Windows; use the 4.7 rc 2 console binary,
 PowerShell Gradle commands, and Git Bash smoke marker checks for the documented
 path.
 

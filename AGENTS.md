@@ -8,9 +8,9 @@ release shape.
 ## Current Baseline
 
 - Kanama preview line: `0.2.2`.
-- Godot baseline: Godot `4.7 beta 5`.
+- Godot baseline: Godot `4.7 rc 2`.
 - Desktop runtime/build JDK: JDK `25+`.
-- Android remains experimental; Godot `4.7 beta 5` Android APK smoke
+- Android remains experimental; Godot `4.7 rc 2` Android APK smoke
   revalidation is still a support gate.
 - Release artifacts use two shapes: desktop kits for new projects and store
   add-ons for existing projects. See `docs/exporting/desktop.md`.
@@ -118,11 +118,11 @@ Validate package install flows without a sibling Kanama checkout:
 scripts/package_install_smoke.sh \
   --desktop-kit \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 scripts/package_install_smoke.sh \
   --store-addon \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7-beta5
+  /absolute/path/to/godot-4.7-rc2
 ```
 
 Desktop kits are complete starter projects for one platform. Store add-ons are
@@ -195,13 +195,13 @@ python3 scripts/validate_godot_api.py --api extension_api.json
 python3 scripts/check_wrapper_generator.py
 mkdocs build --strict
 ./gradlew jar
-./scripts/local_ci.sh /absolute/path/to/godot-4.7-beta5
+./scripts/local_ci.sh /absolute/path/to/godot-4.7-rc2
 ```
 
 Before a release tag, prefer an isolated clone gate:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-beta5
+./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-rc2
 ```
 
 Use demo-repo smoke tasks when a change affects real gameplay ports, wrappers

@@ -1,12 +1,12 @@
 # Android Experimental
 
 Kanama's Android path is experimental for the v0.2.2 line and currently tracks
-the Godot 4.7 beta 5 preview baseline. It proves that Kanama can run inside a
+the Godot 4.7 rc 2 preview baseline. It proves that Kanama can run inside a
 stock Godot Android export through a Godot Android plugin AAR, without a Godot
 fork and without custom JNI in game code.
 
 Use the
-[Godot 4.7 beta 5 archive](https://godotengine.org/download/archive/4.7-beta5/)
+[Godot 4.7 rc 2 archive](https://godotengine.org/download/archive/4.7-rc2/)
 for the matching editor binary and Android export templates.
 
 This is not a production-ready mobile target yet. Treat it as an opt-in preview
@@ -14,7 +14,7 @@ for testing Kanama games on Android.
 
 ## Current Status
 
-Eight public demo exports are Android smoke targets. The beta 5 Android matrix
+Eight public demo exports are Android smoke targets. The rc 2 Android matrix
 is pending revalidation; the last completed Android matrix had emulator
 validation and Pixel 7 startup/playability coverage, while remaining an
 experimental physical-device path:
@@ -74,7 +74,7 @@ Current experimental values:
 
 | Tool | Version / Setting |
 |---|---|
-| Godot | 4.7 beta 5 preview |
+| Godot | 4.7 rc 2 preview |
 | Godot Android export template AGP | 8.6.1 |
 | Godot Android export template compile SDK | 36 |
 | Godot Android export template target SDK | 36 |
@@ -90,7 +90,7 @@ Current experimental values:
 
 Configure Android SDK, NDK, CMake, and JDK locations through Godot editor
 settings or standard environment variables such as `ANDROID_HOME`,
-`ANDROID_SDK_ROOT`, and `JAVA_HOME`. The 4.7 beta 5 Android export-template
+`ANDROID_SDK_ROOT`, and `JAVA_HOME`. The 4.7 rc 2 Android export-template
 build requires the Android SDK platform for API 36, build-tools 36.1.0, and NDK
 29.0.14206865. Do not commit workstation-local paths.
 
@@ -102,7 +102,7 @@ path, not the plain template-only path.
 Requirements:
 
 - Android export templates installed for the matching Godot version from the
-  [Godot 4.7 beta 5 archive](https://godotengine.org/download/archive/4.7-beta5/).
+  [Godot 4.7 rc 2 archive](https://godotengine.org/download/archive/4.7-rc2/).
 - Android build template installed for the project, either from the editor or
   with `--install-android-build-template`.
 - Export preset has `gradle_build/use_gradle_build=true`.
