@@ -144,20 +144,11 @@ works. Two on-device fixes landed after the first launch:
   `rendering_method.mobile="gl_compatibility"` — too low-tier for its Forward+-authored visuals (HDR
   tonemap, glow, screen-space water shader). Switched to `"mobile"` (Vulkan/MoltenVK); device-confirmed
   exposure + water correct. (Other demos keep gl_compatibility; they don't use those features.)
-- **KNOWN-OPEN — enemy walk animation:** BeetleBot calls `beetleSkin.walk()` every physics frame →
-  `BeetlebotSkin` runs `AnimationNodeStateMachinePlayback.travel("walk")`, but the bug doesn't animate
-  (floats to the player). The `travel()` binding is correct (`ptrcallWithStringNameAndBoolArg`, hash
-  3823612587) and `_ready` (which does `animationTree.getStateMachinePlayback("parameters/StateMachine/
-  playback")`) completes; the secondary-action timer also calls travel(). HYPOTHESES: (a) the playback
-  Ref obtained via the Variant `get("parameters/.../playback")` path isn't the AnimationTree's *live*
-  playback (RefCounted liveness / a fresh instance) so travel() drives a detached object; (b) the
-  AnimationTree isn't `active`/processing on iOS. NEXT (device round-trips): temp-log the playback handle
-  + `isPlaying()`/`getCurrentNode()` right after travel() to see if state advances; check AnimationTree.active;
-  compare the stored playback handle vs a re-fetched `get()` handle. (See [[ios_script_model_unification]]-era
-  AnimationMixer.getStateMachinePlayback custom section — it wraps the raw Variant Object handle.)
-
-  **UPDATE 2026-06-24 — WALK ANIMATION FIXED + DEVICE-VALIDATED.** Root cause was neither hypothesis
-  above: the AnimationTree was active and `travel()` was advancing state (proven by `[anim-dbg]` logs:
+- **Enemy walk animation (FIXED + device-validated):** BeetleBot calls `beetleSkin.walk()` every
+  physics frame → `BeetlebotSkin` runs `AnimationNodeStateMachinePlayback.travel("walk")`. Early
+  investigation suspected either a detached playback Ref from the Variant
+  `get("parameters/.../playback")` path or an inactive AnimationTree, but device logs ruled both
+  out: the AnimationTree was active and `travel()` was advancing state (proven by `[anim-dbg]` logs:
   `node='Walk' playing=true`). The bug was that `BeetlebotSkin._force_loop: List<String>` (scene-stored
   `PackedStringArray("Bob","walk")`) was **silently dropped on iOS** — the emitter only generated
   list-property delivery cases for engine-wrapper / user-script element types, so a `List<String>`

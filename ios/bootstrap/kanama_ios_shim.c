@@ -366,6 +366,7 @@ static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string_name = NU
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_bool = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_packed_string_array = NULL;
 static int g_main_loop_callbacks_registered = 0;
 static int g_main_loop_callbacks_active = 0;
 static int g_main_loop_callback_frame_count = 0;
@@ -773,6 +774,8 @@ static int kanama_ios_resolve_godot_api(void) {
     g_variant_from_int = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
     g_variant_from_bool = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_BOOL);
     g_variant_from_string = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING);
+    g_variant_from_packed_string_array =
+        g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY);
 
     if (
         g_string_name_destructor == NULL ||
@@ -799,7 +802,8 @@ static int kanama_ios_resolve_godot_api(void) {
         g_variant_from_string_name == NULL ||
         g_variant_from_int == NULL ||
         g_variant_from_bool == NULL ||
-        g_variant_from_string == NULL
+        g_variant_from_string == NULL ||
+        g_variant_from_packed_string_array == NULL
     ) {
         fprintf(stderr, "[kanama][ios][c] error: failed to resolve Godot builtin helpers\n");
         return 0;
@@ -7600,6 +7604,40 @@ static void kanama_ios_ptrcall_selftest(void) {
         if (g_variant_destroy != NULL) { g_variant_destroy((GDExtensionVariantPtr)variant); }
     } else {
         KANAMA_IOS_ST_CHECK("setprop-vector3", 0);
+    }
+    // PackedStringArray round-trip: build the same Variant shape Godot delivers for
+    // List<String> @ScriptProperty values, extract it through the set-property primitive, and
+    // verify the utf8 element path used by kanama_ios_script_instance_set_property.
+    if (g_variant_from_packed_string_array != NULL && g_variant_to_packed_string_array != NULL) {
+        kanama_ios_cache_packed_string_methods();
+        KANAMA_IOS_PACKED_ARRAY_STORAGE(in_array);
+        KANAMA_IOS_PACKED_ARRAY_STORAGE(out_array);
+        kanama_ios_init_packed_string_array_one(in_array, "walk");
+        uint8_t variant[24] = {0};
+        g_variant_from_packed_string_array(
+            (GDExtensionUninitializedVariantPtr)variant,
+            (GDExtensionTypePtr)in_array);
+        g_variant_to_packed_string_array(
+            (GDExtensionUninitializedTypePtr)out_array,
+            (GDExtensionVariantPtr)variant);
+        int64_t count = 0;
+        if (g_packed_string_array_size_method != NULL) {
+            g_packed_string_array_size_method(out_array, NULL, &count, 0);
+        }
+        GDExtensionStringPtr str = (g_packed_string_array_operator_index_const != NULL && count == 1)
+            ? g_packed_string_array_operator_index_const(out_array, 0)
+            : NULL;
+        char *utf8 = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)str);
+        KANAMA_IOS_ST_CHECK("setprop-packed-string-array",
+            count == 1 && utf8 != NULL && strcmp(utf8, "walk") == 0);
+        free(utf8);
+        if (g_packed_string_array_destructor != NULL) {
+            g_packed_string_array_destructor(out_array);
+            g_packed_string_array_destructor(in_array);
+        }
+        if (g_variant_destroy != NULL) { g_variant_destroy((GDExtensionVariantPtr)variant); }
+    } else {
+        KANAMA_IOS_ST_CHECK("setprop-packed-string-array", 0);
     }
 
     fprintf(stderr, "[kanama][ios][c] PTRCALL SELFTEST MATRIX: %d passed, %d failed\n", pass, fail);
