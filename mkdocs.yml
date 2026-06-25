@@ -71,6 +71,7 @@ nav:
       - Wrapper Coverage Tracker: internals/wrapper-coverage-tracker.md
       - Callable Args Design (1.4): internals/callable-args-design.md
       - Script Model Unification Design (3.1): internals/script-model-unification-design.md
+      - commonMain Unification Design (4.3): internals/commonmain-unification-design.md
       - Virtual Method Coverage Design (5.1): internals/virtual-method-coverage-design.md
       - iOS Backend Architecture: internals/ios-backend-architecture.md
       - iOS Backend Roadmap: internals/ios-backend-roadmap.md

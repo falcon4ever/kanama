@@ -18,6 +18,7 @@ AGENTS.md.)
 | [ios-backend-handwritten.md](./ios-backend-handwritten.md) | **Generated report** (do not edit; run `scripts/ios_handwritten_report.py`) of hand-written/stub iOS classes. |
 | [architecture-review-2026-06.md](./architecture-review-2026-06.md) | Point-in-time architecture/performance review (June 2026). |
 | [wrapper-coverage-roadmap.md](./wrapper-coverage-roadmap.md) | Historical full-wrapper-coverage plan; use the iOS roadmap for current strategy and the tracker for live state. |
+| [commonmain-unification-design.md](./commonmain-unification-design.md) | Design record, roadmap task 4.3 (`commonMain` wrapper unification, `expect/actual ObjectCalls`). Keystone for tasks 07–12; design-only, gated on maintainer sign-off. |
 
 ## Historical — design records for completed phases (kept for context)
 | File | What it is |
