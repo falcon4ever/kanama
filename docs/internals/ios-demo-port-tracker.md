@@ -24,7 +24,7 @@ session without replaying prior history.
 | **Racing** | playable + camera-follow + steering joystick (R1 validated) |
 | **Bunnymark** | playable; FPS + Bunnies readouts safe-area-inset (E1 validated) |
 | **FPS** | playable; weapons `List<Weapon>` @ScriptProperty delivered + AnimatedSprite3D generated (F1). KNOWN: intermittent SIGSEGV in Audio autoload `_ready` (pre-existing lambda-connect infra, see F2) |
-| third-person | **PLAYABLE on iPhone 15 Pro (T1)** — runs, all scripts init, self-tests 54/78. Fixed on-device: attack crash (Vector3 in Variant path) + visuals (Mobile renderer, not gl_compatibility). KNOWN: enemy walk animation (AnimationTree `travel()`) not driving on iOS |
+| third-person | **PLAYABLE on iPhone 15 Pro (T1), walk-anim fixed** — runs, all scripts init, self-tests 54/78. Fixed on-device: attack crash (Vector3 in Variant path) + visuals (Mobile renderer, not gl_compatibility) + enemy walk animation (`List<String>`/PackedStringArray `@ScriptProperty` delivery, see T1 card) |
 
 ## Build / deploy / debug (see private handoff for exact commands + UDIDs)
 - **Build-check a demo's scripts** (fast, no device): `./gradlew installIosAddon
@@ -155,6 +155,24 @@ works. Two on-device fixes landed after the first launch:
   + `isPlaying()`/`getCurrentNode()` right after travel() to see if state advances; check AnimationTree.active;
   compare the stored playback handle vs a re-fetched `get()` handle. (See [[ios_script_model_unification]]-era
   AnimationMixer.getStateMachinePlayback custom section — it wraps the raw Variant Object handle.)
+
+  **UPDATE 2026-06-24 — WALK ANIMATION FIXED + DEVICE-VALIDATED.** Root cause was neither hypothesis
+  above: the AnimationTree was active and `travel()` was advancing state (proven by `[anim-dbg]` logs:
+  `node='Walk' playing=true`). The bug was that `BeetlebotSkin._force_loop: List<String>` (scene-stored
+  `PackedStringArray("Bob","walk")`) was **silently dropped on iOS** — the emitter only generated
+  list-property delivery cases for engine-wrapper / user-script element types, so a `List<String>`
+  fell through to the C dispatch's `else { return 0; }`. With `forceLoop` empty, the Walk animation
+  never got `LOOP_LINEAR` → played once and froze (looked static); one-shot Attack animated fine
+  because it doesn't need looping. Same class of silent drop as the FPS `List<Weapon>` gap. FIX
+  (branch `fix/ios-string-list-property-delivery`, 4 layers): emitter advertises `List<String>` as
+  Variant type 34 (PACKED_STRING_ARRAY) + emits a `setPropertyStringArray` bridge branch; Kotlin
+  runtime gains `setPropertyStringArray` + a `kanama_ios_runtime_script_instance_set_property_string_array`
+  @CName entrypoint; the C shim's `set_property` dispatch gains a `PACKED_STRING_ARRAY` branch that
+  extracts the packed array (reusing the existing `g_variant_to_packed_string_array` + cached
+  size/operator_index_const trio) and hands a C string array to Kotlin. Plus a build-time guardrail
+  that warns on any `@ScriptProperty` with no iOS delivery case (0 warnings on this demo). Device:
+  `property string-array set count=2` logs confirm delivery; bug visibly walks + animates on the
+  iPhone 15 Pro. `[anim-dbg]` diagnostic prints stripped from `BeetlebotSkin.kt` (kanama-demos).
 
 ### T1 — original task notes (now done) ────────────────────────────────────────
 **169 → 0 compile errors.** All layers landed + committed/pushed: KSP dual-annotation fix, 7 wrappers,
