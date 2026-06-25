@@ -73,9 +73,14 @@ internal data class IosProperty(
     // Kotlin script instance via iosScriptInstanceForOwner. Empty for non-custom-script properties.
     val customScriptFqName: String = "",
     // FQ name of a user @ScriptClass element type for a `List<UserScript>` property (e.g. FPS
-    // `weapons: List<Weapon>`). Each delivered owner handle is resolved to its live Kotlin script
-    // instance. Empty unless the array element is a user @ScriptClass type.
+    // `weapons: List<Weapon>`). Each delivered owner handle is resolved to its live Kotlin
+    // script instance. Empty unless the array element is a user @ScriptClass type.
     val arrayElementCustomScriptFqName: String = "",
+    // True for a `List<String>` property (Godot PackedStringArray). Delivered as a string list
+    // via the set-property string-array path (the engine ships the scene-stored
+    // PackedStringArray, the C dispatch extracts each element, the runtime hands a
+    // List<String> to the generated bridge). See `setPropertyStringArray`.
+    val listElementIsString: Boolean = false,
 )
 
 internal data class IosSignal(
@@ -259,6 +264,18 @@ internal class IosScriptCodeEmitter(
                 builder.appendLine("        else -> false")
                 builder.appendLine("    }")
             }
+            val stringListProperties = script.properties.filter { it.isList && it.listElementIsString }
+            if (stringListProperties.isNotEmpty()) {
+                builder.appendLine()
+                builder.appendLine("    override fun setPropertyStringArray(propertyIndex: Int, values: List<String>): Boolean = when (propertyIndex) {")
+                script.properties.forEachIndexed { index, property ->
+                    if (property.isList && property.listElementIsString) {
+                        builder.appendLine("        $index -> { script.${property.kotlinName} = values; true }")
+                    }
+                }
+                builder.appendLine("        else -> false")
+                builder.appendLine("    }")
+            }
             val valueProperties = script.properties.filter { it.valueTypeClassName.isNotEmpty() }
             if (valueProperties.isNotEmpty()) {
                 builder.appendLine()
@@ -271,9 +288,43 @@ internal class IosScriptCodeEmitter(
                 builder.appendLine("        else -> false")
                 builder.appendLine("    }")
             }
+            // Guardrail: warn on any @ScriptProperty that gets NO iOS delivery case across the
+            // set-property blocks above. Such a property silently keeps its Kotlin default (the
+            // scene-stored value is dropped) — the class of bug that hid the third-person
+            // BeetlebotSkin._force_loop (List<String>) and FPS List<Weapon> drops. The conditions
+            // here mirror the five blocks exactly so the warning fires only for genuine gaps.
+            script.properties.forEach { property ->
+                if (!hasIosPropertyDeliveryCase(property)) {
+                    warn(
+                        "[kanama-ios] ${script.className}.${property.kotlinName} — no iOS " +
+                            "@ScriptProperty delivery case; the scene-stored value will be " +
+                            "silently dropped (kept its Kotlin default).",
+                    )
+                }
+            }
             builder.appendLine("}")
         }
         return builder.toString()
+    }
+
+    /** True iff [property] gets a delivery case in one of the set-property* blocks. */
+    private fun hasIosPropertyDeliveryCase(property: IosProperty): Boolean {
+        if (property.isObjectType && property.godotClassName.isNotEmpty()) return true
+        if (property.customScriptFqName.isNotEmpty()) return true
+        if (!property.isObjectType && !property.isList && property.godotClassName == "String") return true
+        if (!property.isObjectType && !property.isList && property.godotClassName.isNotEmpty() &&
+            property.godotClassName != "String"
+        ) {
+            return true
+        }
+        if (property.isList && property.listElementIsString) return true
+        if (property.isList && (property.listElementClassName.isNotEmpty() ||
+                property.arrayElementCustomScriptFqName.isNotEmpty())
+        ) {
+            return true
+        }
+        if (property.valueTypeClassName.isNotEmpty()) return true
+        return false
     }
 
     /** `<Class>Signals` / `<Class>Methods` / `<Class>Names` helper objects. */
@@ -513,6 +564,7 @@ internal class IosScriptCodeEmitter(
         }
         val godotVariantType = when {
             isObject -> 24 // OBJECT
+            isList && arrayElementString -> 34 // PACKED_STRING_ARRAY (List<String>)
             isList -> 28 // ARRAY
             else -> godotVariantTypeFor(type)
         }
@@ -528,6 +580,7 @@ internal class IosScriptCodeEmitter(
             godotVariantType = godotVariantType,
             customScriptFqName = customScript,
             arrayElementCustomScriptFqName = if (isList) arrayElementCustomScriptFqName.orEmpty() else "",
+            listElementIsString = isList && arrayElementString,
         )
     }
 

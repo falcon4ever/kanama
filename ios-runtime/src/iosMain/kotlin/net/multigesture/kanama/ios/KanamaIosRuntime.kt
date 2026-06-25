@@ -3,6 +3,7 @@ package net.multigesture.kanama.ios
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.CPointerVar
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.FloatVar
@@ -75,6 +76,13 @@ internal interface KanamaIosScriptBridge {
         false
 
     fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean =
+        false
+
+    // `List<String>` (Godot PackedStringArray) @ScriptProperty delivery. The C side extracts the
+    // packed array's elements to utf8 C strings and hands them here; the generated
+    // setPropertyStringArray branch assigns the list to the field. See the C
+    // PACKED_STRING_ARRAY set-property dispatch case + the emitter's string-list block.
+    fun setPropertyStringArray(propertyIndex: Int, values: List<String>): Boolean =
         false
 
     // Value-type @ScriptProperty delivery (NodePath/Vector2/Vector3/Color). [value] is the
@@ -335,6 +343,19 @@ internal object KanamaIosRuntime {
         val ok = instance.bridge.setPropertyObjectArray(propertyIndex, values)
         if (ok) {
             log("property array set handle=$handle index=$propertyIndex count=${values.size} path=${instance.resource.path}")
+        }
+        return ok
+    }
+
+    fun setScriptInstancePropertyStringArray(handle: Long, propertyIndex: Int, values: List<String>): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("property string-array set skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.setPropertyStringArray(propertyIndex, values)
+        if (ok) {
+            log("property string-array set handle=$handle index=$propertyIndex count=${values.size} path=${instance.resource.path}")
         }
         return ok
     }
@@ -608,6 +629,22 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyArray(
         LongArray(count) { i -> objects[i] }
     }
     return if (KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values)) 1 else 0
+}
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_string_array")
+fun kanamaIosRuntimeScriptInstanceSetPropertyStringArray(
+    instanceHandle: Long,
+    propertyIndex: Int,
+    strings: CPointer<CPointerVar<ByteVar>>?,
+    count: Int,
+): Int {
+    val values: List<String> = if (strings == null || count <= 0) {
+        emptyList()
+    } else {
+        List(count) { i -> strings[i]?.toKString() ?: "" }
+    }
+    return if (KanamaIosRuntime.setScriptInstancePropertyStringArray(instanceHandle, propertyIndex, values)) 1 else 0
 }
 
 // PT_* tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c. NODE_PATH/STRING ship a
