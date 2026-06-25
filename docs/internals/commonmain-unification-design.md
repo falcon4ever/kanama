@@ -4,7 +4,8 @@
 > [iOS backend roadmap](./ios-backend-roadmap.md) (Post-Mobile-Parity step 1)
 > and the [wrapper coverage roadmap](./wrapper-coverage-roadmap.md) (task 4.3)
 > explicitly require before any code lands. Implementation is gated on this
-> design being reviewed by a maintainer (the roadmaps tag 4.3 **fable**). Tasks
+> design being reviewed by a maintainer (the roadmaps tag 4.3 **opus 4.8** —
+> the architectural tag). Tasks
 > 07–12 cannot start until the migration path here is approved.
 
 Design for unifying Kanama's generated Godot API wrappers toward a single
@@ -760,7 +761,8 @@ section to know exactly what to build.
 
 ## Scope note
 
-This is **design only**. Per the roadmaps (4.3 tagged **fable**) and the task
+This is **design only**. Per the roadmaps (4.3 tagged **opus 4.8** — the
+architectural tag) and the task
 spec, implementation is gated on maintainer sign-off on this document. Do
 not start migrating code (steps 0–4 of §3) until this design is reviewed and
 approved. Tasks 07–12 read §7 to know what to build.

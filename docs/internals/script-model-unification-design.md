@@ -281,5 +281,5 @@ requires the iOS wrapper to exist (Phase 2/4 dependency).
 
 3.1 is **design + the serialized model emission + parallel-run validation** — it
 does NOT change iOS runtime behavior (3.2 does). Per roadmap it is tagged
-**fable → Opus 4.8** (Fable unavailable since 2026-06-12). Model tags: 3.1/3.3
+**opus 4.8** (architectural tag). Model tags: 3.1/3.3
 Opus, 3.2 Opus, 3.4 sonnet.

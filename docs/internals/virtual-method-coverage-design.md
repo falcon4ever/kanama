@@ -9,8 +9,8 @@
 
 Design record for roadmap task 5.1 (`wrapper-coverage-roadmap.md`): let a Kanama
 `@ScriptClass` override **any** engine virtual its base class exposes, not just
-the fixed lifecycle set. Tagged **fable → Opus 4.8** (Fable unavailable since
-2026-06-12). Designed against the Phase 3 unified script model
+the fixed lifecycle set. Tagged **opus 4.8** (the architectural tag).
+Designed against the Phase 3 unified script model
 ([script-model-unification-design.md](./script-model-unification-design.md)).
 
 5.1 is **design only** — no behavior change. 5.2 (JVM), 5.3 (iOS), 5.4 (coverage

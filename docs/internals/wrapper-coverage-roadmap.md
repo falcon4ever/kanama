@@ -17,8 +17,9 @@ Each task carries a **model tag** for implementation sessions:
   catch mistakes.
 - **opus** — risky: new marshalling/ownership semantics, ABI widths, or
   C-side changes; mistakes corrupt memory or leak.
-- **fable** — architectural: cross-cutting design decisions spanning
-  generator, KSP, runtime, and multiple platforms.
+- **opus 4.8** — architectural: cross-cutting design decisions spanning
+  generator, KSP, runtime, and multiple platforms. Review by Claude Opus 4.8
+  is the gate for these decisions.
 
 ## Where we are (June 2026)
 
@@ -48,7 +49,7 @@ generator learns here. Do this first.
 | 1.1 | Add `CALL_SHAPES` for remaining scalar-ish combos (`String+bitfield+int64` args → enum return, void returns with odd arg mixes) | **sonnet** | Pattern fully established in `api_wrapper_candidates.py`; `check_wrapper_generator.py` fixtures + `audit_wrapper_signatures.py` gate it |
 | 1.2 | Container-return shapes: `Array`, `Dictionary`, `TypedVector3iArray`, `PackedColorArray` returns | **opus** | New destroy-after-read ownership paths in `BuiltinTypes`; leak-prone |
 | 1.3 | `Variant`-return and `RID`-return helper shapes | **opus** | Variant lifetime + RID is opaque-by-value; needs an ABI decision |
-| 1.4 | `Callable` argument support (6 methods) | **fable** | Ownership-sensitive by policy (`OWNERSHIP_SENSITIVE_OBJECT_TYPES`); needs a design for Kotlin-lambda→Godot-Callable lifetime that also works on iOS later |
+| 1.4 | `Callable` argument support (6 methods) | **opus 4.8** | Ownership-sensitive by policy (`OWNERSHIP_SENSITIVE_OBJECT_TYPES`); needs a design for Kotlin-lambda→Godot-Callable lifetime that also works on iOS later |
 
 **Done when:** `api_wrapper_generator_report.py` skips contain only
 virtual `_*` methods and deliberately hand-shaped entries; coverage page
@@ -92,9 +93,9 @@ addition is implemented twice.
 
 | # | Task | Model | Notes |
 |---|---|---|---|
-| 3.1 | Make the KSP processor emit a serialized, platform-neutral script model (classes, callbacks, signals, properties) consumable by the iOS build — design: [script-model-unification-design.md](./script-model-unification-design.md) | **fable** | The architectural keystone: one source of truth for desktop/Android/iOS registration |
+| 3.1 | Make the KSP processor emit a serialized, platform-neutral script model (classes, callbacks, signals, properties) consumable by the iOS build — design: [script-model-unification-design.md](./script-model-unification-design.md) | **opus 4.8** | The architectural keystone: one source of truth for desktop/Android/iOS registration |
 | 3.2 | Replace `parseIosScript` regex parser with the KSP model consumer | **opus** | Mechanical-ish once 3.1 lands, but touches codegen + C-shim dispatch wiring |
-| 3.3 | Replace enumerated `IosScriptBridgeKind` with generated per-signature trampolines (multi-arg + value-arg signal payloads) | **fable** | Removes the "missing bridge kind" bug class (the platformer coin bug); C-shim `kanama_ios_script_instance_call` becomes generated |
+| 3.3 | Replace enumerated `IosScriptBridgeKind` with generated per-signature trampolines (multi-arg + value-arg signal payloads) | **opus 4.8** | Removes the "missing bridge kind" bug class (the platformer coin bug); C-shim `kanama_ios_script_instance_call` becomes generated |
 | 3.4 | Wire remaining annotations (`@OnEnterTree`, `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput`, `@Rpc` parse-side) | **sonnet** | Trivial once 3.1–3.3 exist; today each is a manual `when` branch + warning |
 | 3.5 | Non-object signal payloads through `kanama_ios_callable_trampoline` (per-arg variant type+value) | **sonnet** | Subsumed by 3.3 if trampolines are generated; otherwise standalone |
 
@@ -111,7 +112,7 @@ remaining bespoke code paths.
 |---|---|---|---|
 | 4.1 | Wire `GodotObject.call` / `setDeferred` / `disconnect` / `connectBound` via the Variant Object dispatch path | **opus** | Removes 6 `IosGodotApi.kt` STUBs; needs Variant call C-shim entry |
 | 4.2 | Generator custom-sections (stable insertion blocks in generated files) | **sonnet** | Eliminates the 5 fragile `KANAMA-IOS-SUGAR` re-add-after-regen blocks |
-| 4.3 | `commonMain` sharing: `expect/actual ObjectCalls`, move generated wrappers out of `iosMain` copies | **fable** | Ends desktop/iOS wrapper drift permanently; touches the Gradle model of all targets |
+| 4.3 | `commonMain` sharing: `expect/actual ObjectCalls`, move generated wrappers out of `iosMain` copies | **opus 4.8** | Ends desktop/iOS wrapper drift permanently; touches the Gradle model of all targets |
 | 4.4 | iOS `GodotReal` equivalent (centralize `real_t`; survive double-precision builds) | **sonnet** | Low priority while single-precision templates are the target |
 | 4.5 | Shrink `IosGodotApi.kt` HANDWRITTEN to the truly-bespoke (coroutine scope, GD math helpers) and keep the registry honest | **sonnet** | `ios_handwritten_report.py` is the tracker; target: 0 STUB, ~6 HANDWRITTEN, 0 SUGAR |
 
@@ -129,7 +130,7 @@ extension-class virtual dispatch (`get_virtual_call_data` /
 
 | # | Task | Model | Notes |
 |---|---|---|---|
-| 5.1 | Design: annotation surface (`@OverrideVirtual`?) + KSP emission of virtual dispatch tables keyed by interned StringName, per class | **fable** | Must work on JVM (Panama upcalls) and iOS (C-shim) from day one — design against the Phase 3 unified model |
+| 5.1 | Design: annotation surface (`@OverrideVirtual`?) + KSP emission of virtual dispatch tables keyed by interned StringName, per class | **opus 4.8** | Must work on JVM (Panama upcalls) and iOS (C-shim) from day one — design against the Phase 3 unified model |
 | 5.2 | JVM implementation: generic virtual marshalling using Phase 1 shapes | **opus** | Hot path; reuse `PtrcallScratch`-style thread-locals, not per-call arenas |
 | 5.3 | iOS implementation over the unified trampoline model | **opus** | Bounded by Phase 2 audited types |
 | 5.4 | Coverage accounting: teach `api_wrapper_coverage.py` to track virtual coverage separately | **sonnet** | Keeps the "full coverage" claim measurable |
