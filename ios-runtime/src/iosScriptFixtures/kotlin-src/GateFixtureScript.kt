@@ -128,9 +128,8 @@ class GateFixtureScript(godotObject: MemorySegment) : KanamaScript<Label>(godotO
         score += 1L
     }
 
-    // Phase 3.4 @Rpc parse-side: @Rpc rides on a @RegisterFunction method; the processor captures
-    // its RpcModel and the method stays dispatchable on iOS via the generic callV (full
-    // _get_rpc_config delivery to Godot multiplayer is a later phase).
+    // @Rpc rides on a @RegisterFunction method; the processor captures its RpcModel, keeps the
+    // method dispatchable on iOS via generic callV, and delivers _get_rpc_config to Godot.
     @Rpc(callLocal = true)
     @RegisterFunction("net_score")
     fun netScore(points: Long) {

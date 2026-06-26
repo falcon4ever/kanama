@@ -88,6 +88,14 @@ internal data class IosSignal(
     val kotlinName: String,
 )
 
+internal data class IosRpcConfig(
+    val godotName: String,
+    val mode: Int,
+    val callLocal: Boolean,
+    val transferMode: Int,
+    val channel: Int,
+)
+
 internal data class IosScript(
     val resourcePath: String,
     val packageName: String?,
@@ -96,6 +104,7 @@ internal data class IosScript(
     val methods: List<IosMethod>,
     val properties: List<IosProperty>,
     val signals: List<IosSignal>,
+    val rpcConfigs: List<IosRpcConfig>,
 )
 
 internal class IosScriptCodeEmitter(
@@ -149,6 +158,13 @@ internal class IosScriptCodeEmitter(
             script.signals.forEach { signal ->
                 builder.appendLine(
                     "                KanamaIosScriptSignal(${kotlinString(signal.godotName)}),",
+                )
+            }
+            builder.appendLine("            ),")
+            builder.appendLine("            rpcConfigs = listOf(")
+            script.rpcConfigs.forEach { rpc ->
+                builder.appendLine(
+                    "                KanamaIosRpcConfig(${kotlinString(rpc.godotName)}, ${rpc.mode}, ${rpc.callLocal}, ${rpc.transferMode}, ${rpc.channel}),",
                 )
             }
             builder.appendLine("            ),")
@@ -460,6 +476,17 @@ internal class IosScriptCodeEmitter(
             .distinctBy { it.godotName }
         val signals = model.signals.map { IosSignal(it.godotName, it.godotName) }
             .distinctBy { it.godotName }
+        val rpcConfigs = model.methods.mapNotNull { method ->
+            method.rpc?.let { rpc ->
+                IosRpcConfig(
+                    godotName = method.godotName,
+                    mode = rpc.mode,
+                    callLocal = rpc.callLocal,
+                    transferMode = rpc.transferMode,
+                    channel = rpc.channel,
+                )
+            }
+        }.distinctBy { it.godotName }
         return IosScript(
             resourcePath = resourcePath,
             packageName = packageName,
@@ -468,6 +495,7 @@ internal class IosScriptCodeEmitter(
             methods = methods,
             properties = properties,
             signals = signals,
+            rpcConfigs = rpcConfigs,
         )
     }
 

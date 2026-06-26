@@ -20,7 +20,7 @@ experimental: this is demo parity, not desktop-level support.
 | Starter-Kit-FPS | Playable | F1/F2 complete. `List<Weapon>` delivery, AnimatedSprite3D generation, Tween glue, and SceneTree tween creation fixed. |
 | godot-4-3d-third-person-controller | Playable | Attack crash, Mobile/Vulkan visuals, and `List<String>` animation-loop delivery fixed. |
 | Starter-Kit-City-Builder | Desktop-only by design | Desktop-focused controls (GridMap/custom-list); not a mobile target and not reassessed for mobile. |
-| tps-demo-kanama | API blocked on `@Rpc`; mobile UI deferred | Needs `@Rpc` config delivery (kanama-tasks task 03) before the multiplayer demo is meaningful at all. Once `@Rpc` lands, the APIs work on all platforms; mobile *playability* (touch controls, mobile multiplayer UI) is a separate UI effort — see `kanama-tasks/DEFERRED.md`. |
+| tps-demo-kanama | RPC unblocked; iOS wrappers and mobile UI deferred | `@Rpc` config delivery is wired on the shared desktop/Android path and the iOS C-shim path. Full iOS launch still needs the task 08 wrapper gaps; mobile *playability* is tracked separately in `kanama-tasks/19-tps-mobile-virtual-joysticks.md`. |
 
 ## Build / Deploy Pointers
 
@@ -151,7 +151,9 @@ Before copying regenerated files:
 
 ## Next Demo-Relevant Work
 
-- tps-demo-kanama: deliver `@Rpc` multiplayer config to Godot (kanama-tasks task 03). Once landed, mobile *playability* (touch controls, mobile multiplayer UI) is a separate deferred UI effort — see `kanama-tasks/DEFERRED.md`.
+- tps-demo-kanama: run focused multiplayer smoke checks after runtime changes. Full iOS launch still
+  needs task 08 wrapper coverage; mobile *playability* (touch controls, mobile multiplayer UI) is
+  tracked in `kanama-tasks/19-tps-mobile-virtual-joysticks.md`.
 - City-Builder: desktop-only by design (GridMap/custom-list, desktop-focused controls); not a mobile target and not reassessed for mobile.
 - Re-run the full physical-device demo matrix after the iOS export workflow is documented and after
   any generator/commonMain migration.

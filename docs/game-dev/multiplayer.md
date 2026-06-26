@@ -52,6 +52,11 @@ generated `*Rpcs` helpers for Kanama-owned methods. They keep the Godot method
 name and parameter list tied to the annotated Kotlin declaration, similar to
 generated signal helpers.
 
+Kanama delivers the `@Rpc` metadata to Godot when the script is registered, so
+Godot's normal `Node.rpc`, `Node.rpc_id`, and authority checks use the
+annotation's `mode`, `callLocal`, `transferMode`, and `channel` values on
+desktop, Android, and iOS.
+
 `callLocalX(...)` is generated only for `@Rpc(callLocal = true)` methods. That
 keeps local fallback explicit and prevents accidentally running non-local RPCs
 while offline.

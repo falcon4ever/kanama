@@ -46,7 +46,7 @@ commands outside this public repo.
 | 3.1 Platform-neutral script model | done |
 | 3.2 iOS consumes KSP model; regex parser removed | done |
 | 3.3 Generated per-signature trampolines | done |
-| 3.4 Lifecycle/input/RPC parse-side annotations | done; RPC config delivery still deferred |
+| 3.4 Lifecycle/input/RPC annotations | done; RPC config delivered on desktop/Android and iOS |
 | 3.5 Non-object signal payloads | done |
 
 ### Phase 4 — Retire Hand-Written iOS Surfaces
@@ -76,13 +76,12 @@ These are the active forward-looking items. Keep the strategic ordering in
 1. **Stable iOS export workflow**: user-facing `docs/exporting/ios.md`, fresh-project path, and
    physical-device validation gate.
 2. **Android hardening**: current-device Godot 4.7 stable smoke plus R8-minified APK gate.
-3. **`@Rpc` config delivery**: required for multiplayer demo parity and real networked projects.
-4. **`commonMain` wrapper unification**: migrate toward shared generated wrappers with
+3. **`commonMain` wrapper unification**: migrate toward shared generated wrappers with
    `expect/actual ObjectCalls`.
-5. **Long-tail shapes**: Callable/vararg, conservative container policies, and non-POD virtual returns.
-6. **Generator policy cleanup**: explicit class-collision handling, subclass override generation, and
+4. **Long-tail shapes**: Callable/vararg, conservative container policies, and non-POD virtual returns.
+5. **Generator policy cleanup**: explicit class-collision handling, subclass override generation, and
    tighter fixture coverage for custom member/companion sections.
-7. **Optional iOS polish**: `GodotReal` centralization.
+6. **Optional iOS polish**: `GodotReal` centralization.
 
 ## Required Report Refreshes
 

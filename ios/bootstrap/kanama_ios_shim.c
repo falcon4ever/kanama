@@ -55,6 +55,29 @@ extern void kanama_ios_runtime_script_resource_signal_name(
     char *buffer,
     int32_t buffer_size
 );
+extern int32_t kanama_ios_runtime_script_resource_rpc_config_count(int64_t script_handle);
+extern void kanama_ios_runtime_script_resource_rpc_config_method_name(
+    int64_t script_handle,
+    int32_t rpc_config_index,
+    char *buffer,
+    int32_t buffer_size
+);
+extern int32_t kanama_ios_runtime_script_resource_rpc_config_mode(
+    int64_t script_handle,
+    int32_t rpc_config_index
+);
+extern int32_t kanama_ios_runtime_script_resource_rpc_config_call_local(
+    int64_t script_handle,
+    int32_t rpc_config_index
+);
+extern int32_t kanama_ios_runtime_script_resource_rpc_config_transfer_mode(
+    int64_t script_handle,
+    int32_t rpc_config_index
+);
+extern int32_t kanama_ios_runtime_script_resource_rpc_config_channel(
+    int64_t script_handle,
+    int32_t rpc_config_index
+);
 extern int64_t kanama_ios_runtime_script_instance_create(int64_t script_handle, int64_t owner_object);
 extern void kanama_ios_runtime_script_instance_ready(int64_t instance_handle);
 // Generic per-signature inbound call: the C callback marshals every Variant arg into a
@@ -152,9 +175,18 @@ typedef enum {
     KANAMA_IOS_VIRTUAL_SCRIPT_HAS_METHOD,
     KANAMA_IOS_VIRTUAL_SCRIPT_HAS_SIGNAL,
     KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT,
+    KANAMA_IOS_VIRTUAL_SCRIPT_RPC_CONFIG,
     KANAMA_IOS_VIRTUAL_RESOURCE_GET_TYPE,
     KANAMA_IOS_VIRTUAL_RESOURCE_LOAD,
 } KanamaIosVirtualId;
+
+typedef struct {
+    char *method_name_text;
+    int32_t mode;
+    int32_t call_local;
+    int32_t transfer_mode;
+    int32_t channel;
+} KanamaIosRpcConfig;
 
 typedef struct {
     KanamaIosClassKind kind;
@@ -172,6 +204,8 @@ typedef struct {
     uint64_t *script_signal_names;
     char **script_signal_name_texts;
     int32_t script_signal_count;
+    KanamaIosRpcConfig *script_rpc_configs;
+    int32_t script_rpc_config_count;
 } KanamaIosExtensionInstance;
 
 typedef struct {
@@ -195,6 +229,7 @@ static GDExtensionInterfaceStringToUtf8Chars g_string_to_utf8_chars = NULL;
 static GDExtensionInterfaceVariantGetPtrDestructor g_variant_get_ptr_destructor = NULL;
 static GDExtensionInterfaceVariantGetPtrConstructor g_variant_get_ptr_constructor = NULL;
 static GDExtensionInterfaceVariantGetPtrBuiltinMethod g_variant_get_ptr_builtin_method = NULL;
+static GDExtensionInterfaceVariantGetPtrKeyedSetter g_variant_get_ptr_keyed_setter = NULL;
 static GDExtensionInterfaceGetVariantFromTypeConstructor g_get_variant_from_type_constructor = NULL;
 static GDExtensionInterfaceGetVariantToTypeConstructor g_get_variant_to_type_constructor = NULL;
 static GDExtensionInterfaceVariantDestroy g_variant_destroy = NULL;
@@ -298,7 +333,9 @@ static GDExtensionPtrConstructor g_string_from_string_name_constructor = NULL;
 static GDExtensionPtrConstructor g_packed_string_array_constructor = NULL;
 static GDExtensionPtrConstructor g_array_constructor = NULL;
 static GDExtensionPtrConstructor g_dictionary_constructor = NULL;
+static GDExtensionPtrKeyedSetter g_dictionary_keyed_setter = NULL;
 static GDExtensionPtrDestructor g_node_path_destructor = NULL;
+static GDExtensionPtrDestructor g_dictionary_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
 // PackedStringArray read-back (ptrcall return -> List<String>): variable-length elements.
 static GDExtensionPtrDestructor g_packed_string_array_destructor = NULL;
@@ -371,6 +408,7 @@ static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string_name = NU
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_bool = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_dictionary = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_packed_string_array = NULL;
 static int g_main_loop_callbacks_registered = 0;
 static int g_main_loop_callbacks_active = 0;
@@ -664,6 +702,9 @@ static int kanama_ios_resolve_godot_api(void) {
     g_variant_get_ptr_builtin_method = (GDExtensionInterfaceVariantGetPtrBuiltinMethod)kanama_ios_lookup(
         "variant_get_ptr_builtin_method"
     );
+    g_variant_get_ptr_keyed_setter = (GDExtensionInterfaceVariantGetPtrKeyedSetter)kanama_ios_lookup(
+        "variant_get_ptr_keyed_setter"
+    );
     g_get_variant_from_type_constructor = (GDExtensionInterfaceGetVariantFromTypeConstructor)kanama_ios_lookup(
         "get_variant_from_type_constructor"
     );
@@ -714,6 +755,7 @@ static int kanama_ios_resolve_godot_api(void) {
         g_variant_get_ptr_destructor == NULL ||
         g_variant_get_ptr_constructor == NULL ||
         g_variant_get_ptr_builtin_method == NULL ||
+        g_variant_get_ptr_keyed_setter == NULL ||
         g_get_variant_from_type_constructor == NULL ||
         g_get_variant_to_type_constructor == NULL ||
         g_variant_destroy == NULL ||
@@ -737,6 +779,7 @@ static int kanama_ios_resolve_godot_api(void) {
     g_string_name_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
     g_string_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_STRING);
     g_node_path_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
+    g_dictionary_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
     g_node_path_from_string_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH, 2);
     // String(from: StringName) — constructor index 2 in extension_api.json. Used to
     // marshal StringName ptrcall returns (no GDExtension StringName->utf8 exists).
@@ -747,6 +790,7 @@ static int kanama_ios_resolve_godot_api(void) {
     );
     g_array_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY, 0);
     g_dictionary_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY, 0);
+    g_dictionary_keyed_setter = g_variant_get_ptr_keyed_setter(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
     g_variant_to_bool = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_BOOL);
     g_variant_to_string = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING);
     g_variant_to_float = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
@@ -779,6 +823,7 @@ static int kanama_ios_resolve_godot_api(void) {
     g_variant_from_int = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
     g_variant_from_bool = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_BOOL);
     g_variant_from_string = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING);
+    g_variant_from_dictionary = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
     g_variant_from_packed_string_array =
         g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY);
 
@@ -786,11 +831,13 @@ static int kanama_ios_resolve_godot_api(void) {
         g_string_name_destructor == NULL ||
         g_string_destructor == NULL ||
         g_node_path_destructor == NULL ||
+        g_dictionary_destructor == NULL ||
         g_node_path_from_string_constructor == NULL ||
         g_string_from_string_name_constructor == NULL ||
         g_packed_string_array_constructor == NULL ||
         g_array_constructor == NULL ||
         g_dictionary_constructor == NULL ||
+        g_dictionary_keyed_setter == NULL ||
         g_variant_to_float == NULL ||
         g_variant_to_object == NULL ||
         g_variant_to_int == NULL ||
@@ -808,6 +855,7 @@ static int kanama_ios_resolve_godot_api(void) {
         g_variant_from_int == NULL ||
         g_variant_from_bool == NULL ||
         g_variant_from_string == NULL ||
+        g_variant_from_dictionary == NULL ||
         g_variant_from_packed_string_array == NULL
     ) {
         fprintf(stderr, "[kanama][ios][c] error: failed to resolve Godot builtin helpers\n");
@@ -1142,6 +1190,34 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
             instance->script_signal_name_texts[i] = kanama_ios_strdup(signal_name);
         }
     }
+
+    int32_t rpc_config_count = kanama_ios_runtime_script_resource_rpc_config_count(instance->script_handle);
+    if (rpc_config_count > 0) {
+        instance->script_rpc_configs = calloc((size_t)rpc_config_count, sizeof(KanamaIosRpcConfig));
+        if (instance->script_rpc_configs == NULL) {
+            return;
+        }
+        instance->script_rpc_config_count = rpc_config_count;
+        for (int32_t i = 0; i < rpc_config_count; i++) {
+            char method_name[128];
+            method_name[0] = '\0';
+            kanama_ios_runtime_script_resource_rpc_config_method_name(
+                instance->script_handle,
+                i,
+                method_name,
+                (int32_t)sizeof(method_name)
+            );
+            instance->script_rpc_configs[i].method_name_text = kanama_ios_strdup(method_name);
+            instance->script_rpc_configs[i].mode =
+                kanama_ios_runtime_script_resource_rpc_config_mode(instance->script_handle, i);
+            instance->script_rpc_configs[i].call_local =
+                kanama_ios_runtime_script_resource_rpc_config_call_local(instance->script_handle, i);
+            instance->script_rpc_configs[i].transfer_mode =
+                kanama_ios_runtime_script_resource_rpc_config_transfer_mode(instance->script_handle, i);
+            instance->script_rpc_configs[i].channel =
+                kanama_ios_runtime_script_resource_rpc_config_channel(instance->script_handle, i);
+        }
+    }
 }
 
 static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance *instance) {
@@ -1182,6 +1258,12 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
         }
         free(instance->script_signal_name_texts);
     }
+    if (instance->script_rpc_configs != NULL) {
+        for (int32_t i = 0; i < instance->script_rpc_config_count; i++) {
+            free(instance->script_rpc_configs[i].method_name_text);
+        }
+        free(instance->script_rpc_configs);
+    }
     instance->script_method_names = NULL;
     instance->script_method_name_texts = NULL;
     instance->script_base_type_text = NULL;
@@ -1192,6 +1274,8 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
     instance->script_signal_names = NULL;
     instance->script_signal_name_texts = NULL;
     instance->script_signal_count = 0;
+    instance->script_rpc_configs = NULL;
+    instance->script_rpc_config_count = 0;
     instance->script_path = NULL;
     instance->script_method_count = 0;
 }
@@ -4936,6 +5020,96 @@ static void kanama_ios_init_empty_dictionary(GDExtensionTypePtr out) {
     g_dictionary_constructor(out, NULL);
 }
 
+static void kanama_ios_init_string_variant(GDExtensionUninitializedVariantPtr out, const char *value) {
+    uint64_t string_storage = 0;
+    kanama_ios_init_string(&string_storage, value != NULL ? value : "");
+    g_variant_from_string(out, &string_storage);
+    kanama_ios_destroy_string(&string_storage);
+}
+
+static void kanama_ios_init_int_variant(GDExtensionUninitializedVariantPtr out, int64_t value) {
+    GDExtensionInt int_storage = (GDExtensionInt)value;
+    g_variant_from_int(out, &int_storage);
+}
+
+static void kanama_ios_init_bool_variant(GDExtensionUninitializedVariantPtr out, int value) {
+    GDExtensionBool bool_storage = value != 0 ? 1 : 0;
+    g_variant_from_bool(out, &bool_storage);
+}
+
+static void kanama_ios_dictionary_set_variant(
+    GDExtensionTypePtr dictionary,
+    const char *key,
+    GDExtensionConstVariantPtr value_variant
+) {
+    if (dictionary == NULL || key == NULL || value_variant == NULL || g_dictionary_keyed_setter == NULL) {
+        return;
+    }
+
+    uint8_t key_variant[24];
+    memset(key_variant, 0, sizeof(key_variant));
+    kanama_ios_init_string_variant(key_variant, key);
+    g_dictionary_keyed_setter(dictionary, key_variant, value_variant);
+    g_variant_destroy(key_variant);
+}
+
+static void kanama_ios_dictionary_set_int(GDExtensionTypePtr dictionary, const char *key, int64_t value) {
+    uint8_t value_variant[24];
+    memset(value_variant, 0, sizeof(value_variant));
+    kanama_ios_init_int_variant(value_variant, value);
+    kanama_ios_dictionary_set_variant(dictionary, key, value_variant);
+    g_variant_destroy(value_variant);
+}
+
+static void kanama_ios_dictionary_set_bool(GDExtensionTypePtr dictionary, const char *key, int value) {
+    uint8_t value_variant[24];
+    memset(value_variant, 0, sizeof(value_variant));
+    kanama_ios_init_bool_variant(value_variant, value);
+    kanama_ios_dictionary_set_variant(dictionary, key, value_variant);
+    g_variant_destroy(value_variant);
+}
+
+static void kanama_ios_dictionary_set_dictionary(
+    GDExtensionTypePtr dictionary,
+    const char *key,
+    GDExtensionTypePtr value_dictionary
+) {
+    uint8_t value_variant[24];
+    memset(value_variant, 0, sizeof(value_variant));
+    g_variant_from_dictionary(value_variant, value_dictionary);
+    kanama_ios_dictionary_set_variant(dictionary, key, value_variant);
+    g_variant_destroy(value_variant);
+}
+
+static void kanama_ios_init_script_rpc_config_variant(
+    const KanamaIosExtensionInstance *script,
+    GDExtensionUninitializedVariantPtr out
+) {
+    if (script == NULL || script->script_rpc_config_count <= 0 || script->script_rpc_configs == NULL) {
+        g_variant_new_nil(out);
+        return;
+    }
+
+    uint64_t root_dictionary = 0;
+    kanama_ios_init_empty_dictionary(&root_dictionary);
+    for (int32_t i = 0; i < script->script_rpc_config_count; i++) {
+        const KanamaIosRpcConfig *config = &script->script_rpc_configs[i];
+        if (config->method_name_text == NULL || config->method_name_text[0] == '\0') {
+            continue;
+        }
+        uint64_t method_dictionary = 0;
+        kanama_ios_init_empty_dictionary(&method_dictionary);
+        kanama_ios_dictionary_set_int(&method_dictionary, "rpc_mode", config->mode);
+        kanama_ios_dictionary_set_bool(&method_dictionary, "call_local", config->call_local);
+        kanama_ios_dictionary_set_int(&method_dictionary, "transfer_mode", config->transfer_mode);
+        kanama_ios_dictionary_set_int(&method_dictionary, "channel", config->channel);
+        kanama_ios_dictionary_set_dictionary(&root_dictionary, config->method_name_text, &method_dictionary);
+        g_dictionary_destructor(&method_dictionary);
+    }
+    g_variant_from_dictionary(out, &root_dictionary);
+    g_dictionary_destructor(&root_dictionary);
+}
+
 static void kanama_ios_init_nil_variant(GDExtensionUninitializedVariantPtr out) {
     g_variant_new_nil(out);
 }
@@ -4993,7 +5167,7 @@ static void *kanama_ios_virtual_for_script(GDExtensionConstStringNamePtr name) {
     if (kanama_ios_string_name_eq(name, g_name__get_script_signal_list)) return (void *)KANAMA_IOS_VIRTUAL_ARRAY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__get_constants)) return (void *)KANAMA_IOS_VIRTUAL_DICTIONARY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__get_members)) return (void *)KANAMA_IOS_VIRTUAL_PACKED_EMPTY;
-    if (kanama_ios_string_name_eq(name, g_name__get_rpc_config)) return (void *)KANAMA_IOS_VIRTUAL_VARIANT_NIL;
+    if (kanama_ios_string_name_eq(name, g_name__get_rpc_config)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_RPC_CONFIG;
     if (kanama_ios_string_name_eq(name, g_name__instance_has)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
     if (kanama_ios_string_name_eq(name, g_name__is_placeholder_fallback_enabled)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_TRUE;
     return NULL;
@@ -5160,6 +5334,12 @@ static void kanama_ios_call_virtual_with_data(
         }
         case KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT:
             kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)ret);
+            break;
+        case KANAMA_IOS_VIRTUAL_SCRIPT_RPC_CONFIG:
+            kanama_ios_init_script_rpc_config_variant(
+                extension_instance,
+                (GDExtensionUninitializedVariantPtr)ret
+            );
             break;
         case KANAMA_IOS_VIRTUAL_RESOURCE_GET_TYPE:
             kanama_ios_init_string((uint64_t *)ret, "Script");

@@ -72,7 +72,9 @@ Exit gate: the iOS demo matrix and fresh-project path pass after a clean checkou
 
 Close or explicitly document the remaining runtime blockers:
 
-- `@Rpc` config delivery to Godot, needed for `tps-demo-kanama` and real multiplayer workflows.
+- `@Rpc` config delivery to Godot is wired for desktop/Android and the iOS C-shim path. Full
+  `tps-demo-kanama` iOS validation still depends on the remaining wrapper-coverage work tracked by
+  task 08.
 - AVAudioSession Ring/Silent behavior: resolved in the iOS shim by setting
   `AVAudioSessionCategoryAmbient` at startup, with the default and override guidance documented in
   `docs/exporting/ios.md`. Device-validated on iPhone 12 with the FPS demo:
@@ -181,7 +183,7 @@ Only after the above should docs move from "experimental mobile export" toward a
 | FPS | Playable | User-script resource lists, Tween, audio player churn, generated AnimatedSprite3D. |
 | third-person | Playable | Variant Vector3, AnimationTree playback, PackedStringArray script properties. |
 | City-Builder | Desktop-only by design | Desktop-focused controls (GridMap/custom-list); not a mobile target and not reassessed for mobile. |
-| tps-demo-kanama | API blocked on `@Rpc`; mobile UI deferred | `@Rpc` config delivery is task 03 in `kanama-tasks/`. Once landed, APIs work on all platforms; mobile playability (touch controls, mobile multiplayer UI) is deferred — see `kanama-tasks/DEFERRED.md`. |
+| tps-demo-kanama | RPC unblocked; iOS wrappers and mobile UI deferred | `@Rpc` config delivery is wired on all runtime paths. Full iOS launch still needs the task 08 wrapper gaps; mobile playability (touch controls, mobile multiplayer UI) is deferred — see `kanama-tasks/19-tps-mobile-virtual-joysticks.md`. |
 
 ## Validation Commands
 

@@ -45,12 +45,21 @@ internal data class KanamaIosScriptSignal(
     val name: String,
 )
 
+internal data class KanamaIosRpcConfig(
+    val methodName: String,
+    val mode: Int,
+    val callLocal: Boolean,
+    val transferMode: Int,
+    val channel: Int,
+)
+
 internal data class KanamaIosScriptDescriptor(
     val path: String,
     val baseType: String,
     val methods: List<KanamaIosScriptMethod>,
     val properties: List<KanamaIosScriptProperty>,
     val signals: List<KanamaIosScriptSignal>,
+    val rpcConfigs: List<KanamaIosRpcConfig> = emptyList(),
     val factory: (Long) -> KanamaIosScriptBridge?,
 )
 
@@ -226,6 +235,24 @@ internal object KanamaIosRuntime {
 
     fun scriptResourceSignalName(handle: Long, signalIndex: Int): String =
         scriptResources[handle]?.descriptor?.signals?.getOrNull(signalIndex)?.name.orEmpty()
+
+    fun scriptResourceRpcConfigCount(handle: Long): Int =
+        scriptResources[handle]?.descriptor?.rpcConfigs?.size ?: 0
+
+    fun scriptResourceRpcConfigMethodName(handle: Long, rpcConfigIndex: Int): String =
+        scriptResources[handle]?.descriptor?.rpcConfigs?.getOrNull(rpcConfigIndex)?.methodName.orEmpty()
+
+    fun scriptResourceRpcConfigMode(handle: Long, rpcConfigIndex: Int): Int =
+        scriptResources[handle]?.descriptor?.rpcConfigs?.getOrNull(rpcConfigIndex)?.mode ?: 0
+
+    fun scriptResourceRpcConfigCallLocal(handle: Long, rpcConfigIndex: Int): Int =
+        if (scriptResources[handle]?.descriptor?.rpcConfigs?.getOrNull(rpcConfigIndex)?.callLocal == true) 1 else 0
+
+    fun scriptResourceRpcConfigTransferMode(handle: Long, rpcConfigIndex: Int): Int =
+        scriptResources[handle]?.descriptor?.rpcConfigs?.getOrNull(rpcConfigIndex)?.transferMode ?: 0
+
+    fun scriptResourceRpcConfigChannel(handle: Long, rpcConfigIndex: Int): Int =
+        scriptResources[handle]?.descriptor?.rpcConfigs?.getOrNull(rpcConfigIndex)?.channel ?: 0
 
     fun createScriptInstance(scriptHandle: Long, ownerObject: Long): Long {
         if (ownerObject == 0L) {
@@ -421,6 +448,7 @@ internal object KanamaIosRuntime {
             methods = listOf(KanamaIosScriptMethod("_ready")),
             properties = emptyList(),
             signals = emptyList(),
+            rpcConfigs = emptyList(),
             factory = { ownerObject -> BuiltInProbeScript(ownerObject) },
         )
     }
@@ -585,6 +613,42 @@ fun kanamaIosRuntimeScriptResourceSignalName(
 ) {
     writeCString(KanamaIosRuntime.scriptResourceSignalName(scriptHandle, signalIndex), buffer, bufferSize)
 }
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_rpc_config_count")
+fun kanamaIosRuntimeScriptResourceRpcConfigCount(scriptHandle: Long): Int =
+    KanamaIosRuntime.scriptResourceRpcConfigCount(scriptHandle)
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_rpc_config_method_name")
+fun kanamaIosRuntimeScriptResourceRpcConfigMethodName(
+    scriptHandle: Long,
+    rpcConfigIndex: Int,
+    buffer: CPointer<ByteVar>?,
+    bufferSize: Int,
+) {
+    writeCString(KanamaIosRuntime.scriptResourceRpcConfigMethodName(scriptHandle, rpcConfigIndex), buffer, bufferSize)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_rpc_config_mode")
+fun kanamaIosRuntimeScriptResourceRpcConfigMode(scriptHandle: Long, rpcConfigIndex: Int): Int =
+    KanamaIosRuntime.scriptResourceRpcConfigMode(scriptHandle, rpcConfigIndex)
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_rpc_config_call_local")
+fun kanamaIosRuntimeScriptResourceRpcConfigCallLocal(scriptHandle: Long, rpcConfigIndex: Int): Int =
+    KanamaIosRuntime.scriptResourceRpcConfigCallLocal(scriptHandle, rpcConfigIndex)
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_rpc_config_transfer_mode")
+fun kanamaIosRuntimeScriptResourceRpcConfigTransferMode(scriptHandle: Long, rpcConfigIndex: Int): Int =
+    KanamaIosRuntime.scriptResourceRpcConfigTransferMode(scriptHandle, rpcConfigIndex)
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_rpc_config_channel")
+fun kanamaIosRuntimeScriptResourceRpcConfigChannel(scriptHandle: Long, rpcConfigIndex: Int): Int =
+    KanamaIosRuntime.scriptResourceRpcConfigChannel(scriptHandle, rpcConfigIndex)
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_create")
