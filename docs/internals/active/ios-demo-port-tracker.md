@@ -96,16 +96,22 @@ device to forget the currently trusted app.
 
 ## Device Gate Baselines
 
-Last full gate refresh: 2026-06-25 on iPhone 12, iOS 26.5, with Godot 4.7 stable. The demo matrix
-used a reusable locally provisioned bundle ID for copied demo exports after the first two demos, so only
-one gate app needed to remain installed on the device.
+Last full gate refresh: 2026-06-25 on iPhone 12, iOS 26.5, with Godot 4.7 stable. As `ios_device_gate.sh`
+runs it, every demo is copied and its export bundle ID is rewritten to the single reusable gate bundle ID
+(`--gate-bundle-id`, default `net.multigesture.kanama.devicegate`) before install/launch, so only one gate
+app needs to remain installed on the device throughout the matrix.
+
+This table is a maintainer-run snapshot: the elapsed times reflect a hand-managed session (some warm
+rebuilds, occasional manual "trust the development profile" prompts on first launch), so incidental
+per-row timing notes will not match a single clean `scripts/ios_device_gate.sh` invocation exactly.
+Treat the times as rough, device-dependent baselines rather than reproducible measurements.
 
 | Path | Device / OS | Godot | Result | Load / gate elapsed | FPS / readout | Notes |
 |---|---|---|---|---:|---|---|
 | Fresh starter project | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 195s | Probe label ready | Fresh `createStarterProject` + `installIosAddon` path. |
-| Bunnymark | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 186s | FPS/readout visible on device; not machine-captured | Built, installed, and launched with its demo bundle ID. |
+| Bunnymark | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 186s | FPS/readout visible on device; not machine-captured | Copied demo export with reusable gate bundle ID. |
 | Starter-Kit-Match3 | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 182s build/install + direct launch retry | Visual launch pass | Initial launch required trusting the development profile after install. |
-| Starter-Kit-3D-Platformer | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 18s warm build/install + direct launch retry | Visual launch pass | Reused the locally provisioned Match3 bundle ID from a copied demo export. |
+| Starter-Kit-3D-Platformer | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 18s warm build/install + direct launch retry | Visual launch pass | Copied demo export with reusable gate bundle ID; warm rebuild reused the already-installed gate app. |
 | godot-demo-2d-dodge-the-creeps | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 183s | Visual launch pass | Copied demo export with reusable gate bundle ID. |
 | godot-demo-3d-squash-the-creeps | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 188s | Visual launch pass | Copied demo export with reusable gate bundle ID. |
 | godot-4-3d-character-controller | iPhone 12, iOS 26.5 | 4.7 stable | Pass | 189s | Visual launch pass | Copied demo export with reusable gate bundle ID. |
