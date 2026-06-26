@@ -3,8 +3,9 @@
 External review of the Kanama runtime architecture, target support
 (Desktop/Android/iOS), and performance posture, performed against the
 0.2.2 preview line (now Godot 4.7 stable; originally reviewed against the
-4.7 rc 2 baseline). Findings F1–F2 were fixed in the same pass; F3–F4 have
-since been addressed as bounded follow-ups in
+4.7 rc 2 baseline). Finding F1 was fixed in the same pass; F2 is now
+root-caused and blocked upstream (R8/minify unsupported via PanamaPort);
+F3–F4 have since been addressed as bounded follow-ups in
 [wrapper-coverage-tracker.md](../active/wrapper-coverage-tracker.md).
 
 ## Verdict
@@ -94,16 +95,33 @@ registration when `get_proc_address` returns NULL. Fixed: all descriptor
 sources (generators in `build.gradle.kts`, `example_project` addon,
 Android plugin assets) now declare `4.7`, matching the actual baseline.
 
-### F2 — Gap (scaffolded): no R8/ProGuard rules
+### F2 — Gap (blocked upstream): R8/minify unsupported via PanamaPort
 
 Obfuscation-resistant script packaging is a stated project motivation,
 yet the Android plugin shipped no keep rules and no consumer ProGuard
 wiring. Scaffolded in this pass:
 `android/godot-plugin/plugin/consumer-rules.pro` (JNI bootstrap entry,
-Panama upcall targets, KSP registrars, annotations, PanamaPort
-internals) wired via `consumerProguardFiles`. An R8-minified APK smoke
-pass remains a pending validation gate — the keep rules are conservative
-and unvalidated against an actual minified build.
+Panama upcall targets, KSP registrars, annotations) wired via
+`consumerProguardFiles`.
+
+Validation on a Pixel 7 (2026-06-26) root-caused why an R8-minified APK
+fails at runtime, and the result is that **R8/minify cannot be supported
+from keep rules**. The GDExtension loads and `KanamaBinding.init` runs;
+the crash is inside PanamaPort's FFI bootstrap at
+`nativeLinker().downcallHandle()` (`AssertionError: Should not reach
+here`). PanamaPort's Android linker uses Java pattern-matching `switch`es
+over sealed types (`_LLVMStorageDescriptor` storages, the `MemoryLayout`
+hierarchy) that Godot 4.7's R8 (AGP 8.6.1) mis-optimizes into the
+`default -> shouldNotReachHere()` branch. It is a hard contradiction:
+keeping the sealed types blocks the optimization PanamaPort's own
+`@CheckDiscard` rules require (so the build fails the discard check), and
+not keeping them leaves the switch broken at runtime. PanamaPort `Core`
+is at `v0.1.3` (latest on Maven Central), so the fix must come upstream.
+`consumer-rules.pro` therefore keeps no `com.v7878.**` classes (any such
+keep breaks the build) and only `-dontwarn`s them; the failure is
+reproducible via `scripts/android_export_minified.sh`. Until upstream
+resolves it, Android release builds ship without minify. See
+`docs/exporting/android.md` → "Current Boundaries".
 
 ### F3 — Performance follow-up: per-call confined arenas in generated wrappers
 

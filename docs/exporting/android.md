@@ -14,10 +14,12 @@ for testing Kanama games on Android.
 
 ## Current Status
 
-Eight public demo exports are Android smoke targets. The Godot 4.7 stable
-emulator smoke path has re-passed for Starter-Kit-Match3; Pixel 7 hardware
-startup/playability coverage is still pending for the stable baseline, so
-Android remains experimental:
+Eight public demo exports are Android smoke targets. On 2026-06-26, the full
+Godot 4.7 stable matrix passed on a Pixel 7 using debug APK exports, logcat
+startup checks, and screenshot smoke checks. Android remains experimental, and
+R8/minify is unsupported: the obfuscated release path is blocked upstream in
+PanamaPort (see "Current Boundaries"), so release builds must ship without
+minify for now.
 
 | Demo | Current Result |
 |---|---|
@@ -25,15 +27,14 @@ Android remains experimental:
 | `Starter-Kit-3D-Platformer` | APK exports, launches, loads seven Kotlin scripts, reaches the main loop, renders the 3D scene, and runs gameplay logic with mobile controls. |
 | `Starter-Kit-Match3` | APK exports, launches, initializes Kanama, and passes startup/screenshot smoke checks. |
 | `godot-demo-3d-squash-the-creeps` | APK exports, launches, initializes Kanama, and passes startup/screenshot smoke checks. |
-| `Starter-Kit-FPS` | Android export preset and smoke target with touch controls for startup/playability checks. |
-| `Starter-Kit-Racing` | Android export preset and smoke target with mobile steering controls. |
-| `godot-4-3d-character-controller-tutorial` | Android export preset and smoke target with virtual joystick controls. |
-| `godot-4-3d-third-person-controller` | Android export preset and smoke target with virtual joysticks and warmup coverage for gameplay hitches. |
+| `Starter-Kit-FPS` | APK exports, launches, initializes Kanama, reaches the main loop, and passes screenshot smoke checks with touch-control coverage. |
+| `Starter-Kit-Racing` | APK exports, launches, initializes Kanama, reaches the main loop, and passes screenshot smoke checks with mobile steering controls. |
+| `godot-4-3d-character-controller-tutorial` | APK exports, launches, initializes Kanama, reaches the main loop, and passes screenshot smoke checks with virtual joystick controls. |
+| `godot-4-3d-third-person-controller` | APK exports, launches, initializes Kanama, reaches the main loop, and passes screenshot smoke checks with virtual joystick controls. |
 
-Pixel 7 coverage in the last completed pre-stable matrix included manual
-playability checks for the Android-enabled demos in addition to
-startup/screenshot smoke checks. Re-run the hardware matrix before making a
-stronger Android support claim.
+The Pixel 7 debug matrix does not imply release-obfuscated support. R8/minify is
+blocked upstream in PanamaPort (see "Current Boundaries"); obfuscated-build
+support cannot be claimed until that is resolved upstream.
 
 The validated Android demos currently use Godot's OpenGL Compatibility renderer.
 Desktop demos can continue using their normal renderer. Vulkan/Mobile-renderer
@@ -192,11 +193,31 @@ before exiting.
 - Some unsupported ASTC textures may be converted at runtime by the emulator.
 - Godot 4.7 `VirtualJoystick` wrappers are available in Kanama, but demo-level
   touch-control polish remains a project-specific validation claim.
-- R8/ProGuard minification is scaffolded but not yet validated. The plugin AAR
-  ships consumer keep rules (`android/godot-plugin/plugin/consumer-rules.pro`)
-  covering the JNI bootstrap entry, Panama upcall targets, KSP-generated
-  registrars, and PanamaPort internals. An R8-minified APK smoke pass is a
-  pending validation gate before claiming obfuscated-build support.
+- R8/ProGuard minification is **not supported** — blocked upstream in
+  PanamaPort, not by Kanama's keep rules. Root-caused on a Pixel 7 (2026-06-26):
+  a minified Match3 release APK builds and the GDExtension loads and runs
+  (`GodotPluginRegistry` initializes `KanamaAndroid`, `libkanama_bootstrap.so`
+  loads, `kanama_entry` runs, `KanamaBinding.init` executes), then crashes in
+  PanamaPort's FFI bootstrap at `nativeLinker().downcallHandle()` with
+  `AssertionError: Should not reach here`. The recurring
+  `No loader found for resource: res://kotlin-src/*.kt` (and the flickering
+  splash) is downstream of that crash — the `.kt` loader never registers.
+  Deobfuscated, PanamaPort's Android linker (`_AndroidLinkerImpl`) builds native
+  stubs with Java pattern-matching `switch`es over sealed types
+  (`_LLVMStorageDescriptor` storages and the `MemoryLayout` hierarchy), and
+  Godot 4.7's R8 (AGP 8.6.1) mis-optimizes those switches so they fall through
+  to `default -> Utils.shouldNotReachHere()`. This is unfixable from consumer
+  keep rules: keeping the sealed types (even no-shrink-only) blocks the
+  optimization PanamaPort's own `@CheckDiscard` rules require (scalarizing
+  `_ScopedMemoryAccess$SessionLock` in the VarHandle accessors), failing the
+  build; not keeping them leaves the switch broken at runtime. PanamaPort `Core`
+  tops out at `v0.1.3` on Maven Central, so there is no upgrade to pull; the fix
+  must come from upstream. Until then, ship Android release builds **without**
+  minify (debug-signed release or `minifyEnabled=false`). The plugin AAR's
+  `android/godot-plugin/plugin/consumer-rules.pro` covers the Kanama/Godot
+  surface and silences PanamaPort warnings but deliberately keeps **no**
+  `com.v7878.**` classes (any such keep breaks the build). The failure is
+  reproducible with `scripts/android_export_minified.sh` for an upstream report.
 
 ## Validation Shape
 
