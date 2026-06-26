@@ -298,6 +298,31 @@ cat >"$RESULTS_TSV" <<'EOF'
 name	status	elapsed_seconds	log
 EOF
 
+write_summary() {
+  {
+    echo "# iOS Device Gate Summary"
+    echo
+    echo "- Started: $RUN_STARTED"
+    if [[ -n "$DEVICE_LABEL" ]]; then
+      echo "- Device: $DEVICE_LABEL"
+    else
+      echo "- Device: not recorded; rerun with --device-label for public docs"
+    fi
+    echo "- Godot: $GODOT_BIN"
+    echo "- Output: $OUTPUT_DIR"
+    echo
+    echo "| Path | Status | Gate elapsed | Log |"
+    echo "|---|---:|---:|---|"
+    tail -n +2 "$RESULTS_TSV" | while IFS=$'\t' read -r name status elapsed log_path; do
+      echo "| $name | $status | ${elapsed}s | $log_path |"
+    done
+  } >"$SUMMARY"
+}
+
+# Always emit the summary, even if a step fails or the run is interrupted, so the
+# partial pass/fail matrix is recoverable for the baselines table.
+trap write_summary EXIT
+
 export KANAMA_IOS_DEVICE="$DEVICE_ID"
 export KANAMA_IOS_TEAM="$DEVELOPMENT_TEAM"
 export DEVELOPER_DIR="$XCODE_DEVELOPER_DIR"
@@ -322,7 +347,9 @@ if [[ "$RUN_FRESH" -eq 1 ]]; then
   if [[ "$ALLOW_PROVISIONING_UPDATES" -eq 1 ]]; then
     fresh_args+=(--allow-provisioning-updates)
   fi
-  run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}"
+  # run_step records the FAIL itself; keep going so the demo matrix still runs
+  # and the final aggregation below decides the overall exit status.
+  run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}" || true
 fi
 
 if [[ "$RUN_DEMOS" -eq 1 ]]; then
@@ -355,32 +382,13 @@ if [[ "$RUN_DEMOS" -eq 1 ]]; then
       "$demo_run_path" \
       "$GATE_BUNDLE_ID" \
       "${demo_apps[$i]}" \
-      "$OUTPUT_DIR/${demo_apps[$i]}"
+      "$OUTPUT_DIR/${demo_apps[$i]}" || true
   done
   if [[ "$start_found" -eq 0 ]]; then
     echo "[ios_device_gate] --start-at did not match any demo: $START_AT" >&2
     exit 2
   fi
 fi
-
-{
-  echo "# iOS Device Gate Summary"
-  echo
-  echo "- Started: $RUN_STARTED"
-  if [[ -n "$DEVICE_LABEL" ]]; then
-    echo "- Device: $DEVICE_LABEL"
-  else
-    echo "- Device: not recorded; rerun with --device-label for public docs"
-  fi
-  echo "- Godot: $GODOT_BIN"
-  echo "- Output: $OUTPUT_DIR"
-  echo
-  echo "| Path | Status | Gate elapsed | Log |"
-  echo "|---|---:|---:|---|"
-  tail -n +2 "$RESULTS_TSV" | while IFS=$'\t' read -r name status elapsed log_path; do
-    echo "| $name | $status | ${elapsed}s | $log_path |"
-  done
-} >"$SUMMARY"
 
 if rg -q $'\tFAIL\t' "$RESULTS_TSV"; then
   echo "[ios_device_gate] one or more gate steps failed; summary: $SUMMARY" >&2
