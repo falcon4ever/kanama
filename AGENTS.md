@@ -109,7 +109,7 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
 
 | Item | Why it's correct | Do not change |
 |---|---|---|
-| `REFCOUNTED_REFERENCE_HASH == REFCOUNTED_UNREFERENCE_HASH` in `ScriptBridge.kt` | `reference()` and `unreference()` share the `bool()` signature, so their method hashes match by construction. | Verified legitimate in `docs/internals/reference/architecture-review-2026-06.md` verdict/F5 observations. |
+| `REFCOUNTED_REFERENCE_HASH == REFCOUNTED_UNREFERENCE_HASH` (both `2240911060`) in `ScriptBridge.kt` | `reference()` and `unreference()` share the `bool()` signature, so their method hashes match by construction. | Verified legitimate against `extension_api.json` in `docs/internals/reference/architecture-review-2026-06.md` Verdict section. |
 | `compatibility_minimum = "4.7"` in `.gdextension` descriptors | `classdb_register_extension_class6` is a Godot 4.7 API; 4.3-4.6 loads would fail at class registration. | Keep the 4.7 invariant from architecture review F1. |
 | Single-class iOS wrapper regeneration can drop methods returning other wrapper types | The generator emits returns only for classes in the active iOS wrapper set. | Regenerate with the full emitted-class union; see `docs/internals/active/ios-demo-port-tracker.md` "Generator Gotcha". |
 | PanamaPort textual remap from `java.lang.foreign.*` to `com.v7878.foreign.*` | It is a pragmatic Android ART compatibility path guarded by pre/post audits. | Do not clean it up without replacing the audit mitigation; see the architecture review Android section. |
