@@ -67,6 +67,7 @@ nav:
       - Android Internals: contributing/android-internals.md
   - Internals:
       - Architecture Review (2026-06): internals/architecture-review-2026-06.md
+      - commonMain Wrapper Unification Design (4.3): internals/commonmain-unification-design.md
       - Wrapper Coverage Roadmap: internals/wrapper-coverage-roadmap.md
       - Wrapper Coverage Tracker: internals/wrapper-coverage-tracker.md
       - Callable Args Design (1.4): internals/callable-args-design.md

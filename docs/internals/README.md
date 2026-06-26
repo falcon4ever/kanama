@@ -17,6 +17,7 @@ AGENTS.md.)
 | [ios-backend-architecture.md](./ios-backend-architecture.md) | How Kanama runs Kotlin scripts on iOS (C-shim ptrcall, the shared wrapper generator, script model). |
 | [ios-backend-handwritten.md](./ios-backend-handwritten.md) | **Generated report** (do not edit; run `scripts/ios_handwritten_report.py`) of hand-written/stub iOS classes. |
 | [architecture-review-2026-06.md](./architecture-review-2026-06.md) | Point-in-time architecture/performance review (June 2026). |
+| [commonmain-unification-design.md](./commonmain-unification-design.md) | Design record for moving generated wrappers to shared `commonMain` with `expect/actual ObjectCalls`. |
 | [wrapper-coverage-roadmap.md](./wrapper-coverage-roadmap.md) | Historical full-wrapper-coverage plan; use the iOS roadmap for current strategy and the tracker for live state. |
 
 ## Historical — design records for completed phases (kept for context)
