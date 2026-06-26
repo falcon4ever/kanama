@@ -322,7 +322,7 @@ object Input {
         return ObjectCalls.ptrcallNoArgsRetLong(getCurrentCursorShapeBind, singleton)
     }
 
-    fun setCustomMouseCursor(image: Resource?, shape: Long = 0L, hotspot: Vector2) {
+    fun setCustomMouseCursor(image: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: MemorySegment.NULL, shape, hotspot)
     }
 
