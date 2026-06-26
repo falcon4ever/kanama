@@ -161,7 +161,7 @@ VARARG_RETURN_TYPES = {"void", "Variant", "enum"}
 # dispatch (`kanama_ios_godot_ptrcall`). Conservative guardrail: emit ONLY the
 # arg/return kinds whose ptrcall width + layout are audited AND validated on device
 # (the self-test matrix + ObjectCalls probe). Un-audited shapes are skipped, never
-# guessed — see docs/internals/ios-backend-architecture.md §"Rules".
+# guessed — see docs/internals/reference/ios-backend-architecture.md §"Rules".
 #
 # Set by main() when any --ios-* flag is passed; when True, `unsupported_reason`
 # additionally rejects any method the iOS helper generator can't marshal, so the

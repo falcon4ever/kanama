@@ -236,8 +236,8 @@ after each step.
      Kotlin/Native actual, width-sensitive self-test row, and generator fixture
      before promoting the common method.
    - Gate each family with `scripts/check_wrapper_generator.py`,
-     `python3 scripts/api_wrapper_generator_report.py --markdown docs/reference/wrapper-generator-report.md`,
-     `python3 scripts/api_wrapper_coverage.py --markdown docs/reference/api-coverage.md`,
+     `python3 scripts/api_wrapper_generator_report.py --markdown docs/contributing/wrapper-generator-report.md`,
+     `python3 scripts/api_wrapper_coverage.py --markdown docs/contributing/api-coverage.md`,
      JVM compile, iOS compile, and the iOS ObjectCalls/self-test matrix when the
      shape touches the C shim.
 
@@ -248,7 +248,7 @@ after each step.
      `SceneTree` still needs subclass-specific behavior, solve it as a
      generator policy/custom-section problem shared by all platforms, not by
      editing iOS-only source.
-   - Gate: `scripts/ios_handwritten_report.py --markdown docs/internals/ios-backend-handwritten.md`
+   - Gate: `scripts/ios_handwritten_report.py --markdown docs/internals/reference/ios-backend-handwritten.md`
      remains `0 STUB / 0 SUGAR`; iOS compile; focused demo smoke if the class is
      demo-visible.
 

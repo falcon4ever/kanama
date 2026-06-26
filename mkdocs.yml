@@ -55,25 +55,29 @@ nav:
       - iOS Experimental: exporting/ios.md
   - Reference:
       - Version Support: reference/version-support.md
-      - API Coverage: reference/api-coverage.md
-      - Wrapper Generator Report: reference/wrapper-generator-report.md
       - C# Comparison: reference/c-sharp-compat.md
   - Contributing:
       - Contributor Guide: contributing/index.md
       - Architecture: contributing/architecture.md
       - Wrapper Maintenance: contributing/wrapper-maintenance.md
+      - API Coverage: contributing/api-coverage.md
+      - Wrapper Generator Report: contributing/wrapper-generator-report.md
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Demo Porting Rules: contributing/demo-porting-rules.md
       - Android Internals: contributing/android-internals.md
   - Internals:
-      - Architecture Review (2026-06): internals/architecture-review-2026-06.md
-      - commonMain Wrapper Unification Design (4.3): internals/commonmain-unification-design.md
-      - Wrapper Coverage Roadmap: internals/wrapper-coverage-roadmap.md
-      - Wrapper Coverage Tracker: internals/wrapper-coverage-tracker.md
-      - Callable Args Design (1.4): internals/callable-args-design.md
-      - Script Model Unification Design (3.1): internals/script-model-unification-design.md
-      - Virtual Method Coverage Design (5.1): internals/virtual-method-coverage-design.md
-      - iOS Backend Architecture: internals/ios-backend-architecture.md
-      - iOS Backend Roadmap: internals/ios-backend-roadmap.md
-      - iOS Demo Port Tracker: internals/ios-demo-port-tracker.md
-      - iOS Backend Hand-written Registry: internals/ios-backend-handwritten.md
+      - Index: internals/README.md
+      - Active:
+          - iOS Backend Roadmap: internals/active/ios-backend-roadmap.md
+          - iOS Demo Port Tracker: internals/active/ios-demo-port-tracker.md
+          - Wrapper Coverage Tracker: internals/active/wrapper-coverage-tracker.md
+      - Reference:
+          - iOS Backend Architecture: internals/reference/ios-backend-architecture.md
+          - iOS Backend Hand-written Registry: internals/reference/ios-backend-handwritten.md
+          - Architecture Review (2026-06): internals/reference/architecture-review-2026-06.md
+          - commonMain Wrapper Unification Design (4.3): internals/reference/commonmain-unification-design.md
+          - Wrapper Coverage Roadmap: internals/reference/wrapper-coverage-roadmap.md
+      - Historical:
+          - Callable Args Design (1.4): internals/historical/callable-args-design.md
+          - Script Model Unification Design (3.1): internals/historical/script-model-unification-design.md
+          - Virtual Method Coverage Design (5.1): internals/historical/virtual-method-coverage-design.md

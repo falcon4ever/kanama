@@ -54,7 +54,7 @@ self-test and the current demo corpus have playable device runs, with FPS Audio
 autoload still tracked as a follow-up. iOS remains experimental, not a supported
 export — see the
 [iOS (Experimental)](docs/exporting/ios.md) and
-[iOS backend roadmap](docs/internals/ios-backend-roadmap.md).
+[iOS backend roadmap](docs/internals/active/ios-backend-roadmap.md).
 
 Web export is not planned.
 
@@ -185,7 +185,7 @@ The latest public documentation is published at
 - [Android Experimental](docs/exporting/android.md)
 - [iOS (Experimental)](docs/exporting/ios.md)
 - [Version Support](docs/reference/version-support.md)
-- [API Coverage](docs/reference/api-coverage.md)
+- [API Coverage](docs/contributing/api-coverage.md)
 - [C# Comparison](docs/reference/c-sharp-compat.md)
 - [Changelog](CHANGELOG.md)
 - [Contributor Guide](docs/contributing/index.md)

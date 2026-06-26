@@ -73,7 +73,7 @@ import net.multigesture.kanama.types.Vector3i
  * generic C dispatch `kanama_ios_godot_ptrcall`; Kotlin lays out the POD/struct/object
  * arg bytes here, the C side passes them straight to `object_method_bind_ptrcall`.
  *
- * Marshalling rules (see docs/internals/ios-backend-architecture.md):
+ * Marshalling rules (see docs/internals/reference/ios-backend-architecture.md):
  * - SCALAR `float` args/returns are 8-byte `double` at ptrcall (PtrToArg<float> =
  *   convert<float,double>) — so a Godot `float` scalar uses the `*Double*` helpers.
  * - Vector/Color COMPONENTS are real_t = 4-byte float32 in single-precision builds —

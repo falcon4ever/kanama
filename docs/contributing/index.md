@@ -10,6 +10,9 @@ you are changing:
   lifetime, ClassDB registration, or hot reload.
 - [Wrapper Maintenance](wrapper-maintenance.md) before changing generated
   wrappers, generator policy, ABI helpers, or generated KDoc.
+- [API Coverage](api-coverage.md) and
+  [Wrapper Generator Report](wrapper-generator-report.md) before promoting
+  wrapper coverage or changing generator skip policy.
 - [Hot Reload Internals](hot-reload-internals.md) before changing script reload
   behavior or reload smoke checks.
 - [Demo Porting Rules](demo-porting-rules.md) before changing demo ports or

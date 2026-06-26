@@ -127,10 +127,10 @@ echo "[local_ci] API wrapper coverage report"
 python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py"
 
 echo "[local_ci] API wrapper coverage docs check"
-python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/reference/api-coverage.md" --check
+python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/contributing/api-coverage.md" --check
 
 echo "[local_ci] API wrapper generator report docs check"
-python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/wrapper-generator-report.md" --check
+python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md" --check
 
 echo "[local_ci] API shell wrapper generator coverage check"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/generate_api_shell_wrappers.py" \

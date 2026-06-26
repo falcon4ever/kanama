@@ -33,7 +33,7 @@ iOS is still **experimental, not a supported export**. It should not be
 presented as a production mobile target or desktop-level support claim. Treat it
 as a validated experimental backend for Kanama development and demo/device
 testing while the remaining work in the
-[iOS roadmap](../internals/ios-backend-roadmap.md) is completed.
+[iOS roadmap](../internals/active/ios-backend-roadmap.md) is completed.
 
 ## Toolchain
 
@@ -330,7 +330,7 @@ loader/render checks. None of the modes prove hot reload.
 - Hot reload is out of scope for the iOS backend.
 - The audited type set and KSP registration path cover the current demo corpus.
   Remaining support work is tracked explicitly in
-  [ios-backend-roadmap.md](../internals/ios-backend-roadmap.md), including export
+  [ios-backend-roadmap.md](../internals/active/ios-backend-roadmap.md), including export
   workflow polish, `@Rpc` config delivery, and `commonMain` source sharing.
 - The runtime calls Godot through backend-neutral generated wrappers and
   prefers cached typed `ptrcall`s over Variant-heavy or allocation-heavy paths.

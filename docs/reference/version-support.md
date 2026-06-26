@@ -12,7 +12,7 @@ platforms and engine versions validated for the current preview.
 | Linux arm64 | Pending 4.7 stable revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 ARM64 binary. Packaged desktop exports remain a separate release-readiness track. |
 | Linux x86_64 | Pending 4.7 stable revalidation | Last local runtime, editor, and demo smoke validation passed with the 4.7 beta 2 x64 binary. Packaged desktop exports remain a separate release-readiness track. |
 | Windows x86_64 | Pending 4.7 stable revalidation | Last local runtime/editor smoke validation passed with the 4.7 beta 2 console binary. PowerShell Gradle commands and Git Bash smoke marker checks are the documented path. |
-| iOS | Experimental (Kotlin/Native backend); not a supported export | The iOS backend runs full Kanama project scripts via a C shim + Kotlin/Native static `.xcframework`, using the same wrapper generator as desktop/Android. The iPhone 12 self-test (PTRCALL 54 / OBJECTCALLS 78, 0 failed) passed against the 4.7 stable iOS export template (2026-06-21). The current demo corpus has playable iPhone 15 Pro runs, with one FPS Audio autoload follow-up still tracked. Still experimental — see the [iOS roadmap](../internals/ios-backend-roadmap.md) for remaining support/export gates. |
+| iOS | Experimental (Kotlin/Native backend); not a supported export | The iOS backend runs full Kanama project scripts via a C shim + Kotlin/Native static `.xcframework`, using the same wrapper generator as desktop/Android. The iPhone 12 self-test (PTRCALL 54 / OBJECTCALLS 78, 0 failed) passed against the 4.7 stable iOS export template (2026-06-21). The current demo corpus has playable iPhone 15 Pro runs, with one FPS Audio autoload follow-up still tracked. Still experimental — see the [iOS roadmap](../internals/active/ios-backend-roadmap.md) for remaining support/export gates. |
 | Web | Not planned | Kanama depends on a JVM/FFM-style runtime path. |
 
 Validated support is only claimed after the matching smoke path passes.
@@ -90,7 +90,7 @@ until the export workflow is user-facing, the known FPS Audio follow-up is close
 documented as a non-blocking limitation, and a broader physical-device matrix has passed.
 
 See the [iOS export workflow](../exporting/ios.md) and the
-[iOS backend roadmap](../internals/ios-backend-roadmap.md) (guardrails, how to stay in sync
+[iOS backend roadmap](../internals/active/ios-backend-roadmap.md) (guardrails, how to stay in sync
 with desktop/Android, backlog, per-demo coverage).
 
 ## Local Validation
@@ -201,8 +201,8 @@ For a new Godot version:
 4. Regenerate wrapper coverage reports:
 
    ```sh
-   python3 scripts/api_wrapper_generator_report.py --markdown docs/reference/wrapper-generator-report.md
-   python3 scripts/api_wrapper_coverage.py --markdown docs/reference/api-coverage.md
+   python3 scripts/api_wrapper_generator_report.py --markdown docs/contributing/wrapper-generator-report.md
+   python3 scripts/api_wrapper_coverage.py --markdown docs/contributing/api-coverage.md
    ```
 
 5. Validate API metadata and wrapper policy:

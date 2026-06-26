@@ -14,10 +14,10 @@ versioning once public releases begin.
   wrapper generator as desktop/Android) over a C-shim generic `ptrcall`. The core
   self-test and current demo corpus have playable device runs; per-frame Kanama
   binding overhead measured ~0.63 ms on iPhone 12. iOS remains experimental, not
-  a supported export — see `docs/internals/ios-backend-roadmap.md` for the gaps.
+  a supported export — see `docs/internals/active/ios-backend-roadmap.md` for the gaps.
 - Added an iOS hand-written/stub registry: `// KANAMA-IOS-{STUB,HANDWRITTEN,SUGAR}`
   markers, `scripts/ios_handwritten_report.py` (generates
-  `docs/internals/ios-backend-handwritten.md`), and `scripts/check_ios_no_silent_stubs.py`
+  `docs/internals/reference/ios-backend-handwritten.md`), and `scripts/check_ios_no_silent_stubs.py`
   (fails CI on an un-annotated silent stub). The current registry is 0 STUB / 0 SUGAR.
 - Added iOS physical-device validation tooling: a visual smoke script with an
   optional Kotlin/Native frame probe that updates a Godot `Label` through a

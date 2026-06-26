@@ -3,9 +3,9 @@
 This page answers a different question than the wrapper coverage reports:
 can a Godot C# user expect the same broad workflows in Kanama?
 
-- [API Coverage](api-coverage.md) is the numeric API surface: promoted
+- [API Coverage](../contributing/api-coverage.md) is the numeric API surface: promoted
   classes/methods and generator reach.
-- [Wrapper Generator Report](wrapper-generator-report.md) is generator
+- [Wrapper Generator Report](../contributing/wrapper-generator-report.md) is generator
   internals: skip categories, helper-shape gaps, and complete draft classes.
 - This page is capability parity: scripting model, editor workflow, data
   marshalling, resources, signals, coroutines, and debugging.
@@ -44,7 +44,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 
 | Capability | Status | Notes |
 |---|---|---|
-| Promoted Kotlin wrappers | SUPPORTED | Generated wrapper promotion is the main coverage path. See [API Coverage](api-coverage.md) for current percentages and per-class details. |
+| Promoted Kotlin wrappers | SUPPORTED | Generated wrapper promotion is the main coverage path. See [API Coverage](../contributing/api-coverage.md) for current percentages and per-class details. |
 | Generated KDoc | SUPPORTED | Wrapper docs are synced from Godot `doc/classes/*.xml` where available. |
 | Core singletons and utilities | SUPPORTED | `GD`, `Mathf`, `Input`, `OS`, `Engine`, `Time`, `ProjectSettings`, `DisplayServer`, and related helpers are available. |
 | 2D/3D gameplay APIs | PARTIAL | Broad promoted coverage exists, and real demo ports exercise common movement, physics, animation, particles, UI, audio, files, scenes, resources, and tween use cases. Use the coverage reports for exact wrapper availability. |
@@ -85,5 +85,5 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 
 ## Coverage References
 
-For exact wrapper coverage, use [API Coverage](api-coverage.md). For
-generator blockers, use [Wrapper Generator Report](wrapper-generator-report.md).
+For exact wrapper coverage, use [API Coverage](../contributing/api-coverage.md). For
+generator blockers, use [Wrapper Generator Report](../contributing/wrapper-generator-report.md).

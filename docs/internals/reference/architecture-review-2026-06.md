@@ -5,7 +5,7 @@ External review of the Kanama runtime architecture, target support
 0.2.2 preview line (now Godot 4.7 stable; originally reviewed against the
 4.7 rc 2 baseline). Findings F1–F2 were fixed in the same pass; F3–F4 have
 since been addressed as bounded follow-ups in
-[wrapper-coverage-tracker.md](./wrapper-coverage-tracker.md).
+[wrapper-coverage-tracker.md](../active/wrapper-coverage-tracker.md).
 
 ## Verdict
 
@@ -74,7 +74,7 @@ is the only viable model on iOS (no JIT/JVM permitted), and keeping the
 same generated wrapper API surface across backends is the right
 abstraction. The deliberate incompleteness (audited type set, unwired
 annotations, stubbed `GodotObject.call`/`setDeferred`) is well-documented
-in `internals/ios-backend-roadmap.md` and — critically — guarded at build
+in `internals/active/ios-backend-roadmap.md` and — critically — guarded at build
 time (`scripts/check_ios_no_silent_stubs.py`, unwired-annotation
 warnings), so gaps surface instead of silently misbehaving. The
 roadmap's priorities are correct; in particular the move from the

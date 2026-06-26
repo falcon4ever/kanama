@@ -4009,7 +4009,7 @@ static void kanama_ios_pt_arg_to_variant(
 // String/Object) back through the out params. Returns the decoded Variant type tag
 // (KANAMA_IOS_VARIANT_TYPE_*), or -1 if the call did not dispatch. Marshalling is
 // concentrated here and guarded by check_call_error so the boxing bug class stays
-// in one place (see docs/internals/ios-backend-architecture.md).
+// in one place (see docs/internals/reference/ios-backend-architecture.md).
 int32_t kanama_ios_godot_object_call(
     int64_t method_bind,
     int64_t instance,

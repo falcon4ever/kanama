@@ -89,9 +89,9 @@ These are the active forward-looking items. Keep the strategic ordering in
 Run and commit refreshed reports whenever generator coverage or support claims change:
 
 ```sh
-python3 scripts/ios_handwritten_report.py --markdown docs/internals/ios-backend-handwritten.md
-python3 scripts/api_wrapper_generator_report.py --markdown docs/reference/wrapper-generator-report.md
-python3 scripts/api_wrapper_coverage.py --markdown docs/reference/api-coverage.md
+python3 scripts/ios_handwritten_report.py --markdown docs/internals/reference/ios-backend-handwritten.md
+python3 scripts/api_wrapper_generator_report.py --markdown docs/contributing/wrapper-generator-report.md
+python3 scripts/api_wrapper_coverage.py --markdown docs/contributing/api-coverage.md
 ```
 
 Use private handoff notes for exact local device commands and signing values.

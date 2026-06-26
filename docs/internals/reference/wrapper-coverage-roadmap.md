@@ -4,7 +4,7 @@
 > 4.2, 4.5, and 5 are complete; 4.3 (`commonMain` wrapper unification) remains a
 > deferred design/migration decision, and 4.4 (`GodotReal` centralization) remains
 > low priority. The live execution log is
-> [wrapper-coverage-tracker.md](./wrapper-coverage-tracker.md).
+> [wrapper-coverage-tracker.md](../active/wrapper-coverage-tracker.md).
 
 Ordered plan to take the shared wrapper generator
 (`scripts/generate_api_wrapper.py`) to full Godot 4 API coverage on all
@@ -60,7 +60,7 @@ Each task = generator kind (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN`) **+**
 self-test matrix row **+** ObjectCalls probe row **+** (value types) an
 iOS `types/` struct. Never a kind without a matrix row — the ptrcall
 width is the whole correctness story. Ordered by demo unblocking value
-(see demo tier table in `ios-backend-roadmap.md`).
+(see demo tier table in `../active/ios-backend-roadmap.md`).
 
 | # | Task | Model | Unblocks |
 |---|---|---|---|
@@ -92,7 +92,7 @@ addition is implemented twice.
 
 | # | Task | Model | Notes |
 |---|---|---|---|
-| 3.1 | Make the KSP processor emit a serialized, platform-neutral script model (classes, callbacks, signals, properties) consumable by the iOS build — design: [script-model-unification-design.md](./script-model-unification-design.md) | **fable** | The architectural keystone: one source of truth for desktop/Android/iOS registration |
+| 3.1 | Make the KSP processor emit a serialized, platform-neutral script model (classes, callbacks, signals, properties) consumable by the iOS build — design: [script-model-unification-design.md](../historical/script-model-unification-design.md) | **fable** | The architectural keystone: one source of truth for desktop/Android/iOS registration |
 | 3.2 | Replace `parseIosScript` regex parser with the KSP model consumer | **opus** | Mechanical-ish once 3.1 lands, but touches codegen + C-shim dispatch wiring |
 | 3.3 | Replace enumerated `IosScriptBridgeKind` with generated per-signature trampolines (multi-arg + value-arg signal payloads) | **fable** | Removes the "missing bridge kind" bug class (the platformer coin bug); C-shim `kanama_ios_script_instance_call` becomes generated |
 | 3.4 | Wire remaining annotations (`@OnEnterTree`, `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput`, `@Rpc` parse-side) | **sonnet** | Trivial once 3.1–3.3 exist; today each is a manual `when` branch + warning |

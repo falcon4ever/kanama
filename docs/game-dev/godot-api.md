@@ -18,9 +18,9 @@ Kanama exposes two layers:
 
 Kanama now promotes generated wrappers in broad slices rather than maintaining
 a hand-written class list in this page. Use
-[API Coverage](../reference/api-coverage.md) for the current promoted
+[API Coverage](../contributing/api-coverage.md) for the current promoted
 class/method totals and
-[Wrapper Generator Report](../reference/wrapper-generator-report.md) for the
+[Wrapper Generator Report](../contributing/wrapper-generator-report.md) for the
 generator reach and skip categories.
 
 When writing gameplay code, prefer typed wrappers such as `Node`, `Node3D`,
@@ -226,8 +226,8 @@ until the surrounding object/Variant lifetime rules are broader.
 
 ## Coverage References
 
-Use [API Coverage](../reference/api-coverage.md) and
-[Wrapper Generator Report](../reference/wrapper-generator-report.md) as the
+Use [API Coverage](../contributing/api-coverage.md) and
+[Wrapper Generator Report](../contributing/wrapper-generator-report.md) as the
 source of truth for promoted wrapper availability. Dynamic container APIs,
 ownership-sensitive object returns, and convenience helpers are promoted when
 their Kotlin surface is explicit enough to be stable.

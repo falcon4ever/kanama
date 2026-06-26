@@ -2,8 +2,8 @@
 """Generate the iOS hand-written / stub registry from in-code KANAMA-IOS-* markers.
 
 Scans the iOS backend for the three standardized markers and writes a grouped table to
-docs/internals/ios-backend-handwritten.md so every hand-written/stub/sugar site is
-discoverable (and so a reviewer can see what still needs a real implementation).
+docs/internals/reference/ios-backend-handwritten.md so every hand-written/stub/sugar
+site is discoverable (and so a reviewer can see what still needs a real implementation).
 
 Markers (one per line, in a comment above the code):
 - KANAMA-IOS-STUB: a silent stub that SHOULD call real Godot but doesn't yet.
@@ -21,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCAN_DIRS = [ROOT / "ios", ROOT / "ios-runtime/src/iosMain"]
 SCAN_SUFFIXES = {".kt", ".c", ".h"}
-OUTPUT = ROOT / "docs/internals/ios-backend-handwritten.md"
+OUTPUT = ROOT / "docs/internals/reference/ios-backend-handwritten.md"
 MARKER_RE = re.compile(r"KANAMA-IOS-(STUB|HANDWRITTEN|SUGAR)\s*:?\s*(.*)")
 KINDS = ("STUB", "HANDWRITTEN", "SUGAR")
 KIND_BLURB = {

@@ -2,9 +2,9 @@
 
 This is the public-safe plan for taking the iOS Kotlin/Native backend from demo parity to a supportable
 mobile backend, then folding the remaining mobile work back into the broader wrapper-generator roadmap.
-Deep implementation notes live in [ios-backend-architecture.md](./ios-backend-architecture.md);
+Deep implementation notes live in [ios-backend-architecture.md](../reference/ios-backend-architecture.md);
 demo status lives in [ios-demo-port-tracker.md](./ios-demo-port-tracker.md); generated hand-written-site
-accounting lives in [ios-backend-handwritten.md](./ios-backend-handwritten.md).
+accounting lives in [ios-backend-handwritten.md](../reference/ios-backend-handwritten.md).
 
 ## Current Position
 
@@ -188,9 +188,9 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer ./gradlew installIosAdd
   -PkanamaIosProjectDir=<demoDir> \
   -PkanamaIosProjectScriptsDir=<demoDir>/kotlin-src \
   -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
-python3 scripts/ios_handwritten_report.py --markdown docs/internals/ios-backend-handwritten.md
-python3 scripts/api_wrapper_generator_report.py --markdown docs/reference/wrapper-generator-report.md
-python3 scripts/api_wrapper_coverage.py --markdown docs/reference/api-coverage.md
+python3 scripts/ios_handwritten_report.py --markdown docs/internals/reference/ios-backend-handwritten.md
+python3 scripts/api_wrapper_generator_report.py --markdown docs/contributing/wrapper-generator-report.md
+python3 scripts/api_wrapper_coverage.py --markdown docs/contributing/api-coverage.md
 ```
 
 Device launch commands need private device/signing values from the private handoff and should not be

@@ -4,8 +4,8 @@
 > no-arg marker and the Kotlin function name is the engine virtual name
 > (`fun _draw()`, GDScript-style). The explicit-name form discussed below was
 > superseded because KSP2-over-Native does not expose function-annotation
-> argument values. Use [api-coverage.md](../reference/api-coverage.md) and
-> [wrapper-coverage-tracker.md](./wrapper-coverage-tracker.md) for current status.
+> argument values. Use [api-coverage.md](../../contributing/api-coverage.md) and
+> [wrapper-coverage-tracker.md](../active/wrapper-coverage-tracker.md) for current status.
 
 Design record for roadmap task 5.1 (`wrapper-coverage-roadmap.md`): let a Kanama
 `@ScriptClass` override **any** engine virtual its base class exposes, not just

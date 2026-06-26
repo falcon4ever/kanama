@@ -58,8 +58,8 @@ so a Godot API refresh fails loudly if the committed name constants are stale.
 For v0.3.0 wrapper work, use the coverage reports as the baseline instead of
 waiting for another demo to expose a gap:
 
-1. Refresh `docs/reference/api-coverage.md` and
-   `docs/reference/wrapper-generator-report.md`.
+1. Refresh `docs/contributing/api-coverage.md` and
+   `docs/contributing/wrapper-generator-report.md`.
 2. Start from the generator skip categories and missing helper shapes.
 3. Rank gaps by common Godot workflows: scene tree, resources, physics queries,
    animation, UI, input, materials, signals, RPC, and export-facing APIs.
