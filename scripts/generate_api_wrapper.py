@@ -769,6 +769,8 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
         return "emptyList()"
     if logical_kind == "Dictionary" and default_value == "{}":
         return "emptyMap()"
+    if logical_kind == "Vector2" and default_value in {"Vector2(0, 0)", "Vector2(0.0, 0.0)"}:
+        return "Vector2(0f, 0f)"
     return None
 
 
