@@ -9,13 +9,18 @@ import kotlin.math.sqrt
  * iOS marshalling note: at ptrcall a Vector4 is 4 `real_t` (float32 on single-precision iOS).
  */
 data class Vector4(
-    val x: Double,
-    val y: Double,
-    val z: Double,
-    val w: Double,
+    val x: real_t,
+    val y: real_t,
+    val z: real_t,
+    val w: real_t,
 ) {
     constructor(x: Number, y: Number, z: Number, w: Number) :
-        this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
+        this(
+            GodotReal.fromNumber(x),
+            GodotReal.fromNumber(y),
+            GodotReal.fromNumber(z),
+            GodotReal.fromNumber(w),
+        )
 
     // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
     // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
@@ -52,11 +57,16 @@ data class Vector4(
         Vector4(x - other.x, y - other.y, z - other.z, w - other.w)
 
     operator fun times(scale: Number): Vector4 =
-        Vector4(x * scale.toDouble(), y * scale.toDouble(), z * scale.toDouble(), w * scale.toDouble())
+        Vector4(
+            x.toDouble() * scale.toDouble(),
+            y.toDouble() * scale.toDouble(),
+            z.toDouble() * scale.toDouble(),
+            w.toDouble() * scale.toDouble(),
+        )
 
     operator fun unaryMinus(): Vector4 = Vector4(-x, -y, -z, -w)
 
-    fun lengthSquared(): Double = x * x + y * y + z * z + w * w
+    fun lengthSquared(): Double = (x * x + y * y + z * z + w * w).toDouble()
 
     fun length(): Double = sqrt(lengthSquared())
 

@@ -36,18 +36,18 @@ data class Transform3D(
     fun withOrigin(value: Vector3): Transform3D = copy(origin = value)
 
     fun inverse(): Transform3D =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(inverseBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(inverseBind, toGodotRealArray()))
 
     /**
      * Returns the full (affine) inverse of this transform — the true matrix inverse, valid
      * even when the [basis] has scale or shear (unlike [inverse], which assumes orthonormal).
      */
     fun affineInverse(): Transform3D =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(affineInverseBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(affineInverseBind, toGodotRealArray()))
 
     /** Returns a copy of this transform with its [basis] orthonormalized (Gram-Schmidt). */
     fun orthonormalized(): Transform3D =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(orthonormalizedBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(orthonormalizedBind, toGodotRealArray()))
 
     /**
      * Returns a copy of this transform rotated so the forward axis (-Z) points toward
@@ -56,7 +56,7 @@ data class Transform3D(
      * [useModelFront] is true the +Z axis (asset front) is treated as forward instead.
      */
     fun lookingAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false): Transform3D =
-        fromFloat32(BuiltinCalls.call(lookingAtBind, toFloat32(), 12, listOf(
+        fromGodotRealArray(BuiltinCalls.call(lookingAtBind, toGodotRealArray(), 12, listOf(
             BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vec3(target)),
             BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vec3(up)),
             BuiltinCalls.BArg.Bool(useModelFront),
@@ -67,8 +67,8 @@ data class Transform3D(
      * (0 = this, 1 = [to]); the rotation is interpolated via quaternion slerp.
      */
     fun interpolateWith(to: Transform3D, weight: Double): Transform3D =
-        fromFloat32(BuiltinCalls.call(interpolateWithBind, toFloat32(), 12, listOf(
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_TRANSFORM3D, to.toFloat32()),
+        fromGodotRealArray(BuiltinCalls.call(interpolateWithBind, toGodotRealArray(), 12, listOf(
+            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_TRANSFORM3D, to.toGodotRealArray()),
             BuiltinCalls.BArg.Real(weight),
         )))
 
@@ -78,7 +78,7 @@ data class Transform3D(
      * `translated_local` instead (not yet wired on iOS).
      */
     fun translated(offset: Vector3): Transform3D =
-        fromFloat32(BuiltinCalls.call(translatedBind, toFloat32(), 12, listOf(
+        fromGodotRealArray(BuiltinCalls.call(translatedBind, toGodotRealArray(), 12, listOf(
             BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vec3(offset)),
         )))
 
@@ -94,14 +94,22 @@ data class Transform3D(
     fun scaledLocal(scale: Vector3): Transform3D =
         Transform3D(Basis(basis.x * scale.x, basis.y * scale.y, basis.z * scale.z), origin)
 
-    // Column-major 12 float32, matching the ObjectCalls Transform3D ptrcall layout.
-    private fun toFloat32(): FloatArray =
-        floatArrayOf(
-            basis.x.x.toFloat(), basis.y.x.toFloat(), basis.z.x.toFloat(),
-            basis.x.y.toFloat(), basis.y.y.toFloat(), basis.z.y.toFloat(),
-            basis.x.z.toFloat(), basis.y.z.toFloat(), basis.z.z.toFloat(),
-            origin.x.toFloat(), origin.y.toFloat(), origin.z.toFloat(),
-        )
+    // Column-major real_t values, matching the ObjectCalls Transform3D ptrcall layout.
+    private fun toGodotRealArray(): GodotRealArray =
+        GodotRealArray(12).also {
+            it[0] = GodotReal.toC(basis.x.x)
+            it[1] = GodotReal.toC(basis.y.x)
+            it[2] = GodotReal.toC(basis.z.x)
+            it[3] = GodotReal.toC(basis.x.y)
+            it[4] = GodotReal.toC(basis.y.y)
+            it[5] = GodotReal.toC(basis.z.y)
+            it[6] = GodotReal.toC(basis.x.z)
+            it[7] = GodotReal.toC(basis.y.z)
+            it[8] = GodotReal.toC(basis.z.z)
+            it[9] = GodotReal.toC(origin.x)
+            it[10] = GodotReal.toC(origin.y)
+            it[11] = GodotReal.toC(origin.z)
+        }
 
     companion object {
         val IDENTITY = Transform3D(Basis.IDENTITY, Vector3.ZERO)
@@ -128,17 +136,21 @@ data class Transform3D(
             BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_TRANSFORM3D, "translated", 1405596198L)
         }
 
-        private fun vec3(v: Vector3): FloatArray =
-            floatArrayOf(v.x.toFloat(), v.y.toFloat(), v.z.toFloat())
+        private fun vec3(v: Vector3): GodotRealArray =
+            GodotRealArray(3).also {
+                it[0] = GodotReal.toC(v.x)
+                it[1] = GodotReal.toC(v.y)
+                it[2] = GodotReal.toC(v.z)
+            }
 
-        private fun fromFloat32(c: FloatArray): Transform3D =
+        private fun fromGodotRealArray(c: GodotRealArray): Transform3D =
             Transform3D(
                 basis = Basis(
-                    Vector3(c[0].toDouble(), c[3].toDouble(), c[6].toDouble()),
-                    Vector3(c[1].toDouble(), c[4].toDouble(), c[7].toDouble()),
-                    Vector3(c[2].toDouble(), c[5].toDouble(), c[8].toDouble()),
+                    Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[3]), GodotReal.fromC(c[6])),
+                    Vector3(GodotReal.fromC(c[1]), GodotReal.fromC(c[4]), GodotReal.fromC(c[7])),
+                    Vector3(GodotReal.fromC(c[2]), GodotReal.fromC(c[5]), GodotReal.fromC(c[8])),
                 ),
-                origin = Vector3(c[9].toDouble(), c[10].toDouble(), c[11].toDouble()),
+                origin = Vector3(GodotReal.fromC(c[9]), GodotReal.fromC(c[10]), GodotReal.fromC(c[11])),
             )
     }
 }

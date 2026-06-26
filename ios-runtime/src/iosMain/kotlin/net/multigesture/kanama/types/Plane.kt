@@ -9,10 +9,10 @@ package net.multigesture.kanama.types
  */
 data class Plane(
     val normal: Vector3,
-    val d: Double,
+    val d: real_t,
 ) {
     constructor(x: Number, y: Number, z: Number, d: Number) :
-        this(Vector3(x, y, z), d.toDouble())
+        this(Vector3(x, y, z), GodotReal.fromNumber(d))
 
     // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. `normal` delegates to
     // Vector3.equals (also fixed); `d` is compared/hashed the same way. See wrapper-coverage-roadmap.md.
@@ -25,6 +25,6 @@ data class Plane(
     override fun hashCode(): Int = 31 * normal.hashCode() + (d + 0.0).hashCode()
 
     companion object {
-        val ZERO = Plane(Vector3.ZERO, 0.0)
+        val ZERO = Plane(Vector3.ZERO, GodotReal.fromNumber(0.0))
     }
 }

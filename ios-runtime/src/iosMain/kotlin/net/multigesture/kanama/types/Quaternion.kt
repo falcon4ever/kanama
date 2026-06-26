@@ -11,13 +11,18 @@ import net.multigesture.kanama.binding.runtime.BuiltinCalls
  * methods (e.g. [inverse]) route through the BuiltinCalls value-type call path.
  */
 data class Quaternion(
-    val x: Double,
-    val y: Double,
-    val z: Double,
-    val w: Double,
+    val x: real_t,
+    val y: real_t,
+    val z: real_t,
+    val w: real_t,
 ) {
     constructor(x: Number, y: Number, z: Number, w: Number) :
-        this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
+        this(
+            GodotReal.fromNumber(x),
+            GodotReal.fromNumber(y),
+            GodotReal.fromNumber(z),
+            GodotReal.fromNumber(w),
+        )
 
     // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
     // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal quaternions hash equal.
@@ -49,7 +54,7 @@ data class Quaternion(
      * conjugate (negated x/y/z).
      */
     fun inverse(): Quaternion =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(inverseBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(inverseBind, toGodotRealArray()))
 
     /**
      * Spherically interpolates toward [to] by [weight] (0..1), computed by Godot so the
@@ -57,13 +62,18 @@ data class Quaternion(
      * are assumed normalized (matches Godot Quaternion.slerp).
      */
     fun slerp(to: Quaternion, weight: Double): Quaternion =
-        fromFloat32(BuiltinCalls.call(slerpBind, toFloat32(), 4, listOf(
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_QUATERNION, to.toFloat32()),
+        fromGodotRealArray(BuiltinCalls.call(slerpBind, toGodotRealArray(), 4, listOf(
+            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_QUATERNION, to.toGodotRealArray()),
             BuiltinCalls.BArg.Real(weight),
         )))
 
-    private fun toFloat32(): FloatArray =
-        floatArrayOf(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
+    private fun toGodotRealArray(): GodotRealArray =
+        GodotRealArray(4).also {
+            it[0] = GodotReal.toC(x)
+            it[1] = GodotReal.toC(y)
+            it[2] = GodotReal.toC(z)
+            it[3] = GodotReal.toC(w)
+        }
 
     companion object {
         val IDENTITY = Quaternion(0.0, 0.0, 0.0, 1.0)
@@ -83,14 +93,23 @@ data class Quaternion(
          * computed by Godot. `from_euler` is a *static* builtin, so the call passes an empty base.
          */
         fun fromEuler(euler: Vector3): Quaternion =
-            fromFloat32(BuiltinCalls.call(fromEulerBind, floatArrayOf(), 4, listOf(
+            fromGodotRealArray(BuiltinCalls.call(fromEulerBind, GodotRealArray(0), 4, listOf(
                 BuiltinCalls.BArg.Floats(
                     BuiltinCalls.PT_VECTOR3,
-                    floatArrayOf(euler.x.toFloat(), euler.y.toFloat(), euler.z.toFloat()),
+                    GodotRealArray(3).also {
+                        it[0] = GodotReal.toC(euler.x)
+                        it[1] = GodotReal.toC(euler.y)
+                        it[2] = GodotReal.toC(euler.z)
+                    },
                 ),
             )))
 
-        private fun fromFloat32(c: FloatArray): Quaternion =
-            Quaternion(c[0].toDouble(), c[1].toDouble(), c[2].toDouble(), c[3].toDouble())
+        private fun fromGodotRealArray(c: GodotRealArray): Quaternion =
+            Quaternion(
+                GodotReal.fromC(c[0]),
+                GodotReal.fromC(c[1]),
+                GodotReal.fromC(c[2]),
+                GodotReal.fromC(c[3]),
+            )
     }
 }

@@ -24,6 +24,8 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.GodotReal
+import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Quaternion
@@ -45,7 +47,7 @@ import net.multigesture.kanama.types.Vector4
  * generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls resolve here. Every
  * helper marshals through the single generic C dispatch `kanama_ios_godot_ptrcall`,
  * applying the authoritative ptrcall width table (scalar float->double/8B, scalar
- * int->int64/8B, Vector components->float32, Object->8B handle, StringName built
+ * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
  * C-side). Helpers already hand-written in ObjectCalls.kt are the override set and
  * are NOT regenerated here.
  */
@@ -61,28 +63,28 @@ private const val PT_QUATERNION = 20
 
 fun ObjectCalls.ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis =
     memScoped {
-        val ret = allocArray<FloatVar>(9)
+        val ret = allocArray<GodotRealVar>(9)
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_BASIS, ret)
-        Basis(Vector3(ret[0].toDouble(), ret[3].toDouble(), ret[6].toDouble()), Vector3(ret[1].toDouble(), ret[4].toDouble(), ret[7].toDouble()), Vector3(ret[2].toDouble(), ret[5].toDouble(), ret[8].toDouble()))
+        Basis(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])), Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])), Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])))
     }
 
 fun ObjectCalls.ptrcallNoArgsRetQuaternion(methodBind: MemorySegment, instance: MemorySegment): Quaternion =
     memScoped {
-        val ret = allocArray<FloatVar>(4)
+        val ret = allocArray<GodotRealVar>(4)
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_QUATERNION, ret)
-        Quaternion(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+        Quaternion(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3]))
     }
 
 fun ObjectCalls.ptrcallNoArgsRetTransform3D(methodBind: MemorySegment, instance: MemorySegment): Transform3D =
     memScoped {
-        val ret = allocArray<FloatVar>(12)
+        val ret = allocArray<GodotRealVar>(12)
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_TRANSFORM3D, ret)
-        Transform3D(Basis(Vector3(ret[0].toDouble(), ret[3].toDouble(), ret[6].toDouble()), Vector3(ret[1].toDouble(), ret[4].toDouble(), ret[7].toDouble()), Vector3(ret[2].toDouble(), ret[5].toDouble(), ret[8].toDouble())), Vector3(ret[9].toDouble(), ret[10].toDouble(), ret[11].toDouble()))
+        Transform3D(Basis(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])), Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])), Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8]))), Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])))
     }
 
 fun ObjectCalls.ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, a0: Basis) =
     memScoped {
-        val c0 = allocArray<FloatVar>(9); c0[0] = a0.x.x.toFloat(); c0[1] = a0.y.x.toFloat(); c0[2] = a0.z.x.toFloat(); c0[3] = a0.x.y.toFloat(); c0[4] = a0.y.y.toFloat(); c0[5] = a0.z.y.toFloat(); c0[6] = a0.x.z.toFloat(); c0[7] = a0.y.z.toFloat(); c0[8] = a0.z.z.toFloat()
+        val c0 = allocArray<GodotRealVar>(9); c0[0] = GodotReal.toC(a0.x.x); c0[1] = GodotReal.toC(a0.y.x); c0[2] = GodotReal.toC(a0.z.x); c0[3] = GodotReal.toC(a0.x.y); c0[4] = GodotReal.toC(a0.y.y); c0[5] = GodotReal.toC(a0.z.y); c0[6] = GodotReal.toC(a0.x.z); c0[7] = GodotReal.toC(a0.y.z); c0[8] = GodotReal.toC(a0.z.z)
         val types = allocArray<IntVar>(1); types[0] = PT_BASIS
         val ptrs = allocArray<COpaquePointerVar>(1); ptrs[0] = c0.reinterpret<CPointed>()
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
@@ -99,7 +101,7 @@ fun ObjectCalls.ptrcallWithNodePathArg(methodBind: MemorySegment, instance: Memo
 
 fun ObjectCalls.ptrcallWithQuaternionArg(methodBind: MemorySegment, instance: MemorySegment, a0: Quaternion) =
     memScoped {
-        val c0 = allocArray<FloatVar>(4); c0[0] = a0.x.toFloat(); c0[1] = a0.y.toFloat(); c0[2] = a0.z.toFloat(); c0[3] = a0.w.toFloat()
+        val c0 = allocArray<GodotRealVar>(4); c0[0] = GodotReal.toC(a0.x); c0[1] = GodotReal.toC(a0.y); c0[2] = GodotReal.toC(a0.z); c0[3] = GodotReal.toC(a0.w)
         val types = allocArray<IntVar>(1); types[0] = PT_QUATERNION
         val ptrs = allocArray<COpaquePointerVar>(1); ptrs[0] = c0.reinterpret<CPointed>()
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
@@ -108,9 +110,9 @@ fun ObjectCalls.ptrcallWithQuaternionArg(methodBind: MemorySegment, instance: Me
 
 fun ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(methodBind: MemorySegment, instance: MemorySegment, a0: Vector3, a1: Vector3, a2: Vector3, a3: Boolean) =
     memScoped {
-        val c0 = allocArray<FloatVar>(3); c0[0] = a0.x.toFloat(); c0[1] = a0.y.toFloat(); c0[2] = a0.z.toFloat()
-        val c1 = allocArray<FloatVar>(3); c1[0] = a1.x.toFloat(); c1[1] = a1.y.toFloat(); c1[2] = a1.z.toFloat()
-        val c2 = allocArray<FloatVar>(3); c2[0] = a2.x.toFloat(); c2[1] = a2.y.toFloat(); c2[2] = a2.z.toFloat()
+        val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(a0.x); c0[1] = GodotReal.toC(a0.y); c0[2] = GodotReal.toC(a0.z)
+        val c1 = allocArray<GodotRealVar>(3); c1[0] = GodotReal.toC(a1.x); c1[1] = GodotReal.toC(a1.y); c1[2] = GodotReal.toC(a1.z)
+        val c2 = allocArray<GodotRealVar>(3); c2[0] = GodotReal.toC(a2.x); c2[1] = GodotReal.toC(a2.y); c2[2] = GodotReal.toC(a2.z)
         val c3 = alloc<ByteVar>(); c3.value = if (a3) 1 else 0
         val types = allocArray<IntVar>(4); types[0] = PT_VECTOR3; types[1] = PT_VECTOR3; types[2] = PT_VECTOR3; types[3] = PT_BOOL
         val ptrs = allocArray<COpaquePointerVar>(4); ptrs[0] = c0.reinterpret<CPointed>(); ptrs[1] = c1.reinterpret<CPointed>(); ptrs[2] = c2.reinterpret<CPointed>(); ptrs[3] = c3.ptr.reinterpret<CPointed>()
@@ -120,7 +122,7 @@ fun ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(methodBind: MemorySegment, in
 
 fun ObjectCalls.ptrcallWithTransform3DArg(methodBind: MemorySegment, instance: MemorySegment, a0: Transform3D) =
     memScoped {
-        val c0 = allocArray<FloatVar>(12); c0[0] = a0.basis.x.x.toFloat(); c0[1] = a0.basis.y.x.toFloat(); c0[2] = a0.basis.z.x.toFloat(); c0[3] = a0.basis.x.y.toFloat(); c0[4] = a0.basis.y.y.toFloat(); c0[5] = a0.basis.z.y.toFloat(); c0[6] = a0.basis.x.z.toFloat(); c0[7] = a0.basis.y.z.toFloat(); c0[8] = a0.basis.z.z.toFloat(); c0[9] = a0.origin.x.toFloat(); c0[10] = a0.origin.y.toFloat(); c0[11] = a0.origin.z.toFloat()
+        val c0 = allocArray<GodotRealVar>(12); c0[0] = GodotReal.toC(a0.basis.x.x); c0[1] = GodotReal.toC(a0.basis.y.x); c0[2] = GodotReal.toC(a0.basis.z.x); c0[3] = GodotReal.toC(a0.basis.x.y); c0[4] = GodotReal.toC(a0.basis.y.y); c0[5] = GodotReal.toC(a0.basis.z.y); c0[6] = GodotReal.toC(a0.basis.x.z); c0[7] = GodotReal.toC(a0.basis.y.z); c0[8] = GodotReal.toC(a0.basis.z.z); c0[9] = GodotReal.toC(a0.origin.x); c0[10] = GodotReal.toC(a0.origin.y); c0[11] = GodotReal.toC(a0.origin.z)
         val types = allocArray<IntVar>(1); types[0] = PT_TRANSFORM3D
         val ptrs = allocArray<COpaquePointerVar>(1); ptrs[0] = c0.reinterpret<CPointed>()
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
@@ -129,8 +131,8 @@ fun ObjectCalls.ptrcallWithTransform3DArg(methodBind: MemorySegment, instance: M
 
 fun ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(methodBind: MemorySegment, instance: MemorySegment, a0: Vector3, a1: Vector3, a2: Boolean) =
     memScoped {
-        val c0 = allocArray<FloatVar>(3); c0[0] = a0.x.toFloat(); c0[1] = a0.y.toFloat(); c0[2] = a0.z.toFloat()
-        val c1 = allocArray<FloatVar>(3); c1[0] = a1.x.toFloat(); c1[1] = a1.y.toFloat(); c1[2] = a1.z.toFloat()
+        val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(a0.x); c0[1] = GodotReal.toC(a0.y); c0[2] = GodotReal.toC(a0.z)
+        val c1 = allocArray<GodotRealVar>(3); c1[0] = GodotReal.toC(a1.x); c1[1] = GodotReal.toC(a1.y); c1[2] = GodotReal.toC(a1.z)
         val c2 = alloc<ByteVar>(); c2.value = if (a2) 1 else 0
         val types = allocArray<IntVar>(3); types[0] = PT_VECTOR3; types[1] = PT_VECTOR3; types[2] = PT_BOOL
         val ptrs = allocArray<COpaquePointerVar>(3); ptrs[0] = c0.reinterpret<CPointed>(); ptrs[1] = c1.reinterpret<CPointed>(); ptrs[2] = c2.ptr.reinterpret<CPointed>()
@@ -140,7 +142,7 @@ fun ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(methodBind: MemorySegment, inst
 
 fun ObjectCalls.ptrcallWithVector3AndDoubleArg(methodBind: MemorySegment, instance: MemorySegment, a0: Vector3, a1: Double) =
     memScoped {
-        val c0 = allocArray<FloatVar>(3); c0[0] = a0.x.toFloat(); c0[1] = a0.y.toFloat(); c0[2] = a0.z.toFloat()
+        val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(a0.x); c0[1] = GodotReal.toC(a0.y); c0[2] = GodotReal.toC(a0.z)
         val c1 = alloc<DoubleVar>(); c1.value = a1
         val types = allocArray<IntVar>(2); types[0] = PT_VECTOR3; types[1] = PT_FLOAT64
         val ptrs = allocArray<COpaquePointerVar>(2); ptrs[0] = c0.reinterpret<CPointed>(); ptrs[1] = c1.ptr.reinterpret<CPointed>()
@@ -150,10 +152,10 @@ fun ObjectCalls.ptrcallWithVector3AndDoubleArg(methodBind: MemorySegment, instan
 
 fun ObjectCalls.ptrcallWithVector3ArgRetVector3(methodBind: MemorySegment, instance: MemorySegment, a0: Vector3): Vector3 =
     memScoped {
-        val ret = allocArray<FloatVar>(3)
-        val c0 = allocArray<FloatVar>(3); c0[0] = a0.x.toFloat(); c0[1] = a0.y.toFloat(); c0[2] = a0.z.toFloat()
+        val ret = allocArray<GodotRealVar>(3)
+        val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(a0.x); c0[1] = GodotReal.toC(a0.y); c0[2] = GodotReal.toC(a0.z)
         val types = allocArray<IntVar>(1); types[0] = PT_VECTOR3
         val ptrs = allocArray<COpaquePointerVar>(1); ptrs[0] = c0.reinterpret<CPointed>()
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-        Vector3(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble())
+        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
     }

@@ -671,7 +671,13 @@ object Mathf {
 
     // Godot's @GlobalScope.is_equal_approx (CMP_EPSILON fuzzy compare), via the shared iOS helper.
     fun isEqualApprox(a: Double, b: Double): Boolean =
-        net.multigesture.kanama.types.isEqualApprox(a, b)
+        if (a == b) {
+            true
+        } else {
+            val epsilon = 0.00001
+            val tolerance = kotlin.math.max(epsilon * kotlin.math.abs(a), epsilon)
+            kotlin.math.abs(a - b) < tolerance
+        }
 
     fun lerpAngle(from: Double, to: Double, weight: Double): Double {
         val difference = ((to - from + PI) % (PI * 2.0)) - PI
@@ -845,7 +851,7 @@ internal object IosGodot {
         }
 
     fun node2dSetPosition(node: Long, value: Vector2) {
-        kanama_ios_godot_node2d_set_position(node, value.x, value.y)
+        kanama_ios_godot_node2d_set_position(node, value.x.toDouble(), value.y.toDouble())
     }
 
     fun node2dGetScale(node: Long): Vector2 =
@@ -857,35 +863,35 @@ internal object IosGodot {
         }
 
     fun node2dSetScale(node: Long, value: Vector2) {
-        kanama_ios_godot_node2d_set_scale(node, value.x, value.y)
+        kanama_ios_godot_node2d_set_scale(node, value.x.toDouble(), value.y.toDouble())
     }
 
     fun node3dGetPosition(node: Long): Vector3 =
         node3dGetVector3(node, ::kanama_ios_godot_node3d_get_position)
 
     fun node3dSetPosition(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_position(node, value.x, value.y, value.z)
+        kanama_ios_godot_node3d_set_position(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
     }
 
     fun node3dGetRotation(node: Long): Vector3 =
         node3dGetVector3(node, ::kanama_ios_godot_node3d_get_rotation)
 
     fun node3dSetRotation(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_rotation(node, value.x, value.y, value.z)
+        kanama_ios_godot_node3d_set_rotation(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
     }
 
     fun node3dGetScale(node: Long): Vector3 =
         node3dGetVector3(node, ::kanama_ios_godot_node3d_get_scale)
 
     fun node3dSetScale(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_scale(node, value.x, value.y, value.z)
+        kanama_ios_godot_node3d_set_scale(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
     }
 
     fun node3dGetGlobalPosition(node: Long): Vector3 =
         node3dGetVector3(node, ::kanama_ios_godot_node3d_get_global_position)
 
     fun node3dSetGlobalPosition(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_global_position(node, value.x, value.y, value.z)
+        kanama_ios_godot_node3d_set_global_position(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
     }
 
     fun node3dRotateY(node: Long, angle: Double) {

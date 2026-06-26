@@ -1972,6 +1972,8 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.GodotReal
+import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Quaternion
@@ -1993,7 +1995,7 @@ import net.multigesture.kanama.types.Vector4
  * generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls resolve here. Every
  * helper marshals through the single generic C dispatch `kanama_ios_godot_ptrcall`,
  * applying the authoritative ptrcall width table (scalar float->double/8B, scalar
- * int->int64/8B, Vector components->float32, Object->8B handle, StringName built
+ * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
  * C-side). Helpers already hand-written in ObjectCalls.kt are the override set and
  * are NOT regenerated here.
  */
@@ -2051,7 +2053,7 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
         return (
             "Vector2",
             "PT_VECTOR2",
-            [f"val {c} = allocArray<FloatVar>(2); {c}[0] = {a}.x.toFloat(); {c}[1] = {a}.y.toFloat()"],
+            [f"val {c} = allocArray<GodotRealVar>(2); {c}[0] = GodotReal.toC({a}.x); {c}[1] = GodotReal.toC({a}.y)"],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Vector2i":
@@ -2066,7 +2068,7 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
         return (
             "Vector3",
             "PT_VECTOR3",
-            [f"val {c} = allocArray<FloatVar>(3); {c}[0] = {a}.x.toFloat(); {c}[1] = {a}.y.toFloat(); {c}[2] = {a}.z.toFloat()"],
+            [f"val {c} = allocArray<GodotRealVar>(3); {c}[0] = GodotReal.toC({a}.x); {c}[1] = GodotReal.toC({a}.y); {c}[2] = GodotReal.toC({a}.z)"],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Vector3i":
@@ -2086,12 +2088,11 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Rect2":
-        # 4x float32 = 16 bytes (position.x, position.y, size.x, size.y).
-        # Components are real_t = float32 on single-precision iOS.
+        # 4x real_t (position.x, position.y, size.x, size.y).
         return (
             "Rect2",
             "PT_RECT2",
-            [f"val {c} = allocArray<FloatVar>(4); {c}[0] = {a}.position.x.toFloat(); {c}[1] = {a}.position.y.toFloat(); {c}[2] = {a}.size.x.toFloat(); {c}[3] = {a}.size.y.toFloat()"],
+            [f"val {c} = allocArray<GodotRealVar>(4); {c}[0] = GodotReal.toC({a}.position.x); {c}[1] = GodotReal.toC({a}.position.y); {c}[2] = GodotReal.toC({a}.size.x); {c}[3] = GodotReal.toC({a}.size.y)"],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "StringName":
@@ -2104,45 +2105,42 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
         # CONSTRUCT tag: the dispatch builds a NodePath from the path C string.
         return ("NodePath", "PT_NODE_PATH", [], f"{a}.path.cstr.ptr.reinterpret<CPointed>()")
     if kind == "Basis":
-        # 9x float32, column-major: [x.x, y.x, z.x, x.y, y.y, z.y, x.z, y.z, z.z]
-        # (the three axes are the columns). POD passthrough — components are real_t=float32.
+        # 9x real_t, column-major: [x.x, y.x, z.x, x.y, y.y, z.y, x.z, y.z, z.z].
         return (
             "Basis",
             "PT_BASIS",
             [
-                f"val {c} = allocArray<FloatVar>(9); "
-                f"{c}[0] = {a}.x.x.toFloat(); {c}[1] = {a}.y.x.toFloat(); {c}[2] = {a}.z.x.toFloat(); "
-                f"{c}[3] = {a}.x.y.toFloat(); {c}[4] = {a}.y.y.toFloat(); {c}[5] = {a}.z.y.toFloat(); "
-                f"{c}[6] = {a}.x.z.toFloat(); {c}[7] = {a}.y.z.toFloat(); {c}[8] = {a}.z.z.toFloat()"
+                f"val {c} = allocArray<GodotRealVar>(9); "
+                f"{c}[0] = GodotReal.toC({a}.x.x); {c}[1] = GodotReal.toC({a}.y.x); {c}[2] = GodotReal.toC({a}.z.x); "
+                f"{c}[3] = GodotReal.toC({a}.x.y); {c}[4] = GodotReal.toC({a}.y.y); {c}[5] = GodotReal.toC({a}.z.y); "
+                f"{c}[6] = GodotReal.toC({a}.x.z); {c}[7] = GodotReal.toC({a}.y.z); {c}[8] = GodotReal.toC({a}.z.z)"
             ],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Transform2D":
-        # 6x float32: the three columns (x axis, y axis, origin), each a Vector2. POD
-        # passthrough — components are real_t=float32 on single-precision iOS. Unlike
-        # Basis/Transform3D the columns ARE the stored axes, so no column-major reshuffle.
+        # 6x real_t: the three columns (x axis, y axis, origin), each a Vector2.
         return (
             "Transform2D",
             "PT_TRANSFORM2D",
             [
-                f"val {c} = allocArray<FloatVar>(6); "
-                f"{c}[0] = {a}.x.x.toFloat(); {c}[1] = {a}.x.y.toFloat(); "
-                f"{c}[2] = {a}.y.x.toFloat(); {c}[3] = {a}.y.y.toFloat(); "
-                f"{c}[4] = {a}.origin.x.toFloat(); {c}[5] = {a}.origin.y.toFloat()"
+                f"val {c} = allocArray<GodotRealVar>(6); "
+                f"{c}[0] = GodotReal.toC({a}.x.x); {c}[1] = GodotReal.toC({a}.x.y); "
+                f"{c}[2] = GodotReal.toC({a}.y.x); {c}[3] = GodotReal.toC({a}.y.y); "
+                f"{c}[4] = GodotReal.toC({a}.origin.x); {c}[5] = GodotReal.toC({a}.origin.y)"
             ],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Transform3D":
-        # 12x float32: 9 column-major basis components then the 3 origin components.
+        # 12x real_t: 9 column-major basis components then the 3 origin components.
         return (
             "Transform3D",
             "PT_TRANSFORM3D",
             [
-                f"val {c} = allocArray<FloatVar>(12); "
-                f"{c}[0] = {a}.basis.x.x.toFloat(); {c}[1] = {a}.basis.y.x.toFloat(); {c}[2] = {a}.basis.z.x.toFloat(); "
-                f"{c}[3] = {a}.basis.x.y.toFloat(); {c}[4] = {a}.basis.y.y.toFloat(); {c}[5] = {a}.basis.z.y.toFloat(); "
-                f"{c}[6] = {a}.basis.x.z.toFloat(); {c}[7] = {a}.basis.y.z.toFloat(); {c}[8] = {a}.basis.z.z.toFloat(); "
-                f"{c}[9] = {a}.origin.x.toFloat(); {c}[10] = {a}.origin.y.toFloat(); {c}[11] = {a}.origin.z.toFloat()"
+                f"val {c} = allocArray<GodotRealVar>(12); "
+                f"{c}[0] = GodotReal.toC({a}.basis.x.x); {c}[1] = GodotReal.toC({a}.basis.y.x); {c}[2] = GodotReal.toC({a}.basis.z.x); "
+                f"{c}[3] = GodotReal.toC({a}.basis.x.y); {c}[4] = GodotReal.toC({a}.basis.y.y); {c}[5] = GodotReal.toC({a}.basis.z.y); "
+                f"{c}[6] = GodotReal.toC({a}.basis.x.z); {c}[7] = GodotReal.toC({a}.basis.y.z); {c}[8] = GodotReal.toC({a}.basis.z.z); "
+                f"{c}[9] = GodotReal.toC({a}.origin.x); {c}[10] = GodotReal.toC({a}.origin.y); {c}[11] = GodotReal.toC({a}.origin.z)"
             ],
             f"{c}.reinterpret<CPointed>()",
         )
@@ -2150,22 +2148,22 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
         # POD passthrough: a Godot RID is a single uint64 (8 bytes).
         return ("RID", "PT_RID", [f"val {c} = alloc<LongVar>(); {c}.value = {a}.value"], f"{c}.ptr.reinterpret<CPointed>()")
     if kind == "Quaternion":
-        # 4x float32 [x, y, z, w] — POD passthrough.
+        # 4x real_t [x, y, z, w] — POD passthrough.
         return (
             "Quaternion",
             "PT_QUATERNION",
-            [f"val {c} = allocArray<FloatVar>(4); {c}[0] = {a}.x.toFloat(); {c}[1] = {a}.y.toFloat(); {c}[2] = {a}.z.toFloat(); {c}[3] = {a}.w.toFloat()"],
+            [f"val {c} = allocArray<GodotRealVar>(4); {c}[0] = GodotReal.toC({a}.x); {c}[1] = GodotReal.toC({a}.y); {c}[2] = GodotReal.toC({a}.z); {c}[3] = GodotReal.toC({a}.w)"],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "AABB":
-        # 6x float32: position xyz then size xyz — POD passthrough.
+        # 6x real_t: position xyz then size xyz — POD passthrough.
         return (
             "AABB",
             "PT_AABB",
             [
-                f"val {c} = allocArray<FloatVar>(6); "
-                f"{c}[0] = {a}.position.x.toFloat(); {c}[1] = {a}.position.y.toFloat(); {c}[2] = {a}.position.z.toFloat(); "
-                f"{c}[3] = {a}.size.x.toFloat(); {c}[4] = {a}.size.y.toFloat(); {c}[5] = {a}.size.z.toFloat()"
+                f"val {c} = allocArray<GodotRealVar>(6); "
+                f"{c}[0] = GodotReal.toC({a}.position.x); {c}[1] = GodotReal.toC({a}.position.y); {c}[2] = GodotReal.toC({a}.position.z); "
+                f"{c}[3] = GodotReal.toC({a}.size.x); {c}[4] = GodotReal.toC({a}.size.y); {c}[5] = GodotReal.toC({a}.size.z)"
             ],
             f"{c}.reinterpret<CPointed>()",
         )
@@ -2185,16 +2183,16 @@ def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str,
     if kotlin_return == "Double":
         return ("Double", "PT_FLOAT64", ["val ret = alloc<DoubleVar>()"], "ret.ptr", "ret.value")
     if kotlin_return == "Vector2":
-        return ("Vector2", "PT_VECTOR2", ["val ret = allocArray<FloatVar>(2)"], "ret", "Vector2(ret[0].toDouble(), ret[1].toDouble())")
+        return ("Vector2", "PT_VECTOR2", ["val ret = allocArray<GodotRealVar>(2)"], "ret", "Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))")
     if kotlin_return == "Vector2i":
         return ("Vector2i", "PT_VECTOR2I", ["val ret = allocArray<IntVar>(2)"], "ret", "Vector2i(ret[0], ret[1])")
     if kotlin_return == "Vector3":
         return (
             "Vector3",
             "PT_VECTOR3",
-            ["val ret = allocArray<FloatVar>(3)"],
+            ["val ret = allocArray<GodotRealVar>(3)"],
             "ret",
-            "Vector3(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble())",
+            "Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))",
         )
     if kotlin_return == "Vector3i":
         return ("Vector3i", "PT_VECTOR3I", ["val ret = allocArray<IntVar>(3)"], "ret", "Vector3i(ret[0], ret[1], ret[2])")
@@ -2206,55 +2204,56 @@ def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str,
         return (
             "Rect2",
             "PT_RECT2",
-            ["val ret = allocArray<FloatVar>(4)"],
+            ["val ret = allocArray<GodotRealVar>(4)"],
             "ret",
-            "Rect2(Vector2(ret[0].toDouble(), ret[1].toDouble()), Vector2(ret[2].toDouble(), ret[3].toDouble()))",
+            "Rect2(Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])), "
+            "Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])))",
         )
     if kotlin_return == "Basis":
-        # 9x float32, column-major (see ios_arg_layout). Reassemble the column axes.
+        # 9x real_t, column-major (see ios_arg_layout). Reassemble the column axes.
         return (
             "Basis",
             "PT_BASIS",
-            ["val ret = allocArray<FloatVar>(9)"],
+            ["val ret = allocArray<GodotRealVar>(9)"],
             "ret",
-            "Basis(Vector3(ret[0].toDouble(), ret[3].toDouble(), ret[6].toDouble()), "
-            "Vector3(ret[1].toDouble(), ret[4].toDouble(), ret[7].toDouble()), "
-            "Vector3(ret[2].toDouble(), ret[5].toDouble(), ret[8].toDouble()))",
+            "Basis(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])), "
+            "Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])), "
+            "Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])))",
         )
     if kotlin_return == "Transform2D":
-        # 6x float32: the three columns (x axis, y axis, origin), each a Vector2.
+        # 6x real_t: the three columns (x axis, y axis, origin), each a Vector2.
         return (
             "Transform2D",
             "PT_TRANSFORM2D",
-            ["val ret = allocArray<FloatVar>(6)"],
+            ["val ret = allocArray<GodotRealVar>(6)"],
             "ret",
-            "Transform2D(Vector2(ret[0].toDouble(), ret[1].toDouble()), "
-            "Vector2(ret[2].toDouble(), ret[3].toDouble()), "
-            "Vector2(ret[4].toDouble(), ret[5].toDouble()))",
+            "Transform2D(Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])), "
+            "Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])), "
+            "Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])))",
         )
     if kotlin_return == "Transform3D":
-        # 12x float32: 9 column-major basis + 3 origin.
+        # 12x real_t: 9 column-major basis + 3 origin.
         return (
             "Transform3D",
             "PT_TRANSFORM3D",
-            ["val ret = allocArray<FloatVar>(12)"],
+            ["val ret = allocArray<GodotRealVar>(12)"],
             "ret",
-            "Transform3D(Basis(Vector3(ret[0].toDouble(), ret[3].toDouble(), ret[6].toDouble()), "
-            "Vector3(ret[1].toDouble(), ret[4].toDouble(), ret[7].toDouble()), "
-            "Vector3(ret[2].toDouble(), ret[5].toDouble(), ret[8].toDouble())), "
-            "Vector3(ret[9].toDouble(), ret[10].toDouble(), ret[11].toDouble()))",
+            "Transform3D(Basis(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])), "
+            "Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])), "
+            "Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8]))), "
+            "Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])))",
         )
     if kotlin_return == "Projection":
         # 16x float32, column-major: 4 Vector4 columns (x, y, z, w).
         return (
             "Projection",
             "PT_PROJECTION",
-            ["val ret = allocArray<FloatVar>(16)"],
+            ["val ret = allocArray<GodotRealVar>(16)"],
             "ret",
-            "Projection(Vector4(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble()), "
-            "Vector4(ret[4].toDouble(), ret[5].toDouble(), ret[6].toDouble(), ret[7].toDouble()), "
-            "Vector4(ret[8].toDouble(), ret[9].toDouble(), ret[10].toDouble(), ret[11].toDouble()), "
-            "Vector4(ret[12].toDouble(), ret[13].toDouble(), ret[14].toDouble(), ret[15].toDouble()))",
+            "Projection(Vector4(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])), "
+            "Vector4(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[6]), GodotReal.fromC(ret[7])), "
+            "Vector4(GodotReal.fromC(ret[8]), GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])), "
+            "Vector4(GodotReal.fromC(ret[12]), GodotReal.fromC(ret[13]), GodotReal.fromC(ret[14]), GodotReal.fromC(ret[15])))",
         )
     if kotlin_return == "RID":
         return ("RID", "PT_RID", ["val ret = alloc<LongVar>(); ret.value = 0"], "ret.ptr", "RID(ret.value)")
@@ -2262,18 +2261,18 @@ def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str,
         return (
             "Quaternion",
             "PT_QUATERNION",
-            ["val ret = allocArray<FloatVar>(4)"],
+            ["val ret = allocArray<GodotRealVar>(4)"],
             "ret",
-            "Quaternion(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())",
+            "Quaternion(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3]))",
         )
     if kotlin_return == "AABB":
         return (
             "AABB",
             "PT_AABB",
-            ["val ret = allocArray<FloatVar>(6)"],
+            ["val ret = allocArray<GodotRealVar>(6)"],
             "ret",
-            "AABB(Vector3(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble()), "
-            "Vector3(ret[3].toDouble(), ret[4].toDouble(), ret[5].toDouble()))",
+            "AABB(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])), "
+            "Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])))",
         )
     if kotlin_return == "MemorySegment":
         return ("MemorySegment", "PT_OBJECT", ["val ret = alloc<LongVar>(); ret.value = 0"], "ret.ptr", "MemorySegment.ofAddress(ret.value)")

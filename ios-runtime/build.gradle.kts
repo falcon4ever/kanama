@@ -28,6 +28,8 @@ val configuredIosScriptDirs =
         .orElse(providers.gradleProperty("kanamaProjectScriptsDirs"))
         .orElse(providers.gradleProperty("kanamaProjectScriptsDir"))
 
+val kanamaPrecision = providers.gradleProperty("kanamaPrecision").orElse("single")
+
 kotlin {
     iosArm64()
     iosSimulatorArm64()
@@ -66,6 +68,21 @@ kotlin {
         val iosSimulatorArm64Main by getting {
             dependsOn(iosMain)
             iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
+        }
+    }
+}
+
+tasks.configureEach {
+    if (name.startsWith("compileKotlinIos")) {
+        inputs.property("kanamaPrecision", kanamaPrecision)
+        doFirst {
+            val selected = kanamaPrecision.get()
+            if (selected != "single") {
+                throw GradleException(
+                    "iOS currently supports only single-precision Godot real_t; " +
+                        "-PkanamaPrecision=$selected is unsupported for :ios-runtime",
+                )
+            }
         }
     }
 }

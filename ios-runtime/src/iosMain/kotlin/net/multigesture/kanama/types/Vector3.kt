@@ -6,11 +6,12 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 data class Vector3(
-    val x: Double,
-    val y: Double,
-    val z: Double,
+    val x: real_t,
+    val y: real_t,
+    val z: real_t,
 ) {
-    constructor(x: Number, y: Number, z: Number) : this(x.toDouble(), y.toDouble(), z.toDouble())
+    constructor(x: Number, y: Number, z: Number) :
+        this(GodotReal.fromNumber(x), GodotReal.fromNumber(y), GodotReal.fromNumber(z))
 
     // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
     // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
@@ -52,16 +53,16 @@ data class Vector3(
         Vector3(-x, -y, -z)
 
     fun withX(value: Number): Vector3 =
-        copy(x = value.toDouble())
+        copy(x = GodotReal.fromNumber(value))
 
     fun withY(value: Number): Vector3 =
-        copy(y = value.toDouble())
+        copy(y = GodotReal.fromNumber(value))
 
     fun withZ(value: Number): Vector3 =
-        copy(z = value.toDouble())
+        copy(z = GodotReal.fromNumber(value))
 
     fun lengthSquared(): Double =
-        x * x + y * y + z * z
+        (x * x + y * y + z * z).toDouble()
 
     fun length(): Double =
         sqrt(lengthSquared())
@@ -90,14 +91,14 @@ data class Vector3(
         val a = axis.normalized()
         val c = cos(angle)
         val s = sin(angle)
-        val dot = x * a.x + y * a.y + z * a.z
-        val cx = a.y * z - a.z * y
-        val cy = a.z * x - a.x * z
-        val cz = a.x * y - a.y * x
+        val dot = x.toDouble() * a.x + y.toDouble() * a.y + z.toDouble() * a.z
+        val cx = a.y.toDouble() * z - a.z.toDouble() * y
+        val cy = a.z.toDouble() * x - a.x.toDouble() * z
+        val cz = a.x.toDouble() * y - a.y.toDouble() * x
         return Vector3(
-            x * c + cx * s + a.x * dot * (1.0 - c),
-            y * c + cy * s + a.y * dot * (1.0 - c),
-            z * c + cz * s + a.z * dot * (1.0 - c),
+            x.toDouble() * c + cx * s + a.x.toDouble() * dot * (1.0 - c),
+            y.toDouble() * c + cy * s + a.y.toDouble() * dot * (1.0 - c),
+            z.toDouble() * c + cz * s + a.z.toDouble() * dot * (1.0 - c),
         )
     }
 
@@ -106,8 +107,8 @@ data class Vector3(
      * value-type builtin call path (so the handedness/ordering matches the engine exactly).
      */
     fun cross(with: Vector3): Vector3 =
-        fromFloat32(BuiltinCalls.call(crossBind, toFloat32(), 3, listOf(
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, with.toFloat32()),
+        fromGodotRealArray(BuiltinCalls.call(crossBind, toGodotRealArray(), 3, listOf(
+            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, with.toGodotRealArray()),
         )))
 
     /**
@@ -115,8 +116,8 @@ data class Vector3(
      * value-type builtin call path (scalar `real_t` return decoded to Double).
      */
     fun dot(with: Vector3): Double =
-        BuiltinCalls.callScalar(dotBind, toFloat32(), listOf(
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, with.toFloat32()),
+        BuiltinCalls.callScalar(dotBind, toGodotRealArray(), listOf(
+            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, with.toGodotRealArray()),
         ))
 
     /** Euclidean distance from this point to [to] (matches Godot Vector3.distance_to). */
@@ -156,17 +157,21 @@ data class Vector3(
      * return decoded from the ptr-ABI's uint8).
      */
     fun isNormalized(): Boolean =
-        BuiltinCalls.callBool(isNormalizedBind, toFloat32())
+        BuiltinCalls.callBool(isNormalizedBind, toGodotRealArray())
 
     /**
      * Returns the index (0 = x, 1 = y, 2 = z) of this vector's largest component, computed
      * by Godot (int return decoded from the ptr-ABI's int64).
      */
     fun maxAxisIndex(): Int =
-        BuiltinCalls.callInt(maxAxisIndexBind, toFloat32()).toInt()
+        BuiltinCalls.callInt(maxAxisIndexBind, toGodotRealArray()).toInt()
 
-    private fun toFloat32(): FloatArray =
-        floatArrayOf(x.toFloat(), y.toFloat(), z.toFloat())
+    private fun toGodotRealArray(): GodotRealArray =
+        GodotRealArray(3).also {
+            it[0] = GodotReal.toC(x)
+            it[1] = GodotReal.toC(y)
+            it[2] = GodotReal.toC(z)
+        }
 
     companion object {
         val ZERO = Vector3(0.0, 0.0, 0.0)
@@ -191,7 +196,7 @@ data class Vector3(
             BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "max_axis_index", 3173160232L)
         }
 
-        private fun fromFloat32(c: FloatArray): Vector3 =
-            Vector3(c[0].toDouble(), c[1].toDouble(), c[2].toDouble())
+        private fun fromGodotRealArray(c: GodotRealArray): Vector3 =
+            Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]), GodotReal.fromC(c[2]))
     }
 }

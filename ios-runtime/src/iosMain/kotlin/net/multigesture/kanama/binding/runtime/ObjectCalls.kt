@@ -54,6 +54,7 @@ import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.GodotReal
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Quaternion
@@ -397,17 +398,17 @@ object ObjectCalls {
             v
         }
 
-    private fun floatLE(b: ByteArray, o: Int): Double =
-        Float.fromBits(
+    private fun realLE(b: ByteArray, o: Int) =
+        GodotReal.fromFloat(Float.fromBits(
             (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8) or
                 ((b[o + 2].toInt() and 0xFF) shl 16) or ((b[o + 3].toInt() and 0xFF) shl 24),
-        ).toDouble()
+        ))
 
     // Array[Plane] -> List<Plane> (e.g. Camera3D.get_frustum). Each record is 4 float32 LE
     // (normal.x, normal.y, normal.z, d). Phase 2.7i.
     fun ptrcallNoArgsRetPlaneList(methodBind: MemorySegment, instance: MemorySegment): List<Plane> =
         retTypedArrayBlob(methodBind, instance, PT_PLANE) { b, o, _ ->
-            Plane(Vector3(floatLE(b, o), floatLE(b, o + 4), floatLE(b, o + 8)), floatLE(b, o + 12))
+            Plane(Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
         }
 
     // Generic Array -> List<Any?> (Phase 2.7j). The C side serializes each element as a
@@ -1122,7 +1123,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Node3D", "set_position", 3460891852L), n3, Vector3(1.0, 2.0, 3.0))
     val p = ObjectCalls.ptrcallNoArgsRetVector3(
         ObjectCalls.getMethodBind("Node3D", "get_position", 3360562783L), n3)
-    check("vector3", p.x == 1.0 && p.y == 2.0 && p.z == 3.0)
+    check("vector3", p.x.toDouble() == 1.0 && p.y.toDouble() == 2.0 && p.z.toDouble() == 3.0)
 
     // Generated-helper round-trip (T3.1): ptrcallWithVector3ArgRetVector3 lives in the
     // GENERATED ObjectCallsGenerated.kt (extension on ObjectCalls), not hand-written —
@@ -1134,7 +1135,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     val g = ObjectCalls.ptrcallWithVector3ArgRetVector3(
         ObjectCalls.getMethodBind("Node3D", "to_global", 192990374L), n3b, Vector3(10.0, 20.0, 30.0))
     println("[kanama][ios][kn] OBJECTCALLS SELFTEST generated-vector3 g=(${g.x}, ${g.y}, ${g.z})")
-    check("generated-vector3-arg-ret", g.x == 10.0 && g.y == 20.0 && g.z == 30.0)
+    check("generated-vector3-arg-ret", g.x.toDouble() == 10.0 && g.y.toDouble() == 20.0 && g.z.toDouble() == 30.0)
 
     ObjectCalls.ptrcallWithBoolArg(
         ObjectCalls.getMethodBind("Node3D", "set_visible", 2586408642L), n3, false)
@@ -1217,7 +1218,11 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         Rect2(Vector2(1.5, 2.5), Vector2(3.5, 4.5)))
     val r2 = ObjectCalls.ptrcallNoArgsRetRect2(
         ObjectCalls.getMethodBind("GPUParticles2D", "get_visibility_rect", 1639390495L), gp2d)
-    check("rect2", r2.position.x == 1.5 && r2.position.y == 2.5 && r2.size.x == 3.5 && r2.size.y == 4.5)
+    check(
+        "rect2",
+        r2.position.x.toDouble() == 1.5 && r2.position.y.toDouble() == 2.5 &&
+            r2.size.x.toDouble() == 3.5 && r2.size.y.toDouble() == 4.5,
+    )
 
     // String-return (Object.get_class -> "Node2D"): exercises ptrcallNoArgsRetString
     // through the full Kotlin -> dedicated C helper -> Godot path (string_to_utf8_chars
@@ -1628,7 +1633,11 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Node3D", "set_quaternion", 1727505552L), quatNode, qIn)
     val qOut = ObjectCalls.ptrcallNoArgsRetQuaternion(
         ObjectCalls.getMethodBind("Node3D", "get_quaternion", 1222331677L), quatNode)
-    fun nearly(a: Double, b: Double) = (if (a > b) a - b else b - a) < 1e-4
+    fun nearly(a: Number, b: Number): Boolean {
+        val left = a.toDouble()
+        val right = b.toDouble()
+        return (if (left > right) left - right else right - left) < 1e-4
+    }
     check("quaternion(set/get_quaternion)",
         nearly(qOut.x, qIn.x) && nearly(qOut.y, qIn.y) && nearly(qOut.z, qIn.z) && nearly(qOut.w, qIn.w))
 
@@ -1710,13 +1719,13 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     // cross product yields -0.0 in the zero slots, so compare component-wise with `==`
     // (numeric, treats -0.0 == 0.0) rather than data-class equals (Double.equals: -0.0 != 0.0).
     val cross = Vector3(1.0, 0.0, 0.0).cross(Vector3(0.0, 1.0, 0.0))
-    check("builtin-call(Vector3.cross x*y=z)", cross.x == 0.0 && cross.y == 0.0 && cross.z == 1.0)
+    check("builtin-call(Vector3.cross x*y=z)", cross.x.toDouble() == 0.0 && cross.y.toDouble() == 0.0 && cross.z.toDouble() == 1.0)
 
     // Vector2.rotated (arg path: Vector2 base + double scalar, new VT_VECTOR2): (1,0) by π/2 ->
     // (~0,1). Float trig, so component-wise tolerance ε (also avoids the -0.0 data-class trap).
     val rot = Vector2(1.0, 0.0).rotated(kotlin.math.PI / 2.0)
     check("builtin-call(Vector2.rotated pi/2)",
-        kotlin.math.abs(rot.x) < 1e-4 && kotlin.math.abs(rot.y - 1.0) < 1e-4)
+        kotlin.math.abs(rot.x.toDouble()) < 1e-4 && kotlin.math.abs(rot.y.toDouble() - 1.0) < 1e-4)
 
     // Quaternion.inverse (no-arg->Self, new VT_QUATERNION): for the unit quaternion 90° about Z
     // = (0,0,sin45,cos45) the inverse is the conjugate (z flips sign, w kept). Float divide by
@@ -1724,8 +1733,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     val s = 0.7071067811865476
     val qInv = Quaternion(0.0, 0.0, s, s).inverse()
     check("builtin-call(Quaternion.inverse 90z)",
-        kotlin.math.abs(qInv.x) < 1e-4 && kotlin.math.abs(qInv.y) < 1e-4 &&
-            kotlin.math.abs(qInv.z + s) < 1e-4 && kotlin.math.abs(qInv.w - s) < 1e-4)
+        kotlin.math.abs(qInv.x.toDouble()) < 1e-4 && kotlin.math.abs(qInv.y.toDouble()) < 1e-4 &&
+            kotlin.math.abs(qInv.z.toDouble() + s) < 1e-4 && kotlin.math.abs(qInv.w.toDouble() - s) < 1e-4)
 
     // Basis.scaled (arg path: Basis base + Vector3 arg): IDENTITY scaled by (2,3,4) -> diag(2,3,4).
     // Exact float32, but compare component-wise with `==` to dodge any -0.0 in the off-diagonal.
@@ -1769,12 +1778,15 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         val v2 = allocArray<FloatVar>(2)
         v2[0] = 1.5f; v2[1] = -2.5f
         val dv2 = decodeIosPropertyValue(6, v2.reinterpret(), 8) as? Vector2
-        check("setprop-decode(Vector2)", dv2 != null && dv2.x == 1.5 && dv2.y == -2.5)
+        check("setprop-decode(Vector2)", dv2 != null && dv2.x.toDouble() == 1.5 && dv2.y.toDouble() == -2.5)
 
         val v3 = allocArray<FloatVar>(3)
         v3[0] = 1.0f; v3[1] = 2.0f; v3[2] = 3.0f
         val dv3 = decodeIosPropertyValue(8, v3.reinterpret(), 12) as? Vector3
-        check("setprop-decode(Vector3)", dv3 != null && dv3.x == 1.0 && dv3.y == 2.0 && dv3.z == 3.0)
+        check(
+            "setprop-decode(Vector3)",
+            dv3 != null && dv3.x.toDouble() == 1.0 && dv3.y.toDouble() == 2.0 && dv3.z.toDouble() == 3.0,
+        )
 
         val path = "../SceneTarget3D"
         val pathBytes = path.encodeToByteArray()

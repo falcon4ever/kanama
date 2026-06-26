@@ -8,7 +8,6 @@ import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.FloatVar
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.LongVar
 import kotlinx.cinterop.MemScope
@@ -22,6 +21,8 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.value
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_builtin_call
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_builtin_method
+import net.multigesture.kanama.types.GodotRealArray
+import net.multigesture.kanama.types.GodotRealVar
 
 /**
  * iOS implementation of value-type (builtin) method calls — the analogue of [ObjectCalls]
@@ -31,8 +32,8 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_builtin_method
  * which calls `method(base, args, ret, argc)` with raw value byte buffers. Mirrors the
  * desktop `BuiltinTypes.call`.
  *
- * Marshalling note: value components are real_t = 4-byte float32 in single-precision iOS
- * builds, laid out in the same column-major order the [ObjectCalls] ptrcall helpers use.
+ * Marshalling note: value components are `real_t` in iOS builds, laid out in the same
+ * column-major order the [ObjectCalls] ptrcall helpers use.
  */
 object BuiltinCalls {
     // Godot Variant type ids (Variant::Type) — must match the engine enum.
@@ -53,8 +54,8 @@ object BuiltinCalls {
 
     /** An argument to a builtin method call (the value-type analogue of a ptrcall arg). */
     sealed interface BArg {
-        /** A struct value laid out as float32 [values] (Vector3/Basis/Transform3D/…); [tag] is its PT_*. */
-        data class Floats(val tag: Int, val values: FloatArray) : BArg
+        /** A struct value laid out as `real_t` [values] (Vector3/Basis/Transform3D/…); [tag] is its PT_*. */
+        data class Floats(val tag: Int, val values: GodotRealArray) : BArg
         /** A `bool` arg (1-byte). */
         data class Bool(val value: Boolean) : BArg
         /** A scalar `float`/`double` arg (8-byte double at ptrcall). */
@@ -64,13 +65,13 @@ object BuiltinCalls {
     fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long =
         kanama_ios_godot_get_builtin_method(variantType, method, hash)
 
-    // Marshal [base] (float32 components) + [args] (PT-tagged), then invoke the builtin
+    // Marshal [base] (real_t components) + [args] (PT-tagged), then invoke the builtin
     // method writing into the caller-supplied [ret] buffer. The ret encoding is the
-    // caller's choice (float32 components for a value-type return; an 8-byte double for a
+    // caller's choice (real_t components for a value-type return; an 8-byte double for a
     // scalar `float` return — see [callScalar]). Concentrates the arg layout/tags, mirroring
     // the desktop `BuiltinTypes` call helpers.
-    private fun MemScope.invokeBuiltin(methodPtr: Long, base: FloatArray, args: List<BArg>, ret: CValuesRef<*>?) {
-        val baseBuf = allocArray<FloatVar>(if (base.isNotEmpty()) base.size else 1)
+    private fun MemScope.invokeBuiltin(methodPtr: Long, base: GodotRealArray, args: List<BArg>, ret: CValuesRef<*>?) {
+        val baseBuf = allocArray<GodotRealVar>(if (base.isNotEmpty()) base.size else 1)
         for (i in base.indices) baseBuf[i] = base[i]
         val n = args.size
         val tags = allocArray<IntVar>(if (n > 0) n else 1)
@@ -78,7 +79,7 @@ object BuiltinCalls {
         args.forEachIndexed { i, a ->
             when (a) {
                 is BArg.Floats -> {
-                    val b = allocArray<FloatVar>(if (a.values.isNotEmpty()) a.values.size else 1)
+                    val b = allocArray<GodotRealVar>(if (a.values.isNotEmpty()) a.values.size else 1)
                     for (j in a.values.indices) b[j] = a.values[j]
                     tags[i] = a.tag; ptrs[i] = b.reinterpret<CPointed>()
                 }
@@ -96,21 +97,21 @@ object BuiltinCalls {
     }
 
     /**
-     * Call a builtin method whose base and return are value types laid out as float32
-     * components ([base] in, [retCount] floats out), with optional [args].
+     * Call a builtin method whose base and return are value types laid out as `real_t`
+     * components ([base] in, [retCount] values out), with optional [args].
      */
-    fun call(methodPtr: Long, base: FloatArray, retCount: Int, args: List<BArg> = emptyList()): FloatArray =
+    fun call(methodPtr: Long, base: GodotRealArray, retCount: Int, args: List<BArg> = emptyList()): GodotRealArray =
         memScoped {
-            val ret = allocArray<FloatVar>(if (retCount > 0) retCount else 1)
+            val ret = allocArray<GodotRealVar>(if (retCount > 0) retCount else 1)
             invokeBuiltin(methodPtr, base, args, ret)
-            FloatArray(retCount) { ret[it] }
+            GodotRealArray(retCount) { ret[it] }
         }
 
     /**
      * No-arg builtin method whose base and return are the same value type laid out as
-     * float32 components (inverse / transposed / orthonormalized / …).
+     * `real_t` components (inverse / transposed / orthonormalized / …).
      */
-    fun callNoArgsFloat32(methodPtr: Long, base: FloatArray): FloatArray =
+    fun callNoArgsFloat32(methodPtr: Long, base: GodotRealArray): GodotRealArray =
         call(methodPtr, base, base.size, emptyList())
 
     /**
@@ -121,7 +122,7 @@ object BuiltinCalls {
      * `BuiltinTypes`, which allocates a JAVA_DOUBLE ret). An `int`/`bool` scalar return
      * would need its own decode width.
      */
-    fun callScalar(methodPtr: Long, base: FloatArray, args: List<BArg> = emptyList()): Double =
+    fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Double =
         memScoped {
             val ret = alloc<DoubleVar>()
             invokeBuiltin(methodPtr, base, args, ret.ptr)
@@ -133,7 +134,7 @@ object BuiltinCalls {
      * encodes a bool return as a single `uint8_t` (`PtrToArg<bool>` = uint8), so decode one
      * byte (≠ 0 → true).
      */
-    fun callBool(methodPtr: Long, base: FloatArray, args: List<BArg> = emptyList()): Boolean =
+    fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Boolean =
         memScoped {
             val ret = alloc<ByteVar>()
             invokeBuiltin(methodPtr, base, args, ret.ptr)
@@ -144,7 +145,7 @@ object BuiltinCalls {
      * Builtin method returning an `int` (max_axis_index / … ). Godot's ptr-ABI encodes an
      * int return as `int64_t` (`PtrToArg<int64_t>` is direct 8-byte), so decode a Long.
      */
-    fun callInt(methodPtr: Long, base: FloatArray, args: List<BArg> = emptyList()): Long =
+    fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Long =
         memScoped {
             val ret = alloc<LongVar>()
             invokeBuiltin(methodPtr, base, args, ret.ptr)

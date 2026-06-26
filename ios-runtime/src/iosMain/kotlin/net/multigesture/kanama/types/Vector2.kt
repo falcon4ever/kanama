@@ -5,10 +5,10 @@ import kotlin.math.atan2
 import kotlin.math.sqrt
 
 data class Vector2(
-    val x: Double,
-    val y: Double,
+    val x: real_t,
+    val y: real_t,
 ) {
-    constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
+    constructor(x: Number, y: Number) : this(GodotReal.fromNumber(x), GodotReal.fromNumber(y))
 
     // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
     // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
@@ -39,16 +39,16 @@ data class Vector2(
         Vector2(x - other.x, y - other.y)
 
     operator fun times(scale: Number): Vector2 =
-        Vector2(x * scale.toDouble(), y * scale.toDouble())
+        Vector2(x.toDouble() * scale.toDouble(), y.toDouble() * scale.toDouble())
 
     operator fun div(scale: Number): Vector2 =
-        Vector2(x / scale.toDouble(), y / scale.toDouble())
+        Vector2(x.toDouble() / scale.toDouble(), y.toDouble() / scale.toDouble())
 
     operator fun unaryMinus(): Vector2 =
         Vector2(-x, -y)
 
     fun lengthSquared(): Double =
-        x * x + y * y
+        (x * x + y * y).toDouble()
 
     fun length(): Double =
         sqrt(lengthSquared())
@@ -64,7 +64,7 @@ data class Vector2(
         Vector2(x.coerceIn(min.x, max.x), y.coerceIn(min.y, max.y))
 
     fun angle(): Double =
-        atan2(y, x)
+        atan2(y.toDouble(), x.toDouble())
 
     fun withX(value: Number): Vector2 = Vector2(value, y)
 
@@ -75,12 +75,15 @@ data class Vector2(
      * builtin call path (so the rotation direction matches the engine exactly).
      */
     fun rotated(angle: Double): Vector2 =
-        fromFloat32(BuiltinCalls.call(rotatedBind, toFloat32(), 2, listOf(
+        fromGodotRealArray(BuiltinCalls.call(rotatedBind, toGodotRealArray(), 2, listOf(
             BuiltinCalls.BArg.Real(angle),
         )))
 
-    private fun toFloat32(): FloatArray =
-        floatArrayOf(x.toFloat(), y.toFloat())
+    private fun toGodotRealArray(): GodotRealArray =
+        GodotRealArray(2).also {
+            it[0] = GodotReal.toC(x)
+            it[1] = GodotReal.toC(y)
+        }
 
     companion object {
         val ZERO = Vector2(0.0, 0.0)
@@ -94,7 +97,7 @@ data class Vector2(
             BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "rotated", 2544004089L)
         }
 
-        private fun fromFloat32(c: FloatArray): Vector2 =
-            Vector2(c[0].toDouble(), c[1].toDouble())
+        private fun fromGodotRealArray(c: GodotRealArray): Vector2 =
+            Vector2(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]))
     }
 }

@@ -41,25 +41,25 @@ data class Basis(
 
     /** Returns the inverse of this basis. Computed by Godot. */
     fun inverse(): Basis =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(inverseBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(inverseBind, toGodotRealArray()))
 
     /** Returns the transpose of this basis (rows and columns swapped). */
     fun transposed(): Basis =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(transposedBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(transposedBind, toGodotRealArray()))
 
     /** Returns this basis with its axes orthogonalized and normalized (Gram-Schmidt). */
     fun orthonormalized(): Basis =
-        fromFloat32(BuiltinCalls.callNoArgsFloat32(orthonormalizedBind, toFloat32()))
+        fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(orthonormalizedBind, toGodotRealArray()))
 
     /**
      * Returns a copy of this basis scaled by [scale] (each row multiplied by the matching
      * [scale] component). IDENTITY scaled by (sx,sy,sz) is diag(sx,sy,sz).
      */
     fun scaled(scale: Vector3): Basis =
-        fromFloat32(BuiltinCalls.call(scaledBind, toFloat32(), 9, listOf(
+        fromGodotRealArray(BuiltinCalls.call(scaledBind, toGodotRealArray(), 9, listOf(
             BuiltinCalls.BArg.Floats(
                 BuiltinCalls.PT_VECTOR3,
-                floatArrayOf(scale.x.toFloat(), scale.y.toFloat(), scale.z.toFloat()),
+                vector3Array(scale),
             ),
         )))
 
@@ -68,12 +68,12 @@ data class Basis(
      * decoded to Double). A negative determinant means the basis flips orientation.
      */
     fun determinant(): Double =
-        BuiltinCalls.callScalar(determinantBind, toFloat32())
+        BuiltinCalls.callScalar(determinantBind, toGodotRealArray())
 
     /** Returns the scale component of this basis, computed by Godot (matches Basis.get_scale). */
     fun getScale(): Vector3 {
-        val c = BuiltinCalls.call(getScaleBind, toFloat32(), 3)
-        return Vector3(c[0].toDouble(), c[1].toDouble(), c[2].toDouble())
+        val c = BuiltinCalls.call(getScaleBind, toGodotRealArray(), 3)
+        return Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]), GodotReal.fromC(c[2]))
     }
 
     /**
@@ -81,8 +81,8 @@ data class Basis(
      * (orthonormalization + negative-scale handling match the engine; Basis.get_rotation_quaternion).
      */
     fun getRotationQuaternion(): Quaternion {
-        val c = BuiltinCalls.call(getRotationQuaternionBind, toFloat32(), 4)
-        return Quaternion(c[0].toDouble(), c[1].toDouble(), c[2].toDouble(), c[3].toDouble())
+        val c = BuiltinCalls.call(getRotationQuaternionBind, toGodotRealArray(), 4)
+        return Quaternion(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]), GodotReal.fromC(c[2]), GodotReal.fromC(c[3]))
     }
 
     /**
@@ -108,13 +108,19 @@ data class Basis(
         }
     }
 
-    // Column-major 9 float32, matching the ObjectCalls Basis ptrcall layout.
-    private fun toFloat32(): FloatArray =
-        floatArrayOf(
-            x.x.toFloat(), y.x.toFloat(), z.x.toFloat(),
-            x.y.toFloat(), y.y.toFloat(), z.y.toFloat(),
-            x.z.toFloat(), y.z.toFloat(), z.z.toFloat(),
-        )
+    // Column-major real_t values, matching the ObjectCalls Basis ptrcall layout.
+    private fun toGodotRealArray(): GodotRealArray =
+        GodotRealArray(9).also {
+            it[0] = GodotReal.toC(x.x)
+            it[1] = GodotReal.toC(y.x)
+            it[2] = GodotReal.toC(z.x)
+            it[3] = GodotReal.toC(x.y)
+            it[4] = GodotReal.toC(y.y)
+            it[5] = GodotReal.toC(z.y)
+            it[6] = GodotReal.toC(x.z)
+            it[7] = GodotReal.toC(y.z)
+            it[8] = GodotReal.toC(z.z)
+        }
 
     companion object {
         // Godot CMP_EPSILON (used by the Euler decomposition gimbal checks).
@@ -178,23 +184,30 @@ data class Basis(
          * so the call passes an empty base (mirrors the desktop `base = NULL`).
          */
         fun lookingAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false): Basis =
-            fromFloat32(BuiltinCalls.call(lookingAtBind, floatArrayOf(), 9, listOf(
+            fromGodotRealArray(BuiltinCalls.call(lookingAtBind, GodotRealArray(0), 9, listOf(
                 BuiltinCalls.BArg.Floats(
                     BuiltinCalls.PT_VECTOR3,
-                    floatArrayOf(target.x.toFloat(), target.y.toFloat(), target.z.toFloat()),
+                    vector3Array(target),
                 ),
                 BuiltinCalls.BArg.Floats(
                     BuiltinCalls.PT_VECTOR3,
-                    floatArrayOf(up.x.toFloat(), up.y.toFloat(), up.z.toFloat()),
+                    vector3Array(up),
                 ),
                 BuiltinCalls.BArg.Bool(useModelFront),
             )))
 
-        private fun fromFloat32(c: FloatArray): Basis =
+        private fun vector3Array(v: Vector3): GodotRealArray =
+            GodotRealArray(3).also {
+                it[0] = GodotReal.toC(v.x)
+                it[1] = GodotReal.toC(v.y)
+                it[2] = GodotReal.toC(v.z)
+            }
+
+        private fun fromGodotRealArray(c: GodotRealArray): Basis =
             Basis(
-                Vector3(c[0].toDouble(), c[3].toDouble(), c[6].toDouble()),
-                Vector3(c[1].toDouble(), c[4].toDouble(), c[7].toDouble()),
-                Vector3(c[2].toDouble(), c[5].toDouble(), c[8].toDouble()),
+                Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[3]), GodotReal.fromC(c[6])),
+                Vector3(GodotReal.fromC(c[1]), GodotReal.fromC(c[4]), GodotReal.fromC(c[7])),
+                Vector3(GodotReal.fromC(c[2]), GodotReal.fromC(c[5]), GodotReal.fromC(c[8])),
             )
     }
 }
