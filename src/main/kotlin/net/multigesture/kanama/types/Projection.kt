@@ -37,7 +37,7 @@ data class Projection(
         x.isEqualApprox(other.x) && y.isEqualApprox(other.y) &&
             z.isEqualApprox(other.z) && w.isEqualApprox(other.w)
 
-    /** True if every column is approximately zero. */
+    /** kanama convenience (Godot has no composite `is_zero_approx`): true if every column is approximately zero. */
     fun isZeroApprox(): Boolean =
         x.isZeroApprox() && y.isZeroApprox() && z.isZeroApprox() && w.isZeroApprox()
 

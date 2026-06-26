@@ -27,7 +27,7 @@ data class Basis(
     fun isEqualApprox(other: Basis): Boolean =
         x.isEqualApprox(other.x) && y.isEqualApprox(other.y) && z.isEqualApprox(other.z)
 
-    /** True if every axis is approximately zero. */
+    /** kanama convenience (Godot has no composite `is_zero_approx`): true if every axis is approximately zero. */
     fun isZeroApprox(): Boolean = x.isZeroApprox() && y.isZeroApprox() && z.isZeroApprox()
 
     /** Returns a copy with the x/y/z axis replaced (matches desktop Basis.withX/withY/withZ). */

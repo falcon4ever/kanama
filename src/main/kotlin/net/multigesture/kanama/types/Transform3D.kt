@@ -37,7 +37,7 @@ data class Transform3D(
     fun isEqualApprox(other: Transform3D): Boolean =
         basis.isEqualApprox(other.basis) && origin.isEqualApprox(other.origin)
 
-    /** True if basis and origin are approximately zero. */
+    /** kanama convenience (Godot has no composite `is_zero_approx`): true if basis and origin are approximately zero. */
     fun isZeroApprox(): Boolean = basis.isZeroApprox() && origin.isZeroApprox()
 
     operator fun times(vector: Vector3): Vector3 =
