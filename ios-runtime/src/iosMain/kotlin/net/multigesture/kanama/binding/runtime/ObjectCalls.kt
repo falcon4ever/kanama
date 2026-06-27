@@ -29,6 +29,10 @@ import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
+import net.multigesture.kanama.ios.KanamaIosProjectRegistry
+import net.multigesture.kanama.ios.KanamaIosRpcConfig
+import net.multigesture.kanama.ios.KanamaIosRuntime
+import net.multigesture.kanama.ios.KanamaIosScriptDescriptor
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
@@ -1822,6 +1826,48 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         for (i in sb.indices) sp[i] = sb[i]
         sp[sb.size] = 0
         check("callarg-decode(String)", decodeIosCallArg(16, sp) == "hello")
+    }
+
+    // @Rpc config delivery (descriptor -> accessor seam): register a synthetic descriptor with
+    // distinct non-zero values and assert the scriptResourceRpcConfig* accessors read them back in
+    // order. Pairs with the C-side _get_rpc_config Dictionary readback in
+    // kanama_ios_ptrcall_selftest. Distinct non-zero values catch field-swaps (mode/transferMode/
+    // channel) and out-of-order indexing.
+    run {
+        val rpcPath = "res://kanama_ios_rpc_selftest.kt"
+        KanamaIosProjectRegistry.register(
+            KanamaIosScriptDescriptor(
+                path = rpcPath,
+                baseType = "Node",
+                methods = emptyList(),
+                properties = emptyList(),
+                signals = emptyList(),
+                rpcConfigs = listOf(
+                    KanamaIosRpcConfig("net_score", mode = 1, callLocal = true, transferMode = 2, channel = 3),
+                    KanamaIosRpcConfig("sync_pos", mode = 2, callLocal = false, transferMode = 0, channel = 5),
+                ),
+                factory = { null },
+            ),
+        )
+        val handle = KanamaIosRuntime.createScriptResource(rpcPath)
+        check("rpc-config-count", KanamaIosRuntime.scriptResourceRpcConfigCount(handle) == 2)
+        check(
+            "rpc-config[0]",
+            KanamaIosRuntime.scriptResourceRpcConfigMethodName(handle, 0) == "net_score" &&
+                KanamaIosRuntime.scriptResourceRpcConfigMode(handle, 0) == 1 &&
+                KanamaIosRuntime.scriptResourceRpcConfigCallLocal(handle, 0) == 1 &&
+                KanamaIosRuntime.scriptResourceRpcConfigTransferMode(handle, 0) == 2 &&
+                KanamaIosRuntime.scriptResourceRpcConfigChannel(handle, 0) == 3,
+        )
+        check(
+            "rpc-config[1]",
+            KanamaIosRuntime.scriptResourceRpcConfigMethodName(handle, 1) == "sync_pos" &&
+                KanamaIosRuntime.scriptResourceRpcConfigMode(handle, 1) == 2 &&
+                KanamaIosRuntime.scriptResourceRpcConfigCallLocal(handle, 1) == 0 &&
+                KanamaIosRuntime.scriptResourceRpcConfigTransferMode(handle, 1) == 0 &&
+                KanamaIosRuntime.scriptResourceRpcConfigChannel(handle, 1) == 5,
+        )
+        KanamaIosRuntime.freeScriptResource(handle)
     }
 
     println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")

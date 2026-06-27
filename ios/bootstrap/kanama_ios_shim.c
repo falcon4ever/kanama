@@ -230,6 +230,9 @@ static GDExtensionInterfaceVariantGetPtrDestructor g_variant_get_ptr_destructor 
 static GDExtensionInterfaceVariantGetPtrConstructor g_variant_get_ptr_constructor = NULL;
 static GDExtensionInterfaceVariantGetPtrBuiltinMethod g_variant_get_ptr_builtin_method = NULL;
 static GDExtensionInterfaceVariantGetPtrKeyedSetter g_variant_get_ptr_keyed_setter = NULL;
+// Keyed getter is used only by the debug self-test (kanama_ios_ptrcall_selftest) to read back
+// the rpc-config Dictionary; it is intentionally NOT part of the mandatory init gate.
+static GDExtensionInterfaceVariantGetPtrKeyedGetter g_variant_get_ptr_keyed_getter = NULL;
 static GDExtensionInterfaceGetVariantFromTypeConstructor g_get_variant_from_type_constructor = NULL;
 static GDExtensionInterfaceGetVariantToTypeConstructor g_get_variant_to_type_constructor = NULL;
 static GDExtensionInterfaceVariantDestroy g_variant_destroy = NULL;
@@ -334,6 +337,9 @@ static GDExtensionPtrConstructor g_packed_string_array_constructor = NULL;
 static GDExtensionPtrConstructor g_array_constructor = NULL;
 static GDExtensionPtrConstructor g_dictionary_constructor = NULL;
 static GDExtensionPtrKeyedSetter g_dictionary_keyed_setter = NULL;
+// Debug-self-test only (read-back of the rpc-config Dictionary); not in the mandatory init gate.
+static GDExtensionPtrKeyedGetter g_dictionary_keyed_getter = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_dictionary = NULL;
 static GDExtensionPtrDestructor g_node_path_destructor = NULL;
 static GDExtensionPtrDestructor g_dictionary_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_string_array_push_back = NULL;
@@ -705,6 +711,9 @@ static int kanama_ios_resolve_godot_api(void) {
     g_variant_get_ptr_keyed_setter = (GDExtensionInterfaceVariantGetPtrKeyedSetter)kanama_ios_lookup(
         "variant_get_ptr_keyed_setter"
     );
+    g_variant_get_ptr_keyed_getter = (GDExtensionInterfaceVariantGetPtrKeyedGetter)kanama_ios_lookup(
+        "variant_get_ptr_keyed_getter"
+    );
     g_get_variant_from_type_constructor = (GDExtensionInterfaceGetVariantFromTypeConstructor)kanama_ios_lookup(
         "get_variant_from_type_constructor"
     );
@@ -791,6 +800,13 @@ static int kanama_ios_resolve_godot_api(void) {
     g_array_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_ARRAY, 0);
     g_dictionary_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY, 0);
     g_dictionary_keyed_setter = g_variant_get_ptr_keyed_setter(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
+    // Keyed getter + variant->Dictionary back off the debug self-test only. Resolve them
+    // opportunistically; they are deliberately excluded from the mandatory NULL gate below so a
+    // missing symbol can never fail production shim init.
+    if (g_variant_get_ptr_keyed_getter != NULL) {
+        g_dictionary_keyed_getter = g_variant_get_ptr_keyed_getter(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
+    }
+    g_variant_to_dictionary = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
     g_variant_to_bool = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_BOOL);
     g_variant_to_string = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING);
     g_variant_to_float = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
@@ -5081,6 +5097,54 @@ static void kanama_ios_dictionary_set_dictionary(
     g_variant_destroy(value_variant);
 }
 
+// Debug-only Dictionary read-back helpers mirroring the setters above. Used by
+// kanama_ios_ptrcall_selftest to verify the rpc-config Dictionary built by
+// kanama_ios_init_script_rpc_config_variant. They no-op to nil/0 if Godot did not expose the keyed
+// getter (it is not part of the mandatory init gate).
+static void kanama_ios_dictionary_get_variant(
+    GDExtensionConstTypePtr dictionary,
+    const char *key,
+    GDExtensionUninitializedVariantPtr out
+) {
+    if (dictionary == NULL || key == NULL || out == NULL || g_dictionary_keyed_getter == NULL) {
+        g_variant_new_nil(out);
+        return;
+    }
+    uint8_t key_variant[24];
+    memset(key_variant, 0, sizeof(key_variant));
+    kanama_ios_init_string_variant(key_variant, key);
+    g_dictionary_keyed_getter(dictionary, key_variant, out);
+    g_variant_destroy(key_variant);
+}
+
+static int64_t kanama_ios_dictionary_get_int(GDExtensionConstTypePtr dictionary, const char *key) {
+    uint8_t value_variant[24];
+    memset(value_variant, 0, sizeof(value_variant));
+    kanama_ios_dictionary_get_variant(dictionary, key, value_variant);
+    int64_t result = 0;
+    if (g_variant_to_int != NULL) {
+        GDExtensionInt decoded = 0;
+        g_variant_to_int(&decoded, value_variant);
+        result = (int64_t)decoded;
+    }
+    g_variant_destroy(value_variant);
+    return result;
+}
+
+static int kanama_ios_dictionary_get_bool(GDExtensionConstTypePtr dictionary, const char *key) {
+    uint8_t value_variant[24];
+    memset(value_variant, 0, sizeof(value_variant));
+    kanama_ios_dictionary_get_variant(dictionary, key, value_variant);
+    int result = 0;
+    if (g_variant_to_bool != NULL) {
+        GDExtensionBool decoded = 0;
+        g_variant_to_bool(&decoded, value_variant);
+        result = decoded != 0 ? 1 : 0;
+    }
+    g_variant_destroy(value_variant);
+    return result;
+}
+
 static void kanama_ios_init_script_rpc_config_variant(
     const KanamaIosExtensionInstance *script,
     GDExtensionUninitializedVariantPtr out
@@ -7823,6 +7887,48 @@ static void kanama_ios_ptrcall_selftest(void) {
         if (g_variant_destroy != NULL) { g_variant_destroy((GDExtensionVariantPtr)variant); }
     } else {
         KANAMA_IOS_ST_CHECK("setprop-packed-string-array", 0);
+    }
+
+    // @Rpc config delivery: build the _get_rpc_config Dictionary via the production helper from a
+    // synthetic descriptor, then read it back and assert each method's fields. Distinct non-zero
+    // values catch field-swaps (e.g. rpc_mode vs transfer_mode). Needs the debug-only keyed getter
+    // and variant->Dictionary; skip cleanly if Godot did not expose them.
+    if (g_dictionary_keyed_getter != NULL && g_variant_to_dictionary != NULL) {
+        KanamaIosRpcConfig probe_configs[2] = {
+            { "net_score", 1, 1, 2, 3 },
+            { "sync_pos", 2, 0, 0, 5 },
+        };
+        KanamaIosExtensionInstance probe;
+        memset(&probe, 0, sizeof(probe));
+        probe.script_rpc_configs = probe_configs;
+        probe.script_rpc_config_count = 2;
+
+        uint8_t root_variant[24];
+        memset(root_variant, 0, sizeof(root_variant));
+        kanama_ios_init_script_rpc_config_variant(&probe, root_variant);
+
+        uint64_t root_dict = 0;
+        g_variant_to_dictionary(&root_dict, root_variant);
+
+        int rpc_ok = 1;
+        for (int i = 0; i < 2; i++) {
+            const KanamaIosRpcConfig *expected = &probe_configs[i];
+            uint8_t method_variant[24];
+            memset(method_variant, 0, sizeof(method_variant));
+            kanama_ios_dictionary_get_variant(&root_dict, expected->method_name_text, method_variant);
+            uint64_t method_dict = 0;
+            g_variant_to_dictionary(&method_dict, method_variant);
+            rpc_ok = rpc_ok
+                && kanama_ios_dictionary_get_int(&method_dict, "rpc_mode") == expected->mode
+                && kanama_ios_dictionary_get_bool(&method_dict, "call_local") == expected->call_local
+                && kanama_ios_dictionary_get_int(&method_dict, "transfer_mode") == expected->transfer_mode
+                && kanama_ios_dictionary_get_int(&method_dict, "channel") == expected->channel;
+            g_dictionary_destructor(&method_dict);
+            g_variant_destroy(method_variant);
+        }
+        g_dictionary_destructor(&root_dict);
+        g_variant_destroy(root_variant);
+        KANAMA_IOS_ST_CHECK("script-rpc-config-dictionary", rpc_ok);
     }
 
     fprintf(stderr, "[kanama][ios][c] PTRCALL SELFTEST MATRIX: %d passed, %d failed\n", pass, fail);
