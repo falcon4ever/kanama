@@ -122,6 +122,11 @@ specific generator limitation rather than an un-audited shape:
 Retiring the `Engine`/`ProjectSettings`/`ResourceLoader` sugar depends on generator custom sections
 (task 11) or a `MainLoop` wrapper, so they stay hand-written but documented.
 
+Device-validated on iPhone 15 Pro (iOS 26.5, Godot 4.7): Starter-Kit-FPS (the `SceneTree.createTween`
+F2 regression check) and godot-4-3d-third-person-controller (exercises all three retired singletons —
+`InputMap`, `Time`, `PhysicsServer3D`) both launch with self-tests green (`PTRCALL SELFTEST MATRIX:
+57 passed, 0 failed`; `OBJECTCALLS SELFTEST: 82 passed, 0 failed`) and no crash.
+
 Exit gate: 0 STUB / 0 SUGAR remains true, and remaining HANDWRITTEN entries are platform/runtime glue,
 not missing wrapper coverage.
 
