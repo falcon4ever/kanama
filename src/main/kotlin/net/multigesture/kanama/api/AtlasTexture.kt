@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Rect2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Rect2
 
 /**
  * A texture that crops out part of another Texture2D.
@@ -35,91 +35,46 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setFilterClipProperty")
         set(value) = setFilterClip(value)
 
-    /**
-     * The texture that contains the atlas. Can be any type inheriting from `Texture2D`, including
-     * another `AtlasTexture`.
-     *
-     * Generated from Godot docs: AtlasTexture.set_atlas
-     */
     fun setAtlas(atlas: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, handle, listOf(atlas?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The texture that contains the atlas. Can be any type inheriting from `Texture2D`, including
-     * another `AtlasTexture`.
-     *
-     * Generated from Godot docs: AtlasTexture.get_atlas
-     */
     fun getAtlas(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAtlasBind, handle))
     }
 
-    /**
-     * The region used to draw the `atlas`. If either dimension of the region's size is `0`, the value
-     * from `atlas` size will be used for that axis instead. Note: The image size is always an integer,
-     * so the actual region size is rounded down.
-     *
-     * Generated from Godot docs: AtlasTexture.set_region
-     */
     fun setRegion(region: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setRegionBind, handle, region)
     }
 
-    /**
-     * The region used to draw the `atlas`. If either dimension of the region's size is `0`, the value
-     * from `atlas` size will be used for that axis instead. Note: The image size is always an integer,
-     * so the actual region size is rounded down.
-     *
-     * Generated from Godot docs: AtlasTexture.get_region
-     */
     fun getRegion(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getRegionBind, handle)
     }
 
-    /**
-     * The margin around the `region`. Useful for small adjustments. If the `Rect2.size` of this
-     * property ("w" and "h" in the editor) is set, the drawn texture is resized to fit within the
-     * margin.
-     *
-     * Generated from Godot docs: AtlasTexture.set_margin
-     */
     fun setMargin(margin: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setMarginBind, handle, margin)
     }
 
-    /**
-     * The margin around the `region`. Useful for small adjustments. If the `Rect2.size` of this
-     * property ("w" and "h" in the editor) is set, the drawn texture is resized to fit within the
-     * margin.
-     *
-     * Generated from Godot docs: AtlasTexture.get_margin
-     */
     fun getMargin(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getMarginBind, handle)
     }
 
-    /**
-     * If `true`, the area outside of the `region` is clipped to avoid bleeding of the surrounding
-     * texture pixels.
-     *
-     * Generated from Godot docs: AtlasTexture.set_filter_clip
-     */
     fun setFilterClip(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilterClipBind, handle, enable)
     }
 
-    /**
-     * If `true`, the area outside of the `region` is clipped to avoid bleeding of the surrounding
-     * texture pixels.
-     *
-     * Generated from Godot docs: AtlasTexture.has_filter_clip
-     */
     fun hasFilterClip(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasFilterClipBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AtlasTexture? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AtlasTexture? =
+            if (handle.address() == 0L) null else AtlasTexture(handle)
+
         private const val SET_ATLAS_HASH = 4051416890L
         private val setAtlasBind by lazy {
             ObjectCalls.getMethodBind("AtlasTexture", "set_atlas", SET_ATLAS_HASH)

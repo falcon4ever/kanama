@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * A box-shaped region of 3D space that, when visible on screen, enables a target node.
@@ -23,51 +23,34 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
         @JvmName("setEnableNodePathProperty")
         set(value) = setEnableNodePath(value)
 
-    /**
-     * Determines how the target node is enabled. Corresponds to `Node.ProcessMode`. When the node is
-     * disabled, it always uses `Node.PROCESS_MODE_DISABLED`.
-     *
-     * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_mode
-     */
     fun setEnableMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setEnableModeBind, handle, mode)
     }
 
-    /**
-     * Determines how the target node is enabled. Corresponds to `Node.ProcessMode`. When the node is
-     * disabled, it always uses `Node.PROCESS_MODE_DISABLED`.
-     *
-     * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_mode
-     */
     fun getEnableMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, handle)
     }
 
-    /**
-     * The path to the target node, relative to the `VisibleOnScreenEnabler3D`. The target node is
-     * cached; it's only assigned when setting this property (if the `VisibleOnScreenEnabler3D` is
-     * inside the scene tree) and every time the `VisibleOnScreenEnabler3D` enters the scene tree. If
-     * the path is empty, no node will be affected. If the path is invalid, an error is also generated.
-     *
-     * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_node_path
-     */
     fun setEnableNodePath(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setEnableNodePathBind, handle, path)
     }
 
-    /**
-     * The path to the target node, relative to the `VisibleOnScreenEnabler3D`. The target node is
-     * cached; it's only assigned when setting this property (if the `VisibleOnScreenEnabler3D` is
-     * inside the scene tree) and every time the `VisibleOnScreenEnabler3D` enters the scene tree. If
-     * the path is empty, no node will be affected. If the path is invalid, an error is also generated.
-     *
-     * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_node_path
-     */
     fun getEnableNodePath(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, handle)
     }
 
     companion object {
+        const val ENABLE_MODE_INHERIT: Long = 0L
+        const val ENABLE_MODE_ALWAYS: Long = 1L
+        const val ENABLE_MODE_WHEN_PAUSED: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisibleOnScreenEnabler3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisibleOnScreenEnabler3D? =
+            if (handle.address() == 0L) null else VisibleOnScreenEnabler3D(handle)
+
         private const val SET_ENABLE_MODE_HASH = 320303646L
         private val setEnableModeBind by lazy {
             ObjectCalls.getMethodBind("VisibleOnScreenEnabler3D", "set_enable_mode", SET_ENABLE_MODE_HASH)

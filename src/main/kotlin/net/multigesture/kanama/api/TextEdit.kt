@@ -1,12 +1,12 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A multiline text editor.
@@ -296,352 +296,150 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         @JvmName("setStructuredTextBidiOverrideOptionsProperty")
         set(value) = setStructuredTextBidiOverrideOptions(value)
 
-    /**
-     * Returns `true` if the user has text in the Input Method Editor
-     * (https://en.wikipedia.org/wiki/Input_method) (IME).
-     *
-     * Generated from Godot docs: TextEdit.has_ime_text
-     */
     fun hasImeText(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, handle)
     }
 
-    /**
-     * Closes the Input Method Editor (https://en.wikipedia.org/wiki/Input_method) (IME) if it is open.
-     * Any text in the IME will be lost.
-     *
-     * Generated from Godot docs: TextEdit.cancel_ime
-     */
     fun cancelIme() {
         ObjectCalls.ptrcallNoArgs(cancelImeBind, handle)
     }
 
-    /**
-     * Applies text from the Input Method Editor (https://en.wikipedia.org/wiki/Input_method) (IME) to
-     * each caret and closes the IME if it is open.
-     *
-     * Generated from Godot docs: TextEdit.apply_ime
-     */
     fun applyIme() {
         ObjectCalls.ptrcallNoArgs(applyImeBind, handle)
     }
 
-    /**
-     * If `false`, existing text cannot be modified and new text cannot be added.
-     *
-     * Generated from Godot docs: TextEdit.set_editable
-     */
     fun setEditable(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enabled)
     }
 
-    /**
-     * If `false`, existing text cannot be modified and new text cannot be added.
-     *
-     * Generated from Godot docs: TextEdit.is_editable
-     */
     fun isEditable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: TextEdit.set_text_direction
-     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: TextEdit.get_text_direction
-     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: TextEdit.set_language
-     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: TextEdit.get_language
-     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: TextEdit.set_structured_text_bidi_override
-     */
     fun setStructuredTextBidiOverride(parser: Long) {
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: TextEdit.get_structured_text_bidi_override
-     */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: TextEdit.set_structured_text_bidi_override_options
-     */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: TextEdit.get_structured_text_bidi_override_options
-     */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
-    /**
-     * Sets the tab size for the `TextEdit` to use.
-     *
-     * Generated from Godot docs: TextEdit.set_tab_size
-     */
     fun setTabSize(size: Int) {
         ObjectCalls.ptrcallWithIntArg(setTabSizeBind, handle, size)
     }
 
-    /**
-     * Returns the `TextEdit`'s' tab size.
-     *
-     * Generated from Godot docs: TextEdit.get_tab_size
-     */
     fun getTabSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, handle)
     }
 
-    /**
-     * If `true`, all wrapped lines are indented to the same amount as the unwrapped line.
-     *
-     * Generated from Godot docs: TextEdit.set_indent_wrapped_lines
-     */
     fun setIndentWrappedLines(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setIndentWrappedLinesBind, handle, enabled)
     }
 
-    /**
-     * If `true`, all wrapped lines are indented to the same amount as the unwrapped line.
-     *
-     * Generated from Godot docs: TextEdit.is_indent_wrapped_lines
-     */
     fun isIndentWrappedLines(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isIndentWrappedLinesBind, handle)
     }
 
-    /**
-     * If `true`, `ProjectSettings.input/ui_text_indent` input `Tab` character, otherwise it moves
-     * keyboard focus to the next `Control` in the scene.
-     *
-     * Generated from Godot docs: TextEdit.set_tab_input_mode
-     */
     fun setTabInputMode(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTabInputModeBind, handle, enabled)
     }
 
-    /**
-     * If `true`, `ProjectSettings.input/ui_text_indent` input `Tab` character, otherwise it moves
-     * keyboard focus to the next `Control` in the scene.
-     *
-     * Generated from Godot docs: TextEdit.get_tab_input_mode
-     */
     fun getTabInputMode(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getTabInputModeBind, handle)
     }
 
-    /**
-     * If `true`, enables overtype mode. In this mode, typing overrides existing text instead of
-     * inserting text. The `ProjectSettings.input/ui_text_toggle_insert_mode` action toggles overtype
-     * mode. See `is_overtype_mode_enabled`.
-     *
-     * Generated from Godot docs: TextEdit.set_overtype_mode_enabled
-     */
     fun setOvertypeModeEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setOvertypeModeEnabledBind, handle, enabled)
     }
 
-    /**
-     * Returns `true` if overtype mode is enabled. See `set_overtype_mode_enabled`.
-     *
-     * Generated from Godot docs: TextEdit.is_overtype_mode_enabled
-     */
     fun isOvertypeModeEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOvertypeModeEnabledBind, handle)
     }
 
-    /**
-     * If `true`, a right-click displays the context menu.
-     *
-     * Generated from Godot docs: TextEdit.set_context_menu_enabled
-     */
     fun setContextMenuEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, a right-click displays the context menu.
-     *
-     * Generated from Godot docs: TextEdit.is_context_menu_enabled
-     */
     fun isContextMenuEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, handle)
     }
 
-    /**
-     * If `true`, "Emoji and Symbols" menu is enabled.
-     *
-     * Generated from Godot docs: TextEdit.set_emoji_menu_enabled
-     */
     fun setEmojiMenuEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, "Emoji and Symbols" menu is enabled.
-     *
-     * Generated from Godot docs: TextEdit.is_emoji_menu_enabled
-     */
     fun isEmojiMenuEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, handle)
     }
 
-    /**
-     * If `true` and `caret_mid_grapheme` is `false`, backspace deletes an entire composite character
-     * such as ❤️‍🩹, instead of deleting part of the composite character.
-     *
-     * Generated from Godot docs: TextEdit.set_backspace_deletes_composite_character_enabled
-     */
     fun setBackspaceDeletesCompositeCharacterEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true` and `caret_mid_grapheme` is `false`, backspace deletes an entire composite character
-     * such as ❤️‍🩹, instead of deleting part of the composite character.
-     *
-     * Generated from Godot docs: TextEdit.is_backspace_deletes_composite_character_enabled
-     */
     fun isBackspaceDeletesCompositeCharacterEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, handle)
     }
 
-    /**
-     * If `true`, shortcut keys for context menu items are enabled, even if the context menu is
-     * disabled.
-     *
-     * Generated from Godot docs: TextEdit.set_shortcut_keys_enabled
-     */
     fun setShortcutKeysEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, shortcut keys for context menu items are enabled, even if the context menu is
-     * disabled.
-     *
-     * Generated from Godot docs: TextEdit.is_shortcut_keys_enabled
-     */
     fun isShortcutKeysEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the native virtual keyboard is enabled on platforms that support it.
-     *
-     * Generated from Godot docs: TextEdit.set_virtual_keyboard_enabled
-     */
     fun setVirtualKeyboardEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the native virtual keyboard is enabled on platforms that support it.
-     *
-     * Generated from Godot docs: TextEdit.is_virtual_keyboard_enabled
-     */
     fun isVirtualKeyboardEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the native virtual keyboard is shown on focus events on platforms that support it.
-     *
-     * Generated from Godot docs: TextEdit.set_virtual_keyboard_show_on_focus
-     */
     fun setVirtualKeyboardShowOnFocus(showOnFocus: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, handle, showOnFocus)
     }
 
-    /**
-     * If `true`, the native virtual keyboard is shown on focus events on platforms that support it.
-     *
-     * Generated from Godot docs: TextEdit.get_virtual_keyboard_show_on_focus
-     */
     fun getVirtualKeyboardShowOnFocus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, handle)
     }
 
-    /**
-     * If `false`, using middle mouse button to paste clipboard will be disabled. Note: This method is
-     * only implemented on Linux.
-     *
-     * Generated from Godot docs: TextEdit.set_middle_mouse_paste_enabled
-     */
     fun setMiddleMousePasteEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `false`, using middle mouse button to paste clipboard will be disabled. Note: This method is
-     * only implemented on Linux.
-     *
-     * Generated from Godot docs: TextEdit.is_middle_mouse_paste_enabled
-     */
     fun isMiddleMousePasteEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, handle)
     }
 
-    /**
-     * If `true`, copying or cutting without a selection is performed on all lines with a caret.
-     * Otherwise, copy and cut require a selection.
-     *
-     * Generated from Godot docs: TextEdit.set_empty_selection_clipboard_enabled
-     */
     fun setEmptySelectionClipboardEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEmptySelectionClipboardEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, copying or cutting without a selection is performed on all lines with a caret.
-     * Otherwise, copy and cut require a selection.
-     *
-     * Generated from Godot docs: TextEdit.is_empty_selection_clipboard_enabled
-     */
     fun isEmptySelectionClipboardEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptySelectionClipboardEnabledBind, handle)
     }
@@ -655,204 +453,86 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
-    /**
-     * String value of the `TextEdit`.
-     *
-     * Generated from Godot docs: TextEdit.set_text
-     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
-    /**
-     * String value of the `TextEdit`.
-     *
-     * Generated from Godot docs: TextEdit.get_text
-     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
-    /**
-     * Returns the number of lines in the text.
-     *
-     * Generated from Godot docs: TextEdit.get_line_count
-     */
     fun getLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
-    /**
-     * Text shown when the `TextEdit` is empty. It is not the `TextEdit`'s default value (see `text`).
-     *
-     * Generated from Godot docs: TextEdit.set_placeholder
-     */
     fun setPlaceholder(text: String) {
         ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, handle, text)
     }
 
-    /**
-     * Text shown when the `TextEdit` is empty. It is not the `TextEdit`'s default value (see `text`).
-     *
-     * Generated from Godot docs: TextEdit.get_placeholder
-     */
     fun getPlaceholder(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, handle)
     }
 
-    /**
-     * Sets the text for a specific `line`. Carets on the line will attempt to keep their visual x
-     * position.
-     *
-     * Generated from Godot docs: TextEdit.set_line
-     */
     fun setLine(line: Int, newText: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setLineBind, handle, line, newText)
     }
 
-    /**
-     * Returns the text of a specific line.
-     *
-     * Generated from Godot docs: TextEdit.get_line
-     */
     fun getLine(line: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getLineBind, handle, line)
     }
 
-    /**
-     * Returns line text as it is currently displayed, including IME composition string.
-     *
-     * Generated from Godot docs: TextEdit.get_line_with_ime
-     */
     fun getLineWithIme(line: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getLineWithImeBind, handle, line)
     }
 
-    /**
-     * Returns the width in pixels of the `wrap_index` on `line`.
-     *
-     * Generated from Godot docs: TextEdit.get_line_width
-     */
     fun getLineWidth(line: Int, wrapIndex: Int = -1): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWidthBind, handle, line, wrapIndex)
     }
 
-    /**
-     * Returns the maximum value of the line height among all lines. Note: The return value is
-     * influenced by `line_spacing` and `font_size`. And it will not be less than `1`.
-     *
-     * Generated from Godot docs: TextEdit.get_line_height
-     */
     fun getLineHeight(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineHeightBind, handle)
     }
 
-    /**
-     * Returns the indent level of the given line. This is the number of spaces and tabs at the
-     * beginning of the line, with the tabs taking the tab size into account (see `get_tab_size`).
-     *
-     * Generated from Godot docs: TextEdit.get_indent_level
-     */
     fun getIndentLevel(line: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getIndentLevelBind, handle, line)
     }
 
-    /**
-     * Returns the first column containing a non-whitespace character on the given line. If there is
-     * only whitespace, returns the number of characters.
-     *
-     * Generated from Godot docs: TextEdit.get_first_non_whitespace_column
-     */
     fun getFirstNonWhitespaceColumn(line: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getFirstNonWhitespaceColumnBind, handle, line)
     }
 
-    /**
-     * Swaps the two lines. Carets will be swapped with the lines.
-     *
-     * Generated from Godot docs: TextEdit.swap_lines
-     */
     fun swapLines(fromLine: Int, toLine: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(swapLinesBind, handle, fromLine, toLine)
     }
 
-    /**
-     * Inserts a new line with `text` at `line`.
-     *
-     * Generated from Godot docs: TextEdit.insert_line_at
-     */
     fun insertLineAt(line: Int, text: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(insertLineAtBind, handle, line, text)
     }
 
-    /**
-     * Removes the line of text at `line`. Carets on this line will attempt to match their previous
-     * visual x position. If `move_carets_down` is `true` carets will move to the next line down,
-     * otherwise carets will move up.
-     *
-     * Generated from Godot docs: TextEdit.remove_line_at
-     */
     fun removeLineAt(line: Int, moveCaretsDown: Boolean = true) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(removeLineAtBind, handle, line, moveCaretsDown)
     }
 
-    /**
-     * Insert the specified text at the caret position.
-     *
-     * Generated from Godot docs: TextEdit.insert_text_at_caret
-     */
     fun insertTextAtCaret(text: String, caretIndex: Int = -1) {
         ObjectCalls.ptrcallWithStringAndIntArg(insertTextAtCaretBind, handle, text, caretIndex)
     }
 
-    /**
-     * Inserts the `text` at `line` and `column`. If `before_selection_begin` is `true`, carets and
-     * selections that begin at `line` and `column` will moved to the end of the inserted text, along
-     * with all carets after it. If `before_selection_end` is `true`, selections that end at `line` and
-     * `column` will be extended to the end of the inserted text. These parameters can be used to
-     * insert text inside of or outside of selections.
-     *
-     * Generated from Godot docs: TextEdit.insert_text
-     */
     fun insertText(text: String, line: Int, column: Int, beforeSelectionBegin: Boolean = true, beforeSelectionEnd: Boolean = false) {
         ObjectCalls.ptrcallWithStringTwoIntTwoBoolArgs(insertTextBind, handle, text, line, column, beforeSelectionBegin, beforeSelectionEnd)
     }
 
-    /**
-     * Removes text between the given positions.
-     *
-     * Generated from Godot docs: TextEdit.remove_text
-     */
     fun removeText(fromLine: Int, fromColumn: Int, toLine: Int, toColumn: Int) {
         ObjectCalls.ptrcallWithFourIntArgs(removeTextBind, handle, fromLine, fromColumn, toLine, toColumn)
     }
 
-    /**
-     * Returns the last unhidden line in the entire `TextEdit`.
-     *
-     * Generated from Godot docs: TextEdit.get_last_unhidden_line
-     */
     fun getLastUnhiddenLine(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLastUnhiddenLineBind, handle)
     }
 
-    /**
-     * Returns the count to the next visible line from `line` to `line + visible_amount`. Can also
-     * count backwards. For example if a `TextEdit` has 5 lines with lines 2 and 3 hidden, calling this
-     * with `line = 1, visible_amount = 1` would return 3.
-     *
-     * Generated from Godot docs: TextEdit.get_next_visible_line_offset_from
-     */
     fun getNextVisibleLineOffsetFrom(line: Int, visibleAmount: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextVisibleLineOffsetFromBind, handle, line, visibleAmount)
     }
 
-    /**
-     * Similar to `get_next_visible_line_offset_from`, but takes into account the line wrap indexes. In
-     * the returned vector, `x` is the line, `y` is the wrap index.
-     *
-     * Generated from Godot docs: TextEdit.get_next_visible_line_index_offset_from
-     */
     fun getNextVisibleLineIndexOffsetFrom(line: Int, wrapIndex: Int, visibleAmount: Int): Vector2i {
         return ObjectCalls.ptrcallWithThreeIntArgsRetVector2i(getNextVisibleLineIndexOffsetFromBind, handle, line, wrapIndex, visibleAmount)
     }
@@ -893,69 +573,30 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallWithIntArg(pasteBind, handle, caretIndex)
     }
 
-    /**
-     * Pastes the primary clipboard.
-     *
-     * Generated from Godot docs: TextEdit.paste_primary_clipboard
-     */
     fun pastePrimaryClipboard(caretIndex: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(pastePrimaryClipboardBind, handle, caretIndex)
     }
 
-    /**
-     * Starts an action, will end the current action if `action` is different. An action will also end
-     * after a call to `end_action`, after `ProjectSettings.gui/timers/text_edit_idle_detect_sec` is
-     * triggered or a new undoable step outside the `start_action` and `end_action` calls.
-     *
-     * Generated from Godot docs: TextEdit.start_action
-     */
     fun startAction(action: Long) {
         ObjectCalls.ptrcallWithLongArg(startActionBind, handle, action)
     }
 
-    /**
-     * Marks the end of steps in the current action started with `start_action`.
-     *
-     * Generated from Godot docs: TextEdit.end_action
-     */
     fun endAction() {
         ObjectCalls.ptrcallNoArgs(endActionBind, handle)
     }
 
-    /**
-     * Starts a multipart edit. All edits will be treated as one action until `end_complex_operation`
-     * is called.
-     *
-     * Generated from Godot docs: TextEdit.begin_complex_operation
-     */
     fun beginComplexOperation() {
         ObjectCalls.ptrcallNoArgs(beginComplexOperationBind, handle)
     }
 
-    /**
-     * Ends a multipart edit, started with `begin_complex_operation`. If called outside a complex
-     * operation, the current operation is pushed onto the undo/redo stack.
-     *
-     * Generated from Godot docs: TextEdit.end_complex_operation
-     */
     fun endComplexOperation() {
         ObjectCalls.ptrcallNoArgs(endComplexOperationBind, handle)
     }
 
-    /**
-     * Returns `true` if an "undo" action is available.
-     *
-     * Generated from Godot docs: TextEdit.has_undo
-     */
     fun hasUndo(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, handle)
     }
 
-    /**
-     * Returns `true` if a "redo" action is available.
-     *
-     * Generated from Godot docs: TextEdit.has_redo
-     */
     fun hasRedo(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, handle)
     }
@@ -978,58 +619,26 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(redoBind, handle)
     }
 
-    /**
-     * Clears the undo history.
-     *
-     * Generated from Godot docs: TextEdit.clear_undo_history
-     */
     fun clearUndoHistory() {
         ObjectCalls.ptrcallNoArgs(clearUndoHistoryBind, handle)
     }
 
-    /**
-     * Tag the current version as saved.
-     *
-     * Generated from Godot docs: TextEdit.tag_saved_version
-     */
     fun tagSavedVersion() {
         ObjectCalls.ptrcallNoArgs(tagSavedVersionBind, handle)
     }
 
-    /**
-     * Returns the current version of the `TextEdit`. The version is a count of recorded operations by
-     * the undo/redo history.
-     *
-     * Generated from Godot docs: TextEdit.get_version
-     */
     fun getVersion(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVersionBind, handle)
     }
 
-    /**
-     * Returns the last tagged saved version from `tag_saved_version`.
-     *
-     * Generated from Godot docs: TextEdit.get_saved_version
-     */
     fun getSavedVersion(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getSavedVersionBind, handle)
     }
 
-    /**
-     * Sets the search text. See `set_search_flags`.
-     *
-     * Generated from Godot docs: TextEdit.set_search_text
-     */
     fun setSearchText(searchText: String) {
         ObjectCalls.ptrcallWithStringArg(setSearchTextBind, handle, searchText)
     }
 
-    /**
-     * Sets the search `flags`. This is used with `set_search_text` to highlight occurrences of the
-     * searched text. Search flags can be specified from the `SearchFlags` enum.
-     *
-     * Generated from Godot docs: TextEdit.set_search_flags
-     */
     fun setSearchFlags(flags: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setSearchFlagsBind, handle, flags)
     }
@@ -1045,652 +654,254 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         return ObjectCalls.ptrcallWithStringUInt32TwoIntArgsRetVector2i(searchBind, handle, text, flags, fromLine, fromColumn)
     }
 
-    /**
-     * Provide custom tooltip text. The callback method must take the following args: `hovered_word:
-     * String`.
-     *
-     * Generated from Godot docs: TextEdit.set_tooltip_request_func
-     */
     fun setTooltipRequestFunc(callback: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(setTooltipRequestFuncBind, handle, callback.target.handle, callback.method)
     }
 
-    /**
-     * Returns the local mouse position adjusted for the text direction.
-     *
-     * Generated from Godot docs: TextEdit.get_local_mouse_pos
-     */
     fun getLocalMousePos(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePosBind, handle)
     }
 
-    /**
-     * Returns the word at `position`.
-     *
-     * Generated from Godot docs: TextEdit.get_word_at_pos
-     */
     fun getWordAtPos(position: Vector2): String {
         return ObjectCalls.ptrcallWithVector2ArgRetString(getWordAtPosBind, handle, position)
     }
 
-    /**
-     * Returns the line and column at the given position. In the returned vector, `x` is the column and
-     * `y` is the line. If `clamp_line` is `false` and `position` is below the last line, `Vector2i(-1,
-     * -1)` is returned. If `clamp_column` is `false` and `position` is outside the column range of the
-     * line, `Vector2i(-1, -1)` is returned.
-     *
-     * Generated from Godot docs: TextEdit.get_line_column_at_pos
-     */
     fun getLineColumnAtPos(position: Vector2i, clampLine: Boolean = true, clampColumn: Boolean = true): Vector2i {
         return ObjectCalls.ptrcallWithVector2iAndTwoBoolArgsRetVector2i(getLineColumnAtPosBind, handle, position, clampLine, clampColumn)
     }
 
-    /**
-     * Returns the local position for the given `line` and `column`. If `x` or `y` of the returned
-     * vector equal `-1`, the position is outside of the viewable area of the control. Note: The Y
-     * position corresponds to the bottom side of the line. Use `get_rect_at_line_column` to get the
-     * top side position.
-     *
-     * Generated from Godot docs: TextEdit.get_pos_at_line_column
-     */
     fun getPosAtLineColumn(line: Int, column: Int): Vector2i {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2i(getPosAtLineColumnBind, handle, line, column)
     }
 
-    /**
-     * Returns the local position and size for the grapheme at the given `line` and `column`. If `x` or
-     * `y` position of the returned rect equal `-1`, the position is outside of the viewable area of
-     * the control. Note: The Y position of the returned rect corresponds to the top side of the line,
-     * unlike `get_pos_at_line_column` which returns the bottom side.
-     *
-     * Generated from Godot docs: TextEdit.get_rect_at_line_column
-     */
     fun getRectAtLineColumn(line: Int, column: Int): Rect2i {
         return ObjectCalls.ptrcallWithTwoIntArgsRetRect2i(getRectAtLineColumnBind, handle, line, column)
     }
 
-    /**
-     * Returns the equivalent minimap line at `position`.
-     *
-     * Generated from Godot docs: TextEdit.get_minimap_line_at_pos
-     */
     fun getMinimapLineAtPos(position: Vector2i): Int {
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getMinimapLineAtPosBind, handle, position)
     }
 
-    /**
-     * Returns `true` if the user is dragging their mouse for scrolling, selecting, or text dragging.
-     *
-     * Generated from Godot docs: TextEdit.is_dragging_cursor
-     */
     fun isDraggingCursor(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDraggingCursorBind, handle)
     }
 
-    /**
-     * Returns `true` if the mouse is over a selection. If `edges` is `true`, the edges are considered
-     * part of the selection.
-     *
-     * Generated from Godot docs: TextEdit.is_mouse_over_selection
-     */
     fun isMouseOverSelection(edges: Boolean, caretIndex: Int = -1): Boolean {
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetBool(isMouseOverSelectionBind, handle, edges, caretIndex)
     }
 
-    /**
-     * Set the type of caret to draw.
-     *
-     * Generated from Godot docs: TextEdit.set_caret_type
-     */
     fun setCaretType(type: Long) {
         ObjectCalls.ptrcallWithLongArg(setCaretTypeBind, handle, type)
     }
 
-    /**
-     * Set the type of caret to draw.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_type
-     */
     fun getCaretType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCaretTypeBind, handle)
     }
 
-    /**
-     * If `true`, makes the caret blink.
-     *
-     * Generated from Godot docs: TextEdit.set_caret_blink_enabled
-     */
     fun setCaretBlinkEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, makes the caret blink.
-     *
-     * Generated from Godot docs: TextEdit.is_caret_blink_enabled
-     */
     fun isCaretBlinkEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, handle)
     }
 
-    /**
-     * The interval at which the caret blinks (in seconds).
-     *
-     * Generated from Godot docs: TextEdit.set_caret_blink_interval
-     */
     fun setCaretBlinkInterval(interval: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, handle, interval)
     }
 
-    /**
-     * The interval at which the caret blinks (in seconds).
-     *
-     * Generated from Godot docs: TextEdit.get_caret_blink_interval
-     */
     fun getCaretBlinkInterval(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, handle)
     }
 
-    /**
-     * If `true`, caret will be visible when `editable` is disabled.
-     *
-     * Generated from Godot docs: TextEdit.set_draw_caret_when_editable_disabled
-     */
     fun setDrawCaretWhenEditableDisabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawCaretWhenEditableDisabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, caret will be visible when `editable` is disabled.
-     *
-     * Generated from Godot docs: TextEdit.is_drawing_caret_when_editable_disabled
-     */
     fun isDrawingCaretWhenEditableDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingCaretWhenEditableDisabledBind, handle)
     }
 
-    /**
-     * If `true`, a right-click moves the caret at the mouse position before displaying the context
-     * menu. If `false`, the context menu ignores mouse location.
-     *
-     * Generated from Godot docs: TextEdit.set_move_caret_on_right_click_enabled
-     */
     fun setMoveCaretOnRightClickEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMoveCaretOnRightClickEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, a right-click moves the caret at the mouse position before displaying the context
-     * menu. If `false`, the context menu ignores mouse location.
-     *
-     * Generated from Godot docs: TextEdit.is_move_caret_on_right_click_enabled
-     */
     fun isMoveCaretOnRightClickEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMoveCaretOnRightClickEnabledBind, handle)
     }
 
-    /**
-     * Allow moving caret, selecting and removing the individual composite character components. Note:
-     * Backspace is always removing individual composite character components.
-     *
-     * Generated from Godot docs: TextEdit.set_caret_mid_grapheme_enabled
-     */
     fun setCaretMidGraphemeEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, handle, enabled)
     }
 
-    /**
-     * Allow moving caret, selecting and removing the individual composite character components. Note:
-     * Backspace is always removing individual composite character components.
-     *
-     * Generated from Godot docs: TextEdit.is_caret_mid_grapheme_enabled
-     */
     fun isCaretMidGraphemeEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, handle)
     }
 
-    /**
-     * If `true`, multiple carets are allowed. Left-clicking with Alt adds a new caret. See `add_caret`
-     * and `get_caret_count`.
-     *
-     * Generated from Godot docs: TextEdit.set_multiple_carets_enabled
-     */
     fun setMultipleCaretsEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMultipleCaretsEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, multiple carets are allowed. Left-clicking with Alt adds a new caret. See `add_caret`
-     * and `get_caret_count`.
-     *
-     * Generated from Godot docs: TextEdit.is_multiple_carets_enabled
-     */
     fun isMultipleCaretsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMultipleCaretsEnabledBind, handle)
     }
 
-    /**
-     * Adds a new caret at the given location. Returns the index of the new caret, or `-1` if the
-     * location is invalid.
-     *
-     * Generated from Godot docs: TextEdit.add_caret
-     */
     fun addCaret(line: Int, column: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(addCaretBind, handle, line, column)
     }
 
-    /**
-     * Removes the given caret index. Note: This can result in adjustment of all other caret indices.
-     *
-     * Generated from Godot docs: TextEdit.remove_caret
-     */
     fun removeCaret(caret: Int) {
         ObjectCalls.ptrcallWithIntArg(removeCaretBind, handle, caret)
     }
 
-    /**
-     * Removes all additional carets.
-     *
-     * Generated from Godot docs: TextEdit.remove_secondary_carets
-     */
     fun removeSecondaryCarets() {
         ObjectCalls.ptrcallNoArgs(removeSecondaryCaretsBind, handle)
     }
 
-    /**
-     * Returns the number of carets in this `TextEdit`.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_count
-     */
     fun getCaretCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCaretCountBind, handle)
     }
 
-    /**
-     * Adds an additional caret above or below every caret. If `below` is `true` the new caret will be
-     * added below and above otherwise.
-     *
-     * Generated from Godot docs: TextEdit.add_caret_at_carets
-     */
     fun addCaretAtCarets(below: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(addCaretAtCaretsBind, handle, below)
     }
 
-    /**
-     * Returns the carets sorted by selection beginning from lowest line and column to highest (from
-     * top to bottom of text). If `include_ignored_carets` is `false`, carets from
-     * `multicaret_edit_ignore_caret` will be ignored.
-     *
-     * Generated from Godot docs: TextEdit.get_sorted_carets
-     */
     fun getSortedCarets(includeIgnoredCarets: Boolean = false): List<Int> {
         return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(getSortedCaretsBind, handle, includeIgnoredCarets)
     }
 
-    /**
-     * Collapse all carets in the given range to the `from_line` and `from_column` position.
-     * `inclusive` applies to both ends. If `is_in_mulitcaret_edit` is `true`, carets that are
-     * collapsed will be `true` for `multicaret_edit_ignore_caret`. `merge_overlapping_carets` will be
-     * called if any carets were collapsed.
-     *
-     * Generated from Godot docs: TextEdit.collapse_carets
-     */
     fun collapseCarets(fromLine: Int, fromColumn: Int, toLine: Int, toColumn: Int, inclusive: Boolean = false) {
         ObjectCalls.ptrcallWithFourIntAndBoolArgs(collapseCaretsBind, handle, fromLine, fromColumn, toLine, toColumn, inclusive)
     }
 
-    /**
-     * Merges any overlapping carets. Will favor the newest caret, or the caret with a selection. If
-     * `is_in_mulitcaret_edit` is `true`, the merge will be queued to happen at the end of the
-     * multicaret edit. See `begin_multicaret_edit` and `end_multicaret_edit`. Note: This is not called
-     * when a caret changes position but after certain actions, so it is possible to get into a state
-     * where carets overlap.
-     *
-     * Generated from Godot docs: TextEdit.merge_overlapping_carets
-     */
     fun mergeOverlappingCarets() {
         ObjectCalls.ptrcallNoArgs(mergeOverlappingCaretsBind, handle)
     }
 
-    /**
-     * Starts an edit for multiple carets. The edit must be ended with `end_multicaret_edit`.
-     * Multicaret edits can be used to edit text at multiple carets and delay merging the carets until
-     * the end, so the caret indexes aren't affected immediately. `begin_multicaret_edit` and
-     * `end_multicaret_edit` can be nested, and the merge will happen at the last
-     * `end_multicaret_edit`.
-     *
-     * Generated from Godot docs: TextEdit.begin_multicaret_edit
-     */
     fun beginMulticaretEdit() {
         ObjectCalls.ptrcallNoArgs(beginMulticaretEditBind, handle)
     }
 
-    /**
-     * Ends an edit for multiple carets, that was started with `begin_multicaret_edit`. If this was the
-     * last `end_multicaret_edit` and `merge_overlapping_carets` was called, carets will be merged.
-     *
-     * Generated from Godot docs: TextEdit.end_multicaret_edit
-     */
     fun endMulticaretEdit() {
         ObjectCalls.ptrcallNoArgs(endMulticaretEditBind, handle)
     }
 
-    /**
-     * Returns `true` if a `begin_multicaret_edit` has been called and `end_multicaret_edit` has not
-     * yet been called.
-     *
-     * Generated from Godot docs: TextEdit.is_in_mulitcaret_edit
-     */
     fun isInMulitcaretEdit(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isInMulitcaretEditBind, handle)
     }
 
-    /**
-     * Returns `true` if the given `caret_index` should be ignored as part of a multicaret edit. See
-     * `begin_multicaret_edit` and `end_multicaret_edit`. Carets that should be ignored are ones that
-     * were part of removed text and will likely be merged at the end of the edit, or carets that were
-     * added during the edit. It is recommended to `continue` within a loop iterating on multiple
-     * carets if a caret should be ignored.
-     *
-     * Generated from Godot docs: TextEdit.multicaret_edit_ignore_caret
-     */
     fun multicaretEditIgnoreCaret(caretIndex: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(multicaretEditIgnoreCaretBind, handle, caretIndex)
     }
 
-    /**
-     * Returns `true` if the caret is visible, `false` otherwise. A caret will be considered hidden if
-     * it is outside the scrollable area when scrolling is enabled. Note: `is_caret_visible` does not
-     * account for a caret being off-screen if it is still within the scrollable area. It will return
-     * `true` even if the caret is off-screen as long as it meets `TextEdit`'s own conditions for being
-     * visible. This includes uses of `scroll_fit_content_width` and `scroll_fit_content_height` that
-     * cause the `TextEdit` to expand beyond the viewport's bounds. Note: This method does not
-     * guarantee an accurate visibility check immediately after setting the caret position. The correct
-     * value may only be available in the next frame after the `TextEdit` has finished drawing. This
-     * also applies to any operation that causes the `TextEdit` to change in size.
-     *
-     * Generated from Godot docs: TextEdit.is_caret_visible
-     */
     fun isCaretVisible(caretIndex: Int = 0): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isCaretVisibleBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the caret pixel draw position.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_draw_pos
-     */
     fun getCaretDrawPos(caretIndex: Int = 0): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getCaretDrawPosBind, handle, caretIndex)
     }
 
-    /**
-     * Moves the caret to the specified `line` index. The caret column will be moved to the same visual
-     * position it was at the last time `set_caret_column` was called, or clamped to the end of the
-     * line. If `adjust_viewport` is `true`, the viewport will center at the caret position after the
-     * move occurs. If `can_be_hidden` is `true`, the specified `line` can be hidden. If `wrap_index`
-     * is `-1`, the caret column will be clamped to the `line`'s length. If `wrap_index` is greater
-     * than `-1`, the column will be moved to attempt to match the visual x position on the line's
-     * `wrap_index` to the position from the last time `set_caret_column` was called. Note: If
-     * supporting multiple carets this will not check for any overlap. See `merge_overlapping_carets`.
-     *
-     * Generated from Godot docs: TextEdit.set_caret_line
-     */
     fun setCaretLine(line: Int, adjustViewport: Boolean = true, canBeHidden: Boolean = true, wrapIndex: Int = 0, caretIndex: Int = 0) {
         ObjectCalls.ptrcallWithIntTwoBoolTwoIntArgs(setCaretLineBind, handle, line, adjustViewport, canBeHidden, wrapIndex, caretIndex)
     }
 
-    /**
-     * Returns the line the editing caret is on.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_line
-     */
     fun getCaretLine(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCaretLineBind, handle, caretIndex)
     }
 
-    /**
-     * Moves the caret to the specified `column` index. If `adjust_viewport` is `true`, the viewport
-     * will center at the caret position after the move occurs. Note: If supporting multiple carets
-     * this will not check for any overlap. See `merge_overlapping_carets`.
-     *
-     * Generated from Godot docs: TextEdit.set_caret_column
-     */
     fun setCaretColumn(column: Int, adjustViewport: Boolean = true, caretIndex: Int = 0) {
         ObjectCalls.ptrcallWithIntBoolIntArgs(setCaretColumnBind, handle, column, adjustViewport, caretIndex)
     }
 
-    /**
-     * Returns the column the editing caret is at.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_column
-     */
     fun getCaretColumn(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCaretColumnBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the correct column at the end of a composite character like ❤️‍🩹 (mending heart;
-     * Unicode: `U+2764 U+FE0F U+200D U+1FA79`) which is comprised of more than one Unicode code point,
-     * if the caret is at the start of the composite character. Also returns the correct column with
-     * the caret at mid grapheme and for non-composite characters. Note: To check at caret location use
-     * `get_next_composite_character_column(get_caret_line(), get_caret_column())`
-     *
-     * Generated from Godot docs: TextEdit.get_next_composite_character_column
-     */
     fun getNextCompositeCharacterColumn(line: Int, column: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextCompositeCharacterColumnBind, handle, line, column)
     }
 
-    /**
-     * Returns the correct column at the start of a composite character like ❤️‍🩹 (mending heart;
-     * Unicode: `U+2764 U+FE0F U+200D U+1FA79`) which is comprised of more than one Unicode code point,
-     * if the caret is at the end of the composite character. Also returns the correct column with the
-     * caret at mid grapheme and for non-composite characters. Note: To check at caret location use
-     * `get_previous_composite_character_column(get_caret_line(), get_caret_column())`
-     *
-     * Generated from Godot docs: TextEdit.get_previous_composite_character_column
-     */
     fun getPreviousCompositeCharacterColumn(line: Int, column: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getPreviousCompositeCharacterColumnBind, handle, line, column)
     }
 
-    /**
-     * Returns the wrap index the editing caret is on.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_wrap_index
-     */
     fun getCaretWrapIndex(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCaretWrapIndexBind, handle, caretIndex)
     }
 
-    /**
-     * Returns a `String` text with the word under the caret's location.
-     *
-     * Generated from Godot docs: TextEdit.get_word_under_caret
-     */
     fun getWordUnderCaret(caretIndex: Int = -1): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getWordUnderCaretBind, handle, caretIndex)
     }
 
-    /**
-     * If `false`, using Ctrl + Left or Ctrl + Right (Cmd + Left or Cmd + Right on macOS) bindings will
-     * stop moving caret only if a space or punctuation is detected. If `true`, it will also stop the
-     * caret if a character is part of `!"#$%&'()*+,-./:;<=>?@[\]^`{|}~`, the Unicode General
-     * Punctuation table, or the Unicode CJK Punctuation table. Useful for subword moving. This
-     * behavior also will be applied to the behavior of text selection.
-     *
-     * Generated from Godot docs: TextEdit.set_use_default_word_separators
-     */
     fun setUseDefaultWordSeparators(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseDefaultWordSeparatorsBind, handle, enabled)
     }
 
-    /**
-     * If `false`, using Ctrl + Left or Ctrl + Right (Cmd + Left or Cmd + Right on macOS) bindings will
-     * stop moving caret only if a space or punctuation is detected. If `true`, it will also stop the
-     * caret if a character is part of `!"#$%&'()*+,-./:;<=>?@[\]^`{|}~`, the Unicode General
-     * Punctuation table, or the Unicode CJK Punctuation table. Useful for subword moving. This
-     * behavior also will be applied to the behavior of text selection.
-     *
-     * Generated from Godot docs: TextEdit.is_default_word_separators_enabled
-     */
     fun isDefaultWordSeparatorsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultWordSeparatorsEnabledBind, handle)
     }
 
-    /**
-     * If `false`, using Ctrl + Left or Ctrl + Right (Cmd + Left or Cmd + Right on macOS) bindings will
-     * use the behavior of `use_default_word_separators`. If `true`, it will also stop the caret if a
-     * character within `custom_word_separators` is detected. Useful for subword moving. This behavior
-     * also will be applied to the behavior of text selection.
-     *
-     * Generated from Godot docs: TextEdit.set_use_custom_word_separators
-     */
     fun setUseCustomWordSeparators(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseCustomWordSeparatorsBind, handle, enabled)
     }
 
-    /**
-     * If `false`, using Ctrl + Left or Ctrl + Right (Cmd + Left or Cmd + Right on macOS) bindings will
-     * use the behavior of `use_default_word_separators`. If `true`, it will also stop the caret if a
-     * character within `custom_word_separators` is detected. Useful for subword moving. This behavior
-     * also will be applied to the behavior of text selection.
-     *
-     * Generated from Godot docs: TextEdit.is_custom_word_separators_enabled
-     */
     fun isCustomWordSeparatorsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCustomWordSeparatorsEnabledBind, handle)
     }
 
-    /**
-     * The characters to consider as word delimiters if `use_custom_word_separators` is `true`. The
-     * characters should be defined without separation, for example `#_!`.
-     *
-     * Generated from Godot docs: TextEdit.set_custom_word_separators
-     */
     fun setCustomWordSeparators(customWordSeparators: String) {
         ObjectCalls.ptrcallWithStringArg(setCustomWordSeparatorsBind, handle, customWordSeparators)
     }
 
-    /**
-     * The characters to consider as word delimiters if `use_custom_word_separators` is `true`. The
-     * characters should be defined without separation, for example `#_!`.
-     *
-     * Generated from Godot docs: TextEdit.get_custom_word_separators
-     */
     fun getCustomWordSeparators(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCustomWordSeparatorsBind, handle)
     }
 
-    /**
-     * If `true`, text can be selected. If `false`, text can not be selected by the user or by the
-     * `select` or `select_all` methods.
-     *
-     * Generated from Godot docs: TextEdit.set_selecting_enabled
-     */
     fun setSelectingEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, text can be selected. If `false`, text can not be selected by the user or by the
-     * `select` or `select_all` methods.
-     *
-     * Generated from Godot docs: TextEdit.is_selecting_enabled
-     */
     fun isSelectingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the selected text will be deselected when focus is lost.
-     *
-     * Generated from Godot docs: TextEdit.set_deselect_on_focus_loss_enabled
-     */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, the selected text will be deselected when focus is lost.
-     *
-     * Generated from Godot docs: TextEdit.is_deselect_on_focus_loss_enabled
-     */
     fun isDeselectOnFocusLossEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, handle)
     }
 
-    /**
-     * If `true`, allow drag and drop of selected text. Text can still be dropped from other sources.
-     *
-     * Generated from Godot docs: TextEdit.set_drag_and_drop_selection_enabled
-     */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, handle, enable)
     }
 
-    /**
-     * If `true`, allow drag and drop of selected text. Text can still be dropped from other sources.
-     *
-     * Generated from Godot docs: TextEdit.is_drag_and_drop_selection_enabled
-     */
     fun isDragAndDropSelectionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, handle)
     }
 
-    /**
-     * Sets the current selection mode.
-     *
-     * Generated from Godot docs: TextEdit.set_selection_mode
-     */
     fun setSelectionMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSelectionModeBind, handle, mode)
     }
 
-    /**
-     * Returns the current selection mode.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_mode
-     */
     fun getSelectionMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSelectionModeBind, handle)
     }
 
-    /**
-     * Select all the text. If `selecting_enabled` is `false`, no selection will occur.
-     *
-     * Generated from Godot docs: TextEdit.select_all
-     */
     fun selectAll() {
         ObjectCalls.ptrcallNoArgs(selectAllBind, handle)
     }
 
-    /**
-     * Selects the word under the caret.
-     *
-     * Generated from Godot docs: TextEdit.select_word_under_caret
-     */
     fun selectWordUnderCaret(caretIndex: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(selectWordUnderCaretBind, handle, caretIndex)
     }
 
-    /**
-     * Adds a selection and a caret for the next occurrence of the current selection. If there is no
-     * active selection, selects word under caret.
-     *
-     * Generated from Godot docs: TextEdit.add_selection_for_next_occurrence
-     */
     fun addSelectionForNextOccurrence() {
         ObjectCalls.ptrcallNoArgs(addSelectionForNextOccurrenceBind, handle)
     }
 
-    /**
-     * Moves a selection and a caret for the next occurrence of the current selection. If there is no
-     * active selection, moves to the next occurrence of the word under caret.
-     *
-     * Generated from Godot docs: TextEdit.skip_selection_for_next_occurrence
-     */
     fun skipSelectionForNextOccurrence() {
         ObjectCalls.ptrcallNoArgs(skipSelectionForNextOccurrenceBind, handle)
     }
@@ -1708,135 +919,54 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallWithFiveIntArgs(selectBind, handle, originLine, originColumn, caretLine, caretColumn, caretIndex)
     }
 
-    /**
-     * Returns `true` if the user has selected text.
-     *
-     * Generated from Godot docs: TextEdit.has_selection
-     */
     fun hasSelection(caretIndex: Int = -1): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSelectionBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the text inside the selection of a caret, or all the carets if `caret_index` is its
-     * default value `-1`.
-     *
-     * Generated from Godot docs: TextEdit.get_selected_text
-     */
     fun getSelectedText(caretIndex: Int = -1): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getSelectedTextBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the caret index of the selection at the given `line` and `column`, or `-1` if there is
-     * none. If `include_edges` is `false`, the position must be inside the selection and not at either
-     * end. If `only_selections` is `false`, carets without a selection will also be considered.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_at_line_column
-     */
     fun getSelectionAtLineColumn(line: Int, column: Int, includeEdges: Boolean = true, onlySelections: Boolean = true): Int {
         return ObjectCalls.ptrcallWithTwoIntTwoBoolArgsRetInt(getSelectionAtLineColumnBind, handle, line, column, includeEdges, onlySelections)
     }
 
-    /**
-     * Returns an `Array` of line ranges where `x` is the first line and `y` is the last line. All
-     * lines within these ranges will have a caret on them or be part of a selection. Each line will
-     * only be part of one line range, even if it has multiple carets on it. If a selection's end
-     * column (`get_selection_to_column`) is at column `0`, that line will not be included. If a
-     * selection begins on the line after another selection ends and `merge_adjacent` is `true`, or
-     * they begin and end on the same line, one line range will include both selections.
-     *
-     * Generated from Godot docs: TextEdit.get_line_ranges_from_carets
-     */
     fun getLineRangesFromCarets(onlySelections: Boolean = false, mergeAdjacent: Boolean = true): List<Vector2i> {
         return ObjectCalls.ptrcallWithTwoBoolArgsRetVector2iList(getLineRangesFromCaretsBind, handle, onlySelections, mergeAdjacent)
     }
 
-    /**
-     * Returns the origin line of the selection. This is the opposite end from the caret.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_origin_line
-     */
     fun getSelectionOriginLine(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginLineBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the origin column of the selection. This is the opposite end from the caret.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_origin_column
-     */
     fun getSelectionOriginColumn(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginColumnBind, handle, caretIndex)
     }
 
-    /**
-     * Sets the selection origin line to the `line` for the given `caret_index`. If the selection
-     * origin is moved to the caret position, the selection will deselect. If `can_be_hidden` is
-     * `false`, The line will be set to the nearest unhidden line below or above. If `wrap_index` is
-     * `-1`, the selection origin column will be clamped to the `line`'s length. If `wrap_index` is
-     * greater than `-1`, the column will be moved to attempt to match the visual x position on the
-     * line's `wrap_index` to the position from the last time `set_selection_origin_column` or `select`
-     * was called.
-     *
-     * Generated from Godot docs: TextEdit.set_selection_origin_line
-     */
     fun setSelectionOriginLine(line: Int, canBeHidden: Boolean = true, wrapIndex: Int = -1, caretIndex: Int = 0) {
         ObjectCalls.ptrcallWithIntBoolTwoIntArgs(setSelectionOriginLineBind, handle, line, canBeHidden, wrapIndex, caretIndex)
     }
 
-    /**
-     * Sets the selection origin column to the `column` for the given `caret_index`. If the selection
-     * origin is moved to the caret position, the selection will deselect.
-     *
-     * Generated from Godot docs: TextEdit.set_selection_origin_column
-     */
     fun setSelectionOriginColumn(column: Int, caretIndex: Int = 0) {
         ObjectCalls.ptrcallWithTwoIntArgs(setSelectionOriginColumnBind, handle, column, caretIndex)
     }
 
-    /**
-     * Returns the selection begin line. Returns the caret line if there is no selection.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_from_line
-     */
     fun getSelectionFromLine(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromLineBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the selection begin column. Returns the caret column if there is no selection.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_from_column
-     */
     fun getSelectionFromColumn(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromColumnBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the selection end line. Returns the caret line if there is no selection.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_to_line
-     */
     fun getSelectionToLine(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToLineBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the selection end column. Returns the caret column if there is no selection.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_to_column
-     */
     fun getSelectionToColumn(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToColumnBind, handle, caretIndex)
     }
 
-    /**
-     * Returns `true` if the caret of the selection is after the selection origin. This can be used to
-     * determine the direction of the selection.
-     *
-     * Generated from Godot docs: TextEdit.is_caret_after_selection_origin
-     */
     fun isCaretAfterSelectionOrigin(caretIndex: Int = 0): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isCaretAfterSelectionOriginBind, handle, caretIndex)
     }
@@ -1850,867 +980,370 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallWithIntArg(deselectBind, handle, caretIndex)
     }
 
-    /**
-     * Deletes the selected text.
-     *
-     * Generated from Godot docs: TextEdit.delete_selection
-     */
     fun deleteSelection(caretIndex: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(deleteSelectionBind, handle, caretIndex)
     }
 
-    /**
-     * Sets the line wrapping mode to use.
-     *
-     * Generated from Godot docs: TextEdit.set_line_wrapping_mode
-     */
     fun setLineWrappingMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setLineWrappingModeBind, handle, mode)
     }
 
-    /**
-     * Sets the line wrapping mode to use.
-     *
-     * Generated from Godot docs: TextEdit.get_line_wrapping_mode
-     */
     fun getLineWrappingMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLineWrappingModeBind, handle)
     }
 
-    /**
-     * If `wrap_mode` is set to `LINE_WRAPPING_BOUNDARY`, sets text wrapping mode.
-     *
-     * Generated from Godot docs: TextEdit.set_autowrap_mode
-     */
     fun setAutowrapMode(autowrapMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
-    /**
-     * If `wrap_mode` is set to `LINE_WRAPPING_BOUNDARY`, sets text wrapping mode.
-     *
-     * Generated from Godot docs: TextEdit.get_autowrap_mode
-     */
     fun getAutowrapMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
-    /**
-     * Returns if the given line is wrapped.
-     *
-     * Generated from Godot docs: TextEdit.is_line_wrapped
-     */
     fun isLineWrapped(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineWrappedBind, handle, line)
     }
 
-    /**
-     * Returns the number of times the given line is wrapped.
-     *
-     * Generated from Godot docs: TextEdit.get_line_wrap_count
-     */
     fun getLineWrapCount(line: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getLineWrapCountBind, handle, line)
     }
 
-    /**
-     * Returns the wrap index of the given column on the given line. This ranges from `0` to
-     * `get_line_wrap_count`.
-     *
-     * Generated from Godot docs: TextEdit.get_line_wrap_index_at_column
-     */
     fun getLineWrapIndexAtColumn(line: Int, column: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWrapIndexAtColumnBind, handle, line, column)
     }
 
-    /**
-     * Returns an array of `String`s representing each wrapped index.
-     *
-     * Generated from Godot docs: TextEdit.get_line_wrapped_text
-     */
     fun getLineWrappedText(line: Int): List<String> {
         return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getLineWrappedTextBind, handle, line)
     }
 
-    /**
-     * Scroll smoothly over the text rather than jumping to the next location.
-     *
-     * Generated from Godot docs: TextEdit.set_smooth_scroll_enabled
-     */
     fun setSmoothScrollEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSmoothScrollEnabledBind, handle, enable)
     }
 
-    /**
-     * Scroll smoothly over the text rather than jumping to the next location.
-     *
-     * Generated from Godot docs: TextEdit.is_smooth_scroll_enabled
-     */
     fun isSmoothScrollEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSmoothScrollEnabledBind, handle)
     }
 
-    /**
-     * Returns the `VScrollBar` of the `TextEdit`.
-     *
-     * Generated from Godot docs: TextEdit.get_v_scroll_bar
-     */
     fun getVScrollBar(): VScrollBar? {
         return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
     }
 
-    /**
-     * Returns the `HScrollBar` used by `TextEdit`.
-     *
-     * Generated from Godot docs: TextEdit.get_h_scroll_bar
-     */
     fun getHScrollBar(): HScrollBar? {
         return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, handle))
     }
 
-    /**
-     * If there is a vertical scrollbar, this determines the current vertical scroll value in line
-     * numbers, starting at 0 for the top line.
-     *
-     * Generated from Godot docs: TextEdit.set_v_scroll
-     */
     fun setVScroll(value: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVScrollBind, handle, value)
     }
 
-    /**
-     * If there is a vertical scrollbar, this determines the current vertical scroll value in line
-     * numbers, starting at 0 for the top line.
-     *
-     * Generated from Godot docs: TextEdit.get_v_scroll
-     */
     fun getVScroll(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollBind, handle)
     }
 
-    /**
-     * If there is a horizontal scrollbar, this determines the current horizontal scroll value in
-     * pixels.
-     *
-     * Generated from Godot docs: TextEdit.set_h_scroll
-     */
     fun setHScroll(value: Int) {
         ObjectCalls.ptrcallWithIntArg(setHScrollBind, handle, value)
     }
 
-    /**
-     * If there is a horizontal scrollbar, this determines the current horizontal scroll value in
-     * pixels.
-     *
-     * Generated from Godot docs: TextEdit.get_h_scroll
-     */
     fun getHScroll(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, handle)
     }
 
-    /**
-     * Allow scrolling past the last line into "virtual" space.
-     *
-     * Generated from Godot docs: TextEdit.set_scroll_past_end_of_file_enabled
-     */
     fun setScrollPastEndOfFileEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScrollPastEndOfFileEnabledBind, handle, enable)
     }
 
-    /**
-     * Allow scrolling past the last line into "virtual" space.
-     *
-     * Generated from Godot docs: TextEdit.is_scroll_past_end_of_file_enabled
-     */
     fun isScrollPastEndOfFileEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollPastEndOfFileEnabledBind, handle)
     }
 
-    /**
-     * Sets the scroll speed with the minimap or when `scroll_smooth` is enabled.
-     *
-     * Generated from Godot docs: TextEdit.set_v_scroll_speed
-     */
     fun setVScrollSpeed(speed: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVScrollSpeedBind, handle, speed)
     }
 
-    /**
-     * Sets the scroll speed with the minimap or when `scroll_smooth` is enabled.
-     *
-     * Generated from Godot docs: TextEdit.get_v_scroll_speed
-     */
     fun getVScrollSpeed(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollSpeedBind, handle)
     }
 
-    /**
-     * If `true`, `TextEdit` fits its minimum height to the number of visible lines instead of
-     * scrolling vertically. If a maximum height is set (for example via `Control.custom_maximum_size`)
-     * and content exceeds it, a vertical scrollbar is shown.
-     *
-     * Generated from Godot docs: TextEdit.set_fit_content_height_enabled
-     */
     fun setFitContentHeightEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFitContentHeightEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, `TextEdit` fits its minimum height to the number of visible lines instead of
-     * scrolling vertically. If a maximum height is set (for example via `Control.custom_maximum_size`)
-     * and content exceeds it, a vertical scrollbar is shown.
-     *
-     * Generated from Godot docs: TextEdit.is_fit_content_height_enabled
-     */
     fun isFitContentHeightEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFitContentHeightEnabledBind, handle)
     }
 
-    /**
-     * If `true`, `TextEdit` fits its minimum width to the widest line instead of scrolling
-     * horizontally. If a maximum width is set (for example via `Control.custom_maximum_size`) and
-     * content exceeds it, a horizontal scrollbar is shown.
-     *
-     * Generated from Godot docs: TextEdit.set_fit_content_width_enabled
-     */
     fun setFitContentWidthEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFitContentWidthEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, `TextEdit` fits its minimum width to the widest line instead of scrolling
-     * horizontally. If a maximum width is set (for example via `Control.custom_maximum_size`) and
-     * content exceeds it, a horizontal scrollbar is shown.
-     *
-     * Generated from Godot docs: TextEdit.is_fit_content_width_enabled
-     */
     fun isFitContentWidthEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFitContentWidthEnabledBind, handle)
     }
 
-    /**
-     * Returns the scroll position for `wrap_index` of `line`.
-     *
-     * Generated from Godot docs: TextEdit.get_scroll_pos_for_line
-     */
     fun getScrollPosForLine(line: Int, wrapIndex: Int = 0): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getScrollPosForLineBind, handle, line, wrapIndex)
     }
 
-    /**
-     * Positions the `wrap_index` of `line` at the top of the viewport.
-     *
-     * Generated from Godot docs: TextEdit.set_line_as_first_visible
-     */
     fun setLineAsFirstVisible(line: Int, wrapIndex: Int = 0) {
         ObjectCalls.ptrcallWithTwoIntArgs(setLineAsFirstVisibleBind, handle, line, wrapIndex)
     }
 
-    /**
-     * Returns the first visible line.
-     *
-     * Generated from Godot docs: TextEdit.get_first_visible_line
-     */
     fun getFirstVisibleLine(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFirstVisibleLineBind, handle)
     }
 
-    /**
-     * Positions the `wrap_index` of `line` at the center of the viewport.
-     *
-     * Generated from Godot docs: TextEdit.set_line_as_center_visible
-     */
+    fun isLineInViewport(line: Int): Boolean {
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineInViewportBind, handle, line)
+    }
+
     fun setLineAsCenterVisible(line: Int, wrapIndex: Int = 0) {
         ObjectCalls.ptrcallWithTwoIntArgs(setLineAsCenterVisibleBind, handle, line, wrapIndex)
     }
 
-    /**
-     * Positions the `wrap_index` of `line` at the bottom of the viewport.
-     *
-     * Generated from Godot docs: TextEdit.set_line_as_last_visible
-     */
     fun setLineAsLastVisible(line: Int, wrapIndex: Int = 0) {
         ObjectCalls.ptrcallWithTwoIntArgs(setLineAsLastVisibleBind, handle, line, wrapIndex)
     }
 
-    /**
-     * Returns the last visible line. Use `get_last_full_visible_line_wrap_index` for the wrap index.
-     *
-     * Generated from Godot docs: TextEdit.get_last_full_visible_line
-     */
     fun getLastFullVisibleLine(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineBind, handle)
     }
 
-    /**
-     * Returns the last visible wrap index of the last visible line.
-     *
-     * Generated from Godot docs: TextEdit.get_last_full_visible_line_wrap_index
-     */
     fun getLastFullVisibleLineWrapIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineWrapIndexBind, handle)
     }
 
-    /**
-     * Returns the number of lines that can visually fit, rounded down, based on this control's height.
-     *
-     * Generated from Godot docs: TextEdit.get_visible_line_count
-     */
     fun getVisibleLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, handle)
     }
 
-    /**
-     * Returns the total number of lines between `from_line` and `to_line` (inclusive) in the text.
-     * This includes wrapped lines and excludes folded lines. If the range covers all lines it is
-     * equivalent to `get_total_visible_line_count`.
-     *
-     * Generated from Godot docs: TextEdit.get_visible_line_count_in_range
-     */
     fun getVisibleLineCountInRange(fromLine: Int, toLine: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getVisibleLineCountInRangeBind, handle, fromLine, toLine)
     }
 
-    /**
-     * Returns the total number of lines in the text. This includes wrapped lines and excludes folded
-     * lines. If `wrap_mode` is set to `LINE_WRAPPING_NONE` and no lines are folded (see
-     * `CodeEdit.is_line_folded`) then this is equivalent to `get_line_count`. See
-     * `get_visible_line_count_in_range` for a limited range of lines.
-     *
-     * Generated from Godot docs: TextEdit.get_total_visible_line_count
-     */
     fun getTotalVisibleLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTotalVisibleLineCountBind, handle)
     }
 
-    /**
-     * Adjust the viewport so the caret is visible.
-     *
-     * Generated from Godot docs: TextEdit.adjust_viewport_to_caret
-     */
     fun adjustViewportToCaret(caretIndex: Int = 0) {
         ObjectCalls.ptrcallWithIntArg(adjustViewportToCaretBind, handle, caretIndex)
     }
 
-    /**
-     * Centers the viewport on the line the editing caret is at. This also resets the
-     * `scroll_horizontal` value to `0`.
-     *
-     * Generated from Godot docs: TextEdit.center_viewport_to_caret
-     */
     fun centerViewportToCaret(caretIndex: Int = 0) {
         ObjectCalls.ptrcallWithIntArg(centerViewportToCaretBind, handle, caretIndex)
     }
 
-    /**
-     * If `true`, a minimap is shown, providing an outline of your source code. The minimap uses a
-     * fixed-width text size.
-     *
-     * Generated from Godot docs: TextEdit.set_draw_minimap
-     */
     fun setDrawMinimap(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawMinimapBind, handle, enabled)
     }
 
-    /**
-     * If `true`, a minimap is shown, providing an outline of your source code. The minimap uses a
-     * fixed-width text size.
-     *
-     * Generated from Godot docs: TextEdit.is_drawing_minimap
-     */
     fun isDrawingMinimap(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingMinimapBind, handle)
     }
 
-    /**
-     * The width, in pixels, of the minimap.
-     *
-     * Generated from Godot docs: TextEdit.set_minimap_width
-     */
     fun setMinimapWidth(width: Int) {
         ObjectCalls.ptrcallWithIntArg(setMinimapWidthBind, handle, width)
     }
 
-    /**
-     * The width, in pixels, of the minimap.
-     *
-     * Generated from Godot docs: TextEdit.get_minimap_width
-     */
     fun getMinimapWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMinimapWidthBind, handle)
     }
 
-    /**
-     * Returns the number of lines that may be drawn on the minimap.
-     *
-     * Generated from Godot docs: TextEdit.get_minimap_visible_lines
-     */
     fun getMinimapVisibleLines(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMinimapVisibleLinesBind, handle)
     }
 
-    /**
-     * Register a new gutter to this `TextEdit`. Use `at` to have a specific gutter order. A value of
-     * `-1` appends the gutter to the right.
-     *
-     * Generated from Godot docs: TextEdit.add_gutter
-     */
     fun addGutter(at: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(addGutterBind, handle, at)
     }
 
-    /**
-     * Removes the gutter at the given index.
-     *
-     * Generated from Godot docs: TextEdit.remove_gutter
-     */
     fun removeGutter(gutter: Int) {
         ObjectCalls.ptrcallWithIntArg(removeGutterBind, handle, gutter)
     }
 
-    /**
-     * Returns the number of gutters registered.
-     *
-     * Generated from Godot docs: TextEdit.get_gutter_count
-     */
     fun getGutterCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getGutterCountBind, handle)
     }
 
-    /**
-     * Sets the name of the gutter at the given index.
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_name
-     */
     fun setGutterName(gutter: Int, name: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setGutterNameBind, handle, gutter, name)
     }
 
-    /**
-     * Returns the name of the gutter at the given index.
-     *
-     * Generated from Godot docs: TextEdit.get_gutter_name
-     */
     fun getGutterName(gutter: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getGutterNameBind, handle, gutter)
     }
 
-    /**
-     * Sets the type of gutter at the given index. Gutters can contain icons, text, or custom visuals.
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_type
-     */
     fun setGutterType(gutter: Int, type: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setGutterTypeBind, handle, gutter, type)
     }
 
-    /**
-     * Returns the type of the gutter at the given index. Gutters can contain icons, text, or custom
-     * visuals.
-     *
-     * Generated from Godot docs: TextEdit.get_gutter_type
-     */
     fun getGutterType(gutter: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getGutterTypeBind, handle, gutter)
     }
 
-    /**
-     * Set the width of the gutter at the given index.
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_width
-     */
     fun setGutterWidth(gutter: Int, width: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setGutterWidthBind, handle, gutter, width)
     }
 
-    /**
-     * Returns the width of the gutter at the given index.
-     *
-     * Generated from Godot docs: TextEdit.get_gutter_width
-     */
     fun getGutterWidth(gutter: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getGutterWidthBind, handle, gutter)
     }
 
-    /**
-     * If `true`, the gutter at the given index is drawn. The gutter type (`set_gutter_type`)
-     * determines how it is drawn. See `is_gutter_drawn`.
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_draw
-     */
     fun setGutterDraw(gutter: Int, draw: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterDrawBind, handle, gutter, draw)
     }
 
-    /**
-     * Returns `true` if the gutter at the given index is currently drawn. See `set_gutter_draw`.
-     *
-     * Generated from Godot docs: TextEdit.is_gutter_drawn
-     */
     fun isGutterDrawn(gutter: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isGutterDrawnBind, handle, gutter)
     }
 
-    /**
-     * If `true`, the mouse cursor will change to a pointing hand (`Control.CURSOR_POINTING_HAND`) when
-     * hovering over the gutter at the given index. See `is_gutter_clickable` and
-     * `set_line_gutter_clickable`.
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_clickable
-     */
     fun setGutterClickable(gutter: Int, clickable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterClickableBind, handle, gutter, clickable)
     }
 
-    /**
-     * Returns `true` if the gutter at the given index is clickable. See `set_gutter_clickable`.
-     *
-     * Generated from Godot docs: TextEdit.is_gutter_clickable
-     */
     fun isGutterClickable(gutter: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isGutterClickableBind, handle, gutter)
     }
 
-    /**
-     * If `true`, the line data of the gutter at the given index can be overridden when using
-     * `merge_gutters`. See `is_gutter_overwritable`.
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_overwritable
-     */
     fun setGutterOverwritable(gutter: Int, overwritable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterOverwritableBind, handle, gutter, overwritable)
     }
 
-    /**
-     * Returns `true` if the gutter at the given index is overwritable. See `set_gutter_overwritable`.
-     *
-     * Generated from Godot docs: TextEdit.is_gutter_overwritable
-     */
     fun isGutterOverwritable(gutter: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isGutterOverwritableBind, handle, gutter)
     }
 
-    /**
-     * Merge the gutters from `from_line` into `to_line`. Only overwritable gutters will be copied. See
-     * `set_gutter_overwritable`.
-     *
-     * Generated from Godot docs: TextEdit.merge_gutters
-     */
     fun mergeGutters(fromLine: Int, toLine: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(mergeGuttersBind, handle, fromLine, toLine)
     }
 
-    /**
-     * Set a custom draw callback for the gutter at the given index. `draw_callback` must take the
-     * following arguments: A line index `int`, a gutter index `int`, and an area `Rect2`. This
-     * callback only works when the gutter type is `GUTTER_TYPE_CUSTOM` (see `set_gutter_type`).
-     *
-     * Generated from Godot docs: TextEdit.set_gutter_custom_draw
-     */
     fun setGutterCustomDraw(column: Int, drawCallback: GodotCallable) {
         ObjectCalls.ptrcallWithIntCallableArgs(setGutterCustomDrawBind, handle, column, drawCallback.target.handle, drawCallback.method)
     }
 
-    /**
-     * Returns the total width of all gutters and internal padding.
-     *
-     * Generated from Godot docs: TextEdit.get_total_gutter_width
-     */
     fun getTotalGutterWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTotalGutterWidthBind, handle)
     }
 
-    /**
-     * Sets the metadata for `gutter` on `line` to `metadata`.
-     *
-     * Generated from Godot docs: TextEdit.set_line_gutter_metadata
-     */
     fun setLineGutterMetadata(line: Int, gutter: Int, metadata: Any?) {
         ObjectCalls.ptrcallWithTwoIntAndVariantArg(setLineGutterMetadataBind, handle, line, gutter, metadata)
     }
 
-    /**
-     * Returns the metadata currently in `gutter` at `line`.
-     *
-     * Generated from Godot docs: TextEdit.get_line_gutter_metadata
-     */
     fun getLineGutterMetadata(line: Int, gutter: Int): Any? {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLineGutterMetadataBind, handle, line, gutter)
     }
 
-    /**
-     * Sets the text for `gutter` on `line` to `text`. This only works when the gutter type is
-     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
-     *
-     * Generated from Godot docs: TextEdit.set_line_gutter_text
-     */
     fun setLineGutterText(line: Int, gutter: Int, text: String) {
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(setLineGutterTextBind, handle, line, gutter, text)
     }
 
-    /**
-     * Returns the text currently in `gutter` at `line`. This only works when the gutter type is
-     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
-     *
-     * Generated from Godot docs: TextEdit.get_line_gutter_text
-     */
     fun getLineGutterText(line: Int, gutter: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLineGutterTextBind, handle, line, gutter)
     }
 
-    /**
-     * Sets the icon for `gutter` on `line` to `icon`. This only works when the gutter type is
-     * `GUTTER_TYPE_ICON` (see `set_gutter_type`).
-     *
-     * Generated from Godot docs: TextEdit.set_line_gutter_icon
-     */
     fun setLineGutterIcon(line: Int, gutter: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(setLineGutterIconBind, handle, line, gutter, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns the icon currently in `gutter` at `line`. This only works when the gutter type is
-     * `GUTTER_TYPE_ICON` (see `set_gutter_type`).
-     *
-     * Generated from Godot docs: TextEdit.get_line_gutter_icon
-     */
     fun getLineGutterIcon(line: Int, gutter: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getLineGutterIconBind, handle, line, gutter))
     }
 
-    /**
-     * Sets the color for `gutter` on `line` to `color`.
-     *
-     * Generated from Godot docs: TextEdit.set_line_gutter_item_color
-     */
     fun setLineGutterItemColor(line: Int, gutter: Int, color: Color) {
         ObjectCalls.ptrcallWithTwoIntAndColorArg(setLineGutterItemColorBind, handle, line, gutter, color)
     }
 
-    /**
-     * Returns the color currently in `gutter` at `line`.
-     *
-     * Generated from Godot docs: TextEdit.get_line_gutter_item_color
-     */
     fun getLineGutterItemColor(line: Int, gutter: Int): Color {
         return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getLineGutterItemColorBind, handle, line, gutter)
     }
 
-    /**
-     * If `clickable` is `true`, makes the `gutter` on the given `line` clickable. This is like
-     * `set_gutter_clickable`, but for a single line. If `is_gutter_clickable` is `true`, this will not
-     * have any effect. See `is_line_gutter_clickable` and `gutter_clicked`.
-     *
-     * Generated from Godot docs: TextEdit.set_line_gutter_clickable
-     */
     fun setLineGutterClickable(line: Int, gutter: Int, clickable: Boolean) {
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setLineGutterClickableBind, handle, line, gutter, clickable)
     }
 
-    /**
-     * Returns `true` if the gutter at the given index on the given line is clickable. See
-     * `set_line_gutter_clickable`.
-     *
-     * Generated from Godot docs: TextEdit.is_line_gutter_clickable
-     */
     fun isLineGutterClickable(line: Int, gutter: Int): Boolean {
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isLineGutterClickableBind, handle, line, gutter)
     }
 
-    /**
-     * Sets the custom background color of the given line. If transparent, this color is applied on top
-     * of the default background color (See `background_color`). If set to `Color(0, 0, 0, 0)`, no
-     * additional color is applied.
-     *
-     * Generated from Godot docs: TextEdit.set_line_background_color
-     */
     fun setLineBackgroundColor(line: Int, color: Color) {
         ObjectCalls.ptrcallWithIntAndColorArg(setLineBackgroundColorBind, handle, line, color)
     }
 
-    /**
-     * Returns the custom background color of the given line. If no color is set, returns `Color(0, 0,
-     * 0, 0)`.
-     *
-     * Generated from Godot docs: TextEdit.get_line_background_color
-     */
     fun getLineBackgroundColor(line: Int): Color {
         return ObjectCalls.ptrcallWithIntArgRetColor(getLineBackgroundColorBind, handle, line)
     }
 
-    /**
-     * The syntax highlighter to use. Note: A `SyntaxHighlighter` instance should not be used across
-     * multiple `TextEdit` nodes.
-     *
-     * Generated from Godot docs: TextEdit.set_syntax_highlighter
-     */
     fun setSyntaxHighlighter(syntaxHighlighter: SyntaxHighlighter?) {
         ObjectCalls.ptrcallWithObjectArgs(setSyntaxHighlighterBind, handle, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The syntax highlighter to use. Note: A `SyntaxHighlighter` instance should not be used across
-     * multiple `TextEdit` nodes.
-     *
-     * Generated from Godot docs: TextEdit.get_syntax_highlighter
-     */
     fun getSyntaxHighlighter(): SyntaxHighlighter? {
         return SyntaxHighlighter.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSyntaxHighlighterBind, handle))
     }
 
-    /**
-     * If `true`, the line containing the cursor is highlighted.
-     *
-     * Generated from Godot docs: TextEdit.set_highlight_current_line
-     */
     fun setHighlightCurrentLine(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHighlightCurrentLineBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the line containing the cursor is highlighted.
-     *
-     * Generated from Godot docs: TextEdit.is_highlight_current_line_enabled
-     */
     fun isHighlightCurrentLineEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHighlightCurrentLineEnabledBind, handle)
     }
 
-    /**
-     * If `true`, all occurrences of the selected text will be highlighted.
-     *
-     * Generated from Godot docs: TextEdit.set_highlight_all_occurrences
-     */
     fun setHighlightAllOccurrences(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHighlightAllOccurrencesBind, handle, enabled)
     }
 
-    /**
-     * If `true`, all occurrences of the selected text will be highlighted.
-     *
-     * Generated from Godot docs: TextEdit.is_highlight_all_occurrences_enabled
-     */
     fun isHighlightAllOccurrencesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHighlightAllOccurrencesEnabledBind, handle)
     }
 
-    /**
-     * If `true`, control characters are displayed.
-     *
-     * Generated from Godot docs: TextEdit.get_draw_control_chars
-     */
     fun getDrawControlChars(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, handle)
     }
 
-    /**
-     * If `true`, control characters are displayed.
-     *
-     * Generated from Godot docs: TextEdit.set_draw_control_chars
-     */
     fun setDrawControlChars(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the "tab" character will have a visible representation.
-     *
-     * Generated from Godot docs: TextEdit.set_draw_tabs
-     */
     fun setDrawTabs(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawTabsBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the "tab" character will have a visible representation.
-     *
-     * Generated from Godot docs: TextEdit.is_drawing_tabs
-     */
     fun isDrawingTabs(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingTabsBind, handle)
     }
 
-    /**
-     * If `true`, the "space" character will have a visible representation.
-     *
-     * Generated from Godot docs: TextEdit.set_draw_spaces
-     */
     fun setDrawSpaces(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawSpacesBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the "space" character will have a visible representation.
-     *
-     * Generated from Godot docs: TextEdit.is_drawing_spaces
-     */
     fun isDrawingSpaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingSpacesBind, handle)
     }
 
-    /**
-     * Returns the `PopupMenu` of this `TextEdit`. By default, this menu is displayed when
-     * right-clicking on the `TextEdit`. You can add custom menu items or remove standard ones. Make
-     * sure your IDs don't conflict with the standard ones (see `MenuItems`). For example:
-     *
-     * Generated from Godot docs: TextEdit.get_menu
-     */
     fun getMenu(): PopupMenu? {
         return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, handle))
     }
 
-    /**
-     * Returns `true` if the menu is visible. Use this instead of `get_menu().visible` to improve
-     * performance (so the creation of the menu is avoided). See `get_menu`.
-     *
-     * Generated from Godot docs: TextEdit.is_menu_visible
-     */
     fun isMenuVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, handle)
     }
 
-    /**
-     * Executes a given action as defined in the `MenuItems` enum.
-     *
-     * Generated from Godot docs: TextEdit.menu_option
-     */
     fun menuOption(option: Int) {
         ObjectCalls.ptrcallWithIntArg(menuOptionBind, handle, option)
     }
 
-    /**
-     * This method does nothing.
-     *
-     * Generated from Godot docs: TextEdit.adjust_carets_after_edit
-     */
     fun adjustCaretsAfterEdit(caret: Int, fromLine: Int, fromCol: Int, toLine: Int, toCol: Int) {
         ObjectCalls.ptrcallWithFiveIntArgs(adjustCaretsAfterEditBind, handle, caret, fromLine, fromCol, toLine, toCol)
     }
 
-    /**
-     * Returns a list of caret indexes in their edit order, this done from bottom to top. Edit order
-     * refers to the way actions such as `insert_text_at_caret` are applied.
-     *
-     * Generated from Godot docs: TextEdit.get_caret_index_edit_order
-     */
     fun getCaretIndexEditOrder(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getCaretIndexEditOrderBind, handle)
     }
 
-    /**
-     * Returns the original start line of the selection.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_line
-     */
     fun getSelectionLine(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionLineBind, handle, caretIndex)
     }
 
-    /**
-     * Returns the original start column of the selection.
-     *
-     * Generated from Godot docs: TextEdit.get_selection_column
-     */
     fun getSelectionColumn(caretIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionColumnBind, handle, caretIndex)
     }
@@ -3708,6 +2341,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val GET_FIRST_VISIBLE_LINE_HASH = 3905245786L
         private val getFirstVisibleLineBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "get_first_visible_line", GET_FIRST_VISIBLE_LINE_HASH)
+        }
+
+        private const val IS_LINE_IN_VIEWPORT_HASH = 1116898809L
+        private val isLineInViewportBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "is_line_in_viewport", IS_LINE_IN_VIEWPORT_HASH)
         }
 
         private const val SET_LINE_AS_CENTER_VISIBLE_HASH = 2230941749L

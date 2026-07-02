@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeTexture3D
@@ -23,6 +23,13 @@ class VisualShaderNodeTexture3D(handle: MemorySegment) : VisualShaderNodeSample3
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeTexture3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture3D? =
+            if (handle.address() == 0L) null else VisualShaderNodeTexture3D(handle)
+
         private const val SET_TEXTURE_HASH = 1188404210L
         private val setTextureBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeTexture3D", "set_texture", SET_TEXTURE_HASH)

@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A node that provides a thickened polygon shape (a prism) to a `CollisionObject3D` parent.
@@ -48,125 +48,62 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setDebugFillProperty")
         set(value) = setEnableDebugFill(value)
 
-    /**
-     * Length that the resulting collision extends in either direction perpendicular to its 2D polygon.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.set_depth
-     */
     fun setDepth(depth: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
     }
 
-    /**
-     * Length that the resulting collision extends in either direction perpendicular to its 2D polygon.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.get_depth
-     */
     fun getDepth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
-    /**
-     * Array of vertices which define the 2D polygon in the local XY plane.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.set_polygon
-     */
     fun setPolygon(polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
-    /**
-     * Array of vertices which define the 2D polygon in the local XY plane.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.get_polygon
-     */
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 
-    /**
-     * If `true`, no collision will be produced. This property should be changed with
-     * `Object.set_deferred`.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.set_disabled
-     */
     fun setDisabled(disabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
     }
 
-    /**
-     * If `true`, no collision will be produced. This property should be changed with
-     * `Object.set_deferred`.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.is_disabled
-     */
     fun isDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
     }
 
-    /**
-     * The collision shape color that is displayed in the editor, or in the running project if Debug >
-     * Visible Collision Shapes is checked at the top of the editor. Note: The default value is
-     * `ProjectSettings.debug/shapes/collision/shape_color`. The `Color(0, 0, 0, 0)` value documented
-     * here is a placeholder, and not the actual default debug color.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.set_debug_color
-     */
     fun setDebugColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setDebugColorBind, handle, color)
     }
 
-    /**
-     * The collision shape color that is displayed in the editor, or in the running project if Debug >
-     * Visible Collision Shapes is checked at the top of the editor. Note: The default value is
-     * `ProjectSettings.debug/shapes/collision/shape_color`. The `Color(0, 0, 0, 0)` value documented
-     * here is a placeholder, and not the actual default debug color.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.get_debug_color
-     */
     fun getDebugColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, handle)
     }
 
-    /**
-     * If `true`, when the shape is displayed, it will show a solid fill color in addition to its
-     * wireframe.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.set_enable_debug_fill
-     */
     fun setEnableDebugFill(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, handle, enable)
     }
 
-    /**
-     * If `true`, when the shape is displayed, it will show a solid fill color in addition to its
-     * wireframe.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.get_enable_debug_fill
-     */
     fun getEnableDebugFill(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, handle)
     }
 
-    /**
-     * The collision margin for the generated `Shape3D`. See `Shape3D.margin` for more details.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.set_margin
-     */
     fun setMargin(margin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
-    /**
-     * The collision margin for the generated `Shape3D`. See `Shape3D.margin` for more details.
-     *
-     * Generated from Godot docs: CollisionPolygon3D.get_margin
-     */
     fun getMargin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CollisionPolygon3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CollisionPolygon3D? =
+            if (handle.address() == 0L) null else CollisionPolygon3D(handle)
+
         private const val SET_DEPTH_HASH = 373806689L
         private val setDepthBind by lazy {
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_depth", SET_DEPTH_HASH)

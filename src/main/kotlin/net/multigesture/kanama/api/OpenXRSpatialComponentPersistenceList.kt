@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRSpatialComponentPersistenceList
@@ -16,6 +16,13 @@ class OpenXRSpatialComponentPersistenceList(handle: MemorySegment) : OpenXRSpati
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentPersistenceList? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentPersistenceList? =
+            if (handle.address() == 0L) null else OpenXRSpatialComponentPersistenceList(handle)
+
         private const val GET_PERSISTENT_UUID_HASH = 844755477L
         private val getPersistentUuidBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialComponentPersistenceList", "get_persistent_uuid", GET_PERSISTENT_UUID_HASH)

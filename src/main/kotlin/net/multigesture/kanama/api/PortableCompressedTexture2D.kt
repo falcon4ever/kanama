@@ -23,96 +23,39 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setKeepCompressedBufferProperty")
         set(value) = setKeepCompressedBuffer(value)
 
-    /**
-     * Initializes the compressed texture from a base image. The compression mode must be provided.
-     * `normal_map` is recommended to ensure optimum quality if this image will be used as a normal
-     * map. If lossy compression is requested, the quality setting can optionally be provided. This
-     * maps to Lossy WebP compression quality.
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.create_from_image
-     */
     fun createFromImage(image: Image?, compressionMode: Long, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
         ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, compressionMode, normalMap, lossyQuality)
     }
 
-    /**
-     * Return the compression mode used (valid after initialized).
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.get_compression_mode
-     */
     fun getCompressionMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCompressionModeBind, handle)
     }
 
-    /**
-     * Allows overriding the texture's size (for 2D only).
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.set_size_override
-     */
     fun setSizeOverride(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSizeOverrideBind, handle, size)
     }
 
-    /**
-     * Allows overriding the texture's size (for 2D only).
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.get_size_override
-     */
     fun getSizeOverride(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeOverrideBind, handle)
     }
 
-    /**
-     * If `true`, when running in the editor, this texture will keep the source-compressed data in
-     * memory, allowing the data to persist after loading. Otherwise, the source-compressed data is
-     * lost after loading and the texture can't be re-saved. Note: This property must be set before
-     * `create_from_image` for this to work.
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.set_keep_compressed_buffer
-     */
     fun setKeepCompressedBuffer(keep: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setKeepCompressedBufferBind, handle, keep)
     }
 
-    /**
-     * If `true`, when running in the editor, this texture will keep the source-compressed data in
-     * memory, allowing the data to persist after loading. Otherwise, the source-compressed data is
-     * lost after loading and the texture can't be re-saved. Note: This property must be set before
-     * `create_from_image` for this to work.
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.is_keeping_compressed_buffer
-     */
     fun isKeepingCompressedBuffer(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isKeepingCompressedBufferBind, handle)
     }
 
-    /**
-     * Sets the compressor parameters for Basis Universal compression. See also the settings in
-     * `ResourceImporterTexture`. Note: This method must be called before `create_from_image` for this
-     * to work.
-     *
-     * Generated from Godot docs: PortableCompressedTexture2D.set_basisu_compressor_params
-     */
     fun setBasisuCompressorParams(uastcLevel: Int, rdoQualityLoss: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBasisuCompressorParamsBind, handle, uastcLevel, rdoQualityLoss)
     }
 
     companion object {
-        /**
-         * If `keep` is `true`, overrides the flag globally for all textures of this type. This is used
-         * primarily by the editor.
-         *
-         * Generated from Godot docs: PortableCompressedTexture2D.set_keep_all_compressed_buffers
-         */
         fun setKeepAllCompressedBuffers(keep: Boolean) {
             ObjectCalls.ptrcallWithBoolArg(setKeepAllCompressedBuffersBind, MemorySegment.NULL, keep)
         }
 
-        /**
-         * Returns `true` if the flag is overridden for all textures of this type.
-         *
-         * Generated from Godot docs: PortableCompressedTexture2D.is_keeping_all_compressed_buffers
-         */
         fun isKeepingAllCompressedBuffers(): Boolean {
             return ObjectCalls.ptrcallNoArgsRetBool(isKeepingAllCompressedBuffersBind, MemorySegment.NULL)
         }

@@ -1056,7 +1056,7 @@ class HelloScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 		val engineBacktraceCount = engineBacktraces.size
 		engineBacktraces.forEach { it.close() }
 		val connectedJoypads = Input.getConnectedJoypads()
-		val joyInfo = Input.getJoyInfo(connectedJoypads.firstOrNull() ?: 0L)
+		val joyInfo = Input.getJoyInfo(connectedJoypads.firstOrNull()?.toInt() ?: 0)
 		val nowUnix = Time.getUnixTimeFromSystem().toLong()
 		val systemDateTime = Time.getDateTimeDictFromSystem()
 		val systemDate = Time.getDateDictFromSystem()

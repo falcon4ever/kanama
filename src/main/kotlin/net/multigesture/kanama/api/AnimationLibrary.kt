@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Container for `Animation` resources.
@@ -9,66 +9,30 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: AnimationLibrary
  */
 class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
-    /**
-     * Adds the `animation` to the library, accessible by the key `name`.
-     *
-     * Generated from Godot docs: AnimationLibrary.add_animation
-     */
     fun addAnimation(name: String, animation: Animation?): Long {
         return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, handle, name, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Removes the `Animation` with the key `name`.
-     *
-     * Generated from Godot docs: AnimationLibrary.remove_animation
-     */
     fun removeAnimation(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, name)
     }
 
-    /**
-     * Changes the key of the `Animation` associated with the key `name` to `newname`.
-     *
-     * Generated from Godot docs: AnimationLibrary.rename_animation
-     */
     fun renameAnimation(name: String, newname: String) {
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, name, newname)
     }
 
-    /**
-     * Returns `true` if the library stores an `Animation` with `name` as the key.
-     *
-     * Generated from Godot docs: AnimationLibrary.has_animation
-     */
     fun hasAnimation(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, name)
     }
 
-    /**
-     * Returns the `Animation` with the key `name`. If the animation does not exist, `null` is returned
-     * and an error is logged.
-     *
-     * Generated from Godot docs: AnimationLibrary.get_animation
-     */
     fun getAnimation(name: String): Animation? {
         return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, handle, name))
     }
 
-    /**
-     * Returns the keys for the `Animation`s stored in the library.
-     *
-     * Generated from Godot docs: AnimationLibrary.get_animation_list
-     */
     fun getAnimationList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationListBind, handle)
     }
 
-    /**
-     * Returns the key count for the `Animation`s stored in the library.
-     *
-     * Generated from Godot docs: AnimationLibrary.get_animation_list_size
-     */
     fun getAnimationListSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, handle)
     }

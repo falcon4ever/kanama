@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeUVFunc
@@ -23,6 +23,17 @@ class VisualShaderNodeUVFunc(handle: MemorySegment) : VisualShaderNode(handle) {
     }
 
     companion object {
+        const val FUNC_PANNING: Long = 0L
+        const val FUNC_SCALING: Long = 1L
+        const val FUNC_MAX: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeUVFunc? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeUVFunc? =
+            if (handle.address() == 0L) null else VisualShaderNodeUVFunc(handle)
+
         private const val SET_FUNCTION_HASH = 765791915L
         private val setFunctionBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeUVFunc", "set_function", SET_FUNCTION_HASH)

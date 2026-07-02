@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Generate a `PrimitiveMesh` from the text.
@@ -119,373 +119,158 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setStructuredTextBidiOverrideOptionsProperty")
         set(value) = setStructuredTextBidiOverrideOptions(value)
 
-    /**
-     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
-     * justify).
-     *
-     * Generated from Godot docs: TextMesh.set_horizontal_alignment
-     */
     fun setHorizontalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
-     * justify).
-     *
-     * Generated from Godot docs: TextMesh.get_horizontal_alignment
-     */
     fun getHorizontalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
-    /**
-     * Controls the text's vertical alignment. Supports top, center, and bottom.
-     *
-     * Generated from Godot docs: TextMesh.set_vertical_alignment
-     */
     fun setVerticalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Controls the text's vertical alignment. Supports top, center, and bottom.
-     *
-     * Generated from Godot docs: TextMesh.get_vertical_alignment
-     */
     fun getVerticalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
     }
 
-    /**
-     * The text to generate mesh from. Note: Due to being a `Resource`, it doesn't follow the rules of
-     * `Node.auto_translate_mode`. If disabling translation is desired, it should be done manually with
-     * `Object.set_message_translation`.
-     *
-     * Generated from Godot docs: TextMesh.set_text
-     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
-    /**
-     * The text to generate mesh from. Note: Due to being a `Resource`, it doesn't follow the rules of
-     * `Node.auto_translate_mode`. If disabling translation is desired, it should be done manually with
-     * `Object.set_message_translation`.
-     *
-     * Generated from Godot docs: TextMesh.get_text
-     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
-    /**
-     * Font configuration used to display text.
-     *
-     * Generated from Godot docs: TextMesh.set_font
-     */
     fun setFont(font: Font?) {
         ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Font configuration used to display text.
-     *
-     * Generated from Godot docs: TextMesh.get_font
-     */
     fun getFont(): Font? {
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
     }
 
-    /**
-     * Font size of the `TextMesh`'s text. This property works in tandem with `pixel_size`. Higher
-     * values will result in a more detailed font, regardless of `curve_step` and `pixel_size`.
-     * Consider keeping this value below 63 (inclusive) for good performance, and adjust `pixel_size`
-     * as needed to enlarge text. Note: Changing this property will regenerate the mesh, which is a
-     * slow operation, especially with large font sizes and long texts. To change the text's size in
-     * real-time efficiently, change the node's `Node3D.scale` instead.
-     *
-     * Generated from Godot docs: TextMesh.set_font_size
-     */
     fun setFontSize(fontSize: Int) {
         ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, fontSize)
     }
 
-    /**
-     * Font size of the `TextMesh`'s text. This property works in tandem with `pixel_size`. Higher
-     * values will result in a more detailed font, regardless of `curve_step` and `pixel_size`.
-     * Consider keeping this value below 63 (inclusive) for good performance, and adjust `pixel_size`
-     * as needed to enlarge text. Note: Changing this property will regenerate the mesh, which is a
-     * slow operation, especially with large font sizes and long texts. To change the text's size in
-     * real-time efficiently, change the node's `Node3D.scale` instead.
-     *
-     * Generated from Godot docs: TextMesh.get_font_size
-     */
     fun getFontSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
     }
 
-    /**
-     * Additional vertical spacing between lines (in pixels), spacing is added to line descent. This
-     * value can be negative.
-     *
-     * Generated from Godot docs: TextMesh.set_line_spacing
-     */
     fun setLineSpacing(lineSpacing: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
-    /**
-     * Additional vertical spacing between lines (in pixels), spacing is added to line descent. This
-     * value can be negative.
-     *
-     * Generated from Godot docs: TextMesh.get_line_spacing
-     */
     fun getLineSpacing(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
-    /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
-     * node's bounding rectangle. If you resize the node, it will change its height automatically to
-     * show all the text.
-     *
-     * Generated from Godot docs: TextMesh.set_autowrap_mode
-     */
     fun setAutowrapMode(autowrapMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
-    /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
-     * node's bounding rectangle. If you resize the node, it will change its height automatically to
-     * show all the text.
-     *
-     * Generated from Godot docs: TextMesh.get_autowrap_mode
-     */
     fun getAutowrapMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: TextMesh.set_justification_flags
-     */
     fun setJustificationFlags(justificationFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: TextMesh.get_justification_flags
-     */
     fun getJustificationFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
-    /**
-     * Depths of the mesh, if set to `0.0` only front surface, is generated, and UV layout is changed
-     * to use full texture for the front face only.
-     *
-     * Generated from Godot docs: TextMesh.set_depth
-     */
     fun setDepth(depth: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
     }
 
-    /**
-     * Depths of the mesh, if set to `0.0` only front surface, is generated, and UV layout is changed
-     * to use full texture for the front face only.
-     *
-     * Generated from Godot docs: TextMesh.get_depth
-     */
     fun getDepth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
-    /**
-     * Text width (in pixels), used for fill alignment.
-     *
-     * Generated from Godot docs: TextMesh.set_width
-     */
     fun setWidth(width: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
-    /**
-     * Text width (in pixels), used for fill alignment.
-     *
-     * Generated from Godot docs: TextMesh.get_width
-     */
     fun getWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
-    /**
-     * The size of one pixel's width on the text to scale it in 3D. This property works in tandem with
-     * `font_size`. Note: Changing this property will regenerate the mesh, which is a slow operation,
-     * especially with large font sizes and long texts. To change the text's size in real-time
-     * efficiently, change the node's `Node3D.scale` instead.
-     *
-     * Generated from Godot docs: TextMesh.set_pixel_size
-     */
     fun setPixelSize(pixelSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
     }
 
-    /**
-     * The size of one pixel's width on the text to scale it in 3D. This property works in tandem with
-     * `font_size`. Note: Changing this property will regenerate the mesh, which is a slow operation,
-     * especially with large font sizes and long texts. To change the text's size in real-time
-     * efficiently, change the node's `Node3D.scale` instead.
-     *
-     * Generated from Godot docs: TextMesh.get_pixel_size
-     */
     fun getPixelSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
     }
 
-    /**
-     * The text drawing offset (in pixels). Note: Changing this property will regenerate the mesh,
-     * which is a slow operation. To change the text's position in real-time efficiently, change the
-     * node's `Node3D.position` instead.
-     *
-     * Generated from Godot docs: TextMesh.set_offset
-     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
-    /**
-     * The text drawing offset (in pixels). Note: Changing this property will regenerate the mesh,
-     * which is a slow operation. To change the text's position in real-time efficiently, change the
-     * node's `Node3D.position` instead.
-     *
-     * Generated from Godot docs: TextMesh.get_offset
-     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
-    /**
-     * Step (in pixels) used to approximate Bézier curves. Lower values result in smoother curves, but
-     * is slower to generate and render. Consider adjusting this according to the font size and the
-     * typical viewing distance. Note: Changing this property will regenerate the mesh, which is a slow
-     * operation, especially with large font sizes and long texts.
-     *
-     * Generated from Godot docs: TextMesh.set_curve_step
-     */
     fun setCurveStep(curveStep: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCurveStepBind, handle, curveStep)
     }
 
-    /**
-     * Step (in pixels) used to approximate Bézier curves. Lower values result in smoother curves, but
-     * is slower to generate and render. Consider adjusting this according to the font size and the
-     * typical viewing distance. Note: Changing this property will regenerate the mesh, which is a slow
-     * operation, especially with large font sizes and long texts.
-     *
-     * Generated from Godot docs: TextMesh.get_curve_step
-     */
     fun getCurveStep(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurveStepBind, handle)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: TextMesh.set_text_direction
-     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: TextMesh.get_text_direction
-     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: TextMesh.set_language
-     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: TextMesh.get_language
-     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: TextMesh.set_structured_text_bidi_override
-     */
     fun setStructuredTextBidiOverride(parser: Long) {
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: TextMesh.get_structured_text_bidi_override
-     */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: TextMesh.set_structured_text_bidi_override_options
-     */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: TextMesh.get_structured_text_bidi_override_options
-     */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
-    /**
-     * If `true`, all the text displays as UPPERCASE.
-     *
-     * Generated from Godot docs: TextMesh.set_uppercase
-     */
     fun setUppercase(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
     }
 
-    /**
-     * If `true`, all the text displays as UPPERCASE.
-     *
-     * Generated from Godot docs: TextMesh.is_uppercase
-     */
     fun isUppercase(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): TextMesh? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): TextMesh? =
+            if (handle.address() == 0L) null else TextMesh(handle)
+
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
         private val setHorizontalAlignmentBind by lazy {
             ObjectCalls.getMethodBind("TextMesh", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * A node used for advanced animation transitions in an `AnimationPlayer`.
@@ -29,76 +29,34 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
         @JvmName("setAnimPlayerProperty")
         set(value) = setAnimationPlayer(value)
 
-    /**
-     * The root animation node of this `AnimationTree`. See `AnimationRootNode`.
-     *
-     * Generated from Godot docs: AnimationTree.set_tree_root
-     */
     fun setTreeRoot(animationNode: AnimationRootNode?) {
         ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, handle, listOf(animationNode?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The root animation node of this `AnimationTree`. See `AnimationRootNode`.
-     *
-     * Generated from Godot docs: AnimationTree.get_tree_root
-     */
     fun getTreeRoot(): AnimationRootNode? {
         return AnimationRootNode.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, handle))
     }
 
-    /**
-     * The path to the `Node` used to evaluate the `AnimationNode` `Expression` if one is not
-     * explicitly specified internally.
-     *
-     * Generated from Godot docs: AnimationTree.set_advance_expression_base_node
-     */
     fun setAdvanceExpressionBaseNode(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setAdvanceExpressionBaseNodeBind, handle, path)
     }
 
-    /**
-     * The path to the `Node` used to evaluate the `AnimationNode` `Expression` if one is not
-     * explicitly specified internally.
-     *
-     * Generated from Godot docs: AnimationTree.get_advance_expression_base_node
-     */
     fun getAdvanceExpressionBaseNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getAdvanceExpressionBaseNodeBind, handle)
     }
 
-    /**
-     * The path to the `AnimationPlayer` used for animating.
-     *
-     * Generated from Godot docs: AnimationTree.set_animation_player
-     */
     fun setAnimationPlayer(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setAnimationPlayerBind, handle, path)
     }
 
-    /**
-     * The path to the `AnimationPlayer` used for animating.
-     *
-     * Generated from Godot docs: AnimationTree.get_animation_player
-     */
     fun getAnimationPlayer(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPlayerBind, handle)
     }
 
-    /**
-     * Sets the process notification in which to update animations.
-     *
-     * Generated from Godot docs: AnimationTree.set_process_callback
-     */
     fun setProcessCallback(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
     }
 
-    /**
-     * Returns the process notification in which to update animations.
-     *
-     * Generated from Godot docs: AnimationTree.get_process_callback
-     */
     fun getProcessCallback(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
     }
@@ -108,6 +66,17 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
     }
 
     companion object {
+        const val ANIMATION_PROCESS_PHYSICS: Long = 0L
+        const val ANIMATION_PROCESS_IDLE: Long = 1L
+        const val ANIMATION_PROCESS_MANUAL: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AnimationTree? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AnimationTree? =
+            if (handle.address() == 0L) null else AnimationTree(handle)
+
         private const val SET_TREE_ROOT_HASH = 2581683800L
         private val setTreeRootBind by lazy {
             ObjectCalls.getMethodBind("AnimationTree", "set_tree_root", SET_TREE_ROOT_HASH)

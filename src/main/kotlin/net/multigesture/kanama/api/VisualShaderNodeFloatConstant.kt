@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeFloatConstant
@@ -23,6 +23,13 @@ class VisualShaderNodeFloatConstant(handle: MemorySegment) : VisualShaderNodeCon
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeFloatConstant? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeFloatConstant? =
+            if (handle.address() == 0L) null else VisualShaderNodeFloatConstant(handle)
+
         private const val SET_CONSTANT_HASH = 373806689L
         private val setConstantBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeFloatConstant", "set_constant", SET_CONSTANT_HASH)

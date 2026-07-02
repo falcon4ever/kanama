@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Provides playback control for an `AnimationNodeStateMachine`.
@@ -50,99 +50,42 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
-    /**
-     * Returns `true` if an animation is playing.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.is_playing
-     */
     fun isPlaying(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
 
-    /**
-     * Returns the currently playing animation state. Note: When using a cross-fade, the current state
-     * changes to the next state immediately after the cross-fade begins.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_current_node
-     */
     fun getCurrentNode(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentNodeBind, handle)
     }
 
-    /**
-     * Returns the playback position within the current animation state.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_current_play_position
-     */
     fun getCurrentPlayPosition(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentPlayPositionBind, handle)
     }
 
-    /**
-     * Returns the current state length. Note: It is possible that any `AnimationRootNode` can be nodes
-     * as well as animations. This means that there can be multiple animations within a single state.
-     * Which animation length has priority depends on the nodes connected inside it. Also, if a
-     * transition does not reset, the remaining length at that point will be returned.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_current_length
-     */
     fun getCurrentLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentLengthBind, handle)
     }
 
-    /**
-     * Returns the starting state of currently fading animation.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_from_node
-     */
     fun getFadingFromNode(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getFadingFromNodeBind, handle)
     }
 
-    /**
-     * Returns the playback position of the node from `get_fading_from_node`. Returns `0` if no
-     * animation fade is occurring.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_from_play_position
-     */
     fun getFadingFromPlayPosition(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromPlayPositionBind, handle)
     }
 
-    /**
-     * Returns the playback state length of the node from `get_fading_from_node`. Returns `0` if no
-     * animation fade is occurring.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_from_length
-     */
     fun getFadingFromLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromLengthBind, handle)
     }
 
-    /**
-     * Returns the playback position of the current fade animation. Returns `0` if no animation fade is
-     * occurring.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_position
-     */
     fun getFadingPosition(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingPositionBind, handle)
     }
 
-    /**
-     * Returns the length of the current fade animation. Returns `0` if no animation fade is occurring.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_length
-     */
     fun getFadingLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingLengthBind, handle)
     }
 
-    /**
-     * Returns the current travel path as computed internally by the A* algorithm.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_travel_path
-     */
     fun getTravelPath(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, handle)
     }

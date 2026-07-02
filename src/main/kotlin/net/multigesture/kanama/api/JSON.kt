@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Helper class for creating and parsing JSON data.
@@ -31,49 +31,22 @@ class JSON(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, handle, jsonText, keepText)
     }
 
-    /**
-     * Contains the parsed JSON data in `Variant` form.
-     *
-     * Generated from Godot docs: JSON.get_data
-     */
     fun getData(): Any? {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getDataBind, handle)
     }
 
-    /**
-     * Contains the parsed JSON data in `Variant` form.
-     *
-     * Generated from Godot docs: JSON.set_data
-     */
     fun setData(data: Any?) {
         ObjectCalls.ptrcallWithVariantArg(setDataBind, handle, data)
     }
 
-    /**
-     * Return the text parsed by `parse` (requires passing `keep_text` to `parse`).
-     *
-     * Generated from Godot docs: JSON.get_parsed_text
-     */
     fun getParsedText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, handle)
     }
 
-    /**
-     * Returns `0` if the last call to `parse` was successful, or the line number where the parse
-     * failed.
-     *
-     * Generated from Godot docs: JSON.get_error_line
-     */
     fun getErrorLine(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getErrorLineBind, handle)
     }
 
-    /**
-     * Returns an empty string if the last call to `parse` was successful, or the error message if it
-     * failed.
-     *
-     * Generated from Godot docs: JSON.get_error_message
-     */
     fun getErrorMessage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getErrorMessageBind, handle)
     }
@@ -101,37 +74,24 @@ class JSON(handle: MemorySegment) : Resource(handle) {
             return ObjectCalls.ptrcallWithVariantStringTwoBoolArgsRetString(stringifyBind, MemorySegment.NULL, data, indent, sortKeys, fullPrecision)
         }
 
-        /**
-         * Attempts to parse the `json_string` provided and returns the parsed data. Returns `null` if
-         * parse failed.
-         *
-         * Generated from Godot docs: JSON.parse_string
-         */
         fun parseString(jsonString: String): Any? {
             return ObjectCalls.ptrcallWithStringArgRetVariantScalar(parseStringBind, MemorySegment.NULL, jsonString)
         }
 
-        /**
-         * Converts a native engine type to a JSON-compliant value. By default, objects are ignored for
-         * security reasons, unless `full_objects` is `true`. You can convert a native value to a JSON
-         * string like this:
-         *
-         * Generated from Godot docs: JSON.from_native
-         */
         fun fromNative(variant: Any?, fullObjects: Boolean = false): Any? {
             return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(fromNativeBind, MemorySegment.NULL, variant, fullObjects)
         }
 
-        /**
-         * Converts a JSON-compliant value that was created with `from_native` back to native engine types.
-         * By default, objects are ignored for security reasons, unless `allow_objects` is `true`. You can
-         * convert a JSON string back to a native value like this:
-         *
-         * Generated from Godot docs: JSON.to_native
-         */
         fun toNative(json: Any?, allowObjects: Boolean = false): Any? {
             return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(toNativeBind, MemorySegment.NULL, json, allowObjects)
         }
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): JSON? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): JSON? =
+            if (handle.address() == 0L) null else JSON(handle)
 
         private const val STRINGIFY_HASH = 462733549L
         private val stringifyBind by lazy {

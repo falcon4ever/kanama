@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A 1D texture that uses colors obtained from a `Gradient`.
@@ -22,58 +22,34 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setUseHdrProperty")
         set(value) = setUseHdr(value)
 
-    /**
-     * The `Gradient` used to fill the texture.
-     *
-     * Generated from Godot docs: GradientTexture1D.set_gradient
-     */
     fun setGradient(gradient: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `Gradient` used to fill the texture.
-     *
-     * Generated from Godot docs: GradientTexture1D.get_gradient
-     */
     fun getGradient(): Gradient? {
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
     }
 
-    /**
-     * The number of color samples that will be obtained from the `Gradient`.
-     *
-     * Generated from Godot docs: GradientTexture1D.set_width
-     */
     fun setWidth(width: Int) {
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
-    /**
-     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
-     * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
-     * generated texture will use low dynamic range; overbright colors will be clamped
-     * (`Image.FORMAT_RGBA8` format).
-     *
-     * Generated from Godot docs: GradientTexture1D.set_use_hdr
-     */
     fun setUseHdr(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
-     * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
-     * generated texture will use low dynamic range; overbright colors will be clamped
-     * (`Image.FORMAT_RGBA8` format).
-     *
-     * Generated from Godot docs: GradientTexture1D.is_using_hdr
-     */
     fun isUsingHdr(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): GradientTexture1D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): GradientTexture1D? =
+            if (handle.address() == 0L) null else GradientTexture1D(handle)
+
         private const val SET_GRADIENT_HASH = 2756054477L
         private val setGradientBind by lazy {
             ObjectCalls.getMethodBind("GradientTexture1D", "set_gradient", SET_GRADIENT_HASH)

@@ -1,11 +1,11 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2i
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: OpenXRAPIExtension
@@ -61,6 +61,14 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
 
     fun insertDebugLabel(labelName: String) {
         ObjectCalls.ptrcallWithStringArg(insertDebugLabelBind, handle, labelName)
+    }
+
+    fun getViewCount(): Long {
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
+    }
+
+    fun getViewConfiguration(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getViewConfigurationBind, handle)
     }
 
     fun isInitialized(): Boolean {
@@ -125,6 +133,14 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
 
     fun unregisterFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         ObjectCalls.ptrcallWithObjectArgs(unregisterFrameInfoExtensionBind, handle, listOf(extension.handle))
+    }
+
+    fun registerProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
+        ObjectCalls.ptrcallWithObjectArgs(registerProjectionLayerExtensionBind, handle, listOf(extension.handle))
+    }
+
+    fun unregisterProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
+        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionLayerExtensionBind, handle, listOf(extension.handle))
     }
 
     fun getRenderStateZNear(): Double {
@@ -199,6 +215,10 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         fun openxrIsEnabled(checkRunInEditor: Boolean): Boolean {
             return ObjectCalls.ptrcallWithBoolArgRetBool(openxrIsEnabledBind, MemorySegment.NULL, checkRunInEditor)
         }
+
+        const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_NONE: Long = 0L
+        const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_REAL: Long = 1L
+        const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_EMULATING: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): OpenXRAPIExtension? =
@@ -275,6 +295,16 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         private const val INSERT_DEBUG_LABEL_HASH = 83702148L
         private val insertDebugLabelBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "insert_debug_label", INSERT_DEBUG_LABEL_HASH)
+        }
+
+        private const val GET_VIEW_COUNT_HASH = 3905245786L
+        private val getViewCountBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_view_count", GET_VIEW_COUNT_HASH)
+        }
+
+        private const val GET_VIEW_CONFIGURATION_HASH = 3905245786L
+        private val getViewConfigurationBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_view_configuration", GET_VIEW_CONFIGURATION_HASH)
         }
 
         private const val IS_INITIALIZED_HASH = 2240911060L
@@ -355,6 +385,16 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         private const val UNREGISTER_FRAME_INFO_EXTENSION_HASH = 1477360496L
         private val unregisterFrameInfoExtensionBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "unregister_frame_info_extension", UNREGISTER_FRAME_INFO_EXTENSION_HASH)
+        }
+
+        private const val REGISTER_PROJECTION_LAYER_EXTENSION_HASH = 1477360496L
+        private val registerProjectionLayerExtensionBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "register_projection_layer_extension", REGISTER_PROJECTION_LAYER_EXTENSION_HASH)
+        }
+
+        private const val UNREGISTER_PROJECTION_LAYER_EXTENSION_HASH = 1477360496L
+        private val unregisterProjectionLayerExtensionBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "unregister_projection_layer_extension", UNREGISTER_PROJECTION_LAYER_EXTENSION_HASH)
         }
 
         private const val GET_RENDER_STATE_Z_NEAR_HASH = 191475506L

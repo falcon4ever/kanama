@@ -805,7 +805,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(getTooltipTextBind, handle)
     }
 
-    fun getTooltip(atPosition: Vector2): String {
+    fun getTooltip(atPosition: Vector2 = Vector2(0f, 0f)): String {
         return ObjectCalls.ptrcallWithVector2ArgRetString(getTooltipBind, handle, atPosition)
     }
 
@@ -825,7 +825,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCursorShapeBind, handle)
     }
 
-    fun getCursorShape(atPosition: Vector2): Long {
+    fun getCursorShape(atPosition: Vector2 = Vector2(0f, 0f)): Long {
         return ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, handle, atPosition)
     }
 
@@ -941,6 +941,10 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         ObjectCalls.ptrcallNoArgs(grabClickFocusBind, handle)
     }
 
+    fun setDragForwarding(dragFunc: GodotCallable, canDropFunc: GodotCallable, dropFunc: GodotCallable) {
+        ObjectCalls.ptrcallWithThreeCallableArgs(setDragForwardingBind, handle, dragFunc.target.handle, dragFunc.method, canDropFunc.target.handle, canDropFunc.method, dropFunc.target.handle, dropFunc.method)
+    }
+
     fun setDragPreview(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(setDragPreviewBind, handle, listOf(control.handle))
     }
@@ -1010,18 +1014,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         const val themeChanged: String = "theme_changed"
     }
 
-    // Callable-arg method (task 09 / Phase 1.4): object+method GodotCallable via the PT_CALLABLE
-    // ptrcall path (each Callable expands to target.handle + method at the call site).
-    fun setDragForwarding(dragFunc: GodotCallable, canDropFunc: GodotCallable, dropFunc: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeCallableArgs(setDragForwardingBind, handle, dragFunc.target.handle, dragFunc.method, canDropFunc.target.handle, canDropFunc.method, dropFunc.target.handle, dropFunc.method)
-    }
-
     companion object {
-        private const val SET_DRAG_FORWARDING_HASH = 1076571380L
-        private val setDragForwardingBind by lazy {
-            ObjectCalls.getMethodBind("Control", "set_drag_forwarding", SET_DRAG_FORWARDING_HASH)
-        }
-
         const val NOTIFICATION_RESIZED: Long = 40L
         const val NOTIFICATION_MOUSE_ENTER: Long = 41L
         const val NOTIFICATION_MOUSE_EXIT: Long = 42L
@@ -1915,6 +1908,11 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         private const val GRAB_CLICK_FOCUS_HASH = 3218959716L
         private val grabClickFocusBind by lazy {
             ObjectCalls.getMethodBind("Control", "grab_click_focus", GRAB_CLICK_FOCUS_HASH)
+        }
+
+        private const val SET_DRAG_FORWARDING_HASH = 1076571380L
+        private val setDragForwardingBind by lazy {
+            ObjectCalls.getMethodBind("Control", "set_drag_forwarding", SET_DRAG_FORWARDING_HASH)
         }
 
         private const val SET_DRAG_PREVIEW_HASH = 1496901182L

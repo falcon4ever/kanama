@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A transition within an `AnimationNodeStateMachine` connecting two `AnimationRootNode`s.
@@ -64,194 +64,74 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
         @JvmName("setAdvanceExpressionProperty")
         set(value) = setAdvanceExpression(value)
 
-    /**
-     * The transition type.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_switch_mode
-     */
     fun setSwitchMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, handle, mode)
     }
 
-    /**
-     * The transition type.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_switch_mode
-     */
     fun getSwitchMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, handle)
     }
 
-    /**
-     * Determines whether the transition should be disabled, enabled when using
-     * `AnimationNodeStateMachinePlayback.travel`, or traversed automatically if the
-     * `advance_condition` and `advance_expression` checks are `true` (if assigned).
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_mode
-     */
     fun setAdvanceMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, handle, mode)
     }
 
-    /**
-     * Determines whether the transition should be disabled, enabled when using
-     * `AnimationNodeStateMachinePlayback.travel`, or traversed automatically if the
-     * `advance_condition` and `advance_expression` checks are `true` (if assigned).
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_mode
-     */
     fun getAdvanceMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, handle)
     }
 
-    /**
-     * Turn on auto advance when this condition is set. The provided name will become a boolean
-     * parameter on the `AnimationTree` that can be controlled from code (see Using AnimationTree
-     * ($DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code)). For example, if
-     * `AnimationTree.tree_root` is an `AnimationNodeStateMachine` and `advance_condition` is set to
-     * `"idle"`:
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_condition
-     */
     fun setAdvanceCondition(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setAdvanceConditionBind, handle, name)
     }
 
-    /**
-     * Turn on auto advance when this condition is set. The provided name will become a boolean
-     * parameter on the `AnimationTree` that can be controlled from code (see Using AnimationTree
-     * ($DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code)). For example, if
-     * `AnimationTree.tree_root` is an `AnimationNodeStateMachine` and `advance_condition` is set to
-     * `"idle"`:
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_condition
-     */
     fun getAdvanceCondition(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getAdvanceConditionBind, handle)
     }
 
-    /**
-     * The time to cross-fade between this state and the next. Note: `AnimationNodeStateMachine`
-     * transitions the current state immediately after the start of the fading. The precise remaining
-     * time can only be inferred from the main animation. When `AnimationNodeOutput` is considered as
-     * the most upstream, so the `xfade_time` is not scaled depending on the downstream delta. See also
-     * `AnimationNodeOneShot.fadeout_time`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_xfade_time
-     */
     fun setXfadeTime(secs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, secs)
     }
 
-    /**
-     * The time to cross-fade between this state and the next. Note: `AnimationNodeStateMachine`
-     * transitions the current state immediately after the start of the fading. The precise remaining
-     * time can only be inferred from the main animation. When `AnimationNodeOutput` is considered as
-     * the most upstream, so the `xfade_time` is not scaled depending on the downstream delta. See also
-     * `AnimationNodeOneShot.fadeout_time`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_xfade_time
-     */
     fun getXfadeTime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
     }
 
-    /**
-     * Ease curve for better control over cross-fade between this state and the next. Should be a unit
-     * `Curve`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_xfade_curve
-     */
     fun setXfadeCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Ease curve for better control over cross-fade between this state and the next. Should be a unit
-     * `Curve`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_xfade_curve
-     */
     fun getXfadeCurve(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
     }
 
-    /**
-     * If `true`, breaks the loop at the end of the loop cycle for transition, even if the animation is
-     * looping.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_break_loop_at_end
-     */
     fun setBreakLoopAtEnd(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
     }
 
-    /**
-     * If `true`, breaks the loop at the end of the loop cycle for transition, even if the animation is
-     * looping.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.is_loop_broken_at_end
-     */
     fun isLoopBrokenAtEnd(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
     }
 
-    /**
-     * If `true`, the destination animation is played back from the beginning when switched.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_reset
-     */
     fun setReset(reset: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setResetBind, handle, reset)
     }
 
-    /**
-     * If `true`, the destination animation is played back from the beginning when switched.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.is_reset
-     */
     fun isReset(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isResetBind, handle)
     }
 
-    /**
-     * Lower priority transitions are preferred when travelling through the tree via
-     * `AnimationNodeStateMachinePlayback.travel` or `advance_mode` is set to `ADVANCE_MODE_AUTO`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_priority
-     */
     fun setPriority(priority: Int) {
         ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
     }
 
-    /**
-     * Lower priority transitions are preferred when travelling through the tree via
-     * `AnimationNodeStateMachinePlayback.travel` or `advance_mode` is set to `ADVANCE_MODE_AUTO`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_priority
-     */
     fun getPriority(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
     }
 
-    /**
-     * Use an expression as a condition for state machine transitions. It is possible to create complex
-     * animation advance conditions for switching between states and gives much greater flexibility for
-     * creating complex state machines by directly interfacing with the script code.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_expression
-     */
     fun setAdvanceExpression(text: String) {
         ObjectCalls.ptrcallWithStringArg(setAdvanceExpressionBind, handle, text)
     }
 
-    /**
-     * Use an expression as a condition for state machine transitions. It is possible to create complex
-     * animation advance conditions for switching between states and gives much greater flexibility for
-     * creating complex state machines by directly interfacing with the script code.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_expression
-     */
     fun getAdvanceExpression(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, handle)
     }
@@ -261,6 +141,13 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
     }
 
     companion object {
+        const val SWITCH_MODE_IMMEDIATE: Long = 0L
+        const val SWITCH_MODE_SYNC: Long = 1L
+        const val SWITCH_MODE_AT_END: Long = 2L
+        const val ADVANCE_MODE_DISABLED: Long = 0L
+        const val ADVANCE_MODE_ENABLED: Long = 1L
+        const val ADVANCE_MODE_AUTO: Long = 2L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): AnimationNodeStateMachineTransition? =
             wrap(handle)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: AudioStreamInteractive
@@ -113,6 +113,30 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
     }
 
     companion object {
+        const val CLIP_ANY: Long = -1L
+        const val TRANSITION_FROM_TIME_IMMEDIATE: Long = 0L
+        const val TRANSITION_FROM_TIME_NEXT_BEAT: Long = 1L
+        const val TRANSITION_FROM_TIME_NEXT_BAR: Long = 2L
+        const val TRANSITION_FROM_TIME_END: Long = 3L
+        const val TRANSITION_TO_TIME_SAME_POSITION: Long = 0L
+        const val TRANSITION_TO_TIME_START: Long = 1L
+        const val TRANSITION_TO_TIME_PREVIOUS_POSITION: Long = 2L
+        const val FADE_DISABLED: Long = 0L
+        const val FADE_IN: Long = 1L
+        const val FADE_OUT: Long = 2L
+        const val FADE_CROSS: Long = 3L
+        const val FADE_AUTOMATIC: Long = 4L
+        const val AUTO_ADVANCE_DISABLED: Long = 0L
+        const val AUTO_ADVANCE_ENABLED: Long = 1L
+        const val AUTO_ADVANCE_RETURN_TO_HOLD: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioStreamInteractive? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioStreamInteractive? =
+            if (handle.address() == 0L) null else AudioStreamInteractive(handle)
+
         private const val SET_CLIP_COUNT_HASH = 1286410249L
         private val setClipCountBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_count", SET_CLIP_COUNT_HASH)

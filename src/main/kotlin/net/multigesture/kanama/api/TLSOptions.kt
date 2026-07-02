@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * TLS configuration for clients and servers.
@@ -9,57 +9,26 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: TLSOptions
  */
 class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Returns `true` if created with `TLSOptions.server`, `false` otherwise.
-     *
-     * Generated from Godot docs: TLSOptions.is_server
-     */
     fun isServer(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
     }
 
-    /**
-     * Returns `true` if created with `TLSOptions.client_unsafe`, `false` otherwise.
-     *
-     * Generated from Godot docs: TLSOptions.is_unsafe_client
-     */
     fun isUnsafeClient(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUnsafeClientBind, handle)
     }
 
-    /**
-     * Returns the common name (domain name) override specified when creating with `TLSOptions.client`.
-     *
-     * Generated from Godot docs: TLSOptions.get_common_name_override
-     */
     fun getCommonNameOverride(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCommonNameOverrideBind, handle)
     }
 
-    /**
-     * Returns the CA `X509Certificate` chain specified when creating with `TLSOptions.client` or
-     * `TLSOptions.client_unsafe`.
-     *
-     * Generated from Godot docs: TLSOptions.get_trusted_ca_chain
-     */
     fun getTrustedCaChain(): X509Certificate? {
         return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, handle))
     }
 
-    /**
-     * Returns the `CryptoKey` specified when creating with `TLSOptions.server`.
-     *
-     * Generated from Godot docs: TLSOptions.get_private_key
-     */
     fun getPrivateKey(): CryptoKey? {
         return CryptoKey.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, handle))
     }
 
-    /**
-     * Returns the `X509Certificate` specified when creating with `TLSOptions.server`.
-     *
-     * Generated from Godot docs: TLSOptions.get_own_certificate
-     */
     fun getOwnCertificate(): X509Certificate? {
         return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, handle))
     }
@@ -79,15 +48,6 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
             return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(clientBind, MemorySegment.NULL, trustedChain?.requireOpenHandle() ?: MemorySegment.NULL, commonNameOverride))
         }
 
-        /**
-         * Creates an unsafe TLS client configuration where certificate validation is optional. You can
-         * optionally provide a valid `trusted_chain`, but the common name of the certificates will never
-         * be checked. Using this configuration for purposes other than testing is not recommended. Note:
-         * On the Web platform, TLS verification is always enforced against the CA list of the web browser.
-         * This is considered a security feature.
-         *
-         * Generated from Godot docs: TLSOptions.client_unsafe
-         */
         fun clientUnsafe(trustedChain: X509Certificate?): TLSOptions? {
             return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(clientUnsafeBind, MemorySegment.NULL, trustedChain?.requireOpenHandle() ?: MemorySegment.NULL))
         }

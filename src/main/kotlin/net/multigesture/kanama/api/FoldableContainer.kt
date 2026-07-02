@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A container that can be expanded/collapsed.
@@ -76,172 +76,74 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
         ObjectCalls.ptrcallNoArgs(expandBind, handle)
     }
 
-    /**
-     * If `true`, the container will become folded and will hide all its children.
-     *
-     * Generated from Godot docs: FoldableContainer.set_folded
-     */
     fun setFolded(folded: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFoldedBind, handle, folded)
     }
 
-    /**
-     * If `true`, the container will become folded and will hide all its children.
-     *
-     * Generated from Godot docs: FoldableContainer.is_folded
-     */
     fun isFolded(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFoldedBind, handle)
     }
 
-    /**
-     * The `FoldableGroup` associated with the container. When multiple `FoldableContainer` nodes share
-     * the same group, only one of them is allowed to be unfolded.
-     *
-     * Generated from Godot docs: FoldableContainer.set_foldable_group
-     */
     fun setFoldableGroup(buttonGroup: FoldableGroup?) {
         ObjectCalls.ptrcallWithObjectArgs(setFoldableGroupBind, handle, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `FoldableGroup` associated with the container. When multiple `FoldableContainer` nodes share
-     * the same group, only one of them is allowed to be unfolded.
-     *
-     * Generated from Godot docs: FoldableContainer.get_foldable_group
-     */
     fun getFoldableGroup(): FoldableGroup? {
         return FoldableGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFoldableGroupBind, handle))
     }
 
-    /**
-     * The container's title text.
-     *
-     * Generated from Godot docs: FoldableContainer.set_title
-     */
     fun setTitle(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, text)
     }
 
-    /**
-     * The container's title text.
-     *
-     * Generated from Godot docs: FoldableContainer.get_title
-     */
     fun getTitle(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
     }
 
-    /**
-     * Title's horizontal text alignment.
-     *
-     * Generated from Godot docs: FoldableContainer.set_title_alignment
-     */
     fun setTitleAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setTitleAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Title's horizontal text alignment.
-     *
-     * Generated from Godot docs: FoldableContainer.get_title_alignment
-     */
     fun getTitleAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTitleAlignmentBind, handle)
     }
 
-    /**
-     * Language code used for text shaping algorithms. If left empty, the current locale is used
-     * instead.
-     *
-     * Generated from Godot docs: FoldableContainer.set_language
-     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
-    /**
-     * Language code used for text shaping algorithms. If left empty, the current locale is used
-     * instead.
-     *
-     * Generated from Godot docs: FoldableContainer.get_language
-     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
-    /**
-     * Title text writing direction.
-     *
-     * Generated from Godot docs: FoldableContainer.set_title_text_direction
-     */
     fun setTitleTextDirection(textDirection: Long) {
         ObjectCalls.ptrcallWithLongArg(setTitleTextDirectionBind, handle, textDirection)
     }
 
-    /**
-     * Title text writing direction.
-     *
-     * Generated from Godot docs: FoldableContainer.get_title_text_direction
-     */
     fun getTitleTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextDirectionBind, handle)
     }
 
-    /**
-     * Defines the behavior of the title when the text is longer than the available space.
-     *
-     * Generated from Godot docs: FoldableContainer.set_title_text_overrun_behavior
-     */
     fun setTitleTextOverrunBehavior(overrunBehavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setTitleTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
-    /**
-     * Defines the behavior of the title when the text is longer than the available space.
-     *
-     * Generated from Godot docs: FoldableContainer.get_title_text_overrun_behavior
-     */
     fun getTitleTextOverrunBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextOverrunBehaviorBind, handle)
     }
 
-    /**
-     * Title's position.
-     *
-     * Generated from Godot docs: FoldableContainer.set_title_position
-     */
     fun setTitlePosition(titlePosition: Long) {
         ObjectCalls.ptrcallWithLongArg(setTitlePositionBind, handle, titlePosition)
     }
 
-    /**
-     * Title's position.
-     *
-     * Generated from Godot docs: FoldableContainer.get_title_position
-     */
     fun getTitlePosition(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTitlePositionBind, handle)
     }
 
-    /**
-     * Adds a `Control` that will be placed next to the container's title, obscuring the clickable
-     * area. Prime usage is adding `Button` nodes, but it can be any `Control`. The control will be
-     * added as a child of this container and removed from previous parent if necessary. The controls
-     * will be placed aligned to the right, with the first added control being the leftmost one.
-     *
-     * Generated from Godot docs: FoldableContainer.add_title_bar_control
-     */
     fun addTitleBarControl(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(addTitleBarControlBind, handle, listOf(control.handle))
     }
 
-    /**
-     * Removes a `Control` added with `add_title_bar_control`. The node is not freed automatically, you
-     * need to use `Node.queue_free`.
-     *
-     * Generated from Godot docs: FoldableContainer.remove_title_bar_control
-     */
     fun removeTitleBarControl(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(removeTitleBarControlBind, handle, listOf(control.handle))
     }
@@ -251,6 +153,9 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
     }
 
     companion object {
+        const val POSITION_TOP: Long = 0L
+        const val POSITION_BOTTOM: Long = 1L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): FoldableContainer? =
             wrap(handle)

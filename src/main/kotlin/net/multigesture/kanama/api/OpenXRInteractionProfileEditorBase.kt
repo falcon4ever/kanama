@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRInteractionProfileEditorBase
@@ -12,6 +12,13 @@ open class OpenXRInteractionProfileEditorBase(handle: MemorySegment) : HBoxConta
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRInteractionProfileEditorBase? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRInteractionProfileEditorBase? =
+            if (handle.address() == 0L) null else OpenXRInteractionProfileEditorBase(handle)
+
         private const val SETUP_HASH = 421962938L
         private val setupBind by lazy {
             ObjectCalls.getMethodBind("OpenXRInteractionProfileEditorBase", "setup", SETUP_HASH)

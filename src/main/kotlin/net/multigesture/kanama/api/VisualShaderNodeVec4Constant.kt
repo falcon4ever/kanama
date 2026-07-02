@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Quaternion
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Quaternion
 
 /**
  * Generated from Godot docs: VisualShaderNodeVec4Constant
@@ -24,6 +24,13 @@ class VisualShaderNodeVec4Constant(handle: MemorySegment) : VisualShaderNodeCons
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeVec4Constant? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeVec4Constant? =
+            if (handle.address() == 0L) null else VisualShaderNodeVec4Constant(handle)
+
         private const val SET_CONSTANT_HASH = 1727505552L
         private val setConstantBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeVec4Constant", "set_constant", SET_CONSTANT_HASH)

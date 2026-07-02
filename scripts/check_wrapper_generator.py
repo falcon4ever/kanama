@@ -10,8 +10,40 @@ import tempfile
 from pathlib import Path
 
 
+from generate_api_wrapper import IOS_HANDWRITTEN_COLLISION_CLASSES
+
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = ROOT / "scripts/fixtures/wrapper_generator"
+API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+IOS_API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api"
+
+# Full drift-gate exemptions (task 21). The committed generated wrapper trees must equal a fresh
+# regen for EVERY in-API class except these deliberately hand-shaped ones. A class belongs here
+# only if the generator cannot reproduce its committed source: hand-authored ergonomic helpers,
+# convenience aliases, custom parameter defaults, or non-generatable factory/lifetime policy the
+# generator does not emit. Everything else is a generated wrapper and re-drift fails the gate.
+# To retire an entry, teach the generator to emit the class losslessly (custom section) and delete
+# it here. Non-API files (GodotObject, GD, DirAccessHandle, ...) are auto-excluded (not in the API).
+DESKTOP_HANDSHAPED = frozenset({
+    # hand-authored static facades / lifetime & handle policy the generator does not emit
+    "DirAccess", "FileAccess", "RefCounted", "Resource",
+    # generated base + hand ergonomic helpers / aliases / custom defaults
+    "AnimationPlayer", "Button", "LineEdit", "Light3D", "Range", "Slider", "Viewport",
+    "Node", "Node3D", "TabBar",
+    # hand factory/downcast helpers (`create` / `from*` / `node`) not emitted by desktop generator
+    "ArrayMesh", "AudioStreamPlayer", "BaseMaterial3D", "BoxMesh", "BoxShape3D", "ButtonGroup",
+    "Camera3D", "ConfigFile", "ENetMultiplayerPeer", "EditorExportPlatform", "Font",
+    "InputEventKey", "InputEventMouseButton", "InputEventMouseMotion", "LightmapGI", "Material",
+    "Mesh", "MeshDataTool", "MeshLibrary", "NoiseTexture2D", "OpenXRSpatialAnchorCapability",
+    "PackedScene", "PhysicsBody3D", "SceneMultiplayer", "ShaderMaterial", "StandardMaterial3D",
+    "SurfaceTool",
+    # hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry)
+    "CallbackTweener", "PropertyTweener", "SceneTree", "Tween", "ResourceLoader",
+})
+# iOS carries the same generator (audited subset). It currently has no iOS-only hand-shaped
+# wrapper (the iOS custom sections make its helpers regeneratable); the collision-registry
+# singletons (Engine/ProjectSettings/...) are excluded via IOS_HANDWRITTEN_COLLISION_CLASSES.
+IOS_HANDSHAPED = frozenset()
 ADOPTED_CLASSES = ("Time", "ProjectSettings", "VirtualJoystick")
 ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS = ("AnimationMixer",)
 ADOPTED_RESOURCE_DOWNCAST_CLASSES = ("FastNoiseLite", "PlaneMesh", "SphereMesh")
@@ -205,8 +237,12 @@ ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS = (
     "XRInterfaceExtension",
 )
 VIRTUAL_SKIP_REASON = "internal/virtual callback methods are not emitted as public wrappers"
+# Strip generated-doc KDoc blocks (single- OR multi-line) so the drift-gate compares wrapper
+# *behavior*, letting `sync_kdoc_from_godot_docs.py` own the prose independently. The lazy
+# `(?:(?!\*/).)*?` never spans two blocks. Single-line short docs (`/** text. Generated from
+# Godot docs: X */`) must strip too, or old-style stale files falsely fail the gate.
 GENERATED_KDOC_BLOCK = re.compile(
-    r"\n?[ \t]*/\*\*.*?Generated from Godot docs: .*?\n[ \t]*\*/\n",
+    r"\n?[ \t]*/\*\*(?:(?!\*/).)*?Generated from Godot docs:(?:(?!\*/).)*?\*/[ \t]*\n",
     re.DOTALL,
 )
 
@@ -430,6 +466,86 @@ def check_ios_policies(output_dir: Path) -> int:
     return 0
 
 
+def _api_class_names() -> set[str]:
+    import json
+
+    data = json.loads((ROOT / "extension_api.json").read_text(encoding="utf-8"))
+    return {cls["name"] for cls in data["classes"]}
+
+
+def _batch_generate(output_dir: Path, flag: str, classes: list[str], *extra: str) -> None:
+    args = [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py")]
+    for name in classes:
+        args += [flag, name]
+    args += [*extra, "--output-dir" if flag == "--class" else "--ios-output-dir", str(output_dir)]
+    subprocess.run(args, cwd=ROOT, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def check_full_drift_gate(output_dir: Path) -> int:
+    """The durable convergence gate (task 21): every committed generated wrapper, on every
+    platform, must equal a fresh regen (behavior-comparable, KDoc owned by sync). Hand-shaped
+    classes are the only exemptions. Re-drift, an un-adopted generator improvement, or a hand-edit
+    to a generated class all fail here — so the three platform trees can never silently diverge."""
+    api = _api_class_names()
+    rc = 0
+
+    # Desktop (Android consumes these same sources via prepareAndroidKanamaSources, so the desktop
+    # gate transitively covers Android — there is no separate committed Android wrapper tree).
+    committed = {p.stem for p in API_DIR.glob("*.kt")}
+    rot = sorted(DESKTOP_HANDSHAPED - committed)
+    if rot:
+        print(f"[wrapper_generator] FAIL DESKTOP_HANDSHAPED names non-existent classes: {rot}", file=sys.stderr)
+        rc = 1
+    targets = sorted((committed & api) - DESKTOP_HANDSHAPED)
+    dtmp = output_dir / "drift-desktop"
+    dtmp.mkdir(parents=True, exist_ok=True)
+    _batch_generate(dtmp, "--class", targets)
+    stale = [
+        c for c in targets
+        if comparable_source((API_DIR / f"{c}.kt").read_text(encoding="utf-8"))
+        != comparable_source((dtmp / f"{c}.kt").read_text(encoding="utf-8"))
+    ]
+    if stale:
+        print(f"[wrapper_generator] FAIL desktop drift-gate: {len(stale)} committed wrappers differ from fresh regen", file=sys.stderr)
+        for c in stale[:40]:
+            print(f"    {c}", file=sys.stderr)
+        print("    re-adopt: python3 scripts/generate_api_wrapper.py --emit-class <class> --allow-overwrite  (then sync_kdoc_from_godot_docs.py)", file=sys.stderr)
+        print("    or, if the class is deliberately hand-shaped, add it to DESKTOP_HANDSHAPED", file=sys.stderr)
+        rc = 1
+
+    # iOS (same generator, IOS_AUDIT_ONLY subset). Collision-registry singletons are hand-written
+    # and never emitted; exclude them so the gate expects every remaining target to regenerate.
+    ios_committed = {p.stem for p in IOS_API_DIR.glob("*.kt")}
+    ios_targets = sorted(
+        (ios_committed & api) - IOS_HANDSHAPED - set(IOS_HANDWRITTEN_COLLISION_CLASSES)
+    )
+    itmp = output_dir / "drift-ios"
+    itmp.mkdir(parents=True, exist_ok=True)
+    _batch_generate(itmp, "--ios-emit-class", ios_targets)
+    ios_missing = [c for c in ios_targets if not (itmp / f"{c}.kt").exists()]
+    if ios_missing:
+        print(f"[wrapper_generator] FAIL iOS drift-gate: generator did not emit {ios_missing[:20]} (unexpected collision/skip)", file=sys.stderr)
+        rc = 1
+    ios_stale = [
+        c for c in ios_targets
+        if (itmp / f"{c}.kt").exists()
+        and comparable_source((IOS_API_DIR / f"{c}.kt").read_text(encoding="utf-8"))
+        != comparable_source((itmp / f"{c}.kt").read_text(encoding="utf-8"))
+    ]
+    if ios_stale:
+        print(f"[wrapper_generator] FAIL iOS drift-gate: {len(ios_stale)} committed iOS wrappers differ from fresh regen", file=sys.stderr)
+        for c in ios_stale[:40]:
+            print(f"    {c}", file=sys.stderr)
+        rc = 1
+
+    if rc == 0:
+        print(
+            f"[wrapper_generator] PASS drift-gate desktop={len(targets)} ios={len(ios_targets)} "
+            f"(exempt: desktop={len(DESKTOP_HANDSHAPED)} hand-shaped)"
+        )
+    return rc
+
+
 def main() -> int:
     name_constants = subprocess.run(
         [sys.executable, str(ROOT / "scripts/generate_name_constants.py"), "--check"],
@@ -456,6 +572,8 @@ def main() -> int:
         if check_ios_fixture(output_dir) != 0:
             return 1
         if check_ios_policies(output_dir) != 0:
+            return 1
+        if check_full_drift_gate(output_dir) != 0:
             return 1
 
     adopted = (

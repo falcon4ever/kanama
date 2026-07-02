@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.RID
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.RID
 
 /**
  * Texture for 3D that is bound to a texture created on the `RenderingDevice`.
@@ -17,25 +17,22 @@ class Texture3DRD(handle: MemorySegment) : Texture3D(handle) {
         @JvmName("setTextureRdRidProperty")
         set(value) = setTextureRdRid(value)
 
-    /**
-     * The RID of the texture object created on the `RenderingDevice`.
-     *
-     * Generated from Godot docs: Texture3DRD.set_texture_rd_rid
-     */
     fun setTextureRdRid(textureRdRid: RID) {
         ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, handle, textureRdRid)
     }
 
-    /**
-     * The RID of the texture object created on the `RenderingDevice`.
-     *
-     * Generated from Godot docs: Texture3DRD.get_texture_rd_rid
-     */
     fun getTextureRdRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Texture3DRD? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Texture3DRD? =
+            if (handle.address() == 0L) null else Texture3DRD(handle)
+
         private const val SET_TEXTURE_RD_RID_HASH = 2722037293L
         private val setTextureRdRidBind by lazy {
             ObjectCalls.getMethodBind("Texture3DRD", "set_texture_rd_rid", SET_TEXTURE_RD_RID_HASH)

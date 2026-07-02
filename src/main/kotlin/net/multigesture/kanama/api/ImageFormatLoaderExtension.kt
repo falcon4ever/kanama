@@ -9,21 +9,10 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ImageFormatLoaderExtension
  */
 class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(handle) {
-    /**
-     * Add this format loader to the engine, allowing it to recognize the file extensions returned by
-     * `_get_recognized_extensions`.
-     *
-     * Generated from Godot docs: ImageFormatLoaderExtension.add_format_loader
-     */
     fun addFormatLoader() {
         ObjectCalls.ptrcallNoArgs(addFormatLoaderBind, handle)
     }
 
-    /**
-     * Remove this format loader from the engine.
-     *
-     * Generated from Godot docs: ImageFormatLoaderExtension.remove_format_loader
-     */
     fun removeFormatLoader() {
         ObjectCalls.ptrcallNoArgs(removeFormatLoaderBind, handle)
     }

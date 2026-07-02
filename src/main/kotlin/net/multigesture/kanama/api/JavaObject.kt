@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Represents an object from the Java Native Interface.
@@ -9,20 +9,10 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: JavaObject
  */
 class JavaObject(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Returns the `JavaClass` that this object is an instance of.
-     *
-     * Generated from Godot docs: JavaObject.get_java_class
-     */
     fun getJavaClass(): JavaClass? {
         return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, handle))
     }
 
-    /**
-     * Returns `true` if the given `method` name exists in the object's Java methods.
-     *
-     * Generated from Godot docs: JavaObject.has_java_method
-     */
     fun hasJavaMethod(method: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
     }

@@ -1,11 +1,11 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A deformable 3D physics mesh.
@@ -85,401 +85,173 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
         @JvmName("setDisableModeProperty")
         set(value) = setDisableMode(value)
 
-    /**
-     * Returns the internal `RID` used by the `PhysicsServer3D` for this body.
-     *
-     * Generated from Godot docs: SoftBody3D.get_physics_rid
-     */
     fun getPhysicsRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getPhysicsRidBind, handle)
     }
 
-    /**
-     * The physics layers this SoftBody3D scans. Collision objects can scan one or more of 32 different
-     * layers. See also `collision_layer`. Note: Object A can detect a contact with object B only if
-     * object B is in any of the layers that object A scans. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: SoftBody3D.set_collision_mask
-     */
     fun setCollisionMask(collisionMask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
-    /**
-     * The physics layers this SoftBody3D scans. Collision objects can scan one or more of 32 different
-     * layers. See also `collision_layer`. Note: Object A can detect a contact with object B only if
-     * object B is in any of the layers that object A scans. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: SoftBody3D.get_collision_mask
-     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
-    /**
-     * The physics layers this SoftBody3D is in. Collision objects can exist in one or more of 32
-     * different layers. See also `collision_mask`. Note: Object A can detect a contact with object B
-     * only if object B is in any of the layers that object A scans. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: SoftBody3D.set_collision_layer
-     */
     fun setCollisionLayer(collisionLayer: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, collisionLayer)
     }
 
-    /**
-     * The physics layers this SoftBody3D is in. Collision objects can exist in one or more of 32
-     * different layers. See also `collision_mask`. Note: Object A can detect a contact with object B
-     * only if object B is in any of the layers that object A scans. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: SoftBody3D.get_collision_layer
-     */
     fun getCollisionLayer(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
     }
 
-    /**
-     * Based on `value`, enables or disables the specified layer in the `collision_mask`, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: SoftBody3D.set_collision_mask_value
-     */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
     }
 
-    /**
-     * Returns whether or not the specified layer of the `collision_mask` is enabled, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: SoftBody3D.get_collision_mask_value
-     */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
     }
 
-    /**
-     * Based on `value`, enables or disables the specified layer in the `collision_layer`, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: SoftBody3D.set_collision_layer_value
-     */
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, handle, layerNumber, value)
     }
 
-    /**
-     * Returns whether or not the specified layer of the `collision_layer` is enabled, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: SoftBody3D.get_collision_layer_value
-     */
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, handle, layerNumber)
     }
 
-    /**
-     * `NodePath` to a `CollisionObject3D` this SoftBody3D should avoid clipping.
-     *
-     * Generated from Godot docs: SoftBody3D.set_parent_collision_ignore
-     */
     fun setParentCollisionIgnore(parentCollisionIgnore: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setParentCollisionIgnoreBind, handle, parentCollisionIgnore)
     }
 
-    /**
-     * `NodePath` to a `CollisionObject3D` this SoftBody3D should avoid clipping.
-     *
-     * Generated from Godot docs: SoftBody3D.get_parent_collision_ignore
-     */
     fun getParentCollisionIgnore(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getParentCollisionIgnoreBind, handle)
     }
 
-    /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
-     *
-     * Generated from Godot docs: SoftBody3D.set_disable_mode
-     */
     fun setDisableMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setDisableModeBind, handle, mode)
     }
 
-    /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
-     *
-     * Generated from Godot docs: SoftBody3D.get_disable_mode
-     */
     fun getDisableMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, handle)
     }
 
-    /**
-     * Returns an array of nodes that were added as collision exceptions for this body.
-     *
-     * Generated from Godot docs: SoftBody3D.get_collision_exceptions
-     */
     fun getCollisionExceptions(): List<PhysicsBody3D> {
         return ObjectCalls.ptrcallNoArgsRetTypedPhysicsBody3DList(getCollisionExceptionsBind, handle)
     }
 
-    /**
-     * Adds a body to the list of bodies that this body can't collide with.
-     *
-     * Generated from Godot docs: SoftBody3D.add_collision_exception_with
-     */
     fun addCollisionExceptionWith(body: Node) {
         ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, handle, listOf(body.handle))
     }
 
-    /**
-     * Removes a body from the list of bodies that this body can't collide with.
-     *
-     * Generated from Godot docs: SoftBody3D.remove_collision_exception_with
-     */
     fun removeCollisionExceptionWith(body: Node) {
         ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, handle, listOf(body.handle))
     }
 
-    /**
-     * Increasing this value will improve the resulting simulation, but can affect performance. Use
-     * with care.
-     *
-     * Generated from Godot docs: SoftBody3D.set_simulation_precision
-     */
     fun setSimulationPrecision(simulationPrecision: Int) {
         ObjectCalls.ptrcallWithIntArg(setSimulationPrecisionBind, handle, simulationPrecision)
     }
 
-    /**
-     * Increasing this value will improve the resulting simulation, but can affect performance. Use
-     * with care.
-     *
-     * Generated from Godot docs: SoftBody3D.get_simulation_precision
-     */
     fun getSimulationPrecision(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSimulationPrecisionBind, handle)
     }
 
-    /**
-     * The SoftBody3D's mass.
-     *
-     * Generated from Godot docs: SoftBody3D.set_total_mass
-     */
     fun setTotalMass(mass: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTotalMassBind, handle, mass)
     }
 
-    /**
-     * The SoftBody3D's mass.
-     *
-     * Generated from Godot docs: SoftBody3D.get_total_mass
-     */
     fun getTotalMass(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTotalMassBind, handle)
     }
 
-    /**
-     * Higher values will result in a stiffer body, while lower values will increase the body's ability
-     * to bend. The value can be between `0.0` and `1.0` (inclusive).
-     *
-     * Generated from Godot docs: SoftBody3D.set_linear_stiffness
-     */
     fun setLinearStiffness(linearStiffness: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLinearStiffnessBind, handle, linearStiffness)
     }
 
-    /**
-     * Higher values will result in a stiffer body, while lower values will increase the body's ability
-     * to bend. The value can be between `0.0` and `1.0` (inclusive).
-     *
-     * Generated from Godot docs: SoftBody3D.get_linear_stiffness
-     */
     fun getLinearStiffness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLinearStiffnessBind, handle)
     }
 
-    /**
-     * Scales the rest lengths of `SoftBody3D`'s edge constraints. Positive values shrink the mesh,
-     * while negative values expand it. For example, a value of `0.1` shortens the edges of the mesh by
-     * 10%, while `-0.1` expands the edges by 10%. Note: `shrinking_factor` is best used on surface
-     * meshes with pinned points.
-     *
-     * Generated from Godot docs: SoftBody3D.set_shrinking_factor
-     */
     fun setShrinkingFactor(shrinkingFactor: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setShrinkingFactorBind, handle, shrinkingFactor)
     }
 
-    /**
-     * Scales the rest lengths of `SoftBody3D`'s edge constraints. Positive values shrink the mesh,
-     * while negative values expand it. For example, a value of `0.1` shortens the edges of the mesh by
-     * 10%, while `-0.1` expands the edges by 10%. Note: `shrinking_factor` is best used on surface
-     * meshes with pinned points.
-     *
-     * Generated from Godot docs: SoftBody3D.get_shrinking_factor
-     */
     fun getShrinkingFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getShrinkingFactorBind, handle)
     }
 
-    /**
-     * The pressure coefficient of this soft body. Simulate pressure build-up from inside this body.
-     * Higher values increase the strength of this effect.
-     *
-     * Generated from Godot docs: SoftBody3D.set_pressure_coefficient
-     */
     fun setPressureCoefficient(pressureCoefficient: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPressureCoefficientBind, handle, pressureCoefficient)
     }
 
-    /**
-     * The pressure coefficient of this soft body. Simulate pressure build-up from inside this body.
-     * Higher values increase the strength of this effect.
-     *
-     * Generated from Godot docs: SoftBody3D.get_pressure_coefficient
-     */
     fun getPressureCoefficient(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureCoefficientBind, handle)
     }
 
-    /**
-     * The body's damping coefficient. Higher values will slow down the body more noticeably when
-     * forces are applied.
-     *
-     * Generated from Godot docs: SoftBody3D.set_damping_coefficient
-     */
     fun setDampingCoefficient(dampingCoefficient: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDampingCoefficientBind, handle, dampingCoefficient)
     }
 
-    /**
-     * The body's damping coefficient. Higher values will slow down the body more noticeably when
-     * forces are applied.
-     *
-     * Generated from Godot docs: SoftBody3D.get_damping_coefficient
-     */
     fun getDampingCoefficient(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingCoefficientBind, handle)
     }
 
-    /**
-     * The body's drag coefficient. Higher values increase this body's air resistance. Note: This value
-     * is currently unused by Godot's default physics implementation.
-     *
-     * Generated from Godot docs: SoftBody3D.set_drag_coefficient
-     */
     fun setDragCoefficient(dragCoefficient: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDragCoefficientBind, handle, dragCoefficient)
     }
 
-    /**
-     * The body's drag coefficient. Higher values increase this body's air resistance. Note: This value
-     * is currently unused by Godot's default physics implementation.
-     *
-     * Generated from Godot docs: SoftBody3D.get_drag_coefficient
-     */
     fun getDragCoefficient(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDragCoefficientBind, handle)
     }
 
-    /**
-     * Returns local translation of a vertex in the surface array.
-     *
-     * Generated from Godot docs: SoftBody3D.get_point_transform
-     */
     fun getPointTransform(pointIndex: Int): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getPointTransformBind, handle, pointIndex)
     }
 
-    /**
-     * Applies an impulse to a point. An impulse is time-independent! Applying an impulse every frame
-     * would result in a framerate-dependent force. For this reason, it should only be used when
-     * simulating one-time impacts (use the "_force" functions otherwise).
-     *
-     * Generated from Godot docs: SoftBody3D.apply_impulse
-     */
     fun applyImpulse(pointIndex: Int, impulse: Vector3) {
         ObjectCalls.ptrcallWithIntAndVector3Arg(applyImpulseBind, handle, pointIndex, impulse)
     }
 
-    /**
-     * Applies a force to a point. A force is time dependent and meant to be applied every physics
-     * update.
-     *
-     * Generated from Godot docs: SoftBody3D.apply_force
-     */
     fun applyForce(pointIndex: Int, force: Vector3) {
         ObjectCalls.ptrcallWithIntAndVector3Arg(applyForceBind, handle, pointIndex, force)
     }
 
-    /**
-     * Distributes and applies an impulse to all points. An impulse is time-independent! Applying an
-     * impulse every frame would result in a framerate-dependent force. For this reason, it should only
-     * be used when simulating one-time impacts (use the "_force" functions otherwise).
-     *
-     * Generated from Godot docs: SoftBody3D.apply_central_impulse
-     */
     fun applyCentralImpulse(impulse: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, handle, impulse)
     }
 
-    /**
-     * Distributes and applies a force to all points. A force is time dependent and meant to be applied
-     * every physics update.
-     *
-     * Generated from Godot docs: SoftBody3D.apply_central_force
-     */
     fun applyCentralForce(force: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, handle, force)
     }
 
-    /**
-     * Sets the pinned state of a surface vertex. When set to `true`, the optional `attachment_path`
-     * can define a `Node3D` the pinned vertex will be attached to.
-     *
-     * Generated from Godot docs: SoftBody3D.set_point_pinned
-     */
     fun setPointPinned(pointIndex: Int, pinned: Boolean, attachmentPath: NodePath, insertAt: Int = -1) {
         ObjectCalls.ptrcallWithIntBoolNodePathIntArgs(setPointPinnedBind, handle, pointIndex, pinned, attachmentPath, insertAt)
     }
 
-    /**
-     * Returns `true` if vertex is set to pinned.
-     *
-     * Generated from Godot docs: SoftBody3D.is_point_pinned
-     */
     fun isPointPinned(pointIndex: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isPointPinnedBind, handle, pointIndex)
     }
 
-    /**
-     * If `true`, the `SoftBody3D` will respond to `RayCast3D`s.
-     *
-     * Generated from Godot docs: SoftBody3D.set_ray_pickable
-     */
     fun setRayPickable(rayPickable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRayPickableBind, handle, rayPickable)
     }
 
-    /**
-     * If `true`, the `SoftBody3D` will respond to `RayCast3D`s.
-     *
-     * Generated from Godot docs: SoftBody3D.is_ray_pickable
-     */
     fun isRayPickable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, handle)
     }
 
     companion object {
+        const val DISABLE_MODE_REMOVE: Long = 0L
+        const val DISABLE_MODE_KEEP_ACTIVE: Long = 1L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SoftBody3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): SoftBody3D? =
+            if (handle.address() == 0L) null else SoftBody3D(handle)
+
         private const val GET_PHYSICS_RID_HASH = 2944877500L
         private val getPhysicsRidBind by lazy {
             ObjectCalls.getMethodBind("SoftBody3D", "get_physics_rid", GET_PHYSICS_RID_HASH)

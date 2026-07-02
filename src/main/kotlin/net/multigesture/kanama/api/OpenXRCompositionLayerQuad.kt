@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Generated from Godot docs: OpenXRCompositionLayerQuad
@@ -24,6 +24,13 @@ class OpenXRCompositionLayerQuad(handle: MemorySegment) : OpenXRCompositionLayer
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayerQuad? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRCompositionLayerQuad? =
+            if (handle.address() == 0L) null else OpenXRCompositionLayerQuad(handle)
+
         private const val SET_QUAD_SIZE_HASH = 743155724L
         private val setQuadSizeBind by lazy {
             ObjectCalls.getMethodBind("OpenXRCompositionLayerQuad", "set_quad_size", SET_QUAD_SIZE_HASH)

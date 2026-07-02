@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Transform3D
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Transform3D
 
 /**
  * Generated from Godot docs: VisualShaderNodeTransformConstant
@@ -24,6 +24,13 @@ class VisualShaderNodeTransformConstant(handle: MemorySegment) : VisualShaderNod
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeTransformConstant? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformConstant? =
+            if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(handle)
+
         private const val SET_CONSTANT_HASH = 2952846383L
         private val setConstantBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeTransformConstant", "set_constant", SET_CONSTANT_HASH)

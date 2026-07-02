@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Sprite node that contains multiple textures as frames to play for animation.
@@ -71,70 +71,30 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setFlipVProperty")
         set(value) = setFlipV(value)
 
-    /**
-     * The `SpriteFrames` resource containing the animation(s). Allows you the option to load, edit,
-     * clear, make unique and save the states of the `SpriteFrames` resource.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_sprite_frames
-     */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
         ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, handle, listOf(spriteFrames?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `SpriteFrames` resource containing the animation(s). Allows you the option to load, edit,
-     * clear, make unique and save the states of the `SpriteFrames` resource.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_sprite_frames
-     */
     fun getSpriteFrames(): SpriteFrames? {
         return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, handle))
     }
 
-    /**
-     * The current animation from the `sprite_frames` resource. If this value is changed, the `frame`
-     * counter and the `frame_progress` are reset.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_animation
-     */
     fun setAnimation(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
     }
 
-    /**
-     * The current animation from the `sprite_frames` resource. If this value is changed, the `frame`
-     * counter and the `frame_progress` are reset.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_animation
-     */
     fun getAnimation(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
     }
 
-    /**
-     * The key of the animation to play when the scene loads.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_autoplay
-     */
     fun setAutoplay(name: String) {
         ObjectCalls.ptrcallWithStringArg(setAutoplayBind, handle, name)
     }
 
-    /**
-     * The key of the animation to play when the scene loads.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_autoplay
-     */
     fun getAutoplay(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, handle)
     }
 
-    /**
-     * Returns `true` if an animation is currently playing (even if `speed_scale` and/or `custom_speed`
-     * are `0`).
-     *
-     * Generated from Godot docs: AnimatedSprite2D.is_playing
-     */
     fun isPlaying(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
@@ -151,13 +111,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
         ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, handle, name, customSpeed, fromEnd)
     }
 
-    /**
-     * Plays the animation with key `name` in reverse. This method is a shorthand for `play` with
-     * `custom_speed = -1.0` and `from_end = true`, so see its description for more information.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.play_backwards
-     */
-    fun playBackwards(name: String) {
+    fun playBackwards(name: String = "") {
         ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, handle, name)
     }
 
@@ -182,167 +136,66 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
-    /**
-     * If `true`, texture will be centered. Note: For games with a pixel art aesthetic, textures may
-     * appear deformed when centered. This is caused by their position being between pixels. To prevent
-     * this, set this property to `false`, or consider enabling
-     * `ProjectSettings.rendering/2d/snap/snap_2d_vertices_to_pixel` and
-     * `ProjectSettings.rendering/2d/snap/snap_2d_transforms_to_pixel`.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_centered
-     */
     fun setCentered(centered: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCenteredBind, handle, centered)
     }
 
-    /**
-     * If `true`, texture will be centered. Note: For games with a pixel art aesthetic, textures may
-     * appear deformed when centered. This is caused by their position being between pixels. To prevent
-     * this, set this property to `false`, or consider enabling
-     * `ProjectSettings.rendering/2d/snap/snap_2d_vertices_to_pixel` and
-     * `ProjectSettings.rendering/2d/snap/snap_2d_transforms_to_pixel`.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.is_centered
-     */
     fun isCentered(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, handle)
     }
 
-    /**
-     * The texture's drawing offset.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_offset
-     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
-    /**
-     * The texture's drawing offset.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_offset
-     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
-    /**
-     * If `true`, texture is flipped horizontally.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_flip_h
-     */
     fun setFlipH(flipH: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, flipH)
     }
 
-    /**
-     * If `true`, texture is flipped horizontally.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.is_flipped_h
-     */
     fun isFlippedH(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
     }
 
-    /**
-     * If `true`, texture is flipped vertically.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_flip_v
-     */
     fun setFlipV(flipV: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, flipV)
     }
 
-    /**
-     * If `true`, texture is flipped vertically.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.is_flipped_v
-     */
     fun isFlippedV(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
     }
 
-    /**
-     * The displayed animation frame's index. Setting this property also resets `frame_progress`. If
-     * this is not desired, use `set_frame_and_progress`.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_frame
-     */
     fun setFrame(frame: Int) {
         ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
     }
 
-    /**
-     * The displayed animation frame's index. Setting this property also resets `frame_progress`. If
-     * this is not desired, use `set_frame_and_progress`.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_frame
-     */
     fun getFrame(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
     }
 
-    /**
-     * The progress value between `0.0` and `1.0` until the current frame transitions to the next
-     * frame. If the animation is playing backwards, the value transitions from `1.0` to `0.0`.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_frame_progress
-     */
     fun setFrameProgress(progress: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, handle, progress)
     }
 
-    /**
-     * The progress value between `0.0` and `1.0` until the current frame transitions to the next
-     * frame. If the animation is playing backwards, the value transitions from `1.0` to `0.0`.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_frame_progress
-     */
     fun getFrameProgress(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, handle)
     }
 
-    /**
-     * Sets `frame` and `frame_progress` to the given values. Unlike setting `frame`, this method does
-     * not reset the `frame_progress` to `0.0` implicitly.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_frame_and_progress
-     */
     fun setFrameAndProgress(frame: Int, progress: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, handle, frame, progress)
     }
 
-    /**
-     * The speed scaling ratio. For example, if this value is `1`, then the animation plays at normal
-     * speed. If it's `0.5`, then it plays at half speed. If it's `2`, then it plays at double speed.
-     * If set to a negative value, the animation is played in reverse. If set to `0`, the animation
-     * will not advance.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.set_speed_scale
-     */
     fun setSpeedScale(speedScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speedScale)
     }
 
-    /**
-     * The speed scaling ratio. For example, if this value is `1`, then the animation plays at normal
-     * speed. If it's `0.5`, then it plays at half speed. If it's `2`, then it plays at double speed.
-     * If set to a negative value, the animation is played in reverse. If set to `0`, the animation
-     * will not advance.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_speed_scale
-     */
     fun getSpeedScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
-    /**
-     * Returns the actual playing speed of current animation or `0` if not playing. This speed is the
-     * `speed_scale` property multiplied by `custom_speed` argument specified when calling the `play`
-     * method. Returns a negative value if the current animation is playing backwards.
-     *
-     * Generated from Godot docs: AnimatedSprite2D.get_playing_speed
-     */
     fun getPlayingSpeed(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, handle)
     }

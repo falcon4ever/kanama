@@ -1,13 +1,16 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A custom effect for a `RichTextLabel`.
  *
  * Generated from Godot docs: RichTextEffect
  */
-open class RichTextEffect internal constructor(handle: MemorySegment) : Resource(handle) {
+class RichTextEffect(handle: MemorySegment) : Resource(handle) {
+    // No conservative instance methods emitted yet.
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): RichTextEffect? =
@@ -15,5 +18,7 @@ open class RichTextEffect internal constructor(handle: MemorySegment) : Resource
 
         internal fun wrap(handle: MemorySegment): RichTextEffect? =
             if (handle.address() == 0L) null else RichTextEffect(handle)
+
+        // No MethodBinds emitted yet.
     }
 }

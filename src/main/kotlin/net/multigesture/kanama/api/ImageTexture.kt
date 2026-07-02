@@ -10,13 +10,6 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: ImageTexture
  */
 class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
-    /**
-     * Replaces the texture's data with a new `Image`. This will re-allocate new memory for the
-     * texture. If you want to update the image, but don't need to change its parameters (format,
-     * size), use `update` instead for better performance.
-     *
-     * Generated from Godot docs: ImageTexture.set_image
-     */
     fun setImage(image: Image?) {
         ObjectCalls.ptrcallWithObjectArgs(setImageBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
@@ -34,22 +27,11 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
         ObjectCalls.ptrcallWithObjectArgs(updateBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Resizes the texture to the specified dimensions.
-     *
-     * Generated from Godot docs: ImageTexture.set_size_override
-     */
     fun setSizeOverride(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
     }
 
     companion object {
-        /**
-         * Creates a new `ImageTexture` and initializes it by allocating and setting the data from an
-         * `Image`.
-         *
-         * Generated from Godot docs: ImageTexture.create_from_image
-         */
         fun createFromImage(image: Image?): ImageTexture? {
             return ImageTexture.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createFromImageBind, MemorySegment.NULL, image?.requireOpenHandle() ?: MemorySegment.NULL))
         }

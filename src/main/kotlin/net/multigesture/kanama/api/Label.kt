@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Rect2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Rect2
 
 /**
  * A control for displaying plain text.
@@ -143,484 +143,198 @@ class Label(handle: MemorySegment) : Control(handle) {
         @JvmName("setStructuredTextBidiOverrideOptionsProperty")
         set(value) = setStructuredTextBidiOverrideOptions(value)
 
-    /**
-     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
-     * justify).
-     *
-     * Generated from Godot docs: Label.set_horizontal_alignment
-     */
     fun setHorizontalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
-     * justify).
-     *
-     * Generated from Godot docs: Label.get_horizontal_alignment
-     */
     fun getHorizontalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
-    /**
-     * Controls the text's vertical alignment. Supports top, center, bottom, and fill.
-     *
-     * Generated from Godot docs: Label.set_vertical_alignment
-     */
     fun setVerticalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Controls the text's vertical alignment. Supports top, center, bottom, and fill.
-     *
-     * Generated from Godot docs: Label.get_vertical_alignment
-     */
     fun getVerticalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
     }
 
-    /**
-     * The text to display on screen.
-     *
-     * Generated from Godot docs: Label.set_text
-     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
-    /**
-     * The text to display on screen.
-     *
-     * Generated from Godot docs: Label.get_text
-     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
-    /**
-     * A `LabelSettings` resource that can be shared between multiple `Label` nodes. Takes priority
-     * over theme properties.
-     *
-     * Generated from Godot docs: Label.set_label_settings
-     */
     fun setLabelSettings(settings: LabelSettings?) {
         ObjectCalls.ptrcallWithObjectArgs(setLabelSettingsBind, handle, listOf(settings?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * A `LabelSettings` resource that can be shared between multiple `Label` nodes. Takes priority
-     * over theme properties.
-     *
-     * Generated from Godot docs: Label.get_label_settings
-     */
     fun getLabelSettings(): LabelSettings? {
         return LabelSettings.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelSettingsBind, handle))
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: Label.set_text_direction
-     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: Label.get_text_direction
-     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: Label.set_language
-     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: Label.get_language
-     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
-    /**
-     * String used as a paragraph separator. Each paragraph is processed independently, in its own BiDi
-     * context.
-     *
-     * Generated from Godot docs: Label.set_paragraph_separator
-     */
     fun setParagraphSeparator(paragraphSeparator: String) {
         ObjectCalls.ptrcallWithStringArg(setParagraphSeparatorBind, handle, paragraphSeparator)
     }
 
-    /**
-     * String used as a paragraph separator. Each paragraph is processed independently, in its own BiDi
-     * context.
-     *
-     * Generated from Godot docs: Label.get_paragraph_separator
-     */
     fun getParagraphSeparator(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getParagraphSeparatorBind, handle)
     }
 
-    /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
-     * node's bounding rectangle. If you resize the node, it will change its height automatically to
-     * show all the text. Note: Labels with autowrapping enabled must have a custom maximum width
-     * configured to work correctly, either through the Label's own `Control.custom_maximum_size` or as
-     * a result of a propagated maximum size from a parent Control with
-     * `Control.propagate_maximum_size` enabled.
-     *
-     * Generated from Godot docs: Label.set_autowrap_mode
-     */
     fun setAutowrapMode(autowrapMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
-    /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
-     * node's bounding rectangle. If you resize the node, it will change its height automatically to
-     * show all the text. Note: Labels with autowrapping enabled must have a custom maximum width
-     * configured to work correctly, either through the Label's own `Control.custom_maximum_size` or as
-     * a result of a propagated maximum size from a parent Control with
-     * `Control.propagate_maximum_size` enabled.
-     *
-     * Generated from Godot docs: Label.get_autowrap_mode
-     */
     fun getAutowrapMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
-    /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
-     *
-     * Generated from Godot docs: Label.set_autowrap_trim_flags
-     */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
     }
 
-    /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
-     *
-     * Generated from Godot docs: Label.get_autowrap_trim_flags
-     */
     fun getAutowrapTrimFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: Label.set_justification_flags
-     */
     fun setJustificationFlags(justificationFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: Label.get_justification_flags
-     */
     fun getJustificationFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
-    /**
-     * If `true`, the Label only shows the text that fits inside its bounding rectangle and will clip
-     * text horizontally.
-     *
-     * Generated from Godot docs: Label.set_clip_text
-     */
     fun setClipText(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setClipTextBind, handle, enable)
     }
 
-    /**
-     * If `true`, the Label only shows the text that fits inside its bounding rectangle and will clip
-     * text horizontally.
-     *
-     * Generated from Godot docs: Label.is_clipping_text
-     */
     fun isClippingText(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isClippingTextBind, handle)
     }
 
-    /**
-     * Aligns text to the given tab-stops.
-     *
-     * Generated from Godot docs: Label.set_tab_stops
-     */
     fun setTabStops(tabStops: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, handle, tabStops)
     }
 
-    /**
-     * Aligns text to the given tab-stops.
-     *
-     * Generated from Godot docs: Label.get_tab_stops
-     */
     fun getTabStops(): List<Float> {
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, handle)
     }
 
-    /**
-     * The clipping behavior when the text exceeds the node's bounding rectangle.
-     *
-     * Generated from Godot docs: Label.set_text_overrun_behavior
-     */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
-    /**
-     * The clipping behavior when the text exceeds the node's bounding rectangle.
-     *
-     * Generated from Godot docs: Label.get_text_overrun_behavior
-     */
     fun getTextOverrunBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
-    /**
-     * Ellipsis character used for text clipping.
-     *
-     * Generated from Godot docs: Label.set_ellipsis_char
-     */
     fun setEllipsisChar(char: String) {
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
-    /**
-     * Ellipsis character used for text clipping.
-     *
-     * Generated from Godot docs: Label.get_ellipsis_char
-     */
     fun getEllipsisChar(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
-    /**
-     * If `true`, all the text displays as UPPERCASE.
-     *
-     * Generated from Godot docs: Label.set_uppercase
-     */
     fun setUppercase(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
     }
 
-    /**
-     * If `true`, all the text displays as UPPERCASE.
-     *
-     * Generated from Godot docs: Label.is_uppercase
-     */
     fun isUppercase(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
     }
 
-    /**
-     * Returns the height of the line `line`. If `line` is set to `-1`, returns the biggest line
-     * height. If there are no lines, returns font size in pixels.
-     *
-     * Generated from Godot docs: Label.get_line_height
-     */
     fun getLineHeight(line: Int = -1): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, handle, line)
     }
 
-    /**
-     * Returns the number of lines of text the Label has.
-     *
-     * Generated from Godot docs: Label.get_line_count
-     */
     fun getLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
-    /**
-     * Returns the number of lines shown. Useful if the `Label`'s height cannot currently display all
-     * lines.
-     *
-     * Generated from Godot docs: Label.get_visible_line_count
-     */
     fun getVisibleLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, handle)
     }
 
-    /**
-     * Returns the total number of printable characters in the text (excluding spaces and newlines).
-     *
-     * Generated from Godot docs: Label.get_total_character_count
-     */
     fun getTotalCharacterCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, handle)
     }
 
-    /**
-     * The number of characters to display. If set to `-1`, all characters are displayed. This can be
-     * useful when animating the text appearing in a dialog box. Note: Setting this property updates
-     * `visible_ratio` accordingly. Note: Characters are counted as Unicode codepoints. A single
-     * visible grapheme may contain multiple codepoints (e.g. certain emoji use three codepoints). A
-     * single codepoint may contain two UTF-16 characters, which are used in C# strings.
-     *
-     * Generated from Godot docs: Label.set_visible_characters
-     */
     fun setVisibleCharacters(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, handle, amount)
     }
 
-    /**
-     * The number of characters to display. If set to `-1`, all characters are displayed. This can be
-     * useful when animating the text appearing in a dialog box. Note: Setting this property updates
-     * `visible_ratio` accordingly. Note: Characters are counted as Unicode codepoints. A single
-     * visible grapheme may contain multiple codepoints (e.g. certain emoji use three codepoints). A
-     * single codepoint may contain two UTF-16 characters, which are used in C# strings.
-     *
-     * Generated from Godot docs: Label.get_visible_characters
-     */
     fun getVisibleCharacters(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, handle)
     }
 
-    /**
-     * The clipping behavior when `visible_characters` or `visible_ratio` is set.
-     *
-     * Generated from Godot docs: Label.get_visible_characters_behavior
-     */
     fun getVisibleCharactersBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, handle)
     }
 
-    /**
-     * The clipping behavior when `visible_characters` or `visible_ratio` is set.
-     *
-     * Generated from Godot docs: Label.set_visible_characters_behavior
-     */
     fun setVisibleCharactersBehavior(behavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, handle, behavior)
     }
 
-    /**
-     * The fraction of characters to display, relative to the total number of characters (see
-     * `get_total_character_count`). If set to `1.0`, all characters are displayed. If set to `0.5`,
-     * only half of the characters will be displayed. This can be useful when animating the text
-     * appearing in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
-     *
-     * Generated from Godot docs: Label.set_visible_ratio
-     */
     fun setVisibleRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, handle, ratio)
     }
 
-    /**
-     * The fraction of characters to display, relative to the total number of characters (see
-     * `get_total_character_count`). If set to `1.0`, all characters are displayed. If set to `0.5`,
-     * only half of the characters will be displayed. This can be useful when animating the text
-     * appearing in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
-     *
-     * Generated from Godot docs: Label.get_visible_ratio
-     */
     fun getVisibleRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, handle)
     }
 
-    /**
-     * The number of the lines ignored and not displayed from the start of the `text` value.
-     *
-     * Generated from Godot docs: Label.set_lines_skipped
-     */
     fun setLinesSkipped(linesSkipped: Int) {
         ObjectCalls.ptrcallWithIntArg(setLinesSkippedBind, handle, linesSkipped)
     }
 
-    /**
-     * The number of the lines ignored and not displayed from the start of the `text` value.
-     *
-     * Generated from Godot docs: Label.get_lines_skipped
-     */
     fun getLinesSkipped(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLinesSkippedBind, handle)
     }
 
-    /**
-     * Limits the lines of text the node shows on screen.
-     *
-     * Generated from Godot docs: Label.set_max_lines_visible
-     */
     fun setMaxLinesVisible(linesVisible: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, handle, linesVisible)
     }
 
-    /**
-     * Limits the lines of text the node shows on screen.
-     *
-     * Generated from Godot docs: Label.get_max_lines_visible
-     */
     fun getMaxLinesVisible(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, handle)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: Label.set_structured_text_bidi_override
-     */
     fun setStructuredTextBidiOverride(parser: Long) {
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: Label.get_structured_text_bidi_override
-     */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: Label.set_structured_text_bidi_override_options
-     */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: Label.get_structured_text_bidi_override_options
-     */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
-    /**
-     * Returns the bounding rectangle of the character at position `pos` in the label's local
-     * coordinate system. If the character is a non-visual character or `pos` is outside the valid
-     * range, an empty `Rect2` is returned. If the character is a part of a composite grapheme, the
-     * bounding rectangle of the whole grapheme is returned.
-     *
-     * Generated from Godot docs: Label.get_character_bounds
-     */
     fun getCharacterBounds(pos: Int): Rect2 {
         return ObjectCalls.ptrcallWithIntArgRetRect2(getCharacterBoundsBind, handle, pos)
     }

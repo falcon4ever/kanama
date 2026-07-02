@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: GDScript
@@ -12,6 +12,13 @@ class GDScript(handle: MemorySegment) : Script(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): GDScript? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): GDScript? =
+            if (handle.address() == 0L) null else GDScript(handle)
+
         private const val NEW_HASH = 1545262638L
         private val newBind by lazy {
             ObjectCalls.getMethodBind("GDScript", "new", NEW_HASH)

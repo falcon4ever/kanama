@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNode
@@ -71,6 +71,17 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val PORT_TYPE_SCALAR: Long = 0L
+        const val PORT_TYPE_SCALAR_INT: Long = 1L
+        const val PORT_TYPE_SCALAR_UINT: Long = 2L
+        const val PORT_TYPE_VECTOR_2D: Long = 3L
+        const val PORT_TYPE_VECTOR_3D: Long = 4L
+        const val PORT_TYPE_VECTOR_4D: Long = 5L
+        const val PORT_TYPE_BOOLEAN: Long = 6L
+        const val PORT_TYPE_TRANSFORM: Long = 7L
+        const val PORT_TYPE_SAMPLER: Long = 8L
+        const val PORT_TYPE_MAX: Long = 9L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): VisualShaderNode? =
             wrap(handle)

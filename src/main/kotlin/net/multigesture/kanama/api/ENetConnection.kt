@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: ENetConnection
@@ -80,6 +80,21 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        const val COMPRESS_NONE: Long = 0L
+        const val COMPRESS_RANGE_CODER: Long = 1L
+        const val COMPRESS_FASTLZ: Long = 2L
+        const val COMPRESS_ZLIB: Long = 3L
+        const val COMPRESS_ZSTD: Long = 4L
+        const val EVENT_ERROR: Long = -1L
+        const val EVENT_NONE: Long = 0L
+        const val EVENT_CONNECT: Long = 1L
+        const val EVENT_DISCONNECT: Long = 2L
+        const val EVENT_RECEIVE: Long = 3L
+        const val HOST_TOTAL_SENT_DATA: Long = 0L
+        const val HOST_TOTAL_SENT_PACKETS: Long = 1L
+        const val HOST_TOTAL_RECEIVED_DATA: Long = 2L
+        const val HOST_TOTAL_RECEIVED_PACKETS: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): ENetConnection? =
             wrap(handle)

@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: WebRTCPeerConnection
@@ -61,6 +61,22 @@ open class WebRTCPeerConnection(handle: MemorySegment) : RefCounted(handle) {
         fun setDefaultExtension(extensionClass: String) {
             ObjectCalls.ptrcallWithStringNameArg(setDefaultExtensionBind, MemorySegment.NULL, extensionClass)
         }
+
+        const val STATE_NEW: Long = 0L
+        const val STATE_CONNECTING: Long = 1L
+        const val STATE_CONNECTED: Long = 2L
+        const val STATE_DISCONNECTED: Long = 3L
+        const val STATE_FAILED: Long = 4L
+        const val STATE_CLOSED: Long = 5L
+        const val GATHERING_STATE_NEW: Long = 0L
+        const val GATHERING_STATE_GATHERING: Long = 1L
+        const val GATHERING_STATE_COMPLETE: Long = 2L
+        const val SIGNALING_STATE_STABLE: Long = 0L
+        const val SIGNALING_STATE_HAVE_LOCAL_OFFER: Long = 1L
+        const val SIGNALING_STATE_HAVE_REMOTE_OFFER: Long = 2L
+        const val SIGNALING_STATE_HAVE_LOCAL_PRANSWER: Long = 3L
+        const val SIGNALING_STATE_HAVE_REMOTE_PRANSWER: Long = 4L
+        const val SIGNALING_STATE_CLOSED: Long = 5L
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): WebRTCPeerConnection? =

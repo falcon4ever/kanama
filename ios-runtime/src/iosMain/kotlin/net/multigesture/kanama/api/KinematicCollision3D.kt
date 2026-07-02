@@ -22,8 +22,8 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
-    fun getCollisionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
+    fun getCollisionCount(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionCountBind, handle)
     }
 
     fun getPosition(collisionIndex: Int = 0): Vector3 {

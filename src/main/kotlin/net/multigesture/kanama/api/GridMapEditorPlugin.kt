@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3i
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: GridMapEditorPlugin
@@ -42,6 +42,13 @@ class GridMapEditorPlugin(handle: MemorySegment) : EditorPlugin(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): GridMapEditorPlugin? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): GridMapEditorPlugin? =
+            if (handle.address() == 0L) null else GridMapEditorPlugin(handle)
+
         private const val GET_CURRENT_GRID_MAP_HASH = 1184264483L
         private val getCurrentGridMapBind by lazy {
             ObjectCalls.getMethodBind("GridMapEditorPlugin", "get_current_grid_map", GET_CURRENT_GRID_MAP_HASH)

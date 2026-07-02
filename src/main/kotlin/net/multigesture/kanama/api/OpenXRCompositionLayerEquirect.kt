@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRCompositionLayerEquirect
@@ -79,6 +79,13 @@ class OpenXRCompositionLayerEquirect(handle: MemorySegment) : OpenXRCompositionL
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayerEquirect? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRCompositionLayerEquirect? =
+            if (handle.address() == 0L) null else OpenXRCompositionLayerEquirect(handle)
+
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {
             ObjectCalls.getMethodBind("OpenXRCompositionLayerEquirect", "set_radius", SET_RADIUS_HASH)

@@ -1,13 +1,13 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Holds a paragraph of text.
@@ -111,488 +111,214 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
         return TextParagraph.wrap(ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle))
     }
 
-    /**
-     * Text writing direction.
-     *
-     * Generated from Godot docs: TextParagraph.set_direction
-     */
     fun setDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setDirectionBind, handle, direction)
     }
 
-    /**
-     * Text writing direction.
-     *
-     * Generated from Godot docs: TextParagraph.get_direction
-     */
     fun getDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, handle)
     }
 
-    /**
-     * Returns the text writing direction inferred by the BiDi algorithm.
-     *
-     * Generated from Godot docs: TextParagraph.get_inferred_direction
-     */
     fun getInferredDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, handle)
     }
 
-    /**
-     * Custom punctuation character list, used for word breaking. If set to empty string, server
-     * defaults are used.
-     *
-     * Generated from Godot docs: TextParagraph.set_custom_punctuation
-     */
     fun setCustomPunctuation(customPunctuation: String) {
         ObjectCalls.ptrcallWithStringArg(setCustomPunctuationBind, handle, customPunctuation)
     }
 
-    /**
-     * Custom punctuation character list, used for word breaking. If set to empty string, server
-     * defaults are used.
-     *
-     * Generated from Godot docs: TextParagraph.get_custom_punctuation
-     */
     fun getCustomPunctuation(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCustomPunctuationBind, handle)
     }
 
-    /**
-     * Text orientation.
-     *
-     * Generated from Godot docs: TextParagraph.set_orientation
-     */
     fun setOrientation(orientation: Long) {
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
-    /**
-     * Text orientation.
-     *
-     * Generated from Godot docs: TextParagraph.get_orientation
-     */
     fun getOrientation(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 
-    /**
-     * If set to `true` text will display invalid characters.
-     *
-     * Generated from Godot docs: TextParagraph.set_preserve_invalid
-     */
     fun setPreserveInvalid(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, handle, enabled)
     }
 
-    /**
-     * If set to `true` text will display invalid characters.
-     *
-     * Generated from Godot docs: TextParagraph.get_preserve_invalid
-     */
     fun getPreserveInvalid(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, handle)
     }
 
-    /**
-     * If set to `true` text will display control characters.
-     *
-     * Generated from Godot docs: TextParagraph.set_preserve_control
-     */
     fun setPreserveControl(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, handle, enabled)
     }
 
-    /**
-     * If set to `true` text will display control characters.
-     *
-     * Generated from Godot docs: TextParagraph.get_preserve_control
-     */
     fun getPreserveControl(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, handle)
     }
 
-    /**
-     * Overrides BiDi for the structured text. Override ranges should cover full source text without
-     * overlaps. BiDi algorithm will be used on each range separately.
-     *
-     * Generated from Godot docs: TextParagraph.set_bidi_override
-     */
     fun setBidiOverride(override: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
     }
 
-    /**
-     * Sets drop cap, overrides previously set drop cap. Drop cap (dropped capital) is a decorative
-     * element at the beginning of a paragraph that is larger than the rest of the text.
-     *
-     * Generated from Godot docs: TextParagraph.set_dropcap
-     */
     fun setDropcap(text: String, font: Font?, fontSize: Int, dropcapMargins: Rect2, language: String = ""): Boolean {
         return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(setDropcapBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, dropcapMargins, language)
     }
 
-    /**
-     * Removes dropcap.
-     *
-     * Generated from Godot docs: TextParagraph.clear_dropcap
-     */
     fun clearDropcap() {
         ObjectCalls.ptrcallNoArgs(clearDropcapBind, handle)
     }
 
-    /**
-     * Adds text span and font to draw it.
-     *
-     * Generated from Godot docs: TextParagraph.add_string
-     */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
     }
 
-    /**
-     * Adds inline object to the text buffer, `key` must be unique. In the text, object is represented
-     * as `length` object replacement characters.
-     *
-     * Generated from Godot docs: TextParagraph.add_object
-     */
     fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
         return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
     }
 
-    /**
-     * Sets new size and alignment of embedded object.
-     *
-     * Generated from Godot docs: TextParagraph.resize_object
-     */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
         return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
     }
 
-    /**
-     * Returns `true` if an object with `key` is embedded in this shaped text buffer.
-     *
-     * Generated from Godot docs: TextParagraph.has_object
-     */
     fun hasObject(key: Any?): Boolean {
         return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
     }
 
-    /**
-     * Paragraph horizontal alignment.
-     *
-     * Generated from Godot docs: TextParagraph.set_alignment
-     */
     fun setAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Paragraph horizontal alignment.
-     *
-     * Generated from Godot docs: TextParagraph.get_alignment
-     */
     fun getAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
     }
 
-    /**
-     * Aligns paragraph to the given tab-stops.
-     *
-     * Generated from Godot docs: TextParagraph.tab_align
-     */
     fun tabAlign(tabStops: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, handle, tabStops)
     }
 
-    /**
-     * Line breaking rules. For more info see `TextServer`.
-     *
-     * Generated from Godot docs: TextParagraph.set_break_flags
-     */
     fun setBreakFlags(flags: Long) {
         ObjectCalls.ptrcallWithLongArg(setBreakFlagsBind, handle, flags)
     }
 
-    /**
-     * Line breaking rules. For more info see `TextServer`.
-     *
-     * Generated from Godot docs: TextParagraph.get_break_flags
-     */
     fun getBreakFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBreakFlagsBind, handle)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: TextParagraph.set_justification_flags
-     */
     fun setJustificationFlags(flags: Long) {
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, flags)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: TextParagraph.get_justification_flags
-     */
     fun getJustificationFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
-    /**
-     * The clipping behavior when the text exceeds the paragraph's set width.
-     *
-     * Generated from Godot docs: TextParagraph.set_text_overrun_behavior
-     */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
-    /**
-     * The clipping behavior when the text exceeds the paragraph's set width.
-     *
-     * Generated from Godot docs: TextParagraph.get_text_overrun_behavior
-     */
     fun getTextOverrunBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
-    /**
-     * Ellipsis character used for text clipping.
-     *
-     * Generated from Godot docs: TextParagraph.set_ellipsis_char
-     */
     fun setEllipsisChar(char: String) {
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
-    /**
-     * Ellipsis character used for text clipping.
-     *
-     * Generated from Godot docs: TextParagraph.get_ellipsis_char
-     */
     fun getEllipsisChar(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
-    /**
-     * Paragraph width.
-     *
-     * Generated from Godot docs: TextParagraph.set_width
-     */
     fun setWidth(width: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
-    /**
-     * Paragraph width.
-     *
-     * Generated from Godot docs: TextParagraph.get_width
-     */
     fun getWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
-    /**
-     * Returns the size of the bounding box of the paragraph, without line breaks.
-     *
-     * Generated from Godot docs: TextParagraph.get_non_wrapped_size
-     */
     fun getNonWrappedSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getNonWrappedSizeBind, handle)
     }
 
-    /**
-     * Returns the size of the bounding box of the paragraph.
-     *
-     * Generated from Godot docs: TextParagraph.get_size
-     */
     fun getSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
-    /**
-     * Returns TextServer full string buffer RID.
-     *
-     * Generated from Godot docs: TextParagraph.get_rid
-     */
     fun getRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
-    /**
-     * Returns TextServer line buffer RID.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_rid
-     */
     fun getLineRid(line: Int): RID {
         return ObjectCalls.ptrcallWithIntArgRetRID(getLineRidBind, handle, line)
     }
 
-    /**
-     * Returns drop cap text buffer RID.
-     *
-     * Generated from Godot docs: TextParagraph.get_dropcap_rid
-     */
     fun getDropcapRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getDropcapRidBind, handle)
     }
 
-    /**
-     * Returns the character range of the paragraph.
-     *
-     * Generated from Godot docs: TextParagraph.get_range
-     */
     fun getRange(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, handle)
     }
 
-    /**
-     * Returns number of lines in the paragraph.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_count
-     */
     fun getLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
-    /**
-     * Limits the lines of text shown.
-     *
-     * Generated from Godot docs: TextParagraph.set_max_lines_visible
-     */
     fun setMaxLinesVisible(maxLinesVisible: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, handle, maxLinesVisible)
     }
 
-    /**
-     * Limits the lines of text shown.
-     *
-     * Generated from Godot docs: TextParagraph.get_max_lines_visible
-     */
     fun getMaxLinesVisible(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, handle)
     }
 
-    /**
-     * Additional vertical spacing between lines (in pixels), spacing is added to line descent. This
-     * value can be negative.
-     *
-     * Generated from Godot docs: TextParagraph.set_line_spacing
-     */
     fun setLineSpacing(lineSpacing: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
-    /**
-     * Additional vertical spacing between lines (in pixels), spacing is added to line descent. This
-     * value can be negative.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_spacing
-     */
     fun getLineSpacing(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
-    /**
-     * Returns array of inline objects in the line.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_objects
-     */
     fun getLineObjects(line: Int): List<Any?> {
         return ObjectCalls.ptrcallWithIntArgRetArray(getLineObjectsBind, handle, line)
     }
 
-    /**
-     * Returns bounding rectangle of the inline object.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_object_rect
-     */
     fun getLineObjectRect(line: Int, key: Any?): Rect2 {
         return ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(getLineObjectRectBind, handle, line, key)
     }
 
-    /**
-     * Returns size of the bounding box of the line of text. Returned size is rounded up.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_size
-     */
     fun getLineSize(line: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getLineSizeBind, handle, line)
     }
 
-    /**
-     * Returns character range of the line.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_range
-     */
     fun getLineRange(line: Int): Vector2i {
         return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, handle, line)
     }
 
-    /**
-     * Returns the text line ascent (number of pixels above the baseline for horizontal layout or to
-     * the left of baseline for vertical).
-     *
-     * Generated from Godot docs: TextParagraph.get_line_ascent
-     */
     fun getLineAscent(line: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineAscentBind, handle, line)
     }
 
-    /**
-     * Returns the text line descent (number of pixels below the baseline for horizontal layout or to
-     * the right of baseline for vertical).
-     *
-     * Generated from Godot docs: TextParagraph.get_line_descent
-     */
     fun getLineDescent(line: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineDescentBind, handle, line)
     }
 
-    /**
-     * Returns width (for horizontal layout) or height (for vertical) of the line of text.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_width
-     */
     fun getLineWidth(line: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineWidthBind, handle, line)
     }
 
-    /**
-     * Returns pixel offset of the underline below the baseline.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_underline_position
-     */
     fun getLineUnderlinePosition(line: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlinePositionBind, handle, line)
     }
 
-    /**
-     * Returns thickness of the underline.
-     *
-     * Generated from Godot docs: TextParagraph.get_line_underline_thickness
-     */
     fun getLineUnderlineThickness(line: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlineThicknessBind, handle, line)
     }
 
-    /**
-     * Returns drop cap bounding box size.
-     *
-     * Generated from Godot docs: TextParagraph.get_dropcap_size
-     */
     fun getDropcapSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getDropcapSizeBind, handle)
     }
 
-    /**
-     * Returns number of lines used by dropcap.
-     *
-     * Generated from Godot docs: TextParagraph.get_dropcap_lines
-     */
     fun getDropcapLines(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDropcapLinesBind, handle)
     }
@@ -608,68 +334,26 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithRIDVector2TwoColorDoubleArgs(drawBind, handle, canvas, pos, color, dcColor, oversampling)
     }
 
-    /**
-     * Draw outlines of all lines of the text and drop cap into a canvas item at a given position, with
-     * `color`. `pos` specifies the top left corner of the bounding box. If `oversampling` is greater
-     * than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are
-     * used.
-     *
-     * Generated from Godot docs: TextParagraph.draw_outline
-     */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, dcColor: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithRIDVector2IntTwoColorDoubleArgs(drawOutlineBind, handle, canvas, pos, outlineSize, color, dcColor, oversampling)
     }
 
-    /**
-     * Draw single line of text into a canvas item at a given position, with `color`. `pos` specifies
-     * the top left corner of the bounding box. If `oversampling` is greater than zero, it is used as
-     * font oversampling factor, otherwise viewport oversampling settings are used.
-     *
-     * Generated from Godot docs: TextParagraph.draw_line
-     */
     fun drawLine(canvas: RID, pos: Vector2, line: Int, color: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawLineBind, handle, canvas, pos, line, color, oversampling)
     }
 
-    /**
-     * Draw outline of the single line of text into a canvas item at a given position, with `color`.
-     * `pos` specifies the top left corner of the bounding box. If `oversampling` is greater than zero,
-     * it is used as font oversampling factor, otherwise viewport oversampling settings are used.
-     *
-     * Generated from Godot docs: TextParagraph.draw_line_outline
-     */
     fun drawLineOutline(canvas: RID, pos: Vector2, line: Int, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgs(drawLineOutlineBind, handle, canvas, pos, line, outlineSize, color, oversampling)
     }
 
-    /**
-     * Draw drop cap into a canvas item at a given position, with `color`. `pos` specifies the top left
-     * corner of the bounding box. If `oversampling` is greater than zero, it is used as font
-     * oversampling factor, otherwise viewport oversampling settings are used.
-     *
-     * Generated from Godot docs: TextParagraph.draw_dropcap
-     */
     fun drawDropcap(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawDropcapBind, handle, canvas, pos, color, oversampling)
     }
 
-    /**
-     * Draw drop cap outline into a canvas item at a given position, with `color`. `pos` specifies the
-     * top left corner of the bounding box. If `oversampling` is greater than zero, it is used as font
-     * oversampling factor, otherwise viewport oversampling settings are used.
-     *
-     * Generated from Godot docs: TextParagraph.draw_dropcap_outline
-     */
     fun drawDropcapOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawDropcapOutlineBind, handle, canvas, pos, outlineSize, color, oversampling)
     }
 
-    /**
-     * Returns caret character offset at the specified coordinates. This function always returns a
-     * valid position.
-     *
-     * Generated from Godot docs: TextParagraph.hit_test
-     */
     fun hitTest(coords: Vector2): Int {
         return ObjectCalls.ptrcallWithVector2ArgRetInt(hitTestBind, handle, coords)
     }

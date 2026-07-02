@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * An optimized translation.
@@ -17,12 +17,19 @@ class OptimizedTranslation(handle: MemorySegment) : Translation(handle) {
      *
      * Generated from Godot docs: OptimizedTranslation.generate
      */
-    fun generate(from: Translation?) {
-        ObjectCalls.ptrcallWithObjectArgs(generateBind, handle, listOf(from?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun generate(from: Translation?): Boolean {
+        return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, handle, from?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     companion object {
-        private const val GENERATE_HASH = 1466479800L
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OptimizedTranslation? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OptimizedTranslation? =
+            if (handle.address() == 0L) null else OptimizedTranslation(handle)
+
+        private const val GENERATE_HASH = 2141509306L
         private val generateBind by lazy {
             ObjectCalls.getMethodBind("OptimizedTranslation", "generate", GENERATE_HASH)
         }

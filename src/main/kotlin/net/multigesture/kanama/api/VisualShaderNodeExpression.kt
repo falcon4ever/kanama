@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeExpression
@@ -23,6 +23,13 @@ open class VisualShaderNodeExpression(handle: MemorySegment) : VisualShaderNodeG
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeExpression? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeExpression? =
+            if (handle.address() == 0L) null else VisualShaderNodeExpression(handle)
+
         private const val SET_EXPRESSION_HASH = 83702148L
         private val setExpressionBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeExpression", "set_expression", SET_EXPRESSION_HASH)

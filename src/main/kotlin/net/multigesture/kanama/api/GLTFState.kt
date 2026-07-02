@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: GLTFState
@@ -479,6 +479,15 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val HANDLE_BINARY_DISCARD_TEXTURES: Long = 0L
+        const val HANDLE_BINARY_EXTRACT_TEXTURES: Long = 1L
+        const val HANDLE_BINARY_EMBED_AS_BASISU: Long = 2L
+        const val HANDLE_BINARY_EMBED_AS_UNCOMPRESSED: Long = 3L
+        const val HANDLE_BINARY_IMAGE_MODE_DISCARD_TEXTURES: Long = 0L
+        const val HANDLE_BINARY_IMAGE_MODE_EXTRACT_TEXTURES: Long = 1L
+        const val HANDLE_BINARY_IMAGE_MODE_EMBED_AS_BASISU: Long = 2L
+        const val HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFState? =
             wrap(handle)

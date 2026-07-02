@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector3
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Real-time global illumination (GI) probe.
@@ -35,86 +35,34 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
         @JvmName("setDataProperty")
         set(value) = setProbeData(value)
 
-    /**
-     * The `VoxelGIData` resource that holds the data for this `VoxelGI`.
-     *
-     * Generated from Godot docs: VoxelGI.set_probe_data
-     */
     fun setProbeData(data: VoxelGIData?) {
         ObjectCalls.ptrcallWithObjectArgs(setProbeDataBind, handle, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `VoxelGIData` resource that holds the data for this `VoxelGI`.
-     *
-     * Generated from Godot docs: VoxelGI.get_probe_data
-     */
     fun getProbeData(): VoxelGIData? {
         return VoxelGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProbeDataBind, handle))
     }
 
-    /**
-     * Number of times to subdivide the grid that the `VoxelGI` operates on. A higher number results in
-     * finer detail and thus higher visual quality, while lower numbers result in better performance.
-     *
-     * Generated from Godot docs: VoxelGI.set_subdiv
-     */
     fun setSubdiv(subdiv: Long) {
         ObjectCalls.ptrcallWithLongArg(setSubdivBind, handle, subdiv)
     }
 
-    /**
-     * Number of times to subdivide the grid that the `VoxelGI` operates on. A higher number results in
-     * finer detail and thus higher visual quality, while lower numbers result in better performance.
-     *
-     * Generated from Godot docs: VoxelGI.get_subdiv
-     */
     fun getSubdiv(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSubdivBind, handle)
     }
 
-    /**
-     * The size of the area covered by the `VoxelGI`. This must be `1.0` or greater on each axis. Note:
-     * If you make the size larger without increasing the number of subdivisions with `subdiv`, the
-     * size of each cell will increase and result in less detailed lighting.
-     *
-     * Generated from Godot docs: VoxelGI.set_size
-     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
-    /**
-     * The size of the area covered by the `VoxelGI`. This must be `1.0` or greater on each axis. Note:
-     * If you make the size larger without increasing the number of subdivisions with `subdiv`, the
-     * size of each cell will increase and result in less detailed lighting.
-     *
-     * Generated from Godot docs: VoxelGI.get_size
-     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
-    /**
-     * The `CameraAttributes` resource that specifies exposure levels to bake at. Auto-exposure and non
-     * exposure properties will be ignored. Exposure settings should be used to reduce the dynamic
-     * range present when baking. If exposure is too high, the `VoxelGI` will have banding artifacts or
-     * may have over-exposure artifacts.
-     *
-     * Generated from Godot docs: VoxelGI.set_camera_attributes
-     */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `CameraAttributes` resource that specifies exposure levels to bake at. Auto-exposure and non
-     * exposure properties will be ignored. Exposure settings should be used to reduce the dynamic
-     * range present when baking. If exposure is too high, the `VoxelGI` will have banding artifacts or
-     * may have over-exposure artifacts.
-     *
-     * Generated from Godot docs: VoxelGI.get_camera_attributes
-     */
     fun getCameraAttributes(): CameraAttributes? {
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
     }
@@ -138,16 +86,24 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(bakeBind, handle, fromNode.handle, createVisualDebug)
     }
 
-    /**
-     * Calls `bake` with `create_visual_debug` enabled.
-     *
-     * Generated from Godot docs: VoxelGI.debug_bake
-     */
     fun debugBake() {
         ObjectCalls.ptrcallNoArgs(debugBakeBind, handle)
     }
 
     companion object {
+        const val SUBDIV_64: Long = 0L
+        const val SUBDIV_128: Long = 1L
+        const val SUBDIV_256: Long = 2L
+        const val SUBDIV_512: Long = 3L
+        const val SUBDIV_MAX: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VoxelGI? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VoxelGI? =
+            if (handle.address() == 0L) null else VoxelGI(handle)
+
         private const val SET_PROBE_DATA_HASH = 1637849675L
         private val setProbeDataBind by lazy {
             ObjectCalls.getMethodBind("VoxelGI", "set_probe_data", SET_PROBE_DATA_HASH)

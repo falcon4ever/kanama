@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2i
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * An automatically scalable `Texture2D` based on an SVG image.
@@ -12,6 +12,18 @@ import kotlin.jvm.JvmName
  * Generated from Godot docs: DPITexture
  */
 class DPITexture(handle: MemorySegment) : Texture2D(handle) {
+    var fixAlphaBorder: Boolean
+        @JvmName("fixAlphaBorderProperty")
+        get() = getFixAlphaBorder()
+        @JvmName("setFixAlphaBorderProperty")
+        set(value) = setFixAlphaBorder(value)
+
+    var premultAlpha: Boolean
+        @JvmName("premultAlphaProperty")
+        get() = getPremultAlpha()
+        @JvmName("setPremultAlphaProperty")
+        set(value) = setPremultAlpha(value)
+
     var baseScale: Double
         @JvmName("baseScaleProperty")
         get() = getBaseScale()
@@ -30,104 +42,63 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setColorMapProperty")
         set(value) = setColorMap(value)
 
-    /**
-     * Sets this SVG texture's source code.
-     *
-     * Generated from Godot docs: DPITexture.set_source
-     */
     fun setSource(source: String) {
         ObjectCalls.ptrcallWithStringArg(setSourceBind, handle, source)
     }
 
-    /**
-     * Returns this SVG texture's source code.
-     *
-     * Generated from Godot docs: DPITexture.get_source
-     */
     fun getSource(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSourceBind, handle)
     }
 
-    /**
-     * Texture scale. `1.0` is the original SVG size. Higher values result in a larger image.
-     *
-     * Generated from Godot docs: DPITexture.set_base_scale
-     */
+    fun setFixAlphaBorder(fixAlphaBorder: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setFixAlphaBorderBind, handle, fixAlphaBorder)
+    }
+
+    fun getFixAlphaBorder(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(getFixAlphaBorderBind, handle)
+    }
+
+    fun setPremultAlpha(premultAlpha: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setPremultAlphaBind, handle, premultAlpha)
+    }
+
+    fun getPremultAlpha(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(getPremultAlphaBind, handle)
+    }
+
     fun setBaseScale(baseScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBaseScaleBind, handle, baseScale)
     }
 
-    /**
-     * Texture scale. `1.0` is the original SVG size. Higher values result in a larger image.
-     *
-     * Generated from Godot docs: DPITexture.get_base_scale
-     */
     fun getBaseScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBaseScaleBind, handle)
     }
 
-    /**
-     * Overrides texture saturation.
-     *
-     * Generated from Godot docs: DPITexture.set_saturation
-     */
     fun setSaturation(saturation: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSaturationBind, handle, saturation)
     }
 
-    /**
-     * Overrides texture saturation.
-     *
-     * Generated from Godot docs: DPITexture.get_saturation
-     */
     fun getSaturation(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSaturationBind, handle)
     }
 
-    /**
-     * If set, remaps texture colors according to `Color`-`Color` map.
-     *
-     * Generated from Godot docs: DPITexture.set_color_map
-     */
     fun setColorMap(colorMap: Map<String, Any?>) {
         ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, handle, colorMap)
     }
 
-    /**
-     * If set, remaps texture colors according to `Color`-`Color` map.
-     *
-     * Generated from Godot docs: DPITexture.get_color_map
-     */
     fun getColorMap(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, handle)
     }
 
-    /**
-     * Resizes the texture to the specified dimensions.
-     *
-     * Generated from Godot docs: DPITexture.set_size_override
-     */
     fun setSizeOverride(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
     }
 
-    /**
-     * Returns the `RID` of the texture rasterized to match the oversampling of the currently drawn
-     * canvas item.
-     *
-     * Generated from Godot docs: DPITexture.get_scaled_rid
-     */
     fun getScaledRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getScaledRidBind, handle)
     }
 
     companion object {
-        /**
-         * Creates a new `DPITexture` and initializes it by allocating and setting the SVG data to
-         * `source`.
-         *
-         * Generated from Godot docs: DPITexture.create_from_string
-         */
         fun createFromString(source: String, scale: Double = 1.0, saturation: Double = 1.0, colorMap: Map<String, Any?> = emptyMap()): DPITexture? {
             return DPITexture.wrap(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, MemorySegment.NULL, source, scale, saturation, colorMap))
         }
@@ -152,6 +123,26 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         private const val GET_SOURCE_HASH = 201670096L
         private val getSourceBind by lazy {
             ObjectCalls.getMethodBind("DPITexture", "get_source", GET_SOURCE_HASH)
+        }
+
+        private const val SET_FIX_ALPHA_BORDER_HASH = 2586408642L
+        private val setFixAlphaBorderBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "set_fix_alpha_border", SET_FIX_ALPHA_BORDER_HASH)
+        }
+
+        private const val GET_FIX_ALPHA_BORDER_HASH = 36873697L
+        private val getFixAlphaBorderBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "get_fix_alpha_border", GET_FIX_ALPHA_BORDER_HASH)
+        }
+
+        private const val SET_PREMULT_ALPHA_HASH = 2586408642L
+        private val setPremultAlphaBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "set_premult_alpha", SET_PREMULT_ALPHA_HASH)
+        }
+
+        private const val GET_PREMULT_ALPHA_HASH = 36873697L
+        private val getPremultAlphaBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "get_premult_alpha", GET_PREMULT_ALPHA_HASH)
         }
 
         private const val SET_BASE_SCALE_HASH = 373806689L

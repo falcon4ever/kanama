@@ -56,7 +56,7 @@ commands outside this public repo.
 |---|---|
 | 4.1 Variant Object dispatch and signal close paths | done |
 | 4.2 Generator custom sections | done |
-| 4.3 `commonMain` + `expect/actual ObjectCalls` | blocked pending design decision |
+| 4.3 `commonMain` + `expect/actual ObjectCalls` | convergence landed via drift-gate (task 21): all three wrapper trees re-adopted from the honest generator and locked by `check_full_drift_gate` (committed == fresh regen per platform). The physical shared-module move (`:kanama-common-api`, `expect/actual ObjectCalls`) remains a staged follow-up per the commonMain design; the drift-gate already makes cross-platform drift structurally impossible. |
 | 4.4 iOS `GodotReal` centralization | todo; low priority while single-precision is the target |
 | 4.5 Review/shrink hand-written iOS sites | done (2026-07 pass, task 10). 14 -> 11 HANDWRITTEN: Time/InputMap/PhysicsServer3D retired to generated wrappers (08/09 shapes made them clean supersets); remaining 11 are platform/runtime glue or documented permanent exceptions (Engine get_main_loop -> MainLoop non-wrapper, ProjectSettings Variant->Double coercion, ResourceLoader typed loaders). Revisit if MainLoop becomes a wrapper or generator custom sections (task 11) can host the coercion/typed-load sugar. |
 

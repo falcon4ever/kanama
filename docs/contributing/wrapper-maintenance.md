@@ -35,13 +35,24 @@ generation. `Callable` stays blocked unless a helper has a bounded ownership
 shape; `DirAccess`, `FileAccess`, and `SceneTree` use dedicated handle aliases
 where factory methods return nullable object handles.
 
-Promoted generated wrappers are intentionally allowlisted. The generator can
-emit selected classes with `--emit-class`, and
-`scripts/check_wrapper_generator.py` compares allowlisted promoted source files
-against freshly generated output so manual edits and generator drift fail
-loudly. Adopted classes with skipped methods are only accepted when every skip
-is a Godot virtual callback that belongs to the future override-registration
-design rather than the public ptrcall wrapper surface.
+Generated wrappers are held to a **full per-platform drift-gate**. The generator
+can emit selected classes with `--emit-class`, and `check_full_drift_gate` in
+`scripts/check_wrapper_generator.py` regenerates the *entire* committed wrapper
+set — every in-API class under `src/main/kotlin/.../api` (desktop/Android) and
+`ios-runtime/.../api` (iOS) — and fails if any committed file diverges from a
+fresh regen (behavior-comparable; `sync_kdoc_from_godot_docs.py` owns the prose).
+A hand-edit to a generated class, an un-adopted generator improvement, or a
+platform copy drifting from another all fail the gate, so the three wrapper trees
+cannot silently diverge. The only exemptions are the deliberately hand-shaped
+classes listed in `DESKTOP_HANDSHAPED`/`IOS_HANDSHAPED` (hand-authored facades,
+ergonomic helpers, aliases, and custom defaults the generator does not emit); a
+class joins that list only when the generator genuinely cannot reproduce it.
+Non-API files (`GodotObject`, `GD`, `DirAccessHandle`, …) are auto-excluded.
+Android has no separate committed tree — `prepareAndroidKanamaSources` copies the
+desktop sources through the PanamaPort remap, so the desktop gate covers it
+transitively. Adopted classes with skipped methods are only accepted when every
+skip is a Godot virtual callback that belongs to the override-registration design
+rather than the public ptrcall wrapper surface.
 
 Engine-wide `MethodName`, `PropertyName`, and `SignalName` constants are
 generated from `extension_api.json` separately from the class wrapper drafts:
@@ -91,11 +102,11 @@ does not drop them), locked by `check_ios_policies`:
   `fromHandle(handle): Resource` (non-null) so a `@ScriptClass(attachTo = "Resource")` script's
   `(MemorySegment) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays.
 
-Separately, the committed wrappers carry **broad pre-existing regen drift** unrelated to the
-policies above: a fresh regen changes ~273 of ~1027 desktop generated files (accumulated
-generator improvements that were never re-adopted into the committed sources). Closing that is a
-dedicated cross-platform re-adoption pass, not part of the policy work here — see the
-platform-convergence note in the roadmap.
+The broad pre-existing regen drift (a fresh regen once changed the majority of the committed
+desktop generated files — accumulated generator improvements that were never re-adopted) has been
+**closed** by the task 21 convergence pass: all in-API wrappers were regenerated and re-adopted
+from the honest generator, and the full drift-gate above now keeps committed == fresh regen on
+every platform, so that class of drift cannot silently return.
 
 ## Coverage Triage
 

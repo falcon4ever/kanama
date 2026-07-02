@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Provides parameters for `PhysicsDirectSpaceState2D.intersect_ray`.
@@ -54,142 +54,58 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setHitFromInsideProperty")
         set(value) = setHitFromInside(value)
 
-    /**
-     * The starting point of the ray being queried for, in global coordinates.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_from
-     */
     fun setFrom(from: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setFromBind, handle, from)
     }
 
-    /**
-     * The starting point of the ray being queried for, in global coordinates.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.get_from
-     */
     fun getFrom(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getFromBind, handle)
     }
 
-    /**
-     * The ending point of the ray being queried for, in global coordinates.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_to
-     */
     fun setTo(to: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setToBind, handle, to)
     }
 
-    /**
-     * The ending point of the ray being queried for, in global coordinates.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.get_to
-     */
     fun getTo(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getToBind, handle)
     }
 
-    /**
-     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
-     * detected. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_collision_mask
-     */
     fun setCollisionMask(collisionMask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
-    /**
-     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
-     * detected. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.get_collision_mask
-     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
-    /**
-     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject2D.get_rid`
-     * to get the `RID` associated with a `CollisionObject2D`-derived node. Note: The returned array is
-     * copied and any changes to it will not update the original property value. To update the value
-     * you need to modify the returned array, and then assign it to the property again.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_exclude
-     */
     fun setExclude(exclude: List<RID>) {
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
-    /**
-     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject2D.get_rid`
-     * to get the `RID` associated with a `CollisionObject2D`-derived node. Note: The returned array is
-     * copied and any changes to it will not update the original property value. To update the value
-     * you need to modify the returned array, and then assign it to the property again.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.get_exclude
-     */
     fun getExclude(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
-    /**
-     * If `true`, the query will take `PhysicsBody2D`s into account.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_collide_with_bodies
-     */
     fun setCollideWithBodies(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
-    /**
-     * If `true`, the query will take `PhysicsBody2D`s into account.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.is_collide_with_bodies_enabled
-     */
     fun isCollideWithBodiesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the query will take `Area2D`s into account.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_collide_with_areas
-     */
     fun setCollideWithAreas(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
-    /**
-     * If `true`, the query will take `Area2D`s into account.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.is_collide_with_areas_enabled
-     */
     fun isCollideWithAreasEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the query will detect a hit when starting inside shapes. In this case the collision
-     * normal will be `Vector2(0, 0)`. Does not affect concave polygon shapes.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.set_hit_from_inside
-     */
     fun setHitFromInside(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
     }
 
-    /**
-     * If `true`, the query will detect a hit when starting inside shapes. In this case the collision
-     * normal will be `Vector2(0, 0)`. Does not affect concave polygon shapes.
-     *
-     * Generated from Godot docs: PhysicsRayQueryParameters2D.is_hit_from_inside_enabled
-     */
     fun isHitFromInsideEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
     }

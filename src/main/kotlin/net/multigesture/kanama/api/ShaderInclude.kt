@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A snippet of shader code to be included in a `Shader` with `#include`.
@@ -16,27 +16,22 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCodeProperty")
         set(value) = setCode(value)
 
-    /**
-     * Returns the code of the shader include file. The returned text is what the user has written, not
-     * the full generated code used internally.
-     *
-     * Generated from Godot docs: ShaderInclude.set_code
-     */
     fun setCode(code: String) {
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
-    /**
-     * Returns the code of the shader include file. The returned text is what the user has written, not
-     * the full generated code used internally.
-     *
-     * Generated from Godot docs: ShaderInclude.get_code
-     */
     fun getCode(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ShaderInclude? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ShaderInclude? =
+            if (handle.address() == 0L) null else ShaderInclude(handle)
+
         private const val SET_CODE_HASH = 83702148L
         private val setCodeBind by lazy {
             ObjectCalls.getMethodBind("ShaderInclude", "set_code", SET_CODE_HASH)

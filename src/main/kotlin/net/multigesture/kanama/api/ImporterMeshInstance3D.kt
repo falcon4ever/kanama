@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Generated from Godot docs: ImporterMeshInstance3D
@@ -150,6 +150,13 @@ class ImporterMeshInstance3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ImporterMeshInstance3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ImporterMeshInstance3D? =
+            if (handle.address() == 0L) null else ImporterMeshInstance3D(handle)
+
         private const val SET_MESH_HASH = 2255166972L
         private val setMeshBind by lazy {
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_mesh", SET_MESH_HASH)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Omnidirectional light, such as a light bulb or a candle.
@@ -25,6 +25,16 @@ class OmniLight3D(handle: MemorySegment) : Light3D(handle) {
     }
 
     companion object {
+        const val SHADOW_DUAL_PARABOLOID: Long = 0L
+        const val SHADOW_CUBE: Long = 1L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OmniLight3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OmniLight3D? =
+            if (handle.address() == 0L) null else OmniLight3D(handle)
+
         private const val SET_SHADOW_MODE_HASH = 121862228L
         private val setShadowModeBind by lazy {
             ObjectCalls.getMethodBind("OmniLight3D", "set_shadow_mode", SET_SHADOW_MODE_HASH)

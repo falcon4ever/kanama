@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: OpenXRSpatialComponentMesh3DList
@@ -17,6 +17,13 @@ class OpenXRSpatialComponentMesh3DList(handle: MemorySegment) : OpenXRSpatialCom
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentMesh3DList? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentMesh3DList? =
+            if (handle.address() == 0L) null else OpenXRSpatialComponentMesh3DList(handle)
+
         private const val GET_TRANSFORM_HASH = 1965739696L
         private val getTransformBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMesh3DList", "get_transform", GET_TRANSFORM_HASH)

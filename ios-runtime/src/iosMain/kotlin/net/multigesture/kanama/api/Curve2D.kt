@@ -31,7 +31,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
-    fun addPoint(position: Vector2, inValue: Vector2, out: Vector2, index: Int = -1) {
+    fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0f, 0f), out: Vector2 = Vector2(0f, 0f), index: Int = -1) {
         ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, handle, position, inValue, out, index)
     }
 

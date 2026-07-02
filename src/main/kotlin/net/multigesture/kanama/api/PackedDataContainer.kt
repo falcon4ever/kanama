@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Efficiently packs and serializes `Array` or `Dictionary`.
@@ -30,6 +30,13 @@ class PackedDataContainer(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PackedDataContainer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PackedDataContainer? =
+            if (handle.address() == 0L) null else PackedDataContainer(handle)
+
         private const val PACK_HASH = 966674026L
         private val packBind by lazy {
             ObjectCalls.getMethodBind("PackedDataContainer", "pack", PACK_HASH)

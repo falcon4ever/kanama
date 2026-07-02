@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Color
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Color
 
 /**
  * Generated from Godot docs: VisualShaderNodeFrame
@@ -88,6 +88,13 @@ open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResiza
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeFrame? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeFrame? =
+            if (handle.address() == 0L) null else VisualShaderNodeFrame(handle)
+
         private const val SET_TITLE_HASH = 83702148L
         private val setTitleBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeFrame", "set_title", SET_TITLE_HASH)

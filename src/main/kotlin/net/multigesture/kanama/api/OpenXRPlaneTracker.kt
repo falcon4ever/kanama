@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Generated from Godot docs: OpenXRPlaneTracker
@@ -77,6 +77,13 @@ class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(han
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRPlaneTracker? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRPlaneTracker? =
+            if (handle.address() == 0L) null else OpenXRPlaneTracker(handle)
+
         private const val SET_BOUNDS_SIZE_HASH = 743155724L
         private val setBoundsSizeBind by lazy {
             ObjectCalls.getMethodBind("OpenXRPlaneTracker", "set_bounds_size", SET_BOUNDS_SIZE_HASH)

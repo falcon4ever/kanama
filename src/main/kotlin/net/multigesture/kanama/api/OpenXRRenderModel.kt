@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.RID
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.RID
 
 /**
  * Generated from Godot docs: OpenXRRenderModel
@@ -32,6 +32,13 @@ class OpenXRRenderModel(handle: MemorySegment) : Node3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRRenderModel? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRRenderModel? =
+            if (handle.address() == 0L) null else OpenXRRenderModel(handle)
+
         private const val GET_TOP_LEVEL_PATH_HASH = 201670096L
         private val getTopLevelPathBind by lazy {
             ObjectCalls.getMethodBind("OpenXRRenderModel", "get_top_level_path", GET_TOP_LEVEL_PATH_HASH)

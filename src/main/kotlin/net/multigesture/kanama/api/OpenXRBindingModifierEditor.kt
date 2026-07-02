@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRBindingModifierEditor
@@ -20,6 +20,13 @@ class OpenXRBindingModifierEditor(handle: MemorySegment) : PanelContainer(handle
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRBindingModifierEditor? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRBindingModifierEditor? =
+            if (handle.address() == 0L) null else OpenXRBindingModifierEditor(handle)
+
         private const val GET_BINDING_MODIFIER_HASH = 2930765082L
         private val getBindingModifierBind by lazy {
             ObjectCalls.getMethodBind("OpenXRBindingModifierEditor", "get_binding_modifier", GET_BINDING_MODIFIER_HASH)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: NoiseTexture3D
@@ -105,6 +105,13 @@ class NoiseTexture3D(handle: MemorySegment) : Texture3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): NoiseTexture3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): NoiseTexture3D? =
+            if (handle.address() == 0L) null else NoiseTexture3D(handle)
+
         private const val SET_WIDTH_HASH = 1286410249L
         private val setWidthBind by lazy {
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_width", SET_WIDTH_HASH)

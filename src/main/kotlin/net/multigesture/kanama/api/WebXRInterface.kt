@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: WebXRInterface
@@ -133,6 +133,18 @@ class WebXRInterface(handle: MemorySegment) : XRInterface(handle) {
     }
 
     companion object {
+        const val TARGET_RAY_MODE_UNKNOWN: Long = 0L
+        const val TARGET_RAY_MODE_GAZE: Long = 1L
+        const val TARGET_RAY_MODE_TRACKED_POINTER: Long = 2L
+        const val TARGET_RAY_MODE_SCREEN: Long = 3L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): WebXRInterface? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): WebXRInterface? =
+            if (handle.address() == 0L) null else WebXRInterface(handle)
+
         private const val IS_SESSION_SUPPORTED_HASH = 83702148L
         private val isSessionSupportedBind by lazy {
             ObjectCalls.getMethodBind("WebXRInterface", "is_session_supported", IS_SESSION_SUPPORTED_HASH)

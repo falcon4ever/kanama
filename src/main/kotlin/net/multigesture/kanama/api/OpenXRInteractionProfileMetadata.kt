@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRInteractionProfileMetadata
@@ -28,6 +28,13 @@ class OpenXRInteractionProfileMetadata(handle: MemorySegment) : GodotObject(hand
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRInteractionProfileMetadata? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRInteractionProfileMetadata? =
+            if (handle.address() == 0L) null else OpenXRInteractionProfileMetadata(handle)
+
         private const val REGISTER_PROFILE_RENAME_HASH = 3186203200L
         private val registerProfileRenameBind by lazy {
             ObjectCalls.getMethodBind("OpenXRInteractionProfileMetadata", "register_profile_rename", REGISTER_PROFILE_RENAME_HASH)

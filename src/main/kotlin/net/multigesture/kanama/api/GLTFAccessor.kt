@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: GLTFAccessor
@@ -226,6 +226,26 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
             return GLTFAccessor.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
         }
+
+        const val TYPE_SCALAR: Long = 0L
+        const val TYPE_VEC2: Long = 1L
+        const val TYPE_VEC3: Long = 2L
+        const val TYPE_VEC4: Long = 3L
+        const val TYPE_MAT2: Long = 4L
+        const val TYPE_MAT3: Long = 5L
+        const val TYPE_MAT4: Long = 6L
+        const val COMPONENT_TYPE_NONE: Long = 0L
+        const val COMPONENT_TYPE_SIGNED_BYTE: Long = 5120L
+        const val COMPONENT_TYPE_UNSIGNED_BYTE: Long = 5121L
+        const val COMPONENT_TYPE_SIGNED_SHORT: Long = 5122L
+        const val COMPONENT_TYPE_UNSIGNED_SHORT: Long = 5123L
+        const val COMPONENT_TYPE_SIGNED_INT: Long = 5124L
+        const val COMPONENT_TYPE_UNSIGNED_INT: Long = 5125L
+        const val COMPONENT_TYPE_SINGLE_FLOAT: Long = 5126L
+        const val COMPONENT_TYPE_DOUBLE_FLOAT: Long = 5130L
+        const val COMPONENT_TYPE_HALF_FLOAT: Long = 5131L
+        const val COMPONENT_TYPE_SIGNED_LONG: Long = 5134L
+        const val COMPONENT_TYPE_UNSIGNED_LONG: Long = 5135L
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFAccessor? =

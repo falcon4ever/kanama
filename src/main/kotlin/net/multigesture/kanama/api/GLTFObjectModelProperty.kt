@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Generated from Godot docs: GLTFObjectModelProperty
@@ -118,6 +118,18 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        const val GLTF_OBJECT_MODEL_TYPE_UNKNOWN: Long = 0L
+        const val GLTF_OBJECT_MODEL_TYPE_BOOL: Long = 1L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT: Long = 2L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT_ARRAY: Long = 3L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT2: Long = 4L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT3: Long = 5L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT4: Long = 6L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT2X2: Long = 7L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT3X3: Long = 8L
+        const val GLTF_OBJECT_MODEL_TYPE_FLOAT4X4: Long = 9L
+        const val GLTF_OBJECT_MODEL_TYPE_INT: Long = 10L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFObjectModelProperty? =
             wrap(handle)

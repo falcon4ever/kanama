@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A stream peer that handles GZIP and deflate compression/decompression.
@@ -9,22 +9,10 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: StreamPeerGZIP
  */
 class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
-    /**
-     * Start the stream in compression mode with the given `buffer_size`, if `use_deflate` is `true`
-     * uses deflate instead of GZIP.
-     *
-     * Generated from Godot docs: StreamPeerGZIP.start_compression
-     */
     fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, handle, useDeflate, bufferSize)
     }
 
-    /**
-     * Start the stream in decompression mode with the given `buffer_size`, if `use_deflate` is `true`
-     * uses deflate instead of GZIP.
-     *
-     * Generated from Godot docs: StreamPeerGZIP.start_decompression
-     */
     fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, handle, useDeflate, bufferSize)
     }
@@ -49,6 +37,13 @@ class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): StreamPeerGZIP? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): StreamPeerGZIP? =
+            if (handle.address() == 0L) null else StreamPeerGZIP(handle)
+
         private const val START_COMPRESSION_HASH = 781582770L
         private val startCompressionBind by lazy {
             ObjectCalls.getMethodBind("StreamPeerGZIP", "start_compression", START_COMPRESSION_HASH)

@@ -22,104 +22,42 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
         @JvmName("setExecutionModeProperty")
         set(value) = setExecutionMode(value)
 
-    /**
-     * If `true`, the modification's `_execute` function will be called by the
-     * `SkeletonModificationStack2D`.
-     *
-     * Generated from Godot docs: SkeletonModification2D.set_enabled
-     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the modification's `_execute` function will be called by the
-     * `SkeletonModificationStack2D`.
-     *
-     * Generated from Godot docs: SkeletonModification2D.get_enabled
-     */
     fun getEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
-    /**
-     * Returns the `SkeletonModificationStack2D` that this modification is bound to. Through the
-     * modification stack, you can access the Skeleton2D the modification is operating on.
-     *
-     * Generated from Godot docs: SkeletonModification2D.get_modification_stack
-     */
     fun getModificationStack(): SkeletonModificationStack2D? {
         return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, handle))
     }
 
-    /**
-     * Manually allows you to set the setup state of the modification. This function should only rarely
-     * be used, as the `SkeletonModificationStack2D` the modification is bound to should handle setting
-     * the modification up.
-     *
-     * Generated from Godot docs: SkeletonModification2D.set_is_setup
-     */
     fun setIsSetup(isSetup: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, handle, isSetup)
     }
 
-    /**
-     * Returns whether this modification has been successfully setup or not.
-     *
-     * Generated from Godot docs: SkeletonModification2D.get_is_setup
-     */
     fun getIsSetup(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
     }
 
-    /**
-     * The execution mode for the modification. This tells the modification stack when to execute the
-     * modification. Some modifications have settings that are only available in certain execution
-     * modes.
-     *
-     * Generated from Godot docs: SkeletonModification2D.set_execution_mode
-     */
     fun setExecutionMode(executionMode: Int) {
         ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, handle, executionMode)
     }
 
-    /**
-     * The execution mode for the modification. This tells the modification stack when to execute the
-     * modification. Some modifications have settings that are only available in certain execution
-     * modes.
-     *
-     * Generated from Godot docs: SkeletonModification2D.get_execution_mode
-     */
     fun getExecutionMode(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, handle)
     }
 
-    /**
-     * Takes an angle and clamps it so it is within the passed-in `min` and `max` range. `invert` will
-     * inversely clamp the angle, clamping it to the range outside of the given bounds.
-     *
-     * Generated from Godot docs: SkeletonModification2D.clamp_angle
-     */
     fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
         return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, handle, angle, min, max, invert)
     }
 
-    /**
-     * Sets whether this modification will call `_draw_editor_gizmo` in the Godot editor to draw
-     * modification-specific gizmos.
-     *
-     * Generated from Godot docs: SkeletonModification2D.set_editor_draw_gizmo
-     */
     fun setEditorDrawGizmo(drawGizmo: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, handle, drawGizmo)
     }
 
-    /**
-     * Returns whether this modification will call `_draw_editor_gizmo` in the Godot editor to draw
-     * modification-specific gizmos.
-     *
-     * Generated from Godot docs: SkeletonModification2D.get_editor_draw_gizmo
-     */
     fun getEditorDrawGizmo(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, handle)
     }

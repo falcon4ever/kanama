@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A 2D shape that sweeps a region of space to detect `CollisionObject2D`s.
@@ -70,354 +70,158 @@ class ShapeCast2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setCollideWithBodiesProperty")
         set(value) = setCollideWithBodies(value)
 
-    /**
-     * If `true`, collisions will be reported.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_enabled
-     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, collisions will be reported.
-     *
-     * Generated from Godot docs: ShapeCast2D.is_enabled
-     */
     fun isEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
     }
 
-    /**
-     * The shape to be used for collision queries.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_shape
-     */
     fun setShape(shape: Shape2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The shape to be used for collision queries.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_shape
-     */
     fun getShape(): Shape2D? {
         return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
     }
 
-    /**
-     * The shape's destination point, relative to this node's `Node2D.position`.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_target_position
-     */
     fun setTargetPosition(localPoint: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, handle, localPoint)
     }
 
-    /**
-     * The shape's destination point, relative to this node's `Node2D.position`.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_target_position
-     */
     fun getTargetPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, handle)
     }
 
-    /**
-     * The collision margin for the shape. A larger margin helps detecting collisions more
-     * consistently, at the cost of precision.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_margin
-     */
     fun setMargin(margin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
-    /**
-     * The collision margin for the shape. A larger margin helps detecting collisions more
-     * consistently, at the cost of precision.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_margin
-     */
     fun getMargin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
-    /**
-     * The number of intersections can be limited with this parameter, to reduce the processing time.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_max_results
-     */
     fun setMaxResults(maxResults: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxResultsBind, handle, maxResults)
     }
 
-    /**
-     * The number of intersections can be limited with this parameter, to reduce the processing time.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_max_results
-     */
     fun getMaxResults(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxResultsBind, handle)
     }
 
-    /**
-     * Returns whether any object is intersecting with the shape's vector (considering the vector
-     * length).
-     *
-     * Generated from Godot docs: ShapeCast2D.is_colliding
-     */
     fun isColliding(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollidingBind, handle)
     }
 
-    /**
-     * The number of collisions detected at the point of impact. Use this to iterate over multiple
-     * collisions as provided by `get_collider`, `get_collider_shape`, `get_collision_point`, and
-     * `get_collision_normal` methods.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collision_count
-     */
-    fun getCollisionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
+    fun getCollisionCount(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionCountBind, handle)
     }
 
-    /**
-     * Updates the collision information for the shape immediately, without waiting for the next
-     * `_physics_process` call. Use this method, for example, when the shape or its parent has changed
-     * state. Note: Setting `enabled` to `true` is not required for this to work.
-     *
-     * Generated from Godot docs: ShapeCast2D.force_shapecast_update
-     */
     fun forceShapecastUpdate() {
         ObjectCalls.ptrcallNoArgs(forceShapecastUpdateBind, handle)
     }
 
-    /**
-     * Returns the collided `Object` of one of the multiple collisions at `index`, or `null` if no
-     * object is intersecting the shape (i.e. `is_colliding` returns `false`).
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collider
-     */
     fun getCollider(index: Int): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, index))
     }
 
-    /**
-     * Returns the `RID` of the collided object of one of the multiple collisions at `index`.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collider_rid
-     */
     fun getColliderRid(index: Int): RID {
         return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, index)
     }
 
-    /**
-     * Returns the shape ID of the colliding shape of one of the multiple collisions at `index`, or `0`
-     * if no object is intersecting the shape (i.e. `is_colliding` returns `false`).
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collider_shape
-     */
     fun getColliderShape(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, handle, index)
     }
 
-    /**
-     * Returns the collision point of one of the multiple collisions at `index` where the shape
-     * intersects the colliding object. Note: This point is in the global coordinate system.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collision_point
-     */
     fun getCollisionPoint(index: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getCollisionPointBind, handle, index)
     }
 
-    /**
-     * Returns the normal of one of the multiple collisions at `index` of the intersecting object.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collision_normal
-     */
     fun getCollisionNormal(index: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getCollisionNormalBind, handle, index)
     }
 
-    /**
-     * Returns the fraction from this cast's origin to its `target_position` of how far the shape can
-     * move without triggering a collision, as a value between `0.0` and `1.0`.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_closest_collision_safe_fraction
-     */
     fun getClosestCollisionSafeFraction(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getClosestCollisionSafeFractionBind, handle)
     }
 
-    /**
-     * Returns the fraction from this cast's origin to its `target_position` of how far the shape must
-     * move to trigger a collision, as a value between `0.0` and `1.0`. In ideal conditions this would
-     * be the same as `get_closest_collision_safe_fraction`, however shape casting is calculated in
-     * discrete steps, so the precise point of collision can occur between two calculated positions.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_closest_collision_unsafe_fraction
-     */
     fun getClosestCollisionUnsafeFraction(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getClosestCollisionUnsafeFractionBind, handle)
     }
 
-    /**
-     * Adds a collision exception so the shape does not report collisions with the specified `RID`.
-     *
-     * Generated from Godot docs: ShapeCast2D.add_exception_rid
-     */
     fun addExceptionRid(rid: RID) {
         ObjectCalls.ptrcallWithRIDArg(addExceptionRidBind, handle, rid)
     }
 
-    /**
-     * Adds a collision exception so the shape does not report collisions with the specified node.
-     *
-     * Generated from Godot docs: ShapeCast2D.add_exception
-     */
     fun addException(node: CollisionObject2D) {
         ObjectCalls.ptrcallWithObjectArgs(addExceptionBind, handle, listOf(node.handle))
     }
 
-    /**
-     * Removes a collision exception so the shape does report collisions with the specified `RID`.
-     *
-     * Generated from Godot docs: ShapeCast2D.remove_exception_rid
-     */
     fun removeExceptionRid(rid: RID) {
         ObjectCalls.ptrcallWithRIDArg(removeExceptionRidBind, handle, rid)
     }
 
-    /**
-     * Removes a collision exception so the shape does report collisions with the specified node.
-     *
-     * Generated from Godot docs: ShapeCast2D.remove_exception
-     */
     fun removeException(node: CollisionObject2D) {
         ObjectCalls.ptrcallWithObjectArgs(removeExceptionBind, handle, listOf(node.handle))
     }
 
-    /**
-     * Removes all collision exceptions for this shape.
-     *
-     * Generated from Godot docs: ShapeCast2D.clear_exceptions
-     */
     fun clearExceptions() {
         ObjectCalls.ptrcallNoArgs(clearExceptionsBind, handle)
     }
 
-    /**
-     * The shape's collision mask. Only objects in at least one collision layer enabled in the mask
-     * will be detected. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_collision_mask
-     */
     fun setCollisionMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
     }
 
-    /**
-     * The shape's collision mask. Only objects in at least one collision layer enabled in the mask
-     * will be detected. See Collision layers and masks
-     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
-     * documentation for more information.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collision_mask
-     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
-    /**
-     * Based on `value`, enables or disables the specified layer in the `collision_mask`, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_collision_mask_value
-     */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
     }
 
-    /**
-     * Returns whether or not the specified layer of the `collision_mask` is enabled, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collision_mask_value
-     */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
     }
 
-    /**
-     * If `true`, the parent node will be excluded from collision detection.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_exclude_parent_body
-     */
     fun setExcludeParentBody(mask: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setExcludeParentBodyBind, handle, mask)
     }
 
-    /**
-     * If `true`, the parent node will be excluded from collision detection.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_exclude_parent_body
-     */
     fun getExcludeParentBody(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getExcludeParentBodyBind, handle)
     }
 
-    /**
-     * If `true`, collisions with `Area2D`s will be reported.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_collide_with_areas
-     */
     fun setCollideWithAreas(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
-    /**
-     * If `true`, collisions with `Area2D`s will be reported.
-     *
-     * Generated from Godot docs: ShapeCast2D.is_collide_with_areas_enabled
-     */
     fun isCollideWithAreasEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
-    /**
-     * If `true`, collisions with `PhysicsBody2D`s will be reported.
-     *
-     * Generated from Godot docs: ShapeCast2D.set_collide_with_bodies
-     */
     fun setCollideWithBodies(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
-    /**
-     * If `true`, collisions with `PhysicsBody2D`s will be reported.
-     *
-     * Generated from Godot docs: ShapeCast2D.is_collide_with_bodies_enabled
-     */
     fun isCollideWithBodiesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
-    /**
-     * Returns the complete collision information from the collision sweep. The data returned is the
-     * same as in the `PhysicsDirectSpaceState2D.get_rest_info` method.
-     *
-     * Generated from Godot docs: ShapeCast2D.get_collision_result
-     */
     fun getCollisionResult(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getCollisionResultBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ShapeCast2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ShapeCast2D? =
+            if (handle.address() == 0L) null else ShapeCast2D(handle)
+
         private const val SET_ENABLED_HASH = 2586408642L
         private val setEnabledBind by lazy {
             ObjectCalls.getMethodBind("ShapeCast2D", "set_enabled", SET_ENABLED_HASH)

@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: OpenXRSpatialEntityExtension
@@ -32,6 +32,10 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
 
     fun getSpatialContextHandle(spatialContext: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialContextHandleBind, handle, spatialContext)
+    }
+
+    fun discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListObjectCallableArgsRetObject(discoverSpatialEntitiesWithComponentDataBind, handle, spatialContext, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
     }
 
     fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
@@ -115,6 +119,31 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
     }
 
     companion object {
+        const val CAPABILITY_PLANE_TRACKING: Long = 1000741000L
+        const val CAPABILITY_MARKER_TRACKING_QR_CODE: Long = 1000743000L
+        const val CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE: Long = 1000743001L
+        const val CAPABILITY_MARKER_TRACKING_ARUCO_MARKER: Long = 1000743002L
+        const val CAPABILITY_MARKER_TRACKING_APRIL_TAG: Long = 1000743003L
+        const val CAPABILITY_ANCHOR: Long = 1000762000L
+        const val COMPONENT_TYPE_BOUNDED_2D: Long = 1L
+        const val COMPONENT_TYPE_BOUNDED_3D: Long = 2L
+        const val COMPONENT_TYPE_PARENT: Long = 3L
+        const val COMPONENT_TYPE_MESH_3D: Long = 4L
+        const val COMPONENT_TYPE_PLANE_ALIGNMENT: Long = 1000741000L
+        const val COMPONENT_TYPE_MESH_2D: Long = 1000741001L
+        const val COMPONENT_TYPE_POLYGON_2D: Long = 1000741002L
+        const val COMPONENT_TYPE_PLANE_SEMANTIC_LABEL: Long = 1000741003L
+        const val COMPONENT_TYPE_MARKER: Long = 1000743000L
+        const val COMPONENT_TYPE_ANCHOR: Long = 1000762000L
+        const val COMPONENT_TYPE_PERSISTENCE: Long = 1000763000L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRSpatialEntityExtension? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRSpatialEntityExtension? =
+            if (handle.address() == 0L) null else OpenXRSpatialEntityExtension(handle)
+
         private const val SUPPORTS_CAPABILITY_HASH = 1940837202L
         private val supportsCapabilityBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "supports_capability", SUPPORTS_CAPABILITY_HASH)
@@ -143,6 +172,11 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
         private const val GET_SPATIAL_CONTEXT_HANDLE_HASH = 2198884583L
         private val getSpatialContextHandleBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_spatial_context_handle", GET_SPATIAL_CONTEXT_HANDLE_HASH)
+        }
+
+        private const val DISCOVER_SPATIAL_ENTITIES_WITH_COMPONENT_DATA_HASH = 1830928590L
+        private val discoverSpatialEntitiesWithComponentDataBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "discover_spatial_entities_with_component_data", DISCOVER_SPATIAL_ENTITIES_WITH_COMPONENT_DATA_HASH)
         }
 
         private const val DISCOVER_SPATIAL_ENTITIES_HASH = 2252833536L

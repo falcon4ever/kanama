@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A language translation that maps a collection of strings to their individual translations.
@@ -22,125 +22,50 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
         @JvmName("setPluralRulesOverrideProperty")
         set(value) = setPluralRulesOverride(value)
 
-    /**
-     * The locale of the translation.
-     *
-     * Generated from Godot docs: Translation.set_locale
-     */
     fun setLocale(locale: String) {
         ObjectCalls.ptrcallWithStringArg(setLocaleBind, handle, locale)
     }
 
-    /**
-     * The locale of the translation.
-     *
-     * Generated from Godot docs: Translation.get_locale
-     */
     fun getLocale(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, handle)
     }
 
-    /**
-     * Adds a message if nonexistent, followed by its translation. An additional context could be used
-     * to specify the translation context or differentiate polysemic words.
-     *
-     * Generated from Godot docs: Translation.add_message
-     */
-    fun addMessage(srcMessage: String, xlatedMessage: String, context: String) {
+    fun addMessage(srcMessage: String, xlatedMessage: String, context: String = "") {
         ObjectCalls.ptrcallWithThreeStringNameArgs(addMessageBind, handle, srcMessage, xlatedMessage, context)
     }
 
-    /**
-     * Adds a message involving plural translation if nonexistent, followed by its translation. An
-     * additional context could be used to specify the translation context or differentiate polysemic
-     * words.
-     *
-     * Generated from Godot docs: Translation.add_plural_message
-     */
-    fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String) {
+    fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String = "") {
         ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(addPluralMessageBind, handle, srcMessage, xlatedMessages, context)
     }
 
-    /**
-     * Returns a message's translation.
-     *
-     * Generated from Godot docs: Translation.get_message
-     */
-    fun getMessage(srcMessage: String, context: String): String {
+    fun getMessage(srcMessage: String, context: String = ""): String {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(getMessageBind, handle, srcMessage, context)
     }
 
-    /**
-     * Returns a message's translation involving plurals. The number `n` is the number or quantity of
-     * the plural object. It will be used to guide the translation system to fetch the correct plural
-     * form for the selected language. Note: Plurals are only supported in gettext-based translations
-     * (PO) ($DOCS_URL/tutorials/i18n/localization_using_gettext.html), not CSV.
-     *
-     * Generated from Godot docs: Translation.get_plural_message
-     */
-    fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String): String {
+    fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String = ""): String {
         return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(getPluralMessageBind, handle, srcMessage, srcPluralMessage, n, context)
     }
 
-    /**
-     * Erases a message.
-     *
-     * Generated from Godot docs: Translation.erase_message
-     */
-    fun eraseMessage(srcMessage: String, context: String) {
+    fun eraseMessage(srcMessage: String, context: String = "") {
         ObjectCalls.ptrcallWithTwoStringNameArgs(eraseMessageBind, handle, srcMessage, context)
     }
 
-    /**
-     * Returns the keys of all messages, that is, the context and untranslated strings of each message.
-     * Note: If a message does not use a context, the corresponding element is the untranslated string.
-     * Otherwise, the corresponding element is the context and untranslated string separated by the EOT
-     * character (`U+0004`). This is done for compatibility purposes.
-     *
-     * Generated from Godot docs: Translation.get_message_list
-     */
     fun getMessageList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMessageListBind, handle)
     }
 
-    /**
-     * Returns all the translated strings.
-     *
-     * Generated from Godot docs: Translation.get_translated_message_list
-     */
     fun getTranslatedMessageList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTranslatedMessageListBind, handle)
     }
 
-    /**
-     * Returns the number of existing messages.
-     *
-     * Generated from Godot docs: Translation.get_message_count
-     */
     fun getMessageCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
     }
 
-    /**
-     * The plural rules string to enforce. See GNU gettext
-     * (https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html) for examples and more
-     * info. If empty or invalid, default plural rules from `TranslationServer.get_plural_rules` are
-     * used. The English plural rules are used as a fallback.
-     *
-     * Generated from Godot docs: Translation.set_plural_rules_override
-     */
     fun setPluralRulesOverride(rules: String) {
         ObjectCalls.ptrcallWithStringArg(setPluralRulesOverrideBind, handle, rules)
     }
 
-    /**
-     * The plural rules string to enforce. See GNU gettext
-     * (https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html) for examples and more
-     * info. If empty or invalid, default plural rules from `TranslationServer.get_plural_rules` are
-     * used. The English plural rules are used as a fallback.
-     *
-     * Generated from Godot docs: Translation.get_plural_rules_override
-     */
     fun getPluralRulesOverride(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPluralRulesOverrideBind, handle)
     }

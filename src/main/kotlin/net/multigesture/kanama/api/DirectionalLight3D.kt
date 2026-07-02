@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Directional light from a distance, as from the Sun.
@@ -28,62 +28,26 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
         @JvmName("setSkyModeProperty")
         set(value) = setSkyMode(value)
 
-    /**
-     * The light's shadow rendering algorithm.
-     *
-     * Generated from Godot docs: DirectionalLight3D.set_shadow_mode
-     */
     fun setShadowMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setShadowModeBind, handle, mode)
     }
 
-    /**
-     * The light's shadow rendering algorithm.
-     *
-     * Generated from Godot docs: DirectionalLight3D.get_shadow_mode
-     */
     fun getShadowMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, handle)
     }
 
-    /**
-     * If `true`, shadow detail is sacrificed in exchange for smoother transitions between splits.
-     * Enabling shadow blend splitting also has a moderate performance cost. This is ignored when
-     * `directional_shadow_mode` is `SHADOW_ORTHOGONAL`.
-     *
-     * Generated from Godot docs: DirectionalLight3D.set_blend_splits
-     */
     fun setBlendSplits(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setBlendSplitsBind, handle, enabled)
     }
 
-    /**
-     * If `true`, shadow detail is sacrificed in exchange for smoother transitions between splits.
-     * Enabling shadow blend splitting also has a moderate performance cost. This is ignored when
-     * `directional_shadow_mode` is `SHADOW_ORTHOGONAL`.
-     *
-     * Generated from Godot docs: DirectionalLight3D.is_blend_splits_enabled
-     */
     fun isBlendSplitsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isBlendSplitsEnabledBind, handle)
     }
 
-    /**
-     * Whether this `DirectionalLight3D` is visible in the sky, in the scene, or both in the sky and in
-     * the scene.
-     *
-     * Generated from Godot docs: DirectionalLight3D.set_sky_mode
-     */
     fun setSkyMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSkyModeBind, handle, mode)
     }
 
-    /**
-     * Whether this `DirectionalLight3D` is visible in the sky, in the scene, or both in the sky and in
-     * the scene.
-     *
-     * Generated from Godot docs: DirectionalLight3D.get_sky_mode
-     */
     fun getSkyMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, handle)
     }

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRCompositionLayerCylinder
@@ -65,6 +65,13 @@ class OpenXRCompositionLayerCylinder(handle: MemorySegment) : OpenXRCompositionL
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayerCylinder? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRCompositionLayerCylinder? =
+            if (handle.address() == 0L) null else OpenXRCompositionLayerCylinder(handle)
+
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {
             ObjectCalls.getMethodBind("OpenXRCompositionLayerCylinder", "set_radius", SET_RADIUS_HASH)

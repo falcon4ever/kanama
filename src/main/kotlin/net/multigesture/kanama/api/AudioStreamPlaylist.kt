@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: AudioStreamPlaylist
@@ -77,6 +77,15 @@ class AudioStreamPlaylist(handle: MemorySegment) : AudioStream(handle) {
     }
 
     companion object {
+        const val MAX_STREAMS: Long = 64L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioStreamPlaylist? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioStreamPlaylist? =
+            if (handle.address() == 0L) null else AudioStreamPlaylist(handle)
+
         private const val SET_STREAM_COUNT_HASH = 1286410249L
         private val setStreamCountBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "set_stream_count", SET_STREAM_COUNT_HASH)

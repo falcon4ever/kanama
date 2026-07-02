@@ -1,32 +1,26 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * One-shot timer.
  *
  * Generated from Godot docs: SceneTreeTimer
  */
-class SceneTreeTimer internal constructor(handle: MemorySegment) : RefCounted(handle) {
+class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
+    var timeLeft: Double
+        @JvmName("timeLeftProperty")
+        get() = getTimeLeft()
+        @JvmName("setTimeLeftProperty")
+        set(value) = setTimeLeft(value)
 
-    /**
-     * The time remaining (in seconds).
-     *
-     * Generated from Godot docs: SceneTreeTimer.set_time_left
-     */
-    fun setTimeLeft(seconds: Double) {
-        checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, handle, seconds)
+    fun setTimeLeft(time: Double) {
+        ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, handle, time)
     }
 
-    /**
-     * The time remaining (in seconds).
-     *
-     * Generated from Godot docs: SceneTreeTimer.get_time_left
-     */
     fun getTimeLeft(): Double {
-        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, handle)
     }
 
@@ -35,18 +29,21 @@ class SceneTreeTimer internal constructor(handle: MemorySegment) : RefCounted(ha
     }
 
     companion object {
-        private const val DOUBLE_VOID_HASH = 373806689L
-        private const val NOARGS_DOUBLE_HASH = 1740695150L
-
-        private val setTimeLeftBind by lazy {
-            ObjectCalls.getMethodBind("SceneTreeTimer", "set_time_left", DOUBLE_VOID_HASH)
-        }
-
-        private val getTimeLeftBind by lazy {
-            ObjectCalls.getMethodBind("SceneTreeTimer", "get_time_left", NOARGS_DOUBLE_HASH)
-        }
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SceneTreeTimer? =
+            wrap(handle)
 
         internal fun wrap(handle: MemorySegment): SceneTreeTimer? =
             if (handle.address() == 0L) null else SceneTreeTimer(handle)
+
+        private const val SET_TIME_LEFT_HASH = 373806689L
+        private val setTimeLeftBind by lazy {
+            ObjectCalls.getMethodBind("SceneTreeTimer", "set_time_left", SET_TIME_LEFT_HASH)
+        }
+
+        private const val GET_TIME_LEFT_HASH = 1740695150L
+        private val getTimeLeftBind by lazy {
+            ObjectCalls.getMethodBind("SceneTreeTimer", "get_time_left", GET_TIME_LEFT_HASH)
+        }
     }
 }

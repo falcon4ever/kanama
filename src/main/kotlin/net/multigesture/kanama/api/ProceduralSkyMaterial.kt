@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Color
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Color
 
 /**
  * A material that defines a simple sky for a `Sky` resource.
@@ -95,273 +95,126 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setEnergyMultiplierProperty")
         set(value) = setEnergyMultiplier(value)
 
-    /**
-     * Color of the sky at the top. Blends with `sky_horizon_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sky_top_color
-     */
     fun setSkyTopColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, handle, color)
     }
 
-    /**
-     * Color of the sky at the top. Blends with `sky_horizon_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sky_top_color
-     */
     fun getSkyTopColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, handle)
     }
 
-    /**
-     * Color of the sky at the horizon. Blends with `sky_top_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sky_horizon_color
-     */
     fun setSkyHorizonColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, handle, color)
     }
 
-    /**
-     * Color of the sky at the horizon. Blends with `sky_top_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sky_horizon_color
-     */
     fun getSkyHorizonColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, handle)
     }
 
-    /**
-     * How quickly the `sky_horizon_color` fades into the `sky_top_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sky_curve
-     */
     fun setSkyCurve(curve: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, handle, curve)
     }
 
-    /**
-     * How quickly the `sky_horizon_color` fades into the `sky_top_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sky_curve
-     */
     fun getSkyCurve(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, handle)
     }
 
-    /**
-     * Multiplier for sky color. A higher value will make the sky brighter.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sky_energy_multiplier
-     */
     fun setSkyEnergyMultiplier(multiplier: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, handle, multiplier)
     }
 
-    /**
-     * Multiplier for sky color. A higher value will make the sky brighter.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sky_energy_multiplier
-     */
     fun getSkyEnergyMultiplier(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, handle)
     }
 
-    /**
-     * The sky cover texture to use. This texture must use an equirectangular projection (similar to
-     * `PanoramaSkyMaterial`). The texture's colors will be added to the existing sky color, and will
-     * be multiplied by `sky_energy_multiplier` and `sky_cover_modulate`. This is mainly suited to
-     * displaying stars at night, but it can also be used to display clouds at day or night (with a
-     * non-physically-accurate look).
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sky_cover
-     */
     fun setSkyCover(skyCover: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setSkyCoverBind, handle, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The sky cover texture to use. This texture must use an equirectangular projection (similar to
-     * `PanoramaSkyMaterial`). The texture's colors will be added to the existing sky color, and will
-     * be multiplied by `sky_energy_multiplier` and `sky_cover_modulate`. This is mainly suited to
-     * displaying stars at night, but it can also be used to display clouds at day or night (with a
-     * non-physically-accurate look).
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sky_cover
-     */
     fun getSkyCover(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, handle))
     }
 
-    /**
-     * The tint to apply to the `sky_cover` texture. This can be used to change the sky cover's colors
-     * or opacity independently of the sky energy, which is useful for day/night or weather
-     * transitions. Only effective if a texture is defined in `sky_cover`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sky_cover_modulate
-     */
     fun setSkyCoverModulate(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, handle, color)
     }
 
-    /**
-     * The tint to apply to the `sky_cover` texture. This can be used to change the sky cover's colors
-     * or opacity independently of the sky energy, which is useful for day/night or weather
-     * transitions. Only effective if a texture is defined in `sky_cover`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sky_cover_modulate
-     */
     fun getSkyCoverModulate(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, handle)
     }
 
-    /**
-     * Color of the ground at the bottom. Blends with `ground_horizon_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_ground_bottom_color
-     */
     fun setGroundBottomColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, handle, color)
     }
 
-    /**
-     * Color of the ground at the bottom. Blends with `ground_horizon_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_ground_bottom_color
-     */
     fun getGroundBottomColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, handle)
     }
 
-    /**
-     * Color of the ground at the horizon. Blends with `ground_bottom_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_ground_horizon_color
-     */
     fun setGroundHorizonColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, handle, color)
     }
 
-    /**
-     * Color of the ground at the horizon. Blends with `ground_bottom_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_ground_horizon_color
-     */
     fun getGroundHorizonColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, handle)
     }
 
-    /**
-     * How quickly the `ground_horizon_color` fades into the `ground_bottom_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_ground_curve
-     */
     fun setGroundCurve(curve: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, handle, curve)
     }
 
-    /**
-     * How quickly the `ground_horizon_color` fades into the `ground_bottom_color`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_ground_curve
-     */
     fun getGroundCurve(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, handle)
     }
 
-    /**
-     * Multiplier for ground color. A higher value will make the ground brighter.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_ground_energy_multiplier
-     */
     fun setGroundEnergyMultiplier(energy: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, handle, energy)
     }
 
-    /**
-     * Multiplier for ground color. A higher value will make the ground brighter.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_ground_energy_multiplier
-     */
     fun getGroundEnergyMultiplier(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, handle)
     }
 
-    /**
-     * Distance from center of sun where it fades out completely.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sun_angle_max
-     */
     fun setSunAngleMax(degrees: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, handle, degrees)
     }
 
-    /**
-     * Distance from center of sun where it fades out completely.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sun_angle_max
-     */
     fun getSunAngleMax(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, handle)
     }
 
-    /**
-     * How quickly the sun fades away between the edge of the sun disk and `sun_angle_max`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_sun_curve
-     */
     fun setSunCurve(curve: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, handle, curve)
     }
 
-    /**
-     * How quickly the sun fades away between the edge of the sun disk and `sun_angle_max`.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_sun_curve
-     */
     fun getSunCurve(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, handle)
     }
 
-    /**
-     * If `true`, enables debanding. Debanding adds a small amount of noise which helps reduce banding
-     * that appears from the smooth changes in color in the sky.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_use_debanding
-     */
     fun setUseDebanding(useDebanding: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
     }
 
-    /**
-     * If `true`, enables debanding. Debanding adds a small amount of noise which helps reduce banding
-     * that appears from the smooth changes in color in the sky.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_use_debanding
-     */
     fun getUseDebanding(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
     }
 
-    /**
-     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.set_energy_multiplier
-     */
     fun setEnergyMultiplier(multiplier: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
-    /**
-     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
-     *
-     * Generated from Godot docs: ProceduralSkyMaterial.get_energy_multiplier
-     */
     fun getEnergyMultiplier(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ProceduralSkyMaterial? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ProceduralSkyMaterial? =
+            if (handle.address() == 0L) null else ProceduralSkyMaterial(handle)
+
         private const val SET_SKY_TOP_COLOR_HASH = 2920490490L
         private val setSkyTopColorBind by lazy {
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_top_color", SET_SKY_TOP_COLOR_HASH)

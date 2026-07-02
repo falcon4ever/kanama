@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Texture with 3 dimensions, optionally compressed.
@@ -23,16 +23,18 @@ class CompressedTexture3D(handle: MemorySegment) : Texture3D(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
-    /**
-     * The `CompressedTexture3D`'s file path to a `.ctex3d` file.
-     *
-     * Generated from Godot docs: CompressedTexture3D.get_load_path
-     */
     fun getLoadPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CompressedTexture3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CompressedTexture3D? =
+            if (handle.address() == 0L) null else CompressedTexture3D(handle)
+
         private const val LOAD_HASH = 166001499L
         private val loadBind by lazy {
             ObjectCalls.getMethodBind("CompressedTexture3D", "load", LOAD_HASH)

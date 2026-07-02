@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A binary `Semaphore` for synchronization of multiple `Thread`s.
@@ -19,12 +19,6 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(lockBind, handle)
     }
 
-    /**
-     * Tries locking this `Mutex`, but does not block. Returns `true` on success, `false` otherwise.
-     * Note: This function returns `true` if the thread already has ownership of the mutex.
-     *
-     * Generated from Godot docs: Mutex.try_lock
-     */
     fun tryLock(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, handle)
     }
@@ -43,6 +37,13 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Mutex? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Mutex? =
+            if (handle.address() == 0L) null else Mutex(handle)
+
         private const val LOCK_HASH = 3218959716L
         private val lockBind by lazy {
             ObjectCalls.getMethodBind("Mutex", "lock", LOCK_HASH)

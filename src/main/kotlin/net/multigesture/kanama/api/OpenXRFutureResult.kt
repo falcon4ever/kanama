@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRFutureResult
@@ -32,6 +32,10 @@ class OpenXRFutureResult(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        const val RESULT_RUNNING: Long = 0L
+        const val RESULT_FINISHED: Long = 1L
+        const val RESULT_CANCELLED: Long = 2L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): OpenXRFutureResult? =
             wrap(handle)

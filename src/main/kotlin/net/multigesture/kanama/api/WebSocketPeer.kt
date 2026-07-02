@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: WebSocketPeer
@@ -157,6 +157,13 @@ class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
     }
 
     companion object {
+        const val WRITE_MODE_TEXT: Long = 0L
+        const val WRITE_MODE_BINARY: Long = 1L
+        const val STATE_CONNECTING: Long = 0L
+        const val STATE_OPEN: Long = 1L
+        const val STATE_CLOSING: Long = 2L
+        const val STATE_CLOSED: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): WebSocketPeer? =
             wrap(handle)

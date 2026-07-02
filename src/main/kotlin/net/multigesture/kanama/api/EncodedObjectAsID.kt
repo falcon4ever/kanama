@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Holds a reference to an `Object`'s instance ID.
@@ -16,27 +16,22 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setObjectIdProperty")
         set(value) = setObjectId(value)
 
-    /**
-     * The `Object` identifier stored in this `EncodedObjectAsID` instance. The object instance can be
-     * retrieved with `@GlobalScope.instance_from_id`.
-     *
-     * Generated from Godot docs: EncodedObjectAsID.set_object_id
-     */
     fun setObjectId(id: Long) {
         ObjectCalls.ptrcallWithLongArg(setObjectIdBind, handle, id)
     }
 
-    /**
-     * The `Object` identifier stored in this `EncodedObjectAsID` instance. The object instance can be
-     * retrieved with `@GlobalScope.instance_from_id`.
-     *
-     * Generated from Godot docs: EncodedObjectAsID.get_object_id
-     */
     fun getObjectId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): EncodedObjectAsID? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): EncodedObjectAsID? =
+            if (handle.address() == 0L) null else EncodedObjectAsID(handle)
+
         private const val SET_OBJECT_ID_HASH = 1286410249L
         private val setObjectIdBind by lazy {
             ObjectCalls.getMethodBind("EncodedObjectAsID", "set_object_id", SET_OBJECT_ID_HASH)

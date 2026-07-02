@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Plugin for adding custom converters from one resource format to another in the editor resource
@@ -8,7 +9,9 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: EditorResourceConversionPlugin
  */
-open class EditorResourceConversionPlugin internal constructor(handle: MemorySegment) : RefCounted(handle) {
+class EditorResourceConversionPlugin(handle: MemorySegment) : RefCounted(handle) {
+    // No conservative instance methods emitted yet.
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): EditorResourceConversionPlugin? =
@@ -16,5 +19,7 @@ open class EditorResourceConversionPlugin internal constructor(handle: MemorySeg
 
         internal fun wrap(handle: MemorySegment): EditorResourceConversionPlugin? =
             if (handle.address() == 0L) null else EditorResourceConversionPlugin(handle)
+
+        // No MethodBinds emitted yet.
     }
 }

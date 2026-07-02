@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.RID
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A traversable 3D region that `NavigationAgent3D`s can use for pathfinding.
@@ -48,211 +48,86 @@ class NavigationRegion3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setTravelCostProperty")
         set(value) = setTravelCost(value)
 
-    /**
-     * Returns the `RID` of this region on the `NavigationServer3D`. Combined with
-     * `NavigationServer3D.map_get_closest_point_owner` can be used to identify the
-     * `NavigationRegion3D` closest to a point on the merged navigation map.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_rid
-     */
     fun getRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
-    /**
-     * The `NavigationMesh` resource to use.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_navigation_mesh
-     */
     fun setNavigationMesh(navigationMesh: NavigationMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(setNavigationMeshBind, handle, listOf(navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `NavigationMesh` resource to use.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_navigation_mesh
-     */
     fun getNavigationMesh(): NavigationMesh? {
         return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, handle))
     }
 
-    /**
-     * Determines if the `NavigationRegion3D` is enabled or disabled.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_enabled
-     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
-    /**
-     * Determines if the `NavigationRegion3D` is enabled or disabled.
-     *
-     * Generated from Godot docs: NavigationRegion3D.is_enabled
-     */
     fun isEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
     }
 
-    /**
-     * Sets the `RID` of the navigation map this region should use. By default the region will
-     * automatically join the `World3D` default navigation map so this function is only required to
-     * override the default map.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_navigation_map
-     */
     fun setNavigationMap(navigationMap: RID) {
         ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
     }
 
-    /**
-     * Returns the current navigation map `RID` used by this region.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_navigation_map
-     */
     fun getNavigationMap(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
-    /**
-     * If enabled the navigation region will use edge connections to connect with other navigation
-     * regions within proximity of the navigation map edge connection margin.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_use_edge_connections
-     */
     fun setUseEdgeConnections(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseEdgeConnectionsBind, handle, enabled)
     }
 
-    /**
-     * If enabled the navigation region will use edge connections to connect with other navigation
-     * regions within proximity of the navigation map edge connection margin.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_use_edge_connections
-     */
     fun getUseEdgeConnections(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseEdgeConnectionsBind, handle)
     }
 
-    /**
-     * A bitfield determining all navigation layers the region belongs to. These navigation layers can
-     * be checked upon when requesting a path with `NavigationServer3D.map_get_path`.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_navigation_layers
-     */
     fun setNavigationLayers(navigationLayers: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
     }
 
-    /**
-     * A bitfield determining all navigation layers the region belongs to. These navigation layers can
-     * be checked upon when requesting a path with `NavigationServer3D.map_get_path`.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_navigation_layers
-     */
     fun getNavigationLayers(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
     }
 
-    /**
-     * Based on `value`, enables or disables the specified layer in the `navigation_layers` bitmask,
-     * given a `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_navigation_layer_value
-     */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, handle, layerNumber, value)
     }
 
-    /**
-     * Returns whether or not the specified layer of the `navigation_layers` bitmask is enabled, given
-     * a `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_navigation_layer_value
-     */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, handle, layerNumber)
     }
 
-    /**
-     * Returns the `RID` of this region on the `NavigationServer3D`.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_region_rid
-     */
     fun getRegionRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRegionRidBind, handle)
     }
 
-    /**
-     * When pathfinding enters this region's navigation mesh from another regions navigation mesh the
-     * `enter_cost` value is added to the path distance for determining the shortest path.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_enter_cost
-     */
     fun setEnterCost(enterCost: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, handle, enterCost)
     }
 
-    /**
-     * When pathfinding enters this region's navigation mesh from another regions navigation mesh the
-     * `enter_cost` value is added to the path distance for determining the shortest path.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_enter_cost
-     */
     fun getEnterCost(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, handle)
     }
 
-    /**
-     * When pathfinding moves inside this region's navigation mesh the traveled distances are
-     * multiplied with `travel_cost` for determining the shortest path.
-     *
-     * Generated from Godot docs: NavigationRegion3D.set_travel_cost
-     */
     fun setTravelCost(travelCost: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, handle, travelCost)
     }
 
-    /**
-     * When pathfinding moves inside this region's navigation mesh the traveled distances are
-     * multiplied with `travel_cost` for determining the shortest path.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_travel_cost
-     */
     fun getTravelCost(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, handle)
     }
 
-    /**
-     * Bakes the `NavigationMesh`. If `on_thread` is set to `true` (default), the baking is done on a
-     * separate thread. Baking on separate thread is useful because navigation baking is not a cheap
-     * operation. When it is completed, it automatically sets the new `NavigationMesh`. Please note
-     * that baking on separate thread may be very slow if geometry is parsed from meshes as async
-     * access to each mesh involves heavy synchronization. Also, please note that baking on a separate
-     * thread is automatically disabled on operating systems that cannot use threads (such as Web with
-     * threads disabled).
-     *
-     * Generated from Godot docs: NavigationRegion3D.bake_navigation_mesh
-     */
     fun bakeNavigationMesh(onThread: Boolean = true) {
         ObjectCalls.ptrcallWithBoolArg(bakeNavigationMeshBind, handle, onThread)
     }
 
-    /**
-     * Returns `true` when the `NavigationMesh` is being baked on a background thread.
-     *
-     * Generated from Godot docs: NavigationRegion3D.is_baking
-     */
     fun isBaking(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isBakingBind, handle)
     }
 
-    /**
-     * Returns the axis-aligned bounding box for the region's transformed navigation mesh.
-     *
-     * Generated from Godot docs: NavigationRegion3D.get_bounds
-     */
     fun getBounds(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
     }
@@ -263,6 +138,13 @@ class NavigationRegion3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): NavigationRegion3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): NavigationRegion3D? =
+            if (handle.address() == 0L) null else NavigationRegion3D(handle)
+
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {
             ObjectCalls.getMethodBind("NavigationRegion3D", "get_rid", GET_RID_HASH)

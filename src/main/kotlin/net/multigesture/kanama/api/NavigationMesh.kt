@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A navigation mesh that defines traversable areas and obstacles.
@@ -162,572 +162,230 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
         @JvmName("setFilterBakingAabbOffsetProperty")
         set(value) = setFilterBakingAabbOffset(value)
 
-    /**
-     * Partitioning algorithm for creating the navigation mesh polys.
-     *
-     * Generated from Godot docs: NavigationMesh.set_sample_partition_type
-     */
     fun setSamplePartitionType(samplePartitionType: Long) {
         ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
     }
 
-    /**
-     * Partitioning algorithm for creating the navigation mesh polys.
-     *
-     * Generated from Godot docs: NavigationMesh.get_sample_partition_type
-     */
     fun getSamplePartitionType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
     }
 
-    /**
-     * Determines which type of nodes will be parsed as geometry.
-     *
-     * Generated from Godot docs: NavigationMesh.set_parsed_geometry_type
-     */
     fun setParsedGeometryType(geometryType: Long) {
         ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
     }
 
-    /**
-     * Determines which type of nodes will be parsed as geometry.
-     *
-     * Generated from Godot docs: NavigationMesh.get_parsed_geometry_type
-     */
     fun getParsedGeometryType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
     }
 
-    /**
-     * The physics layers to scan for static colliders. Only used when `geometry_parsed_geometry_type`
-     * is `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_collision_mask
-     */
     fun setCollisionMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
     }
 
-    /**
-     * The physics layers to scan for static colliders. Only used when `geometry_parsed_geometry_type`
-     * is `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_collision_mask
-     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
-    /**
-     * Based on `value`, enables or disables the specified layer in the `geometry_collision_mask`,
-     * given a `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: NavigationMesh.set_collision_mask_value
-     */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
     }
 
-    /**
-     * Returns whether or not the specified layer of the `geometry_collision_mask` is enabled, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: NavigationMesh.get_collision_mask_value
-     */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
     }
 
-    /**
-     * The source of the geometry used when baking.
-     *
-     * Generated from Godot docs: NavigationMesh.set_source_geometry_mode
-     */
     fun setSourceGeometryMode(mask: Long) {
         ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, mask)
     }
 
-    /**
-     * The source of the geometry used when baking.
-     *
-     * Generated from Godot docs: NavigationMesh.get_source_geometry_mode
-     */
     fun getSourceGeometryMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
     }
 
-    /**
-     * The name of the group to scan for geometry. Only used when `geometry_source_geometry_mode` is
-     * `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_source_group_name
-     */
     fun setSourceGroupName(mask: String) {
         ObjectCalls.ptrcallWithStringNameArg(setSourceGroupNameBind, handle, mask)
     }
 
-    /**
-     * The name of the group to scan for geometry. Only used when `geometry_source_geometry_mode` is
-     * `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_source_group_name
-     */
     fun getSourceGroupName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGroupNameBind, handle)
     }
 
-    /**
-     * The cell size used to rasterize the navigation mesh vertices on the XZ plane. Must match with
-     * the cell size on the navigation map.
-     *
-     * Generated from Godot docs: NavigationMesh.set_cell_size
-     */
     fun setCellSize(cellSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
     }
 
-    /**
-     * The cell size used to rasterize the navigation mesh vertices on the XZ plane. Must match with
-     * the cell size on the navigation map.
-     *
-     * Generated from Godot docs: NavigationMesh.get_cell_size
-     */
     fun getCellSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
-    /**
-     * The cell height used to rasterize the navigation mesh vertices on the Y axis. Must match with
-     * the cell height on the navigation map.
-     *
-     * Generated from Godot docs: NavigationMesh.set_cell_height
-     */
     fun setCellHeight(cellHeight: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCellHeightBind, handle, cellHeight)
     }
 
-    /**
-     * The cell height used to rasterize the navigation mesh vertices on the Y axis. Must match with
-     * the cell height on the navigation map.
-     *
-     * Generated from Godot docs: NavigationMesh.get_cell_height
-     */
     fun getCellHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellHeightBind, handle)
     }
 
-    /**
-     * The size of the non-navigable border around the bake bounding area. In conjunction with the
-     * `filter_baking_aabb` and a `edge_max_error` value at `1.0` or below the border size can be used
-     * to bake tile aligned navigation meshes without the tile edges being shrunk by `agent_radius`.
-     * Note: If this value is not `0.0`, it will be rounded up to the nearest multiple of `cell_size`
-     * during baking.
-     *
-     * Generated from Godot docs: NavigationMesh.set_border_size
-     */
     fun setBorderSize(borderSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
     }
 
-    /**
-     * The size of the non-navigable border around the bake bounding area. In conjunction with the
-     * `filter_baking_aabb` and a `edge_max_error` value at `1.0` or below the border size can be used
-     * to bake tile aligned navigation meshes without the tile edges being shrunk by `agent_radius`.
-     * Note: If this value is not `0.0`, it will be rounded up to the nearest multiple of `cell_size`
-     * during baking.
-     *
-     * Generated from Godot docs: NavigationMesh.get_border_size
-     */
     fun getBorderSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
     }
 
-    /**
-     * The minimum floor to ceiling height that will still allow the floor area to be considered
-     * walkable. Note: While baking, this value will be rounded up to the nearest multiple of
-     * `cell_height`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_agent_height
-     */
     fun setAgentHeight(agentHeight: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAgentHeightBind, handle, agentHeight)
     }
 
-    /**
-     * The minimum floor to ceiling height that will still allow the floor area to be considered
-     * walkable. Note: While baking, this value will be rounded up to the nearest multiple of
-     * `cell_height`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_agent_height
-     */
     fun getAgentHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentHeightBind, handle)
     }
 
-    /**
-     * The distance to erode/shrink the walkable area of the heightfield away from obstructions. Note:
-     * While baking, this value will be rounded up to the nearest multiple of `cell_size`. Note: The
-     * radius must be equal or higher than `0.0`. If the radius is `0.0`, it won't be possible to fix
-     * invalid outline overlaps and other precision errors during the baking process. As a result, some
-     * obstacles may be excluded incorrectly from the final navigation mesh, or may delete the
-     * navigation mesh's polygons.
-     *
-     * Generated from Godot docs: NavigationMesh.set_agent_radius
-     */
     fun setAgentRadius(agentRadius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
     }
 
-    /**
-     * The distance to erode/shrink the walkable area of the heightfield away from obstructions. Note:
-     * While baking, this value will be rounded up to the nearest multiple of `cell_size`. Note: The
-     * radius must be equal or higher than `0.0`. If the radius is `0.0`, it won't be possible to fix
-     * invalid outline overlaps and other precision errors during the baking process. As a result, some
-     * obstacles may be excluded incorrectly from the final navigation mesh, or may delete the
-     * navigation mesh's polygons.
-     *
-     * Generated from Godot docs: NavigationMesh.get_agent_radius
-     */
     fun getAgentRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
     }
 
-    /**
-     * The minimum ledge height that is considered to still be traversable. Note: While baking, this
-     * value will be rounded down to the nearest multiple of `cell_height`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_agent_max_climb
-     */
     fun setAgentMaxClimb(agentMaxClimb: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAgentMaxClimbBind, handle, agentMaxClimb)
     }
 
-    /**
-     * The minimum ledge height that is considered to still be traversable. Note: While baking, this
-     * value will be rounded down to the nearest multiple of `cell_height`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_agent_max_climb
-     */
     fun getAgentMaxClimb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxClimbBind, handle)
     }
 
-    /**
-     * The maximum slope that is considered walkable, in degrees.
-     *
-     * Generated from Godot docs: NavigationMesh.set_agent_max_slope
-     */
     fun setAgentMaxSlope(agentMaxSlope: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAgentMaxSlopeBind, handle, agentMaxSlope)
     }
 
-    /**
-     * The maximum slope that is considered walkable, in degrees.
-     *
-     * Generated from Godot docs: NavigationMesh.get_agent_max_slope
-     */
     fun getAgentMaxSlope(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxSlopeBind, handle)
     }
 
-    /**
-     * The minimum size of a region for it to be created. Note: This value will be squared to calculate
-     * the minimum number of cells allowed to form isolated island areas. For example, a value of 8
-     * will set the number of cells to 64.
-     *
-     * Generated from Godot docs: NavigationMesh.set_region_min_size
-     */
     fun setRegionMinSize(regionMinSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRegionMinSizeBind, handle, regionMinSize)
     }
 
-    /**
-     * The minimum size of a region for it to be created. Note: This value will be squared to calculate
-     * the minimum number of cells allowed to form isolated island areas. For example, a value of 8
-     * will set the number of cells to 64.
-     *
-     * Generated from Godot docs: NavigationMesh.get_region_min_size
-     */
     fun getRegionMinSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMinSizeBind, handle)
     }
 
-    /**
-     * Any regions with a size smaller than this will be merged with larger regions if possible. Note:
-     * This value will be squared to calculate the number of cells. For example, a value of 20 will set
-     * the number of cells to 400.
-     *
-     * Generated from Godot docs: NavigationMesh.set_region_merge_size
-     */
     fun setRegionMergeSize(regionMergeSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRegionMergeSizeBind, handle, regionMergeSize)
     }
 
-    /**
-     * Any regions with a size smaller than this will be merged with larger regions if possible. Note:
-     * This value will be squared to calculate the number of cells. For example, a value of 20 will set
-     * the number of cells to 400.
-     *
-     * Generated from Godot docs: NavigationMesh.get_region_merge_size
-     */
     fun getRegionMergeSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMergeSizeBind, handle)
     }
 
-    /**
-     * The maximum allowed length for contour edges along the border of the mesh. A value of `0.0`
-     * disables this feature. Note: While baking, this value will be rounded up to the nearest multiple
-     * of `cell_size`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_edge_max_length
-     */
     fun setEdgeMaxLength(edgeMaxLength: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxLengthBind, handle, edgeMaxLength)
     }
 
-    /**
-     * The maximum allowed length for contour edges along the border of the mesh. A value of `0.0`
-     * disables this feature. Note: While baking, this value will be rounded up to the nearest multiple
-     * of `cell_size`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_edge_max_length
-     */
     fun getEdgeMaxLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxLengthBind, handle)
     }
 
-    /**
-     * The maximum distance a simplified contour's border edges should deviate the original raw
-     * contour.
-     *
-     * Generated from Godot docs: NavigationMesh.set_edge_max_error
-     */
     fun setEdgeMaxError(edgeMaxError: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxErrorBind, handle, edgeMaxError)
     }
 
-    /**
-     * The maximum distance a simplified contour's border edges should deviate the original raw
-     * contour.
-     *
-     * Generated from Godot docs: NavigationMesh.get_edge_max_error
-     */
     fun getEdgeMaxError(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxErrorBind, handle)
     }
 
-    /**
-     * The maximum number of vertices allowed for polygons generated during the contour to polygon
-     * conversion process.
-     *
-     * Generated from Godot docs: NavigationMesh.set_vertices_per_polygon
-     */
     fun setVerticesPerPolygon(verticesPerPolygon: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVerticesPerPolygonBind, handle, verticesPerPolygon)
     }
 
-    /**
-     * The maximum number of vertices allowed for polygons generated during the contour to polygon
-     * conversion process.
-     *
-     * Generated from Godot docs: NavigationMesh.get_vertices_per_polygon
-     */
     fun getVerticesPerPolygon(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVerticesPerPolygonBind, handle)
     }
 
-    /**
-     * The sampling distance to use when generating the detail mesh, in cell unit.
-     *
-     * Generated from Godot docs: NavigationMesh.set_detail_sample_distance
-     */
     fun setDetailSampleDistance(detailSampleDist: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDetailSampleDistanceBind, handle, detailSampleDist)
     }
 
-    /**
-     * The sampling distance to use when generating the detail mesh, in cell unit.
-     *
-     * Generated from Godot docs: NavigationMesh.get_detail_sample_distance
-     */
     fun getDetailSampleDistance(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleDistanceBind, handle)
     }
 
-    /**
-     * The maximum distance the detail mesh surface should deviate from heightfield, in cell unit.
-     *
-     * Generated from Godot docs: NavigationMesh.set_detail_sample_max_error
-     */
     fun setDetailSampleMaxError(detailSampleMaxError: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDetailSampleMaxErrorBind, handle, detailSampleMaxError)
     }
 
-    /**
-     * The maximum distance the detail mesh surface should deviate from heightfield, in cell unit.
-     *
-     * Generated from Godot docs: NavigationMesh.get_detail_sample_max_error
-     */
     fun getDetailSampleMaxError(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleMaxErrorBind, handle)
     }
 
-    /**
-     * If `true`, marks non-walkable spans as walkable if their maximum is within `agent_max_climb` of
-     * a walkable neighbor.
-     *
-     * Generated from Godot docs: NavigationMesh.set_filter_low_hanging_obstacles
-     */
     fun setFilterLowHangingObstacles(filterLowHangingObstacles: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilterLowHangingObstaclesBind, handle, filterLowHangingObstacles)
     }
 
-    /**
-     * If `true`, marks non-walkable spans as walkable if their maximum is within `agent_max_climb` of
-     * a walkable neighbor.
-     *
-     * Generated from Godot docs: NavigationMesh.get_filter_low_hanging_obstacles
-     */
     fun getFilterLowHangingObstacles(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterLowHangingObstaclesBind, handle)
     }
 
-    /**
-     * If `true`, marks spans that are ledges as non-walkable.
-     *
-     * Generated from Godot docs: NavigationMesh.set_filter_ledge_spans
-     */
     fun setFilterLedgeSpans(filterLedgeSpans: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilterLedgeSpansBind, handle, filterLedgeSpans)
     }
 
-    /**
-     * If `true`, marks spans that are ledges as non-walkable.
-     *
-     * Generated from Godot docs: NavigationMesh.get_filter_ledge_spans
-     */
     fun getFilterLedgeSpans(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterLedgeSpansBind, handle)
     }
 
-    /**
-     * If `true`, marks walkable spans as not walkable if the clearance above the span is less than
-     * `agent_height`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_filter_walkable_low_height_spans
-     */
     fun setFilterWalkableLowHeightSpans(filterWalkableLowHeightSpans: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilterWalkableLowHeightSpansBind, handle, filterWalkableLowHeightSpans)
     }
 
-    /**
-     * If `true`, marks walkable spans as not walkable if the clearance above the span is less than
-     * `agent_height`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_filter_walkable_low_height_spans
-     */
     fun getFilterWalkableLowHeightSpans(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterWalkableLowHeightSpansBind, handle)
     }
 
-    /**
-     * If the baking `AABB` has a volume the navigation mesh baking will be restricted to its enclosing
-     * area.
-     *
-     * Generated from Godot docs: NavigationMesh.set_filter_baking_aabb
-     */
     fun setFilterBakingAabb(bakingAabb: AABB) {
         ObjectCalls.ptrcallWithAABBArg(setFilterBakingAabbBind, handle, bakingAabb)
     }
 
-    /**
-     * If the baking `AABB` has a volume the navigation mesh baking will be restricted to its enclosing
-     * area.
-     *
-     * Generated from Godot docs: NavigationMesh.get_filter_baking_aabb
-     */
     fun getFilterBakingAabb(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(getFilterBakingAabbBind, handle)
     }
 
-    /**
-     * The position offset applied to the `filter_baking_aabb` `AABB`.
-     *
-     * Generated from Godot docs: NavigationMesh.set_filter_baking_aabb_offset
-     */
     fun setFilterBakingAabbOffset(bakingAabbOffset: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setFilterBakingAabbOffsetBind, handle, bakingAabbOffset)
     }
 
-    /**
-     * The position offset applied to the `filter_baking_aabb` `AABB`.
-     *
-     * Generated from Godot docs: NavigationMesh.get_filter_baking_aabb_offset
-     */
     fun getFilterBakingAabbOffset(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getFilterBakingAabbOffsetBind, handle)
     }
 
-    /**
-     * Sets the vertices that can be then indexed to create polygons with the `add_polygon` method.
-     *
-     * Generated from Godot docs: NavigationMesh.set_vertices
-     */
     fun setVertices(vertices: List<Vector3>) {
         ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
     }
 
-    /**
-     * Returns a `PackedVector3Array` containing all the vertices being used to create the polygons.
-     *
-     * Generated from Godot docs: NavigationMesh.get_vertices
-     */
     fun getVertices(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
     }
 
-    /**
-     * Adds a polygon using the indices of the vertices you get when calling `get_vertices`.
-     *
-     * Generated from Godot docs: NavigationMesh.add_polygon
-     */
     fun addPolygon(polygon: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
     }
 
-    /**
-     * Returns the number of polygons in the navigation mesh.
-     *
-     * Generated from Godot docs: NavigationMesh.get_polygon_count
-     */
     fun getPolygonCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
     }
 
-    /**
-     * Returns a `PackedInt32Array` containing the indices of the vertices of a created polygon.
-     *
-     * Generated from Godot docs: NavigationMesh.get_polygon
-     */
     fun getPolygon(idx: Int): List<Int> {
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
     }
 
-    /**
-     * Clears the array of polygons, but it doesn't clear the array of vertices.
-     *
-     * Generated from Godot docs: NavigationMesh.clear_polygons
-     */
     fun clearPolygons() {
         ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
     }
 
-    /**
-     * Initializes the navigation mesh by setting the vertices and indices according to a `Mesh`. Note:
-     * The given `mesh` must be of type `Mesh.PRIMITIVE_TRIANGLES` and have an index array.
-     *
-     * Generated from Godot docs: NavigationMesh.create_from_mesh
-     */
     fun createFromMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
@@ -742,6 +400,19 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val SAMPLE_PARTITION_WATERSHED: Long = 0L
+        const val SAMPLE_PARTITION_MONOTONE: Long = 1L
+        const val SAMPLE_PARTITION_LAYERS: Long = 2L
+        const val SAMPLE_PARTITION_MAX: Long = 3L
+        const val PARSED_GEOMETRY_MESH_INSTANCES: Long = 0L
+        const val PARSED_GEOMETRY_STATIC_COLLIDERS: Long = 1L
+        const val PARSED_GEOMETRY_BOTH: Long = 2L
+        const val PARSED_GEOMETRY_MAX: Long = 3L
+        const val SOURCE_GEOMETRY_ROOT_NODE_CHILDREN: Long = 0L
+        const val SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN: Long = 1L
+        const val SOURCE_GEOMETRY_GROUPS_EXPLICIT: Long = 2L
+        const val SOURCE_GEOMETRY_MAX: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): NavigationMesh? =
             wrap(handle)

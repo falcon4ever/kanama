@@ -184,7 +184,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, handle, trackIdx)
     }
 
-    fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2, outHandle: Vector2): Int {
+    fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0f, 0f), outHandle: Vector2 = Vector2(0f, 0f)): Int {
         return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, handle, trackIdx, time, value, inHandle, outHandle)
     }
 

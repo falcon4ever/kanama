@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Rect2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Rect2
 
 /**
  * Generated from Godot docs: MobileVRInterface
@@ -150,6 +150,13 @@ class MobileVRInterface(handle: MemorySegment) : XRInterface(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): MobileVRInterface? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): MobileVRInterface? =
+            if (handle.address() == 0L) null else MobileVRInterface(handle)
+
         private const val SET_EYE_HEIGHT_HASH = 373806689L
         private val setEyeHeightBind by lazy {
             ObjectCalls.getMethodBind("MobileVRInterface", "set_eye_height", SET_EYE_HEIGHT_HASH)

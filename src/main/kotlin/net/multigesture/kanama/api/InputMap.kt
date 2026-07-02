@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A singleton that manages all `InputEventAction`s.
@@ -13,149 +13,71 @@ object InputMap {
         ObjectCalls.getSingleton("InputMap")
     }
 
-    /**
-     * Returns `true` if the `InputMap` has a registered action with the given name.
-     *
-     * Generated from Godot docs: InputMap.has_action
-     */
     @JvmStatic
     fun hasAction(action: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasActionBind, singleton, action)
     }
 
-    /**
-     * Returns an array of all actions in the `InputMap`.
-     *
-     * Generated from Godot docs: InputMap.get_actions
-     */
     @JvmStatic
     fun getActions(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getActionsBind, singleton)
     }
 
-    /**
-     * Adds an empty action to the `InputMap` with a configurable `deadzone`. An `InputEvent` can then
-     * be added to this action with `action_add_event`.
-     *
-     * Generated from Godot docs: InputMap.add_action
-     */
     @JvmStatic
     fun addAction(action: String, deadzone: Double = 0.2) {
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(addActionBind, singleton, action, deadzone)
     }
 
-    /**
-     * Removes an action from the `InputMap`.
-     *
-     * Generated from Godot docs: InputMap.erase_action
-     */
     @JvmStatic
     fun eraseAction(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(eraseActionBind, singleton, action)
     }
 
-    /**
-     * Returns the human-readable description of the given action.
-     *
-     * Generated from Godot docs: InputMap.get_action_description
-     */
     @JvmStatic
     fun getActionDescription(action: String): String {
         return ObjectCalls.ptrcallWithStringNameArgRetString(getActionDescriptionBind, singleton, action)
     }
 
-    /**
-     * Sets a deadzone value for the action.
-     *
-     * Generated from Godot docs: InputMap.action_set_deadzone
-     */
     @JvmStatic
     fun actionSetDeadzone(action: String, deadzone: Double) {
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(actionSetDeadzoneBind, singleton, action, deadzone)
     }
 
-    /**
-     * Returns a deadzone value for the action.
-     *
-     * Generated from Godot docs: InputMap.action_get_deadzone
-     */
     @JvmStatic
     fun actionGetDeadzone(action: String): Double {
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(actionGetDeadzoneBind, singleton, action)
     }
 
-    /**
-     * Adds an `InputEvent` to an action. This `InputEvent` will trigger the action.
-     *
-     * Generated from Godot docs: InputMap.action_add_event
-     */
     @JvmStatic
     fun actionAddEvent(action: String, event: InputEvent?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(actionAddEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns `true` if the action has the given `InputEvent` associated with it.
-     *
-     * Generated from Godot docs: InputMap.action_has_event
-     */
     @JvmStatic
     fun actionHasEvent(action: String, event: InputEvent?): Boolean {
         return ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(actionHasEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Removes an `InputEvent` from an action.
-     *
-     * Generated from Godot docs: InputMap.action_erase_event
-     */
     @JvmStatic
     fun actionEraseEvent(action: String, event: InputEvent?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(actionEraseEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Removes all events from an action.
-     *
-     * Generated from Godot docs: InputMap.action_erase_events
-     */
     @JvmStatic
     fun actionEraseEvents(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(actionEraseEventsBind, singleton, action)
     }
 
-    /**
-     * Returns an array of `InputEvent`s associated with a given action. Note: When used in the editor
-     * (e.g. a tool script or `EditorPlugin`), this method will return events for the editor action. If
-     * you want to access your project's input binds from the editor, read the `input/\*` settings from
-     * `ProjectSettings`.
-     *
-     * Generated from Godot docs: InputMap.action_get_events
-     */
     @JvmStatic
     fun actionGetEvents(action: String): List<InputEvent> {
         return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(actionGetEventsBind, singleton, action, InputEvent::fromHandle)
     }
 
-    /**
-     * Returns `true` if the given event is part of an existing action. This method ignores keyboard
-     * modifiers if the given `InputEvent` is not pressed (for proper release detection). See
-     * `action_has_event` if you don't want this behavior. If `exact_match` is `false`, it ignores
-     * additional input modifiers for `InputEventKey` and `InputEventMouseButton` events, and the
-     * direction for `InputEventJoypadMotion` events.
-     *
-     * Generated from Godot docs: InputMap.event_is_action
-     */
     @JvmStatic
     fun eventIsAction(event: InputEvent?, action: String, exactMatch: Boolean = false): Boolean {
         return ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(eventIsActionBind, singleton, event?.requireOpenHandle() ?: MemorySegment.NULL, action, exactMatch)
     }
 
-    /**
-     * Clears all `InputEventAction` in the `InputMap` and load it anew from `ProjectSettings`.
-     *
-     * Generated from Godot docs: InputMap.load_from_project_settings
-     */
     @JvmStatic
     fun loadFromProjectSettings() {
         ObjectCalls.ptrcallNoArgs(loadFromProjectSettingsBind, singleton)
@@ -164,6 +86,13 @@ object InputMap {
     object Signals {
         const val projectSettingsLoaded: String = "project_settings_loaded"
     }
+
+    @JvmStatic
+    fun fromHandle(handle: MemorySegment): InputMap? =
+        wrap(handle)
+
+    internal fun wrap(handle: MemorySegment): InputMap? =
+        if (handle.address() == 0L) null else this
 
     private const val HAS_ACTION_HASH = 2619796661L
     private val hasActionBind by lazy {

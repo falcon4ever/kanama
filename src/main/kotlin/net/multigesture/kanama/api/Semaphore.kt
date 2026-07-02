@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A synchronization mechanism used to control access to a shared resource by `Thread`s.
@@ -13,12 +13,6 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(waitBlockingBind, handle)
     }
 
-    /**
-     * Like `wait`, but won't block, so if the value is zero, fails immediately and returns `false`. If
-     * non-zero, it returns `true` to report success.
-     *
-     * Generated from Godot docs: Semaphore.try_wait
-     */
     fun tryWait(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, handle)
     }
@@ -33,6 +27,13 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Semaphore? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Semaphore? =
+            if (handle.address() == 0L) null else Semaphore(handle)
+
         private const val WAIT_HASH = 3218959716L
         private val waitBlockingBind by lazy {
             ObjectCalls.getMethodBind("Semaphore", "wait", WAIT_HASH)

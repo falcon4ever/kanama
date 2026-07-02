@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * RemoteTransform2D pushes its own `Transform2D` to another `Node2D` derived node in the scene.
@@ -41,107 +41,58 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setUpdateScaleProperty")
         set(value) = setUpdateScale(value)
 
-    /**
-     * The `NodePath` to the remote node, relative to the RemoteTransform2D's position in the scene.
-     *
-     * Generated from Godot docs: RemoteTransform2D.set_remote_node
-     */
     fun setRemoteNode(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setRemoteNodeBind, handle, path)
     }
 
-    /**
-     * The `NodePath` to the remote node, relative to the RemoteTransform2D's position in the scene.
-     *
-     * Generated from Godot docs: RemoteTransform2D.get_remote_node
-     */
     fun getRemoteNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getRemoteNodeBind, handle)
     }
 
-    /**
-     * `RemoteTransform2D` caches the remote node. It may not notice if the remote node disappears;
-     * `force_update_cache` forces it to update the cache again.
-     *
-     * Generated from Godot docs: RemoteTransform2D.force_update_cache
-     */
     fun forceUpdateCache() {
         ObjectCalls.ptrcallNoArgs(forceUpdateCacheBind, handle)
     }
 
-    /**
-     * If `true`, global coordinates are used. If `false`, local coordinates are used.
-     *
-     * Generated from Godot docs: RemoteTransform2D.set_use_global_coordinates
-     */
     fun setUseGlobalCoordinates(useGlobalCoordinates: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseGlobalCoordinatesBind, handle, useGlobalCoordinates)
     }
 
-    /**
-     * If `true`, global coordinates are used. If `false`, local coordinates are used.
-     *
-     * Generated from Godot docs: RemoteTransform2D.get_use_global_coordinates
-     */
     fun getUseGlobalCoordinates(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseGlobalCoordinatesBind, handle)
     }
 
-    /**
-     * If `true`, the remote node's position is updated.
-     *
-     * Generated from Godot docs: RemoteTransform2D.set_update_position
-     */
     fun setUpdatePosition(updateRemotePosition: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdatePositionBind, handle, updateRemotePosition)
     }
 
-    /**
-     * If `true`, the remote node's position is updated.
-     *
-     * Generated from Godot docs: RemoteTransform2D.get_update_position
-     */
     fun getUpdatePosition(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdatePositionBind, handle)
     }
 
-    /**
-     * If `true`, the remote node's rotation is updated.
-     *
-     * Generated from Godot docs: RemoteTransform2D.set_update_rotation
-     */
     fun setUpdateRotation(updateRemoteRotation: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdateRotationBind, handle, updateRemoteRotation)
     }
 
-    /**
-     * If `true`, the remote node's rotation is updated.
-     *
-     * Generated from Godot docs: RemoteTransform2D.get_update_rotation
-     */
     fun getUpdateRotation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdateRotationBind, handle)
     }
 
-    /**
-     * If `true`, the remote node's scale is updated.
-     *
-     * Generated from Godot docs: RemoteTransform2D.set_update_scale
-     */
     fun setUpdateScale(updateRemoteScale: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdateScaleBind, handle, updateRemoteScale)
     }
 
-    /**
-     * If `true`, the remote node's scale is updated.
-     *
-     * Generated from Godot docs: RemoteTransform2D.get_update_scale
-     */
     fun getUpdateScale(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdateScaleBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): RemoteTransform2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): RemoteTransform2D? =
+            if (handle.address() == 0L) null else RemoteTransform2D(handle)
+
         private const val SET_REMOTE_NODE_HASH = 1348162250L
         private val setRemoteNodeBind by lazy {
             ObjectCalls.getMethodBind("RemoteTransform2D", "set_remote_node", SET_REMOTE_NODE_HASH)

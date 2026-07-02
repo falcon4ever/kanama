@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Generated from Godot docs: VisualShader
@@ -104,6 +104,40 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
     }
 
     companion object {
+        const val NODE_ID_INVALID: Long = -1L
+        const val NODE_ID_OUTPUT: Long = 0L
+        const val TYPE_VERTEX: Long = 0L
+        const val TYPE_FRAGMENT: Long = 1L
+        const val TYPE_LIGHT: Long = 2L
+        const val TYPE_START: Long = 3L
+        const val TYPE_PROCESS: Long = 4L
+        const val TYPE_COLLIDE: Long = 5L
+        const val TYPE_START_CUSTOM: Long = 6L
+        const val TYPE_PROCESS_CUSTOM: Long = 7L
+        const val TYPE_SKY: Long = 8L
+        const val TYPE_FOG: Long = 9L
+        const val TYPE_TEXTURE_BLIT: Long = 10L
+        const val TYPE_MAX: Long = 11L
+        const val VARYING_MODE_VERTEX_TO_FRAG_LIGHT: Long = 0L
+        const val VARYING_MODE_FRAG_TO_LIGHT: Long = 1L
+        const val VARYING_MODE_MAX: Long = 2L
+        const val VARYING_TYPE_FLOAT: Long = 0L
+        const val VARYING_TYPE_INT: Long = 1L
+        const val VARYING_TYPE_UINT: Long = 2L
+        const val VARYING_TYPE_VECTOR_2D: Long = 3L
+        const val VARYING_TYPE_VECTOR_3D: Long = 4L
+        const val VARYING_TYPE_VECTOR_4D: Long = 5L
+        const val VARYING_TYPE_BOOLEAN: Long = 6L
+        const val VARYING_TYPE_TRANSFORM: Long = 7L
+        const val VARYING_TYPE_MAX: Long = 8L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShader? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShader? =
+            if (handle.address() == 0L) null else VisualShader(handle)
+
         private const val SET_MODE_HASH = 3978014962L
         private val setModeBind by lazy {
             ObjectCalls.getMethodBind("VisualShader", "set_mode", SET_MODE_HASH)

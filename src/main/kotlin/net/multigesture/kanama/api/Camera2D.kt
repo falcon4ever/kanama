@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Camera node for 2D scenes.
@@ -129,488 +129,182 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setEditorDrawDragMarginProperty")
         set(value) = setMarginDrawingEnabled(value)
 
-    /**
-     * The camera's relative offset. Useful for looking around or camera shake animations. The
-     * offsetted camera can go past the limits defined in `limit_top`, `limit_bottom`, `limit_left` and
-     * `limit_right`.
-     *
-     * Generated from Godot docs: Camera2D.set_offset
-     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
-    /**
-     * The camera's relative offset. Useful for looking around or camera shake animations. The
-     * offsetted camera can go past the limits defined in `limit_top`, `limit_bottom`, `limit_left` and
-     * `limit_right`.
-     *
-     * Generated from Godot docs: Camera2D.get_offset
-     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
-    /**
-     * The Camera2D's anchor point.
-     *
-     * Generated from Godot docs: Camera2D.set_anchor_mode
-     */
     fun setAnchorMode(anchorMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAnchorModeBind, handle, anchorMode)
     }
 
-    /**
-     * The Camera2D's anchor point.
-     *
-     * Generated from Godot docs: Camera2D.get_anchor_mode
-     */
     fun getAnchorMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAnchorModeBind, handle)
     }
 
-    /**
-     * If `true`, the camera's rendered view is not affected by its `Node2D.rotation` and
-     * `Node2D.global_rotation`.
-     *
-     * Generated from Godot docs: Camera2D.set_ignore_rotation
-     */
     fun setIgnoreRotation(ignore: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setIgnoreRotationBind, handle, ignore)
     }
 
-    /**
-     * If `true`, the camera's rendered view is not affected by its `Node2D.rotation` and
-     * `Node2D.global_rotation`.
-     *
-     * Generated from Godot docs: Camera2D.is_ignoring_rotation
-     */
     fun isIgnoringRotation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringRotationBind, handle)
     }
 
-    /**
-     * The camera's process callback.
-     *
-     * Generated from Godot docs: Camera2D.set_process_callback
-     */
     fun setProcessCallback(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
     }
 
-    /**
-     * The camera's process callback.
-     *
-     * Generated from Godot docs: Camera2D.get_process_callback
-     */
     fun getProcessCallback(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
     }
 
-    /**
-     * Controls whether the camera can be active or not. If `true`, the `Camera2D` will become the main
-     * camera when it enters the scene tree and there is no active camera currently (see
-     * `Viewport.get_camera_2d`). When the camera is currently active and `enabled` is set to `false`,
-     * the next enabled `Camera2D` in the scene tree will become active.
-     *
-     * Generated from Godot docs: Camera2D.set_enabled
-     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
-    /**
-     * Controls whether the camera can be active or not. If `true`, the `Camera2D` will become the main
-     * camera when it enters the scene tree and there is no active camera currently (see
-     * `Viewport.get_camera_2d`). When the camera is currently active and `enabled` is set to `false`,
-     * the next enabled `Camera2D` in the scene tree will become active.
-     *
-     * Generated from Godot docs: Camera2D.is_enabled
-     */
     fun isEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
     }
 
-    /**
-     * Forces this `Camera2D` to become the current active one. `enabled` must be `true`.
-     *
-     * Generated from Godot docs: Camera2D.make_current
-     */
     fun makeCurrent() {
         ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
     }
 
-    /**
-     * Returns `true` if this `Camera2D` is the active camera (see `Viewport.get_camera_2d`).
-     *
-     * Generated from Godot docs: Camera2D.is_current
-     */
     fun isCurrent(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
     }
 
-    /**
-     * If `true`, the limits will be enabled. Disabling this will allow the camera to focus anywhere,
-     * when the four `limit_*` properties will not work.
-     *
-     * Generated from Godot docs: Camera2D.set_limit_enabled
-     */
     fun setLimitEnabled(limitEnabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLimitEnabledBind, handle, limitEnabled)
     }
 
-    /**
-     * If `true`, the limits will be enabled. Disabling this will allow the camera to focus anywhere,
-     * when the four `limit_*` properties will not work.
-     *
-     * Generated from Godot docs: Camera2D.is_limit_enabled
-     */
     fun isLimitEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLimitEnabledBind, handle)
     }
 
-    /**
-     * Top scroll limit in pixels. The camera stops moving when reaching this value, but `offset` can
-     * push the view past the limit.
-     *
-     * Generated from Godot docs: Camera2D.set_limit
-     */
     fun setLimit(margin: Long, limit: Int) {
         ObjectCalls.ptrcallWithLongAndIntArgs(setLimitBind, handle, margin, limit)
     }
 
-    /**
-     * Top scroll limit in pixels. The camera stops moving when reaching this value, but `offset` can
-     * push the view past the limit.
-     *
-     * Generated from Godot docs: Camera2D.get_limit
-     */
     fun getLimit(margin: Long): Int {
         return ObjectCalls.ptrcallWithLongArgRetInt(getLimitBind, handle, margin)
     }
 
-    /**
-     * If `true`, the camera smoothly stops when reaches its limits. This property has no effect if
-     * `position_smoothing_enabled` is `false`. Note: To immediately update the camera's position to be
-     * within limits without smoothing, even with this setting enabled, invoke `reset_smoothing`.
-     *
-     * Generated from Godot docs: Camera2D.set_limit_smoothing_enabled
-     */
     fun setLimitSmoothingEnabled(limitSmoothingEnabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLimitSmoothingEnabledBind, handle, limitSmoothingEnabled)
     }
 
-    /**
-     * If `true`, the camera smoothly stops when reaches its limits. This property has no effect if
-     * `position_smoothing_enabled` is `false`. Note: To immediately update the camera's position to be
-     * within limits without smoothing, even with this setting enabled, invoke `reset_smoothing`.
-     *
-     * Generated from Godot docs: Camera2D.is_limit_smoothing_enabled
-     */
     fun isLimitSmoothingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLimitSmoothingEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the camera only moves when reaching the vertical (top and bottom) drag margins. If
-     * `false`, the camera moves vertically regardless of the drag margins.
-     *
-     * Generated from Godot docs: Camera2D.set_drag_vertical_enabled
-     */
     fun setDragVerticalEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDragVerticalEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the camera only moves when reaching the vertical (top and bottom) drag margins. If
-     * `false`, the camera moves vertically regardless of the drag margins.
-     *
-     * Generated from Godot docs: Camera2D.is_drag_vertical_enabled
-     */
     fun isDragVerticalEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDragVerticalEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the camera only moves when reaching the horizontal (left and right) drag margins. If
-     * `false`, the camera moves horizontally regardless of margins.
-     *
-     * Generated from Godot docs: Camera2D.set_drag_horizontal_enabled
-     */
     fun setDragHorizontalEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDragHorizontalEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the camera only moves when reaching the horizontal (left and right) drag margins. If
-     * `false`, the camera moves horizontally regardless of margins.
-     *
-     * Generated from Godot docs: Camera2D.is_drag_horizontal_enabled
-     */
     fun isDragHorizontalEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDragHorizontalEnabledBind, handle)
     }
 
-    /**
-     * The relative vertical drag offset of the camera between the bottom (`-1`) and top (`1`) drag
-     * margins. Note: Used to set the initial vertical drag offset; determine the current offset; or
-     * force the current offset. It's not automatically updated when `drag_vertical_enabled` is `true`
-     * or the drag margins are changed.
-     *
-     * Generated from Godot docs: Camera2D.set_drag_vertical_offset
-     */
     fun setDragVerticalOffset(offset: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDragVerticalOffsetBind, handle, offset)
     }
 
-    /**
-     * The relative vertical drag offset of the camera between the bottom (`-1`) and top (`1`) drag
-     * margins. Note: Used to set the initial vertical drag offset; determine the current offset; or
-     * force the current offset. It's not automatically updated when `drag_vertical_enabled` is `true`
-     * or the drag margins are changed.
-     *
-     * Generated from Godot docs: Camera2D.get_drag_vertical_offset
-     */
     fun getDragVerticalOffset(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDragVerticalOffsetBind, handle)
     }
 
-    /**
-     * The relative horizontal drag offset of the camera between the right (`-1`) and left (`1`) drag
-     * margins. Note: Used to set the initial horizontal drag offset; determine the current offset; or
-     * force the current offset. It's not automatically updated when `drag_horizontal_enabled` is
-     * `true` or the drag margins are changed.
-     *
-     * Generated from Godot docs: Camera2D.set_drag_horizontal_offset
-     */
     fun setDragHorizontalOffset(offset: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDragHorizontalOffsetBind, handle, offset)
     }
 
-    /**
-     * The relative horizontal drag offset of the camera between the right (`-1`) and left (`1`) drag
-     * margins. Note: Used to set the initial horizontal drag offset; determine the current offset; or
-     * force the current offset. It's not automatically updated when `drag_horizontal_enabled` is
-     * `true` or the drag margins are changed.
-     *
-     * Generated from Godot docs: Camera2D.get_drag_horizontal_offset
-     */
     fun getDragHorizontalOffset(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDragHorizontalOffsetBind, handle)
     }
 
-    /**
-     * Top margin needed to drag the camera. A value of `1` makes the camera move only when reaching
-     * the top edge of the screen.
-     *
-     * Generated from Godot docs: Camera2D.set_drag_margin
-     */
     fun setDragMargin(margin: Long, dragMargin: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setDragMarginBind, handle, margin, dragMargin)
     }
 
-    /**
-     * Top margin needed to drag the camera. A value of `1` makes the camera move only when reaching
-     * the top edge of the screen.
-     *
-     * Generated from Godot docs: Camera2D.get_drag_margin
-     */
     fun getDragMargin(margin: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getDragMarginBind, handle, margin)
     }
 
-    /**
-     * Returns this camera's target position, in global coordinates. Note: The returned value is not
-     * the same as `Node2D.global_position`, as it is affected by the drag properties. It is also not
-     * the same as the current position if `position_smoothing_enabled` is `true` (see
-     * `get_screen_center_position`).
-     *
-     * Generated from Godot docs: Camera2D.get_target_position
-     */
     fun getTargetPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, handle)
     }
 
-    /**
-     * Returns the center of the screen from this camera's point of view, in global coordinates. Note:
-     * The exact targeted position of the camera may be different. See `get_target_position`.
-     *
-     * Generated from Godot docs: Camera2D.get_screen_center_position
-     */
     fun getScreenCenterPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenCenterPositionBind, handle)
     }
 
-    /**
-     * Returns the current screen rotation from this camera's point of view. Note: The screen rotation
-     * can be different from `Node2D.global_rotation` if the camera is rotating smoothly due to
-     * `rotation_smoothing_enabled`.
-     *
-     * Generated from Godot docs: Camera2D.get_screen_rotation
-     */
     fun getScreenRotation(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getScreenRotationBind, handle)
     }
 
-    /**
-     * The camera's zoom. Higher values are more zoomed in. For example, a zoom of `Vector2(2.0, 2.0)`
-     * will be twice as zoomed in on each axis (the view covers an area four times smaller). In
-     * contrast, a zoom of `Vector2(0.5, 0.5)` will be twice as zoomed out on each axis (the view
-     * covers an area four times larger). The X and Y components should generally always be set to the
-     * same value, unless you wish to stretch the camera view. Note: `FontFile.oversampling` does not
-     * take `Camera2D` zoom into account. This means that zooming in/out will cause bitmap fonts and
-     * rasterized (non-MSDF) dynamic fonts to appear blurry or pixelated unless the font is part of a
-     * `CanvasLayer` that makes it ignore camera zoom. To ensure text remains crisp regardless of zoom,
-     * you can enable MSDF font rendering by enabling
-     * `ProjectSettings.gui/theme/default_font_multichannel_signed_distance_field` (applies to the
-     * default project font only), or enabling Multichannel Signed Distance Field in the import options
-     * of a DynamicFont for custom fonts. On system fonts,
-     * `SystemFont.multichannel_signed_distance_field` can be enabled in the inspector.
-     *
-     * Generated from Godot docs: Camera2D.set_zoom
-     */
     fun setZoom(zoom: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setZoomBind, handle, zoom)
     }
 
-    /**
-     * The camera's zoom. Higher values are more zoomed in. For example, a zoom of `Vector2(2.0, 2.0)`
-     * will be twice as zoomed in on each axis (the view covers an area four times smaller). In
-     * contrast, a zoom of `Vector2(0.5, 0.5)` will be twice as zoomed out on each axis (the view
-     * covers an area four times larger). The X and Y components should generally always be set to the
-     * same value, unless you wish to stretch the camera view. Note: `FontFile.oversampling` does not
-     * take `Camera2D` zoom into account. This means that zooming in/out will cause bitmap fonts and
-     * rasterized (non-MSDF) dynamic fonts to appear blurry or pixelated unless the font is part of a
-     * `CanvasLayer` that makes it ignore camera zoom. To ensure text remains crisp regardless of zoom,
-     * you can enable MSDF font rendering by enabling
-     * `ProjectSettings.gui/theme/default_font_multichannel_signed_distance_field` (applies to the
-     * default project font only), or enabling Multichannel Signed Distance Field in the import options
-     * of a DynamicFont for custom fonts. On system fonts,
-     * `SystemFont.multichannel_signed_distance_field` can be enabled in the inspector.
-     *
-     * Generated from Godot docs: Camera2D.get_zoom
-     */
     fun getZoom(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getZoomBind, handle)
     }
 
-    /**
-     * The custom `Viewport` node attached to the `Camera2D`. If `null` or not a `Viewport`, uses the
-     * default viewport instead.
-     *
-     * Generated from Godot docs: Camera2D.set_custom_viewport
-     */
     fun setCustomViewport(viewport: Node) {
         ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, handle, listOf(viewport.handle))
     }
 
-    /**
-     * The custom `Viewport` node attached to the `Camera2D`. If `null` or not a `Viewport`, uses the
-     * default viewport instead.
-     *
-     * Generated from Godot docs: Camera2D.get_custom_viewport
-     */
     fun getCustomViewport(): Node? {
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, handle))
     }
 
-    /**
-     * Speed in pixels per second of the camera's smoothing effect when `position_smoothing_enabled` is
-     * `true`.
-     *
-     * Generated from Godot docs: Camera2D.set_position_smoothing_speed
-     */
     fun setPositionSmoothingSpeed(positionSmoothingSpeed: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPositionSmoothingSpeedBind, handle, positionSmoothingSpeed)
     }
 
-    /**
-     * Speed in pixels per second of the camera's smoothing effect when `position_smoothing_enabled` is
-     * `true`.
-     *
-     * Generated from Godot docs: Camera2D.get_position_smoothing_speed
-     */
     fun getPositionSmoothingSpeed(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPositionSmoothingSpeedBind, handle)
     }
 
-    /**
-     * If `true`, the camera's view smoothly moves towards its target position at
-     * `position_smoothing_speed`.
-     *
-     * Generated from Godot docs: Camera2D.set_position_smoothing_enabled
-     */
     fun setPositionSmoothingEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPositionSmoothingEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the camera's view smoothly moves towards its target position at
-     * `position_smoothing_speed`.
-     *
-     * Generated from Godot docs: Camera2D.is_position_smoothing_enabled
-     */
     fun isPositionSmoothingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPositionSmoothingEnabledBind, handle)
     }
 
-    /**
-     * If `true`, the camera's view smoothly rotates, via asymptotic smoothing, to align with its
-     * target rotation at `rotation_smoothing_speed`. Note: This property has no effect if
-     * `ignore_rotation` is `true`.
-     *
-     * Generated from Godot docs: Camera2D.set_rotation_smoothing_enabled
-     */
     fun setRotationSmoothingEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRotationSmoothingEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the camera's view smoothly rotates, via asymptotic smoothing, to align with its
-     * target rotation at `rotation_smoothing_speed`. Note: This property has no effect if
-     * `ignore_rotation` is `true`.
-     *
-     * Generated from Godot docs: Camera2D.is_rotation_smoothing_enabled
-     */
     fun isRotationSmoothingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRotationSmoothingEnabledBind, handle)
     }
 
-    /**
-     * The angular, asymptotic speed of the camera's rotation smoothing effect when
-     * `rotation_smoothing_enabled` is `true`.
-     *
-     * Generated from Godot docs: Camera2D.set_rotation_smoothing_speed
-     */
     fun setRotationSmoothingSpeed(speed: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRotationSmoothingSpeedBind, handle, speed)
     }
 
-    /**
-     * The angular, asymptotic speed of the camera's rotation smoothing effect when
-     * `rotation_smoothing_enabled` is `true`.
-     *
-     * Generated from Godot docs: Camera2D.get_rotation_smoothing_speed
-     */
     fun getRotationSmoothingSpeed(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRotationSmoothingSpeedBind, handle)
     }
 
-    /**
-     * Forces the camera to update scroll immediately.
-     *
-     * Generated from Godot docs: Camera2D.force_update_scroll
-     */
     fun forceUpdateScroll() {
         ObjectCalls.ptrcallNoArgs(forceUpdateScrollBind, handle)
     }
 
-    /**
-     * Sets the camera's position immediately to its current smoothing destination. This method has no
-     * effect if `position_smoothing_enabled` is `false`.
-     *
-     * Generated from Godot docs: Camera2D.reset_smoothing
-     */
     fun resetSmoothing() {
         ObjectCalls.ptrcallNoArgs(resetSmoothingBind, handle)
     }
@@ -625,61 +319,36 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
         ObjectCalls.ptrcallNoArgs(alignBind, handle)
     }
 
-    /**
-     * If `true`, draws the camera's screen rectangle in the editor.
-     *
-     * Generated from Godot docs: Camera2D.set_screen_drawing_enabled
-     */
     fun setScreenDrawingEnabled(screenDrawingEnabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScreenDrawingEnabledBind, handle, screenDrawingEnabled)
     }
 
-    /**
-     * If `true`, draws the camera's screen rectangle in the editor.
-     *
-     * Generated from Godot docs: Camera2D.is_screen_drawing_enabled
-     */
     fun isScreenDrawingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScreenDrawingEnabledBind, handle)
     }
 
-    /**
-     * If `true`, draws the camera's limits rectangle in the editor.
-     *
-     * Generated from Godot docs: Camera2D.set_limit_drawing_enabled
-     */
     fun setLimitDrawingEnabled(limitDrawingEnabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLimitDrawingEnabledBind, handle, limitDrawingEnabled)
     }
 
-    /**
-     * If `true`, draws the camera's limits rectangle in the editor.
-     *
-     * Generated from Godot docs: Camera2D.is_limit_drawing_enabled
-     */
     fun isLimitDrawingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLimitDrawingEnabledBind, handle)
     }
 
-    /**
-     * If `true`, draws the camera's drag margin rectangle in the editor.
-     *
-     * Generated from Godot docs: Camera2D.set_margin_drawing_enabled
-     */
     fun setMarginDrawingEnabled(marginDrawingEnabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMarginDrawingEnabledBind, handle, marginDrawingEnabled)
     }
 
-    /**
-     * If `true`, draws the camera's drag margin rectangle in the editor.
-     *
-     * Generated from Godot docs: Camera2D.is_margin_drawing_enabled
-     */
     fun isMarginDrawingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMarginDrawingEnabledBind, handle)
     }
 
     companion object {
+        const val ANCHOR_MODE_FIXED_TOP_LEFT: Long = 0L
+        const val ANCHOR_MODE_DRAG_CENTER: Long = 1L
+        const val CAMERA2D_PROCESS_PHYSICS: Long = 0L
+        const val CAMERA2D_PROCESS_IDLE: Long = 1L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): Camera2D? =
             wrap(handle)

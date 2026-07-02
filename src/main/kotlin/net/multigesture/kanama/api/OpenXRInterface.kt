@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Generated from Godot docs: OpenXRInterface
@@ -34,6 +34,12 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
         @JvmName("setFoveationDynamicProperty")
         set(value) = setFoveationDynamic(value)
 
+    var foveationWithSubsampledImages: Boolean
+        @JvmName("foveationWithSubsampledImagesProperty")
+        get() = getFoveationWithSubsampledImages()
+        @JvmName("setFoveationWithSubsampledImagesProperty")
+        set(value) = setFoveationWithSubsampledImages(value)
+
     var vrsMinRadius: Double
         @JvmName("vrsMinRadiusProperty")
         get() = getVrsMinRadius()
@@ -48,6 +54,14 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
 
     fun getSessionState(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSessionStateBind, handle)
+    }
+
+    fun isUserPresenceSupported(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresenceSupportedBind, handle)
+    }
+
+    fun isUserPresent(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresentBind, handle)
     }
 
     fun getDisplayRefreshRate(): Double {
@@ -84,6 +98,14 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
 
     fun setFoveationDynamic(foveationDynamic: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFoveationDynamicBind, handle, foveationDynamic)
+    }
+
+    fun getFoveationWithSubsampledImages(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationWithSubsampledImagesBind, handle)
+    }
+
+    fun setFoveationWithSubsampledImages(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setFoveationWithSubsampledImagesBind, handle, enabled)
     }
 
     fun isActionSetActive(name: String): Boolean {
@@ -186,12 +208,94 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
         const val refreshRateChanged: String = "refresh_rate_changed"
         const val cpuLevelChanged: String = "cpu_level_changed"
         const val gpuLevelChanged: String = "gpu_level_changed"
+        const val userPresenceChanged: String = "user_presence_changed"
     }
 
     companion object {
+        const val SESSION_STATE_UNKNOWN: Long = 0L
+        const val SESSION_STATE_IDLE: Long = 1L
+        const val SESSION_STATE_READY: Long = 2L
+        const val SESSION_STATE_SYNCHRONIZED: Long = 3L
+        const val SESSION_STATE_VISIBLE: Long = 4L
+        const val SESSION_STATE_FOCUSED: Long = 5L
+        const val SESSION_STATE_STOPPING: Long = 6L
+        const val SESSION_STATE_LOSS_PENDING: Long = 7L
+        const val SESSION_STATE_EXITING: Long = 8L
+        const val HAND_LEFT: Long = 0L
+        const val HAND_RIGHT: Long = 1L
+        const val HAND_MAX: Long = 2L
+        const val HAND_MOTION_RANGE_UNOBSTRUCTED: Long = 0L
+        const val HAND_MOTION_RANGE_CONFORM_TO_CONTROLLER: Long = 1L
+        const val HAND_MOTION_RANGE_MAX: Long = 2L
+        const val HAND_TRACKED_SOURCE_UNKNOWN: Long = 0L
+        const val HAND_TRACKED_SOURCE_UNOBSTRUCTED: Long = 1L
+        const val HAND_TRACKED_SOURCE_CONTROLLER: Long = 2L
+        const val HAND_TRACKED_SOURCE_MAX: Long = 3L
+        const val HAND_JOINT_PALM: Long = 0L
+        const val HAND_JOINT_WRIST: Long = 1L
+        const val HAND_JOINT_THUMB_METACARPAL: Long = 2L
+        const val HAND_JOINT_THUMB_PROXIMAL: Long = 3L
+        const val HAND_JOINT_THUMB_DISTAL: Long = 4L
+        const val HAND_JOINT_THUMB_TIP: Long = 5L
+        const val HAND_JOINT_INDEX_METACARPAL: Long = 6L
+        const val HAND_JOINT_INDEX_PROXIMAL: Long = 7L
+        const val HAND_JOINT_INDEX_INTERMEDIATE: Long = 8L
+        const val HAND_JOINT_INDEX_DISTAL: Long = 9L
+        const val HAND_JOINT_INDEX_TIP: Long = 10L
+        const val HAND_JOINT_MIDDLE_METACARPAL: Long = 11L
+        const val HAND_JOINT_MIDDLE_PROXIMAL: Long = 12L
+        const val HAND_JOINT_MIDDLE_INTERMEDIATE: Long = 13L
+        const val HAND_JOINT_MIDDLE_DISTAL: Long = 14L
+        const val HAND_JOINT_MIDDLE_TIP: Long = 15L
+        const val HAND_JOINT_RING_METACARPAL: Long = 16L
+        const val HAND_JOINT_RING_PROXIMAL: Long = 17L
+        const val HAND_JOINT_RING_INTERMEDIATE: Long = 18L
+        const val HAND_JOINT_RING_DISTAL: Long = 19L
+        const val HAND_JOINT_RING_TIP: Long = 20L
+        const val HAND_JOINT_LITTLE_METACARPAL: Long = 21L
+        const val HAND_JOINT_LITTLE_PROXIMAL: Long = 22L
+        const val HAND_JOINT_LITTLE_INTERMEDIATE: Long = 23L
+        const val HAND_JOINT_LITTLE_DISTAL: Long = 24L
+        const val HAND_JOINT_LITTLE_TIP: Long = 25L
+        const val HAND_JOINT_MAX: Long = 26L
+        const val PERF_SETTINGS_LEVEL_POWER_SAVINGS: Long = 0L
+        const val PERF_SETTINGS_LEVEL_SUSTAINED_LOW: Long = 1L
+        const val PERF_SETTINGS_LEVEL_SUSTAINED_HIGH: Long = 2L
+        const val PERF_SETTINGS_LEVEL_BOOST: Long = 3L
+        const val PERF_SETTINGS_SUB_DOMAIN_COMPOSITING: Long = 0L
+        const val PERF_SETTINGS_SUB_DOMAIN_RENDERING: Long = 1L
+        const val PERF_SETTINGS_SUB_DOMAIN_THERMAL: Long = 2L
+        const val PERF_SETTINGS_NOTIF_LEVEL_NORMAL: Long = 0L
+        const val PERF_SETTINGS_NOTIF_LEVEL_WARNING: Long = 1L
+        const val PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED: Long = 2L
+        const val HAND_JOINT_NONE: Long = 0L
+        const val HAND_JOINT_ORIENTATION_VALID: Long = 1L
+        const val HAND_JOINT_ORIENTATION_TRACKED: Long = 2L
+        const val HAND_JOINT_POSITION_VALID: Long = 4L
+        const val HAND_JOINT_POSITION_TRACKED: Long = 8L
+        const val HAND_JOINT_LINEAR_VELOCITY_VALID: Long = 16L
+        const val HAND_JOINT_ANGULAR_VELOCITY_VALID: Long = 32L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRInterface? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRInterface? =
+            if (handle.address() == 0L) null else OpenXRInterface(handle)
+
         private const val GET_SESSION_STATE_HASH = 896364779L
         private val getSessionStateBind by lazy {
             ObjectCalls.getMethodBind("OpenXRInterface", "get_session_state", GET_SESSION_STATE_HASH)
+        }
+
+        private const val IS_USER_PRESENCE_SUPPORTED_HASH = 36873697L
+        private val isUserPresenceSupportedBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRInterface", "is_user_presence_supported", IS_USER_PRESENCE_SUPPORTED_HASH)
+        }
+
+        private const val IS_USER_PRESENT_HASH = 36873697L
+        private val isUserPresentBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRInterface", "is_user_present", IS_USER_PRESENT_HASH)
         }
 
         private const val GET_DISPLAY_REFRESH_RATE_HASH = 1740695150L
@@ -237,6 +341,16 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
         private const val SET_FOVEATION_DYNAMIC_HASH = 2586408642L
         private val setFoveationDynamicBind by lazy {
             ObjectCalls.getMethodBind("OpenXRInterface", "set_foveation_dynamic", SET_FOVEATION_DYNAMIC_HASH)
+        }
+
+        private const val GET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH = 36873697L
+        private val getFoveationWithSubsampledImagesBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRInterface", "get_foveation_with_subsampled_images", GET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH)
+        }
+
+        private const val SET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH = 2586408642L
+        private val setFoveationWithSubsampledImagesBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRInterface", "set_foveation_with_subsampled_images", SET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH)
         }
 
         private const val IS_ACTION_SET_ACTIVE_HASH = 3927539163L

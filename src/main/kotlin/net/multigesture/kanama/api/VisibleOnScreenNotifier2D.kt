@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Rect2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Rect2
 
 /**
  * A rectangular region of 2D space that detects whether it is visible on screen.
@@ -23,53 +23,22 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setShowRectProperty")
         set(value) = setShowRect(value)
 
-    /**
-     * The VisibleOnScreenNotifier2D's bounding rectangle.
-     *
-     * Generated from Godot docs: VisibleOnScreenNotifier2D.set_rect
-     */
     fun setRect(rect: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setRectBind, handle, rect)
     }
 
-    /**
-     * The VisibleOnScreenNotifier2D's bounding rectangle.
-     *
-     * Generated from Godot docs: VisibleOnScreenNotifier2D.get_rect
-     */
     fun getRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
     }
 
-    /**
-     * If `true`, shows the rectangle area of `rect` in the editor with a translucent magenta fill.
-     * Unlike changing the visibility of the VisibleOnScreenNotifier2D, this does not affect the screen
-     * culling detection.
-     *
-     * Generated from Godot docs: VisibleOnScreenNotifier2D.set_show_rect
-     */
     fun setShowRect(showRect: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShowRectBind, handle, showRect)
     }
 
-    /**
-     * If `true`, shows the rectangle area of `rect` in the editor with a translucent magenta fill.
-     * Unlike changing the visibility of the VisibleOnScreenNotifier2D, this does not affect the screen
-     * culling detection.
-     *
-     * Generated from Godot docs: VisibleOnScreenNotifier2D.is_showing_rect
-     */
     fun isShowingRect(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShowingRectBind, handle)
     }
 
-    /**
-     * If `true`, the bounding rectangle is on the screen. Note: It takes one frame for the
-     * `VisibleOnScreenNotifier2D`'s visibility to be determined once added to the scene tree, so this
-     * method will always return `false` right after it is instantiated, before the draw pass.
-     *
-     * Generated from Godot docs: VisibleOnScreenNotifier2D.is_on_screen
-     */
     fun isOnScreen(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, handle)
     }

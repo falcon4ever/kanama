@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: SceneReplicationConfig
@@ -61,6 +61,10 @@ class SceneReplicationConfig(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val REPLICATION_MODE_NEVER: Long = 0L
+        const val REPLICATION_MODE_ALWAYS: Long = 1L
+        const val REPLICATION_MODE_ON_CHANGE: Long = 2L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): SceneReplicationConfig? =
             wrap(handle)

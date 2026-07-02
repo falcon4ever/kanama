@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * This resource allows for creating a custom rendering effect.
@@ -52,142 +52,58 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
         @JvmName("setNeedsSeparateSpecularProperty")
         set(value) = setNeedsSeparateSpecular(value)
 
-    /**
-     * If `true` this rendering effect is applied to any viewport it is added to.
-     *
-     * Generated from Godot docs: CompositorEffect.set_enabled
-     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true` this rendering effect is applied to any viewport it is added to.
-     *
-     * Generated from Godot docs: CompositorEffect.get_enabled
-     */
     fun getEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
-    /**
-     * The type of effect that is implemented, determines at what stage of rendering the callback is
-     * called.
-     *
-     * Generated from Godot docs: CompositorEffect.set_effect_callback_type
-     */
     fun setEffectCallbackType(effectCallbackType: Long) {
         ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, handle, effectCallbackType)
     }
 
-    /**
-     * The type of effect that is implemented, determines at what stage of rendering the callback is
-     * called.
-     *
-     * Generated from Godot docs: CompositorEffect.get_effect_callback_type
-     */
     fun getEffectCallbackType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, handle)
     }
 
-    /**
-     * If `true` and MSAA is enabled, this will trigger a color buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.set_access_resolved_color
-     */
     fun setAccessResolvedColor(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAccessResolvedColorBind, handle, enable)
     }
 
-    /**
-     * If `true` and MSAA is enabled, this will trigger a color buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.get_access_resolved_color
-     */
     fun getAccessResolvedColor(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedColorBind, handle)
     }
 
-    /**
-     * If `true` and MSAA is enabled, this will trigger a depth buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.set_access_resolved_depth
-     */
     fun setAccessResolvedDepth(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAccessResolvedDepthBind, handle, enable)
     }
 
-    /**
-     * If `true` and MSAA is enabled, this will trigger a depth buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.get_access_resolved_depth
-     */
     fun getAccessResolvedDepth(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedDepthBind, handle)
     }
 
-    /**
-     * If `true` this triggers motion vectors being calculated during the opaque render state. Note: In
-     * `_render_callback`, to access the motion vector buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.set_needs_motion_vectors
-     */
     fun setNeedsMotionVectors(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNeedsMotionVectorsBind, handle, enable)
     }
 
-    /**
-     * If `true` this triggers motion vectors being calculated during the opaque render state. Note: In
-     * `_render_callback`, to access the motion vector buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.get_needs_motion_vectors
-     */
     fun getNeedsMotionVectors(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsMotionVectorsBind, handle)
     }
 
-    /**
-     * If `true` this triggers normal and roughness data to be output during our depth pre-pass, only
-     * applicable for the Forward+ renderer. Note: In `_render_callback`, to access the roughness
-     * buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.set_needs_normal_roughness
-     */
     fun setNeedsNormalRoughness(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNeedsNormalRoughnessBind, handle, enable)
     }
 
-    /**
-     * If `true` this triggers normal and roughness data to be output during our depth pre-pass, only
-     * applicable for the Forward+ renderer. Note: In `_render_callback`, to access the roughness
-     * buffer use:
-     *
-     * Generated from Godot docs: CompositorEffect.get_needs_normal_roughness
-     */
     fun getNeedsNormalRoughness(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsNormalRoughnessBind, handle)
     }
 
-    /**
-     * If `true` this triggers specular data being rendered to a separate buffer and combined after
-     * effects have been applied, only applicable for the Forward+ renderer.
-     *
-     * Generated from Godot docs: CompositorEffect.set_needs_separate_specular
-     */
     fun setNeedsSeparateSpecular(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNeedsSeparateSpecularBind, handle, enable)
     }
 
-    /**
-     * If `true` this triggers specular data being rendered to a separate buffer and combined after
-     * effects have been applied, only applicable for the Forward+ renderer.
-     *
-     * Generated from Godot docs: CompositorEffect.get_needs_separate_specular
-     */
     fun getNeedsSeparateSpecular(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, handle)
     }

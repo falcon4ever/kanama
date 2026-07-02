@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * An X509 certificate (e.g. for TLS).
@@ -27,21 +27,10 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
-    /**
-     * Returns a string representation of the certificate, or an empty string if the certificate is
-     * invalid.
-     *
-     * Generated from Godot docs: X509Certificate.save_to_string
-     */
     fun saveToString(): String {
         return ObjectCalls.ptrcallNoArgsRetString(saveToStringBind, handle)
     }
 
-    /**
-     * Loads a certificate from the given `string`.
-     *
-     * Generated from Godot docs: X509Certificate.load_from_string
-     */
     fun loadFromString(string: String): Long {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, handle, string)
     }

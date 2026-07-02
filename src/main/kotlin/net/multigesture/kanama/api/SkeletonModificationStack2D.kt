@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A resource that holds a stack of `SkeletonModification2D`s.
@@ -50,125 +50,54 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithDoubleAndIntArgs(executeBind, handle, delta, executionMode)
     }
 
-    /**
-     * Enables all `SkeletonModification2D`s in the stack.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.enable_all_modifications
-     */
     fun enableAllModifications(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(enableAllModificationsBind, handle, enabled)
     }
 
-    /**
-     * Returns the `SkeletonModification2D` at the passed-in index, `mod_idx`.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.get_modification
-     */
     fun getModification(modIdx: Int): SkeletonModification2D? {
         return SkeletonModification2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, handle, modIdx))
     }
 
-    /**
-     * Adds the passed-in `SkeletonModification2D` to the stack.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.add_modification
-     */
     fun addModification(modification: SkeletonModification2D?) {
         ObjectCalls.ptrcallWithObjectArgs(addModificationBind, handle, listOf(modification?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Deletes the `SkeletonModification2D` at the index position `mod_idx`, if it exists.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.delete_modification
-     */
     fun deleteModification(modIdx: Int) {
         ObjectCalls.ptrcallWithIntArg(deleteModificationBind, handle, modIdx)
     }
 
-    /**
-     * Sets the modification at `mod_idx` to the passed-in modification, `modification`.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.set_modification
-     */
     fun setModification(modIdx: Int, modification: SkeletonModification2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, handle, modIdx, modification?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * The number of modifications in the stack.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.set_modification_count
-     */
     fun setModificationCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setModificationCountBind, handle, count)
     }
 
-    /**
-     * The number of modifications in the stack.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.get_modification_count
-     */
     fun getModificationCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getModificationCountBind, handle)
     }
 
-    /**
-     * Returns a boolean that indicates whether the modification stack is setup and can execute.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.get_is_setup
-     */
     fun getIsSetup(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
     }
 
-    /**
-     * If `true`, the modification's in the stack will be called. This is handled automatically through
-     * the `Skeleton2D` node.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.set_enabled
-     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the modification's in the stack will be called. This is handled automatically through
-     * the `Skeleton2D` node.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.get_enabled
-     */
     fun getEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
-    /**
-     * The interpolation strength of the modifications in stack. A value of `0` will make it where the
-     * modifications are not applied, a strength of `0.5` will be half applied, and a strength of `1`
-     * will allow the modifications to be fully applied and override the `Skeleton2D` `Bone2D` poses.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.set_strength
-     */
     fun setStrength(strength: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
     }
 
-    /**
-     * The interpolation strength of the modifications in stack. A value of `0` will make it where the
-     * modifications are not applied, a strength of `0.5` will be half applied, and a strength of `1`
-     * will allow the modifications to be fully applied and override the `Skeleton2D` `Bone2D` poses.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.get_strength
-     */
     fun getStrength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
     }
 
-    /**
-     * Returns the `Skeleton2D` node that the SkeletonModificationStack2D is bound to.
-     *
-     * Generated from Godot docs: SkeletonModificationStack2D.get_skeleton
-     */
     fun getSkeleton(): Skeleton2D? {
         return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
     }

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRFrameSynthesisExtension
@@ -45,6 +45,13 @@ class OpenXRFrameSynthesisExtension(handle: MemorySegment) : OpenXRExtensionWrap
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRFrameSynthesisExtension? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRFrameSynthesisExtension? =
+            if (handle.address() == 0L) null else OpenXRFrameSynthesisExtension(handle)
+
         private const val IS_AVAILABLE_HASH = 36873697L
         private val isAvailableBind by lazy {
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "is_available", IS_AVAILABLE_HASH)

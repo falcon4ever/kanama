@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Abstract base class for interacting with socket streams.
@@ -18,25 +18,20 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
-    /**
-     * Returns the status of the connection.
-     *
-     * Generated from Godot docs: StreamPeerSocket.get_status
-     */
     fun getStatus(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
-    /**
-     * Disconnects from host.
-     *
-     * Generated from Godot docs: StreamPeerSocket.disconnect_from_host
-     */
     fun disconnectFromHost() {
         ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, handle)
     }
 
     companion object {
+        const val STATUS_NONE: Long = 0L
+        const val STATUS_CONNECTING: Long = 1L
+        const val STATUS_CONNECTED: Long = 2L
+        const val STATUS_ERROR: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): StreamPeerSocket? =
             wrap(handle)

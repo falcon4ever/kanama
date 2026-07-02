@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Transform3D
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Transform3D
 
 /**
  * Generated from Godot docs: VisualShaderNodeTransformParameter
@@ -38,6 +38,13 @@ class VisualShaderNodeTransformParameter(handle: MemorySegment) : VisualShaderNo
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeTransformParameter? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformParameter? =
+            if (handle.address() == 0L) null else VisualShaderNodeTransformParameter(handle)
+
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
         private val setDefaultValueEnabledBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeTransformParameter", "set_default_value_enabled", SET_DEFAULT_VALUE_ENABLED_HASH)

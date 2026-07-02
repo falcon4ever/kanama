@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Interpolates an abstract value and supplies it to a method called over time.
@@ -9,32 +9,14 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: MethodTweener
  */
 class MethodTweener(handle: MemorySegment) : Tweener(handle) {
-    /**
-     * Sets the time in seconds after which the `MethodTweener` will start interpolating. By default
-     * there's no delay.
-     *
-     * Generated from Godot docs: MethodTweener.set_delay
-     */
     fun setDelay(delay: Double): MethodTweener? {
         return MethodTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay))
     }
 
-    /**
-     * Sets the type of used transition from `Tween.TransitionType`. If not set, the default transition
-     * is used from the `Tween` that contains this Tweener.
-     *
-     * Generated from Godot docs: MethodTweener.set_trans
-     */
     fun setTrans(trans: Long): MethodTweener? {
         return MethodTweener.wrap(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, handle, trans))
     }
 
-    /**
-     * Sets the type of used easing from `Tween.EaseType`. If not set, the default easing is used from
-     * the `Tween` that contains this Tweener.
-     *
-     * Generated from Godot docs: MethodTweener.set_ease
-     */
     fun setEase(ease: Long): MethodTweener? {
         return MethodTweener.wrap(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease))
     }

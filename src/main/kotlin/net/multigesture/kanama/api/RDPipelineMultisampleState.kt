@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Pipeline multisample state (used by `RenderingDevice`).
@@ -46,138 +46,50 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setSampleMasksProperty")
         set(value) = setSampleMasks(value)
 
-    /**
-     * The number of MSAA samples (or SSAA samples if `enable_sample_shading` is `true`) to perform.
-     * Higher values result in better antialiasing, at the cost of performance.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.set_sample_count
-     */
     fun setSampleCount(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSampleCountBind, handle, pMember)
     }
 
-    /**
-     * The number of MSAA samples (or SSAA samples if `enable_sample_shading` is `true`) to perform.
-     * Higher values result in better antialiasing, at the cost of performance.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.get_sample_count
-     */
     fun getSampleCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, handle)
     }
 
-    /**
-     * If `true`, enables per-sample shading which replaces MSAA by SSAA. This provides higher quality
-     * antialiasing that works with transparent (alpha scissor) edges. This has a very high performance
-     * cost. See also `min_sample_shading`. See the per-sample shading Vulkan documentation
-     * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-sampleshading)
-     * for more details.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.set_enable_sample_shading
-     */
     fun setEnableSampleShading(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableSampleShadingBind, handle, pMember)
     }
 
-    /**
-     * If `true`, enables per-sample shading which replaces MSAA by SSAA. This provides higher quality
-     * antialiasing that works with transparent (alpha scissor) edges. This has a very high performance
-     * cost. See also `min_sample_shading`. See the per-sample shading Vulkan documentation
-     * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-sampleshading)
-     * for more details.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.get_enable_sample_shading
-     */
     fun getEnableSampleShading(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableSampleShadingBind, handle)
     }
 
-    /**
-     * The multiplier of `sample_count` that determines how many samples are performed for each
-     * fragment. Must be between `0.0` and `1.0` (inclusive). Only effective if `enable_sample_shading`
-     * is `true`. If `min_sample_shading` is `1.0`, fragment invocation must only read from the
-     * coverage index sample. Tile image access must not be used if `enable_sample_shading` is not
-     * `1.0`.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.set_min_sample_shading
-     */
     fun setMinSampleShading(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMinSampleShadingBind, handle, pMember)
     }
 
-    /**
-     * The multiplier of `sample_count` that determines how many samples are performed for each
-     * fragment. Must be between `0.0` and `1.0` (inclusive). Only effective if `enable_sample_shading`
-     * is `true`. If `min_sample_shading` is `1.0`, fragment invocation must only read from the
-     * coverage index sample. Tile image access must not be used if `enable_sample_shading` is not
-     * `1.0`.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.get_min_sample_shading
-     */
     fun getMinSampleShading(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinSampleShadingBind, handle)
     }
 
-    /**
-     * If `true`, alpha to coverage is enabled. This generates a temporary coverage value based on the
-     * alpha component of the fragment's first color output. This allows alpha transparency to make use
-     * of multisample antialiasing.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.set_enable_alpha_to_coverage
-     */
     fun setEnableAlphaToCoverage(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToCoverageBind, handle, pMember)
     }
 
-    /**
-     * If `true`, alpha to coverage is enabled. This generates a temporary coverage value based on the
-     * alpha component of the fragment's first color output. This allows alpha transparency to make use
-     * of multisample antialiasing.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.get_enable_alpha_to_coverage
-     */
     fun getEnableAlphaToCoverage(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToCoverageBind, handle)
     }
 
-    /**
-     * If `true`, alpha is forced to either `0.0` or `1.0`. This allows hardening the edges of
-     * antialiased alpha transparencies. Only relevant if `enable_alpha_to_coverage` is `true`.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.set_enable_alpha_to_one
-     */
     fun setEnableAlphaToOne(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToOneBind, handle, pMember)
     }
 
-    /**
-     * If `true`, alpha is forced to either `0.0` or `1.0`. This allows hardening the edges of
-     * antialiased alpha transparencies. Only relevant if `enable_alpha_to_coverage` is `true`.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.get_enable_alpha_to_one
-     */
     fun getEnableAlphaToOne(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToOneBind, handle)
     }
 
-    /**
-     * The sample mask array. See the sample mask Vulkan documentation
-     * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-samplemask)
-     * for more details.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.set_sample_masks
-     */
     fun setSampleMasks(masks: List<Long>) {
         ObjectCalls.ptrcallWithTypedIntListArg(setSampleMasksBind, handle, masks)
     }
 
-    /**
-     * The sample mask array. See the sample mask Vulkan documentation
-     * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-samplemask)
-     * for more details.
-     *
-     * Generated from Godot docs: RDPipelineMultisampleState.get_sample_masks
-     */
     fun getSampleMasks(): List<Long> {
         return ObjectCalls.ptrcallNoArgsRetLongList(getSampleMasksBind, handle)
     }

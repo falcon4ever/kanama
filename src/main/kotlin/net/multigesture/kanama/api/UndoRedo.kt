@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Provides a high-level interface for implementing undo and redo operations.
@@ -16,214 +16,86 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
         @JvmName("setMaxStepsProperty")
         set(value) = setMaxSteps(value)
 
-    /**
-     * Create a new action. After this is called, do all your calls to `add_do_method`,
-     * `add_undo_method`, `add_do_property`, and `add_undo_property`, then commit the action with
-     * `commit_action`. The way actions are merged is dictated by `merge_mode`. The way undo operation
-     * are ordered in actions is dictated by `backward_undo_ops`. When `backward_undo_ops` is `false`
-     * undo option are ordered in the same order they were added. Which means the first operation to be
-     * added will be the first to be undone.
-     *
-     * Generated from Godot docs: UndoRedo.create_action
-     */
     fun createAction(name: String, mergeMode: Long = 0L, backwardUndoOps: Boolean = false) {
         ObjectCalls.ptrcallWithStringLongBoolArgs(createActionBind, handle, name, mergeMode, backwardUndoOps)
     }
 
-    /**
-     * Commit the action. If `execute` is `true` (which it is by default), all "do" methods/properties
-     * are called/set when this function is called.
-     *
-     * Generated from Godot docs: UndoRedo.commit_action
-     */
     fun commitAction(execute: Boolean = true) {
         ObjectCalls.ptrcallWithBoolArg(commitActionBind, handle, execute)
     }
 
-    /**
-     * Returns `true` if the `UndoRedo` is currently committing the action, i.e. running its "do"
-     * method or property change (see `commit_action`).
-     *
-     * Generated from Godot docs: UndoRedo.is_committing_action
-     */
     fun isCommittingAction(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, handle)
     }
 
-    /**
-     * Register a `Callable` that will be called when the action is committed.
-     *
-     * Generated from Godot docs: UndoRedo.add_do_method
-     */
     fun addDoMethod(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(addDoMethodBind, handle, callable.target.handle, callable.method)
     }
 
-    /**
-     * Register a `Callable` that will be called when the action is undone.
-     *
-     * Generated from Godot docs: UndoRedo.add_undo_method
-     */
     fun addUndoMethod(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(addUndoMethodBind, handle, callable.target.handle, callable.method)
     }
 
-    /**
-     * Register a `property` that would change its value to `value` when the action is committed.
-     *
-     * Generated from Godot docs: UndoRedo.add_do_property
-     */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
         ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, handle, objectValue.handle, property, value)
     }
 
-    /**
-     * Register a `property` that would change its value to `value` when the action is undone.
-     *
-     * Generated from Godot docs: UndoRedo.add_undo_property
-     */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
         ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, handle, objectValue.handle, property, value)
     }
 
-    /**
-     * Register a reference to an object that will be erased if the "do" history is deleted. This is
-     * useful for objects added by the "do" action and removed by the "undo" action. When the "do"
-     * history is deleted, if the object is a `RefCounted`, it will be unreferenced. Otherwise, it will
-     * be freed. Do not use for resources.
-     *
-     * Generated from Godot docs: UndoRedo.add_do_reference
-     */
     fun addDoReference(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, handle, listOf(objectValue.handle))
     }
 
-    /**
-     * Register a reference to an object that will be erased if the "undo" history is deleted. This is
-     * useful for objects added by the "undo" action and removed by the "do" action. When the "undo"
-     * history is deleted, if the object is a `RefCounted`, it will be unreferenced. Otherwise, it will
-     * be freed. Do not use for resources.
-     *
-     * Generated from Godot docs: UndoRedo.add_undo_reference
-     */
     fun addUndoReference(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, handle, listOf(objectValue.handle))
     }
 
-    /**
-     * Marks the next "do" and "undo" operations to be processed even if the action gets merged with
-     * another in the `MERGE_ENDS` mode. Return to normal operation using
-     * `end_force_keep_in_merge_ends`.
-     *
-     * Generated from Godot docs: UndoRedo.start_force_keep_in_merge_ends
-     */
     fun startForceKeepInMergeEnds() {
         ObjectCalls.ptrcallNoArgs(startForceKeepInMergeEndsBind, handle)
     }
 
-    /**
-     * Stops marking operations as to be processed even if the action gets merged with another in the
-     * `MERGE_ENDS` mode. See `start_force_keep_in_merge_ends`.
-     *
-     * Generated from Godot docs: UndoRedo.end_force_keep_in_merge_ends
-     */
     fun endForceKeepInMergeEnds() {
         ObjectCalls.ptrcallNoArgs(endForceKeepInMergeEndsBind, handle)
     }
 
-    /**
-     * Returns how many elements are in the history.
-     *
-     * Generated from Godot docs: UndoRedo.get_history_count
-     */
     fun getHistoryCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getHistoryCountBind, handle)
     }
 
-    /**
-     * Gets the index of the current action.
-     *
-     * Generated from Godot docs: UndoRedo.get_current_action
-     */
     fun getCurrentAction(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentActionBind, handle)
     }
 
-    /**
-     * Gets the action name from its index.
-     *
-     * Generated from Godot docs: UndoRedo.get_action_name
-     */
     fun getActionName(id: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getActionNameBind, handle, id)
     }
 
-    /**
-     * Clear the undo/redo history and associated references. Passing `false` to `increase_version`
-     * will prevent the version number from increasing when the history is cleared.
-     *
-     * Generated from Godot docs: UndoRedo.clear_history
-     */
     fun clearHistory(increaseVersion: Boolean = true) {
         ObjectCalls.ptrcallWithBoolArg(clearHistoryBind, handle, increaseVersion)
     }
 
-    /**
-     * Gets the name of the current action, equivalent to `get_action_name(get_current_action())`.
-     *
-     * Generated from Godot docs: UndoRedo.get_current_action_name
-     */
     fun getCurrentActionName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCurrentActionNameBind, handle)
     }
 
-    /**
-     * Returns `true` if an "undo" action is available.
-     *
-     * Generated from Godot docs: UndoRedo.has_undo
-     */
     fun hasUndo(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, handle)
     }
 
-    /**
-     * Returns `true` if a "redo" action is available.
-     *
-     * Generated from Godot docs: UndoRedo.has_redo
-     */
     fun hasRedo(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, handle)
     }
 
-    /**
-     * Gets the version. Every time a new action is committed, the `UndoRedo`'s version number is
-     * increased automatically. This is useful mostly to check if something changed from a saved
-     * version.
-     *
-     * Generated from Godot docs: UndoRedo.get_version
-     */
     fun getVersion(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, handle)
     }
 
-    /**
-     * The maximum number of steps that can be stored in the undo/redo history. If the number of stored
-     * steps exceeds this limit, older steps are removed from history and can no longer be reached by
-     * calling `undo`. A value of `0` or lower means no limit.
-     *
-     * Generated from Godot docs: UndoRedo.set_max_steps
-     */
     fun setMaxSteps(maxSteps: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxStepsBind, handle, maxSteps)
     }
 
-    /**
-     * The maximum number of steps that can be stored in the undo/redo history. If the number of stored
-     * steps exceeds this limit, older steps are removed from history and can no longer be reached by
-     * calling `undo`. A value of `0` or lower means no limit.
-     *
-     * Generated from Godot docs: UndoRedo.get_max_steps
-     */
     fun getMaxSteps(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxStepsBind, handle)
     }
@@ -251,6 +123,10 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
     }
 
     companion object {
+        const val MERGE_DISABLE: Long = 0L
+        const val MERGE_ENDS: Long = 1L
+        const val MERGE_ALL: Long = 2L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): UndoRedo? =
             wrap(handle)

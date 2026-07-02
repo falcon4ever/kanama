@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A node for displaying plain text in 3D space.
@@ -186,591 +186,268 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setStructuredTextBidiOverrideOptionsProperty")
         set(value) = setStructuredTextBidiOverrideOptions(value)
 
-    /**
-     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
-     * justify).
-     *
-     * Generated from Godot docs: Label3D.set_horizontal_alignment
-     */
     fun setHorizontalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
-     * justify).
-     *
-     * Generated from Godot docs: Label3D.get_horizontal_alignment
-     */
     fun getHorizontalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
-    /**
-     * Controls the text's vertical alignment. Supports top, center, and bottom.
-     *
-     * Generated from Godot docs: Label3D.set_vertical_alignment
-     */
     fun setVerticalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
     }
 
-    /**
-     * Controls the text's vertical alignment. Supports top, center, and bottom.
-     *
-     * Generated from Godot docs: Label3D.get_vertical_alignment
-     */
     fun getVerticalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
     }
 
-    /**
-     * Text `Color` of the `Label3D`.
-     *
-     * Generated from Godot docs: Label3D.set_modulate
-     */
     fun setModulate(modulate: Color) {
         ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, modulate)
     }
 
-    /**
-     * Text `Color` of the `Label3D`.
-     *
-     * Generated from Godot docs: Label3D.get_modulate
-     */
     fun getModulate(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
     }
 
-    /**
-     * The tint of text outline.
-     *
-     * Generated from Godot docs: Label3D.set_outline_modulate
-     */
     fun setOutlineModulate(modulate: Color) {
         ObjectCalls.ptrcallWithColorArg(setOutlineModulateBind, handle, modulate)
     }
 
-    /**
-     * The tint of text outline.
-     *
-     * Generated from Godot docs: Label3D.get_outline_modulate
-     */
     fun getOutlineModulate(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getOutlineModulateBind, handle)
     }
 
-    /**
-     * The text to display on screen.
-     *
-     * Generated from Godot docs: Label3D.set_text
-     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
-    /**
-     * The text to display on screen.
-     *
-     * Generated from Godot docs: Label3D.get_text
-     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: Label3D.set_text_direction
-     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: Label3D.get_text_direction
-     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: Label3D.set_language
-     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: Label3D.get_language
-     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: Label3D.set_structured_text_bidi_override
-     */
     fun setStructuredTextBidiOverride(parser: Long) {
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
-    /**
-     * Set BiDi algorithm override for the structured text.
-     *
-     * Generated from Godot docs: Label3D.get_structured_text_bidi_override
-     */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: Label3D.set_structured_text_bidi_override_options
-     */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
-    /**
-     * Set additional options for BiDi override.
-     *
-     * Generated from Godot docs: Label3D.get_structured_text_bidi_override_options
-     */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
-    /**
-     * If `true`, all the text displays as UPPERCASE.
-     *
-     * Generated from Godot docs: Label3D.set_uppercase
-     */
     fun setUppercase(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
     }
 
-    /**
-     * If `true`, all the text displays as UPPERCASE.
-     *
-     * Generated from Godot docs: Label3D.is_uppercase
-     */
     fun isUppercase(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
     }
 
-    /**
-     * Sets the render priority for the text. Higher priority objects will be sorted in front of lower
-     * priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED` (default
-     * value). Note: This only applies to sorting of transparent objects. This will not impact how
-     * transparent objects are sorted relative to opaque objects. This is because opaque objects are
-     * not sorted, while transparent objects are sorted from back to front (subject to priority).
-     *
-     * Generated from Godot docs: Label3D.set_render_priority
-     */
     fun setRenderPriority(priority: Int) {
         ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, handle, priority)
     }
 
-    /**
-     * Sets the render priority for the text. Higher priority objects will be sorted in front of lower
-     * priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED` (default
-     * value). Note: This only applies to sorting of transparent objects. This will not impact how
-     * transparent objects are sorted relative to opaque objects. This is because opaque objects are
-     * not sorted, while transparent objects are sorted from back to front (subject to priority).
-     *
-     * Generated from Godot docs: Label3D.get_render_priority
-     */
     fun getRenderPriority(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, handle)
     }
 
-    /**
-     * Sets the render priority for the text outline. Higher priority objects will be sorted in front
-     * of lower priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED`
-     * (default value). Note: This only applies to sorting of transparent objects. This will not impact
-     * how transparent objects are sorted relative to opaque objects. This is because opaque objects
-     * are not sorted, while transparent objects are sorted from back to front (subject to priority).
-     *
-     * Generated from Godot docs: Label3D.set_outline_render_priority
-     */
     fun setOutlineRenderPriority(priority: Int) {
         ObjectCalls.ptrcallWithIntArg(setOutlineRenderPriorityBind, handle, priority)
     }
 
-    /**
-     * Sets the render priority for the text outline. Higher priority objects will be sorted in front
-     * of lower priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED`
-     * (default value). Note: This only applies to sorting of transparent objects. This will not impact
-     * how transparent objects are sorted relative to opaque objects. This is because opaque objects
-     * are not sorted, while transparent objects are sorted from back to front (subject to priority).
-     *
-     * Generated from Godot docs: Label3D.get_outline_render_priority
-     */
     fun getOutlineRenderPriority(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineRenderPriorityBind, handle)
     }
 
-    /**
-     * Font configuration used to display text.
-     *
-     * Generated from Godot docs: Label3D.set_font
-     */
     fun setFont(font: Font?) {
         ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Font configuration used to display text.
-     *
-     * Generated from Godot docs: Label3D.get_font
-     */
     fun getFont(): Font? {
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
     }
 
-    /**
-     * Font size of the `Label3D`'s text. To make the font look more detailed when up close, increase
-     * `font_size` while decreasing `pixel_size` at the same time. Higher font sizes require more time
-     * to render new characters, which can cause stuttering during gameplay.
-     *
-     * Generated from Godot docs: Label3D.set_font_size
-     */
     fun setFontSize(size: Int) {
         ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, size)
     }
 
-    /**
-     * Font size of the `Label3D`'s text. To make the font look more detailed when up close, increase
-     * `font_size` while decreasing `pixel_size` at the same time. Higher font sizes require more time
-     * to render new characters, which can cause stuttering during gameplay.
-     *
-     * Generated from Godot docs: Label3D.get_font_size
-     */
     fun getFontSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
     }
 
-    /**
-     * Text outline size.
-     *
-     * Generated from Godot docs: Label3D.set_outline_size
-     */
     fun setOutlineSize(outlineSize: Int) {
         ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, handle, outlineSize)
     }
 
-    /**
-     * Text outline size.
-     *
-     * Generated from Godot docs: Label3D.get_outline_size
-     */
     fun getOutlineSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, handle)
     }
 
-    /**
-     * Additional vertical spacing between lines (in pixels), spacing is added to line descent. This
-     * value can be negative.
-     *
-     * Generated from Godot docs: Label3D.set_line_spacing
-     */
     fun setLineSpacing(lineSpacing: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
-    /**
-     * Additional vertical spacing between lines (in pixels), spacing is added to line descent. This
-     * value can be negative.
-     *
-     * Generated from Godot docs: Label3D.get_line_spacing
-     */
     fun getLineSpacing(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
-    /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
-     * node's bounding rectangle. If you resize the node, it will change its height automatically to
-     * show all the text.
-     *
-     * Generated from Godot docs: Label3D.set_autowrap_mode
-     */
     fun setAutowrapMode(autowrapMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
-    /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
-     * node's bounding rectangle. If you resize the node, it will change its height automatically to
-     * show all the text.
-     *
-     * Generated from Godot docs: Label3D.get_autowrap_mode
-     */
     fun getAutowrapMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
-    /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
-     *
-     * Generated from Godot docs: Label3D.set_autowrap_trim_flags
-     */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
     }
 
-    /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
-     *
-     * Generated from Godot docs: Label3D.get_autowrap_trim_flags
-     */
     fun getAutowrapTrimFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: Label3D.set_justification_flags
-     */
     fun setJustificationFlags(justificationFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
     }
 
-    /**
-     * Line fill alignment rules.
-     *
-     * Generated from Godot docs: Label3D.get_justification_flags
-     */
     fun getJustificationFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
-    /**
-     * Text width (in pixels), used for autowrap and fill alignment.
-     *
-     * Generated from Godot docs: Label3D.set_width
-     */
     fun setWidth(width: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
-    /**
-     * Text width (in pixels), used for autowrap and fill alignment.
-     *
-     * Generated from Godot docs: Label3D.get_width
-     */
     fun getWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
-    /**
-     * The size of one pixel's width on the label to scale it in 3D. To make the font look more
-     * detailed when up close, increase `font_size` while decreasing `pixel_size` at the same time.
-     *
-     * Generated from Godot docs: Label3D.set_pixel_size
-     */
     fun setPixelSize(pixelSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
     }
 
-    /**
-     * The size of one pixel's width on the label to scale it in 3D. To make the font look more
-     * detailed when up close, increase `font_size` while decreasing `pixel_size` at the same time.
-     *
-     * Generated from Godot docs: Label3D.get_pixel_size
-     */
     fun getPixelSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
     }
 
-    /**
-     * The text drawing offset (in pixels).
-     *
-     * Generated from Godot docs: Label3D.set_offset
-     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
-    /**
-     * The text drawing offset (in pixels).
-     *
-     * Generated from Godot docs: Label3D.get_offset
-     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
-    /**
-     * If `true`, the `Light3D` in the `Environment` has effects on the label.
-     *
-     * Generated from Godot docs: Label3D.set_draw_flag
-     */
     fun setDrawFlag(flag: Long, enabled: Boolean) {
         ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, handle, flag, enabled)
     }
 
-    /**
-     * If `true`, the `Light3D` in the `Environment` has effects on the label.
-     *
-     * Generated from Godot docs: Label3D.get_draw_flag
-     */
     fun getDrawFlag(flag: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, handle, flag)
     }
 
-    /**
-     * The billboard mode to use for the label.
-     *
-     * Generated from Godot docs: Label3D.set_billboard_mode
-     */
     fun setBillboardMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, handle, mode)
     }
 
-    /**
-     * The billboard mode to use for the label.
-     *
-     * Generated from Godot docs: Label3D.get_billboard_mode
-     */
     fun getBillboardMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, handle)
     }
 
-    /**
-     * The alpha cutting mode to use for the sprite.
-     *
-     * Generated from Godot docs: Label3D.set_alpha_cut_mode
-     */
     fun setAlphaCutMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, handle, mode)
     }
 
-    /**
-     * The alpha cutting mode to use for the sprite.
-     *
-     * Generated from Godot docs: Label3D.get_alpha_cut_mode
-     */
     fun getAlphaCutMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, handle)
     }
 
-    /**
-     * Threshold at which the alpha scissor will discard values.
-     *
-     * Generated from Godot docs: Label3D.set_alpha_scissor_threshold
-     */
     fun setAlphaScissorThreshold(threshold: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, handle, threshold)
     }
 
-    /**
-     * Threshold at which the alpha scissor will discard values.
-     *
-     * Generated from Godot docs: Label3D.get_alpha_scissor_threshold
-     */
     fun getAlphaScissorThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, handle)
     }
 
-    /**
-     * The hashing scale for Alpha Hash. Recommended values between `0` and `2`.
-     *
-     * Generated from Godot docs: Label3D.set_alpha_hash_scale
-     */
     fun setAlphaHashScale(threshold: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, handle, threshold)
     }
 
-    /**
-     * The hashing scale for Alpha Hash. Recommended values between `0` and `2`.
-     *
-     * Generated from Godot docs: Label3D.get_alpha_hash_scale
-     */
     fun getAlphaHashScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, handle)
     }
 
-    /**
-     * The type of alpha antialiasing to apply.
-     *
-     * Generated from Godot docs: Label3D.set_alpha_antialiasing
-     */
     fun setAlphaAntialiasing(alphaAa: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, handle, alphaAa)
     }
 
-    /**
-     * The type of alpha antialiasing to apply.
-     *
-     * Generated from Godot docs: Label3D.get_alpha_antialiasing
-     */
     fun getAlphaAntialiasing(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, handle)
     }
 
-    /**
-     * Threshold at which antialiasing will be applied on the alpha channel.
-     *
-     * Generated from Godot docs: Label3D.set_alpha_antialiasing_edge
-     */
     fun setAlphaAntialiasingEdge(edge: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, handle, edge)
     }
 
-    /**
-     * Threshold at which antialiasing will be applied on the alpha channel.
-     *
-     * Generated from Godot docs: Label3D.get_alpha_antialiasing_edge
-     */
     fun getAlphaAntialiasingEdge(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, handle)
     }
 
-    /**
-     * Filter flags for the texture.
-     *
-     * Generated from Godot docs: Label3D.set_texture_filter
-     */
     fun setTextureFilter(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
     }
 
-    /**
-     * Filter flags for the texture.
-     *
-     * Generated from Godot docs: Label3D.get_texture_filter
-     */
     fun getTextureFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
-    /**
-     * Returns a `TriangleMesh` with the label's vertices following its current configuration (such as
-     * its `pixel_size`).
-     *
-     * Generated from Godot docs: Label3D.generate_triangle_mesh
-     */
     fun generateTriangleMesh(): TriangleMesh? {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, handle))
     }
 
     companion object {
+        const val FLAG_SHADED: Long = 0L
+        const val FLAG_DOUBLE_SIDED: Long = 1L
+        const val FLAG_DISABLE_DEPTH_TEST: Long = 2L
+        const val FLAG_FIXED_SIZE: Long = 3L
+        const val FLAG_MAX: Long = 4L
+        const val ALPHA_CUT_DISABLED: Long = 0L
+        const val ALPHA_CUT_DISCARD: Long = 1L
+        const val ALPHA_CUT_OPAQUE_PREPASS: Long = 2L
+        const val ALPHA_CUT_HASH: Long = 3L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Label3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Label3D? =
+            if (handle.address() == 0L) null else Label3D(handle)
+
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
         private val setHorizontalAlignmentBind by lazy {
             ObjectCalls.getMethodBind("Label3D", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)

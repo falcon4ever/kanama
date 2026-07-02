@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Abstract base class for all 2D physics joints.
@@ -36,89 +36,38 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setDisableCollisionProperty")
         set(value) = setExcludeNodesFromCollision(value)
 
-    /**
-     * Path to the first body (A) attached to the joint. The node must inherit `PhysicsBody2D`.
-     *
-     * Generated from Godot docs: Joint2D.set_node_a
-     */
     fun setNodeA(node: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setNodeABind, handle, node)
     }
 
-    /**
-     * Path to the first body (A) attached to the joint. The node must inherit `PhysicsBody2D`.
-     *
-     * Generated from Godot docs: Joint2D.get_node_a
-     */
     fun getNodeA(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeABind, handle)
     }
 
-    /**
-     * Path to the second body (B) attached to the joint. The node must inherit `PhysicsBody2D`.
-     *
-     * Generated from Godot docs: Joint2D.set_node_b
-     */
     fun setNodeB(node: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setNodeBBind, handle, node)
     }
 
-    /**
-     * Path to the second body (B) attached to the joint. The node must inherit `PhysicsBody2D`.
-     *
-     * Generated from Godot docs: Joint2D.get_node_b
-     */
     fun getNodeB(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeBBind, handle)
     }
 
-    /**
-     * When `node_a` and `node_b` move in different directions the `bias` controls how fast the joint
-     * pulls them back to their original position. The lower the `bias` the more the two bodies can
-     * pull on the joint. When set to `0`, the default value from
-     * `ProjectSettings.physics/2d/solver/default_constraint_bias` is used.
-     *
-     * Generated from Godot docs: Joint2D.set_bias
-     */
     fun setBias(bias: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
     }
 
-    /**
-     * When `node_a` and `node_b` move in different directions the `bias` controls how fast the joint
-     * pulls them back to their original position. The lower the `bias` the more the two bodies can
-     * pull on the joint. When set to `0`, the default value from
-     * `ProjectSettings.physics/2d/solver/default_constraint_bias` is used.
-     *
-     * Generated from Godot docs: Joint2D.get_bias
-     */
     fun getBias(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
     }
 
-    /**
-     * If `true`, the two bodies bound together do not collide with each other.
-     *
-     * Generated from Godot docs: Joint2D.set_exclude_nodes_from_collision
-     */
     fun setExcludeNodesFromCollision(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setExcludeNodesFromCollisionBind, handle, enable)
     }
 
-    /**
-     * If `true`, the two bodies bound together do not collide with each other.
-     *
-     * Generated from Godot docs: Joint2D.get_exclude_nodes_from_collision
-     */
     fun getExcludeNodesFromCollision(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getExcludeNodesFromCollisionBind, handle)
     }
 
-    /**
-     * Returns the joint's internal `RID` from the `PhysicsServer2D`.
-     *
-     * Generated from Godot docs: Joint2D.get_rid
-     */
     fun getRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }

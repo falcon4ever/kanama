@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Adds a distortion audio effect to an audio bus. Remaps audio samples using a nonlinear function
@@ -41,101 +41,60 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setPostGainProperty")
         set(value) = setPostGain(value)
 
-    /**
-     * Distortion type. Changes the nonlinear function used to distort the waveform. See `Mode`.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.set_mode
-     */
     fun setMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
-    /**
-     * Distortion type. Changes the nonlinear function used to distort the waveform. See `Mode`.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.get_mode
-     */
     fun getMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
-    /**
-     * Gain before the effect, in dB. Value can range from -60 to 60.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.set_pre_gain
-     */
     fun setPreGain(preGain: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPreGainBind, handle, preGain)
     }
 
-    /**
-     * Gain before the effect, in dB. Value can range from -60 to 60.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.get_pre_gain
-     */
     fun getPreGain(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainBind, handle)
     }
 
-    /**
-     * High-pass filter, in Hz. Frequencies higher than this value will not be affected by the
-     * distortion. Value can range from 1 to 20000.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.set_keep_hf_hz
-     */
     fun setKeepHfHz(keepHfHz: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setKeepHfHzBind, handle, keepHfHz)
     }
 
-    /**
-     * High-pass filter, in Hz. Frequencies higher than this value will not be affected by the
-     * distortion. Value can range from 1 to 20000.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.get_keep_hf_hz
-     */
     fun getKeepHfHz(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getKeepHfHzBind, handle)
     }
 
-    /**
-     * Distortion intensity. Controls how much of the input audio is affected by the distortion curve
-     * by moving from a linear function to a nonlinear one. Value can range from 0 to 1.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.set_drive
-     */
     fun setDrive(drive: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDriveBind, handle, drive)
     }
 
-    /**
-     * Distortion intensity. Controls how much of the input audio is affected by the distortion curve
-     * by moving from a linear function to a nonlinear one. Value can range from 0 to 1.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.get_drive
-     */
     fun getDrive(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDriveBind, handle)
     }
 
-    /**
-     * Gain after the effect, in dB. Value can range from -80 to 24.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.set_post_gain
-     */
     fun setPostGain(postGain: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPostGainBind, handle, postGain)
     }
 
-    /**
-     * Gain after the effect, in dB. Value can range from -80 to 24.
-     *
-     * Generated from Godot docs: AudioEffectDistortion.get_post_gain
-     */
     fun getPostGain(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, handle)
     }
 
     companion object {
+        const val MODE_CLIP: Long = 0L
+        const val MODE_ATAN: Long = 1L
+        const val MODE_LOFI: Long = 2L
+        const val MODE_OVERDRIVE: Long = 3L
+        const val MODE_WAVESHAPE: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioEffectDistortion? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioEffectDistortion? =
+            if (handle.address() == 0L) null else AudioEffectDistortion(handle)
+
         private const val SET_MODE_HASH = 1314744793L
         private val setModeBind by lazy {
             ObjectCalls.getMethodBind("AudioEffectDistortion", "set_mode", SET_MODE_HASH)

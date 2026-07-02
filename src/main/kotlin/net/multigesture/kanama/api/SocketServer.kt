@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * An abstract class for servers based on sockets.
@@ -9,20 +9,10 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: SocketServer
  */
 open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Returns `true` if a connection is available for taking.
-     *
-     * Generated from Godot docs: SocketServer.is_connection_available
-     */
     fun isConnectionAvailable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
-    /**
-     * Returns `true` if the server is currently listening for connections.
-     *
-     * Generated from Godot docs: SocketServer.is_listening
-     */
     fun isListening(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
@@ -36,16 +26,18 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
-    /**
-     * If a connection is available, returns a StreamPeerSocket with the connection.
-     *
-     * Generated from Godot docs: SocketServer.take_socket_connection
-     */
     fun takeSocketConnection(): StreamPeerSocket? {
         return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, handle))
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SocketServer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): SocketServer? =
+            if (handle.address() == 0L) null else SocketServer(handle)
+
         private const val IS_CONNECTION_AVAILABLE_HASH = 36873697L
         private val isConnectionAvailableBind by lazy {
             ObjectCalls.getMethodBind("SocketServer", "is_connection_available", IS_CONNECTION_AVAILABLE_HASH)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * An internal editor class intended for keeping the data of unrecognized resources.
@@ -22,45 +22,30 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
         @JvmName("setRecordingPropertiesProperty")
         set(value) = setRecordingProperties(value)
 
-    /**
-     * The name of the class this resource was supposed to be (see `Object.get_class`).
-     *
-     * Generated from Godot docs: MissingResource.set_original_class
-     */
     fun setOriginalClass(name: String) {
         ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, handle, name)
     }
 
-    /**
-     * The name of the class this resource was supposed to be (see `Object.get_class`).
-     *
-     * Generated from Godot docs: MissingResource.get_original_class
-     */
     fun getOriginalClass(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, handle)
     }
 
-    /**
-     * If set to `true`, allows new properties to be added on top of the existing ones with
-     * `Object.set`.
-     *
-     * Generated from Godot docs: MissingResource.set_recording_properties
-     */
     fun setRecordingProperties(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, handle, enable)
     }
 
-    /**
-     * If set to `true`, allows new properties to be added on top of the existing ones with
-     * `Object.set`.
-     *
-     * Generated from Godot docs: MissingResource.is_recording_properties
-     */
     fun isRecordingProperties(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): MissingResource? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): MissingResource? =
+            if (handle.address() == 0L) null else MissingResource(handle)
+
         private const val SET_ORIGINAL_CLASS_HASH = 83702148L
         private val setOriginalClassBind by lazy {
             ObjectCalls.getMethodBind("MissingResource", "set_original_class", SET_ORIGINAL_CLASS_HASH)

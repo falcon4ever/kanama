@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A node for driving body meshes from `XRBodyTracker` data.
@@ -28,63 +28,45 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setBoneUpdateProperty")
         set(value) = setBoneUpdate(value)
 
-    /**
-     * The name of the `XRBodyTracker` registered with `XRServer` to obtain the body tracking data
-     * from.
-     *
-     * Generated from Godot docs: XRBodyModifier3D.set_body_tracker
-     */
     fun setBodyTracker(trackerName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setBodyTrackerBind, handle, trackerName)
     }
 
-    /**
-     * The name of the `XRBodyTracker` registered with `XRServer` to obtain the body tracking data
-     * from.
-     *
-     * Generated from Godot docs: XRBodyModifier3D.get_body_tracker
-     */
     fun getBodyTracker(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getBodyTrackerBind, handle)
     }
 
-    /**
-     * Specifies the body parts to update.
-     *
-     * Generated from Godot docs: XRBodyModifier3D.set_body_update
-     */
     fun setBodyUpdate(bodyUpdate: Long) {
         ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, handle, bodyUpdate)
     }
 
-    /**
-     * Specifies the body parts to update.
-     *
-     * Generated from Godot docs: XRBodyModifier3D.get_body_update
-     */
     fun getBodyUpdate(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, handle)
     }
 
-    /**
-     * Specifies the type of updates to perform on the bones.
-     *
-     * Generated from Godot docs: XRBodyModifier3D.set_bone_update
-     */
     fun setBoneUpdate(boneUpdate: Long) {
         ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, handle, boneUpdate)
     }
 
-    /**
-     * Specifies the type of updates to perform on the bones.
-     *
-     * Generated from Godot docs: XRBodyModifier3D.get_bone_update
-     */
     fun getBoneUpdate(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, handle)
     }
 
     companion object {
+        const val BODY_UPDATE_UPPER_BODY: Long = 1L
+        const val BODY_UPDATE_LOWER_BODY: Long = 2L
+        const val BODY_UPDATE_HANDS: Long = 4L
+        const val BONE_UPDATE_FULL: Long = 0L
+        const val BONE_UPDATE_ROTATION_ONLY: Long = 1L
+        const val BONE_UPDATE_MAX: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): XRBodyModifier3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): XRBodyModifier3D? =
+            if (handle.address() == 0L) null else XRBodyModifier3D(handle)
+
         private const val SET_BODY_TRACKER_HASH = 3304788590L
         private val setBodyTrackerBind by lazy {
             ObjectCalls.getMethodBind("XRBodyModifier3D", "set_body_tracker", SET_BODY_TRACKER_HASH)

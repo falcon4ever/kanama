@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: ZIPReader
@@ -32,6 +32,13 @@ class ZIPReader(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ZIPReader? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ZIPReader? =
+            if (handle.address() == 0L) null else ZIPReader(handle)
+
         private const val OPEN_HASH = 166001499L
         private val openBind by lazy {
             ObjectCalls.getMethodBind("ZIPReader", "open", OPEN_HASH)

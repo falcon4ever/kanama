@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Generated from Godot docs: CSGPolygon3D
@@ -249,6 +249,22 @@ class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
     }
 
     companion object {
+        const val MODE_DEPTH: Long = 0L
+        const val MODE_SPIN: Long = 1L
+        const val MODE_PATH: Long = 2L
+        const val PATH_ROTATION_POLYGON: Long = 0L
+        const val PATH_ROTATION_PATH: Long = 1L
+        const val PATH_ROTATION_PATH_FOLLOW: Long = 2L
+        const val PATH_INTERVAL_DISTANCE: Long = 0L
+        const val PATH_INTERVAL_SUBDIVIDE: Long = 1L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGPolygon3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGPolygon3D? =
+            if (handle.address() == 0L) null else CSGPolygon3D(handle)
+
         private const val SET_POLYGON_HASH = 1509147220L
         private val setPolygonBind by lazy {
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_polygon", SET_POLYGON_HASH)

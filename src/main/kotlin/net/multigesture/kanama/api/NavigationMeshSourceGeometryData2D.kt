@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Container for parsed source geometry data used in navigation mesh baking.
@@ -39,85 +39,38 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
-    /**
-     * Returns `true` when parsed source geometry data exists.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.has_data
-     */
     fun hasData(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
     }
 
-    /**
-     * Sets all the traversable area outlines arrays.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.set_traversable_outlines
-     */
     fun setTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         ObjectCalls.ptrcallWithPackedVector2ListListArg(setTraversableOutlinesBind, handle, traversableOutlines)
     }
 
-    /**
-     * Returns all the traversable area outlines arrays.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_traversable_outlines
-     */
     fun getTraversableOutlines(): List<List<Vector2>> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getTraversableOutlinesBind, handle)
     }
 
-    /**
-     * Sets all the obstructed area outlines arrays.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.set_obstruction_outlines
-     */
     fun setObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         ObjectCalls.ptrcallWithPackedVector2ListListArg(setObstructionOutlinesBind, handle, obstructionOutlines)
     }
 
-    /**
-     * Returns all the obstructed area outlines arrays.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_obstruction_outlines
-     */
     fun getObstructionOutlines(): List<List<Vector2>> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getObstructionOutlinesBind, handle)
     }
 
-    /**
-     * Appends another array of `traversable_outlines` at the end of the existing traversable outlines
-     * array.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.append_traversable_outlines
-     */
     fun appendTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         ObjectCalls.ptrcallWithPackedVector2ListListArg(appendTraversableOutlinesBind, handle, traversableOutlines)
     }
 
-    /**
-     * Appends another array of `obstruction_outlines` at the end of the existing obstruction outlines
-     * array.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.append_obstruction_outlines
-     */
     fun appendObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         ObjectCalls.ptrcallWithPackedVector2ListListArg(appendObstructionOutlinesBind, handle, obstructionOutlines)
     }
 
-    /**
-     * Adds the outline points of a shape as traversable area.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_traversable_outline
-     */
     fun addTraversableOutline(shapeOutline: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(addTraversableOutlineBind, handle, shapeOutline)
     }
 
-    /**
-     * Adds the outline points of a shape as obstructed area.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_obstruction_outline
-     */
     fun addObstructionOutline(shapeOutline: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(addObstructionOutlineBind, handle, shapeOutline)
     }
@@ -132,56 +85,22 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Adds a projected obstruction shape to the source geometry. If `carve` is `true` the carved shape
-     * will not be affected by additional offsets (e.g. agent radius) of the navigation mesh baking
-     * process.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_projected_obstruction
-     */
     fun addProjectedObstruction(vertices: List<Vector2>, carve: Boolean) {
         ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(addProjectedObstructionBind, handle, vertices, carve)
     }
 
-    /**
-     * Clears all projected obstructions.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.clear_projected_obstructions
-     */
     fun clearProjectedObstructions() {
         ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
     }
 
-    /**
-     * Sets the projected obstructions with an Array of Dictionaries with the following key value
-     * pairs:
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.set_projected_obstructions
-     */
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, handle, projectedObstructions)
     }
 
-    /**
-     * Returns the projected obstructions as an `Array` of dictionaries. Each `Dictionary` contains the
-     * following entries: - `vertices` - A `PackedFloat32Array` that defines the outline points of the
-     * projected shape. - `carve` - A `bool` that defines how the projected shape affects the
-     * navigation mesh baking. If `true` the projected shape will not be affected by addition offsets,
-     * e.g. agent radius.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_projected_obstructions
-     */
     fun getProjectedObstructions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, handle)
     }
 
-    /**
-     * Returns an axis-aligned bounding box that covers all the stored geometry data. The bounds are
-     * calculated when calling this function with the result cached until further geometry changes are
-     * made.
-     *
-     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_bounds
-     */
     fun getBounds(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
     }

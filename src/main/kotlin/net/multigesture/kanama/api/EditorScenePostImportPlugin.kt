@@ -9,32 +9,14 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorScenePostImportPlugin
  */
 class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Query the value of an option. This function can only be called from those querying visibility,
-     * or processing.
-     *
-     * Generated from Godot docs: EditorScenePostImportPlugin.get_option_value
-     */
     fun getOptionValue(name: String): Any? {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionValueBind, handle, name)
     }
 
-    /**
-     * Add a specific import option (name and default value only). This function can only be called
-     * from `_get_import_options` and `_get_internal_import_options`.
-     *
-     * Generated from Godot docs: EditorScenePostImportPlugin.add_import_option
-     */
     fun addImportOption(name: String, value: Any?) {
         ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, handle, name, value)
     }
 
-    /**
-     * Add a specific import option. This function can only be called from `_get_import_options` and
-     * `_get_internal_import_options`.
-     *
-     * Generated from Godot docs: EditorScenePostImportPlugin.add_import_option_advanced
-     */
     fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
         ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, handle, type, name, defaultValue, hint, hintString, usageFlags)
     }

@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A native library for GDExtension.
@@ -9,26 +9,20 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: GDExtension
  */
 class GDExtension(handle: MemorySegment) : Resource(handle) {
-    /**
-     * Returns `true` if this extension's library has been opened.
-     *
-     * Generated from Godot docs: GDExtension.is_library_open
-     */
     fun isLibraryOpen(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, handle)
     }
 
-    /**
-     * Returns the lowest level required for this extension to be properly initialized (see the
-     * `InitializationLevel` enum).
-     *
-     * Generated from Godot docs: GDExtension.get_minimum_library_initialization_level
-     */
     fun getMinimumLibraryInitializationLevel(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, handle)
     }
 
     companion object {
+        const val INITIALIZATION_LEVEL_CORE: Long = 0L
+        const val INITIALIZATION_LEVEL_SERVERS: Long = 1L
+        const val INITIALIZATION_LEVEL_SCENE: Long = 2L
+        const val INITIALIZATION_LEVEL_EDITOR: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GDExtension? =
             wrap(handle)

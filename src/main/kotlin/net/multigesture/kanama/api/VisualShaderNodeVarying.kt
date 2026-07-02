@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeVarying
@@ -37,6 +37,13 @@ open class VisualShaderNodeVarying(handle: MemorySegment) : VisualShaderNode(han
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeVarying? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeVarying? =
+            if (handle.address() == 0L) null else VisualShaderNodeVarying(handle)
+
         private const val SET_VARYING_NAME_HASH = 83702148L
         private val setVaryingNameBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeVarying", "set_varying_name", SET_VARYING_NAME_HASH)

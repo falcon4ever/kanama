@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Overrides the location sounds are heard from.
@@ -9,31 +9,14 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: AudioListener2D
  */
 class AudioListener2D(handle: MemorySegment) : Node2D(handle) {
-    /**
-     * Makes the `AudioListener2D` active, setting it as the hearing point for the sounds. If there is
-     * already another active `AudioListener2D`, it will be disabled. This method will have no effect
-     * if the `AudioListener2D` is not added to `SceneTree`.
-     *
-     * Generated from Godot docs: AudioListener2D.make_current
-     */
     fun makeCurrent() {
         ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
     }
 
-    /**
-     * Disables the `AudioListener2D`. If it's not set as current, this method will have no effect.
-     *
-     * Generated from Godot docs: AudioListener2D.clear_current
-     */
     fun clearCurrent() {
         ObjectCalls.ptrcallNoArgs(clearCurrentBind, handle)
     }
 
-    /**
-     * Returns `true` if this `AudioListener2D` is currently active.
-     *
-     * Generated from Godot docs: AudioListener2D.is_current
-     */
     fun isCurrent(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
     }

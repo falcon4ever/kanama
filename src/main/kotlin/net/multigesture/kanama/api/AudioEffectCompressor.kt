@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Adds a downward compressor audio effect to an audio bus. Allows control of the dynamic range via
@@ -53,145 +53,70 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setSidechainProperty")
         set(value) = setSidechain(value)
 
-    /**
-     * The volume level above which compression is applied to the audio, in dB. Value can range from
-     * -60 to 0.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_threshold
-     */
     fun setThreshold(threshold: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, handle, threshold)
     }
 
-    /**
-     * The volume level above which compression is applied to the audio, in dB. Value can range from
-     * -60 to 0.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_threshold
-     */
     fun getThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, handle)
     }
 
-    /**
-     * Amount of compression applied to the audio once it passes the volume threshold level. The higher
-     * the ratio, the stronger the compression applied to audio signals that pass the volume threshold
-     * level. Value can range from 1 to 48.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_ratio
-     */
     fun setRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRatioBind, handle, ratio)
     }
 
-    /**
-     * Amount of compression applied to the audio once it passes the volume threshold level. The higher
-     * the ratio, the stronger the compression applied to audio signals that pass the volume threshold
-     * level. Value can range from 1 to 48.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_ratio
-     */
     fun getRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, handle)
     }
 
-    /**
-     * Gain of the audio signal, in dB. Value can range from -20 to 20.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_gain
-     */
     fun setGain(gain: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, gain)
     }
 
-    /**
-     * Gain of the audio signal, in dB. Value can range from -20 to 20.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_gain
-     */
     fun getGain(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
     }
 
-    /**
-     * Compressor's reaction time when the audio exceeds the volume threshold level, in microseconds.
-     * Value can range from 20 to 2000.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_attack_us
-     */
     fun setAttackUs(attackUs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAttackUsBind, handle, attackUs)
     }
 
-    /**
-     * Compressor's reaction time when the audio exceeds the volume threshold level, in microseconds.
-     * Value can range from 20 to 2000.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_attack_us
-     */
     fun getAttackUs(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAttackUsBind, handle)
     }
 
-    /**
-     * Compressor's delay time to stop decreasing the volume after the it falls below the volume
-     * threshold level, in milliseconds. Value can range from 20 to 2000.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_release_ms
-     */
     fun setReleaseMs(releaseMs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setReleaseMsBind, handle, releaseMs)
     }
 
-    /**
-     * Compressor's delay time to stop decreasing the volume after the it falls below the volume
-     * threshold level, in milliseconds. Value can range from 20 to 2000.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_release_ms
-     */
     fun getReleaseMs(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseMsBind, handle)
     }
 
-    /**
-     * Balance between the original audio and the compressed audio. Value can range from 0 (totally
-     * dry) to 1 (totally wet).
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_mix
-     */
     fun setMix(mix: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMixBind, handle, mix)
     }
 
-    /**
-     * Balance between the original audio and the compressed audio. Value can range from 0 (totally
-     * dry) to 1 (totally wet).
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_mix
-     */
     fun getMix(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMixBind, handle)
     }
 
-    /**
-     * Audio bus to use for the volume threshold detection.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.set_sidechain
-     */
     fun setSidechain(sidechain: String) {
         ObjectCalls.ptrcallWithStringNameArg(setSidechainBind, handle, sidechain)
     }
 
-    /**
-     * Audio bus to use for the volume threshold detection.
-     *
-     * Generated from Godot docs: AudioEffectCompressor.get_sidechain
-     */
     fun getSidechain(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getSidechainBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioEffectCompressor? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioEffectCompressor? =
+            if (handle.address() == 0L) null else AudioEffectCompressor(handle)
+
         private const val SET_THRESHOLD_HASH = 373806689L
         private val setThresholdBind by lazy {
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_threshold", SET_THRESHOLD_HASH)

@@ -1,12 +1,12 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Holds font source data and prerendered glyph cache, imported from a dynamic or a bitmap font.
@@ -116,1033 +116,438 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         @JvmName("setOversamplingProperty")
         set(value) = setOversampling(value)
 
-    /**
-     * Loads an AngelCode BMFont (.fnt, .font) bitmap font from file `path`. Warning: This method
-     * should only be used in the editor or in cases when you need to load external fonts at run-time,
-     * such as fonts located at the `user://` directory.
-     *
-     * Generated from Godot docs: FontFile.load_bitmap_font
-     */
     fun loadBitmapFont(path: String): Long {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, handle, path)
     }
 
-    /**
-     * Loads a TrueType (.ttf), OpenType (.otf), WOFF (.woff), WOFF2 (.woff2) or Type 1 (.pfb, .pfm)
-     * dynamic font from file `path`. Warning: This method should only be used in the editor or in
-     * cases when you need to load external fonts at run-time, such as fonts located at the `user://`
-     * directory.
-     *
-     * Generated from Godot docs: FontFile.load_dynamic_font
-     */
     fun loadDynamicFont(path: String): Long {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, handle, path)
     }
 
-    /**
-     * Contents of the dynamic font source file.
-     *
-     * Generated from Godot docs: FontFile.set_data
-     */
     fun setData(data: ByteArray) {
         ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
     }
 
-    /**
-     * Contents of the dynamic font source file.
-     *
-     * Generated from Godot docs: FontFile.get_data
-     */
     fun getData(): ByteArray {
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
     }
 
-    /**
-     * Font family name.
-     *
-     * Generated from Godot docs: FontFile.set_font_name
-     */
     fun setFontName(name: String) {
         ObjectCalls.ptrcallWithStringArg(setFontNameBind, handle, name)
     }
 
-    /**
-     * Font style name.
-     *
-     * Generated from Godot docs: FontFile.set_font_style_name
-     */
     fun setFontStyleName(name: String) {
         ObjectCalls.ptrcallWithStringArg(setFontStyleNameBind, handle, name)
     }
 
-    /**
-     * Font style flags.
-     *
-     * Generated from Godot docs: FontFile.set_font_style
-     */
     fun setFontStyle(style: Long) {
         ObjectCalls.ptrcallWithLongArg(setFontStyleBind, handle, style)
     }
 
-    /**
-     * Weight (boldness) of the font. A value in the `100...999` range, normal font weight is `400`,
-     * bold font weight is `700`.
-     *
-     * Generated from Godot docs: FontFile.set_font_weight
-     */
     fun setFontWeight(weight: Int) {
         ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
     }
 
-    /**
-     * Font stretch amount, compared to a normal width. A percentage value between `50%` and `200%`.
-     *
-     * Generated from Godot docs: FontFile.set_font_stretch
-     */
     fun setFontStretch(stretch: Int) {
         ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
     }
 
-    /**
-     * Font anti-aliasing mode.
-     *
-     * Generated from Godot docs: FontFile.set_antialiasing
-     */
     fun setAntialiasing(antialiasing: Long) {
         ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
     }
 
-    /**
-     * Font anti-aliasing mode.
-     *
-     * Generated from Godot docs: FontFile.get_antialiasing
-     */
     fun getAntialiasing(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
     }
 
-    /**
-     * If set to `true`, embedded font bitmap loading is disabled (bitmap-only and color fonts ignore
-     * this property).
-     *
-     * Generated from Godot docs: FontFile.set_disable_embedded_bitmaps
-     */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
     }
 
-    /**
-     * If set to `true`, embedded font bitmap loading is disabled (bitmap-only and color fonts ignore
-     * this property).
-     *
-     * Generated from Godot docs: FontFile.get_disable_embedded_bitmaps
-     */
     fun getDisableEmbeddedBitmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
     }
 
-    /**
-     * If set to `true`, generate mipmaps for the font textures.
-     *
-     * Generated from Godot docs: FontFile.set_generate_mipmaps
-     */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
     }
 
-    /**
-     * If set to `true`, generate mipmaps for the font textures.
-     *
-     * Generated from Godot docs: FontFile.get_generate_mipmaps
-     */
     fun getGenerateMipmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
     }
 
-    /**
-     * If set to `true`, glyphs of all sizes are rendered using single multichannel signed distance
-     * field (MSDF) generated from the dynamic font vector data. Since this approach does not rely on
-     * rasterizing the font every time its size changes, this allows for resizing the font in real-time
-     * without any performance penalty. Text will also not look grainy for `Control`s that are scaled
-     * down (or for `Label3D`s viewed from a long distance). As a downside, font hinting is not
-     * available with MSDF. The lack of font hinting may result in less crisp and less readable fonts
-     * at small sizes. Note: If using font outlines, `msdf_pixel_range` must be set to at least twice
-     * the size of the largest font outline. Note: MSDF font rendering does not render glyphs with
-     * overlapping shapes correctly. Overlapping shapes are not valid per the OpenType standard, but
-     * are still commonly found in many font files, especially those converted by Google Fonts. To
-     * avoid issues with overlapping glyphs, consider downloading the font file directly from the type
-     * foundry instead of relying on Google Fonts.
-     *
-     * Generated from Godot docs: FontFile.set_multichannel_signed_distance_field
-     */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
     }
 
-    /**
-     * If set to `true`, glyphs of all sizes are rendered using single multichannel signed distance
-     * field (MSDF) generated from the dynamic font vector data. Since this approach does not rely on
-     * rasterizing the font every time its size changes, this allows for resizing the font in real-time
-     * without any performance penalty. Text will also not look grainy for `Control`s that are scaled
-     * down (or for `Label3D`s viewed from a long distance). As a downside, font hinting is not
-     * available with MSDF. The lack of font hinting may result in less crisp and less readable fonts
-     * at small sizes. Note: If using font outlines, `msdf_pixel_range` must be set to at least twice
-     * the size of the largest font outline. Note: MSDF font rendering does not render glyphs with
-     * overlapping shapes correctly. Overlapping shapes are not valid per the OpenType standard, but
-     * are still commonly found in many font files, especially those converted by Google Fonts. To
-     * avoid issues with overlapping glyphs, consider downloading the font file directly from the type
-     * foundry instead of relying on Google Fonts.
-     *
-     * Generated from Godot docs: FontFile.is_multichannel_signed_distance_field
-     */
     fun isMultichannelSignedDistanceField(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
     }
 
-    /**
-     * The width of the range around the shape between the minimum and maximum representable signed
-     * distance. If using font outlines, `msdf_pixel_range` must be set to at least twice the size of
-     * the largest font outline. The default `msdf_pixel_range` value of `16` allows outline sizes up
-     * to `8` to look correct.
-     *
-     * Generated from Godot docs: FontFile.set_msdf_pixel_range
-     */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
     }
 
-    /**
-     * The width of the range around the shape between the minimum and maximum representable signed
-     * distance. If using font outlines, `msdf_pixel_range` must be set to at least twice the size of
-     * the largest font outline. The default `msdf_pixel_range` value of `16` allows outline sizes up
-     * to `8` to look correct.
-     *
-     * Generated from Godot docs: FontFile.get_msdf_pixel_range
-     */
     fun getMsdfPixelRange(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
     }
 
-    /**
-     * Source font size used to generate MSDF textures. Higher values allow for more precision, but are
-     * slower to render and require more memory. Only increase this value if you notice a visible lack
-     * of precision in glyph rendering.
-     *
-     * Generated from Godot docs: FontFile.set_msdf_size
-     */
     fun setMsdfSize(msdfSize: Int) {
         ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
     }
 
-    /**
-     * Source font size used to generate MSDF textures. Higher values allow for more precision, but are
-     * slower to render and require more memory. Only increase this value if you notice a visible lack
-     * of precision in glyph rendering.
-     *
-     * Generated from Godot docs: FontFile.get_msdf_size
-     */
     fun getMsdfSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
     }
 
-    /**
-     * Font size, used only for the bitmap fonts.
-     *
-     * Generated from Godot docs: FontFile.set_fixed_size
-     */
     fun setFixedSize(fixedSize: Int) {
         ObjectCalls.ptrcallWithIntArg(setFixedSizeBind, handle, fixedSize)
     }
 
-    /**
-     * Font size, used only for the bitmap fonts.
-     *
-     * Generated from Godot docs: FontFile.get_fixed_size
-     */
     fun getFixedSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFixedSizeBind, handle)
     }
 
-    /**
-     * Scaling mode, used only for the bitmap fonts with `fixed_size` greater than zero.
-     *
-     * Generated from Godot docs: FontFile.set_fixed_size_scale_mode
-     */
     fun setFixedSizeScaleMode(fixedSizeScaleMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, handle, fixedSizeScaleMode)
     }
 
-    /**
-     * Scaling mode, used only for the bitmap fonts with `fixed_size` greater than zero.
-     *
-     * Generated from Godot docs: FontFile.get_fixed_size_scale_mode
-     */
     fun getFixedSizeScaleMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, handle)
     }
 
-    /**
-     * If set to `true`, system fonts can be automatically used as fallbacks.
-     *
-     * Generated from Godot docs: FontFile.set_allow_system_fallback
-     */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
     }
 
-    /**
-     * If set to `true`, system fonts can be automatically used as fallbacks.
-     *
-     * Generated from Godot docs: FontFile.is_allow_system_fallback
-     */
     fun isAllowSystemFallback(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
     }
 
-    /**
-     * If set to `true`, auto-hinting is supported and preferred over font built-in hinting. Used by
-     * dynamic fonts only (MSDF fonts don't support hinting).
-     *
-     * Generated from Godot docs: FontFile.set_force_autohinter
-     */
     fun setForceAutohinter(forceAutohinter: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
     }
 
-    /**
-     * If set to `true`, auto-hinting is supported and preferred over font built-in hinting. Used by
-     * dynamic fonts only (MSDF fonts don't support hinting).
-     *
-     * Generated from Godot docs: FontFile.is_force_autohinter
-     */
     fun isForceAutohinter(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
     }
 
-    /**
-     * If set to `true`, color modulation is applied when drawing colored glyphs, otherwise it's
-     * applied to the monochrome glyphs only.
-     *
-     * Generated from Godot docs: FontFile.set_modulate_color_glyphs
-     */
     fun setModulateColorGlyphs(modulate: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
     }
 
-    /**
-     * If set to `true`, color modulation is applied when drawing colored glyphs, otherwise it's
-     * applied to the monochrome glyphs only.
-     *
-     * Generated from Godot docs: FontFile.is_modulate_color_glyphs
-     */
     fun isModulateColorGlyphs(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
     }
 
-    /**
-     * Font hinting mode. Used by dynamic fonts only.
-     *
-     * Generated from Godot docs: FontFile.set_hinting
-     */
     fun setHinting(hinting: Long) {
         ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
     }
 
-    /**
-     * Font hinting mode. Used by dynamic fonts only.
-     *
-     * Generated from Godot docs: FontFile.get_hinting
-     */
     fun getHinting(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
     }
 
-    /**
-     * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
-     * kerning for smaller font sizes, at the cost of higher memory usage and lower font rasterization
-     * speed. Use `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font
-     * size.
-     *
-     * Generated from Godot docs: FontFile.set_subpixel_positioning
-     */
     fun setSubpixelPositioning(subpixelPositioning: Long) {
         ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
     }
 
-    /**
-     * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
-     * kerning for smaller font sizes, at the cost of higher memory usage and lower font rasterization
-     * speed. Use `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font
-     * size.
-     *
-     * Generated from Godot docs: FontFile.get_subpixel_positioning
-     */
     fun getSubpixelPositioning(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
     }
 
-    /**
-     * If set to `true`, when aligning glyphs to the pixel boundaries rounding remainders are
-     * accumulated to ensure more uniform glyph distribution. This setting has no effect if subpixel
-     * positioning is enabled.
-     *
-     * Generated from Godot docs: FontFile.set_keep_rounding_remainders
-     */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
     }
 
-    /**
-     * If set to `true`, when aligning glyphs to the pixel boundaries rounding remainders are
-     * accumulated to ensure more uniform glyph distribution. This setting has no effect if subpixel
-     * positioning is enabled.
-     *
-     * Generated from Godot docs: FontFile.get_keep_rounding_remainders
-     */
     fun getKeepRoundingRemainders(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
     }
 
-    /**
-     * If set to a positive value, overrides the oversampling factor of the viewport this font is used
-     * in. See `Viewport.oversampling`. This value doesn't override the `oversampling` parameter of
-     * `draw_*` methods.
-     *
-     * Generated from Godot docs: FontFile.set_oversampling
-     */
     fun setOversampling(oversampling: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
     }
 
-    /**
-     * If set to a positive value, overrides the oversampling factor of the viewport this font is used
-     * in. See `Viewport.oversampling`. This value doesn't override the `oversampling` parameter of
-     * `draw_*` methods.
-     *
-     * Generated from Godot docs: FontFile.get_oversampling
-     */
     fun getOversampling(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
     }
 
-    /**
-     * Returns number of the font cache entries.
-     *
-     * Generated from Godot docs: FontFile.get_cache_count
-     */
     fun getCacheCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCacheCountBind, handle)
     }
 
-    /**
-     * Removes all font cache entries.
-     *
-     * Generated from Godot docs: FontFile.clear_cache
-     */
     fun clearCache() {
         ObjectCalls.ptrcallNoArgs(clearCacheBind, handle)
     }
 
-    /**
-     * Removes specified font cache entry.
-     *
-     * Generated from Godot docs: FontFile.remove_cache
-     */
     fun removeCache(cacheIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(removeCacheBind, handle, cacheIndex)
     }
 
-    /**
-     * Returns list of the font sizes in the cache. Each size is `Vector2i` with font size and outline
-     * size.
-     *
-     * Generated from Godot docs: FontFile.get_size_cache_list
-     */
     fun getSizeCacheList(cacheIndex: Int): List<Vector2i> {
         return ObjectCalls.ptrcallWithIntArgRetVector2iList(getSizeCacheListBind, handle, cacheIndex)
     }
 
-    /**
-     * Removes all font sizes from the cache entry.
-     *
-     * Generated from Godot docs: FontFile.clear_size_cache
-     */
     fun clearSizeCache(cacheIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(clearSizeCacheBind, handle, cacheIndex)
     }
 
-    /**
-     * Removes specified font size from the cache entry.
-     *
-     * Generated from Godot docs: FontFile.remove_size_cache
-     */
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Sets variation coordinates for the specified font cache entry. See
-     * `Font.get_supported_variation_list` for more info.
-     *
-     * Generated from Godot docs: FontFile.set_variation_coordinates
-     */
     fun setVariationCoordinates(cacheIndex: Int, variationCoordinates: Map<String, Any?>) {
         ObjectCalls.ptrcallWithIntAndDictionaryArg(setVariationCoordinatesBind, handle, cacheIndex, variationCoordinates)
     }
 
-    /**
-     * Returns variation coordinates for the specified font cache entry. See
-     * `Font.get_supported_variation_list` for more info.
-     *
-     * Generated from Godot docs: FontFile.get_variation_coordinates
-     */
     fun getVariationCoordinates(cacheIndex: Int): Map<String, Any?> {
         return ObjectCalls.ptrcallWithIntArgRetDictionary(getVariationCoordinatesBind, handle, cacheIndex)
     }
 
-    /**
-     * Sets embolden strength, if is not equal to zero, emboldens the font outlines. Negative values
-     * reduce the outline thickness.
-     *
-     * Generated from Godot docs: FontFile.set_embolden
-     */
     fun setEmbolden(cacheIndex: Int, strength: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setEmboldenBind, handle, cacheIndex, strength)
     }
 
-    /**
-     * Returns embolden strength, if is not equal to zero, emboldens the font outlines. Negative values
-     * reduce the outline thickness.
-     *
-     * Generated from Godot docs: FontFile.get_embolden
-     */
     fun getEmbolden(cacheIndex: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getEmboldenBind, handle, cacheIndex)
     }
 
-    /**
-     * Sets 2D transform, applied to the font outlines, can be used for slanting, flipping, and
-     * rotating glyphs.
-     *
-     * Generated from Godot docs: FontFile.set_transform
-     */
     fun setTransform(cacheIndex: Int, transform: Transform2D) {
         ObjectCalls.ptrcallWithIntAndTransform2DArg(setTransformBind, handle, cacheIndex, transform)
     }
 
-    /**
-     * Returns 2D transform, applied to the font outlines, can be used for slanting, flipping and
-     * rotating glyphs.
-     *
-     * Generated from Godot docs: FontFile.get_transform
-     */
     fun getTransform(cacheIndex: Int): Transform2D {
         return ObjectCalls.ptrcallWithIntArgRetTransform2D(getTransformBind, handle, cacheIndex)
     }
 
-    /**
-     * Sets the spacing for `spacing` to `value` in pixels (not relative to the font size).
-     *
-     * Generated from Godot docs: FontFile.set_extra_spacing
-     */
     fun setExtraSpacing(cacheIndex: Int, spacing: Long, value: Long) {
         ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, handle, cacheIndex, spacing, value)
     }
 
-    /**
-     * Returns spacing for `spacing` in pixels (not relative to the font size).
-     *
-     * Generated from Godot docs: FontFile.get_extra_spacing
-     */
     fun getExtraSpacing(cacheIndex: Int, spacing: Long): Long {
         return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, handle, cacheIndex, spacing)
     }
 
-    /**
-     * Sets extra baseline offset (as a fraction of font height).
-     *
-     * Generated from Godot docs: FontFile.set_extra_baseline_offset
-     */
     fun setExtraBaselineOffset(cacheIndex: Int, baselineOffset: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setExtraBaselineOffsetBind, handle, cacheIndex, baselineOffset)
     }
 
-    /**
-     * Returns extra baseline offset (as a fraction of font height).
-     *
-     * Generated from Godot docs: FontFile.get_extra_baseline_offset
-     */
     fun getExtraBaselineOffset(cacheIndex: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getExtraBaselineOffsetBind, handle, cacheIndex)
     }
 
-    /**
-     * Sets an active face index in the TrueType / OpenType collection.
-     *
-     * Generated from Godot docs: FontFile.set_face_index
-     */
     fun setFaceIndex(cacheIndex: Int, faceIndex: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setFaceIndexBind, handle, cacheIndex, faceIndex)
     }
 
-    /**
-     * Returns an active face index in the TrueType / OpenType collection.
-     *
-     * Generated from Godot docs: FontFile.get_face_index
-     */
     fun getFaceIndex(cacheIndex: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getFaceIndexBind, handle, cacheIndex)
     }
 
-    /**
-     * Sets the font ascent (number of pixels above the baseline).
-     *
-     * Generated from Godot docs: FontFile.set_cache_ascent
-     */
     fun setCacheAscent(cacheIndex: Int, size: Int, ascent: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheAscentBind, handle, cacheIndex, size, ascent)
     }
 
-    /**
-     * Returns the font ascent (number of pixels above the baseline).
-     *
-     * Generated from Godot docs: FontFile.get_cache_ascent
-     */
     fun getCacheAscent(cacheIndex: Int, size: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheAscentBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Sets the font descent (number of pixels below the baseline).
-     *
-     * Generated from Godot docs: FontFile.set_cache_descent
-     */
     fun setCacheDescent(cacheIndex: Int, size: Int, descent: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheDescentBind, handle, cacheIndex, size, descent)
     }
 
-    /**
-     * Returns the font descent (number of pixels below the baseline).
-     *
-     * Generated from Godot docs: FontFile.get_cache_descent
-     */
     fun getCacheDescent(cacheIndex: Int, size: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheDescentBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Sets pixel offset of the underline below the baseline.
-     *
-     * Generated from Godot docs: FontFile.set_cache_underline_position
-     */
     fun setCacheUnderlinePosition(cacheIndex: Int, size: Int, underlinePosition: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlinePositionBind, handle, cacheIndex, size, underlinePosition)
     }
 
-    /**
-     * Returns pixel offset of the underline below the baseline.
-     *
-     * Generated from Godot docs: FontFile.get_cache_underline_position
-     */
     fun getCacheUnderlinePosition(cacheIndex: Int, size: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlinePositionBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Sets thickness of the underline in pixels.
-     *
-     * Generated from Godot docs: FontFile.set_cache_underline_thickness
-     */
     fun setCacheUnderlineThickness(cacheIndex: Int, size: Int, underlineThickness: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlineThicknessBind, handle, cacheIndex, size, underlineThickness)
     }
 
-    /**
-     * Returns thickness of the underline in pixels.
-     *
-     * Generated from Godot docs: FontFile.get_cache_underline_thickness
-     */
     fun getCacheUnderlineThickness(cacheIndex: Int, size: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlineThicknessBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Sets scaling factor of the color bitmap font.
-     *
-     * Generated from Godot docs: FontFile.set_cache_scale
-     */
     fun setCacheScale(cacheIndex: Int, size: Int, scale: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheScaleBind, handle, cacheIndex, size, scale)
     }
 
-    /**
-     * Returns scaling factor of the color bitmap font.
-     *
-     * Generated from Godot docs: FontFile.get_cache_scale
-     */
     fun getCacheScale(cacheIndex: Int, size: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheScaleBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Returns number of textures used by font cache entry.
-     *
-     * Generated from Godot docs: FontFile.get_texture_count
-     */
     fun getTextureCount(cacheIndex: Int, size: Vector2i): Int {
         return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(getTextureCountBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Removes all textures from font cache entry. Note: This function will not remove glyphs
-     * associated with the texture, use `remove_glyph` to remove them manually.
-     *
-     * Generated from Godot docs: FontFile.clear_textures
-     */
     fun clearTextures(cacheIndex: Int, size: Vector2i) {
         ObjectCalls.ptrcallWithIntAndVector2iArg(clearTexturesBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Removes specified texture from the cache entry. Note: This function will not remove glyphs
-     * associated with the texture. Remove them manually using `remove_glyph`.
-     *
-     * Generated from Godot docs: FontFile.remove_texture
-     */
     fun removeTexture(cacheIndex: Int, size: Vector2i, textureIndex: Int) {
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeTextureBind, handle, cacheIndex, size, textureIndex)
     }
 
-    /**
-     * Sets font cache texture image.
-     *
-     * Generated from Godot docs: FontFile.set_texture_image
-     */
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
         ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, handle, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns a copy of the font cache texture image.
-     *
-     * Generated from Godot docs: FontFile.get_texture_image
-     */
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
         return Image.wrap(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, handle, cacheIndex, size, textureIndex))
     }
 
-    /**
-     * Sets array containing glyph packing data.
-     *
-     * Generated from Godot docs: FontFile.set_texture_offsets
-     */
     fun setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int, offset: List<Int>) {
         ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(setTextureOffsetsBind, handle, cacheIndex, size, textureIndex, offset)
     }
 
-    /**
-     * Returns a copy of the array containing glyph packing data.
-     *
-     * Generated from Godot docs: FontFile.get_texture_offsets
-     */
     fun getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, handle, cacheIndex, size, textureIndex)
     }
 
-    /**
-     * Returns list of rendered glyphs in the cache entry.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_list
-     */
     fun getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
         return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Removes all rendered glyph information from the cache entry. Note: This function will not remove
-     * textures associated with the glyphs, use `remove_texture` to remove them manually.
-     *
-     * Generated from Godot docs: FontFile.clear_glyphs
-     */
     fun clearGlyphs(cacheIndex: Int, size: Vector2i) {
         ObjectCalls.ptrcallWithIntAndVector2iArg(clearGlyphsBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Removes specified rendered glyph information from the cache entry. Note: This function will not
-     * remove textures associated with the glyphs, use `remove_texture` to remove them manually.
-     *
-     * Generated from Godot docs: FontFile.remove_glyph
-     */
     fun removeGlyph(cacheIndex: Int, size: Vector2i, glyph: Int) {
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeGlyphBind, handle, cacheIndex, size, glyph)
     }
 
-    /**
-     * Sets glyph advance (offset of the next glyph). Note: Advance for glyphs outlines is the same as
-     * the base glyph advance and is not saved.
-     *
-     * Generated from Godot docs: FontFile.set_glyph_advance
-     */
     fun setGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int, advance: Vector2) {
         ObjectCalls.ptrcallWithThreeIntAndVector2Arg(setGlyphAdvanceBind, handle, cacheIndex, size, glyph, advance)
     }
 
-    /**
-     * Returns glyph advance (offset of the next glyph). Note: Advance for glyphs outlines is the same
-     * as the base glyph advance and is not saved.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_advance
-     */
     fun getGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int): Vector2 {
         return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(getGlyphAdvanceBind, handle, cacheIndex, size, glyph)
     }
 
-    /**
-     * Sets glyph offset from the baseline.
-     *
-     * Generated from Godot docs: FontFile.set_glyph_offset
-     */
     fun setGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int, offset: Vector2) {
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphOffsetBind, handle, cacheIndex, size, glyph, offset)
     }
 
-    /**
-     * Returns glyph offset from the baseline.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_offset
-     */
     fun getGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphOffsetBind, handle, cacheIndex, size, glyph)
     }
 
-    /**
-     * Sets glyph size.
-     *
-     * Generated from Godot docs: FontFile.set_glyph_size
-     */
     fun setGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int, glSize: Vector2) {
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphSizeBind, handle, cacheIndex, size, glyph, glSize)
     }
 
-    /**
-     * Returns glyph size.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_size
-     */
     fun getGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphSizeBind, handle, cacheIndex, size, glyph)
     }
 
-    /**
-     * Sets rectangle in the cache texture containing the glyph.
-     *
-     * Generated from Godot docs: FontFile.set_glyph_uv_rect
-     */
     fun setGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int, uvRect: Rect2) {
         ObjectCalls.ptrcallWithIntVector2iIntRect2Args(setGlyphUvRectBind, handle, cacheIndex, size, glyph, uvRect)
     }
 
-    /**
-     * Returns rectangle in the cache texture containing the glyph.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_uv_rect
-     */
     fun getGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int): Rect2 {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(getGlyphUvRectBind, handle, cacheIndex, size, glyph)
     }
 
-    /**
-     * Sets index of the cache texture containing the glyph.
-     *
-     * Generated from Godot docs: FontFile.set_glyph_texture_idx
-     */
     fun setGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int, textureIdx: Int) {
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(setGlyphTextureIdxBind, handle, cacheIndex, size, glyph, textureIdx)
     }
 
-    /**
-     * Returns index of the cache texture containing the glyph.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_texture_idx
-     */
     fun getGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int): Int {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(getGlyphTextureIdxBind, handle, cacheIndex, size, glyph)
     }
 
-    /**
-     * Returns list of the kerning overrides.
-     *
-     * Generated from Godot docs: FontFile.get_kerning_list
-     */
     fun getKerningList(cacheIndex: Int, size: Int): List<Vector2i> {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(getKerningListBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Removes all kerning overrides.
-     *
-     * Generated from Godot docs: FontFile.clear_kerning_map
-     */
     fun clearKerningMap(cacheIndex: Int, size: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(clearKerningMapBind, handle, cacheIndex, size)
     }
 
-    /**
-     * Removes kerning override for the pair of glyphs.
-     *
-     * Generated from Godot docs: FontFile.remove_kerning
-     */
     fun removeKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i) {
         ObjectCalls.ptrcallWithTwoIntAndVector2iArg(removeKerningBind, handle, cacheIndex, size, glyphPair)
     }
 
-    /**
-     * Sets kerning for the pair of glyphs.
-     *
-     * Generated from Godot docs: FontFile.set_kerning
-     */
     fun setKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i, kerning: Vector2) {
         ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(setKerningBind, handle, cacheIndex, size, glyphPair, kerning)
     }
 
-    /**
-     * Returns kerning for the pair of glyphs.
-     *
-     * Generated from Godot docs: FontFile.get_kerning
-     */
     fun getKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i): Vector2 {
         return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(getKerningBind, handle, cacheIndex, size, glyphPair)
     }
 
-    /**
-     * Renders the range of characters to the font cache texture.
-     *
-     * Generated from Godot docs: FontFile.render_range
-     */
     fun renderRange(cacheIndex: Int, size: Vector2i, start: Int, end: Int) {
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(renderRangeBind, handle, cacheIndex, size, start, end)
     }
 
-    /**
-     * Renders specified glyph to the font cache texture.
-     *
-     * Generated from Godot docs: FontFile.render_glyph
-     */
     fun renderGlyph(cacheIndex: Int, size: Vector2i, index: Int) {
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(renderGlyphBind, handle, cacheIndex, size, index)
     }
 
-    /**
-     * Adds override for `Font.is_language_supported`.
-     *
-     * Generated from Godot docs: FontFile.set_language_support_override
-     */
     fun setLanguageSupportOverride(language: String, supported: Boolean) {
         ObjectCalls.ptrcallWithStringAndBoolArg(setLanguageSupportOverrideBind, handle, language, supported)
     }
 
-    /**
-     * Returns `true` if support override is enabled for the `language`.
-     *
-     * Generated from Godot docs: FontFile.get_language_support_override
-     */
     fun getLanguageSupportOverride(language: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(getLanguageSupportOverrideBind, handle, language)
     }
 
-    /**
-     * Remove language support override.
-     *
-     * Generated from Godot docs: FontFile.remove_language_support_override
-     */
     fun removeLanguageSupportOverride(language: String) {
         ObjectCalls.ptrcallWithStringArg(removeLanguageSupportOverrideBind, handle, language)
     }
 
-    /**
-     * Returns list of language support overrides.
-     *
-     * Generated from Godot docs: FontFile.get_language_support_overrides
-     */
     fun getLanguageSupportOverrides(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLanguageSupportOverridesBind, handle)
     }
 
-    /**
-     * Adds override for `Font.is_script_supported`.
-     *
-     * Generated from Godot docs: FontFile.set_script_support_override
-     */
     fun setScriptSupportOverride(script: String, supported: Boolean) {
         ObjectCalls.ptrcallWithStringAndBoolArg(setScriptSupportOverrideBind, handle, script, supported)
     }
 
-    /**
-     * Returns `true` if support override is enabled for the `script`.
-     *
-     * Generated from Godot docs: FontFile.get_script_support_override
-     */
     fun getScriptSupportOverride(script: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(getScriptSupportOverrideBind, handle, script)
     }
 
-    /**
-     * Removes script support override.
-     *
-     * Generated from Godot docs: FontFile.remove_script_support_override
-     */
     fun removeScriptSupportOverride(script: String) {
         ObjectCalls.ptrcallWithStringArg(removeScriptSupportOverrideBind, handle, script)
     }
 
-    /**
-     * Returns list of script support overrides.
-     *
-     * Generated from Godot docs: FontFile.get_script_support_overrides
-     */
     fun getScriptSupportOverrides(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getScriptSupportOverridesBind, handle)
     }
 
-    /**
-     * Font OpenType feature set override.
-     *
-     * Generated from Godot docs: FontFile.set_opentype_feature_overrides
-     */
     fun setOpentypeFeatureOverrides(overrides: Map<String, Any?>) {
         ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeatureOverridesBind, handle, overrides)
     }
 
-    /**
-     * Font OpenType feature set override.
-     *
-     * Generated from Godot docs: FontFile.get_opentype_feature_overrides
-     */
     fun getOpentypeFeatureOverrides(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeatureOverridesBind, handle)
     }
 
-    /**
-     * Returns the glyph index of a `char`, optionally modified by the `variation_selector`.
-     *
-     * Generated from Godot docs: FontFile.get_glyph_index
-     */
     fun getGlyphIndex(size: Int, char: Int, variationSelector: Int): Int {
         return ObjectCalls.ptrcallWithThreeIntArgsRetInt(getGlyphIndexBind, handle, size, char, variationSelector)
     }
 
-    /**
-     * Returns character code associated with `glyph_index`, or `0` if `glyph_index` is invalid. See
-     * `get_glyph_index`.
-     *
-     * Generated from Godot docs: FontFile.get_char_from_glyph_index
-     */
     fun getCharFromGlyphIndex(size: Int, glyphIndex: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getCharFromGlyphIndexBind, handle, size, glyphIndex)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): FontFile? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): FontFile? =
+            if (handle.address() == 0L) null else FontFile(handle)
+
         private const val LOAD_BITMAP_FONT_HASH = 166001499L
         private val loadBitmapFontBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "load_bitmap_font", LOAD_BITMAP_FONT_HASH)

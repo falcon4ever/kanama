@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2i
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2i
 
 /**
  * An interface to a game world that doesn't create a window or draw to the screen directly.
@@ -29,6 +29,12 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
         @JvmName("setSize2dOverrideStretchProperty")
         set(value) = setSize2dOverrideStretch(value)
 
+    var viewCount: Int
+        @JvmName("viewCountProperty")
+        get() = getViewCount()
+        @JvmName("setViewCountProperty")
+        set(value) = setViewCount(value)
+
     var renderTargetClearMode: Long
         @JvmName("renderTargetClearModeProperty")
         get() = getClearMode()
@@ -41,102 +47,50 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
         @JvmName("setRenderTargetUpdateModeProperty")
         set(value) = setUpdateMode(value)
 
-    /**
-     * The width and height of the sub-viewport. Must be set to a value greater than or equal to 2
-     * pixels on both dimensions. Otherwise, nothing will be displayed. Note: If the parent node is a
-     * `SubViewportContainer` and its `SubViewportContainer.stretch` is `true`, the viewport size
-     * cannot be changed manually.
-     *
-     * Generated from Godot docs: SubViewport.set_size
-     */
     fun setSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
-    /**
-     * The width and height of the sub-viewport. Must be set to a value greater than or equal to 2
-     * pixels on both dimensions. Otherwise, nothing will be displayed. Note: If the parent node is a
-     * `SubViewportContainer` and its `SubViewportContainer.stretch` is `true`, the viewport size
-     * cannot be changed manually.
-     *
-     * Generated from Godot docs: SubViewport.get_size
-     */
     fun getSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
-    /**
-     * The 2D size override of the sub-viewport. If either the width or height is `0`, the override is
-     * disabled.
-     *
-     * Generated from Godot docs: SubViewport.set_size_2d_override
-     */
     fun setSize2dOverride(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSize2dOverrideBind, handle, size)
     }
 
-    /**
-     * The 2D size override of the sub-viewport. If either the width or height is `0`, the override is
-     * disabled.
-     *
-     * Generated from Godot docs: SubViewport.get_size_2d_override
-     */
     fun getSize2dOverride(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSize2dOverrideBind, handle)
     }
 
-    /**
-     * If `true`, the 2D size override affects stretch as well.
-     *
-     * Generated from Godot docs: SubViewport.set_size_2d_override_stretch
-     */
     fun setSize2dOverrideStretch(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSize2dOverrideStretchBind, handle, enable)
     }
 
-    /**
-     * If `true`, the 2D size override affects stretch as well.
-     *
-     * Generated from Godot docs: SubViewport.is_size_2d_override_stretch_enabled
-     */
     fun isSize2dOverrideStretchEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSize2dOverrideStretchEnabledBind, handle)
     }
 
-    /**
-     * The update mode when the sub-viewport is used as a render target.
-     *
-     * Generated from Godot docs: SubViewport.set_update_mode
-     */
+    fun setViewCount(viewCount: Int) {
+        ObjectCalls.ptrcallWithIntArg(setViewCountBind, handle, viewCount)
+    }
+
+    fun getViewCount(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(getViewCountBind, handle)
+    }
+
     fun setUpdateMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, handle, mode)
     }
 
-    /**
-     * The update mode when the sub-viewport is used as a render target.
-     *
-     * Generated from Godot docs: SubViewport.get_update_mode
-     */
     fun getUpdateMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, handle)
     }
 
-    /**
-     * The clear mode when the sub-viewport is used as a render target. Note: This property is intended
-     * for 2D usage.
-     *
-     * Generated from Godot docs: SubViewport.set_clear_mode
-     */
     fun setClearMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setClearModeBind, handle, mode)
     }
 
-    /**
-     * The clear mode when the sub-viewport is used as a render target. Note: This property is intended
-     * for 2D usage.
-     *
-     * Generated from Godot docs: SubViewport.get_clear_mode
-     */
     fun getClearMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, handle)
     }
@@ -186,6 +140,16 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
         private const val IS_SIZE_2D_OVERRIDE_STRETCH_ENABLED_HASH = 36873697L
         private val isSize2dOverrideStretchEnabledBind by lazy {
             ObjectCalls.getMethodBind("SubViewport", "is_size_2d_override_stretch_enabled", IS_SIZE_2D_OVERRIDE_STRETCH_ENABLED_HASH)
+        }
+
+        private const val SET_VIEW_COUNT_HASH = 1286410249L
+        private val setViewCountBind by lazy {
+            ObjectCalls.getMethodBind("SubViewport", "set_view_count", SET_VIEW_COUNT_HASH)
+        }
+
+        private const val GET_VIEW_COUNT_HASH = 3905245786L
+        private val getViewCountBind by lazy {
+            ObjectCalls.getMethodBind("SubViewport", "get_view_count", GET_VIEW_COUNT_HASH)
         }
 
         private const val SET_UPDATE_MODE_HASH = 1295690030L

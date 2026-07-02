@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Generated from Godot docs: OpenXRHand
@@ -80,6 +80,26 @@ class OpenXRHand(handle: MemorySegment) : Node3D(handle) {
     }
 
     companion object {
+        const val HAND_LEFT: Long = 0L
+        const val HAND_RIGHT: Long = 1L
+        const val HAND_MAX: Long = 2L
+        const val MOTION_RANGE_UNOBSTRUCTED: Long = 0L
+        const val MOTION_RANGE_CONFORM_TO_CONTROLLER: Long = 1L
+        const val MOTION_RANGE_MAX: Long = 2L
+        const val SKELETON_RIG_OPENXR: Long = 0L
+        const val SKELETON_RIG_HUMANOID: Long = 1L
+        const val SKELETON_RIG_MAX: Long = 2L
+        const val BONE_UPDATE_FULL: Long = 0L
+        const val BONE_UPDATE_ROTATION_ONLY: Long = 1L
+        const val BONE_UPDATE_MAX: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRHand? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRHand? =
+            if (handle.address() == 0L) null else OpenXRHand(handle)
+
         private const val SET_HAND_HASH = 1849328560L
         private val setHandBind by lazy {
             ObjectCalls.getMethodBind("OpenXRHand", "set_hand", SET_HAND_HASH)

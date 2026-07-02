@@ -284,11 +284,11 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
         ObjectCalls.ptrcallWithVector2Arg(setAxisVelocityBind, handle, axisVelocity)
     }
 
-    fun applyCentralImpulse(impulse: Vector2) {
+    fun applyCentralImpulse(impulse: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralImpulseBind, handle, impulse)
     }
 
-    fun applyImpulse(impulse: Vector2, position: Vector2) {
+    fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, handle, impulse, position)
     }
 
@@ -300,7 +300,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralForceBind, handle, force)
     }
 
-    fun applyForce(force: Vector2, position: Vector2) {
+    fun applyForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, handle, force, position)
     }
 
@@ -312,7 +312,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
         ObjectCalls.ptrcallWithVector2Arg(addConstantCentralForceBind, handle, force)
     }
 
-    fun addConstantForce(force: Vector2, position: Vector2) {
+    fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, handle, force, position)
     }
 

@@ -12,13 +12,6 @@ class MovieWriter(handle: MemorySegment) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
-        /**
-         * Adds a writer to be usable by the engine. The supported file extensions can be set by overriding
-         * `_handles_file`. Note: `add_writer` must be called early enough in the engine initialization to
-         * work, as movie writing is designed to start at the same time as the rest of the engine.
-         *
-         * Generated from Godot docs: MovieWriter.add_writer
-         */
         fun addWriter(writer: MovieWriter) {
             ObjectCalls.ptrcallWithObjectArgs(addWriterBind, MemorySegment.NULL, listOf(writer.handle))
         }

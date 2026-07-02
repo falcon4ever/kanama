@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Playback class used for resampled `AudioStream`s.
@@ -9,17 +9,18 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: AudioStreamPlaybackResampled
  */
 open class AudioStreamPlaybackResampled(handle: MemorySegment) : AudioStreamPlayback(handle) {
-    /**
-     * Called when an `AudioStream` is played. Clears the cubic interpolation history and starts mixing
-     * by calling `_mix_resampled`.
-     *
-     * Generated from Godot docs: AudioStreamPlaybackResampled.begin_resample
-     */
     fun beginResample() {
         ObjectCalls.ptrcallNoArgs(beginResampleBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioStreamPlaybackResampled? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioStreamPlaybackResampled? =
+            if (handle.address() == 0L) null else AudioStreamPlaybackResampled(handle)
+
         private const val BEGIN_RESAMPLE_HASH = 3218959716L
         private val beginResampleBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamPlaybackResampled", "begin_resample", BEGIN_RESAMPLE_HASH)

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Positional 2D light source.
@@ -29,61 +29,38 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
         @JvmName("setTextureScaleProperty")
         set(value) = setTextureScale(value)
 
-    /**
-     * `Texture2D` used for the light's appearance.
-     *
-     * Generated from Godot docs: PointLight2D.set_texture
-     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * `Texture2D` used for the light's appearance.
-     *
-     * Generated from Godot docs: PointLight2D.get_texture
-     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
-    /**
-     * The offset of the light's `texture`.
-     *
-     * Generated from Godot docs: PointLight2D.set_texture_offset
-     */
     fun setTextureOffset(textureOffset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, handle, textureOffset)
     }
 
-    /**
-     * The offset of the light's `texture`.
-     *
-     * Generated from Godot docs: PointLight2D.get_texture_offset
-     */
     fun getTextureOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, handle)
     }
 
-    /**
-     * The `texture`'s scale factor.
-     *
-     * Generated from Godot docs: PointLight2D.set_texture_scale
-     */
     fun setTextureScale(textureScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTextureScaleBind, handle, textureScale)
     }
 
-    /**
-     * The `texture`'s scale factor.
-     *
-     * Generated from Godot docs: PointLight2D.get_texture_scale
-     */
     fun getTextureScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTextureScaleBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PointLight2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PointLight2D? =
+            if (handle.address() == 0L) null else PointLight2D(handle)
+
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {
             ObjectCalls.getMethodBind("PointLight2D", "set_texture", SET_TEXTURE_HASH)

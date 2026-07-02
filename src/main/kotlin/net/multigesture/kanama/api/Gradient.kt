@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Color
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Color
 
 /**
  * A color transition.
@@ -35,38 +35,18 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         @JvmName("setColorsProperty")
         set(value) = setColors(value)
 
-    /**
-     * Adds the specified color to the gradient, with the specified offset.
-     *
-     * Generated from Godot docs: Gradient.add_point
-     */
     fun addPoint(offset: Double, color: Color) {
         ObjectCalls.ptrcallWithDoubleAndColorArg(addPointBind, handle, offset, color)
     }
 
-    /**
-     * Removes the color at index `point`.
-     *
-     * Generated from Godot docs: Gradient.remove_point
-     */
     fun removePoint(point: Int) {
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, point)
     }
 
-    /**
-     * Sets the offset for the gradient color at index `point`.
-     *
-     * Generated from Godot docs: Gradient.set_offset
-     */
     fun setOffset(point: Int, offset: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setOffsetBind, handle, point, offset)
     }
 
-    /**
-     * Returns the offset of the gradient color at index `point`.
-     *
-     * Generated from Godot docs: Gradient.get_offset
-     */
     fun getOffset(point: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getOffsetBind, handle, point)
     }
@@ -82,20 +62,10 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(reverseBind, handle)
     }
 
-    /**
-     * Sets the color of the gradient color at index `point`.
-     *
-     * Generated from Godot docs: Gradient.set_color
-     */
     fun setColor(point: Int, color: Color) {
         ObjectCalls.ptrcallWithIntAndColorArg(setColorBind, handle, point, color)
     }
 
-    /**
-     * Returns the color of the gradient color at index `point`.
-     *
-     * Generated from Godot docs: Gradient.get_color
-     */
     fun getColor(point: Int): Color {
         return ObjectCalls.ptrcallWithIntArgRetColor(getColorBind, handle, point)
     }
@@ -113,96 +83,50 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithDoubleArgRetColor(sampleBind, handle, offset)
     }
 
-    /**
-     * Returns the number of colors in the gradient.
-     *
-     * Generated from Godot docs: Gradient.get_point_count
-     */
     fun getPointCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
-    /**
-     * Gradient's offsets as a `PackedFloat32Array`. Note: Setting this property updates all offsets at
-     * once. To update any offset individually use `set_offset`.
-     *
-     * Generated from Godot docs: Gradient.set_offsets
-     */
     fun setOffsets(offsets: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setOffsetsBind, handle, offsets)
     }
 
-    /**
-     * Gradient's offsets as a `PackedFloat32Array`. Note: Setting this property updates all offsets at
-     * once. To update any offset individually use `set_offset`.
-     *
-     * Generated from Godot docs: Gradient.get_offsets
-     */
     fun getOffsets(): List<Float> {
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, handle)
     }
 
-    /**
-     * Gradient's colors as a `PackedColorArray`. Note: Setting this property updates all colors at
-     * once. To update any color individually use `set_color`.
-     *
-     * Generated from Godot docs: Gradient.set_colors
-     */
     fun setColors(colors: List<Color>) {
         ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
     }
 
-    /**
-     * Gradient's colors as a `PackedColorArray`. Note: Setting this property updates all colors at
-     * once. To update any color individually use `set_color`.
-     *
-     * Generated from Godot docs: Gradient.get_colors
-     */
     fun getColors(): List<Color> {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
     }
 
-    /**
-     * The algorithm used to interpolate between points of the gradient.
-     *
-     * Generated from Godot docs: Gradient.set_interpolation_mode
-     */
     fun setInterpolationMode(interpolationMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, handle, interpolationMode)
     }
 
-    /**
-     * The algorithm used to interpolate between points of the gradient.
-     *
-     * Generated from Godot docs: Gradient.get_interpolation_mode
-     */
     fun getInterpolationMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, handle)
     }
 
-    /**
-     * The color space used to interpolate between points of the gradient. It does not affect the
-     * returned colors, which will always use nonlinear sRGB encoding. Note: This setting has no effect
-     * when `interpolation_mode` is set to `GRADIENT_INTERPOLATE_CONSTANT`.
-     *
-     * Generated from Godot docs: Gradient.set_interpolation_color_space
-     */
     fun setInterpolationColorSpace(interpolationColorSpace: Long) {
         ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, handle, interpolationColorSpace)
     }
 
-    /**
-     * The color space used to interpolate between points of the gradient. It does not affect the
-     * returned colors, which will always use nonlinear sRGB encoding. Note: This setting has no effect
-     * when `interpolation_mode` is set to `GRADIENT_INTERPOLATE_CONSTANT`.
-     *
-     * Generated from Godot docs: Gradient.get_interpolation_color_space
-     */
     fun getInterpolationColorSpace(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, handle)
     }
 
     companion object {
+        const val GRADIENT_INTERPOLATE_LINEAR: Long = 0L
+        const val GRADIENT_INTERPOLATE_CONSTANT: Long = 1L
+        const val GRADIENT_INTERPOLATE_CUBIC: Long = 2L
+        const val GRADIENT_COLOR_SPACE_SRGB: Long = 0L
+        const val GRADIENT_COLOR_SPACE_LINEAR_SRGB: Long = 1L
+        const val GRADIENT_COLOR_SPACE_OKLAB: Long = 2L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): Gradient? =
             wrap(handle)

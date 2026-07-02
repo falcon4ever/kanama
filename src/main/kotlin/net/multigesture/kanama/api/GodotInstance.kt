@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Provides access to an embedded Godot instance.
@@ -18,11 +18,6 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(startBind, handle)
     }
 
-    /**
-     * Returns `true` if this instance has been fully started.
-     *
-     * Generated from Godot docs: GodotInstance.is_started
-     */
     fun isStarted(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, handle)
     }
@@ -36,20 +31,10 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(iterationBind, handle)
     }
 
-    /**
-     * Notifies the instance that it is now in focus.
-     *
-     * Generated from Godot docs: GodotInstance.focus_in
-     */
     fun focusIn() {
         ObjectCalls.ptrcallNoArgs(focusInBind, handle)
     }
 
-    /**
-     * Notifies the instance that it is now not in focus.
-     *
-     * Generated from Godot docs: GodotInstance.focus_out
-     */
     fun focusOut() {
         ObjectCalls.ptrcallNoArgs(focusOutBind, handle)
     }
@@ -73,6 +58,13 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): GodotInstance? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): GodotInstance? =
+            if (handle.address() == 0L) null else GodotInstance(handle)
+
         private const val START_HASH = 2240911060L
         private val startBind by lazy {
             ObjectCalls.getMethodBind("GodotInstance", "start", START_HASH)

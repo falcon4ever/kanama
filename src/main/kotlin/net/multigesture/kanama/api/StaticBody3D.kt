@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector3
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector3
 
 /**
  * A 3D physics body that can't be moved by external forces. When moved manually, it doesn't affect
@@ -30,62 +30,26 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
         @JvmName("setConstantAngularVelocityProperty")
         set(value) = setConstantAngularVelocity(value)
 
-    /**
-     * The body's constant linear velocity. This does not move the body, but affects touching bodies,
-     * as if it were moving.
-     *
-     * Generated from Godot docs: StaticBody3D.set_constant_linear_velocity
-     */
     fun setConstantLinearVelocity(vel: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setConstantLinearVelocityBind, handle, vel)
     }
 
-    /**
-     * The body's constant angular velocity. This does not rotate the body, but affects touching
-     * bodies, as if it were rotating.
-     *
-     * Generated from Godot docs: StaticBody3D.set_constant_angular_velocity
-     */
     fun setConstantAngularVelocity(vel: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setConstantAngularVelocityBind, handle, vel)
     }
 
-    /**
-     * The body's constant linear velocity. This does not move the body, but affects touching bodies,
-     * as if it were moving.
-     *
-     * Generated from Godot docs: StaticBody3D.get_constant_linear_velocity
-     */
     fun getConstantLinearVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getConstantLinearVelocityBind, handle)
     }
 
-    /**
-     * The body's constant angular velocity. This does not rotate the body, but affects touching
-     * bodies, as if it were rotating.
-     *
-     * Generated from Godot docs: StaticBody3D.get_constant_angular_velocity
-     */
     fun getConstantAngularVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getConstantAngularVelocityBind, handle)
     }
 
-    /**
-     * The physics material override for the body. If a material is assigned to this property, it will
-     * be used instead of any other physics material, such as an inherited one.
-     *
-     * Generated from Godot docs: StaticBody3D.set_physics_material_override
-     */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
         ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, handle, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The physics material override for the body. If a material is assigned to this property, it will
-     * be used instead of any other physics material, such as an inherited one.
-     *
-     * Generated from Godot docs: StaticBody3D.get_physics_material_override
-     */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
         return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, handle))
     }

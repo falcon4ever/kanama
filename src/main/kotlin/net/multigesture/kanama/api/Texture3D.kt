@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Base class for 3-dimensional textures.
@@ -9,67 +9,30 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: Texture3D
  */
 open class Texture3D(handle: MemorySegment) : Texture(handle) {
-    /**
-     * Returns the current format being used by this texture.
-     *
-     * Generated from Godot docs: Texture3D.get_format
-     */
     fun getFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
-    /**
-     * Returns the `Texture3D`'s width in pixels. Width is typically represented by the X axis.
-     *
-     * Generated from Godot docs: Texture3D.get_width
-     */
     fun getWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
-    /**
-     * Returns the `Texture3D`'s height in pixels. Width is typically represented by the Y axis.
-     *
-     * Generated from Godot docs: Texture3D.get_height
-     */
     fun getHeight(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
-    /**
-     * Returns the `Texture3D`'s depth in pixels. Depth is typically represented by the Z axis (a
-     * dimension not present in `Texture2D`).
-     *
-     * Generated from Godot docs: Texture3D.get_depth
-     */
     fun getDepth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, handle)
     }
 
-    /**
-     * Returns `true` if the `Texture3D` has generated mipmaps.
-     *
-     * Generated from Godot docs: Texture3D.has_mipmaps
-     */
     fun hasMipmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
-    /**
-     * Returns the `Texture3D`'s data as an array of `Image`s. Each `Image` represents a slice of the
-     * `Texture3D`, with different slices mapping to different depth (Z axis) levels.
-     *
-     * Generated from Godot docs: Texture3D.get_data
-     */
     fun getData(): List<Image> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, handle, Image::fromHandle)
     }
 
-    /**
-     * Creates a placeholder version of this resource (`PlaceholderTexture3D`).
-     *
-     * Generated from Godot docs: Texture3D.create_placeholder
-     */
     fun createPlaceholder(): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle))
     }

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeUIntParameter
@@ -37,6 +37,13 @@ class VisualShaderNodeUIntParameter(handle: MemorySegment) : VisualShaderNodePar
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeUIntParameter? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeUIntParameter? =
+            if (handle.address() == 0L) null else VisualShaderNodeUIntParameter(handle)
+
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
         private val setDefaultValueEnabledBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeUIntParameter", "set_default_value_enabled", SET_DEFAULT_VALUE_ENABLED_HASH)

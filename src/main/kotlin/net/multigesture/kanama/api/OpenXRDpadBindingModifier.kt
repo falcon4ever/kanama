@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRDpadBindingModifier
@@ -135,6 +135,13 @@ class OpenXRDpadBindingModifier(handle: MemorySegment) : OpenXRIPBindingModifier
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRDpadBindingModifier? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRDpadBindingModifier? =
+            if (handle.address() == 0L) null else OpenXRDpadBindingModifier(handle)
+
         private const val SET_ACTION_SET_HASH = 2093310581L
         private val setActionSetBind by lazy {
             ObjectCalls.getMethodBind("OpenXRDpadBindingModifier", "set_action_set", SET_ACTION_SET_HASH)

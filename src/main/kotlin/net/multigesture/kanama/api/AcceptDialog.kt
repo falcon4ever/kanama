@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A base dialog used for user notification.
@@ -40,175 +40,66 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
         @JvmName("setDialogAutowrapProperty")
         set(value) = setAutowrap(value)
 
-    /**
-     * Returns the OK `Button` instance. Warning: This is a required internal node, removing and
-     * freeing it may cause a crash. If you wish to hide it or any of its children, use their
-     * `CanvasItem.visible` property.
-     *
-     * Generated from Godot docs: AcceptDialog.get_ok_button
-     */
     fun getOkButton(): Button? {
         return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOkButtonBind, handle))
     }
 
-    /**
-     * Returns the label used for built-in text. Warning: This is a required internal node, removing
-     * and freeing it may cause a crash. If you wish to hide it or any of its children, use their
-     * `CanvasItem.visible` property.
-     *
-     * Generated from Godot docs: AcceptDialog.get_label
-     */
     fun getLabel(): Label? {
         return Label.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelBind, handle))
     }
 
-    /**
-     * If `true`, the dialog is hidden when the OK button is pressed. You can set it to `false` if you
-     * want to do e.g. input validation when receiving the `confirmed` signal, and handle hiding the
-     * dialog in your own logic. Note: Some nodes derived from this class can have a different default
-     * value, and potentially their own built-in logic overriding this setting. For example
-     * `FileDialog` defaults to `false`, and has its own input validation code that is called when you
-     * press OK, which eventually hides the dialog if the input is valid. As such, this property can't
-     * be used in `FileDialog` to disable hiding the dialog when pressing OK.
-     *
-     * Generated from Godot docs: AcceptDialog.set_hide_on_ok
-     */
     fun setHideOnOk(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideOnOkBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the dialog is hidden when the OK button is pressed. You can set it to `false` if you
-     * want to do e.g. input validation when receiving the `confirmed` signal, and handle hiding the
-     * dialog in your own logic. Note: Some nodes derived from this class can have a different default
-     * value, and potentially their own built-in logic overriding this setting. For example
-     * `FileDialog` defaults to `false`, and has its own input validation code that is called when you
-     * press OK, which eventually hides the dialog if the input is valid. As such, this property can't
-     * be used in `FileDialog` to disable hiding the dialog when pressing OK.
-     *
-     * Generated from Godot docs: AcceptDialog.get_hide_on_ok
-     */
     fun getHideOnOk(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getHideOnOkBind, handle)
     }
 
-    /**
-     * If `true`, the dialog will be hidden when the `ui_close_dialog` action is pressed (by default,
-     * this action is bound to Escape, or Cmd + W on macOS).
-     *
-     * Generated from Godot docs: AcceptDialog.set_close_on_escape
-     */
     fun setCloseOnEscape(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCloseOnEscapeBind, handle, enabled)
     }
 
-    /**
-     * If `true`, the dialog will be hidden when the `ui_close_dialog` action is pressed (by default,
-     * this action is bound to Escape, or Cmd + W on macOS).
-     *
-     * Generated from Godot docs: AcceptDialog.get_close_on_escape
-     */
     fun getCloseOnEscape(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getCloseOnEscapeBind, handle)
     }
 
-    /**
-     * Adds a button with label `text` and a custom `action` to the dialog and returns the created
-     * button. If `action` is not empty, pressing the button will emit the `custom_action` signal with
-     * the specified action string. If `true`, `right` will place the button to the right of any
-     * sibling buttons. You can use `remove_button` method to remove a button created with this method
-     * from the dialog.
-     *
-     * Generated from Godot docs: AcceptDialog.add_button
-     */
     fun addButton(text: String, right: Boolean = false, action: String = ""): Button? {
         return Button.wrap(ObjectCalls.ptrcallWithStringBoolStringArgsRetObject(addButtonBind, handle, text, right, action))
     }
 
-    /**
-     * Adds a button with label `name` and a cancel action to the dialog and returns the created
-     * button. You can use `remove_button` method to remove a button created with this method from the
-     * dialog.
-     *
-     * Generated from Godot docs: AcceptDialog.add_cancel_button
-     */
     fun addCancelButton(name: String): Button? {
         return Button.wrap(ObjectCalls.ptrcallWithStringArgRetObject(addCancelButtonBind, handle, name))
     }
 
-    /**
-     * Removes the `button` from the dialog. Does NOT free the `button`. The `button` must be a
-     * `Button` added with `add_button` or `add_cancel_button` method. After removal, pressing the
-     * `button` will no longer emit this dialog's `custom_action` or `canceled` signals.
-     *
-     * Generated from Godot docs: AcceptDialog.remove_button
-     */
     fun removeButton(button: Button) {
         ObjectCalls.ptrcallWithObjectArgs(removeButtonBind, handle, listOf(button.handle))
     }
 
-    /**
-     * Registers a `LineEdit` in the dialog. When the enter key is pressed, the dialog will be
-     * accepted.
-     *
-     * Generated from Godot docs: AcceptDialog.register_text_enter
-     */
     fun registerTextEnter(lineEdit: LineEdit) {
         ObjectCalls.ptrcallWithObjectArgs(registerTextEnterBind, handle, listOf(lineEdit.handle))
     }
 
-    /**
-     * The text displayed by the dialog.
-     *
-     * Generated from Godot docs: AcceptDialog.set_text
-     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
-    /**
-     * The text displayed by the dialog.
-     *
-     * Generated from Godot docs: AcceptDialog.get_text
-     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
-    /**
-     * Sets autowrapping for the text in the dialog.
-     *
-     * Generated from Godot docs: AcceptDialog.set_autowrap
-     */
     fun setAutowrap(autowrap: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutowrapBind, handle, autowrap)
     }
 
-    /**
-     * Sets autowrapping for the text in the dialog.
-     *
-     * Generated from Godot docs: AcceptDialog.has_autowrap
-     */
     fun hasAutowrap(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutowrapBind, handle)
     }
 
-    /**
-     * The text displayed by the OK button (see `get_ok_button`). If empty, a default text will be
-     * used.
-     *
-     * Generated from Godot docs: AcceptDialog.set_ok_button_text
-     */
     fun setOkButtonText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setOkButtonTextBind, handle, text)
     }
 
-    /**
-     * The text displayed by the OK button (see `get_ok_button`). If empty, a default text will be
-     * used.
-     *
-     * Generated from Godot docs: AcceptDialog.get_ok_button_text
-     */
     fun getOkButtonText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getOkButtonTextBind, handle)
     }

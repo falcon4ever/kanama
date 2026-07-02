@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Generated from Godot docs: MultiplayerSynchronizer
@@ -120,6 +120,17 @@ class MultiplayerSynchronizer(handle: MemorySegment) : Node(handle) {
     }
 
     companion object {
+        const val VISIBILITY_PROCESS_IDLE: Long = 0L
+        const val VISIBILITY_PROCESS_PHYSICS: Long = 1L
+        const val VISIBILITY_PROCESS_NONE: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): MultiplayerSynchronizer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): MultiplayerSynchronizer? =
+            if (handle.address() == 0L) null else MultiplayerSynchronizer(handle)
+
         private const val SET_ROOT_PATH_HASH = 1348162250L
         private val setRootPathBind by lazy {
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_root_path", SET_ROOT_PATH_HASH)

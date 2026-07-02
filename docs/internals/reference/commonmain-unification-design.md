@@ -5,6 +5,19 @@ Roadmap scope: wrapper coverage Phase 4.3, with a decision for Phase 4.4
 must land as staged follow-up work after maintainer sign-off because it changes
 the Gradle shape consumed by desktop, Android, and iOS.
 
+> **Status (task 21):** the *convergence goal* — one honest source of truth, no
+> platform drift — has been achieved without the physical module move. All in-API
+> wrappers were regenerated and re-adopted from the honest (task 11) generator on
+> desktop, iOS, and Android (via the `prepareAndroidKanamaSources` copy), and
+> `check_full_drift_gate` in `scripts/check_wrapper_generator.py` now enforces
+> `committed == fresh regen` for the entire generated set on every platform, with
+> a small explicit hand-shaped exemption list. Cross-platform wrapper drift is
+> therefore structurally impossible today. The physical `:kanama-common-api`
+> module + `expect/actual ObjectCalls` restructure described below remains the
+> recommended follow-up (it removes the duplicated source trees), and is still the
+> staged, sign-off-gated migration — it is now an ergonomics/maintainability step
+> rather than the mechanism that stops drift.
+
 ## Goal
 
 Kanama should have one generated Godot API wrapper source set shared by desktop,

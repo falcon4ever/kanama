@@ -77,222 +77,90 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
         @JvmName("setVisibilityModeProperty")
         set(value) = setVisibilityMode(value)
 
-    /**
-     * The joystick mode to use.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_joystick_mode
-     */
     fun setJoystickMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setJoystickModeBind, handle, mode)
     }
 
-    /**
-     * The joystick mode to use.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_joystick_mode
-     */
     fun getJoystickMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJoystickModeBind, handle)
     }
 
-    /**
-     * The size of the joystick in pixels.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_joystick_size
-     */
     fun setJoystickSize(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setJoystickSizeBind, handle, size)
     }
 
-    /**
-     * The size of the joystick in pixels.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_joystick_size
-     */
     fun getJoystickSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getJoystickSizeBind, handle)
     }
 
-    /**
-     * The size of the joystick tip in pixels.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_tip_size
-     */
     fun setTipSize(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTipSizeBind, handle, size)
     }
 
-    /**
-     * The size of the joystick tip in pixels.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_tip_size
-     */
     fun getTipSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTipSizeBind, handle)
     }
 
-    /**
-     * The ratio of the joystick size that defines the joystick deadzone. The joystick tip must move
-     * beyond this ratio before being considered active. This deadzone is applied before triggering
-     * input actions and affects the joystick's input vector and all related signals. Note that input
-     * actions may also define their own deadzones in the InputMap. If both are set, the joystick
-     * deadzone is applied first, followed by the action's deadzone. By default, this value is `0.0`,
-     * meaning the joystick does not apply its own deadzone and relies entirely on the InputMap action
-     * deadzones.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_deadzone_ratio
-     */
     fun setDeadzoneRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDeadzoneRatioBind, handle, ratio)
     }
 
-    /**
-     * The ratio of the joystick size that defines the joystick deadzone. The joystick tip must move
-     * beyond this ratio before being considered active. This deadzone is applied before triggering
-     * input actions and affects the joystick's input vector and all related signals. Note that input
-     * actions may also define their own deadzones in the InputMap. If both are set, the joystick
-     * deadzone is applied first, followed by the action's deadzone. By default, this value is `0.0`,
-     * meaning the joystick does not apply its own deadzone and relies entirely on the InputMap action
-     * deadzones.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_deadzone_ratio
-     */
     fun getDeadzoneRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDeadzoneRatioBind, handle)
     }
 
-    /**
-     * The multiplier applied to the joystick's radius that defines the clamp zone. This zone limits
-     * how far the joystick tip can move from its center before being clamped. A value of `1.0` means
-     * the tip can move up to the edge of the joystick's visual size. In `JOYSTICK_FOLLOWING` mode,
-     * this radius also determines how far the finger can move before the joystick base starts
-     * following the touch input.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_clampzone_ratio
-     */
     fun setClampzoneRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setClampzoneRatioBind, handle, ratio)
     }
 
-    /**
-     * The multiplier applied to the joystick's radius that defines the clamp zone. This zone limits
-     * how far the joystick tip can move from its center before being clamped. A value of `1.0` means
-     * the tip can move up to the edge of the joystick's visual size. In `JOYSTICK_FOLLOWING` mode,
-     * this radius also determines how far the finger can move before the joystick base starts
-     * following the touch input.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_clampzone_ratio
-     */
     fun getClampzoneRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getClampzoneRatioBind, handle)
     }
 
-    /**
-     * The initial position of the joystick as a ratio of the control's size. `(0, 0)` is top-left and
-     * `(1, 1)` is bottom-right.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_initial_offset_ratio
-     */
     fun setInitialOffsetRatio(ratio: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setInitialOffsetRatioBind, handle, ratio)
     }
 
-    /**
-     * The initial position of the joystick as a ratio of the control's size. `(0, 0)` is top-left and
-     * `(1, 1)` is bottom-right.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_initial_offset_ratio
-     */
     fun getInitialOffsetRatio(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getInitialOffsetRatioBind, handle)
     }
 
-    /**
-     * The action to trigger when the joystick is moved left.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_action_left
-     */
     fun setActionLeft(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(setActionLeftBind, handle, action)
     }
 
-    /**
-     * The action to trigger when the joystick is moved left.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_action_left
-     */
     fun getActionLeft(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getActionLeftBind, handle)
     }
 
-    /**
-     * The action to trigger when the joystick is moved right.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_action_right
-     */
     fun setActionRight(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(setActionRightBind, handle, action)
     }
 
-    /**
-     * The action to trigger when the joystick is moved right.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_action_right
-     */
     fun getActionRight(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getActionRightBind, handle)
     }
 
-    /**
-     * The action to trigger when the joystick is moved up.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_action_up
-     */
     fun setActionUp(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(setActionUpBind, handle, action)
     }
 
-    /**
-     * The action to trigger when the joystick is moved up.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_action_up
-     */
     fun getActionUp(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getActionUpBind, handle)
     }
 
-    /**
-     * The action to trigger when the joystick is moved down.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_action_down
-     */
     fun setActionDown(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(setActionDownBind, handle, action)
     }
 
-    /**
-     * The action to trigger when the joystick is moved down.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_action_down
-     */
     fun getActionDown(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getActionDownBind, handle)
     }
 
-    /**
-     * The visibility mode to use.
-     *
-     * Generated from Godot docs: VirtualJoystick.set_visibility_mode
-     */
     fun setVisibilityMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, handle, mode)
     }
 
-    /**
-     * The visibility mode to use.
-     *
-     * Generated from Godot docs: VirtualJoystick.get_visibility_mode
-     */
     fun getVisibilityMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, handle)
     }

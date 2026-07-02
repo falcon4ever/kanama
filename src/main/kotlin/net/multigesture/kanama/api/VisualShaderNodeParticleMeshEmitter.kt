@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter
@@ -51,6 +51,13 @@ class VisualShaderNodeParticleMeshEmitter(handle: MemorySegment) : VisualShaderN
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleMeshEmitter? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleMeshEmitter? =
+            if (handle.address() == 0L) null else VisualShaderNodeParticleMeshEmitter(handle)
+
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeParticleMeshEmitter", "set_mesh", SET_MESH_HASH)

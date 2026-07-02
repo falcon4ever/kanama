@@ -9,12 +9,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorResourceTooltipPlugin
  */
 class EditorResourceTooltipPlugin(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Requests a thumbnail for the given `TextureRect`. The thumbnail is created asynchronously by
-     * `EditorResourcePreview` and automatically set when available.
-     *
-     * Generated from Godot docs: EditorResourceTooltipPlugin.request_thumbnail
-     */
     fun requestThumbnail(path: String, control: TextureRect) {
         ObjectCalls.ptrcallWithStringAndObjectArg(requestThumbnailBind, handle, path, control.handle)
     }

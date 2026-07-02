@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A 1D texture where the red, green, and blue color channels correspond to points on 3 curves.
@@ -28,67 +28,30 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setCurveZProperty")
         set(value) = setCurveZ(value)
 
-    /**
-     * The width of the texture (in pixels). Higher values make it possible to represent high-frequency
-     * data better (such as sudden direction changes), at the cost of increased generation time and
-     * memory usage.
-     *
-     * Generated from Godot docs: CurveXYZTexture.set_width
-     */
     fun setWidth(width: Int) {
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
-    /**
-     * The `Curve` that is rendered onto the texture's red channel. Should be a unit `Curve`.
-     *
-     * Generated from Godot docs: CurveXYZTexture.set_curve_x
-     */
     fun setCurveX(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `Curve` that is rendered onto the texture's red channel. Should be a unit `Curve`.
-     *
-     * Generated from Godot docs: CurveXYZTexture.get_curve_x
-     */
     fun getCurveX(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, handle))
     }
 
-    /**
-     * The `Curve` that is rendered onto the texture's green channel. Should be a unit `Curve`.
-     *
-     * Generated from Godot docs: CurveXYZTexture.set_curve_y
-     */
     fun setCurveY(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `Curve` that is rendered onto the texture's green channel. Should be a unit `Curve`.
-     *
-     * Generated from Godot docs: CurveXYZTexture.get_curve_y
-     */
     fun getCurveY(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, handle))
     }
 
-    /**
-     * The `Curve` that is rendered onto the texture's blue channel. Should be a unit `Curve`.
-     *
-     * Generated from Godot docs: CurveXYZTexture.set_curve_z
-     */
     fun setCurveZ(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The `Curve` that is rendered onto the texture's blue channel. Should be a unit `Curve`.
-     *
-     * Generated from Godot docs: CurveXYZTexture.get_curve_z
-     */
     fun getCurveZ(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, handle))
     }

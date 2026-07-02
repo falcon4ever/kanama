@@ -1,13 +1,25 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: CSGShape3D
  */
 open class CSGShape3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+    var autosmooth: Boolean
+        @JvmName("autosmoothProperty")
+        get() = isAutosmooth()
+        @JvmName("setAutosmoothProperty")
+        set(value) = setAutosmooth(value)
+
+    var smoothingAngle: Double
+        @JvmName("smoothingAngleProperty")
+        get() = getSmoothingAngle()
+        @JvmName("setSmoothingAngleProperty")
+        set(value) = setSmoothingAngle(value)
+
     var operation: Long
         @JvmName("operationProperty")
         get() = getOperation()
@@ -138,7 +150,34 @@ open class CSGShape3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeStaticMeshBind, handle))
     }
 
+    fun setAutosmooth(autosmooth: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setAutosmoothBind, handle, autosmooth)
+    }
+
+    fun isAutosmooth(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutosmoothBind, handle)
+    }
+
+    fun setSmoothingAngle(smoothingAngle: Double) {
+        ObjectCalls.ptrcallWithDoubleArg(setSmoothingAngleBind, handle, smoothingAngle)
+    }
+
+    fun getSmoothingAngle(): Double {
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSmoothingAngleBind, handle)
+    }
+
     companion object {
+        const val OPERATION_UNION: Long = 0L
+        const val OPERATION_INTERSECTION: Long = 1L
+        const val OPERATION_SUBTRACTION: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGShape3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGShape3D? =
+            if (handle.address() == 0L) null else CSGShape3D(handle)
+
         private const val IS_ROOT_SHAPE_HASH = 36873697L
         private val isRootShapeBind by lazy {
             ObjectCalls.getMethodBind("CSGShape3D", "is_root_shape", IS_ROOT_SHAPE_HASH)
@@ -247,6 +286,26 @@ open class CSGShape3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         private const val BAKE_STATIC_MESH_HASH = 1605880883L
         private val bakeStaticMeshBind by lazy {
             ObjectCalls.getMethodBind("CSGShape3D", "bake_static_mesh", BAKE_STATIC_MESH_HASH)
+        }
+
+        private const val SET_AUTOSMOOTH_HASH = 2586408642L
+        private val setAutosmoothBind by lazy {
+            ObjectCalls.getMethodBind("CSGShape3D", "set_autosmooth", SET_AUTOSMOOTH_HASH)
+        }
+
+        private const val IS_AUTOSMOOTH_HASH = 36873697L
+        private val isAutosmoothBind by lazy {
+            ObjectCalls.getMethodBind("CSGShape3D", "is_autosmooth", IS_AUTOSMOOTH_HASH)
+        }
+
+        private const val SET_SMOOTHING_ANGLE_HASH = 373806689L
+        private val setSmoothingAngleBind by lazy {
+            ObjectCalls.getMethodBind("CSGShape3D", "set_smoothing_angle", SET_SMOOTHING_ANGLE_HASH)
+        }
+
+        private const val GET_SMOOTHING_ANGLE_HASH = 1740695150L
+        private val getSmoothingAngleBind by lazy {
+            ObjectCalls.getMethodBind("CSGShape3D", "get_smoothing_angle", GET_SMOOTHING_ANGLE_HASH)
         }
     }
 }

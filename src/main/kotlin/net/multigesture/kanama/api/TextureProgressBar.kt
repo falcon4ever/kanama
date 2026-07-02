@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Texture-based progress bar. Useful for loading screens and life or stamina bars.
@@ -84,279 +84,128 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
         @JvmName("setTintProgressProperty")
         set(value) = setTintProgress(value)
 
-    /**
-     * `Texture2D` that draws under the progress bar. The bar's background.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_under_texture
-     */
     fun setUnderTexture(tex: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setUnderTextureBind, handle, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * `Texture2D` that draws under the progress bar. The bar's background.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_under_texture
-     */
     fun getUnderTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getUnderTextureBind, handle))
     }
 
-    /**
-     * `Texture2D` that clips based on the node's `value` and `fill_mode`. As `value` increased, the
-     * texture fills up. It shows entirely when `value` reaches `max_value`. It doesn't show at all if
-     * `value` is equal to `min_value`. The `value` property comes from `Range`. See `Range.value`,
-     * `Range.min_value`, `Range.max_value`.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_progress_texture
-     */
     fun setProgressTexture(tex: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setProgressTextureBind, handle, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * `Texture2D` that clips based on the node's `value` and `fill_mode`. As `value` increased, the
-     * texture fills up. It shows entirely when `value` reaches `max_value`. It doesn't show at all if
-     * `value` is equal to `min_value`. The `value` property comes from `Range`. See `Range.value`,
-     * `Range.min_value`, `Range.max_value`.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_progress_texture
-     */
     fun getProgressTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProgressTextureBind, handle))
     }
 
-    /**
-     * `Texture2D` that draws over the progress bar. Use it to add highlights or an upper-frame that
-     * hides part of `texture_progress`.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_over_texture
-     */
     fun setOverTexture(tex: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setOverTextureBind, handle, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * `Texture2D` that draws over the progress bar. Use it to add highlights or an upper-frame that
-     * hides part of `texture_progress`.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_over_texture
-     */
     fun getOverTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOverTextureBind, handle))
     }
 
-    /**
-     * The fill direction. See `FillMode` for possible values.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_fill_mode
-     */
     fun setFillMode(mode: Int) {
         ObjectCalls.ptrcallWithIntArg(setFillModeBind, handle, mode)
     }
 
-    /**
-     * The fill direction. See `FillMode` for possible values.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_fill_mode
-     */
     fun getFillMode(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, handle)
     }
 
-    /**
-     * Multiplies the color of the bar's `texture_under` texture.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_tint_under
-     */
     fun setTintUnder(tint: Color) {
         ObjectCalls.ptrcallWithColorArg(setTintUnderBind, handle, tint)
     }
 
-    /**
-     * Multiplies the color of the bar's `texture_under` texture.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_tint_under
-     */
     fun getTintUnder(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getTintUnderBind, handle)
     }
 
-    /**
-     * Multiplies the color of the bar's `texture_progress` texture.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_tint_progress
-     */
     fun setTintProgress(tint: Color) {
         ObjectCalls.ptrcallWithColorArg(setTintProgressBind, handle, tint)
     }
 
-    /**
-     * Multiplies the color of the bar's `texture_progress` texture.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_tint_progress
-     */
     fun getTintProgress(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getTintProgressBind, handle)
     }
 
-    /**
-     * Multiplies the color of the bar's `texture_over` texture. The effect is similar to
-     * `CanvasItem.modulate`, except it only affects this specific texture instead of the entire node.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_tint_over
-     */
     fun setTintOver(tint: Color) {
         ObjectCalls.ptrcallWithColorArg(setTintOverBind, handle, tint)
     }
 
-    /**
-     * Multiplies the color of the bar's `texture_over` texture. The effect is similar to
-     * `CanvasItem.modulate`, except it only affects this specific texture instead of the entire node.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_tint_over
-     */
     fun getTintOver(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getTintOverBind, handle)
     }
 
-    /**
-     * The offset of `texture_progress`. Useful for `texture_over` and `texture_under` with fancy
-     * borders, to avoid transparent margins in your progress texture.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_texture_progress_offset
-     */
     fun setTextureProgressOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setTextureProgressOffsetBind, handle, offset)
     }
 
-    /**
-     * The offset of `texture_progress`. Useful for `texture_over` and `texture_under` with fancy
-     * borders, to avoid transparent margins in your progress texture.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_texture_progress_offset
-     */
     fun getTextureProgressOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTextureProgressOffsetBind, handle)
     }
 
-    /**
-     * Starting angle for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `min_value`, the texture doesn't show up at all. When the `value` increases, the
-     * texture fills and tends towards `radial_fill_degrees`. Note: `radial_initial_angle` is wrapped
-     * between `0` and `360` degrees (inclusive).
-     *
-     * Generated from Godot docs: TextureProgressBar.set_radial_initial_angle
-     */
     fun setRadialInitialAngle(mode: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadialInitialAngleBind, handle, mode)
     }
 
-    /**
-     * Starting angle for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `min_value`, the texture doesn't show up at all. When the `value` increases, the
-     * texture fills and tends towards `radial_fill_degrees`. Note: `radial_initial_angle` is wrapped
-     * between `0` and `360` degrees (inclusive).
-     *
-     * Generated from Godot docs: TextureProgressBar.get_radial_initial_angle
-     */
     fun getRadialInitialAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadialInitialAngleBind, handle)
     }
 
-    /**
-     * Offsets `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`, `FILL_COUNTER_CLOCKWISE`, or
-     * `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. Note: The effective radial center always stays within
-     * the `texture_progress` bounds. If you need to move it outside the texture's bounds, modify the
-     * `texture_progress` to contain additional empty space where needed.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_radial_center_offset
-     */
     fun setRadialCenterOffset(mode: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setRadialCenterOffsetBind, handle, mode)
     }
 
-    /**
-     * Offsets `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`, `FILL_COUNTER_CLOCKWISE`, or
-     * `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. Note: The effective radial center always stays within
-     * the `texture_progress` bounds. If you need to move it outside the texture's bounds, modify the
-     * `texture_progress` to contain additional empty space where needed.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_radial_center_offset
-     */
     fun getRadialCenterOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getRadialCenterOffsetBind, handle)
     }
 
-    /**
-     * Upper limit for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `max_value`, the texture fills up to this angle. See `Range.value`,
-     * `Range.max_value`.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_fill_degrees
-     */
     fun setFillDegrees(mode: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFillDegreesBind, handle, mode)
     }
 
-    /**
-     * Upper limit for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `max_value`, the texture fills up to this angle. See `Range.value`,
-     * `Range.max_value`.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_fill_degrees
-     */
     fun getFillDegrees(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFillDegreesBind, handle)
     }
 
-    /**
-     * The height of the 9-patch's top row. Only effective if `nine_patch_stretch` is `true`.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_stretch_margin
-     */
     fun setStretchMargin(margin: Long, value: Int) {
         ObjectCalls.ptrcallWithLongAndIntArgs(setStretchMarginBind, handle, margin, value)
     }
 
-    /**
-     * The height of the 9-patch's top row. Only effective if `nine_patch_stretch` is `true`.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_stretch_margin
-     */
     fun getStretchMargin(margin: Long): Int {
         return ObjectCalls.ptrcallWithLongArgRetInt(getStretchMarginBind, handle, margin)
     }
 
-    /**
-     * If `true`, Godot treats the bar's textures like in `NinePatchRect`. Use the `stretch_margin_*`
-     * properties like `stretch_margin_bottom` to set up the nine patch's 3×3 grid. When using a radial
-     * `fill_mode`, this setting will only enable stretching for `texture_progress`, while
-     * `texture_under` and `texture_over` will be treated like in `NinePatchRect`.
-     *
-     * Generated from Godot docs: TextureProgressBar.set_nine_patch_stretch
-     */
     fun setNinePatchStretch(stretch: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNinePatchStretchBind, handle, stretch)
     }
 
-    /**
-     * If `true`, Godot treats the bar's textures like in `NinePatchRect`. Use the `stretch_margin_*`
-     * properties like `stretch_margin_bottom` to set up the nine patch's 3×3 grid. When using a radial
-     * `fill_mode`, this setting will only enable stretching for `texture_progress`, while
-     * `texture_under` and `texture_over` will be treated like in `NinePatchRect`.
-     *
-     * Generated from Godot docs: TextureProgressBar.get_nine_patch_stretch
-     */
     fun getNinePatchStretch(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getNinePatchStretchBind, handle)
     }
 
     companion object {
+        const val FILL_LEFT_TO_RIGHT: Long = 0L
+        const val FILL_RIGHT_TO_LEFT: Long = 1L
+        const val FILL_TOP_TO_BOTTOM: Long = 2L
+        const val FILL_BOTTOM_TO_TOP: Long = 3L
+        const val FILL_CLOCKWISE: Long = 4L
+        const val FILL_COUNTER_CLOCKWISE: Long = 5L
+        const val FILL_BILINEAR_LEFT_AND_RIGHT: Long = 6L
+        const val FILL_BILINEAR_TOP_AND_BOTTOM: Long = 7L
+        const val FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE: Long = 8L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): TextureProgressBar? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): TextureProgressBar? =
+            if (handle.address() == 0L) null else TextureProgressBar(handle)
+
         private const val SET_UNDER_TEXTURE_HASH = 4051416890L
         private val setUnderTextureBind by lazy {
             ObjectCalls.getMethodBind("TextureProgressBar", "set_under_texture", SET_UNDER_TEXTURE_HASH)

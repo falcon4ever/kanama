@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Pipeline color blend state attachment (used by `RenderingDevice`).
@@ -76,228 +76,94 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
         @JvmName("setWriteAProperty")
         set(value) = setWriteA(value)
 
-    /**
-     * Convenience method to perform standard mix blending with straight (non-premultiplied) alpha.
-     * This sets `enable_blend` to `true`, `src_color_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_SRC_ALPHA`, `dst_color_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA`, `src_alpha_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_SRC_ALPHA` and `dst_alpha_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA`.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_as_mix
-     */
     fun setAsMix() {
         ObjectCalls.ptrcallNoArgs(setAsMixBind, handle)
     }
 
-    /**
-     * If `true`, performs blending between the source and destination according to the factors defined
-     * in `src_color_blend_factor`, `dst_color_blend_factor`, `src_alpha_blend_factor` and
-     * `dst_alpha_blend_factor`. The blend modes `color_blend_op` and `alpha_blend_op` are also taken
-     * into account, with `write_r`, `write_g`, `write_b` and `write_a` controlling the output.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_enable_blend
-     */
     fun setEnableBlend(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableBlendBind, handle, pMember)
     }
 
-    /**
-     * If `true`, performs blending between the source and destination according to the factors defined
-     * in `src_color_blend_factor`, `dst_color_blend_factor`, `src_alpha_blend_factor` and
-     * `dst_alpha_blend_factor`. The blend modes `color_blend_op` and `alpha_blend_op` are also taken
-     * into account, with `write_r`, `write_g`, `write_b` and `write_a` controlling the output.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_enable_blend
-     */
     fun getEnableBlend(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableBlendBind, handle)
     }
 
-    /**
-     * Controls how the blend factor for the color channels is determined based on the source's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_src_color_blend_factor
-     */
     fun setSrcColorBlendFactor(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, handle, pMember)
     }
 
-    /**
-     * Controls how the blend factor for the color channels is determined based on the source's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_src_color_blend_factor
-     */
     fun getSrcColorBlendFactor(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, handle)
     }
 
-    /**
-     * Controls how the blend factor for the color channels is determined based on the destination's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_dst_color_blend_factor
-     */
     fun setDstColorBlendFactor(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, handle, pMember)
     }
 
-    /**
-     * Controls how the blend factor for the color channels is determined based on the destination's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_dst_color_blend_factor
-     */
     fun getDstColorBlendFactor(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, handle)
     }
 
-    /**
-     * The blend mode to use for the red/green/blue color channels.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_color_blend_op
-     */
     fun setColorBlendOp(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, handle, pMember)
     }
 
-    /**
-     * The blend mode to use for the red/green/blue color channels.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_color_blend_op
-     */
     fun getColorBlendOp(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, handle)
     }
 
-    /**
-     * Controls how the blend factor for the alpha channel is determined based on the source's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_src_alpha_blend_factor
-     */
     fun setSrcAlphaBlendFactor(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, handle, pMember)
     }
 
-    /**
-     * Controls how the blend factor for the alpha channel is determined based on the source's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_src_alpha_blend_factor
-     */
     fun getSrcAlphaBlendFactor(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, handle)
     }
 
-    /**
-     * Controls how the blend factor for the alpha channel is determined based on the destination's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_dst_alpha_blend_factor
-     */
     fun setDstAlphaBlendFactor(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, handle, pMember)
     }
 
-    /**
-     * Controls how the blend factor for the alpha channel is determined based on the destination's
-     * fragments.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_dst_alpha_blend_factor
-     */
     fun getDstAlphaBlendFactor(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, handle)
     }
 
-    /**
-     * The blend mode to use for the alpha channel.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_alpha_blend_op
-     */
     fun setAlphaBlendOp(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, handle, pMember)
     }
 
-    /**
-     * The blend mode to use for the alpha channel.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_alpha_blend_op
-     */
     fun getAlphaBlendOp(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, handle)
     }
 
-    /**
-     * If `true`, writes the new red color channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_r
-     */
     fun setWriteR(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWriteRBind, handle, pMember)
     }
 
-    /**
-     * If `true`, writes the new red color channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_r
-     */
     fun getWriteR(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteRBind, handle)
     }
 
-    /**
-     * If `true`, writes the new green color channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_g
-     */
     fun setWriteG(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWriteGBind, handle, pMember)
     }
 
-    /**
-     * If `true`, writes the new green color channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_g
-     */
     fun getWriteG(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteGBind, handle)
     }
 
-    /**
-     * If `true`, writes the new blue color channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_b
-     */
     fun setWriteB(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWriteBBind, handle, pMember)
     }
 
-    /**
-     * If `true`, writes the new blue color channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_b
-     */
     fun getWriteB(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteBBind, handle)
     }
 
-    /**
-     * If `true`, writes the new alpha channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_a
-     */
     fun setWriteA(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWriteABind, handle, pMember)
     }
 
-    /**
-     * If `true`, writes the new alpha channel to the final result.
-     *
-     * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_a
-     */
     fun getWriteA(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteABind, handle)
     }

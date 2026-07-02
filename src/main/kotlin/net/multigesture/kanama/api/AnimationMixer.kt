@@ -73,386 +73,138 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
         @JvmName("setCallbackModeDiscreteProperty")
         set(value) = setCallbackModeDiscrete(value)
 
-    /**
-     * Adds `library` to the animation player, under the key `name`. AnimationMixer has a global
-     * library by default with an empty string as key. For adding an animation to the global library:
-     *
-     * Generated from Godot docs: AnimationMixer.add_animation_library
-     */
     fun addAnimationLibrary(name: String, library: AnimationLibrary?): Long {
         return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, handle, name, library?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Removes the `AnimationLibrary` associated with the key `name`.
-     *
-     * Generated from Godot docs: AnimationMixer.remove_animation_library
-     */
     fun removeAnimationLibrary(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeAnimationLibraryBind, handle, name)
     }
 
-    /**
-     * Moves the `AnimationLibrary` associated with the key `name` to the key `newname`.
-     *
-     * Generated from Godot docs: AnimationMixer.rename_animation_library
-     */
     fun renameAnimationLibrary(name: String, newname: String) {
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationLibraryBind, handle, name, newname)
     }
 
-    /**
-     * Returns `true` if the `AnimationMixer` stores an `AnimationLibrary` with key `name`.
-     *
-     * Generated from Godot docs: AnimationMixer.has_animation_library
-     */
     fun hasAnimationLibrary(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationLibraryBind, handle, name)
     }
 
-    /**
-     * Returns the first `AnimationLibrary` with key `name` or `null` if not found. To get the
-     * `AnimationMixer`'s global animation library, use `get_animation_library("")`.
-     *
-     * Generated from Godot docs: AnimationMixer.get_animation_library
-     */
     fun getAnimationLibrary(name: String): AnimationLibrary? {
         return AnimationLibrary.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationLibraryBind, handle, name))
     }
 
-    /**
-     * Returns the list of stored library keys.
-     *
-     * Generated from Godot docs: AnimationMixer.get_animation_library_list
-     */
     fun getAnimationLibraryList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationLibraryListBind, handle)
     }
 
-    /**
-     * Returns `true` if the `AnimationMixer` stores an `Animation` with key `name`.
-     *
-     * Generated from Godot docs: AnimationMixer.has_animation
-     */
     fun hasAnimation(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, name)
     }
 
-    /**
-     * Returns the `Animation` with the key `name`. If the animation does not exist, `null` is returned
-     * and an error is logged.
-     *
-     * Generated from Godot docs: AnimationMixer.get_animation
-     */
     fun getAnimation(name: String): Animation? {
         return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, handle, name))
     }
 
-    /**
-     * Returns the list of stored animation keys.
-     *
-     * Generated from Godot docs: AnimationMixer.get_animation_list
-     */
     fun getAnimationList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationListBind, handle)
     }
 
-    /**
-     * If `true`, the `AnimationMixer` will be processing.
-     *
-     * Generated from Godot docs: AnimationMixer.set_active
-     */
     fun setActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
     }
 
-    /**
-     * If `true`, the `AnimationMixer` will be processing.
-     *
-     * Generated from Godot docs: AnimationMixer.is_active
-     */
     fun isActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
-    /**
-     * If `true`, the blending uses the deterministic algorithm. The total weight is not normalized and
-     * the result is accumulated with an initial value (`0` or a `"RESET"` animation if present). This
-     * means that if the total amount of blending is `0.0`, the result is equal to the `"RESET"`
-     * animation. If the number of tracks between the blended animations is different, the animation
-     * with the missing track is treated as if it had the initial value. If `false`, The blend does not
-     * use the deterministic algorithm. The total weight is normalized and always `1.0`. If the number
-     * of tracks between the blended animations is different, nothing is done about the animation that
-     * is missing a track. Note: In `AnimationTree`, the blending with `AnimationNodeAdd2`,
-     * `AnimationNodeAdd3`, `AnimationNodeSub2` or the weight greater than `1.0` may produce unexpected
-     * results. For example, if `AnimationNodeAdd2` blends two nodes with the amount `1.0`, then total
-     * weight is `2.0` but it will be normalized to make the total amount `1.0` and the result will be
-     * equal to `AnimationNodeBlend2` with the amount `0.5`.
-     *
-     * Generated from Godot docs: AnimationMixer.set_deterministic
-     */
     fun setDeterministic(deterministic: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDeterministicBind, handle, deterministic)
     }
 
-    /**
-     * If `true`, the blending uses the deterministic algorithm. The total weight is not normalized and
-     * the result is accumulated with an initial value (`0` or a `"RESET"` animation if present). This
-     * means that if the total amount of blending is `0.0`, the result is equal to the `"RESET"`
-     * animation. If the number of tracks between the blended animations is different, the animation
-     * with the missing track is treated as if it had the initial value. If `false`, The blend does not
-     * use the deterministic algorithm. The total weight is normalized and always `1.0`. If the number
-     * of tracks between the blended animations is different, nothing is done about the animation that
-     * is missing a track. Note: In `AnimationTree`, the blending with `AnimationNodeAdd2`,
-     * `AnimationNodeAdd3`, `AnimationNodeSub2` or the weight greater than `1.0` may produce unexpected
-     * results. For example, if `AnimationNodeAdd2` blends two nodes with the amount `1.0`, then total
-     * weight is `2.0` but it will be normalized to make the total amount `1.0` and the result will be
-     * equal to `AnimationNodeBlend2` with the amount `0.5`.
-     *
-     * Generated from Godot docs: AnimationMixer.is_deterministic
-     */
     fun isDeterministic(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeterministicBind, handle)
     }
 
-    /**
-     * The node which node path references will travel from.
-     *
-     * Generated from Godot docs: AnimationMixer.set_root_node
-     */
     fun setRootNode(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setRootNodeBind, handle, path)
     }
 
-    /**
-     * The node which node path references will travel from.
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_node
-     */
     fun getRootNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getRootNodeBind, handle)
     }
 
-    /**
-     * The process notification in which to update animations.
-     *
-     * Generated from Godot docs: AnimationMixer.set_callback_mode_process
-     */
     fun setCallbackModeProcess(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setCallbackModeProcessBind, handle, mode)
     }
 
-    /**
-     * The process notification in which to update animations.
-     *
-     * Generated from Godot docs: AnimationMixer.get_callback_mode_process
-     */
     fun getCallbackModeProcess(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeProcessBind, handle)
     }
 
-    /**
-     * The call mode used for "Call Method" tracks.
-     *
-     * Generated from Godot docs: AnimationMixer.set_callback_mode_method
-     */
     fun setCallbackModeMethod(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setCallbackModeMethodBind, handle, mode)
     }
 
-    /**
-     * The call mode used for "Call Method" tracks.
-     *
-     * Generated from Godot docs: AnimationMixer.get_callback_mode_method
-     */
     fun getCallbackModeMethod(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeMethodBind, handle)
     }
 
-    /**
-     * Ordinarily, tracks can be set to `Animation.UPDATE_DISCRETE` to update infrequently, usually
-     * when using nearest interpolation. However, when blending with `Animation.UPDATE_CONTINUOUS`
-     * several results are considered. The `callback_mode_discrete` specify it explicitly. See also
-     * `AnimationCallbackModeDiscrete`. To make the blended results look good, it is recommended to set
-     * this to `ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to update every frame during
-     * blending. Other values exist for compatibility and they are fine if there is no blending, but
-     * not so, may produce artifacts.
-     *
-     * Generated from Godot docs: AnimationMixer.set_callback_mode_discrete
-     */
     fun setCallbackModeDiscrete(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setCallbackModeDiscreteBind, handle, mode)
     }
 
-    /**
-     * Ordinarily, tracks can be set to `Animation.UPDATE_DISCRETE` to update infrequently, usually
-     * when using nearest interpolation. However, when blending with `Animation.UPDATE_CONTINUOUS`
-     * several results are considered. The `callback_mode_discrete` specify it explicitly. See also
-     * `AnimationCallbackModeDiscrete`. To make the blended results look good, it is recommended to set
-     * this to `ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to update every frame during
-     * blending. Other values exist for compatibility and they are fine if there is no blending, but
-     * not so, may produce artifacts.
-     *
-     * Generated from Godot docs: AnimationMixer.get_callback_mode_discrete
-     */
     fun getCallbackModeDiscrete(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeDiscreteBind, handle)
     }
 
-    /**
-     * The number of possible simultaneous sounds for each of the assigned AudioStreamPlayers. For
-     * example, if this value is `32` and the animation has two audio tracks, the two
-     * `AudioStreamPlayer`s assigned can play simultaneously up to `32` voices each.
-     *
-     * Generated from Godot docs: AnimationMixer.set_audio_max_polyphony
-     */
     fun setAudioMaxPolyphony(maxPolyphony: Int) {
         ObjectCalls.ptrcallWithIntArg(setAudioMaxPolyphonyBind, handle, maxPolyphony)
     }
 
-    /**
-     * The number of possible simultaneous sounds for each of the assigned AudioStreamPlayers. For
-     * example, if this value is `32` and the animation has two audio tracks, the two
-     * `AudioStreamPlayer`s assigned can play simultaneously up to `32` voices each.
-     *
-     * Generated from Godot docs: AnimationMixer.get_audio_max_polyphony
-     */
     fun getAudioMaxPolyphony(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAudioMaxPolyphonyBind, handle)
     }
 
-    /**
-     * The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a
-     * node, and must be specified starting from the parent node of the node that will reproduce the
-     * animation. The `root_motion_track` uses the same format as `Animation.track_set_path`, but note
-     * that a bone must be specified. If the track has type `Animation.TYPE_POSITION_3D`,
-     * `Animation.TYPE_ROTATION_3D`, or `Animation.TYPE_SCALE_3D` the transformation will be canceled
-     * visually, and the animation will appear to stay in place. See also `get_root_motion_position`,
-     * `get_root_motion_rotation`, `get_root_motion_scale`, and `RootMotionView`.
-     *
-     * Generated from Godot docs: AnimationMixer.set_root_motion_track
-     */
     fun setRootMotionTrack(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setRootMotionTrackBind, handle, path)
     }
 
-    /**
-     * The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a
-     * node, and must be specified starting from the parent node of the node that will reproduce the
-     * animation. The `root_motion_track` uses the same format as `Animation.track_set_path`, but note
-     * that a bone must be specified. If the track has type `Animation.TYPE_POSITION_3D`,
-     * `Animation.TYPE_ROTATION_3D`, or `Animation.TYPE_SCALE_3D` the transformation will be canceled
-     * visually, and the animation will appear to stay in place. See also `get_root_motion_position`,
-     * `get_root_motion_rotation`, `get_root_motion_scale`, and `RootMotionView`.
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_track
-     */
     fun getRootMotionTrack(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getRootMotionTrackBind, handle)
     }
 
-    /**
-     * If `true`, `get_root_motion_position` value is extracted as a local translation value before
-     * blending. In other words, it is treated like the translation is done after the rotation.
-     *
-     * Generated from Godot docs: AnimationMixer.set_root_motion_local
-     */
     fun setRootMotionLocal(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRootMotionLocalBind, handle, enabled)
     }
 
-    /**
-     * If `true`, `get_root_motion_position` value is extracted as a local translation value before
-     * blending. In other words, it is treated like the translation is done after the rotation.
-     *
-     * Generated from Godot docs: AnimationMixer.is_root_motion_local
-     */
     fun isRootMotionLocal(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRootMotionLocalBind, handle)
     }
 
-    /**
-     * Retrieve the motion delta of position with the `root_motion_track` as a `Vector3` that can be
-     * used elsewhere. If `root_motion_track` is not a path to a track of type
-     * `Animation.TYPE_POSITION_3D`, returns `Vector3(0, 0, 0)`. See also `root_motion_track` and
-     * `RootMotionView`. The most basic example is applying position to `CharacterBody3D`:
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_position
-     */
     fun getRootMotionPosition(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionBind, handle)
     }
 
-    /**
-     * Retrieve the motion delta of rotation with the `root_motion_track` as a `Quaternion` that can be
-     * used elsewhere. If `root_motion_track` is not a path to a track of type
-     * `Animation.TYPE_ROTATION_3D`, returns `Quaternion(0, 0, 0, 1)`. See also `root_motion_track` and
-     * `RootMotionView`. The most basic example is applying rotation to `CharacterBody3D`:
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_rotation
-     */
     fun getRootMotionRotation(): Quaternion {
         return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationBind, handle)
     }
 
-    /**
-     * Retrieve the motion delta of scale with the `root_motion_track` as a `Vector3` that can be used
-     * elsewhere. If `root_motion_track` is not a path to a track of type `Animation.TYPE_SCALE_3D`,
-     * returns `Vector3(0, 0, 0)`. See also `root_motion_track` and `RootMotionView`. The most basic
-     * example is applying scale to `CharacterBody3D`:
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_scale
-     */
     fun getRootMotionScale(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleBind, handle)
     }
 
-    /**
-     * Retrieve the blended value of the position tracks with the `root_motion_track` as a `Vector3`
-     * that can be used elsewhere. This is useful in cases where you want to respect the initial key
-     * values of the animation. For example, if an animation with only one key `Vector3(0, 0, 0)` is
-     * played in the previous frame and then an animation with only one key `Vector3(1, 0, 1)` is
-     * played in the next frame, the difference can be calculated as follows:
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_position_accumulator
-     */
     fun getRootMotionPositionAccumulator(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionAccumulatorBind, handle)
     }
 
-    /**
-     * Retrieve the blended value of the rotation tracks with the `root_motion_track` as a `Quaternion`
-     * that can be used elsewhere. This is necessary to apply the root motion position correctly,
-     * taking rotation into account. See also `get_root_motion_position`. Also, this is useful in cases
-     * where you want to respect the initial key values of the animation. For example, if an animation
-     * with only one key `Quaternion(0, 0, 0, 1)` is played in the previous frame and then an animation
-     * with only one key `Quaternion(0, 0.707, 0, 0.707)` is played in the next frame, the difference
-     * can be calculated as follows:
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_rotation_accumulator
-     */
     fun getRootMotionRotationAccumulator(): Quaternion {
         return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationAccumulatorBind, handle)
     }
 
-    /**
-     * Retrieve the blended value of the scale tracks with the `root_motion_track` as a `Vector3` that
-     * can be used elsewhere. For example, if an animation with only one key `Vector3(1, 1, 1)` is
-     * played in the previous frame and then an animation with only one key `Vector3(2, 2, 2)` is
-     * played in the next frame, the difference can be calculated as follows:
-     *
-     * Generated from Godot docs: AnimationMixer.get_root_motion_scale_accumulator
-     */
     fun getRootMotionScaleAccumulator(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleAccumulatorBind, handle)
     }
 
-    /**
-     * `AnimationMixer` caches animated nodes. It may not notice if a node disappears; `clear_caches`
-     * forces it to update the cache again.
-     *
-     * Generated from Godot docs: AnimationMixer.clear_caches
-     */
     fun clearCaches() {
         ObjectCalls.ptrcallNoArgs(clearCachesBind, handle)
     }
@@ -482,47 +234,18 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(captureBind, handle, name, duration, transType, easeType)
     }
 
-    /**
-     * This is used by the editor. If set to `true`, the scene will be saved with the effects of the
-     * reset animation (the animation with the key `"RESET"`) applied as if it had been seeked to time
-     * 0, with the editor keeping the values that the scene had before saving. This makes it more
-     * convenient to preview and edit animations in the editor, as changes to the scene will not be
-     * saved as long as they are set in the reset animation.
-     *
-     * Generated from Godot docs: AnimationMixer.set_reset_on_save_enabled
-     */
     fun setResetOnSaveEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setResetOnSaveEnabledBind, handle, enabled)
     }
 
-    /**
-     * This is used by the editor. If set to `true`, the scene will be saved with the effects of the
-     * reset animation (the animation with the key `"RESET"`) applied as if it had been seeked to time
-     * 0, with the editor keeping the values that the scene had before saving. This makes it more
-     * convenient to preview and edit animations in the editor, as changes to the scene will not be
-     * saved as long as they are set in the reset animation.
-     *
-     * Generated from Godot docs: AnimationMixer.is_reset_on_save_enabled
-     */
     fun isResetOnSaveEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isResetOnSaveEnabledBind, handle)
     }
 
-    /**
-     * Returns the key of `animation` or an empty `StringName` if not found.
-     *
-     * Generated from Godot docs: AnimationMixer.find_animation
-     */
     fun findAnimation(animation: Animation?): String {
         return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, handle, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns the key for the `AnimationLibrary` that contains `animation` or an empty `StringName` if
-     * not found.
-     *
-     * Generated from Godot docs: AnimationMixer.find_animation_library
-     */
     fun findAnimationLibrary(animation: Animation?): String {
         return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, handle, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 
 /**
  * Occluder shape resource for use with occlusion culling in `OccluderInstance3D`.
@@ -10,20 +10,10 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: Occluder3D
  */
 open class Occluder3D(handle: MemorySegment) : Resource(handle) {
-    /**
-     * Returns the occluder shape's vertex positions.
-     *
-     * Generated from Godot docs: Occluder3D.get_vertices
-     */
     fun getVertices(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
     }
 
-    /**
-     * Returns the occluder shape's vertex indices.
-     *
-     * Generated from Godot docs: Occluder3D.get_indices
-     */
     fun getIndices(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }

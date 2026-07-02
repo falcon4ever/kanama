@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * A set of `AnimationRootNode`s placed on 2D coordinates, crossfading between the three adjacent
@@ -60,257 +60,156 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
         @JvmName("setSyncProperty")
         set(value) = setUseSync(value)
 
-    /**
-     * Adds a new point with `name` that represents a `node` at the position set by `pos`. You can
-     * insert it at a specific index using the `at_index` argument. If you use the default value for
-     * `at_index`, the point is inserted at the end of the blend points array. Note: If no name is
-     * provided, safe index is used as reference. In the future, empty names will be deprecated, so
-     * explicitly passing a name is recommended.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.add_blend_point
-     */
-    fun addBlendPoint(node: AnimationRootNode?, pos: Vector2, atIndex: Int = -1) {
-        ObjectCalls.ptrcallWithObjectVector2AndIntArgs(addBlendPointBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex)
+    var syncMode: Long
+        @JvmName("syncModeProperty")
+        get() = getSyncMode()
+        @JvmName("setSyncModeProperty")
+        set(value) = setSyncMode(value)
+
+    var cyclicLength: Double
+        @JvmName("cyclicLengthProperty")
+        get() = getCyclicLength()
+        @JvmName("setCyclicLengthProperty")
+        set(value) = setCyclicLength(value)
+
+    fun addBlendPoint(node: AnimationRootNode?, pos: Vector2, atIndex: Int = -1, name: String = "") {
+        ObjectCalls.ptrcallWithObjectVector2IntStringNameArgs(addBlendPointBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
     }
 
-    /**
-     * Updates the position of the point at index `point` in the blend space.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_position
-     */
     fun setBlendPointPosition(point: Int, pos: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setBlendPointPositionBind, handle, point, pos)
     }
 
-    /**
-     * Returns the position of the point at index `point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_position
-     */
     fun getBlendPointPosition(point: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getBlendPointPositionBind, handle, point)
     }
 
-    /**
-     * Changes the `AnimationNode` referenced by the point at index `point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_node
-     */
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, handle, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns the `AnimationRootNode` referenced by the point at index `point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_node
-     */
     fun getBlendPointNode(point: Int): AnimationRootNode? {
         return AnimationRootNode.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, handle, point))
     }
 
-    /**
-     * Removes the point at index `point` from the blend space.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.remove_blend_point
-     */
+    fun setBlendPointName(point: Int, name: String) {
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, handle, point, name)
+    }
+
+    fun getBlendPointName(point: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, handle, point)
+    }
+
+    fun findBlendPointByName(name: String): Int {
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, handle, name)
+    }
+
     fun removeBlendPoint(point: Int) {
         ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, handle, point)
     }
 
-    /**
-     * Returns the number of points in the blend space.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_count
-     */
     fun getBlendPointCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, handle)
     }
 
-    /**
-     * Creates a new triangle using three points `x`, `y`, and `z`. Triangles can overlap. You can
-     * insert the triangle at a specific index using the `at_index` argument. If you use the default
-     * value for `at_index`, the point is inserted at the end of the blend points array.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.add_triangle
-     */
+    fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
+        ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, handle, fromIndex, toIndex)
+    }
+
     fun addTriangle(x: Int, y: Int, z: Int, atIndex: Int = -1) {
         ObjectCalls.ptrcallWithFourIntArgs(addTriangleBind, handle, x, y, z, atIndex)
     }
 
-    /**
-     * Returns the position of the point at index `point` in the triangle of index `triangle`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_triangle_point
-     */
     fun getTrianglePoint(triangle: Int, point: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTrianglePointBind, handle, triangle, point)
     }
 
-    /**
-     * Removes the triangle at index `triangle` from the blend space.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.remove_triangle
-     */
     fun removeTriangle(triangle: Int) {
         ObjectCalls.ptrcallWithIntArg(removeTriangleBind, handle, triangle)
     }
 
-    /**
-     * Returns the number of triangles in the blend space.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_triangle_count
-     */
     fun getTriangleCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTriangleCountBind, handle)
     }
 
-    /**
-     * The blend space's X and Y axes' lower limit for the points' position. See `add_blend_point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_min_space
-     */
     fun setMinSpace(minSpace: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setMinSpaceBind, handle, minSpace)
     }
 
-    /**
-     * The blend space's X and Y axes' lower limit for the points' position. See `add_blend_point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_min_space
-     */
     fun getMinSpace(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMinSpaceBind, handle)
     }
 
-    /**
-     * The blend space's X and Y axes' upper limit for the points' position. See `add_blend_point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_max_space
-     */
     fun setMaxSpace(maxSpace: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setMaxSpaceBind, handle, maxSpace)
     }
 
-    /**
-     * The blend space's X and Y axes' upper limit for the points' position. See `add_blend_point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_max_space
-     */
     fun getMaxSpace(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMaxSpaceBind, handle)
     }
 
-    /**
-     * Position increment to snap to when moving a point.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_snap
-     */
     fun setSnap(snap: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSnapBind, handle, snap)
     }
 
-    /**
-     * Position increment to snap to when moving a point.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_snap
-     */
     fun getSnap(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSnapBind, handle)
     }
 
-    /**
-     * Name of the blend space's X axis.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_x_label
-     */
     fun setXLabel(text: String) {
         ObjectCalls.ptrcallWithStringArg(setXLabelBind, handle, text)
     }
 
-    /**
-     * Name of the blend space's X axis.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_x_label
-     */
     fun getXLabel(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getXLabelBind, handle)
     }
 
-    /**
-     * Name of the blend space's Y axis.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_y_label
-     */
     fun setYLabel(text: String) {
         ObjectCalls.ptrcallWithStringArg(setYLabelBind, handle, text)
     }
 
-    /**
-     * Name of the blend space's Y axis.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_y_label
-     */
     fun getYLabel(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getYLabelBind, handle)
     }
 
-    /**
-     * If `true`, the blend space is triangulated automatically. The mesh updates every time you add or
-     * remove points with `add_blend_point` and `remove_blend_point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_auto_triangles
-     */
     fun setAutoTriangles(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoTrianglesBind, handle, enable)
     }
 
-    /**
-     * If `true`, the blend space is triangulated automatically. The mesh updates every time you add or
-     * remove points with `add_blend_point` and `remove_blend_point`.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_auto_triangles
-     */
     fun getAutoTriangles(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAutoTrianglesBind, handle)
     }
 
-    /**
-     * Controls the interpolation between animations.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_mode
-     */
     fun setBlendMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, mode)
     }
 
-    /**
-     * Controls the interpolation between animations.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_mode
-     */
     fun getBlendMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
-    /**
-     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
-     * for backward compatibility.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_use_sync
-     */
     fun setUseSync(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
-    /**
-     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
-     * for backward compatibility.
-     *
-     * Generated from Godot docs: AnimationNodeBlendSpace2D.is_using_sync
-     */
     fun isUsingSync(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
+    }
+
+    fun setSyncMode(syncMode: Long) {
+        ObjectCalls.ptrcallWithLongArg(setSyncModeBind, handle, syncMode)
+    }
+
+    fun getSyncMode(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, handle)
+    }
+
+    fun setCyclicLength(length: Double) {
+        ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, handle, length)
+    }
+
+    fun getCyclicLength(): Double {
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, handle)
     }
 
     object Signals {
@@ -318,7 +217,22 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
     }
 
     companion object {
-        private const val ADD_BLEND_POINT_HASH = 402261981L
+        const val BLEND_MODE_INTERPOLATED: Long = 0L
+        const val BLEND_MODE_DISCRETE: Long = 1L
+        const val BLEND_MODE_DISCRETE_CARRY: Long = 2L
+        const val SYNC_MODE_NONE: Long = 0L
+        const val SYNC_MODE_INDEPENDENT: Long = 1L
+        const val SYNC_MODE_CYCLIC_MUTABLE: Long = 2L
+        const val SYNC_MODE_CYCLIC_CONSTANT: Long = 3L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AnimationNodeBlendSpace2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AnimationNodeBlendSpace2D? =
+            if (handle.address() == 0L) null else AnimationNodeBlendSpace2D(handle)
+
+        private const val ADD_BLEND_POINT_HASH = 768750458L
         private val addBlendPointBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "add_blend_point", ADD_BLEND_POINT_HASH)
         }
@@ -343,6 +257,21 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "get_blend_point_node", GET_BLEND_POINT_NODE_HASH)
         }
 
+        private const val SET_BLEND_POINT_NAME_HASH = 3780747571L
+        private val setBlendPointNameBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "set_blend_point_name", SET_BLEND_POINT_NAME_HASH)
+        }
+
+        private const val GET_BLEND_POINT_NAME_HASH = 659327637L
+        private val getBlendPointNameBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "get_blend_point_name", GET_BLEND_POINT_NAME_HASH)
+        }
+
+        private const val FIND_BLEND_POINT_BY_NAME_HASH = 2458036349L
+        private val findBlendPointByNameBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "find_blend_point_by_name", FIND_BLEND_POINT_BY_NAME_HASH)
+        }
+
         private const val REMOVE_BLEND_POINT_HASH = 1286410249L
         private val removeBlendPointBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "remove_blend_point", REMOVE_BLEND_POINT_HASH)
@@ -351,6 +280,11 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
         private const val GET_BLEND_POINT_COUNT_HASH = 3905245786L
         private val getBlendPointCountBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "get_blend_point_count", GET_BLEND_POINT_COUNT_HASH)
+        }
+
+        private const val REORDER_BLEND_POINT_HASH = 3937882851L
+        private val reorderBlendPointBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "reorder_blend_point", REORDER_BLEND_POINT_HASH)
         }
 
         private const val ADD_TRIANGLE_HASH = 753017335L
@@ -451,6 +385,26 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
         private const val IS_USING_SYNC_HASH = 36873697L
         private val isUsingSyncBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "is_using_sync", IS_USING_SYNC_HASH)
+        }
+
+        private const val SET_SYNC_MODE_HASH = 2615784488L
+        private val setSyncModeBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "set_sync_mode", SET_SYNC_MODE_HASH)
+        }
+
+        private const val GET_SYNC_MODE_HASH = 242032665L
+        private val getSyncModeBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "get_sync_mode", GET_SYNC_MODE_HASH)
+        }
+
+        private const val SET_CYCLIC_LENGTH_HASH = 373806689L
+        private val setCyclicLengthBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "set_cyclic_length", SET_CYCLIC_LENGTH_HASH)
+        }
+
+        private const val GET_CYCLIC_LENGTH_HASH = 1740695150L
+        private val getCyclicLengthBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "get_cyclic_length", GET_CYCLIC_LENGTH_HASH)
         }
     }
 }

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeCompare
@@ -51,6 +51,33 @@ class VisualShaderNodeCompare(handle: MemorySegment) : VisualShaderNode(handle) 
     }
 
     companion object {
+        const val CTYPE_SCALAR: Long = 0L
+        const val CTYPE_SCALAR_INT: Long = 1L
+        const val CTYPE_SCALAR_UINT: Long = 2L
+        const val CTYPE_VECTOR_2D: Long = 3L
+        const val CTYPE_VECTOR_3D: Long = 4L
+        const val CTYPE_VECTOR_4D: Long = 5L
+        const val CTYPE_BOOLEAN: Long = 6L
+        const val CTYPE_TRANSFORM: Long = 7L
+        const val CTYPE_MAX: Long = 8L
+        const val FUNC_EQUAL: Long = 0L
+        const val FUNC_NOT_EQUAL: Long = 1L
+        const val FUNC_GREATER_THAN: Long = 2L
+        const val FUNC_GREATER_THAN_EQUAL: Long = 3L
+        const val FUNC_LESS_THAN: Long = 4L
+        const val FUNC_LESS_THAN_EQUAL: Long = 5L
+        const val FUNC_MAX: Long = 6L
+        const val COND_ALL: Long = 0L
+        const val COND_ANY: Long = 1L
+        const val COND_MAX: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeCompare? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeCompare? =
+            if (handle.address() == 0L) null else VisualShaderNodeCompare(handle)
+
         private const val SET_COMPARISON_TYPE_HASH = 516558320L
         private val setComparisonTypeBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "set_comparison_type", SET_COMPARISON_TYPE_HASH)

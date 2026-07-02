@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: ZIPPacker
@@ -26,8 +26,12 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getCompressionLevelBind, handle)
     }
 
-    fun startFile(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(startFileBind, handle, path)
+    fun addDirectory(path: String, permissions: Long = 493L, modifiedTime: Long = 0L): Long {
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, handle, path, permissions, modifiedTime)
+    }
+
+    fun startFile(path: String, permissions: Long = 420L, modifiedTime: Long = 0L): Long {
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, handle, path, permissions, modifiedTime)
     }
 
     fun writeFile(data: ByteArray): Long {
@@ -43,6 +47,21 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        const val APPEND_CREATE: Long = 0L
+        const val APPEND_CREATEAFTER: Long = 1L
+        const val APPEND_ADDINZIP: Long = 2L
+        const val COMPRESSION_DEFAULT: Long = -1L
+        const val COMPRESSION_NONE: Long = 0L
+        const val COMPRESSION_FAST: Long = 1L
+        const val COMPRESSION_BEST: Long = 9L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ZIPPacker? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ZIPPacker? =
+            if (handle.address() == 0L) null else ZIPPacker(handle)
+
         private const val OPEN_HASH = 1936816515L
         private val openBind by lazy {
             ObjectCalls.getMethodBind("ZIPPacker", "open", OPEN_HASH)
@@ -58,7 +77,12 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ZIPPacker", "get_compression_level", GET_COMPRESSION_LEVEL_HASH)
         }
 
-        private const val START_FILE_HASH = 166001499L
+        private const val ADD_DIRECTORY_HASH = 934773537L
+        private val addDirectoryBind by lazy {
+            ObjectCalls.getMethodBind("ZIPPacker", "add_directory", ADD_DIRECTORY_HASH)
+        }
+
+        private const val START_FILE_HASH = 4260848715L
         private val startFileBind by lazy {
             ObjectCalls.getMethodBind("ZIPPacker", "start_file", START_FILE_HASH)
         }

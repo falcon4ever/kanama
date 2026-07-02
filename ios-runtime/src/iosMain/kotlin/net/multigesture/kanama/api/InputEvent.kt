@@ -73,7 +73,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithObjectArgRetBool(accumulateBind, handle, withEvent?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    fun xformedBy(xform: Transform2D, localOfs: Vector2): InputEvent? {
+    fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent? {
         return InputEvent.wrap(ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, handle, xform, localOfs))
     }
 

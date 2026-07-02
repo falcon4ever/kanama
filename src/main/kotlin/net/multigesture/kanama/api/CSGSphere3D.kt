@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: CSGSphere3D
@@ -79,6 +79,13 @@ class CSGSphere3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGSphere3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGSphere3D? =
+            if (handle.address() == 0L) null else CSGSphere3D(handle)
+
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {
             ObjectCalls.getMethodBind("CSGSphere3D", "set_radius", SET_RADIUS_HASH)

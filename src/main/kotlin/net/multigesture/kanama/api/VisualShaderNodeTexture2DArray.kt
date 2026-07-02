@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeTexture2DArray
@@ -23,6 +23,13 @@ class VisualShaderNodeTexture2DArray(handle: MemorySegment) : VisualShaderNodeSa
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeTexture2DArray? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture2DArray? =
+            if (handle.address() == 0L) null else VisualShaderNodeTexture2DArray(handle)
+
         private const val SET_TEXTURE_ARRAY_HASH = 1278366092L
         private val setTextureArrayBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeTexture2DArray", "set_texture_array", SET_TEXTURE_ARRAY_HASH)

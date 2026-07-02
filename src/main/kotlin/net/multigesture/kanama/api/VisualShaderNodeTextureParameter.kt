@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeTextureParameter
@@ -79,6 +79,40 @@ open class VisualShaderNodeTextureParameter(handle: MemorySegment) : VisualShade
     }
 
     companion object {
+        const val TYPE_DATA: Long = 0L
+        const val TYPE_COLOR: Long = 1L
+        const val TYPE_NORMAL_MAP: Long = 2L
+        const val TYPE_ANISOTROPY: Long = 3L
+        const val TYPE_MAX: Long = 4L
+        const val COLOR_DEFAULT_WHITE: Long = 0L
+        const val COLOR_DEFAULT_BLACK: Long = 1L
+        const val COLOR_DEFAULT_TRANSPARENT: Long = 2L
+        const val COLOR_DEFAULT_MAX: Long = 3L
+        const val FILTER_DEFAULT: Long = 0L
+        const val FILTER_NEAREST: Long = 1L
+        const val FILTER_LINEAR: Long = 2L
+        const val FILTER_NEAREST_MIPMAP: Long = 3L
+        const val FILTER_LINEAR_MIPMAP: Long = 4L
+        const val FILTER_NEAREST_MIPMAP_ANISOTROPIC: Long = 5L
+        const val FILTER_LINEAR_MIPMAP_ANISOTROPIC: Long = 6L
+        const val FILTER_MAX: Long = 7L
+        const val REPEAT_DEFAULT: Long = 0L
+        const val REPEAT_ENABLED: Long = 1L
+        const val REPEAT_DISABLED: Long = 2L
+        const val REPEAT_MAX: Long = 3L
+        const val SOURCE_NONE: Long = 0L
+        const val SOURCE_SCREEN: Long = 1L
+        const val SOURCE_DEPTH: Long = 2L
+        const val SOURCE_NORMAL_ROUGHNESS: Long = 3L
+        const val SOURCE_MAX: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeTextureParameter? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeTextureParameter? =
+            if (handle.address() == 0L) null else VisualShaderNodeTextureParameter(handle)
+
         private const val SET_TEXTURE_TYPE_HASH = 2227296876L
         private val setTextureTypeBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "set_texture_type", SET_TEXTURE_TYPE_HASH)

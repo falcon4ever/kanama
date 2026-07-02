@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRRenderModelManager
@@ -42,6 +42,18 @@ class OpenXRRenderModelManager(handle: MemorySegment) : Node3D(handle) {
     }
 
     companion object {
+        const val RENDER_MODEL_TRACKER_ANY: Long = 0L
+        const val RENDER_MODEL_TRACKER_NONE_SET: Long = 1L
+        const val RENDER_MODEL_TRACKER_LEFT_HAND: Long = 2L
+        const val RENDER_MODEL_TRACKER_RIGHT_HAND: Long = 3L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRRenderModelManager? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRRenderModelManager? =
+            if (handle.address() == 0L) null else OpenXRRenderModelManager(handle)
+
         private const val GET_TRACKER_HASH = 2456466356L
         private val getTrackerBind by lazy {
             ObjectCalls.getMethodBind("OpenXRRenderModelManager", "get_tracker", GET_TRACKER_HASH)

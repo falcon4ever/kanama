@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Custom control for editing properties that can be added to the `EditorInspector`.
@@ -82,272 +82,118 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
         @JvmName("setNameSplitRatioProperty")
         set(value) = setNameSplitRatio(value)
 
-    /**
-     * Set this property to change the label (if you want to show one).
-     *
-     * Generated from Godot docs: EditorProperty.set_label
-     */
     fun setLabel(text: String) {
         ObjectCalls.ptrcallWithStringArg(setLabelBind, handle, text)
     }
 
-    /**
-     * Set this property to change the label (if you want to show one).
-     *
-     * Generated from Godot docs: EditorProperty.get_label
-     */
     fun getLabel(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is read-only.
-     *
-     * Generated from Godot docs: EditorProperty.set_read_only
-     */
     fun setReadOnly(readOnly: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, handle, readOnly)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is read-only.
-     *
-     * Generated from Godot docs: EditorProperty.is_read_only
-     */
     fun isReadOnly(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property label is drawn.
-     *
-     * Generated from Godot docs: EditorProperty.set_draw_label
-     */
     fun setDrawLabel(drawLabel: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawLabelBind, handle, drawLabel)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property label is drawn.
-     *
-     * Generated from Godot docs: EditorProperty.is_draw_label
-     */
     fun isDrawLabel(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawLabelBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property background is drawn.
-     *
-     * Generated from Godot docs: EditorProperty.set_draw_background
-     */
     fun setDrawBackground(drawBackground: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawBackgroundBind, handle, drawBackground)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property background is drawn.
-     *
-     * Generated from Godot docs: EditorProperty.is_draw_background
-     */
     fun isDrawBackground(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawBackgroundBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is checkable.
-     *
-     * Generated from Godot docs: EditorProperty.set_checkable
-     */
     fun setCheckable(checkable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCheckableBind, handle, checkable)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is checkable.
-     *
-     * Generated from Godot docs: EditorProperty.is_checkable
-     */
     fun isCheckable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCheckableBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is checked.
-     *
-     * Generated from Godot docs: EditorProperty.set_checked
-     */
     fun setChecked(checked: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCheckedBind, handle, checked)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is checked.
-     *
-     * Generated from Godot docs: EditorProperty.is_checked
-     */
     fun isChecked(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCheckedBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is drawn with the editor theme's warning
-     * color. This is used for editable children's properties.
-     *
-     * Generated from Godot docs: EditorProperty.set_draw_warning
-     */
     fun setDrawWarning(drawWarning: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawWarningBind, handle, drawWarning)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is drawn with the editor theme's warning
-     * color. This is used for editable children's properties.
-     *
-     * Generated from Godot docs: EditorProperty.is_draw_warning
-     */
     fun isDrawWarning(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawWarningBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property can add keys for animation.
-     *
-     * Generated from Godot docs: EditorProperty.set_keying
-     */
     fun setKeying(keying: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setKeyingBind, handle, keying)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property can add keys for animation.
-     *
-     * Generated from Godot docs: EditorProperty.is_keying
-     */
     fun isKeying(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isKeyingBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property can be deleted by the user.
-     *
-     * Generated from Godot docs: EditorProperty.set_deletable
-     */
     fun setDeletable(deletable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDeletableBind, handle, deletable)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property can be deleted by the user.
-     *
-     * Generated from Godot docs: EditorProperty.is_deletable
-     */
     fun isDeletable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeletableBind, handle)
     }
 
-    /**
-     * Returns the edited property. If your editor is for a single property (added via
-     * `EditorInspectorPlugin._parse_property`), then this will return the property. Note: This method
-     * could return `null` if the editor has not yet been associated with a property. However, in
-     * `_update_property` and `_set_read_only`, this value is guaranteed to be non-`null`.
-     *
-     * Generated from Godot docs: EditorProperty.get_edited_property
-     */
     fun getEditedProperty(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getEditedPropertyBind, handle)
     }
 
-    /**
-     * Returns the edited object. Note: This method could return `null` if the editor has not yet been
-     * associated with a property. However, in `_update_property` and `_set_read_only`, this value is
-     * guaranteed to be non-`null`.
-     *
-     * Generated from Godot docs: EditorProperty.get_edited_object
-     */
     fun getEditedObject(): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, handle))
     }
 
-    /**
-     * Forces a refresh of the property display.
-     *
-     * Generated from Godot docs: EditorProperty.update_property
-     */
     fun updateProperty() {
         ObjectCalls.ptrcallNoArgs(updatePropertyBind, handle)
     }
 
-    /**
-     * If any of the controls added can gain keyboard focus, add it here. This ensures that focus will
-     * be restored if the inspector is refreshed.
-     *
-     * Generated from Godot docs: EditorProperty.add_focusable
-     */
     fun addFocusable(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(addFocusableBind, handle, listOf(control.handle))
     }
 
-    /**
-     * Puts the `editor` control below the property label. The control must be previously added using
-     * `Node.add_child`.
-     *
-     * Generated from Godot docs: EditorProperty.set_bottom_editor
-     */
     fun setBottomEditor(editor: Control) {
         ObjectCalls.ptrcallWithObjectArgs(setBottomEditorBind, handle, listOf(editor.handle))
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is selectable.
-     *
-     * Generated from Godot docs: EditorProperty.set_selectable
-     */
     fun setSelectable(selectable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSelectableBind, handle, selectable)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is selectable.
-     *
-     * Generated from Godot docs: EditorProperty.is_selectable
-     */
     fun isSelectable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, handle)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is using folding.
-     *
-     * Generated from Godot docs: EditorProperty.set_use_folding
-     */
     fun setUseFolding(useFolding: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseFoldingBind, handle, useFolding)
     }
 
-    /**
-     * Used by the inspector, set to `true` when the property is using folding.
-     *
-     * Generated from Godot docs: EditorProperty.is_using_folding
-     */
     fun isUsingFolding(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingFoldingBind, handle)
     }
 
-    /**
-     * Space distribution ratio between the label and the editing field.
-     *
-     * Generated from Godot docs: EditorProperty.set_name_split_ratio
-     */
     fun setNameSplitRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setNameSplitRatioBind, handle, ratio)
     }
 
-    /**
-     * Space distribution ratio between the label and the editing field.
-     *
-     * Generated from Godot docs: EditorProperty.get_name_split_ratio
-     */
     fun getNameSplitRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getNameSplitRatioBind, handle)
     }
@@ -361,11 +207,6 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
         ObjectCalls.ptrcallNoArgs(deselectBind, handle)
     }
 
-    /**
-     * Returns `true` if property is drawn as selected. Used by the inspector.
-     *
-     * Generated from Godot docs: EditorProperty.is_selected
-     */
     fun isSelected(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, handle)
     }
@@ -379,33 +220,15 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
         ObjectCalls.ptrcallWithIntArg(selectBind, handle, focusable)
     }
 
-    /**
-     * Assigns object and property to edit.
-     *
-     * Generated from Godot docs: EditorProperty.set_object_and_property
-     */
     fun setObjectAndProperty(objectValue: GodotObject, property: String) {
         ObjectCalls.ptrcallWithObjectAndStringNameArg(setObjectAndPropertyBind, handle, objectValue.handle, property)
     }
 
-    /**
-     * Used by the inspector, set to a control that will be used as a reference to calculate the size
-     * of the label.
-     *
-     * Generated from Godot docs: EditorProperty.set_label_reference
-     */
     fun setLabelReference(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(setLabelReferenceBind, handle, listOf(control.handle))
     }
 
-    /**
-     * If one or several properties have changed, this must be called. `field` is used in case your
-     * editor can modify fields separately (as an example, Vector3.x). The `changing` argument avoids
-     * the editor requesting this property to be refreshed (leave as `false` if unsure).
-     *
-     * Generated from Godot docs: EditorProperty.emit_changed
-     */
-    fun emitChanged(property: String, value: Any?, field: String, changing: Boolean = false) {
+    fun emitChanged(property: String, value: Any?, field: String = "", changing: Boolean = false) {
         ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(emitChangedBind, handle, property, value, field, changing)
     }
 

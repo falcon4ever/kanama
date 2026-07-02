@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: WebSocketMultiplayerPeer
@@ -113,6 +113,13 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): WebSocketMultiplayerPeer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): WebSocketMultiplayerPeer? =
+            if (handle.address() == 0L) null else WebSocketMultiplayerPeer(handle)
+
         private const val CREATE_CLIENT_HASH = 1966198364L
         private val createClientBind by lazy {
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "create_client", CREATE_CLIENT_HASH)

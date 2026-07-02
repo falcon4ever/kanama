@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A 2D navigation mesh that describes a traversable surface for pathfinding.
@@ -78,367 +78,150 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
         @JvmName("setBakingRectOffsetProperty")
         set(value) = setBakingRectOffset(value)
 
-    /**
-     * Sets the vertices that can be then indexed to create polygons with the `add_polygon` method.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_vertices
-     */
     fun setVertices(vertices: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, handle, vertices)
     }
 
-    /**
-     * Returns a `PackedVector2Array` containing all the vertices being used to create the polygons.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_vertices
-     */
     fun getVertices(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
     }
 
-    /**
-     * Adds a polygon using the indices of the vertices you get when calling `get_vertices`.
-     *
-     * Generated from Godot docs: NavigationPolygon.add_polygon
-     */
     fun addPolygon(polygon: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
     }
 
-    /**
-     * Returns the count of all polygons.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_polygon_count
-     */
     fun getPolygonCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
     }
 
-    /**
-     * Returns a `PackedInt32Array` containing the indices of the vertices of a created polygon.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_polygon
-     */
     fun getPolygon(idx: Int): List<Int> {
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
     }
 
-    /**
-     * Clears the array of polygons, but it doesn't clear the array of outlines and vertices.
-     *
-     * Generated from Godot docs: NavigationPolygon.clear_polygons
-     */
     fun clearPolygons() {
         ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
     }
 
-    /**
-     * Returns the `NavigationMesh` resulting from this navigation polygon. This navigation mesh can be
-     * used to update the navigation mesh of a region with the
-     * `NavigationServer3D.region_set_navigation_mesh` API directly.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_navigation_mesh
-     */
     fun getNavigationMesh(): NavigationMesh? {
         return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, handle))
     }
 
-    /**
-     * Appends a `PackedVector2Array` that contains the vertices of an outline to the internal array
-     * that contains all the outlines.
-     *
-     * Generated from Godot docs: NavigationPolygon.add_outline
-     */
     fun addOutline(outline: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(addOutlineBind, handle, outline)
     }
 
-    /**
-     * Adds a `PackedVector2Array` that contains the vertices of an outline to the internal array that
-     * contains all the outlines at a fixed position.
-     *
-     * Generated from Godot docs: NavigationPolygon.add_outline_at_index
-     */
     fun addOutlineAtIndex(outline: List<Vector2>, index: Int) {
         ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(addOutlineAtIndexBind, handle, outline, index)
     }
 
-    /**
-     * Returns the number of outlines that were created in the editor or by script.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_outline_count
-     */
     fun getOutlineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, handle)
     }
 
-    /**
-     * Changes an outline created in the editor or by script. You have to call
-     * `make_polygons_from_outlines` for the polygons to update.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_outline
-     */
     fun setOutline(idx: Int, outline: List<Vector2>) {
         ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(setOutlineBind, handle, idx, outline)
     }
 
-    /**
-     * Returns a `PackedVector2Array` containing the vertices of an outline that was created in the
-     * editor or by script.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_outline
-     */
     fun getOutline(idx: Int): List<Vector2> {
         return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getOutlineBind, handle, idx)
     }
 
-    /**
-     * Removes an outline created in the editor or by script. You have to call
-     * `make_polygons_from_outlines` for the polygons to update.
-     *
-     * Generated from Godot docs: NavigationPolygon.remove_outline
-     */
     fun removeOutline(idx: Int) {
         ObjectCalls.ptrcallWithIntArg(removeOutlineBind, handle, idx)
     }
 
-    /**
-     * Clears the array of the outlines, but it doesn't clear the vertices and the polygons that were
-     * created by them.
-     *
-     * Generated from Godot docs: NavigationPolygon.clear_outlines
-     */
     fun clearOutlines() {
         ObjectCalls.ptrcallNoArgs(clearOutlinesBind, handle)
     }
 
-    /**
-     * Creates polygons from the outlines added in the editor or by script.
-     *
-     * Generated from Godot docs: NavigationPolygon.make_polygons_from_outlines
-     */
     fun makePolygonsFromOutlines() {
         ObjectCalls.ptrcallNoArgs(makePolygonsFromOutlinesBind, handle)
     }
 
-    /**
-     * The cell size used to rasterize the navigation mesh vertices. Must match with the cell size on
-     * the navigation map.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_cell_size
-     */
     fun setCellSize(cellSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
     }
 
-    /**
-     * The cell size used to rasterize the navigation mesh vertices. Must match with the cell size on
-     * the navigation map.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_cell_size
-     */
     fun getCellSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
-    /**
-     * The size of the non-navigable border around the bake bounding area defined by the `baking_rect`
-     * `Rect2`. In conjunction with the `baking_rect` the border size can be used to bake tile aligned
-     * navigation meshes without the tile edges being shrunk by `agent_radius`.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_border_size
-     */
     fun setBorderSize(borderSize: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
     }
 
-    /**
-     * The size of the non-navigable border around the bake bounding area defined by the `baking_rect`
-     * `Rect2`. In conjunction with the `baking_rect` the border size can be used to bake tile aligned
-     * navigation meshes without the tile edges being shrunk by `agent_radius`.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_border_size
-     */
     fun getBorderSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
     }
 
-    /**
-     * Partitioning algorithm for creating the navigation mesh polys.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_sample_partition_type
-     */
     fun setSamplePartitionType(samplePartitionType: Long) {
         ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
     }
 
-    /**
-     * Partitioning algorithm for creating the navigation mesh polys.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_sample_partition_type
-     */
     fun getSamplePartitionType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
     }
 
-    /**
-     * Determines which type of nodes will be parsed as geometry.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_parsed_geometry_type
-     */
     fun setParsedGeometryType(geometryType: Long) {
         ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
     }
 
-    /**
-     * Determines which type of nodes will be parsed as geometry.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_parsed_geometry_type
-     */
     fun getParsedGeometryType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
     }
 
-    /**
-     * The physics layers to scan for static colliders. Only used when `parsed_geometry_type` is
-     * `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_parsed_collision_mask
-     */
     fun setParsedCollisionMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setParsedCollisionMaskBind, handle, mask)
     }
 
-    /**
-     * The physics layers to scan for static colliders. Only used when `parsed_geometry_type` is
-     * `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_parsed_collision_mask
-     */
     fun getParsedCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getParsedCollisionMaskBind, handle)
     }
 
-    /**
-     * Based on `value`, enables or disables the specified layer in the `parsed_collision_mask`, given
-     * a `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_parsed_collision_mask_value
-     */
     fun setParsedCollisionMaskValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setParsedCollisionMaskValueBind, handle, layerNumber, value)
     }
 
-    /**
-     * Returns whether or not the specified layer of the `parsed_collision_mask` is enabled, given a
-     * `layer_number` between 1 and 32.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_parsed_collision_mask_value
-     */
     fun getParsedCollisionMaskValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getParsedCollisionMaskValueBind, handle, layerNumber)
     }
 
-    /**
-     * The source of the geometry used when baking.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_source_geometry_mode
-     */
     fun setSourceGeometryMode(geometryMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, geometryMode)
     }
 
-    /**
-     * The source of the geometry used when baking.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_source_geometry_mode
-     */
     fun getSourceGeometryMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
     }
 
-    /**
-     * The group name of nodes that should be parsed for baking source geometry. Only used when
-     * `source_geometry_mode` is `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or
-     * `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_source_geometry_group_name
-     */
     fun setSourceGeometryGroupName(groupName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setSourceGeometryGroupNameBind, handle, groupName)
     }
 
-    /**
-     * The group name of nodes that should be parsed for baking source geometry. Only used when
-     * `source_geometry_mode` is `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or
-     * `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_source_geometry_group_name
-     */
     fun getSourceGeometryGroupName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGeometryGroupNameBind, handle)
     }
 
-    /**
-     * The distance to erode/shrink the walkable surface when baking the navigation mesh. Note: The
-     * radius must be equal or higher than `0.0`. If the radius is `0.0`, it won't be possible to fix
-     * invalid outline overlaps and other precision errors during the baking process. As a result, some
-     * obstacles may be excluded incorrectly from the final navigation mesh, or may delete the
-     * navigation mesh's polygons.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_agent_radius
-     */
     fun setAgentRadius(agentRadius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
     }
 
-    /**
-     * The distance to erode/shrink the walkable surface when baking the navigation mesh. Note: The
-     * radius must be equal or higher than `0.0`. If the radius is `0.0`, it won't be possible to fix
-     * invalid outline overlaps and other precision errors during the baking process. As a result, some
-     * obstacles may be excluded incorrectly from the final navigation mesh, or may delete the
-     * navigation mesh's polygons.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_agent_radius
-     */
     fun getAgentRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
     }
 
-    /**
-     * If the baking `Rect2` has an area the navigation mesh baking will be restricted to its enclosing
-     * area.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_baking_rect
-     */
     fun setBakingRect(rect: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setBakingRectBind, handle, rect)
     }
 
-    /**
-     * If the baking `Rect2` has an area the navigation mesh baking will be restricted to its enclosing
-     * area.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_baking_rect
-     */
     fun getBakingRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getBakingRectBind, handle)
     }
 
-    /**
-     * The position offset applied to the `baking_rect` `Rect2`.
-     *
-     * Generated from Godot docs: NavigationPolygon.set_baking_rect_offset
-     */
     fun setBakingRectOffset(rectOffset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setBakingRectOffsetBind, handle, rectOffset)
     }
 
-    /**
-     * The position offset applied to the `baking_rect` `Rect2`.
-     *
-     * Generated from Godot docs: NavigationPolygon.get_baking_rect_offset
-     */
     fun getBakingRectOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getBakingRectOffsetBind, handle)
     }
@@ -453,6 +236,18 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val SAMPLE_PARTITION_CONVEX_PARTITION: Long = 0L
+        const val SAMPLE_PARTITION_TRIANGULATE: Long = 1L
+        const val SAMPLE_PARTITION_MAX: Long = 2L
+        const val PARSED_GEOMETRY_MESH_INSTANCES: Long = 0L
+        const val PARSED_GEOMETRY_STATIC_COLLIDERS: Long = 1L
+        const val PARSED_GEOMETRY_BOTH: Long = 2L
+        const val PARSED_GEOMETRY_MAX: Long = 3L
+        const val SOURCE_GEOMETRY_ROOT_NODE_CHILDREN: Long = 0L
+        const val SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN: Long = 1L
+        const val SOURCE_GEOMETRY_GROUPS_EXPLICIT: Long = 2L
+        const val SOURCE_GEOMETRY_MAX: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): NavigationPolygon? =
             wrap(handle)

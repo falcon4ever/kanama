@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A stream peer that handles TLS connections.
@@ -19,55 +19,40 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
-    /**
-     * Accepts a peer connection as a server using the given `server_options`. See `TLSOptions.server`.
-     *
-     * Generated from Godot docs: StreamPeerTLS.accept_stream
-     */
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): Long {
         return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Connects to a peer using an underlying `StreamPeer` `stream` and verifying the remote
-     * certificate is correctly signed for the given `common_name`. You can pass the optional
-     * `client_options` parameter to customize the trusted certification authorities, or disable the
-     * common name verification. See `TLSOptions.client` and `TLSOptions.client_unsafe`.
-     *
-     * Generated from Godot docs: StreamPeerTLS.connect_to_stream
-     */
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): Long {
         return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, commonName, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns the status of the connection.
-     *
-     * Generated from Godot docs: StreamPeerTLS.get_status
-     */
     fun getStatus(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
-    /**
-     * Returns the underlying `StreamPeer` connection, used in `accept_stream` or `connect_to_stream`.
-     *
-     * Generated from Godot docs: StreamPeerTLS.get_stream
-     */
     fun getStream(): StreamPeer? {
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle))
     }
 
-    /**
-     * Disconnects from host.
-     *
-     * Generated from Godot docs: StreamPeerTLS.disconnect_from_stream
-     */
     fun disconnectFromStream() {
         ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, handle)
     }
 
     companion object {
+        const val STATUS_DISCONNECTED: Long = 0L
+        const val STATUS_HANDSHAKING: Long = 1L
+        const val STATUS_CONNECTED: Long = 2L
+        const val STATUS_ERROR: Long = 3L
+        const val STATUS_ERROR_HOSTNAME_MISMATCH: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): StreamPeerTLS? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): StreamPeerTLS? =
+            if (handle.address() == 0L) null else StreamPeerTLS(handle)
+
         private const val POLL_HASH = 3218959716L
         private val pollBind by lazy {
             ObjectCalls.getMethodBind("StreamPeerTLS", "poll", POLL_HASH)

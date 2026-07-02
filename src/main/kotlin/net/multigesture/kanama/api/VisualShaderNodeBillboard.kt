@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeBillboard
@@ -37,6 +37,19 @@ class VisualShaderNodeBillboard(handle: MemorySegment) : VisualShaderNode(handle
     }
 
     companion object {
+        const val BILLBOARD_TYPE_DISABLED: Long = 0L
+        const val BILLBOARD_TYPE_ENABLED: Long = 1L
+        const val BILLBOARD_TYPE_FIXED_Y: Long = 2L
+        const val BILLBOARD_TYPE_PARTICLES: Long = 3L
+        const val BILLBOARD_TYPE_MAX: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeBillboard? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeBillboard? =
+            if (handle.address() == 0L) null else VisualShaderNodeBillboard(handle)
+
         private const val SET_BILLBOARD_TYPE_HASH = 1227463289L
         private val setBillboardTypeBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeBillboard", "set_billboard_type", SET_BILLBOARD_TYPE_HASH)

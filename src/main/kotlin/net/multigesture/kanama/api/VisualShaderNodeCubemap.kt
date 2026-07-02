@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeCubemap
@@ -51,6 +51,21 @@ class VisualShaderNodeCubemap(handle: MemorySegment) : VisualShaderNode(handle) 
     }
 
     companion object {
+        const val SOURCE_TEXTURE: Long = 0L
+        const val SOURCE_PORT: Long = 1L
+        const val SOURCE_MAX: Long = 2L
+        const val TYPE_DATA: Long = 0L
+        const val TYPE_COLOR: Long = 1L
+        const val TYPE_NORMAL_MAP: Long = 2L
+        const val TYPE_MAX: Long = 3L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeCubemap? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeCubemap? =
+            if (handle.address() == 0L) null else VisualShaderNodeCubemap(handle)
+
         private const val SET_SOURCE_HASH = 1625400621L
         private val setSourceBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeCubemap", "set_source", SET_SOURCE_HASH)

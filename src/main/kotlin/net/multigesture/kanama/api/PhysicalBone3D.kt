@@ -108,381 +108,150 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
         @JvmName("setCanSleepProperty")
         set(value) = setCanSleep(value)
 
-    /**
-     * Applies a directional impulse without affecting rotation. An impulse is time-independent!
-     * Applying an impulse every frame would result in a framerate-dependent force. For this reason, it
-     * should only be used when simulating one-time impacts (use the "_integrate_forces" functions
-     * otherwise). This is equivalent to using `apply_impulse` at the body's center of mass.
-     *
-     * Generated from Godot docs: PhysicalBone3D.apply_central_impulse
-     */
     fun applyCentralImpulse(impulse: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, handle, impulse)
     }
 
-    /**
-     * Applies a positioned impulse to the PhysicsBone3D. An impulse is time-independent! Applying an
-     * impulse every frame would result in a framerate-dependent force. For this reason, it should only
-     * be used when simulating one-time impacts (use the "_integrate_forces" functions otherwise).
-     * `position` is the offset from the PhysicsBone3D origin in global coordinates.
-     *
-     * Generated from Godot docs: PhysicalBone3D.apply_impulse
-     */
     fun applyImpulse(impulse: Vector3, position: Vector3) {
         ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, handle, impulse, position)
     }
 
-    /**
-     * Sets the joint type.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_joint_type
-     */
     fun setJointType(jointType: Long) {
         ObjectCalls.ptrcallWithLongArg(setJointTypeBind, handle, jointType)
     }
 
-    /**
-     * Sets the joint type.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_joint_type
-     */
     fun getJointType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJointTypeBind, handle)
     }
 
-    /**
-     * Sets the joint's transform.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_joint_offset
-     */
     fun setJointOffset(offset: Transform3D) {
         ObjectCalls.ptrcallWithTransform3DArg(setJointOffsetBind, handle, offset)
     }
 
-    /**
-     * Sets the joint's transform.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_joint_offset
-     */
     fun getJointOffset(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getJointOffsetBind, handle)
     }
 
-    /**
-     * Sets the joint's rotation in radians.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_joint_rotation
-     */
     fun setJointRotation(euler: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setJointRotationBind, handle, euler)
     }
 
-    /**
-     * Sets the joint's rotation in radians.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_joint_rotation
-     */
     fun getJointRotation(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getJointRotationBind, handle)
     }
 
-    /**
-     * Sets the body's transform.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_body_offset
-     */
     fun setBodyOffset(offset: Transform3D) {
         ObjectCalls.ptrcallWithTransform3DArg(setBodyOffsetBind, handle, offset)
     }
 
-    /**
-     * Sets the body's transform.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_body_offset
-     */
     fun getBodyOffset(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getBodyOffsetBind, handle)
     }
 
-    /**
-     * Returns `true` if the PhysicsBone3D is allowed to simulate physics.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_simulate_physics
-     */
     fun getSimulatePhysics(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, handle)
     }
 
-    /**
-     * Returns `true` if the PhysicsBone3D is currently simulating physics.
-     *
-     * Generated from Godot docs: PhysicalBone3D.is_simulating_physics
-     */
     fun isSimulatingPhysics(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, handle)
     }
 
-    /**
-     * Returns the unique identifier of the PhysicsBone3D.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_bone_id
-     */
     fun getBoneId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdBind, handle)
     }
 
-    /**
-     * The body's mass.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_mass
-     */
     fun setMass(mass: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
     }
 
-    /**
-     * The body's mass.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_mass
-     */
     fun getMass(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
     }
 
-    /**
-     * The body's friction, from `0` (frictionless) to `1` (max friction).
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_friction
-     */
     fun setFriction(friction: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, handle, friction)
     }
 
-    /**
-     * The body's friction, from `0` (frictionless) to `1` (max friction).
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_friction
-     */
     fun getFriction(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, handle)
     }
 
-    /**
-     * The body's bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Note: Even
-     * with `bounce` set to `1.0`, some energy will be lost over time due to linear and angular
-     * damping. To have a `PhysicalBone3D` that preserves all its energy over time, set `bounce` to
-     * `1.0`, `linear_damp_mode` to `DAMP_MODE_REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
-     * `DAMP_MODE_REPLACE`, and `angular_damp` to `0.0`.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_bounce
-     */
     fun setBounce(bounce: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBounceBind, handle, bounce)
     }
 
-    /**
-     * The body's bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Note: Even
-     * with `bounce` set to `1.0`, some energy will be lost over time due to linear and angular
-     * damping. To have a `PhysicalBone3D` that preserves all its energy over time, set `bounce` to
-     * `1.0`, `linear_damp_mode` to `DAMP_MODE_REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
-     * `DAMP_MODE_REPLACE`, and `angular_damp` to `0.0`.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_bounce
-     */
     fun getBounce(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, handle)
     }
 
-    /**
-     * This is multiplied by `ProjectSettings.physics/3d/default_gravity` to produce this body's
-     * gravity. For example, a value of `1.0` will apply normal gravity, `2.0` will apply double the
-     * gravity, and `0.5` will apply half the gravity to this body.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_gravity_scale
-     */
     fun setGravityScale(gravityScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, handle, gravityScale)
     }
 
-    /**
-     * This is multiplied by `ProjectSettings.physics/3d/default_gravity` to produce this body's
-     * gravity. For example, a value of `1.0` will apply normal gravity, `2.0` will apply double the
-     * gravity, and `0.5` will apply half the gravity to this body.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_gravity_scale
-     */
     fun getGravityScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, handle)
     }
 
-    /**
-     * Defines how `linear_damp` is applied.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_linear_damp_mode
-     */
     fun setLinearDampMode(linearDampMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, handle, linearDampMode)
     }
 
-    /**
-     * Defines how `linear_damp` is applied.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_linear_damp_mode
-     */
     fun getLinearDampMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, handle)
     }
 
-    /**
-     * Defines how `angular_damp` is applied.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_angular_damp_mode
-     */
     fun setAngularDampMode(angularDampMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, handle, angularDampMode)
     }
 
-    /**
-     * Defines how `angular_damp` is applied.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_angular_damp_mode
-     */
     fun getAngularDampMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, handle)
     }
 
-    /**
-     * Damps the body's movement. By default, the body will use
-     * `ProjectSettings.physics/3d/default_linear_damp` or any value override set by an `Area3D` the
-     * body is in. Depending on `linear_damp_mode`, `linear_damp` may be added to or replace the body's
-     * damping value. See `ProjectSettings.physics/3d/default_linear_damp` for more details about
-     * damping.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_linear_damp
-     */
     fun setLinearDamp(linearDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
     }
 
-    /**
-     * Damps the body's movement. By default, the body will use
-     * `ProjectSettings.physics/3d/default_linear_damp` or any value override set by an `Area3D` the
-     * body is in. Depending on `linear_damp_mode`, `linear_damp` may be added to or replace the body's
-     * damping value. See `ProjectSettings.physics/3d/default_linear_damp` for more details about
-     * damping.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_linear_damp
-     */
     fun getLinearDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
     }
 
-    /**
-     * Damps the body's rotation. By default, the body will use the
-     * `ProjectSettings.physics/3d/default_angular_damp` project setting or any value override set by
-     * an `Area3D` the body is in. Depending on `angular_damp_mode`, you can set `angular_damp` to be
-     * added to or to replace the body's damping value. See
-     * `ProjectSettings.physics/3d/default_angular_damp` for more details about damping.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_angular_damp
-     */
     fun setAngularDamp(angularDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
     }
 
-    /**
-     * Damps the body's rotation. By default, the body will use the
-     * `ProjectSettings.physics/3d/default_angular_damp` project setting or any value override set by
-     * an `Area3D` the body is in. Depending on `angular_damp_mode`, you can set `angular_damp` to be
-     * added to or to replace the body's damping value. See
-     * `ProjectSettings.physics/3d/default_angular_damp` for more details about damping.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_angular_damp
-     */
     fun getAngularDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
     }
 
-    /**
-     * The body's linear velocity in units per second. Can be used sporadically, but don't set this
-     * every frame, because physics may run in another thread and runs at a different granularity. Use
-     * `_integrate_forces` as your process loop for precise control of the body state.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_linear_velocity
-     */
     fun setLinearVelocity(linearVelocity: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, linearVelocity)
     }
 
-    /**
-     * The body's linear velocity in units per second. Can be used sporadically, but don't set this
-     * every frame, because physics may run in another thread and runs at a different granularity. Use
-     * `_integrate_forces` as your process loop for precise control of the body state.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_linear_velocity
-     */
     fun getLinearVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
     }
 
-    /**
-     * The PhysicalBone3D's rotational velocity in radians per second.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_angular_velocity
-     */
     fun setAngularVelocity(angularVelocity: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, angularVelocity)
     }
 
-    /**
-     * The PhysicalBone3D's rotational velocity in radians per second.
-     *
-     * Generated from Godot docs: PhysicalBone3D.get_angular_velocity
-     */
     fun getAngularVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
     }
 
-    /**
-     * If `true`, the standard force integration (like gravity or damping) will be disabled for this
-     * body. Other than collision response, the body will only move as determined by the
-     * `_integrate_forces` method, if that virtual method is overridden. Setting this property will
-     * call the method `PhysicsServer3D.body_set_omit_force_integration` internally.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_use_custom_integrator
-     */
     fun setUseCustomIntegrator(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, handle, enable)
     }
 
-    /**
-     * If `true`, the standard force integration (like gravity or damping) will be disabled for this
-     * body. Other than collision response, the body will only move as determined by the
-     * `_integrate_forces` method, if that virtual method is overridden. Setting this property will
-     * call the method `PhysicsServer3D.body_set_omit_force_integration` internally.
-     *
-     * Generated from Godot docs: PhysicalBone3D.is_using_custom_integrator
-     */
     fun isUsingCustomIntegrator(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, handle)
     }
 
-    /**
-     * If `true`, the body is deactivated when there is no movement, so it will not take part in the
-     * simulation until it is awakened by an external force.
-     *
-     * Generated from Godot docs: PhysicalBone3D.set_can_sleep
-     */
     fun setCanSleep(ableToSleep: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, handle, ableToSleep)
     }
 
-    /**
-     * If `true`, the body is deactivated when there is no movement, so it will not take part in the
-     * simulation until it is awakened by an external force.
-     *
-     * Generated from Godot docs: PhysicalBone3D.is_able_to_sleep
-     */
     fun isAbleToSleep(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, handle)
     }

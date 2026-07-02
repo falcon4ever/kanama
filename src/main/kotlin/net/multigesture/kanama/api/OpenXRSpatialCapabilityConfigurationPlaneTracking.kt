@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking
@@ -24,6 +24,13 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: MemorySegment) :
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
+            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationPlaneTracking(handle)
+
         private const val SUPPORTS_MESH_2D_HASH = 2240911060L
         private val supportsMesh2dBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "supports_mesh_2d", SUPPORTS_MESH_2D_HASH)

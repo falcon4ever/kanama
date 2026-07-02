@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * A 2D physics body that can't be moved by external forces. When moved manually, it doesn't affect
@@ -30,67 +30,38 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
         @JvmName("setConstantAngularVelocityProperty")
         set(value) = setConstantAngularVelocity(value)
 
-    /**
-     * The body's constant linear velocity. This does not move the body, but affects touching bodies,
-     * as if it were moving.
-     *
-     * Generated from Godot docs: StaticBody2D.set_constant_linear_velocity
-     */
     fun setConstantLinearVelocity(vel: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setConstantLinearVelocityBind, handle, vel)
     }
 
-    /**
-     * The body's constant angular velocity. This does not rotate the body, but affects touching
-     * bodies, as if it were rotating.
-     *
-     * Generated from Godot docs: StaticBody2D.set_constant_angular_velocity
-     */
     fun setConstantAngularVelocity(vel: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setConstantAngularVelocityBind, handle, vel)
     }
 
-    /**
-     * The body's constant linear velocity. This does not move the body, but affects touching bodies,
-     * as if it were moving.
-     *
-     * Generated from Godot docs: StaticBody2D.get_constant_linear_velocity
-     */
     fun getConstantLinearVelocity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getConstantLinearVelocityBind, handle)
     }
 
-    /**
-     * The body's constant angular velocity. This does not rotate the body, but affects touching
-     * bodies, as if it were rotating.
-     *
-     * Generated from Godot docs: StaticBody2D.get_constant_angular_velocity
-     */
     fun getConstantAngularVelocity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstantAngularVelocityBind, handle)
     }
 
-    /**
-     * The physics material override for the body. If a material is assigned to this property, it will
-     * be used instead of any other physics material, such as an inherited one.
-     *
-     * Generated from Godot docs: StaticBody2D.set_physics_material_override
-     */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
         ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, handle, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The physics material override for the body. If a material is assigned to this property, it will
-     * be used instead of any other physics material, such as an inherited one.
-     *
-     * Generated from Godot docs: StaticBody2D.get_physics_material_override
-     */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
         return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, handle))
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): StaticBody2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): StaticBody2D? =
+            if (handle.address() == 0L) null else StaticBody2D(handle)
+
         private const val SET_CONSTANT_LINEAR_VELOCITY_HASH = 743155724L
         private val setConstantLinearVelocityBind by lazy {
             ObjectCalls.getMethodBind("StaticBody2D", "set_constant_linear_velocity", SET_CONSTANT_LINEAR_VELOCITY_HASH)

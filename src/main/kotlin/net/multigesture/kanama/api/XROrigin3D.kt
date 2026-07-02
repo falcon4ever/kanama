@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * The origin point in AR/VR.
@@ -22,49 +22,30 @@ class XROrigin3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setCurrentProperty")
         set(value) = setCurrent(value)
 
-    /**
-     * The scale of the game world compared to the real world. This is the same as
-     * `XRServer.world_scale`. By default, most AR/VR platforms assume that 1 game unit corresponds to
-     * 1 real world meter.
-     *
-     * Generated from Godot docs: XROrigin3D.set_world_scale
-     */
     fun setWorldScale(worldScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWorldScaleBind, handle, worldScale)
     }
 
-    /**
-     * The scale of the game world compared to the real world. This is the same as
-     * `XRServer.world_scale`. By default, most AR/VR platforms assume that 1 game unit corresponds to
-     * 1 real world meter.
-     *
-     * Generated from Godot docs: XROrigin3D.get_world_scale
-     */
     fun getWorldScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWorldScaleBind, handle)
     }
 
-    /**
-     * If `true`, this origin node is currently being used by the `XRServer`. Only one origin point can
-     * be used at a time.
-     *
-     * Generated from Godot docs: XROrigin3D.set_current
-     */
     fun setCurrent(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCurrentBind, handle, enabled)
     }
 
-    /**
-     * If `true`, this origin node is currently being used by the `XRServer`. Only one origin point can
-     * be used at a time.
-     *
-     * Generated from Godot docs: XROrigin3D.is_current
-     */
     fun isCurrent(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): XROrigin3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): XROrigin3D? =
+            if (handle.address() == 0L) null else XROrigin3D(handle)
+
         private const val SET_WORLD_SCALE_HASH = 373806689L
         private val setWorldScaleBind by lazy {
             ObjectCalls.getMethodBind("XROrigin3D", "set_world_scale", SET_WORLD_SCALE_HASH)

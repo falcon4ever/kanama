@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A Unix Domain Socket (UDS) server.
@@ -20,16 +20,18 @@ class UDSServer(handle: MemorySegment) : SocketServer(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(listenBind, handle, path)
     }
 
-    /**
-     * If a connection is available, returns a StreamPeerUDS with the connection.
-     *
-     * Generated from Godot docs: UDSServer.take_connection
-     */
     fun takeConnection(): StreamPeerUDS? {
         return StreamPeerUDS.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): UDSServer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): UDSServer? =
+            if (handle.address() == 0L) null else UDSServer(handle)
+
         private const val LISTEN_HASH = 166001499L
         private val listenBind by lazy {
             ObjectCalls.getMethodBind("UDSServer", "listen", LISTEN_HASH)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: CSGCylinder3D
@@ -93,6 +93,13 @@ class CSGCylinder3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGCylinder3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGCylinder3D? =
+            if (handle.address() == 0L) null else CSGCylinder3D(handle)
+
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {
             ObjectCalls.getMethodBind("CSGCylinder3D", "set_radius", SET_RADIUS_HASH)

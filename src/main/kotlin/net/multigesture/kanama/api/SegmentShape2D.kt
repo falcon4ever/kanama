@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * A 2D line segment shape used for physics collision.
@@ -23,43 +23,30 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
         @JvmName("setBProperty")
         set(value) = setB(value)
 
-    /**
-     * The segment's first point position.
-     *
-     * Generated from Godot docs: SegmentShape2D.set_a
-     */
     fun setA(a: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setABind, handle, a)
     }
 
-    /**
-     * The segment's first point position.
-     *
-     * Generated from Godot docs: SegmentShape2D.get_a
-     */
     fun getA(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getABind, handle)
     }
 
-    /**
-     * The segment's second point position.
-     *
-     * Generated from Godot docs: SegmentShape2D.set_b
-     */
     fun setB(b: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setBBind, handle, b)
     }
 
-    /**
-     * The segment's second point position.
-     *
-     * Generated from Godot docs: SegmentShape2D.get_b
-     */
     fun getB(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getBBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SegmentShape2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): SegmentShape2D? =
+            if (handle.address() == 0L) null else SegmentShape2D(handle)
+
         private const val SET_A_HASH = 743155724L
         private val setABind by lazy {
             ObjectCalls.getMethodBind("SegmentShape2D", "set_a", SET_A_HASH)

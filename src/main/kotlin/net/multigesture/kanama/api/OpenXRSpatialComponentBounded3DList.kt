@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: OpenXRSpatialComponentBounded3DList
@@ -18,6 +18,13 @@ class OpenXRSpatialComponentBounded3DList(handle: MemorySegment) : OpenXRSpatial
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentBounded3DList? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentBounded3DList? =
+            if (handle.address() == 0L) null else OpenXRSpatialComponentBounded3DList(handle)
+
         private const val GET_CENTER_POSE_HASH = 1965739696L
         private val getCenterPoseBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialComponentBounded3DList", "get_center_pose", GET_CENTER_POSE_HASH)

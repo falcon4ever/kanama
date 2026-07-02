@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: CSGMesh3D
@@ -37,6 +37,13 @@ class CSGMesh3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGMesh3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGMesh3D? =
+            if (handle.address() == 0L) null else CSGMesh3D(handle)
+
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {
             ObjectCalls.getMethodBind("CSGMesh3D", "set_mesh", SET_MESH_HASH)

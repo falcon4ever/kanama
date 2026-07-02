@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Wrapper to use a PacketPeer over a StreamPeer.
@@ -28,20 +28,10 @@ class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
         @JvmName("setStreamPeerProperty")
         set(value) = setStreamPeer(value)
 
-    /**
-     * The wrapped `StreamPeer` object.
-     *
-     * Generated from Godot docs: PacketPeerStream.set_stream_peer
-     */
     fun setStreamPeer(peer: StreamPeer?) {
         ObjectCalls.ptrcallWithObjectArgs(setStreamPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * The wrapped `StreamPeer` object.
-     *
-     * Generated from Godot docs: PacketPeerStream.get_stream_peer
-     */
     fun getStreamPeer(): StreamPeer? {
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, handle))
     }
@@ -63,6 +53,13 @@ class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PacketPeerStream? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PacketPeerStream? =
+            if (handle.address() == 0L) null else PacketPeerStream(handle)
+
         private const val SET_STREAM_PEER_HASH = 3281897016L
         private val setStreamPeerBind by lazy {
             ObjectCalls.getMethodBind("PacketPeerStream", "set_stream_peer", SET_STREAM_PEER_HASH)

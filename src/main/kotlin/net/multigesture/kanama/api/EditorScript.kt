@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Base script that can be used to add extension functions to the editor.
@@ -9,31 +9,14 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: EditorScript
  */
 class EditorScript(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Makes `node` root of the currently opened scene. Only works if the scene is empty. If the `node`
-     * is a scene instance, an inheriting scene will be created.
-     *
-     * Generated from Godot docs: EditorScript.add_root_node
-     */
     fun addRootNode(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, handle, listOf(node.handle))
     }
 
-    /**
-     * Returns the edited (current) scene's root `Node`. Equivalent of
-     * `EditorInterface.get_edited_scene_root`.
-     *
-     * Generated from Godot docs: EditorScript.get_scene
-     */
     fun getScene(): Node? {
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSceneBind, handle))
     }
 
-    /**
-     * Returns the `EditorInterface` singleton instance.
-     *
-     * Generated from Godot docs: EditorScript.get_editor_interface
-     */
     fun getEditorInterface(): EditorInterface? {
         return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, handle))
     }

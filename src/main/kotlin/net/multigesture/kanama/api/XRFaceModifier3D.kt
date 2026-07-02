@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
 
 /**
  * A node for driving standard face meshes from `XRFaceTracker` weights.
@@ -23,43 +23,30 @@ class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setTargetProperty")
         set(value) = setTarget(value)
 
-    /**
-     * The `XRFaceTracker` path.
-     *
-     * Generated from Godot docs: XRFaceModifier3D.set_face_tracker
-     */
     fun setFaceTracker(trackerName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setFaceTrackerBind, handle, trackerName)
     }
 
-    /**
-     * The `XRFaceTracker` path.
-     *
-     * Generated from Godot docs: XRFaceModifier3D.get_face_tracker
-     */
     fun getFaceTracker(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getFaceTrackerBind, handle)
     }
 
-    /**
-     * The `NodePath` of the face `MeshInstance3D`.
-     *
-     * Generated from Godot docs: XRFaceModifier3D.set_target
-     */
     fun setTarget(target: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTargetBind, handle, target)
     }
 
-    /**
-     * The `NodePath` of the face `MeshInstance3D`.
-     *
-     * Generated from Godot docs: XRFaceModifier3D.get_target
-     */
     fun getTarget(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): XRFaceModifier3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): XRFaceModifier3D? =
+            if (handle.address() == 0L) null else XRFaceModifier3D(handle)
+
         private const val SET_FACE_TRACKER_HASH = 3304788590L
         private val setFaceTrackerBind by lazy {
             ObjectCalls.getMethodBind("XRFaceModifier3D", "set_face_tracker", SET_FACE_TRACKER_HASH)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Attachment format (used by `RenderingDevice`).
@@ -28,56 +28,26 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setUsageFlagsProperty")
         set(value) = setUsageFlags(value)
 
-    /**
-     * The attachment's data format.
-     *
-     * Generated from Godot docs: RDAttachmentFormat.set_format
-     */
     fun setFormat(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
-    /**
-     * The attachment's data format.
-     *
-     * Generated from Godot docs: RDAttachmentFormat.get_format
-     */
     fun getFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
-    /**
-     * The number of samples used when sampling the attachment.
-     *
-     * Generated from Godot docs: RDAttachmentFormat.set_samples
-     */
     fun setSamples(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
     }
 
-    /**
-     * The number of samples used when sampling the attachment.
-     *
-     * Generated from Godot docs: RDAttachmentFormat.get_samples
-     */
     fun getSamples(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
     }
 
-    /**
-     * The attachment's usage flags, which determine what can be done with it.
-     *
-     * Generated from Godot docs: RDAttachmentFormat.set_usage_flags
-     */
     fun setUsageFlags(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setUsageFlagsBind, handle, pMember)
     }
 
-    /**
-     * The attachment's usage flags, which determine what can be done with it.
-     *
-     * Generated from Godot docs: RDAttachmentFormat.get_usage_flags
-     */
     fun getUsageFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getUsageFlagsBind, handle)
     }

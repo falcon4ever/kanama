@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A 3D sphere shape used for physics collision.
@@ -16,25 +16,22 @@ class SphereShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
-    /**
-     * The sphere's radius. The shape's diameter is double the radius.
-     *
-     * Generated from Godot docs: SphereShape3D.set_radius
-     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
-    /**
-     * The sphere's radius. The shape's diameter is double the radius.
-     *
-     * Generated from Godot docs: SphereShape3D.get_radius
-     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SphereShape3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): SphereShape3D? =
+            if (handle.address() == 0L) null else SphereShape3D(handle)
+
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {
             ObjectCalls.getMethodBind("SphereShape3D", "set_radius", SET_RADIUS_HASH)

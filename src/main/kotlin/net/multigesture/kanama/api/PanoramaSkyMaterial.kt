@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A material that provides a special texture to a `Sky`, usually an HDR panorama.
@@ -28,61 +28,38 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setEnergyMultiplierProperty")
         set(value) = setEnergyMultiplier(value)
 
-    /**
-     * `Texture2D` to be applied to the `PanoramaSkyMaterial`.
-     *
-     * Generated from Godot docs: PanoramaSkyMaterial.set_panorama
-     */
     fun setPanorama(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * `Texture2D` to be applied to the `PanoramaSkyMaterial`.
-     *
-     * Generated from Godot docs: PanoramaSkyMaterial.get_panorama
-     */
     fun getPanorama(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, handle))
     }
 
-    /**
-     * A boolean value to determine if the background texture should be filtered or not.
-     *
-     * Generated from Godot docs: PanoramaSkyMaterial.set_filtering_enabled
-     */
     fun setFilteringEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilteringEnabledBind, handle, enabled)
     }
 
-    /**
-     * A boolean value to determine if the background texture should be filtered or not.
-     *
-     * Generated from Godot docs: PanoramaSkyMaterial.is_filtering_enabled
-     */
     fun isFilteringEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFilteringEnabledBind, handle)
     }
 
-    /**
-     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
-     *
-     * Generated from Godot docs: PanoramaSkyMaterial.set_energy_multiplier
-     */
     fun setEnergyMultiplier(multiplier: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
-    /**
-     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
-     *
-     * Generated from Godot docs: PanoramaSkyMaterial.get_energy_multiplier
-     */
     fun getEnergyMultiplier(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PanoramaSkyMaterial? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PanoramaSkyMaterial? =
+            if (handle.address() == 0L) null else PanoramaSkyMaterial(handle)
+
         private const val SET_PANORAMA_HASH = 4051416890L
         private val setPanoramaBind by lazy {
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "set_panorama", SET_PANORAMA_HASH)

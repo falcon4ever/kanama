@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeIntOp
@@ -23,6 +23,27 @@ class VisualShaderNodeIntOp(handle: MemorySegment) : VisualShaderNode(handle) {
     }
 
     companion object {
+        const val OP_ADD: Long = 0L
+        const val OP_SUB: Long = 1L
+        const val OP_MUL: Long = 2L
+        const val OP_DIV: Long = 3L
+        const val OP_MOD: Long = 4L
+        const val OP_MAX: Long = 5L
+        const val OP_MIN: Long = 6L
+        const val OP_BITWISE_AND: Long = 7L
+        const val OP_BITWISE_OR: Long = 8L
+        const val OP_BITWISE_XOR: Long = 9L
+        const val OP_BITWISE_LEFT_SHIFT: Long = 10L
+        const val OP_BITWISE_RIGHT_SHIFT: Long = 11L
+        const val OP_ENUM_SIZE: Long = 12L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeIntOp? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeIntOp? =
+            if (handle.address() == 0L) null else VisualShaderNodeIntOp(handle)
+
         private const val SET_OPERATOR_HASH = 1677909323L
         private val setOperatorBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeIntOp", "set_operator", SET_OPERATOR_HASH)

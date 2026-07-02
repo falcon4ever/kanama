@@ -1,10 +1,11 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Rect2
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Vector2
 
 /**
  * A control used to show a set of internal `TreeItem`s in a hierarchical structure.
@@ -118,682 +119,286 @@ class Tree(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
-    /**
-     * Creates an item in the tree and adds it as a child of `parent`, which can be either a valid
-     * `TreeItem` or `null`. If `parent` is `null`, the root item will be the parent, or the new item
-     * will be the root itself if the tree is empty. The new item will be the `index`-th child of
-     * parent, or it will be the last child if there are not enough siblings. Prints an error and
-     * returns `null` if called during mouse selection, or if the `parent` does not belong to this
-     * tree.
-     *
-     * Generated from Godot docs: Tree.create_item
-     */
     fun createItem(parent: TreeItem, index: Int = -1): TreeItem? {
         return TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(createItemBind, handle, parent.handle, index))
     }
 
-    /**
-     * Returns the tree's root item, or `null` if the tree is empty.
-     *
-     * Generated from Godot docs: Tree.get_root
-     */
     fun getRoot(): TreeItem? {
         return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, handle))
     }
 
-    /**
-     * Overrides the calculated minimum width of a column. It can be set to `0` to restore the default
-     * behavior. Columns that have the "Expand" flag will use their "min_width" in a similar fashion to
-     * `Control.size_flags_stretch_ratio`.
-     *
-     * Generated from Godot docs: Tree.set_column_custom_minimum_width
-     */
     fun setColumnCustomMinimumWidth(column: Int, minWidth: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setColumnCustomMinimumWidthBind, handle, column, minWidth)
     }
 
-    /**
-     * If `true`, the column will have the "Expand" flag of `Control`. Columns that have the "Expand"
-     * flag will use their expand ratio in a similar fashion to `Control.size_flags_stretch_ratio` (see
-     * `set_column_expand_ratio`).
-     *
-     * Generated from Godot docs: Tree.set_column_expand
-     */
     fun setColumnExpand(column: Int, expand: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnExpandBind, handle, column, expand)
     }
 
-    /**
-     * Sets the relative expand ratio for a column. See `set_column_expand`.
-     *
-     * Generated from Godot docs: Tree.set_column_expand_ratio
-     */
     fun setColumnExpandRatio(column: Int, ratio: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setColumnExpandRatioBind, handle, column, ratio)
     }
 
-    /**
-     * Allows to enable clipping for column's content, making the content size ignored.
-     *
-     * Generated from Godot docs: Tree.set_column_clip_content
-     */
     fun setColumnClipContent(column: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnClipContentBind, handle, column, enable)
     }
 
-    /**
-     * Returns `true` if the column has enabled expanding (see `set_column_expand`).
-     *
-     * Generated from Godot docs: Tree.is_column_expanding
-     */
     fun isColumnExpanding(column: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isColumnExpandingBind, handle, column)
     }
 
-    /**
-     * Returns `true` if the column has enabled clipping (see `set_column_clip_content`).
-     *
-     * Generated from Godot docs: Tree.is_column_clipping_content
-     */
     fun isColumnClippingContent(column: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isColumnClippingContentBind, handle, column)
     }
 
-    /**
-     * Returns the expand ratio assigned to the column.
-     *
-     * Generated from Godot docs: Tree.get_column_expand_ratio
-     */
     fun getColumnExpandRatio(column: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getColumnExpandRatioBind, handle, column)
     }
 
-    /**
-     * Returns the column's width in pixels.
-     *
-     * Generated from Godot docs: Tree.get_column_width
-     */
     fun getColumnWidth(column: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getColumnWidthBind, handle, column)
     }
 
-    /**
-     * If `true`, the tree's root is hidden.
-     *
-     * Generated from Godot docs: Tree.set_hide_root
-     */
+    fun getCustomDrawingCanvasItem(): RID {
+        return ObjectCalls.ptrcallNoArgsRetRID(getCustomDrawingCanvasItemBind, handle)
+    }
+
     fun setHideRoot(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideRootBind, handle, enable)
     }
 
-    /**
-     * If `true`, the tree's root is hidden.
-     *
-     * Generated from Godot docs: Tree.is_root_hidden
-     */
     fun isRootHidden(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRootHiddenBind, handle)
     }
 
-    /**
-     * Returns the next selected `TreeItem` after the given one, or `null` if the end is reached. If
-     * `from` is `null`, this returns the first selected item.
-     *
-     * Generated from Godot docs: Tree.get_next_selected
-     */
     fun getNextSelected(from: TreeItem): TreeItem? {
         return TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getNextSelectedBind, handle, from.handle))
     }
 
-    /**
-     * Returns the currently focused item, or `null` if no item is focused. In `SELECT_ROW` and
-     * `SELECT_SINGLE` modes, the focused item is same as the selected item. In `SELECT_MULTI` mode,
-     * the focused item is the item under the focus cursor, not necessarily selected. To get the
-     * currently selected item(s), use `get_next_selected`.
-     *
-     * Generated from Godot docs: Tree.get_selected
-     */
     fun getSelected(): TreeItem? {
         return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSelectedBind, handle))
     }
 
-    /**
-     * Selects the specified `TreeItem` and column.
-     *
-     * Generated from Godot docs: Tree.set_selected
-     */
     fun setSelected(item: TreeItem, column: Int) {
         ObjectCalls.ptrcallWithObjectAndIntArg(setSelectedBind, handle, item.handle, column)
     }
 
-    /**
-     * Returns the currently focused column, or -1 if no column is focused. In `SELECT_SINGLE` mode,
-     * the focused column is the selected column. In `SELECT_ROW` mode, the focused column is always 0
-     * if any item is selected. In `SELECT_MULTI` mode, the focused column is the column under the
-     * focus cursor, and there are not necessarily any column selected. To tell whether a column of an
-     * item is selected, use `TreeItem.is_selected`.
-     *
-     * Generated from Godot docs: Tree.get_selected_column
-     */
     fun getSelectedColumn(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSelectedColumnBind, handle)
     }
 
-    /**
-     * Returns the last pressed button's index.
-     *
-     * Generated from Godot docs: Tree.get_pressed_button
-     */
     fun getPressedButton(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPressedButtonBind, handle)
     }
 
-    /**
-     * Allows single or multiple selection. See the `SelectMode` constants.
-     *
-     * Generated from Godot docs: Tree.set_select_mode
-     */
     fun setSelectMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSelectModeBind, handle, mode)
     }
 
-    /**
-     * Allows single or multiple selection. See the `SelectMode` constants.
-     *
-     * Generated from Godot docs: Tree.get_select_mode
-     */
     fun getSelectMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, handle)
     }
 
-    /**
-     * Deselects all tree items (rows and columns). In `SELECT_MULTI` mode also removes selection
-     * cursor.
-     *
-     * Generated from Godot docs: Tree.deselect_all
-     */
     fun deselectAll() {
         ObjectCalls.ptrcallNoArgs(deselectAllBind, handle)
     }
 
-    /**
-     * The number of columns. Prints an error and does not allow setting the columns during mouse
-     * selection.
-     *
-     * Generated from Godot docs: Tree.set_columns
-     */
     fun setColumns(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setColumnsBind, handle, amount)
     }
 
-    /**
-     * The number of columns. Prints an error and does not allow setting the columns during mouse
-     * selection.
-     *
-     * Generated from Godot docs: Tree.get_columns
-     */
     fun getColumns(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, handle)
     }
 
-    /**
-     * Returns the currently edited item. Can be used with `item_edited` to get the item that was
-     * modified.
-     *
-     * Generated from Godot docs: Tree.get_edited
-     */
     fun getEdited(): TreeItem? {
         return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedBind, handle))
     }
 
-    /**
-     * Returns the column for the currently edited item.
-     *
-     * Generated from Godot docs: Tree.get_edited_column
-     */
     fun getEditedColumn(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getEditedColumnBind, handle)
     }
 
-    /**
-     * Edits the selected tree item as if it was clicked. Either the item must be set editable with
-     * `TreeItem.set_editable` or `force_edit` must be `true`. Returns `true` if the item could be
-     * edited. Fails if no item is selected.
-     *
-     * Generated from Godot docs: Tree.edit_selected
-     */
     fun editSelected(forceEdit: Boolean = false): Boolean {
         return ObjectCalls.ptrcallWithBoolArgRetBool(editSelectedBind, handle, forceEdit)
     }
 
-    /**
-     * Returns the rectangle for custom popups. Helper to create custom cell controls that display a
-     * popup. See `TreeItem.set_cell_mode`.
-     *
-     * Generated from Godot docs: Tree.get_custom_popup_rect
-     */
     fun getCustomPopupRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getCustomPopupRectBind, handle)
     }
 
-    /**
-     * Returns the rectangle area for the specified `TreeItem`. If `column` is specified, only get the
-     * position and size of that column, otherwise get the rectangle containing all columns. If a
-     * button index is specified, the rectangle of that button will be returned.
-     *
-     * Generated from Godot docs: Tree.get_item_area_rect
-     */
     fun getItemAreaRect(item: TreeItem, column: Int = -1, buttonIndex: Int = -1): Rect2 {
         return ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(getItemAreaRectBind, handle, item.handle, column, buttonIndex)
     }
 
-    /**
-     * Returns the tree item at the specified position (relative to the tree origin position).
-     *
-     * Generated from Godot docs: Tree.get_item_at_position
-     */
     fun getItemAtPosition(position: Vector2): TreeItem? {
         return TreeItem.wrap(ObjectCalls.ptrcallWithVector2ArgRetObject(getItemAtPositionBind, handle, position))
     }
 
-    /**
-     * Returns the column index at `position`, or -1 if no item is there.
-     *
-     * Generated from Godot docs: Tree.get_column_at_position
-     */
     fun getColumnAtPosition(position: Vector2): Int {
         return ObjectCalls.ptrcallWithVector2ArgRetInt(getColumnAtPositionBind, handle, position)
     }
 
-    /**
-     * Returns the drop section at `position`, or -100 if no item is there. Values -1, 0, or 1 will be
-     * returned for the "above item", "on item", and "below item" drop sections, respectively. See
-     * `DropModeFlags` for a description of each drop section. To get the item which the returned drop
-     * section is relative to, use `get_item_at_position`.
-     *
-     * Generated from Godot docs: Tree.get_drop_section_at_position
-     */
     fun getDropSectionAtPosition(position: Vector2): Int {
         return ObjectCalls.ptrcallWithVector2ArgRetInt(getDropSectionAtPositionBind, handle, position)
     }
 
-    /**
-     * Returns the button ID at `position`, or -1 if no button is there.
-     *
-     * Generated from Godot docs: Tree.get_button_id_at_position
-     */
     fun getButtonIdAtPosition(position: Vector2): Int {
         return ObjectCalls.ptrcallWithVector2ArgRetInt(getButtonIdAtPositionBind, handle, position)
     }
 
-    /**
-     * Makes the currently focused cell visible. This will scroll the tree if necessary. In
-     * `SELECT_ROW` mode, this will not do horizontal scrolling, as all the cells in the selected row
-     * is focused logically. Note: Despite the name of this method, the focus cursor itself is only
-     * visible in `SELECT_MULTI` mode.
-     *
-     * Generated from Godot docs: Tree.ensure_cursor_is_visible
-     */
     fun ensureCursorIsVisible() {
         ObjectCalls.ptrcallNoArgs(ensureCursorIsVisibleBind, handle)
     }
 
-    /**
-     * If `true`, column titles are visible.
-     *
-     * Generated from Godot docs: Tree.set_column_titles_visible
-     */
     fun setColumnTitlesVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setColumnTitlesVisibleBind, handle, visible)
     }
 
-    /**
-     * If `true`, column titles are visible.
-     *
-     * Generated from Godot docs: Tree.are_column_titles_visible
-     */
     fun areColumnTitlesVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areColumnTitlesVisibleBind, handle)
     }
 
-    /**
-     * Sets the title of a column.
-     *
-     * Generated from Godot docs: Tree.set_column_title
-     */
     fun setColumnTitle(column: Int, title: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleBind, handle, column, title)
     }
 
-    /**
-     * Returns the column's title.
-     *
-     * Generated from Godot docs: Tree.get_column_title
-     */
     fun getColumnTitle(column: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleBind, handle, column)
     }
 
-    /**
-     * Sets the column title's tooltip text.
-     *
-     * Generated from Godot docs: Tree.set_column_title_tooltip_text
-     */
     fun setColumnTitleTooltipText(column: Int, tooltipText: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleTooltipTextBind, handle, column, tooltipText)
     }
 
-    /**
-     * Returns the column title's tooltip text.
-     *
-     * Generated from Godot docs: Tree.get_column_title_tooltip_text
-     */
     fun getColumnTitleTooltipText(column: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleTooltipTextBind, handle, column)
     }
 
-    /**
-     * Sets the column title alignment. Note that `@GlobalScope.HORIZONTAL_ALIGNMENT_FILL` is not
-     * supported for column titles.
-     *
-     * Generated from Godot docs: Tree.set_column_title_alignment
-     */
     fun setColumnTitleAlignment(column: Int, titleAlignment: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleAlignmentBind, handle, column, titleAlignment)
     }
 
-    /**
-     * Returns the column title alignment.
-     *
-     * Generated from Godot docs: Tree.get_column_title_alignment
-     */
     fun getColumnTitleAlignment(column: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleAlignmentBind, handle, column)
     }
 
-    /**
-     * Sets column title base writing direction.
-     *
-     * Generated from Godot docs: Tree.set_column_title_direction
-     */
     fun setColumnTitleDirection(column: Int, direction: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleDirectionBind, handle, column, direction)
     }
 
-    /**
-     * Returns column title base writing direction.
-     *
-     * Generated from Godot docs: Tree.get_column_title_direction
-     */
     fun getColumnTitleDirection(column: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleDirectionBind, handle, column)
     }
 
-    /**
-     * Sets the language code of the given `column`'s title to `language`. This is used for
-     * line-breaking and text shaping algorithms. If `language` is empty, the current locale is used.
-     *
-     * Generated from Godot docs: Tree.set_column_title_language
-     */
     fun setColumnTitleLanguage(column: Int, language: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleLanguageBind, handle, column, language)
     }
 
-    /**
-     * Returns column title language code.
-     *
-     * Generated from Godot docs: Tree.get_column_title_language
-     */
     fun getColumnTitleLanguage(column: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleLanguageBind, handle, column)
     }
 
-    /**
-     * Returns the current scrolling position.
-     *
-     * Generated from Godot docs: Tree.get_scroll
-     */
     fun getScroll(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBind, handle)
     }
 
-    /**
-     * Causes the `Tree` to jump to the specified `TreeItem`.
-     *
-     * Generated from Godot docs: Tree.scroll_to_item
-     */
     fun scrollToItem(item: TreeItem, centerOnItem: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(scrollToItemBind, handle, item.handle, centerOnItem)
     }
 
-    /**
-     * If `true`, enables horizontal scrolling.
-     *
-     * Generated from Godot docs: Tree.set_h_scroll_enabled
-     */
     fun setHScrollEnabled(hScroll: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHScrollEnabledBind, handle, hScroll)
     }
 
-    /**
-     * If `true`, enables horizontal scrolling.
-     *
-     * Generated from Godot docs: Tree.is_h_scroll_enabled
-     */
     fun isHScrollEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHScrollEnabledBind, handle)
     }
 
-    /**
-     * If `true`, enables vertical scrolling.
-     *
-     * Generated from Godot docs: Tree.set_v_scroll_enabled
-     */
     fun setVScrollEnabled(hScroll: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVScrollEnabledBind, handle, hScroll)
     }
 
-    /**
-     * If `true`, enables vertical scrolling.
-     *
-     * Generated from Godot docs: Tree.is_v_scroll_enabled
-     */
     fun isVScrollEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVScrollEnabledBind, handle)
     }
 
-    /**
-     * The way which scroll hints (indicators that show that the content can still be scrolled in a
-     * certain direction) will be shown.
-     *
-     * Generated from Godot docs: Tree.set_scroll_hint_mode
-     */
     fun setScrollHintMode(scrollHintMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, handle, scrollHintMode)
     }
 
-    /**
-     * The way which scroll hints (indicators that show that the content can still be scrolled in a
-     * certain direction) will be shown.
-     *
-     * Generated from Godot docs: Tree.get_scroll_hint_mode
-     */
     fun getScrollHintMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, handle)
     }
 
-    /**
-     * If `true`, the scroll hint texture will be tiled instead of stretched. See `scroll_hint_mode`.
-     *
-     * Generated from Godot docs: Tree.set_tile_scroll_hint
-     */
     fun setTileScrollHint(tileScrollHint: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, handle, tileScrollHint)
     }
 
-    /**
-     * If `true`, the scroll hint texture will be tiled instead of stretched. See `scroll_hint_mode`.
-     *
-     * Generated from Godot docs: Tree.is_scroll_hint_tiled
-     */
     fun isScrollHintTiled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, handle)
     }
 
-    /**
-     * If `true`, the folding arrow is hidden.
-     *
-     * Generated from Godot docs: Tree.set_hide_folding
-     */
     fun setHideFolding(hide: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideFoldingBind, handle, hide)
     }
 
-    /**
-     * If `true`, the folding arrow is hidden.
-     *
-     * Generated from Godot docs: Tree.is_folding_hidden
-     */
     fun isFoldingHidden(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFoldingHiddenBind, handle)
     }
 
-    /**
-     * If `true`, recursive folding is enabled for this `Tree`. Holding down Shift while clicking the
-     * fold arrow or using `ui_right`/`ui_left` shortcuts collapses or uncollapses the `TreeItem` and
-     * all its descendants.
-     *
-     * Generated from Godot docs: Tree.set_enable_recursive_folding
-     */
     fun setEnableRecursiveFolding(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableRecursiveFoldingBind, handle, enable)
     }
 
-    /**
-     * If `true`, recursive folding is enabled for this `Tree`. Holding down Shift while clicking the
-     * fold arrow or using `ui_right`/`ui_left` shortcuts collapses or uncollapses the `TreeItem` and
-     * all its descendants.
-     *
-     * Generated from Godot docs: Tree.is_recursive_folding_enabled
-     */
     fun isRecursiveFoldingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRecursiveFoldingEnabledBind, handle)
     }
 
-    /**
-     * If `true`, tree items will unfold when hovered over during a drag-and-drop. The delay for when
-     * this happens is dictated by `dragging_unfold_wait_msec`.
-     *
-     * Generated from Godot docs: Tree.set_enable_drag_unfolding
-     */
     fun setEnableDragUnfolding(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDragUnfoldingBind, handle, enable)
     }
 
-    /**
-     * If `true`, tree items will unfold when hovered over during a drag-and-drop. The delay for when
-     * this happens is dictated by `dragging_unfold_wait_msec`.
-     *
-     * Generated from Godot docs: Tree.is_drag_unfolding_enabled
-     */
     fun isDragUnfoldingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDragUnfoldingEnabledBind, handle)
     }
 
-    /**
-     * The drop mode as an OR combination of flags. See `DropModeFlags` constants. Once dropping is
-     * done, reverts to `DROP_MODE_DISABLED`. Setting this during `Control._can_drop_data` is
-     * recommended. This controls the drop sections, i.e. the decision and drawing of possible drop
-     * locations based on the mouse position.
-     *
-     * Generated from Godot docs: Tree.set_drop_mode_flags
-     */
     fun setDropModeFlags(flags: Int) {
         ObjectCalls.ptrcallWithIntArg(setDropModeFlagsBind, handle, flags)
     }
 
-    /**
-     * The drop mode as an OR combination of flags. See `DropModeFlags` constants. Once dropping is
-     * done, reverts to `DROP_MODE_DISABLED`. Setting this during `Control._can_drop_data` is
-     * recommended. This controls the drop sections, i.e. the decision and drawing of possible drop
-     * locations based on the mouse position.
-     *
-     * Generated from Godot docs: Tree.get_drop_mode_flags
-     */
     fun getDropModeFlags(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDropModeFlagsBind, handle)
     }
 
-    /**
-     * If `true`, a right mouse button click can select items.
-     *
-     * Generated from Godot docs: Tree.set_allow_rmb_select
-     */
     fun setAllowRmbSelect(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, handle, allow)
     }
 
-    /**
-     * If `true`, a right mouse button click can select items.
-     *
-     * Generated from Godot docs: Tree.get_allow_rmb_select
-     */
     fun getAllowRmbSelect(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, handle)
     }
 
-    /**
-     * If `true`, the currently selected cell may be selected again.
-     *
-     * Generated from Godot docs: Tree.set_allow_reselect
-     */
     fun setAllowReselect(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
     }
 
-    /**
-     * If `true`, the currently selected cell may be selected again.
-     *
-     * Generated from Godot docs: Tree.get_allow_reselect
-     */
     fun getAllowReselect(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
     }
 
-    /**
-     * If `true`, allows navigating the `Tree` with letter keys through incremental search.
-     *
-     * Generated from Godot docs: Tree.set_allow_search
-     */
     fun setAllowSearch(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, handle, allow)
     }
 
-    /**
-     * If `true`, allows navigating the `Tree` with letter keys through incremental search.
-     *
-     * Generated from Godot docs: Tree.get_allow_search
-     */
     fun getAllowSearch(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, handle)
     }
 
-    /**
-     * If `true`, tree items with no tooltip assigned display their text as their tooltip. See also
-     * `TreeItem.get_tooltip_text` and `TreeItem.get_button_tooltip_text`.
-     *
-     * Generated from Godot docs: Tree.set_auto_tooltip
-     */
     fun setAutoTooltip(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoTooltipBind, handle, enable)
     }
 
-    /**
-     * If `true`, tree items with no tooltip assigned display their text as their tooltip. See also
-     * `TreeItem.get_tooltip_text` and `TreeItem.get_button_tooltip_text`.
-     *
-     * Generated from Godot docs: Tree.is_auto_tooltip_enabled
-     */
     fun isAutoTooltipEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoTooltipEnabledBind, handle)
     }
@@ -817,6 +422,17 @@ class Tree(handle: MemorySegment) : Control(handle) {
     }
 
     companion object {
+        const val SELECT_SINGLE: Long = 0L
+        const val SELECT_ROW: Long = 1L
+        const val SELECT_MULTI: Long = 2L
+        const val DROP_MODE_DISABLED: Long = 0L
+        const val DROP_MODE_ON_ITEM: Long = 1L
+        const val DROP_MODE_INBETWEEN: Long = 2L
+        const val SCROLL_HINT_MODE_DISABLED: Long = 0L
+        const val SCROLL_HINT_MODE_BOTH: Long = 1L
+        const val SCROLL_HINT_MODE_TOP: Long = 2L
+        const val SCROLL_HINT_MODE_BOTTOM: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): Tree? =
             wrap(handle)
@@ -877,6 +493,11 @@ class Tree(handle: MemorySegment) : Control(handle) {
         private const val GET_COLUMN_WIDTH_HASH = 923996154L
         private val getColumnWidthBind by lazy {
             ObjectCalls.getMethodBind("Tree", "get_column_width", GET_COLUMN_WIDTH_HASH)
+        }
+
+        private const val GET_CUSTOM_DRAWING_CANVAS_ITEM_HASH = 2944877500L
+        private val getCustomDrawingCanvasItemBind by lazy {
+            ObjectCalls.getMethodBind("Tree", "get_custom_drawing_canvas_item", GET_CUSTOM_DRAWING_CANVAS_ITEM_HASH)
         }
 
         private const val SET_HIDE_ROOT_HASH = 2586408642L

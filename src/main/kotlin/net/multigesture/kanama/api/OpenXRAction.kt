@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRAction
@@ -51,6 +51,11 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val OPENXR_ACTION_BOOL: Long = 0L
+        const val OPENXR_ACTION_FLOAT: Long = 1L
+        const val OPENXR_ACTION_VECTOR2: Long = 2L
+        const val OPENXR_ACTION_POSE: Long = 3L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): OpenXRAction? =
             wrap(handle)

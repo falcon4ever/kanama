@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector3
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector3
 
 /**
  * A 3D convex polyhedron shape used for physics collision.
@@ -17,20 +17,10 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setPointsProperty")
         set(value) = setPoints(value)
 
-    /**
-     * The list of 3D points forming the convex polygon shape.
-     *
-     * Generated from Godot docs: ConvexPolygonShape3D.set_points
-     */
     fun setPoints(points: List<Vector3>) {
         ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, handle, points)
     }
 
-    /**
-     * The list of 3D points forming the convex polygon shape.
-     *
-     * Generated from Godot docs: ConvexPolygonShape3D.get_points
-     */
     fun getPoints(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPointsBind, handle)
     }

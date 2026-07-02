@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A modification that uses FABRIK to manipulate a series of `Bone2D` nodes to reach a target.
@@ -24,121 +24,62 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
         @JvmName("setFabrikDataChainLengthProperty")
         set(value) = setFabrikDataChainLength(value)
 
-    /**
-     * The NodePath to the node that is the target for the FABRIK modification. This node is what the
-     * FABRIK chain will attempt to rotate the bone chain to.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.set_target_node
-     */
     fun setTargetNode(targetNodepath: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
-    /**
-     * The NodePath to the node that is the target for the FABRIK modification. This node is what the
-     * FABRIK chain will attempt to rotate the bone chain to.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.get_target_node
-     */
     fun getTargetNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
-    /**
-     * The number of FABRIK joints in the FABRIK modification.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_data_chain_length
-     */
     fun setFabrikDataChainLength(length: Int) {
         ObjectCalls.ptrcallWithIntArg(setFabrikDataChainLengthBind, handle, length)
     }
 
-    /**
-     * The number of FABRIK joints in the FABRIK modification.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_data_chain_length
-     */
     fun getFabrikDataChainLength(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFabrikDataChainLengthBind, handle)
     }
 
-    /**
-     * Sets the `Bone2D` node assigned to the FABRIK joint at `joint_idx`.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_bone2d_node
-     */
     fun setFabrikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setFabrikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
     }
 
-    /**
-     * Returns the `Bone2D` node assigned to the FABRIK joint at `joint_idx`.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_bone2d_node
-     */
     fun getFabrikJointBone2dNode(jointIdx: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getFabrikJointBone2dNodeBind, handle, jointIdx)
     }
 
-    /**
-     * Sets the bone index, `bone_idx`, of the FABRIK joint at `joint_idx`. When possible, this will
-     * also update the `bone2d_node` of the FABRIK joint based on data provided by the linked skeleton.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_bone_index
-     */
     fun setFabrikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setFabrikJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
-    /**
-     * Returns the index of the `Bone2D` node assigned to the FABRIK joint at `joint_idx`.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_bone_index
-     */
     fun getFabrikJointBoneIndex(jointIdx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getFabrikJointBoneIndexBind, handle, jointIdx)
     }
 
-    /**
-     * Sets the magnet position vector for the joint at `joint_idx`.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_magnet_position
-     */
     fun setFabrikJointMagnetPosition(jointIdx: Int, magnetPosition: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setFabrikJointMagnetPositionBind, handle, jointIdx, magnetPosition)
     }
 
-    /**
-     * Returns the magnet position vector for the joint at `joint_idx`.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_magnet_position
-     */
     fun getFabrikJointMagnetPosition(jointIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getFabrikJointMagnetPositionBind, handle, jointIdx)
     }
 
-    /**
-     * Sets whether the joint at `joint_idx` will use the target node's rotation rather than letting
-     * FABRIK rotate the node. Note: This option only works for the tip/final joint in the chain. For
-     * all other nodes, this option will be ignored.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_use_target_rotation
-     */
     fun setFabrikJointUseTargetRotation(jointIdx: Int, useTargetRotation: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setFabrikJointUseTargetRotationBind, handle, jointIdx, useTargetRotation)
     }
 
-    /**
-     * Returns whether the joint is using the target's rotation rather than allowing FABRIK to rotate
-     * the joint. This option only applies to the tip/final joint in the chain.
-     *
-     * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_use_target_rotation
-     */
     fun getFabrikJointUseTargetRotation(jointIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getFabrikJointUseTargetRotationBind, handle, jointIdx)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SkeletonModification2DFABRIK? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): SkeletonModification2DFABRIK? =
+            if (handle.address() == 0L) null else SkeletonModification2DFABRIK(handle)
+
         private const val SET_TARGET_NODE_HASH = 1348162250L
         private val setTargetNodeBind by lazy {
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_target_node", SET_TARGET_NODE_HASH)

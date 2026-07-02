@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRFutureExtension
@@ -20,6 +20,13 @@ class OpenXRFutureExtension(handle: MemorySegment) : OpenXRExtensionWrapper(hand
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRFutureExtension? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRFutureExtension? =
+            if (handle.address() == 0L) null else OpenXRFutureExtension(handle)
+
         private const val IS_ACTIVE_HASH = 36873697L
         private val isActiveBind by lazy {
             ObjectCalls.getMethodBind("OpenXRFutureExtension", "is_active", IS_ACTIVE_HASH)

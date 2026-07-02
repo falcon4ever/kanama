@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Texture with 2 dimensions, optionally compressed.
@@ -23,16 +23,18 @@ class CompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
-    /**
-     * The `CompressedTexture2D`'s file path to a `.ctex` file.
-     *
-     * Generated from Godot docs: CompressedTexture2D.get_load_path
-     */
     fun getLoadPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CompressedTexture2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CompressedTexture2D? =
+            if (handle.address() == 0L) null else CompressedTexture2D(handle)
+
         private const val LOAD_HASH = 166001499L
         private val loadBind by lazy {
             ObjectCalls.getMethodBind("CompressedTexture2D", "load", LOAD_HASH)

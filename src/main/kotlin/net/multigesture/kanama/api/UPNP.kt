@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: UPNP
@@ -95,6 +95,43 @@ class UPNP(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        const val UPNP_RESULT_SUCCESS: Long = 0L
+        const val UPNP_RESULT_NOT_AUTHORIZED: Long = 1L
+        const val UPNP_RESULT_PORT_MAPPING_NOT_FOUND: Long = 2L
+        const val UPNP_RESULT_INCONSISTENT_PARAMETERS: Long = 3L
+        const val UPNP_RESULT_NO_SUCH_ENTRY_IN_ARRAY: Long = 4L
+        const val UPNP_RESULT_ACTION_FAILED: Long = 5L
+        const val UPNP_RESULT_SRC_IP_WILDCARD_NOT_PERMITTED: Long = 6L
+        const val UPNP_RESULT_EXT_PORT_WILDCARD_NOT_PERMITTED: Long = 7L
+        const val UPNP_RESULT_INT_PORT_WILDCARD_NOT_PERMITTED: Long = 8L
+        const val UPNP_RESULT_REMOTE_HOST_MUST_BE_WILDCARD: Long = 9L
+        const val UPNP_RESULT_EXT_PORT_MUST_BE_WILDCARD: Long = 10L
+        const val UPNP_RESULT_NO_PORT_MAPS_AVAILABLE: Long = 11L
+        const val UPNP_RESULT_CONFLICT_WITH_OTHER_MECHANISM: Long = 12L
+        const val UPNP_RESULT_CONFLICT_WITH_OTHER_MAPPING: Long = 13L
+        const val UPNP_RESULT_SAME_PORT_VALUES_REQUIRED: Long = 14L
+        const val UPNP_RESULT_ONLY_PERMANENT_LEASE_SUPPORTED: Long = 15L
+        const val UPNP_RESULT_INVALID_GATEWAY: Long = 16L
+        const val UPNP_RESULT_INVALID_PORT: Long = 17L
+        const val UPNP_RESULT_INVALID_PROTOCOL: Long = 18L
+        const val UPNP_RESULT_INVALID_DURATION: Long = 19L
+        const val UPNP_RESULT_INVALID_ARGS: Long = 20L
+        const val UPNP_RESULT_INVALID_RESPONSE: Long = 21L
+        const val UPNP_RESULT_INVALID_PARAM: Long = 22L
+        const val UPNP_RESULT_HTTP_ERROR: Long = 23L
+        const val UPNP_RESULT_SOCKET_ERROR: Long = 24L
+        const val UPNP_RESULT_MEM_ALLOC_ERROR: Long = 25L
+        const val UPNP_RESULT_NO_GATEWAY: Long = 26L
+        const val UPNP_RESULT_NO_DEVICES: Long = 27L
+        const val UPNP_RESULT_UNKNOWN_ERROR: Long = 28L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): UPNP? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): UPNP? =
+            if (handle.address() == 0L) null else UPNP(handle)
+
         private const val GET_DEVICE_COUNT_HASH = 3905245786L
         private val getDeviceCountBind by lazy {
             ObjectCalls.getMethodBind("UPNP", "get_device_count", GET_DEVICE_COUNT_HASH)

@@ -25,22 +25,10 @@ class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
         return ObjectCalls.ptrcallNoArgsRetRID(getVelocityTextureBind, handle)
     }
 
-    /**
-     * Blits our render results to screen optionally applying lens distortion. This can only be called
-     * while processing `_commit_views`.
-     *
-     * Generated from Godot docs: XRInterfaceExtension.add_blit
-     */
     fun addBlit(renderTarget: RID, srcRect: Rect2, dstRect: Rect2i, useLayer: Boolean, layer: Long, applyLensDistortion: Boolean, eyeCenter: Vector2, k1: Double, k2: Double, upscale: Double, aspectRatio: Double) {
         ObjectCalls.ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(addBlitBind, handle, renderTarget, srcRect, dstRect, useLayer, layer, applyLensDistortion, eyeCenter, k1, k2, upscale, aspectRatio)
     }
 
-    /**
-     * Returns a valid `RID` for a texture to which we should render the current frame if supported by
-     * the interface.
-     *
-     * Generated from Godot docs: XRInterfaceExtension.get_render_target_texture
-     */
     fun getRenderTargetTexture(renderTarget: RID): RID {
         return ObjectCalls.ptrcallWithRIDArgRetRID(getRenderTargetTextureBind, handle, renderTarget)
     }

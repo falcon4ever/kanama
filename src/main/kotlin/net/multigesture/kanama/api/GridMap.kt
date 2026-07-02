@@ -1,12 +1,13 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.types.Vector3i
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Generated from Godot docs: GridMap
@@ -78,6 +79,12 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setCollisionPriorityProperty")
         set(value) = setCollisionPriority(value)
 
+    var collisionVisibilityMode: Long
+        @JvmName("collisionVisibilityModeProperty")
+        get() = getCollisionVisibilityMode()
+        @JvmName("setCollisionVisibilityModeProperty")
+        set(value) = setCollisionVisibilityMode(value)
+
     var bakeNavigation: Boolean
         @JvmName("bakeNavigationProperty")
         get() = isBakingNavigation()
@@ -122,6 +129,14 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
 
     fun getCollisionPriority(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, handle)
+    }
+
+    fun setCollisionVisibilityMode(visibilityMode: Long) {
+        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, handle, visibilityMode)
+    }
+
+    fun getCollisionVisibilityMode(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, handle)
     }
 
     fun setPhysicsMaterial(material: PhysicsMaterial?) {
@@ -252,6 +267,34 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedCellsByItemBind, handle, item)
     }
 
+    fun getUsedOctants(): List<Vector3i> {
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedOctantsBind, handle)
+    }
+
+    fun getUsedOctantsByItem(item: Int): List<Vector3i> {
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedOctantsByItemBind, handle, item)
+    }
+
+    fun getUsedCellsInOctant(octantCoords: Vector3i): List<Vector3i> {
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3iList(getUsedCellsInOctantBind, handle, octantCoords)
+    }
+
+    fun getUsedCellsInOctantByItem(octantCoords: Vector3i, item: Int): List<Vector3i> {
+        return ObjectCalls.ptrcallWithVector3iAndIntArgRetVector3iList(getUsedCellsInOctantByItemBind, handle, octantCoords, item)
+    }
+
+    fun getOctantsInBounds(bounds: AABB): List<Vector3i> {
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getOctantsInBoundsBind, handle, bounds)
+    }
+
+    fun getUsedOctantsInBounds(bounds: AABB): List<Vector3i> {
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getUsedOctantsInBoundsBind, handle, bounds)
+    }
+
+    fun getOctantCoordsFromCellCoords(cellCoords: Vector3i): Vector3i {
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3i(getOctantCoordsFromCellCoordsBind, handle, cellCoords)
+    }
+
     fun getMeshes(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, handle)
     }
@@ -278,7 +321,10 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
     }
 
     companion object {
-        const val INVALID_CELL_ITEM = -1
+        const val INVALID_CELL_ITEM: Long = -1L
+        const val DEBUG_VISIBILITY_MODE_DEFAULT: Long = 0L
+        const val DEBUG_VISIBILITY_MODE_FORCE_SHOW: Long = 1L
+        const val DEBUG_VISIBILITY_MODE_FORCE_HIDE: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GridMap? =
@@ -335,6 +381,16 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         private const val GET_COLLISION_PRIORITY_HASH = 1740695150L
         private val getCollisionPriorityBind by lazy {
             ObjectCalls.getMethodBind("GridMap", "get_collision_priority", GET_COLLISION_PRIORITY_HASH)
+        }
+
+        private const val SET_COLLISION_VISIBILITY_MODE_HASH = 4160694578L
+        private val setCollisionVisibilityModeBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "set_collision_visibility_mode", SET_COLLISION_VISIBILITY_MODE_HASH)
+        }
+
+        private const val GET_COLLISION_VISIBILITY_MODE_HASH = 3729798365L
+        private val getCollisionVisibilityModeBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_collision_visibility_mode", GET_COLLISION_VISIBILITY_MODE_HASH)
         }
 
         private const val SET_PHYSICS_MATERIAL_HASH = 1784508650L
@@ -495,6 +551,41 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         private const val GET_USED_CELLS_BY_ITEM_HASH = 663333327L
         private val getUsedCellsByItemBind by lazy {
             ObjectCalls.getMethodBind("GridMap", "get_used_cells_by_item", GET_USED_CELLS_BY_ITEM_HASH)
+        }
+
+        private const val GET_USED_OCTANTS_HASH = 3995934104L
+        private val getUsedOctantsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_octants", GET_USED_OCTANTS_HASH)
+        }
+
+        private const val GET_USED_OCTANTS_BY_ITEM_HASH = 663333327L
+        private val getUsedOctantsByItemBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_octants_by_item", GET_USED_OCTANTS_BY_ITEM_HASH)
+        }
+
+        private const val GET_USED_CELLS_IN_OCTANT_HASH = 2658725580L
+        private val getUsedCellsInOctantBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", GET_USED_CELLS_IN_OCTANT_HASH)
+        }
+
+        private const val GET_USED_CELLS_IN_OCTANT_BY_ITEM_HASH = 2384667821L
+        private val getUsedCellsInOctantByItemBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant_by_item", GET_USED_CELLS_IN_OCTANT_BY_ITEM_HASH)
+        }
+
+        private const val GET_OCTANTS_IN_BOUNDS_HASH = 2489849902L
+        private val getOctantsInBoundsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_octants_in_bounds", GET_OCTANTS_IN_BOUNDS_HASH)
+        }
+
+        private const val GET_USED_OCTANTS_IN_BOUNDS_HASH = 2489849902L
+        private val getUsedOctantsInBoundsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_octants_in_bounds", GET_USED_OCTANTS_IN_BOUNDS_HASH)
+        }
+
+        private const val GET_OCTANT_COORDS_FROM_CELL_COORDS_HASH = 2075501597L
+        private val getOctantCoordsFromCellCoordsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_octant_coords_from_cell_coords", GET_OCTANT_COORDS_FROM_CELL_COORDS_HASH)
         }
 
         private const val GET_MESHES_HASH = 3995934104L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A group of foldable containers that doesn't allow more than one container to be expanded at a
@@ -17,40 +17,18 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
         @JvmName("setAllowFoldingAllProperty")
         set(value) = setAllowFoldingAll(value)
 
-    /**
-     * Returns the current expanded container.
-     *
-     * Generated from Godot docs: FoldableGroup.get_expanded_container
-     */
     fun getExpandedContainer(): FoldableContainer? {
         return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExpandedContainerBind, handle))
     }
 
-    /**
-     * Returns an `Array` of `FoldableContainer`s that have this as their FoldableGroup (see
-     * `FoldableContainer.foldable_group`). This is equivalent to `ButtonGroup` but for
-     * FoldableContainers.
-     *
-     * Generated from Godot docs: FoldableGroup.get_containers
-     */
     fun getContainers(): List<FoldableContainer> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getContainersBind, handle, FoldableContainer::fromHandle)
     }
 
-    /**
-     * If `true`, it is possible to fold all containers in this FoldableGroup.
-     *
-     * Generated from Godot docs: FoldableGroup.set_allow_folding_all
-     */
     fun setAllowFoldingAll(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowFoldingAllBind, handle, enabled)
     }
 
-    /**
-     * If `true`, it is possible to fold all containers in this FoldableGroup.
-     *
-     * Generated from Godot docs: FoldableGroup.is_allow_folding_all
-     */
     fun isAllowFoldingAll(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, handle)
     }

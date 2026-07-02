@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Used to create an HMAC for a message using a key.
@@ -39,6 +39,13 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): HMACContext? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): HMACContext? =
+            if (handle.address() == 0L) null else HMACContext(handle)
+
         private const val START_HASH = 3537364598L
         private val startBind by lazy {
             ObjectCalls.getMethodBind("HMACContext", "start", START_HASH)

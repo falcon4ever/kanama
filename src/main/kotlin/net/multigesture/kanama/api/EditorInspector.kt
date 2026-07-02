@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A control used to edit properties of an object.
@@ -20,22 +20,24 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
         ObjectCalls.ptrcallWithObjectArgs(editBind, handle, listOf(objectValue.handle))
     }
 
-    /**
-     * Gets the path of the currently selected property.
-     *
-     * Generated from Godot docs: EditorInspector.get_selected_path
-     */
     fun getSelectedPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSelectedPathBind, handle)
     }
 
-    /**
-     * Returns the object currently selected in this inspector.
-     *
-     * Generated from Godot docs: EditorInspector.get_edited_object
-     */
     fun getEditedObject(): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, handle))
+    }
+
+    fun collapseAllFolding() {
+        ObjectCalls.ptrcallNoArgs(collapseAllFoldingBind, handle)
+    }
+
+    fun expandAllFolding() {
+        ObjectCalls.ptrcallNoArgs(expandAllFoldingBind, handle)
+    }
+
+    fun expandRevertable() {
+        ObjectCalls.ptrcallNoArgs(expandRevertableBind, handle)
     }
 
     object Signals {
@@ -51,14 +53,12 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
     }
 
     companion object {
-        /**
-         * Creates a property editor that can be used by plugin UI to edit the specified property of an
-         * `object`.
-         *
-         * Generated from Godot docs: EditorInspector.instantiate_property_editor
-         */
         fun instantiatePropertyEditor(objectValue: GodotObject, type: Long, path: String, hint: Long, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
             return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, MemorySegment.NULL, objectValue.handle, type, path, hint, hintText, usage, wide))
+        }
+
+        fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
+            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, MemorySegment.NULL, filterLineEdit.handle))
         }
 
         @JvmStatic
@@ -83,9 +83,29 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
             ObjectCalls.getMethodBind("EditorInspector", "get_edited_object", GET_EDITED_OBJECT_HASH)
         }
 
+        private const val COLLAPSE_ALL_FOLDING_HASH = 3218959716L
+        private val collapseAllFoldingBind by lazy {
+            ObjectCalls.getMethodBind("EditorInspector", "collapse_all_folding", COLLAPSE_ALL_FOLDING_HASH)
+        }
+
+        private const val EXPAND_ALL_FOLDING_HASH = 3218959716L
+        private val expandAllFoldingBind by lazy {
+            ObjectCalls.getMethodBind("EditorInspector", "expand_all_folding", EXPAND_ALL_FOLDING_HASH)
+        }
+
+        private const val EXPAND_REVERTABLE_HASH = 3218959716L
+        private val expandRevertableBind by lazy {
+            ObjectCalls.getMethodBind("EditorInspector", "expand_revertable", EXPAND_REVERTABLE_HASH)
+        }
+
         private const val INSTANTIATE_PROPERTY_EDITOR_HASH = 1429914152L
         private val instantiatePropertyEditorBind by lazy {
             ObjectCalls.getMethodBind("EditorInspector", "instantiate_property_editor", INSTANTIATE_PROPERTY_EDITOR_HASH)
+        }
+
+        private const val CREATE_DEFAULT_INSPECTOR_HASH = 2419746798L
+        private val createDefaultInspectorBind by lazy {
+            ObjectCalls.getMethodBind("EditorInspector", "create_default_inspector", CREATE_DEFAULT_INSPECTOR_HASH)
         }
     }
 }

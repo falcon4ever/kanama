@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: CSGTorus3D
@@ -93,6 +93,13 @@ class CSGTorus3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGTorus3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGTorus3D? =
+            if (handle.address() == 0L) null else CSGTorus3D(handle)
+
         private const val SET_INNER_RADIUS_HASH = 373806689L
         private val setInnerRadiusBind by lazy {
             ObjectCalls.getMethodBind("CSGTorus3D", "set_inner_radius", SET_INNER_RADIUS_HASH)

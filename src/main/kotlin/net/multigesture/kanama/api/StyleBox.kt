@@ -12,62 +12,26 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: StyleBox
  */
 open class StyleBox(handle: MemorySegment) : Resource(handle) {
-    /**
-     * Returns the minimum size that this stylebox can be shrunk to.
-     *
-     * Generated from Godot docs: StyleBox.get_minimum_size
-     */
     fun getMinimumSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, handle)
     }
 
-    /**
-     * The top margin for the contents of this style box. Increasing this value reduces the space
-     * available to the contents from the top. Refer to `content_margin_bottom` for extra
-     * considerations.
-     *
-     * Generated from Godot docs: StyleBox.set_content_margin
-     */
     fun setContentMargin(margin: Long, offset: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, handle, margin, offset)
     }
 
-    /**
-     * Sets the default margin to `offset` pixels for all sides.
-     *
-     * Generated from Godot docs: StyleBox.set_content_margin_all
-     */
     fun setContentMarginAll(offset: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setContentMarginAllBind, handle, offset)
     }
 
-    /**
-     * The top margin for the contents of this style box. Increasing this value reduces the space
-     * available to the contents from the top. Refer to `content_margin_bottom` for extra
-     * considerations.
-     *
-     * Generated from Godot docs: StyleBox.get_content_margin
-     */
     fun getContentMargin(margin: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, handle, margin)
     }
 
-    /**
-     * Returns the content margin offset for the specified `Side`. Positive values reduce size inwards,
-     * unlike `Control`'s margin values.
-     *
-     * Generated from Godot docs: StyleBox.get_margin
-     */
     fun getMargin(margin: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, handle, margin)
     }
 
-    /**
-     * Returns the "offset" of a stylebox. This helper function returns a value equivalent to
-     * `Vector2(style.get_margin(MARGIN_LEFT), style.get_margin(MARGIN_TOP))`.
-     *
-     * Generated from Godot docs: StyleBox.get_offset
-     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
@@ -84,21 +48,10 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithRIDAndRect2Arg(drawBind, handle, canvasItem, rect)
     }
 
-    /**
-     * Returns the `CanvasItem` that handles its `CanvasItem.NOTIFICATION_DRAW` or `CanvasItem._draw`
-     * callback at this moment.
-     *
-     * Generated from Godot docs: StyleBox.get_current_item_drawn
-     */
     fun getCurrentItemDrawn(): CanvasItem? {
         return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentItemDrawnBind, handle))
     }
 
-    /**
-     * Test a position in a rectangle, return whether it passes the mask test.
-     *
-     * Generated from Godot docs: StyleBox.test_mask
-     */
     fun testMask(point: Vector2, rect: Rect2): Boolean {
         return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(testMaskBind, handle, point, rect)
     }

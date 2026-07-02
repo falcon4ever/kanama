@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: VisualShaderNodeIntParameter
@@ -107,6 +107,19 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
     }
 
     companion object {
+        const val HINT_NONE: Long = 0L
+        const val HINT_RANGE: Long = 1L
+        const val HINT_RANGE_STEP: Long = 2L
+        const val HINT_ENUM: Long = 3L
+        const val HINT_MAX: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): VisualShaderNodeIntParameter? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): VisualShaderNodeIntParameter? =
+            if (handle.address() == 0L) null else VisualShaderNodeIntParameter(handle)
+
         private const val SET_HINT_HASH = 2540512075L
         private val setHintBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_hint", SET_HINT_HASH)

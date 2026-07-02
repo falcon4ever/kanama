@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: OpenXRSpatialComponentAnchorList
@@ -13,6 +13,13 @@ class OpenXRSpatialComponentAnchorList(handle: MemorySegment) : OpenXRSpatialCom
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentAnchorList? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentAnchorList? =
+            if (handle.address() == 0L) null else OpenXRSpatialComponentAnchorList(handle)
+
         private const val GET_ENTITY_POSE_HASH = 1965739696L
         private val getEntityPoseBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialComponentAnchorList", "get_entity_pose", GET_ENTITY_POSE_HASH)

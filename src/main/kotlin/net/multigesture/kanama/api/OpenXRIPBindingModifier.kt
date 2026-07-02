@@ -1,11 +1,14 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
- * Generated shell wrapper from Godot API metadata: OpenXRIPBindingModifier.
+ * Generated from Godot docs: OpenXRIPBindingModifier
  */
-open class OpenXRIPBindingModifier internal constructor(handle: MemorySegment) : OpenXRBindingModifier(handle) {
+open class OpenXRIPBindingModifier(handle: MemorySegment) : OpenXRBindingModifier(handle) {
+    // No conservative instance methods emitted yet.
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): OpenXRIPBindingModifier? =
@@ -13,5 +16,7 @@ open class OpenXRIPBindingModifier internal constructor(handle: MemorySegment) :
 
         internal fun wrap(handle: MemorySegment): OpenXRIPBindingModifier? =
             if (handle.address() == 0L) null else OpenXRIPBindingModifier(handle)
+
+        // No MethodBinds emitted yet.
     }
 }

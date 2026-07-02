@@ -1,12 +1,12 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Generated from Godot docs: OpenXRCompositionLayer
@@ -51,6 +51,12 @@ open class OpenXRCompositionLayer(handle: MemorySegment) : Node3D(handle) {
         get() = getEnableHolePunch()
         @JvmName("setEnableHolePunchProperty")
         set(value) = setEnableHolePunch(value)
+
+    var eyeVisibility: Long
+        @JvmName("eyeVisibilityProperty")
+        get() = getEyeVisibility()
+        @JvmName("setEyeVisibilityProperty")
+        set(value) = setEyeVisibility(value)
 
     var swapchainStateMinFilter: Long
         @JvmName("swapchainStateMinFilterProperty")
@@ -270,11 +276,47 @@ open class OpenXRCompositionLayer(handle: MemorySegment) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
     }
 
+    fun setEyeVisibility(eyeVisibility: Long) {
+        ObjectCalls.ptrcallWithLongArg(setEyeVisibilityBind, handle, eyeVisibility)
+    }
+
+    fun getEyeVisibility(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getEyeVisibilityBind, handle)
+    }
+
     fun intersectsRay(origin: Vector3, direction: Vector3): Vector2 {
         return ObjectCalls.ptrcallWithTwoVector3ArgsRetVector2(intersectsRayBind, handle, origin, direction)
     }
 
     companion object {
+        const val FILTER_NEAREST: Long = 0L
+        const val FILTER_LINEAR: Long = 1L
+        const val FILTER_CUBIC: Long = 2L
+        const val MIPMAP_MODE_DISABLED: Long = 0L
+        const val MIPMAP_MODE_NEAREST: Long = 1L
+        const val MIPMAP_MODE_LINEAR: Long = 2L
+        const val WRAP_CLAMP_TO_BORDER: Long = 0L
+        const val WRAP_CLAMP_TO_EDGE: Long = 1L
+        const val WRAP_REPEAT: Long = 2L
+        const val WRAP_MIRRORED_REPEAT: Long = 3L
+        const val WRAP_MIRROR_CLAMP_TO_EDGE: Long = 4L
+        const val SWIZZLE_RED: Long = 0L
+        const val SWIZZLE_GREEN: Long = 1L
+        const val SWIZZLE_BLUE: Long = 2L
+        const val SWIZZLE_ALPHA: Long = 3L
+        const val SWIZZLE_ZERO: Long = 4L
+        const val SWIZZLE_ONE: Long = 5L
+        const val EYE_VISIBILITY_BOTH: Long = 0L
+        const val EYE_VISIBILITY_LEFT: Long = 1L
+        const val EYE_VISIBILITY_RIGHT: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRCompositionLayer? =
+            if (handle.address() == 0L) null else OpenXRCompositionLayer(handle)
+
         private const val SET_LAYER_VIEWPORT_HASH = 3888077664L
         private val setLayerViewportBind by lazy {
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_layer_viewport", SET_LAYER_VIEWPORT_HASH)
@@ -463,6 +505,16 @@ open class OpenXRCompositionLayer(handle: MemorySegment) : Node3D(handle) {
         private const val GET_BORDER_COLOR_HASH = 3444240500L
         private val getBorderColorBind by lazy {
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_border_color", GET_BORDER_COLOR_HASH)
+        }
+
+        private const val SET_EYE_VISIBILITY_HASH = 156391336L
+        private val setEyeVisibilityBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_eye_visibility", SET_EYE_VISIBILITY_HASH)
+        }
+
+        private const val GET_EYE_VISIBILITY_HASH = 467669000L
+        private val getEyeVisibilityBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_eye_visibility", GET_EYE_VISIBILITY_HASH)
         }
 
         private const val INTERSECTS_RAY_HASH = 1091262597L

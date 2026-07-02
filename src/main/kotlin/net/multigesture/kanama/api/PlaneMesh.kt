@@ -42,92 +42,42 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setOrientationProperty")
         set(value) = setOrientation(value)
 
-    /**
-     * Size of the generated plane.
-     *
-     * Generated from Godot docs: PlaneMesh.set_size
-     */
     fun setSize(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
-    /**
-     * Size of the generated plane.
-     *
-     * Generated from Godot docs: PlaneMesh.get_size
-     */
     fun getSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
-    /**
-     * Number of subdivision along the X axis.
-     *
-     * Generated from Godot docs: PlaneMesh.set_subdivide_width
-     */
     fun setSubdivideWidth(subdivide: Int) {
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivide)
     }
 
-    /**
-     * Number of subdivision along the X axis.
-     *
-     * Generated from Godot docs: PlaneMesh.get_subdivide_width
-     */
     fun getSubdivideWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
-    /**
-     * Number of subdivision along the Z axis.
-     *
-     * Generated from Godot docs: PlaneMesh.set_subdivide_depth
-     */
     fun setSubdivideDepth(subdivide: Int) {
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, subdivide)
     }
 
-    /**
-     * Number of subdivision along the Z axis.
-     *
-     * Generated from Godot docs: PlaneMesh.get_subdivide_depth
-     */
     fun getSubdivideDepth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }
 
-    /**
-     * Offset of the generated plane. Useful for particles.
-     *
-     * Generated from Godot docs: PlaneMesh.set_center_offset
-     */
     fun setCenterOffset(offset: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setCenterOffsetBind, handle, offset)
     }
 
-    /**
-     * Offset of the generated plane. Useful for particles.
-     *
-     * Generated from Godot docs: PlaneMesh.get_center_offset
-     */
     fun getCenterOffset(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOffsetBind, handle)
     }
 
-    /**
-     * Direction that the `PlaneMesh` is facing.
-     *
-     * Generated from Godot docs: PlaneMesh.set_orientation
-     */
     fun setOrientation(orientation: Long) {
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
-    /**
-     * Direction that the `PlaneMesh` is facing.
-     *
-     * Generated from Godot docs: PlaneMesh.get_orientation
-     */
     fun getOrientation(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }

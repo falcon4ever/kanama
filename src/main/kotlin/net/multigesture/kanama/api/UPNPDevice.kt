@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: UPNPDevice
@@ -109,6 +109,17 @@ class UPNPDevice(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        const val IGD_STATUS_OK: Long = 0L
+        const val IGD_STATUS_HTTP_ERROR: Long = 1L
+        const val IGD_STATUS_HTTP_EMPTY: Long = 2L
+        const val IGD_STATUS_NO_URLS: Long = 3L
+        const val IGD_STATUS_NO_IGD: Long = 4L
+        const val IGD_STATUS_DISCONNECTED: Long = 5L
+        const val IGD_STATUS_UNKNOWN_DEVICE: Long = 6L
+        const val IGD_STATUS_INVALID_CONTROL: Long = 7L
+        const val IGD_STATUS_MALLOC_ERROR: Long = 8L
+        const val IGD_STATUS_UNKNOWN_ERROR: Long = 9L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): UPNPDevice? =
             wrap(handle)

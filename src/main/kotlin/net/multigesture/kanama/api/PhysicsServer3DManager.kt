@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A singleton for managing `PhysicsServer3D` implementations.
@@ -13,27 +13,22 @@ object PhysicsServer3DManager {
         ObjectCalls.getSingleton("PhysicsServer3DManager")
     }
 
-    /**
-     * Register a `PhysicsServer3D` implementation by passing a `name` and a `Callable` that returns a
-     * `PhysicsServer3D` object.
-     *
-     * Generated from Godot docs: PhysicsServer3DManager.register_server
-     */
     @JvmStatic
     fun registerServer(name: String, createCallback: GodotCallable) {
         ObjectCalls.ptrcallWithStringCallableArgs(registerServerBind, singleton, name, createCallback.target.handle, createCallback.method)
     }
 
-    /**
-     * Set the default `PhysicsServer3D` implementation to the one identified by `name`, if `priority`
-     * is greater than the priority of the current default implementation.
-     *
-     * Generated from Godot docs: PhysicsServer3DManager.set_default_server
-     */
     @JvmStatic
     fun setDefaultServer(name: String, priority: Int) {
         ObjectCalls.ptrcallWithStringAndIntArg(setDefaultServerBind, singleton, name, priority)
     }
+
+    @JvmStatic
+    fun fromHandle(handle: MemorySegment): PhysicsServer3DManager? =
+        wrap(handle)
+
+    internal fun wrap(handle: MemorySegment): PhysicsServer3DManager? =
+        if (handle.address() == 0L) null else this
 
     private const val REGISTER_SERVER_HASH = 2137474292L
     private val registerServerBind by lazy {

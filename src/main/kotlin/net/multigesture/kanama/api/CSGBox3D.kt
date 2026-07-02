@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector3
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Generated from Godot docs: CSGBox3D
@@ -38,6 +38,13 @@ class CSGBox3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CSGBox3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CSGBox3D? =
+            if (handle.address() == 0L) null else CSGBox3D(handle)
+
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {
             ObjectCalls.getMethodBind("CSGBox3D", "set_size", SET_SIZE_HASH)

@@ -9,21 +9,10 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorDebuggerPlugin
  */
 class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Returns the `EditorDebuggerSession` with the given `id`.
-     *
-     * Generated from Godot docs: EditorDebuggerPlugin.get_session
-     */
     fun getSession(id: Int): EditorDebuggerSession? {
         return EditorDebuggerSession.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, handle, id))
     }
 
-    /**
-     * Returns an array of `EditorDebuggerSession` currently available to this debugger plugin. Note:
-     * Sessions in the array may be inactive, check their state via `EditorDebuggerSession.is_active`.
-     *
-     * Generated from Godot docs: EditorDebuggerPlugin.get_sessions
-     */
     fun getSessions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getSessionsBind, handle)
     }

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A modified version of `FileDialog` used by the editor.
@@ -16,35 +16,26 @@ class EditorFileDialog(handle: MemorySegment) : FileDialog(handle) {
         @JvmName("setDisableOverwriteWarningProperty")
         set(value) = setDisableOverwriteWarning(value)
 
-    /**
-     * This method is kept for compatibility and does nothing. As an alternative, you can display
-     * another dialog after showing the file dialog.
-     *
-     * Generated from Godot docs: EditorFileDialog.add_side_menu
-     */
     fun addSideMenu(menu: Control, title: String = "") {
         ObjectCalls.ptrcallWithObjectAndStringArg(addSideMenuBind, handle, menu.handle, title)
     }
 
-    /**
-     * If `true`, the `EditorFileDialog` will not warn the user before overwriting files.
-     *
-     * Generated from Godot docs: EditorFileDialog.set_disable_overwrite_warning
-     */
     fun setDisableOverwriteWarning(disable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableOverwriteWarningBind, handle, disable)
     }
 
-    /**
-     * If `true`, the `EditorFileDialog` will not warn the user before overwriting files.
-     *
-     * Generated from Godot docs: EditorFileDialog.is_overwrite_warning_disabled
-     */
     fun isOverwriteWarningDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOverwriteWarningDisabledBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): EditorFileDialog? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): EditorFileDialog? =
+            if (handle.address() == 0L) null else EditorFileDialog(handle)
+
         private const val ADD_SIDE_MENU_HASH = 402368861L
         private val addSideMenuBind by lazy {
             ObjectCalls.getMethodBind("EditorFileDialog", "add_side_menu", ADD_SIDE_MENU_HASH)

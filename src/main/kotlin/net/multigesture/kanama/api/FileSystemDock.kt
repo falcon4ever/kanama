@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Godot editor's dock for managing files in the project.
@@ -9,30 +9,14 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: FileSystemDock
  */
 class FileSystemDock(handle: MemorySegment) : EditorDock(handle) {
-    /**
-     * Sets the given `path` as currently selected, ensuring that the selected file/directory is
-     * visible.
-     *
-     * Generated from Godot docs: FileSystemDock.navigate_to_path
-     */
     fun navigateToPath(path: String) {
         ObjectCalls.ptrcallWithStringArg(navigateToPathBind, handle, path)
     }
 
-    /**
-     * Registers a new `EditorResourceTooltipPlugin`.
-     *
-     * Generated from Godot docs: FileSystemDock.add_resource_tooltip_plugin
-     */
     fun addResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(addResourceTooltipPluginBind, handle, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Removes an `EditorResourceTooltipPlugin`. Fails if the plugin wasn't previously added.
-     *
-     * Generated from Godot docs: FileSystemDock.remove_resource_tooltip_plugin
-     */
     fun removeResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, handle, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
     }

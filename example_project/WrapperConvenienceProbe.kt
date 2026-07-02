@@ -331,7 +331,7 @@ class WrapperConvenienceProbe(val godotObject: MemorySegment) {
 	}
 
 	fun constantsAndFactories(): Camera3D {
-		val invalidCellItem: Int = GridMap.INVALID_CELL_ITEM
+		val invalidCellItem: Long = GridMap.INVALID_CELL_ITEM
 		val bodyAxis: Long = PhysicsBody3D.BODY_AXIS_ANGULAR_X
 
 		return Camera3D.create()

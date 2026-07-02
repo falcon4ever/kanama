@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Base class for a profile of a virtual skeleton used as a target for retargeting.
@@ -36,289 +36,118 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
         @JvmName("setBoneSizeProperty")
         set(value) = setBoneSize(value)
 
-    /**
-     * A bone name that will be used as the root bone in `AnimationTree`. This should be the bone of
-     * the parent of hips that exists at the world origin.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_root_bone
-     */
     fun setRootBone(boneName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, handle, boneName)
     }
 
-    /**
-     * A bone name that will be used as the root bone in `AnimationTree`. This should be the bone of
-     * the parent of hips that exists at the world origin.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_root_bone
-     */
     fun getRootBone(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, handle)
     }
 
-    /**
-     * A bone name which will use model's height as the coefficient for normalization. For example,
-     * `SkeletonProfileHumanoid` defines it as `Hips`.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_scale_base_bone
-     */
     fun setScaleBaseBone(boneName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setScaleBaseBoneBind, handle, boneName)
     }
 
-    /**
-     * A bone name which will use model's height as the coefficient for normalization. For example,
-     * `SkeletonProfileHumanoid` defines it as `Hips`.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_scale_base_bone
-     */
     fun getScaleBaseBone(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getScaleBaseBoneBind, handle)
     }
 
-    /**
-     * The amount of groups of bones in retargeting section's `BoneMap` editor. For example,
-     * `SkeletonProfileHumanoid` has 4 groups. This property exists to separate the bone list into
-     * several sections in the editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_group_size
-     */
     fun setGroupSize(size: Int) {
         ObjectCalls.ptrcallWithIntArg(setGroupSizeBind, handle, size)
     }
 
-    /**
-     * The amount of groups of bones in retargeting section's `BoneMap` editor. For example,
-     * `SkeletonProfileHumanoid` has 4 groups. This property exists to separate the bone list into
-     * several sections in the editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_group_size
-     */
     fun getGroupSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupSizeBind, handle)
     }
 
-    /**
-     * Returns the name of the group at `group_idx` that will be the drawing group in the `BoneMap`
-     * editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_group_name
-     */
     fun getGroupName(groupIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupNameBind, handle, groupIdx)
     }
 
-    /**
-     * Sets the name of the group at `group_idx` that will be the drawing group in the `BoneMap`
-     * editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_group_name
-     */
     fun setGroupName(groupIdx: Int, groupName: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupNameBind, handle, groupIdx, groupName)
     }
 
-    /**
-     * Returns the texture of the group at `group_idx` that will be the drawing group background image
-     * in the `BoneMap` editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_texture
-     */
     fun getTexture(groupIdx: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, handle, groupIdx))
     }
 
-    /**
-     * Sets the texture of the group at `group_idx` that will be the drawing group background image in
-     * the `BoneMap` editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_texture
-     */
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, handle, groupIdx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * The amount of bones in retargeting section's `BoneMap` editor. For example,
-     * `SkeletonProfileHumanoid` has 56 bones. The size of elements in `BoneMap` updates when changing
-     * this property in it's assigned `SkeletonProfile`.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_bone_size
-     */
     fun setBoneSize(size: Int) {
         ObjectCalls.ptrcallWithIntArg(setBoneSizeBind, handle, size)
     }
 
-    /**
-     * The amount of bones in retargeting section's `BoneMap` editor. For example,
-     * `SkeletonProfileHumanoid` has 56 bones. The size of elements in `BoneMap` updates when changing
-     * this property in it's assigned `SkeletonProfile`.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_bone_size
-     */
     fun getBoneSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneSizeBind, handle)
     }
 
-    /**
-     * Returns the bone index that matches `bone_name` as its name.
-     *
-     * Generated from Godot docs: SkeletonProfile.find_bone
-     */
     fun findBone(boneName: String): Int {
         return ObjectCalls.ptrcallWithStringNameArgRetInt(findBoneBind, handle, boneName)
     }
 
-    /**
-     * Returns the name of the bone at `bone_idx` that will be the key name in the `BoneMap`. In the
-     * retargeting process, the returned bone name is the bone name of the target skeleton.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_bone_name
-     */
     fun getBoneName(boneIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneNameBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the name of the bone at `bone_idx` that will be the key name in the `BoneMap`. In the
-     * retargeting process, the setting bone name is the bone name of the target skeleton.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_bone_name
-     */
     fun setBoneName(boneIdx: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, handle, boneIdx, boneName)
     }
 
-    /**
-     * Returns the name of the bone which is the parent to the bone at `bone_idx`. The result is empty
-     * if the bone has no parent.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_bone_parent
-     */
     fun getBoneParent(boneIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneParentBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the bone with name `bone_parent` as the parent of the bone at `bone_idx`. If an empty
-     * string is passed, then the bone has no parent.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_bone_parent
-     */
     fun setBoneParent(boneIdx: Int, boneParent: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneParentBind, handle, boneIdx, boneParent)
     }
 
-    /**
-     * Returns the tail direction of the bone at `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_tail_direction
-     */
     fun getTailDirection(boneIdx: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the tail direction of the bone at `bone_idx`. Note: This only specifies the method of
-     * calculation. The actual coordinates required should be stored in an external skeleton, so the
-     * calculation itself needs to be done externally.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_tail_direction
-     */
     fun setTailDirection(boneIdx: Int, tailDirection: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, handle, boneIdx, tailDirection)
     }
 
-    /**
-     * Returns the name of the bone which is the tail of the bone at `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_bone_tail
-     */
     fun getBoneTail(boneIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneTailBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the bone with name `bone_tail` as the tail of the bone at `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_bone_tail
-     */
     fun setBoneTail(boneIdx: Int, boneTail: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneTailBind, handle, boneIdx, boneTail)
     }
 
-    /**
-     * Returns the reference pose transform for bone `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_reference_pose
-     */
     fun getReferencePose(boneIdx: Int): Transform3D {
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getReferencePoseBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the reference pose transform for bone `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_reference_pose
-     */
     fun setReferencePose(boneIdx: Int, boneName: Transform3D) {
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setReferencePoseBind, handle, boneIdx, boneName)
     }
 
-    /**
-     * Returns the offset of the bone at `bone_idx` that will be the button position in the `BoneMap`
-     * editor. This is the offset with origin at the top left corner of the square.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_handle_offset
-     */
     fun getHandleOffset(boneIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getHandleOffsetBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the offset of the bone at `bone_idx` that will be the button position in the `BoneMap`
-     * editor. This is the offset with origin at the top left corner of the square.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_handle_offset
-     */
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, handle, boneIdx, handleOffset)
     }
 
-    /**
-     * Returns the group of the bone at `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.get_group
-     */
     fun getGroup(boneIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the group of the bone at `bone_idx`.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_group
-     */
     fun setGroup(boneIdx: Int, group: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupBind, handle, boneIdx, group)
     }
 
-    /**
-     * Returns whether the bone at `bone_idx` is required for retargeting. This value is used by the
-     * bone map editor. If this method returns `true`, and no bone is assigned, the handle color will
-     * be red on the bone map editor.
-     *
-     * Generated from Godot docs: SkeletonProfile.is_required
-     */
     fun isRequired(boneIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isRequiredBind, handle, boneIdx)
     }
 
-    /**
-     * Sets the required status for bone `bone_idx` to `required`.
-     *
-     * Generated from Godot docs: SkeletonProfile.set_required
-     */
     fun setRequired(boneIdx: Int, required: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, handle, boneIdx, required)
     }
@@ -328,6 +157,10 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        const val TAIL_DIRECTION_AVERAGE_CHILDREN: Long = 0L
+        const val TAIL_DIRECTION_SPECIFIC_CHILD: Long = 1L
+        const val TAIL_DIRECTION_END: Long = 2L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): SkeletonProfile? =
             wrap(handle)

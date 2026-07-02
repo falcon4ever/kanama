@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * A state machine with multiple `AnimationRootNode`s, used by `AnimationTree`.
@@ -29,253 +29,122 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
         @JvmName("setResetEndsProperty")
         set(value) = setResetEnds(value)
 
-    /**
-     * Adds a new animation node to the graph. The `position` is used for display in the editor.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.add_node
-     */
-    fun addNode(name: String, node: AnimationNode?, position: Vector2) {
+    fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
     }
 
-    /**
-     * Replaces the given animation node with a new animation node.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.replace_node
-     */
     fun replaceNode(name: String, node: AnimationNode?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns the animation node with the given name.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_node
-     */
     fun getNode(name: String): AnimationNode? {
         return AnimationNode.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, handle, name))
     }
 
-    /**
-     * Deletes the given animation node from the graph.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.remove_node
-     */
     fun removeNode(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, handle, name)
     }
 
-    /**
-     * Renames the given animation node.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.rename_node
-     */
     fun renameNode(name: String, newName: String) {
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, handle, name, newName)
     }
 
-    /**
-     * Returns `true` if the graph contains the given animation node.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.has_node
-     */
     fun hasNode(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, handle, name)
     }
 
-    /**
-     * Returns the given animation node's name.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_node_name
-     */
     fun getNodeName(node: AnimationNode?): String {
         return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns a list containing the names of all animation nodes in this state machine.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_node_list
-     */
     fun getNodeList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, handle)
     }
 
-    /**
-     * Sets the animation node's coordinates. Used for display in the editor.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.set_node_position
-     */
     fun setNodePosition(name: String, position: Vector2) {
         ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, handle, name, position)
     }
 
-    /**
-     * Returns the given animation node's coordinates. Used for display in the editor.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_node_position
-     */
     fun getNodePosition(name: String): Vector2 {
         return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, handle, name)
     }
 
-    /**
-     * Returns `true` if there is a transition between the given animation nodes.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.has_transition
-     */
     fun hasTransition(from: String, to: String): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTransitionBind, handle, from, to)
     }
 
-    /**
-     * Adds a transition between the given animation nodes.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.add_transition
-     */
     fun addTransition(from: String, to: String, transition: AnimationNodeStateMachineTransition?) {
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, handle, from, to, transition?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * Returns the given transition.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_transition
-     */
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
         return AnimationNodeStateMachineTransition.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, handle, idx))
     }
 
-    /**
-     * Returns the given transition's start node.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_transition_from
-     */
     fun getTransitionFrom(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionFromBind, handle, idx)
     }
 
-    /**
-     * Returns the given transition's end node.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_transition_to
-     */
     fun getTransitionTo(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionToBind, handle, idx)
     }
 
-    /**
-     * Returns the number of connections in the graph.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_transition_count
-     */
     fun getTransitionCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTransitionCountBind, handle)
     }
 
-    /**
-     * Deletes the given transition by index.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.remove_transition_by_index
-     */
     fun removeTransitionByIndex(idx: Int) {
         ObjectCalls.ptrcallWithIntArg(removeTransitionByIndexBind, handle, idx)
     }
 
-    /**
-     * Deletes the transition between the two specified animation nodes.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.remove_transition
-     */
     fun removeTransition(from: String, to: String) {
         ObjectCalls.ptrcallWithTwoStringNameArgs(removeTransitionBind, handle, from, to)
     }
 
-    /**
-     * Sets the draw offset of the graph. Used for display in the editor.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.set_graph_offset
-     */
     fun setGraphOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
     }
 
-    /**
-     * Returns the draw offset of the graph. Used for display in the editor.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_graph_offset
-     */
     fun getGraphOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
     }
 
-    /**
-     * This property can define the process of transitions for different use cases. See also
-     * `AnimationNodeStateMachine.StateMachineType`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.set_state_machine_type
-     */
     fun setStateMachineType(stateMachineType: Long) {
         ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, handle, stateMachineType)
     }
 
-    /**
-     * This property can define the process of transitions for different use cases. See also
-     * `AnimationNodeStateMachine.StateMachineType`.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.get_state_machine_type
-     */
     fun getStateMachineType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, handle)
     }
 
-    /**
-     * If `true`, allows teleport to the self state with `AnimationNodeStateMachinePlayback.travel`.
-     * When the reset option is enabled in `AnimationNodeStateMachinePlayback.travel`, the animation is
-     * restarted. If `false`, nothing happens on the teleportation to the self state.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.set_allow_transition_to_self
-     */
     fun setAllowTransitionToSelf(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
     }
 
-    /**
-     * If `true`, allows teleport to the self state with `AnimationNodeStateMachinePlayback.travel`.
-     * When the reset option is enabled in `AnimationNodeStateMachinePlayback.travel`, the animation is
-     * restarted. If `false`, nothing happens on the teleportation to the self state.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.is_allow_transition_to_self
-     */
     fun isAllowTransitionToSelf(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
     }
 
-    /**
-     * If `true`, treat the cross-fade to the start and end nodes as a blend with the RESET animation.
-     * In most cases, when additional cross-fades are performed in the parent `AnimationNode` of the
-     * state machine, setting this property to `false` and matching the cross-fade time of the parent
-     * `AnimationNode` and the state machine's start node and end node gives good results.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.set_reset_ends
-     */
     fun setResetEnds(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setResetEndsBind, handle, enable)
     }
 
-    /**
-     * If `true`, treat the cross-fade to the start and end nodes as a blend with the RESET animation.
-     * In most cases, when additional cross-fades are performed in the parent `AnimationNode` of the
-     * state machine, setting this property to `false` and matching the cross-fade time of the parent
-     * `AnimationNode` and the state machine's start node and end node gives good results.
-     *
-     * Generated from Godot docs: AnimationNodeStateMachine.are_ends_reset
-     */
     fun areEndsReset(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, handle)
     }
 
     companion object {
+        const val STATE_MACHINE_TYPE_ROOT: Long = 0L
+        const val STATE_MACHINE_TYPE_NESTED: Long = 1L
+        const val STATE_MACHINE_TYPE_GROUPED: Long = 2L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AnimationNodeStateMachine? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AnimationNodeStateMachine? =
+            if (handle.address() == 0L) null else AnimationNodeStateMachine(handle)
+
         private const val ADD_NODE_HASH = 1980270704L
         private val addNodeBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "add_node", ADD_NODE_HASH)

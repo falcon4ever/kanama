@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: OpenXRRenderModelExtension
@@ -68,6 +68,13 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRRenderModelExtension? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRRenderModelExtension? =
+            if (handle.address() == 0L) null else OpenXRRenderModelExtension(handle)
+
         private const val IS_ACTIVE_HASH = 36873697L
         private val isActiveBind by lazy {
             ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "is_active", IS_ACTIVE_HASH)

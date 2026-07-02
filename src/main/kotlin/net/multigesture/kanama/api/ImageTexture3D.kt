@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Texture with 3 dimensions.
@@ -31,6 +31,13 @@ class ImageTexture3D(handle: MemorySegment) : Texture3D(handle) {
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): ImageTexture3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): ImageTexture3D? =
+            if (handle.address() == 0L) null else ImageTexture3D(handle)
+
         private const val CREATE_HASH = 1130379827L
         private val createBind by lazy {
             ObjectCalls.getMethodBind("ImageTexture3D", "create", CREATE_HASH)

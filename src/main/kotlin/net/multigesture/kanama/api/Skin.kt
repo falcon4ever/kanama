@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
-import java.lang.foreign.MemorySegment
 
 /**
  * Generated from Godot docs: Skin

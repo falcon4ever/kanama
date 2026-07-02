@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
-import java.lang.foreign.MemorySegment
 
 /**
  * A reference-counted holder object for a skeleton RID used in the `RenderingServer`.
@@ -10,23 +10,10 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: SkinReference
  */
 class SkinReference(handle: MemorySegment) : RefCounted(handle) {
-    /**
-     * Returns the `RID` owned by this SkinReference, as returned by `RenderingServer.skeleton_create`.
-     *
-     * Generated from Godot docs: SkinReference.get_skeleton
-     */
     fun getSkeleton(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, handle)
     }
 
-    /**
-     * Returns the `Skin` connected to this SkinReference. In the case of `MeshInstance3D` with no
-     * `MeshInstance3D.skin` assigned, this will reference an internal default `Skin` owned by that
-     * `MeshInstance3D`. Note that a single `Skin` may have more than one `SkinReference` in the case
-     * that it is shared by meshes across multiple `Skeleton3D` nodes.
-     *
-     * Generated from Godot docs: SkinReference.get_skin
-     */
     fun getSkin(): Skin? {
         return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
     }

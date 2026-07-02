@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Adds a pitch-shifting audio effect to an audio bus. Raises or lowers the pitch of the input
@@ -29,73 +29,45 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setFftSizeProperty")
         set(value) = setFftSize(value)
 
-    /**
-     * The pitch scale to use. `1.0` is the default pitch and plays sounds unaffected. `pitch_scale`
-     * can range from 0 (infinitely low pitch, inaudible) to 16 (16 times higher than the initial
-     * pitch).
-     *
-     * Generated from Godot docs: AudioEffectPitchShift.set_pitch_scale
-     */
     fun setPitchScale(rate: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, rate)
     }
 
-    /**
-     * The pitch scale to use. `1.0` is the default pitch and plays sounds unaffected. `pitch_scale`
-     * can range from 0 (infinitely low pitch, inaudible) to 16 (16 times higher than the initial
-     * pitch).
-     *
-     * Generated from Godot docs: AudioEffectPitchShift.get_pitch_scale
-     */
     fun getPitchScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
     }
 
-    /**
-     * The oversampling factor to use. Higher values result in better quality, but are more demanding
-     * on the CPU and may cause audio cracking if the CPU can't keep up.
-     *
-     * Generated from Godot docs: AudioEffectPitchShift.set_oversampling
-     */
     fun setOversampling(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setOversamplingBind, handle, amount)
     }
 
-    /**
-     * The oversampling factor to use. Higher values result in better quality, but are more demanding
-     * on the CPU and may cause audio cracking if the CPU can't keep up.
-     *
-     * Generated from Godot docs: AudioEffectPitchShift.get_oversampling
-     */
     fun getOversampling(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, handle)
     }
 
-    /**
-     * The size of the Fast Fourier transform (https://en.wikipedia.org/wiki/Fast_Fourier_transform)
-     * buffer. Higher values smooth out the effect over time, but have greater latency. The effects of
-     * this higher latency are especially noticeable on audio signals that have sudden amplitude
-     * changes.
-     *
-     * Generated from Godot docs: AudioEffectPitchShift.set_fft_size
-     */
     fun setFftSize(size: Long) {
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
-    /**
-     * The size of the Fast Fourier transform (https://en.wikipedia.org/wiki/Fast_Fourier_transform)
-     * buffer. Higher values smooth out the effect over time, but have greater latency. The effects of
-     * this higher latency are especially noticeable on audio signals that have sudden amplitude
-     * changes.
-     *
-     * Generated from Godot docs: AudioEffectPitchShift.get_fft_size
-     */
     fun getFftSize(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }
 
     companion object {
+        const val FFT_SIZE_256: Long = 0L
+        const val FFT_SIZE_512: Long = 1L
+        const val FFT_SIZE_1024: Long = 2L
+        const val FFT_SIZE_2048: Long = 3L
+        const val FFT_SIZE_4096: Long = 4L
+        const val FFT_SIZE_MAX: Long = 5L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioEffectPitchShift? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioEffectPitchShift? =
+            if (handle.address() == 0L) null else AudioEffectPitchShift(handle)
+
         private const val SET_PITCH_SCALE_HASH = 373806689L
         private val setPitchScaleBind by lazy {
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "set_pitch_scale", SET_PITCH_SCALE_HASH)

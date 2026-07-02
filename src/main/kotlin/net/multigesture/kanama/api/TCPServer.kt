@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A TCP server.
@@ -23,25 +23,22 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
     }
 
-    /**
-     * Returns the local port this server is listening to.
-     *
-     * Generated from Godot docs: TCPServer.get_local_port
-     */
     fun getLocalPort(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
-    /**
-     * If a connection is available, returns a StreamPeerTCP with the connection.
-     *
-     * Generated from Godot docs: TCPServer.take_connection
-     */
     fun takeConnection(): StreamPeerTCP? {
         return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): TCPServer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): TCPServer? =
+            if (handle.address() == 0L) null else TCPServer(handle)
+
         private const val LISTEN_HASH = 3167955072L
         private val listenBind by lazy {
             ObjectCalls.getMethodBind("TCPServer", "listen", LISTEN_HASH)

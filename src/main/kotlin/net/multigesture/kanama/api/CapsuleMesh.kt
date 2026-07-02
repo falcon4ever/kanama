@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Class representing a capsule-shaped `PrimitiveMesh`.
@@ -34,87 +34,46 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setRingsProperty")
         set(value) = setRings(value)
 
-    /**
-     * Radius of the capsule mesh. Note: The `radius` of a capsule cannot be greater than half of its
-     * `height`. Otherwise, the capsule becomes a circle. If the `radius` is greater than half of the
-     * `height`, the properties adjust to a valid value.
-     *
-     * Generated from Godot docs: CapsuleMesh.set_radius
-     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
-    /**
-     * Radius of the capsule mesh. Note: The `radius` of a capsule cannot be greater than half of its
-     * `height`. Otherwise, the capsule becomes a circle. If the `radius` is greater than half of the
-     * `height`, the properties adjust to a valid value.
-     *
-     * Generated from Godot docs: CapsuleMesh.get_radius
-     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
-    /**
-     * Total height of the capsule mesh (including the hemispherical ends). Note: The `height` of a
-     * capsule must be at least twice its `radius`. Otherwise, the capsule becomes a circle. If the
-     * `height` is less than twice the `radius`, the properties adjust to a valid value.
-     *
-     * Generated from Godot docs: CapsuleMesh.set_height
-     */
     fun setHeight(height: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
-    /**
-     * Total height of the capsule mesh (including the hemispherical ends). Note: The `height` of a
-     * capsule must be at least twice its `radius`. Otherwise, the capsule becomes a circle. If the
-     * `height` is less than twice the `radius`, the properties adjust to a valid value.
-     *
-     * Generated from Godot docs: CapsuleMesh.get_height
-     */
     fun getHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
-    /**
-     * Number of radial segments on the capsule mesh.
-     *
-     * Generated from Godot docs: CapsuleMesh.set_radial_segments
-     */
     fun setRadialSegments(segments: Int) {
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
     }
 
-    /**
-     * Number of radial segments on the capsule mesh.
-     *
-     * Generated from Godot docs: CapsuleMesh.get_radial_segments
-     */
     fun getRadialSegments(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
-    /**
-     * Number of rings along the height of the capsule.
-     *
-     * Generated from Godot docs: CapsuleMesh.set_rings
-     */
     fun setRings(rings: Int) {
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
-    /**
-     * Number of rings along the height of the capsule.
-     *
-     * Generated from Godot docs: CapsuleMesh.get_rings
-     */
     fun getRings(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): CapsuleMesh? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): CapsuleMesh? =
+            if (handle.address() == 0L) null else CapsuleMesh(handle)
+
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {
             ObjectCalls.getMethodBind("CapsuleMesh", "set_radius", SET_RADIUS_HASH)

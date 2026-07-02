@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Abstract base class for touch gestures.
@@ -17,27 +17,22 @@ open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(ha
         @JvmName("setPositionProperty")
         set(value) = setPosition(value)
 
-    /**
-     * The local gesture position relative to the `Viewport`. If used in `Control._gui_input`, the
-     * position is relative to the current `Control` that received this gesture.
-     *
-     * Generated from Godot docs: InputEventGesture.set_position
-     */
     fun setPosition(position: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
-    /**
-     * The local gesture position relative to the `Viewport`. If used in `Control._gui_input`, the
-     * position is relative to the current `Control` that received this gesture.
-     *
-     * Generated from Godot docs: InputEventGesture.get_position
-     */
     fun getPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): InputEventGesture? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): InputEventGesture? =
+            if (handle.address() == 0L) null else InputEventGesture(handle)
+
         private const val SET_POSITION_HASH = 743155724L
         private val setPositionBind by lazy {
             ObjectCalls.getMethodBind("InputEventGesture", "set_position", SET_POSITION_HASH)

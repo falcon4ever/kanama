@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * A horizontal menu bar that creates a menu for each `PopupMenu` child.
@@ -46,237 +46,110 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    /**
-     * If `true`, when the cursor hovers above menu item, it will close the current `PopupMenu` and
-     * open the other one.
-     *
-     * Generated from Godot docs: MenuBar.set_switch_on_hover
-     */
     fun setSwitchOnHover(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, handle, enable)
     }
 
-    /**
-     * If `true`, when the cursor hovers above menu item, it will close the current `PopupMenu` and
-     * open the other one.
-     *
-     * Generated from Godot docs: MenuBar.is_switch_on_hover
-     */
     fun isSwitchOnHover(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, handle)
     }
 
-    /**
-     * If `true`, shortcuts are disabled and cannot be used to trigger the button.
-     *
-     * Generated from Godot docs: MenuBar.set_disable_shortcuts
-     */
     fun setDisableShortcuts(disabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
     }
 
-    /**
-     * If `true`, `MenuBar` will use system global menu when supported. Note: If `true` and global menu
-     * is supported, this node is not displayed, has zero size, and all its child nodes except
-     * `PopupMenu`s are inaccessible. Note: This property overrides the value of the
-     * `PopupMenu.prefer_native_menu` property of the child nodes.
-     *
-     * Generated from Godot docs: MenuBar.set_prefer_global_menu
-     */
     fun setPreferGlobalMenu(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPreferGlobalMenuBind, handle, enabled)
     }
 
-    /**
-     * If `true`, `MenuBar` will use system global menu when supported. Note: If `true` and global menu
-     * is supported, this node is not displayed, has zero size, and all its child nodes except
-     * `PopupMenu`s are inaccessible. Note: This property overrides the value of the
-     * `PopupMenu.prefer_native_menu` property of the child nodes.
-     *
-     * Generated from Godot docs: MenuBar.is_prefer_global_menu
-     */
     fun isPreferGlobalMenu(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPreferGlobalMenuBind, handle)
     }
 
-    /**
-     * Returns `true` if the current system's global menu is supported and used by this `MenuBar`.
-     *
-     * Generated from Godot docs: MenuBar.is_native_menu
-     */
     fun isNativeMenu(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, handle)
     }
 
-    /**
-     * Returns number of menu items.
-     *
-     * Generated from Godot docs: MenuBar.get_menu_count
-     */
     fun getMenuCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMenuCountBind, handle)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: MenuBar.set_text_direction
-     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
-    /**
-     * Base text writing direction.
-     *
-     * Generated from Godot docs: MenuBar.get_text_direction
-     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: MenuBar.set_language
-     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
-    /**
-     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
-     * locale is used instead.
-     *
-     * Generated from Godot docs: MenuBar.get_language
-     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
-    /**
-     * Flat `MenuBar` don't display item decoration.
-     *
-     * Generated from Godot docs: MenuBar.set_flat
-     */
     fun setFlat(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, enabled)
     }
 
-    /**
-     * Flat `MenuBar` don't display item decoration.
-     *
-     * Generated from Godot docs: MenuBar.is_flat
-     */
     fun isFlat(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
     }
 
-    /**
-     * Position order in the global menu to insert `MenuBar` items at. All menu items in the `MenuBar`
-     * are always inserted as a continuous range. Menus with lower `start_index` are inserted first.
-     * Menus with `start_index` equal to `-1` are inserted last.
-     *
-     * Generated from Godot docs: MenuBar.set_start_index
-     */
     fun setStartIndex(enabled: Int) {
         ObjectCalls.ptrcallWithIntArg(setStartIndexBind, handle, enabled)
     }
 
-    /**
-     * Position order in the global menu to insert `MenuBar` items at. All menu items in the `MenuBar`
-     * are always inserted as a continuous range. Menus with lower `start_index` are inserted first.
-     * Menus with `start_index` equal to `-1` are inserted last.
-     *
-     * Generated from Godot docs: MenuBar.get_start_index
-     */
     fun getStartIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getStartIndexBind, handle)
     }
 
-    /**
-     * Sets menu item title.
-     *
-     * Generated from Godot docs: MenuBar.set_menu_title
-     */
     fun setMenuTitle(menu: Int, title: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setMenuTitleBind, handle, menu, title)
     }
 
-    /**
-     * Returns menu item title.
-     *
-     * Generated from Godot docs: MenuBar.get_menu_title
-     */
     fun getMenuTitle(menu: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getMenuTitleBind, handle, menu)
     }
 
-    /**
-     * Sets menu item tooltip.
-     *
-     * Generated from Godot docs: MenuBar.set_menu_tooltip
-     */
     fun setMenuTooltip(menu: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setMenuTooltipBind, handle, menu, tooltip)
     }
 
-    /**
-     * Returns menu item tooltip.
-     *
-     * Generated from Godot docs: MenuBar.get_menu_tooltip
-     */
     fun getMenuTooltip(menu: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getMenuTooltipBind, handle, menu)
     }
 
-    /**
-     * If `true`, menu item is disabled.
-     *
-     * Generated from Godot docs: MenuBar.set_menu_disabled
-     */
     fun setMenuDisabled(menu: Int, disabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setMenuDisabledBind, handle, menu, disabled)
     }
 
-    /**
-     * Returns `true` if the menu item is disabled.
-     *
-     * Generated from Godot docs: MenuBar.is_menu_disabled
-     */
     fun isMenuDisabled(menu: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isMenuDisabledBind, handle, menu)
     }
 
-    /**
-     * If `true`, menu item is hidden.
-     *
-     * Generated from Godot docs: MenuBar.set_menu_hidden
-     */
     fun setMenuHidden(menu: Int, hidden: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setMenuHiddenBind, handle, menu, hidden)
     }
 
-    /**
-     * Returns `true` if the menu item is hidden.
-     *
-     * Generated from Godot docs: MenuBar.is_menu_hidden
-     */
     fun isMenuHidden(menu: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isMenuHiddenBind, handle, menu)
     }
 
-    /**
-     * Returns `PopupMenu` associated with menu item.
-     *
-     * Generated from Godot docs: MenuBar.get_menu_popup
-     */
     fun getMenuPopup(menu: Int): PopupMenu? {
         return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getMenuPopupBind, handle, menu))
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): MenuBar? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): MenuBar? =
+            if (handle.address() == 0L) null else MenuBar(handle)
+
         private const val SET_SWITCH_ON_HOVER_HASH = 2586408642L
         private val setSwitchOnHoverBind by lazy {
             ObjectCalls.getMethodBind("MenuBar", "set_switch_on_hover", SET_SWITCH_ON_HOVER_HASH)

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: OpenXRAnalogThresholdModifier
@@ -65,6 +65,13 @@ class OpenXRAnalogThresholdModifier(handle: MemorySegment) : OpenXRActionBinding
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRAnalogThresholdModifier? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRAnalogThresholdModifier? =
+            if (handle.address() == 0L) null else OpenXRAnalogThresholdModifier(handle)
+
         private const val SET_ON_THRESHOLD_HASH = 373806689L
         private val setOnThresholdBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "set_on_threshold", SET_ON_THRESHOLD_HASH)

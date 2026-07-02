@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Generated from Godot docs: OpenXRMarkerTracker
@@ -60,6 +60,13 @@ class OpenXRMarkerTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRMarkerTracker? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRMarkerTracker? =
+            if (handle.address() == 0L) null else OpenXRMarkerTracker(handle)
+
         private const val SET_BOUNDS_SIZE_HASH = 743155724L
         private val setBoundsSizeBind by lazy {
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "set_bounds_size", SET_BOUNDS_SIZE_HASH)

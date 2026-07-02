@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Sampler state (used by `RenderingDevice`).
@@ -100,310 +100,122 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setUnnormalizedUvwProperty")
         set(value) = setUnnormalizedUvw(value)
 
-    /**
-     * The sampler's magnification filter. It is the filtering method used when sampling texels that
-     * appear bigger than on-screen pixels.
-     *
-     * Generated from Godot docs: RDSamplerState.set_mag_filter
-     */
     fun setMagFilter(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setMagFilterBind, handle, pMember)
     }
 
-    /**
-     * The sampler's magnification filter. It is the filtering method used when sampling texels that
-     * appear bigger than on-screen pixels.
-     *
-     * Generated from Godot docs: RDSamplerState.get_mag_filter
-     */
     fun getMagFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, handle)
     }
 
-    /**
-     * The sampler's minification filter. It is the filtering method used when sampling texels that
-     * appear smaller than on-screen pixels.
-     *
-     * Generated from Godot docs: RDSamplerState.set_min_filter
-     */
     fun setMinFilter(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setMinFilterBind, handle, pMember)
     }
 
-    /**
-     * The sampler's minification filter. It is the filtering method used when sampling texels that
-     * appear smaller than on-screen pixels.
-     *
-     * Generated from Godot docs: RDSamplerState.get_min_filter
-     */
     fun getMinFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, handle)
     }
 
-    /**
-     * The filtering method to use for mipmaps.
-     *
-     * Generated from Godot docs: RDSamplerState.set_mip_filter
-     */
     fun setMipFilter(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setMipFilterBind, handle, pMember)
     }
 
-    /**
-     * The filtering method to use for mipmaps.
-     *
-     * Generated from Godot docs: RDSamplerState.get_mip_filter
-     */
     fun getMipFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, handle)
     }
 
-    /**
-     * The repeat mode to use along the U axis of UV coordinates. This affects the returned values if
-     * sampling outside the UV bounds.
-     *
-     * Generated from Godot docs: RDSamplerState.set_repeat_u
-     */
     fun setRepeatU(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setRepeatUBind, handle, pMember)
     }
 
-    /**
-     * The repeat mode to use along the U axis of UV coordinates. This affects the returned values if
-     * sampling outside the UV bounds.
-     *
-     * Generated from Godot docs: RDSamplerState.get_repeat_u
-     */
     fun getRepeatU(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, handle)
     }
 
-    /**
-     * The repeat mode to use along the V axis of UV coordinates. This affects the returned values if
-     * sampling outside the UV bounds.
-     *
-     * Generated from Godot docs: RDSamplerState.set_repeat_v
-     */
     fun setRepeatV(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setRepeatVBind, handle, pMember)
     }
 
-    /**
-     * The repeat mode to use along the V axis of UV coordinates. This affects the returned values if
-     * sampling outside the UV bounds.
-     *
-     * Generated from Godot docs: RDSamplerState.get_repeat_v
-     */
     fun getRepeatV(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, handle)
     }
 
-    /**
-     * The repeat mode to use along the W axis of UV coordinates. This affects the returned values if
-     * sampling outside the UV bounds. Only effective for 3D samplers.
-     *
-     * Generated from Godot docs: RDSamplerState.set_repeat_w
-     */
     fun setRepeatW(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setRepeatWBind, handle, pMember)
     }
 
-    /**
-     * The repeat mode to use along the W axis of UV coordinates. This affects the returned values if
-     * sampling outside the UV bounds. Only effective for 3D samplers.
-     *
-     * Generated from Godot docs: RDSamplerState.get_repeat_w
-     */
     fun getRepeatW(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, handle)
     }
 
-    /**
-     * The mipmap LOD bias to use. Positive values will make the sampler blurrier at a given distance,
-     * while negative values will make the sampler sharper at a given distance (at the risk of looking
-     * grainy). Recommended values are between `-0.5` and `0.0`. Only effective if the sampler has
-     * mipmaps available.
-     *
-     * Generated from Godot docs: RDSamplerState.set_lod_bias
-     */
     fun setLodBias(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, handle, pMember)
     }
 
-    /**
-     * The mipmap LOD bias to use. Positive values will make the sampler blurrier at a given distance,
-     * while negative values will make the sampler sharper at a given distance (at the risk of looking
-     * grainy). Recommended values are between `-0.5` and `0.0`. Only effective if the sampler has
-     * mipmaps available.
-     *
-     * Generated from Godot docs: RDSamplerState.get_lod_bias
-     */
     fun getLodBias(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, handle)
     }
 
-    /**
-     * If `true`, perform anisotropic sampling. See `anisotropy_max`.
-     *
-     * Generated from Godot docs: RDSamplerState.set_use_anisotropy
-     */
     fun setUseAnisotropy(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseAnisotropyBind, handle, pMember)
     }
 
-    /**
-     * If `true`, perform anisotropic sampling. See `anisotropy_max`.
-     *
-     * Generated from Godot docs: RDSamplerState.get_use_anisotropy
-     */
     fun getUseAnisotropy(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseAnisotropyBind, handle)
     }
 
-    /**
-     * Maximum anisotropy that can be used when sampling. Only effective if `use_anisotropy` is `true`.
-     * Higher values result in a sharper sampler at oblique angles, at the cost of performance (due to
-     * memory bandwidth). This value may be limited by the graphics hardware in use. Most graphics
-     * hardware only supports values up to `16.0`. If `anisotropy_max` is `1.0`, forcibly disables
-     * anisotropy even if `use_anisotropy` is `true`.
-     *
-     * Generated from Godot docs: RDSamplerState.set_anisotropy_max
-     */
     fun setAnisotropyMax(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAnisotropyMaxBind, handle, pMember)
     }
 
-    /**
-     * Maximum anisotropy that can be used when sampling. Only effective if `use_anisotropy` is `true`.
-     * Higher values result in a sharper sampler at oblique angles, at the cost of performance (due to
-     * memory bandwidth). This value may be limited by the graphics hardware in use. Most graphics
-     * hardware only supports values up to `16.0`. If `anisotropy_max` is `1.0`, forcibly disables
-     * anisotropy even if `use_anisotropy` is `true`.
-     *
-     * Generated from Godot docs: RDSamplerState.get_anisotropy_max
-     */
     fun getAnisotropyMax(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyMaxBind, handle)
     }
 
-    /**
-     * If `true`, returned values will be based on the comparison operation defined in `compare_op`.
-     * This is a hardware-based approach and is therefore faster than performing this manually in a
-     * shader. For example, compare operations are used for shadow map rendering by comparing depth
-     * values from a shadow sampler.
-     *
-     * Generated from Godot docs: RDSamplerState.set_enable_compare
-     */
     fun setEnableCompare(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableCompareBind, handle, pMember)
     }
 
-    /**
-     * If `true`, returned values will be based on the comparison operation defined in `compare_op`.
-     * This is a hardware-based approach and is therefore faster than performing this manually in a
-     * shader. For example, compare operations are used for shadow map rendering by comparing depth
-     * values from a shadow sampler.
-     *
-     * Generated from Godot docs: RDSamplerState.get_enable_compare
-     */
     fun getEnableCompare(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableCompareBind, handle)
     }
 
-    /**
-     * The compare operation to use. Only effective if `enable_compare` is `true`.
-     *
-     * Generated from Godot docs: RDSamplerState.set_compare_op
-     */
     fun setCompareOp(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setCompareOpBind, handle, pMember)
     }
 
-    /**
-     * The compare operation to use. Only effective if `enable_compare` is `true`.
-     *
-     * Generated from Godot docs: RDSamplerState.get_compare_op
-     */
     fun getCompareOp(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, handle)
     }
 
-    /**
-     * The minimum mipmap LOD bias to display (highest resolution). Only effective if the sampler has
-     * mipmaps available.
-     *
-     * Generated from Godot docs: RDSamplerState.set_min_lod
-     */
     fun setMinLod(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMinLodBind, handle, pMember)
     }
 
-    /**
-     * The minimum mipmap LOD bias to display (highest resolution). Only effective if the sampler has
-     * mipmaps available.
-     *
-     * Generated from Godot docs: RDSamplerState.get_min_lod
-     */
     fun getMinLod(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinLodBind, handle)
     }
 
-    /**
-     * The maximum mipmap LOD bias to display (lowest resolution). Only effective if the sampler has
-     * mipmaps available.
-     *
-     * Generated from Godot docs: RDSamplerState.set_max_lod
-     */
     fun setMaxLod(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMaxLodBind, handle, pMember)
     }
 
-    /**
-     * The maximum mipmap LOD bias to display (lowest resolution). Only effective if the sampler has
-     * mipmaps available.
-     *
-     * Generated from Godot docs: RDSamplerState.get_max_lod
-     */
     fun getMaxLod(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxLodBind, handle)
     }
 
-    /**
-     * The border color that will be returned when sampling outside the sampler's bounds and the
-     * `repeat_u`, `repeat_v` or `repeat_w` modes have repeating disabled.
-     *
-     * Generated from Godot docs: RDSamplerState.set_border_color
-     */
     fun setBorderColor(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setBorderColorBind, handle, pMember)
     }
 
-    /**
-     * The border color that will be returned when sampling outside the sampler's bounds and the
-     * `repeat_u`, `repeat_v` or `repeat_w` modes have repeating disabled.
-     *
-     * Generated from Godot docs: RDSamplerState.get_border_color
-     */
     fun getBorderColor(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, handle)
     }
 
-    /**
-     * If `true`, the texture will be sampled with coordinates ranging from 0 to the texture's
-     * resolution. Otherwise, the coordinates will be normalized and range from 0 to 1.
-     *
-     * Generated from Godot docs: RDSamplerState.set_unnormalized_uvw
-     */
     fun setUnnormalizedUvw(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUnnormalizedUvwBind, handle, pMember)
     }
 
-    /**
-     * If `true`, the texture will be sampled with coordinates ranging from 0 to the texture's
-     * resolution. Otherwise, the coordinates will be normalized and range from 0 to 1.
-     *
-     * Generated from Godot docs: RDSamplerState.get_unnormalized_uvw
-     */
     fun getUnnormalizedUvw(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUnnormalizedUvwBind, handle)
     }

@@ -1,13 +1,13 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * A 3D particle emitter.
@@ -141,6 +141,18 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setTransformAlignProperty")
         set(value) = setTransformAlign(value)
 
+    var transformAlignAxis: Long
+        @JvmName("transformAlignAxisProperty")
+        get() = getTransformAlignAxis()
+        @JvmName("setTransformAlignAxisProperty")
+        set(value) = setTransformAlignAxis(value)
+
+    var transformAlignChannelFilter: Long
+        @JvmName("transformAlignChannelFilterProperty")
+        get() = getTransformAlignChannelFilter()
+        @JvmName("setTransformAlignChannelFilterProperty")
+        set(value) = setTransformAlignChannelFilter(value)
+
     var trailEnabled: Boolean
         @JvmName("trailEnabledProperty")
         get() = isTrailEnabled()
@@ -171,460 +183,170 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setDrawSkinProperty")
         set(value) = setSkin(value)
 
-    /**
-     * If `true`, particles are being emitted. `emitting` can be used to start and stop particles from
-     * emitting. However, if `one_shot` is `true` setting `emitting` to `true` will not restart the
-     * emission cycle unless all active particles have finished processing. Use the `finished` signal
-     * to be notified once all active particles finish processing. Note: For `one_shot` emitters, due
-     * to the particles being computed on the GPU, there may be a short period after receiving the
-     * `finished` signal during which setting this to `true` will not restart the emission cycle. Tip:
-     * If your `one_shot` emitter needs to immediately restart emitting particles once `finished`
-     * signal is received, consider calling `restart` instead of setting `emitting`.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_emitting
-     */
     fun setEmitting(emitting: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEmittingBind, handle, emitting)
     }
 
-    /**
-     * The number of particles to emit in one emission cycle. The effective emission rate is `(amount *
-     * amount_ratio) / lifetime` particles per second. Higher values will increase GPU requirements,
-     * even if not all particles are visible at a given time or if `amount_ratio` is decreased. Note:
-     * Changing this value will cause the particle system to restart. To avoid this, change
-     * `amount_ratio` instead.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_amount
-     */
     fun setAmount(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setAmountBind, handle, amount)
     }
 
-    /**
-     * The amount of time each particle will exist (in seconds). The effective emission rate is
-     * `(amount * amount_ratio) / lifetime` particles per second.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_lifetime
-     */
     fun setLifetime(secs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, handle, secs)
     }
 
-    /**
-     * If `true`, only the number of particles equal to `amount` will be emitted.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_one_shot
-     */
     fun setOneShot(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, enable)
     }
 
-    /**
-     * Amount of time to preprocess the particles before animation starts. Lets you start the animation
-     * some time after particles have started emitting. Note: This can be very expensive if set to a
-     * high number as it requires running the particle shader a number of times equal to the
-     * `fixed_fps` (or 30, if `fixed_fps` is 0) for every second. In extreme cases it can even lead to
-     * a GPU crash due to the volume of work done in a single frame.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_pre_process_time
-     */
     fun setPreProcessTime(secs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, handle, secs)
     }
 
-    /**
-     * Time ratio between each emission. If `0`, particles are emitted continuously. If `1`, all
-     * particles are emitted simultaneously.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_explosiveness_ratio
-     */
     fun setExplosivenessRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, handle, ratio)
     }
 
-    /**
-     * Emission randomness ratio.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_randomness_ratio
-     */
     fun setRandomnessRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, handle, ratio)
     }
 
-    /**
-     * The `AABB` that determines the node's region which needs to be visible on screen for the
-     * particle system to be active. `GeometryInstance3D.extra_cull_margin` is added on each of the
-     * AABB's axes. Particle collisions and attraction will only occur within this area. Grow the box
-     * if particles suddenly appear/disappear when the node enters/exits the screen. The `AABB` can be
-     * grown via code or with the Particles → Generate AABB editor tool. Note: `visibility_aabb` is
-     * overridden by `GeometryInstance3D.custom_aabb` if that property is set to a non-default value.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_visibility_aabb
-     */
     fun setVisibilityAabb(aabb: AABB) {
         ObjectCalls.ptrcallWithAABBArg(setVisibilityAabbBind, handle, aabb)
     }
 
-    /**
-     * If `true`, particles use the parent node's coordinate space (known as local coordinates). This
-     * will cause particles to move and rotate along the `GPUParticles3D` node (and its parents) when
-     * it is moved or rotated. If `false`, particles use global coordinates; they will not move or
-     * rotate along the `GPUParticles3D` node (and its parents) when it is moved or rotated.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_use_local_coordinates
-     */
     fun setUseLocalCoordinates(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, handle, enable)
     }
 
-    /**
-     * The particle system's frame rate is fixed to a value. For example, changing the value to 2 will
-     * make the particles render at 2 frames per second. Note this does not slow down the simulation of
-     * the particle system itself.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_fixed_fps
-     */
     fun setFixedFps(fps: Int) {
         ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, handle, fps)
     }
 
-    /**
-     * If `true`, results in fractional delta calculation which has a smoother particles display
-     * effect.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_fractional_delta
-     */
     fun setFractionalDelta(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, handle, enable)
     }
 
-    /**
-     * Enables particle interpolation, which makes the particle movement smoother when their
-     * `fixed_fps` is lower than the screen refresh rate.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_interpolate
-     */
     fun setInterpolate(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setInterpolateBind, handle, enable)
     }
 
-    /**
-     * `Material` for processing particles. Can be a `ParticleProcessMaterial` or a `ShaderMaterial`.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_process_material
-     */
     fun setProcessMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(setProcessMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    /**
-     * Speed scaling ratio. A value of `0` can be used to pause the particles.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_speed_scale
-     */
     fun setSpeedScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
     }
 
-    /**
-     * The base diameter for particle collision in meters. If particles appear to sink into the ground
-     * when colliding, increase this value. If particles appear to float when colliding, decrease this
-     * value. Only effective if `ParticleProcessMaterial.collision_mode` is
-     * `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
-     * collision shape.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_collision_base_size
-     */
     fun setCollisionBaseSize(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCollisionBaseSizeBind, handle, size)
     }
 
-    /**
-     * Causes all the particles in this node to interpolate towards the end of their lifetime. Note:
-     * This only works when used with a `ParticleProcessMaterial`. It needs to be manually implemented
-     * for custom process shaders.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_interp_to_end
-     */
     fun setInterpToEnd(interp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setInterpToEndBind, handle, interp)
     }
 
-    /**
-     * If `true`, particles are being emitted. `emitting` can be used to start and stop particles from
-     * emitting. However, if `one_shot` is `true` setting `emitting` to `true` will not restart the
-     * emission cycle unless all active particles have finished processing. Use the `finished` signal
-     * to be notified once all active particles finish processing. Note: For `one_shot` emitters, due
-     * to the particles being computed on the GPU, there may be a short period after receiving the
-     * `finished` signal during which setting this to `true` will not restart the emission cycle. Tip:
-     * If your `one_shot` emitter needs to immediately restart emitting particles once `finished`
-     * signal is received, consider calling `restart` instead of setting `emitting`.
-     *
-     * Generated from Godot docs: GPUParticles3D.is_emitting
-     */
     fun isEmitting(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, handle)
     }
 
-    /**
-     * The number of particles to emit in one emission cycle. The effective emission rate is `(amount *
-     * amount_ratio) / lifetime` particles per second. Higher values will increase GPU requirements,
-     * even if not all particles are visible at a given time or if `amount_ratio` is decreased. Note:
-     * Changing this value will cause the particle system to restart. To avoid this, change
-     * `amount_ratio` instead.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_amount
-     */
     fun getAmount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, handle)
     }
 
-    /**
-     * The amount of time each particle will exist (in seconds). The effective emission rate is
-     * `(amount * amount_ratio) / lifetime` particles per second.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_lifetime
-     */
     fun getLifetime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, handle)
     }
 
-    /**
-     * If `true`, only the number of particles equal to `amount` will be emitted.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_one_shot
-     */
     fun getOneShot(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
     }
 
-    /**
-     * Amount of time to preprocess the particles before animation starts. Lets you start the animation
-     * some time after particles have started emitting. Note: This can be very expensive if set to a
-     * high number as it requires running the particle shader a number of times equal to the
-     * `fixed_fps` (or 30, if `fixed_fps` is 0) for every second. In extreme cases it can even lead to
-     * a GPU crash due to the volume of work done in a single frame.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_pre_process_time
-     */
     fun getPreProcessTime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, handle)
     }
 
-    /**
-     * Time ratio between each emission. If `0`, particles are emitted continuously. If `1`, all
-     * particles are emitted simultaneously.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_explosiveness_ratio
-     */
     fun getExplosivenessRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, handle)
     }
 
-    /**
-     * Emission randomness ratio.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_randomness_ratio
-     */
     fun getRandomnessRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, handle)
     }
 
-    /**
-     * The `AABB` that determines the node's region which needs to be visible on screen for the
-     * particle system to be active. `GeometryInstance3D.extra_cull_margin` is added on each of the
-     * AABB's axes. Particle collisions and attraction will only occur within this area. Grow the box
-     * if particles suddenly appear/disappear when the node enters/exits the screen. The `AABB` can be
-     * grown via code or with the Particles → Generate AABB editor tool. Note: `visibility_aabb` is
-     * overridden by `GeometryInstance3D.custom_aabb` if that property is set to a non-default value.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_visibility_aabb
-     */
     fun getVisibilityAabb(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(getVisibilityAabbBind, handle)
     }
 
-    /**
-     * If `true`, particles use the parent node's coordinate space (known as local coordinates). This
-     * will cause particles to move and rotate along the `GPUParticles3D` node (and its parents) when
-     * it is moved or rotated. If `false`, particles use global coordinates; they will not move or
-     * rotate along the `GPUParticles3D` node (and its parents) when it is moved or rotated.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_use_local_coordinates
-     */
     fun getUseLocalCoordinates(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, handle)
     }
 
-    /**
-     * The particle system's frame rate is fixed to a value. For example, changing the value to 2 will
-     * make the particles render at 2 frames per second. Note this does not slow down the simulation of
-     * the particle system itself.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_fixed_fps
-     */
     fun getFixedFps(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, handle)
     }
 
-    /**
-     * If `true`, results in fractional delta calculation which has a smoother particles display
-     * effect.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_fractional_delta
-     */
     fun getFractionalDelta(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, handle)
     }
 
-    /**
-     * Enables particle interpolation, which makes the particle movement smoother when their
-     * `fixed_fps` is lower than the screen refresh rate.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_interpolate
-     */
     fun getInterpolate(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getInterpolateBind, handle)
     }
 
-    /**
-     * `Material` for processing particles. Can be a `ParticleProcessMaterial` or a `ShaderMaterial`.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_process_material
-     */
     fun getProcessMaterial(): Material? {
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProcessMaterialBind, handle))
     }
 
-    /**
-     * Speed scaling ratio. A value of `0` can be used to pause the particles.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_speed_scale
-     */
     fun getSpeedScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
-    /**
-     * The base diameter for particle collision in meters. If particles appear to sink into the ground
-     * when colliding, increase this value. If particles appear to float when colliding, decrease this
-     * value. Only effective if `ParticleProcessMaterial.collision_mode` is
-     * `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
-     * collision shape.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_collision_base_size
-     */
     fun getCollisionBaseSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBaseSizeBind, handle)
     }
 
-    /**
-     * Causes all the particles in this node to interpolate towards the end of their lifetime. Note:
-     * This only works when used with a `ParticleProcessMaterial`. It needs to be manually implemented
-     * for custom process shaders.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_interp_to_end
-     */
     fun getInterpToEnd(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInterpToEndBind, handle)
     }
 
-    /**
-     * If `true`, particles will use the same seed for every simulation using the seed defined in
-     * `seed`. This is useful for situations where the visual outcome should be consistent across
-     * replays, for example when using Movie Maker mode.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_use_fixed_seed
-     */
     fun setUseFixedSeed(useFixedSeed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, handle, useFixedSeed)
     }
 
-    /**
-     * If `true`, particles will use the same seed for every simulation using the seed defined in
-     * `seed`. This is useful for situations where the visual outcome should be consistent across
-     * replays, for example when using Movie Maker mode.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_use_fixed_seed
-     */
     fun getUseFixedSeed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, handle)
     }
 
-    /**
-     * Sets the random seed used by the particle system. Only effective if `use_fixed_seed` is `true`.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_seed
-     */
     fun setSeed(seed: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, handle, seed)
     }
 
-    /**
-     * Sets the random seed used by the particle system. Only effective if `use_fixed_seed` is `true`.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_seed
-     */
     fun getSeed(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, handle)
     }
 
-    /**
-     * Particle draw order. Note: `DRAW_ORDER_INDEX` is the only option that supports motion vectors
-     * for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
-     * ghosting artifacts.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_draw_order
-     */
     fun setDrawOrder(order: Long) {
         ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, handle, order)
     }
 
-    /**
-     * Particle draw order. Note: `DRAW_ORDER_INDEX` is the only option that supports motion vectors
-     * for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
-     * ghosting artifacts.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_draw_order
-     */
     fun getDrawOrder(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, handle)
     }
 
-    /**
-     * The number of draw passes when rendering particles.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_draw_passes
-     */
     fun setDrawPasses(passes: Int) {
         ObjectCalls.ptrcallWithIntArg(setDrawPassesBind, handle, passes)
     }
 
-    /**
-     * `Mesh` that is drawn for the fourth draw pass.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_draw_pass_mesh
-     */
     fun setDrawPassMesh(pass: Int, mesh: Mesh?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setDrawPassMeshBind, handle, pass, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    /**
-     * The number of draw passes when rendering particles.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_draw_passes
-     */
     fun getDrawPasses(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDrawPassesBind, handle)
     }
 
-    /**
-     * `Mesh` that is drawn for the fourth draw pass.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_draw_pass_mesh
-     */
     fun getDrawPassMesh(pass: Int): Mesh? {
         return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDrawPassMeshBind, handle, pass))
     }
@@ -649,171 +371,76 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         ObjectCalls.ptrcallWithBoolArg(restartBind, handle, keepSeed)
     }
 
-    /**
-     * Returns the axis-aligned bounding box that contains all the particles that are active in the
-     * current frame.
-     *
-     * Generated from Godot docs: GPUParticles3D.capture_aabb
-     */
     fun captureAabb(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(captureAabbBind, handle)
     }
 
-    /**
-     * Path to another `GPUParticles3D` node that will be used as a subemitter (see
-     * `ParticleProcessMaterial.sub_emitter_mode`). Subemitters can be used to achieve effects such as
-     * fireworks, sparks on collision, bubbles popping into water drops, and more. Note: When
-     * `sub_emitter` is set, the target `GPUParticles3D` node will no longer emit particles on its own.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_sub_emitter
-     */
     fun setSubEmitter(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setSubEmitterBind, handle, path)
     }
 
-    /**
-     * Path to another `GPUParticles3D` node that will be used as a subemitter (see
-     * `ParticleProcessMaterial.sub_emitter_mode`). Subemitters can be used to achieve effects such as
-     * fireworks, sparks on collision, bubbles popping into water drops, and more. Note: When
-     * `sub_emitter` is set, the target `GPUParticles3D` node will no longer emit particles on its own.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_sub_emitter
-     */
     fun getSubEmitter(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getSubEmitterBind, handle)
     }
 
-    /**
-     * Emits a single particle. Whether `xform`, `velocity`, `color` and `custom` are applied depends
-     * on the value of `flags`. See `EmitFlags`. The default ParticleProcessMaterial will overwrite
-     * `color` and use the contents of `custom` as `(rotation, age, animation, lifetime)`. Note:
-     * `emit_particle` is only supported on the Forward+ and Mobile rendering methods, not
-     * Compatibility.
-     *
-     * Generated from Godot docs: GPUParticles3D.emit_particle
-     */
     fun emitParticle(xform: Transform3D, velocity: Vector3, color: Color, custom: Color, flags: Long) {
         ObjectCalls.ptrcallWithTransform3DVector3TwoColorUInt32Args(emitParticleBind, handle, xform, velocity, color, custom, flags)
     }
 
-    /**
-     * If `true`, enables particle trails using a mesh skinning system. Designed to work with
-     * `RibbonTrailMesh` and `TubeTrailMesh`. Note: `BaseMaterial3D.use_particle_trails` must also be
-     * enabled on the particle mesh's material. Otherwise, setting `trail_enabled` to `true` will have
-     * no effect. Note: Unlike `GPUParticles2D`, the number of trail sections and subdivisions is set
-     * in the `RibbonTrailMesh` or the `TubeTrailMesh`'s properties.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_trail_enabled
-     */
     fun setTrailEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTrailEnabledBind, handle, enabled)
     }
 
-    /**
-     * The amount of time the particle's trail should represent (in seconds). Only effective if
-     * `trail_enabled` is `true`.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_trail_lifetime
-     */
     fun setTrailLifetime(secs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTrailLifetimeBind, handle, secs)
     }
 
-    /**
-     * If `true`, enables particle trails using a mesh skinning system. Designed to work with
-     * `RibbonTrailMesh` and `TubeTrailMesh`. Note: `BaseMaterial3D.use_particle_trails` must also be
-     * enabled on the particle mesh's material. Otherwise, setting `trail_enabled` to `true` will have
-     * no effect. Note: Unlike `GPUParticles2D`, the number of trail sections and subdivisions is set
-     * in the `RibbonTrailMesh` or the `TubeTrailMesh`'s properties.
-     *
-     * Generated from Godot docs: GPUParticles3D.is_trail_enabled
-     */
     fun isTrailEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTrailEnabledBind, handle)
     }
 
-    /**
-     * The amount of time the particle's trail should represent (in seconds). Only effective if
-     * `trail_enabled` is `true`.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_trail_lifetime
-     */
     fun getTrailLifetime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTrailLifetimeBind, handle)
     }
 
-    /**
-     * The alignment of particles. Use this for billboarding and aligning to velocity.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_transform_align
-     */
     fun setTransformAlign(align: Long) {
         ObjectCalls.ptrcallWithLongArg(setTransformAlignBind, handle, align)
     }
 
-    /**
-     * The alignment of particles. Use this for billboarding and aligning to velocity.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_transform_align
-     */
     fun getTransformAlign(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignBind, handle)
     }
 
-    /**
-     * Sets this node's properties to match a given `CPUParticles3D` node.
-     *
-     * Generated from Godot docs: GPUParticles3D.convert_from_particles
-     */
+    fun setTransformAlignChannelFilter(channelFilter: Long) {
+        ObjectCalls.ptrcallWithLongArg(setTransformAlignChannelFilterBind, handle, channelFilter)
+    }
+
+    fun getTransformAlignChannelFilter(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignChannelFilterBind, handle)
+    }
+
+    fun setTransformAlignAxis(align: Long) {
+        ObjectCalls.ptrcallWithLongArg(setTransformAlignAxisBind, handle, align)
+    }
+
+    fun getTransformAlignAxis(): Long {
+        return ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignAxisBind, handle)
+    }
+
     fun convertFromParticles(particles: Node) {
         ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, handle, listOf(particles.handle))
     }
 
-    /**
-     * The ratio of particles that should actually be emitted. If set to a value lower than `1.0`, this
-     * will set the amount of emitted particles throughout the lifetime to `amount * amount_ratio`.
-     * Unlike changing `amount`, changing `amount_ratio` while emitting does not affect already-emitted
-     * particles and doesn't cause the particle system to restart. `amount_ratio` can be used to create
-     * effects that make the number of emitted particles vary over time. Note: Reducing the
-     * `amount_ratio` has no performance benefit, since resources need to be allocated and processed
-     * for the total `amount` of particles regardless of the `amount_ratio`. If you don't intend to
-     * change the number of particles emitted while the particles are emitting, make sure
-     * `amount_ratio` is set to `1` and change `amount` to your liking instead.
-     *
-     * Generated from Godot docs: GPUParticles3D.set_amount_ratio
-     */
     fun setAmountRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAmountRatioBind, handle, ratio)
     }
 
-    /**
-     * The ratio of particles that should actually be emitted. If set to a value lower than `1.0`, this
-     * will set the amount of emitted particles throughout the lifetime to `amount * amount_ratio`.
-     * Unlike changing `amount`, changing `amount_ratio` while emitting does not affect already-emitted
-     * particles and doesn't cause the particle system to restart. `amount_ratio` can be used to create
-     * effects that make the number of emitted particles vary over time. Note: Reducing the
-     * `amount_ratio` has no performance benefit, since resources need to be allocated and processed
-     * for the total `amount` of particles regardless of the `amount_ratio`. If you don't intend to
-     * change the number of particles emitted while the particles are emitting, make sure
-     * `amount_ratio` is set to `1` and change `amount` to your liking instead.
-     *
-     * Generated from Godot docs: GPUParticles3D.get_amount_ratio
-     */
     fun getAmountRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAmountRatioBind, handle)
     }
 
-    /**
-     * Requests the particles to process for extra process time during a single frame. `process_time`
-     * defines the time that the particles will process while emitting is on. `process_time_residual`
-     * defines the time that particles will process with emitting turned off for the simulation. When
-     * combined with `speed_scale` set to `0.0`, this is useful to be able to seek a particle system
-     * timeline.
-     *
-     * Generated from Godot docs: GPUParticles3D.request_particles_process
-     */
-    fun requestParticlesProcess(processTime: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(requestParticlesProcessBind, handle, processTime)
+    fun requestParticlesProcess(processTime: Double, processTimeResidual: Double = 0.0) {
+        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, handle, processTime, processTimeResidual)
     }
 
     object Signals {
@@ -835,6 +462,7 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         const val TRANSFORM_ALIGN_Z_BILLBOARD: Long = 1L
         const val TRANSFORM_ALIGN_Y_TO_VELOCITY: Long = 2L
         const val TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY: Long = 3L
+        const val TRANSFORM_ALIGN_LOCAL_BILLBOARD: Long = 4L
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GPUParticles3D? =
@@ -1118,6 +746,26 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
             ObjectCalls.getMethodBind("GPUParticles3D", "get_transform_align", GET_TRANSFORM_ALIGN_HASH)
         }
 
+        private const val SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH = 540833286L
+        private val setTransformAlignChannelFilterBind by lazy {
+            ObjectCalls.getMethodBind("GPUParticles3D", "set_transform_align_channel_filter", SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH)
+        }
+
+        private const val GET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH = 1664431231L
+        private val getTransformAlignChannelFilterBind by lazy {
+            ObjectCalls.getMethodBind("GPUParticles3D", "get_transform_align_channel_filter", GET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH)
+        }
+
+        private const val SET_TRANSFORM_ALIGN_AXIS_HASH = 3781785913L
+        private val setTransformAlignAxisBind by lazy {
+            ObjectCalls.getMethodBind("GPUParticles3D", "set_transform_align_axis", SET_TRANSFORM_ALIGN_AXIS_HASH)
+        }
+
+        private const val GET_TRANSFORM_ALIGN_AXIS_HASH = 2427180841L
+        private val getTransformAlignAxisBind by lazy {
+            ObjectCalls.getMethodBind("GPUParticles3D", "get_transform_align_axis", GET_TRANSFORM_ALIGN_AXIS_HASH)
+        }
+
         private const val CONVERT_FROM_PARTICLES_HASH = 1078189570L
         private val convertFromParticlesBind by lazy {
             ObjectCalls.getMethodBind("GPUParticles3D", "convert_from_particles", CONVERT_FROM_PARTICLES_HASH)
@@ -1133,7 +781,7 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
             ObjectCalls.getMethodBind("GPUParticles3D", "get_amount_ratio", GET_AMOUNT_RATIO_HASH)
         }
 
-        private const val REQUEST_PARTICLES_PROCESS_HASH = 373806689L
+        private const val REQUEST_PARTICLES_PROCESS_HASH = 66938510L
         private val requestParticlesProcessBind by lazy {
             ObjectCalls.getMethodBind("GPUParticles3D", "request_particles_process", REQUEST_PARTICLES_PROCESS_HASH)
         }

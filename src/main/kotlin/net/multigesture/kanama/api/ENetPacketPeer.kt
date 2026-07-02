@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * Generated from Godot docs: ENetPacketPeer
@@ -72,6 +72,36 @@ class ENetPacketPeer(handle: MemorySegment) : PacketPeer(handle) {
     }
 
     companion object {
+        const val PACKET_LOSS_SCALE: Long = 65536L
+        const val PACKET_THROTTLE_SCALE: Long = 32L
+        const val FLAG_RELIABLE: Long = 1L
+        const val FLAG_UNSEQUENCED: Long = 2L
+        const val FLAG_UNRELIABLE_FRAGMENT: Long = 8L
+        const val STATE_DISCONNECTED: Long = 0L
+        const val STATE_CONNECTING: Long = 1L
+        const val STATE_ACKNOWLEDGING_CONNECT: Long = 2L
+        const val STATE_CONNECTION_PENDING: Long = 3L
+        const val STATE_CONNECTION_SUCCEEDED: Long = 4L
+        const val STATE_CONNECTED: Long = 5L
+        const val STATE_DISCONNECT_LATER: Long = 6L
+        const val STATE_DISCONNECTING: Long = 7L
+        const val STATE_ACKNOWLEDGING_DISCONNECT: Long = 8L
+        const val STATE_ZOMBIE: Long = 9L
+        const val PEER_PACKET_LOSS: Long = 0L
+        const val PEER_PACKET_LOSS_VARIANCE: Long = 1L
+        const val PEER_PACKET_LOSS_EPOCH: Long = 2L
+        const val PEER_ROUND_TRIP_TIME: Long = 3L
+        const val PEER_ROUND_TRIP_TIME_VARIANCE: Long = 4L
+        const val PEER_LAST_ROUND_TRIP_TIME: Long = 5L
+        const val PEER_LAST_ROUND_TRIP_TIME_VARIANCE: Long = 6L
+        const val PEER_PACKET_THROTTLE: Long = 7L
+        const val PEER_PACKET_THROTTLE_LIMIT: Long = 8L
+        const val PEER_PACKET_THROTTLE_COUNTER: Long = 9L
+        const val PEER_PACKET_THROTTLE_EPOCH: Long = 10L
+        const val PEER_PACKET_THROTTLE_ACCELERATION: Long = 11L
+        const val PEER_PACKET_THROTTLE_DECELERATION: Long = 12L
+        const val PEER_PACKET_THROTTLE_INTERVAL: Long = 13L
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): ENetPacketPeer? =
             wrap(handle)

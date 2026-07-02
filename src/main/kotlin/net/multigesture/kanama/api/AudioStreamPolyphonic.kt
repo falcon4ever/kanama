@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
  * AudioStream that lets the user play custom streams at any time from code, simultaneously using a
@@ -17,25 +17,22 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
         @JvmName("setPolyphonyProperty")
         set(value) = setPolyphony(value)
 
-    /**
-     * Maximum amount of simultaneous streams that can be played.
-     *
-     * Generated from Godot docs: AudioStreamPolyphonic.set_polyphony
-     */
     fun setPolyphony(voices: Int) {
         ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, handle, voices)
     }
 
-    /**
-     * Maximum amount of simultaneous streams that can be played.
-     *
-     * Generated from Godot docs: AudioStreamPolyphonic.get_polyphony
-     */
     fun getPolyphony(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, handle)
     }
 
     companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): AudioStreamPolyphonic? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): AudioStreamPolyphonic? =
+            if (handle.address() == 0L) null else AudioStreamPolyphonic(handle)
+
         private const val SET_POLYPHONY_HASH = 1286410249L
         private val setPolyphonyBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamPolyphonic", "set_polyphony", SET_POLYPHONY_HASH)
