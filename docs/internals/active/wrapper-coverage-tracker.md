@@ -58,7 +58,7 @@ commands outside this public repo.
 | 4.2 Generator custom sections | done |
 | 4.3 `commonMain` + `expect/actual ObjectCalls` | blocked pending design decision |
 | 4.4 iOS `GodotReal` centralization | todo; low priority while single-precision is the target |
-| 4.5 Review/shrink hand-written iOS sites | done for 2026-06 pass; revisit as classes move to generated wrappers |
+| 4.5 Review/shrink hand-written iOS sites | done (2026-07 pass, task 10). 14 -> 11 HANDWRITTEN: Time/InputMap/PhysicsServer3D retired to generated wrappers (08/09 shapes made them clean supersets); remaining 11 are platform/runtime glue or documented permanent exceptions (Engine get_main_loop -> MainLoop non-wrapper, ProjectSettings Variant->Double coercion, ResourceLoader typed loaders). Revisit if MainLoop becomes a wrapper or generator custom sections (task 11) can host the coercion/typed-load sugar. |
 
 ### Phase 5 — Virtual Methods
 

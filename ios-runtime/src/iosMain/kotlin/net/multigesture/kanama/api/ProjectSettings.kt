@@ -3,8 +3,9 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
-// KANAMA-IOS-HANDWRITTEN: [glue] ProjectSettings singleton (engine global). get_setting returns a
-// Variant, so it routes through the Object Variant call path (not the audited ptrcall set).
+// KANAMA-IOS-HANDWRITTEN: [glue] ProjectSettings singleton. Not retired to the generated wrapper:
+// the only demo-used method is getSettingDouble(name), a bespoke Variant->Double coercion over
+// get_setting (a Variant return). The generator emits no coercing helper, so this stays bespoke.
 object ProjectSettings {
     private val singleton: MemorySegment by lazy {
         ObjectCalls.getSingleton("ProjectSettings")

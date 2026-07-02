@@ -688,7 +688,11 @@ object Mathf {
         value.coerceIn(min, max)
 }
 
-// KANAMA-IOS-HANDWRITTEN: [glue] ResourceLoader singleton glue over the C shim resource loader.
+// KANAMA-IOS-HANDWRITTEN: [glue] ResourceLoader singleton. Not retired to the generated wrapper:
+// the generated ResourceLoader.load() returns a bare Resource, but demos call the bespoke typed
+// loaders (loadTexture2D/loadAudioStream/loadPackedScene), which pass a type_hint through the C
+// shim and wrap the result to the concrete type. The generator emits no typed-load sugar, so this
+// stays bespoke.
 object ResourceLoader {
     fun load(path: String): Resource? =
         IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
