@@ -71,15 +71,17 @@ width is the whole correctness story. Ordered by demo unblocking value
 | 2.5 ✅ | `Transform3D` / `Basis` args+returns | **opus** | FPS, third-person, squash-the-creeps demos; widest structs, `real_t`-sensitive |
 | 2.5b ✅ | `RID` / `Quaternion` / `AABB` args+returns | **opus** | Third-person rotation, 3D culling, resource handles |
 | 2.6 ✅ | `@ScriptProperty` value types (NodePath/Vector/Color delivery) | **opus** | Platformer `view: NodePath`; done 2026-06-15 after Phase 3, device-validated end-to-end |
-| 2.7 | Variant / typed-array / vararg ptrcall on iOS | **opus** | Long tail; mirror Phase 1.2–1.3 desktop semantics. **In progress (2026-06-16):** ~86 true shape-gaps over the emitted classes (Transform2D, NodePath/StringName returns, Packed*/Typed* arrays, Variant); Callable + vararg stay deferred like desktop 1.4 |
+| 2.7 ✅ | Variant / typed-array / vararg ptrcall on iOS | **opus** | Long tail; mirror Phase 1.2–1.3 desktop semantics. **Done (sub-phases 2.7a–2.7j):** the named shapes landed (Transform2D, no-arg + audited arg-bearing NodePath/StringName/String returns, Packed*/Typed*-array returns with destroy-after-read, Variant scalar returns), each with a self-test row + ObjectCalls probe. Residual audited-guardrail skips over the emitted union are the deferred long tail — Variant *args* (Callable/vararg, task 09), Dictionary returns (conservative container policy), `PackedByteArray`, and `int32`-arg container returns; Callable + vararg stay deferred like desktop 1.4 |
 
 **Status (2026-06-16):** 2.1–2.6 all DONE and device-validated (iPhone 12, iOS
 26.5) — the full POD-passthrough + String/StringName/NodePath audited set + the
-`@ScriptProperty` value-type delivery path, with a fail-loud self-test matrix (42 C
-+ 53 Kotlin rows, all green). `Plane` deferred: no clean arg+return on an emitted
-class to anchor a self-test row. **2.7 (the long tail) is the only remaining Phase 2
-item — IN PROGRESS;** Callable + vararg stay deferred to match desktop 1.4. See the
-tracker for the live per-task state.
+`@ScriptProperty` value-type delivery path, with a fail-loud self-test matrix. **2.7
+(the long tail) landed in sub-phases 2.7a–2.7j** — the self-test matrix has since grown
+to 61 C + 79 Kotlin rows covering the named shapes (Transform2D, NodePath/StringName/
+String returns, Packed*/Typed*-array returns, Variant scalar). `Plane` returns are wired
+(`ptrcallNoArgsRetPlaneList`); `Plane` args stay deferred (no clean arg+return on an
+emitted class to anchor a self-test row). Callable + vararg stay deferred to match desktop
+1.4. See the tracker for the live per-task state.
 
 **Done when:** the audited-set skip report for the demo corpus is empty
 for non-virtual methods; self-test matrix green on device.
