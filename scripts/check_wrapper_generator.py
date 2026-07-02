@@ -354,6 +354,60 @@ def check_ios_fixture(output_dir: Path) -> int:
     return 0
 
 
+def _gen_ios(output_dir: Path, *class_names: str) -> subprocess.CompletedProcess:
+    """Run the iOS generator for one-or-more classes, capturing stdout+stderr."""
+    return subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/generate_api_wrapper.py"),
+            *sum((["--ios-emit-class", c] for c in class_names), []),
+            "--ios-output-dir",
+            str(output_dir),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+
+def check_ios_policies(output_dir: Path) -> int:
+    """Lock the task-11 generator policies so a refactor can't silently regress them.
+
+    1. bare-`Object` returns are emitted on iOS (GodotObject wrap policy) — else regen
+       silently drops get_collider()-style methods.
+    2. Node.createTween() is generated `open` so the hand-written SceneTree subclass can
+       override it (the FPS F2 fix) — else regen re-breaks the SIGSEGV path.
+    3. a hand-written class (SceneTree) requested for emission is reported as a collision and
+       NOT written — else a duplicate-class file breaks the compile.
+    """
+    policy_dir = output_dir / "ios-policies"
+    policy_dir.mkdir(parents=True, exist_ok=True)
+
+    _gen_ios(policy_dir, "KinematicCollision2D", "Node")
+    kc = (policy_dir / "KinematicCollision2D.kt").read_text(encoding="utf-8")
+    if "fun getCollider(): GodotObject?" not in kc:
+        print("[wrapper_generator] FAIL bare-Object return getCollider() dropped on iOS "
+              "(GodotObject wrap policy regressed)", file=sys.stderr)
+        return 1
+    node = (policy_dir / "Node.kt").read_text(encoding="utf-8")
+    if "open fun createTween(): Tween?" not in node:
+        print("[wrapper_generator] FAIL Node.createTween() is not generated `open` "
+              "(subclass-override policy regressed — breaks the SceneTree F2 fix)", file=sys.stderr)
+        return 1
+
+    collision = _gen_ios(policy_dir, "SceneTree")
+    if (policy_dir / "SceneTree.kt").exists():
+        print("[wrapper_generator] FAIL SceneTree.kt emitted despite being hand-written "
+              "(collision policy regressed)", file=sys.stderr)
+        return 1
+    if "collision: SceneTree is hand-written" not in collision.stderr:
+        print("[wrapper_generator] FAIL SceneTree collision not reported "
+              "(collision policy regressed)", file=sys.stderr)
+        return 1
+    return 0
+
+
 def main() -> int:
     name_constants = subprocess.run(
         [sys.executable, str(ROOT / "scripts/generate_name_constants.py"), "--check"],
@@ -378,6 +432,8 @@ def main() -> int:
             if check_adopted_source(output_dir, class_name, allow_virtual_skips=True) != 0:
                 return 1
         if check_ios_fixture(output_dir) != 0:
+            return 1
+        if check_ios_policies(output_dir) != 0:
             return 1
 
     adopted = (

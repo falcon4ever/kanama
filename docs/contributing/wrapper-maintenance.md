@@ -53,6 +53,39 @@ python3 scripts/generate_name_constants.py
 `scripts/check_wrapper_generator.py` runs the same generator in `--check` mode,
 so a Godot API refresh fails loudly if the committed name constants are stale.
 
+## iOS Generator Policy
+
+The iOS island is emitted under `IOS_AUDIT_ONLY` and has extra policy so a regen stays
+honest instead of silently dropping or clashing. These are locked by `check_ios_policies`
+in `scripts/check_wrapper_generator.py`:
+
+- **Bare-`Object` returns.** `get_collider()`-style methods that return the root Godot
+  `Object` wrap to `GodotObject?`. Desktop/Android find `GodotObject.wrap()` via a
+  `GodotObject.kt` file; on iOS `GodotObject` lives inside `IosGodotApi.kt`, so
+  `wrapper_has_wrap` special-cases `GodotObject` as always-present. Without this the iOS
+  regen drops every bare-`Object`-return method (a silent coverage loss), even though the
+  `ptrcallNoArgsRetObject` helper is fully wired (Node returns use it).
+
+- **Subclass-override openness.** Where a hand-written iOS subclass overrides a generated
+  method, the base method must be generated `open` — otherwise a regen drops the keyword and
+  the override stops compiling. `Node.createTween()` is emitted `open` (via the Node custom
+  member section) so the hand-written `SceneTree` subclass can override it with the correct
+  `SceneTree.create_tween` bind (the FPS F2 fix). Add such cases to the class's
+  `IOS_CUSTOM_MEMBER_SECTIONS` entry, not by hand-editing the generated file.
+
+- **Explicit class collisions.** Real Godot classes that are deliberately hand-written on iOS
+  (inside `IosGodotApi.kt` or a bespoke single-class file) are listed in
+  `IOS_HANDWRITTEN_COLLISION_CLASSES` with a reason. `--ios-emit-class <that class>` logs a
+  `collision:` line and skips it, instead of writing a `<Class>.kt` that duplicate-declares
+  the class and breaks the compile. When a class graduates to a real generated wrapper
+  (as `Time`/`InputMap`/`PhysicsServer3D` did), delete its entry so generation is allowed.
+
+Known residual regen drift (tracked, not yet closed): some committed wrappers differ from a
+fresh regen on **default-value expressions** (e.g. `Node3D.lookAt(up = Vector3.UP)` — the
+generator has no `Vector3` default-value case yet) and the **non-null `fromHandle`** on
+script-attachable base classes (`Resource`). These are cross-platform (they affect the
+desktop source too) and are separate from the iOS collision/override policy above.
+
 ## Coverage Triage
 
 For v0.3.0 wrapper work, use the coverage reports as the baseline instead of

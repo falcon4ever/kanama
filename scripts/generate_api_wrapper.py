@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 from api_wrapper_candidates import CALL_SHAPES, CallShape, camel_name, const_name
@@ -175,6 +176,28 @@ IOS_AUDIT_ONLY = False
 # Otherwise the generated island won't compile (unresolved peer type / missing
 # `.wrap`). None = no constraint (desktop / single-class fixture default is set in main).
 IOS_EMIT_CLASSES: set[str] | None = None
+
+# Real Godot classes that are deliberately hand-written on iOS (inside IosGodotApi.kt or a
+# bespoke single-class file), so the generator must NOT emit a wrapper for them — a generated
+# `<Class>.kt` would duplicate-declare the class and break the compile. `scan_wrapper_classes`
+# only sees classes that own a `.kt` file, so the ones nested in IosGodotApi.kt are invisible to
+# it; without this registry, `--ios-emit-class SceneTree` would silently produce a colliding file.
+# main() logs + skips any requested class listed here, making the collision explicit (task 11,
+# generator policy). Retire an entry only when the class moves to a real generated wrapper (as
+# Time/InputMap/PhysicsServer3D did in task 10) — then delete it here so generation is allowed.
+IOS_HANDWRITTEN_COLLISION_CLASSES = {
+    "SceneTree": "hand-written Node subclass (createTween F2 fix + coroutine/companion glue) in IosGodotApi.kt",
+    "Tween": "hand-written Variant tween_property runtime in IosGodotApi.kt",
+    "Tweener": "hand-written Tween chaining glue in IosGodotApi.kt",
+    "PropertyTweener": "hand-written Tween chaining glue in IosGodotApi.kt",
+    "CallbackTweener": "hand-written Tween chaining glue in IosGodotApi.kt",
+    "ResourceLoader": "hand-written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt",
+    "Engine": "hand-written singleton (get_main_loop -> MainLoop, no wrapper class) in Engine.kt",
+    "ProjectSettings": "hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt",
+    "StaticBody3D": "hand-written thin Node3D subclass in IosGodotApi.kt",
+    "AudioStreamPlayer": "hand-written cinterop-glue Node subclass in IosGodotApi.kt",
+    "InputEventMouseButton": "hand-written cinterop-glue event wrapper in IosGodotApi.kt",
+}
 
 # Logical arg kinds the iOS generic dispatch + Kotlin layout marshal today. Scalars
 # widen per the width table (int*->int64/8B, float->double/8B); Vector2/3 components
@@ -482,7 +505,10 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
     fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (MemorySegment) -> T): T? =
         getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
 
-    fun createTween(): Tween? =
+    // `open` so the hand-written SceneTree subclass (IosGodotApi.kt) can override createTween() with
+    // the correct SceneTree.create_tween bind — the FPS F2 fix. Generated here so a regen preserves
+    // the openness instead of silently dropping it (which would re-break the SIGSEGV path).
+    open fun createTween(): Tween? =
         IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
             Tween(MemorySegment.ofAddress(it))
         }
@@ -611,6 +637,13 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
 
 
 def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
+    # GodotObject is the hand-written universal base — it always exists on every platform with a
+    # `wrap(handle): GodotObject?` helper, but it does not live in a GodotObject.kt file on iOS
+    # (it is declared inside IosGodotApi.kt). Treat it as always-present so bare-`Object` returns
+    # (get_collider, shape_owner_get_owner, ...) stay emittable on iOS instead of being dropped on
+    # regen — matching desktop/Android, where GodotObject.kt makes the file check pass.
+    if class_name == "GodotObject":
+        return True
     path = api_dir / f"{class_name}.kt"
     if not path.exists():
         return False
@@ -2476,10 +2509,25 @@ def main() -> int:
     if args.ios_classes:
         global IOS_AUDIT_ONLY, IOS_EMIT_CLASSES
         IOS_AUDIT_ONLY = True
-        IOS_EMIT_CLASSES = set(args.ios_classes)
+        # Explicit class-collision handling (task 11): a class that is deliberately hand-written on
+        # iOS must not also be generated, or the two declarations collide at compile time. Log the
+        # collision and drop the request instead of silently emitting a clashing file.
+        requested = list(dict.fromkeys(args.ios_classes))
+        emit_names: list[str] = []
+        for class_name in requested:
+            reason = IOS_HANDWRITTEN_COLLISION_CLASSES.get(class_name)
+            if reason is not None:
+                print(
+                    f"[generate_api_wrapper] collision: {class_name} is hand-written on iOS "
+                    f"({reason}); skipping generation.",
+                    file=sys.stderr,
+                )
+                continue
+            emit_names.append(class_name)
+        IOS_EMIT_CLASSES = set(emit_names)
         ios_skip_lines: list[str] = []
         ios_classes: list[ApiClass] = []
-        for class_name in args.ios_classes:
+        for class_name in emit_names:
             cls = api_classes.get(class_name)
             if cls is None:
                 raise SystemExit(f"{class_name}: not found in {args.api}")
