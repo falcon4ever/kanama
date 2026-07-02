@@ -573,7 +573,44 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         const val editorStateChanged: String = "editor_state_changed"
     }
 
+    // Vararg methods (task 09 / Phase 1.4): the fixed + vararg args are boxed by
+    // ObjectCalls.callWithVariantArgs and driven through the Variant call path (device-proven on
+    // iOS via kanama_ios_godot_object_call). rpc/rpc_id return a Godot Error enum; the thread-group
+    // calls return a Variant.
+    fun rpc(method: String, vararg extraArgs: Any?): Long {
+        return (ObjectCalls.callWithVariantArgs(rpcBind, handle, listOf(method, *extraArgs)) as Number).toLong()
+    }
+
+    fun rpcId(peerId: Long, method: String, vararg extraArgs: Any?): Long {
+        return (ObjectCalls.callWithVariantArgs(rpcIdBind, handle, listOf(peerId, method, *extraArgs)) as Number).toLong()
+    }
+
+    fun callDeferredThreadGroup(method: String, vararg extraArgs: Any?): Any? {
+        return ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, handle, listOf(method, *extraArgs))
+    }
+
+    fun callThreadSafe(method: String, vararg extraArgs: Any?): Any? {
+        return ObjectCalls.callWithVariantArgs(callThreadSafeBind, handle, listOf(method, *extraArgs))
+    }
+
     companion object {
+        private const val RPC_HASH = 4047867050L
+        private val rpcBind by lazy {
+            ObjectCalls.getMethodBind("Node", "rpc", RPC_HASH)
+        }
+        private const val RPC_ID_HASH = 361499283L
+        private val rpcIdBind by lazy {
+            ObjectCalls.getMethodBind("Node", "rpc_id", RPC_ID_HASH)
+        }
+        private const val CALL_DEFERRED_THREAD_GROUP_HASH = 3400424181L
+        private val callDeferredThreadGroupBind by lazy {
+            ObjectCalls.getMethodBind("Node", "call_deferred_thread_group", CALL_DEFERRED_THREAD_GROUP_HASH)
+        }
+        private const val CALL_THREAD_SAFE_HASH = 3400424181L
+        private val callThreadSafeBind by lazy {
+            ObjectCalls.getMethodBind("Node", "call_thread_safe", CALL_THREAD_SAFE_HASH)
+        }
+
         fun printOrphanNodes() {
             ObjectCalls.ptrcallNoArgs(printOrphanNodesBind, MemorySegment.NULL)
         }

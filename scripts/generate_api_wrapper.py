@@ -207,6 +207,12 @@ IOS_ARG_KINDS = {
     "PackedFloat32Array",
     "PackedVector2Array",
     "PackedColorArray",
+    # Callable args: object+method form only (GodotCallable). The iOS ptrcall dispatch builds the
+    # Callable via constructor index 2 (PT_CALLABLE / KanamaIosCallableArgDesc) and destroys it after
+    # the call — no Kotlin-side state outlives the call, so nothing leaks regardless of engine
+    # retention (docs/internals/historical/callable-args-design.md, Decisions 1-3, 5). Callable
+    # *return* and Callable-as-Variant-arg stay unsupported (no emitted iOS method needs them).
+    "Callable",
 }
 # Return shapes the iOS helpers can read back (keyed by CallShape.kotlin_return, the
 # stable per-helper return-type token). StringName/String/RID/List/Map returns
@@ -1123,7 +1129,9 @@ def ios_method_supported(method: ApiMethod, object_types: set[str]) -> bool:
     """True iff the iOS ObjectCalls helper generator can marshal this method.
 
     Independent of desktop emittability — callers AND `unsupported_reason` together
-    gate emission. Varargs (Variant `call` path) are not generated for iOS yet.
+    gate emission. Varargs marshal through the hand-written `callWithVariantArgs` path
+    (not a generated ptrcall helper), so `unsupported_reason` clears them before this
+    ptrcall-helper gate is consulted; here they are treated as unsupported.
     """
     if method.is_vararg:
         return False
@@ -1266,8 +1274,10 @@ def unsupported_reason(
     if method.name.startswith("_"):
         return "internal/virtual callback methods are not emitted as public wrappers"
     if method.is_vararg and is_supported_vararg_method(method, object_types):
-        if IOS_AUDIT_ONLY:
-            return "iOS: vararg/Variant-path methods are not generated yet"
+        # Supported varargs (void/Variant/enum return, no Callable) render the same on every
+        # platform: ObjectCalls.callWithVariantArgs boxes the fixed + vararg args and drives the
+        # Variant call path. On iOS that path (kanama_ios_godot_object_call + encodeVariantArgs) is
+        # device-proven, so varargs are emitted there too (Phase 1.4 iOS vararg).
         return None
     if method.is_vararg:
         return "vararg methods must use dynamic Object.call policy"
@@ -1968,6 +1978,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.value
+import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -2029,6 +2040,9 @@ IOS_PT_TAG_VALUES = {
     # 23/24 are the Packed*Array build tags (KanamaIosPackedArgDesc path, not in this scalar
     # dict). PT_PROJECTION is appended at 25 to match the C enum's end (no renumbering).
     "PT_PROJECTION": 25,
+    # 26 is PT_PLANE (typed-array element selector, not an arg/ret tag). PT_CALLABLE is the
+    # object+method Callable arg (KanamaIosCallableArgDesc path); value matches the C enum.
+    "PT_CALLABLE": 27,
 }
 
 
@@ -2167,6 +2181,9 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
             ],
             f"{c}.reinterpret<CPointed>()",
         )
+    # Callable is handled directly in render_ios_helper: a Callable arg is expanded at the wrapper
+    # call site into (target.handle, method) — a (MemorySegment, String) pair — matching the desktop
+    # helper contract, so it maps to TWO helper params, not one. See render_ios_helper.
     raise ValueError(f"iOS arg kind not audited: {kind}")
 
 
@@ -2287,6 +2304,22 @@ def render_ios_helper(function: str, logical_args: tuple[str, ...], kotlin_retur
     arg_ptr_exprs: list[str] = []
     cell_decls: list[str] = []
     for i, kind in enumerate(logical_args):
+        if kind == "Callable":
+            # The wrapper call site expands a GodotCallable into (target.handle, method) — a
+            # (MemorySegment, String) pair (call_argument_expressions, same as desktop). Build a
+            # KanamaIosCallableArgDesc from that pair; the PT_CALLABLE ptrcall dispatch constructs the
+            # object+method Callable (constructor index 2) and destroys it after the call.
+            tags_used.add("PT_CALLABLE")
+            params.append(f"a{i}Object: MemorySegment")
+            params.append(f"a{i}Method: String")
+            cell_decls.append(
+                f"val c{i} = alloc<KanamaIosCallableArgDesc>(); "
+                f"c{i}.object_handle = a{i}Object.address(); "
+                f"c{i}.method = a{i}Method.cstr.ptr"
+            )
+            arg_tags.append("PT_CALLABLE")
+            arg_ptr_exprs.append(f"c{i}.ptr.reinterpret<CPointed>()")
+            continue
         param_type, tag, decls, ptr_expr = ios_arg_layout(kind, i)
         tags_used.add(tag)
         params.append(f"a{i}: {param_type}")

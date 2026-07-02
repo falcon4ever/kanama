@@ -1378,6 +1378,10 @@ object RenderingServer {
         ObjectCalls.ptrcallWithRIDAndAABBArg(visibilityNotifierSetAabbBind, singleton, notifier, aabb)
     }
 
+    fun visibilityNotifierSetCallbacks(notifier: RID, enterCallable: GodotCallable, exitCallable: GodotCallable) {
+        ObjectCalls.ptrcallWithRIDTwoCallableArgs(visibilityNotifierSetCallbacksBind, singleton, notifier, enterCallable.target.handle, enterCallable.method, exitCallable.target.handle, exitCallable.method)
+    }
+
     fun occluderCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(occluderCreateBind, singleton)
     }
@@ -1660,6 +1664,10 @@ object RenderingServer {
 
     fun compositorEffectSetEnabled(effect: RID, enabled: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(compositorEffectSetEnabledBind, singleton, effect, enabled)
+    }
+
+    fun compositorEffectSetCallback(effect: RID, callbackType: Long, callback: GodotCallable) {
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(compositorEffectSetCallbackBind, singleton, effect, callbackType, callback.target.handle, callback.method)
     }
 
     fun compositorEffectSetFlag(effect: RID, flag: Long, set: Boolean) {
@@ -2150,6 +2158,10 @@ object RenderingServer {
         ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetUseParentMaterialBind, singleton, item, enabled)
     }
 
+    fun canvasItemSetVisibilityNotifier(item: RID, enable: Boolean, area: Rect2, enterCallable: GodotCallable, exitCallable: GodotCallable) {
+        ObjectCalls.ptrcallWithRIDBoolRect2TwoCallableArgs(canvasItemSetVisibilityNotifierBind, singleton, item, enable, area, enterCallable.target.handle, enterCallable.method, exitCallable.target.handle, exitCallable.method)
+    }
+
     fun canvasItemSetCanvasGroupMode(item: RID, mode: Long, clearMargin: Double = 5.0, fitEmpty: Boolean = false, fitMargin: Double = 0.0, blurMipmaps: Boolean = false) {
         ObjectCalls.ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(canvasItemSetCanvasGroupModeBind, singleton, item, mode, clearMargin, fitEmpty, fitMargin, blurMipmaps)
     }
@@ -2322,6 +2334,10 @@ object RenderingServer {
         ObjectCalls.ptrcallWithRIDArg(freeRidBind, singleton, rid)
     }
 
+    fun requestFrameDrawnCallback(callable: GodotCallable) {
+        ObjectCalls.ptrcallWithCallableArg(requestFrameDrawnCallbackBind, singleton, callable.target.handle, callable.method)
+    }
+
     fun hasChanged(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasChangedBind, singleton)
     }
@@ -2416,6 +2432,10 @@ object RenderingServer {
 
     fun isOnRenderThread(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOnRenderThreadBind, singleton)
+    }
+
+    fun callOnRenderThread(callable: GodotCallable) {
+        ObjectCalls.ptrcallWithCallableArg(callOnRenderThreadBind, singleton, callable.target.handle, callable.method)
     }
 
     fun hasFeature(feature: Long): Boolean {
@@ -3473,6 +3493,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_set_aabb", VISIBILITY_NOTIFIER_SET_AABB_HASH)
     }
 
+    private const val VISIBILITY_NOTIFIER_SET_CALLBACKS_HASH = 2689735388L
+    private val visibilityNotifierSetCallbacksBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_set_callbacks", VISIBILITY_NOTIFIER_SET_CALLBACKS_HASH)
+    }
+
     private const val OCCLUDER_CREATE_HASH = 529393457L
     private val occluderCreateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "occluder_create", OCCLUDER_CREATE_HASH)
@@ -3826,6 +3851,11 @@ object RenderingServer {
     private const val COMPOSITOR_EFFECT_SET_ENABLED_HASH = 1265174801L
     private val compositorEffectSetEnabledBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_enabled", COMPOSITOR_EFFECT_SET_ENABLED_HASH)
+    }
+
+    private const val COMPOSITOR_EFFECT_SET_CALLBACK_HASH = 487412485L
+    private val compositorEffectSetCallbackBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_callback", COMPOSITOR_EFFECT_SET_CALLBACK_HASH)
     }
 
     private const val COMPOSITOR_EFFECT_SET_FLAG_HASH = 3659527075L
@@ -4438,6 +4468,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_use_parent_material", CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH)
     }
 
+    private const val CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH = 3568945579L
+    private val canvasItemSetVisibilityNotifierBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visibility_notifier", CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH)
+    }
+
     private const val CANVAS_ITEM_SET_CANVAS_GROUP_MODE_HASH = 3973586316L
     private val canvasItemSetCanvasGroupModeBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_canvas_group_mode", CANVAS_ITEM_SET_CANVAS_GROUP_MODE_HASH)
@@ -4653,6 +4688,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "free_rid", FREE_RID_HASH)
     }
 
+    private const val REQUEST_FRAME_DRAWN_CALLBACK_HASH = 1611583062L
+    private val requestFrameDrawnCallbackBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "request_frame_drawn_callback", REQUEST_FRAME_DRAWN_CALLBACK_HASH)
+    }
+
     private const val HAS_CHANGED_HASH = 36873697L
     private val hasChangedBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "has_changed", HAS_CHANGED_HASH)
@@ -4771,6 +4811,11 @@ object RenderingServer {
     private const val IS_ON_RENDER_THREAD_HASH = 2240911060L
     private val isOnRenderThreadBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "is_on_render_thread", IS_ON_RENDER_THREAD_HASH)
+    }
+
+    private const val CALL_ON_RENDER_THREAD_HASH = 1611583062L
+    private val callOnRenderThreadBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "call_on_render_thread", CALL_ON_RENDER_THREAD_HASH)
     }
 
     private const val HAS_FEATURE_HASH = 598462696L

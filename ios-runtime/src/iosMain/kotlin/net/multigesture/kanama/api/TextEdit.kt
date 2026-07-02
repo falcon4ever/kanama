@@ -596,6 +596,10 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         return ObjectCalls.ptrcallWithStringUInt32TwoIntArgsRetVector2i(searchBind, handle, text, flags, fromLine, fromColumn)
     }
 
+    fun setTooltipRequestFunc(callback: GodotCallable) {
+        ObjectCalls.ptrcallWithCallableArg(setTooltipRequestFuncBind, handle, callback.target.handle, callback.method)
+    }
+
     fun getLocalMousePos(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePosBind, handle)
     }
@@ -1110,6 +1114,10 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
 
     fun mergeGutters(fromLine: Int, toLine: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(mergeGuttersBind, handle, fromLine, toLine)
+    }
+
+    fun setGutterCustomDraw(column: Int, drawCallback: GodotCallable) {
+        ObjectCalls.ptrcallWithIntCallableArgs(setGutterCustomDrawBind, handle, column, drawCallback.target.handle, drawCallback.method)
     }
 
     fun getTotalGutterWidth(): Int {
@@ -1675,6 +1683,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val SEARCH_HASH = 1203739136L
         private val searchBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "search", SEARCH_HASH)
+        }
+
+        private const val SET_TOOLTIP_REQUEST_FUNC_HASH = 1611583062L
+        private val setTooltipRequestFuncBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "set_tooltip_request_func", SET_TOOLTIP_REQUEST_FUNC_HASH)
         }
 
         private const val GET_LOCAL_MOUSE_POS_HASH = 3341600327L
@@ -2320,6 +2333,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val MERGE_GUTTERS_HASH = 3937882851L
         private val mergeGuttersBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "merge_gutters", MERGE_GUTTERS_HASH)
+        }
+
+        private const val SET_GUTTER_CUSTOM_DRAW_HASH = 957362965L
+        private val setGutterCustomDrawBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "set_gutter_custom_draw", SET_GUTTER_CUSTOM_DRAW_HASH)
         }
 
         private const val GET_TOTAL_GUTTER_WIDTH_HASH = 3905245786L

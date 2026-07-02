@@ -20,6 +20,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.value
+import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis

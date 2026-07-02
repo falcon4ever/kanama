@@ -224,6 +224,21 @@ typedef struct {
 } KanamaIosPackedArgDesc;
 
 /*
+ * Descriptor for a Callable argument passed through the generic ptrcall dispatcher
+ * (KANAMA_IOS_PT_CALLABLE tag). `object_handle` is the target GodotObject pointer as an
+ * int64 and `method` is its method name as a C string. The dispatch builds an object+method
+ * Callable (Callable constructor index 2, the same one BuiltinTypes.initCallable pins on
+ * desktop) into a cell, passes it to ptrcall, and destroys the cell after the call. No
+ * Kotlin-side state outlives the call, so there is nothing to leak regardless of how long
+ * the engine retains its copy (see docs/internals/historical/callable-args-design.md,
+ * Decisions 1-3, 5).
+ */
+typedef struct {
+    int64_t object_handle;
+    const char *method;
+} KanamaIosCallableArgDesc;
+
+/*
  * Typed-object-array (Array[Object]) ptrcall return -> object handles. Drives the call through
  * the generic dispatcher (arg_types/arg_ptrs/arg_count laid out as for kanama_ios_godot_ptrcall),
  * returning an Array whose elements' object pointers are written into out_handles. Two-call length

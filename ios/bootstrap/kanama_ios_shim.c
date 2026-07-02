@@ -554,6 +554,10 @@ enum {
     KANAMA_IOS_PT_PROJECTION,
     // Typed-array element selector (not a ptrcall arg/ret tag): Array[Plane] element = 4 float32.
     KANAMA_IOS_PT_PLANE,
+    // CONSTRUCT-tagged Callable arg: arg ptr is a KanamaIosCallableArgDesc {object_handle, method};
+    // the dispatch builds an object+method Callable (constructor index 2) into a cell, passes it to
+    // ptrcall, and destroys the cell after the call. Object+method form only (Phase 1.4 Callable-args).
+    KANAMA_IOS_PT_CALLABLE,
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -563,6 +567,14 @@ typedef struct {
     int64_t count;
     const void *data;
 } KanamaIosPackedArgDesc;
+
+// Descriptor for a CONSTRUCT-tagged Callable arg (mirrors KanamaIosCallableArgDesc in
+// ios/include/kanama_ios.h — the shim does not include that header). `object_handle` is the
+// target GodotObject pointer as int64; `method` is its method name as a C string.
+typedef struct {
+    int64_t object_handle;
+    const char *method;
+} KanamaIosCallableArgDesc;
 
 enum {
     KANAMA_IOS_VARIANT_TYPE_NIL = 0,
@@ -1431,6 +1443,10 @@ void kanama_ios_godot_ptrcall(
     uint64_t packed_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
     _Static_assert(sizeof(packed_cells[0]) >= KANAMA_IOS_PACKED_ARRAY_OPAQUE_SIZE,
         "Packed*Array dispatch cell must be >= the 16-byte 64-bit ABI opaque size");
+    // 24-byte cells for CONSTRUCT-tagged Callable args (object+method Callable is 16 bytes on
+    // 64-bit; 24 matches the connect path's safety margin). The method-name StringName reuses the
+    // arg's builtin_cells[i] slot (a Callable arg uses no other cell in that slot).
+    uint8_t callable_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][24];
     int constructed[KANAMA_IOS_PTRCALL_MAX_ARGS];
 
     for (int32_t i = 0; i < arg_count; i++) {
@@ -1471,6 +1487,26 @@ void kanama_ios_godot_ptrcall(
                 }
                 break;
             }
+            case KANAMA_IOS_PT_CALLABLE: {
+                // arg ptr is a KanamaIosCallableArgDesc {object_handle, method}; build an
+                // object+method Callable (constructor index 2, resolved in resolve_godot_api) into
+                // callable_cells[i] and pass it by pointer to ptrcall. The method-name StringName
+                // lives in builtin_cells[i] so the destroy loop can free both after the call.
+                const KanamaIosCallableArgDesc *desc =
+                    (arg_ptrs != NULL) ? (const KanamaIosCallableArgDesc *)arg_ptrs[i] : NULL;
+                memset(callable_cells[i], 0, sizeof(callable_cells[i]));
+                builtin_cells[i] = 0;
+                kanama_ios_init_string_name(
+                    &builtin_cells[i],
+                    (desc != NULL && desc->method != NULL) ? desc->method : "");
+                GDExtensionObjectPtr target =
+                    (desc != NULL) ? (GDExtensionObjectPtr)(intptr_t)desc->object_handle : NULL;
+                const void *callable_args[2] = { &target, &builtin_cells[i] };
+                g_callable_object_method_constructor(callable_cells[i], callable_args);
+                args[i] = (const void *)callable_cells[i];
+                constructed[i] = tag;
+                break;
+            }
             default:
                 // POD / struct / object: the caller-laid bytes are the ptrcall value.
                 args[i] = (arg_ptrs != NULL ? arg_ptrs[i] : NULL);
@@ -1498,6 +1534,13 @@ void kanama_ios_godot_ptrcall(
             case KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY:
             case KANAMA_IOS_PT_PACKED_COLOR_ARRAY:
                 kanama_ios_destroy_packed_arg(constructed[i], packed_cells[i]);
+                break;
+            case KANAMA_IOS_PT_CALLABLE:
+                // Destroy the Callable cell and its method-name StringName. The engine
+                // copy-constructs the Callable parameter, so freeing our cell here is safe even
+                // when the engine retains its own copy (callable-args-design.md, Decision 2).
+                g_callable_destructor(callable_cells[i]);
+                kanama_ios_destroy_string_name(&builtin_cells[i]);
                 break;
             default:
                 break;
@@ -7475,6 +7518,26 @@ static void kanama_ios_ptrcall_selftest(void) {
             if (t2out[k] != t2in[k]) { t2_ok = 0; }
         }
         KANAMA_IOS_ST_CHECK("transform2d set/get_transform round-trip", t2_ok);
+    }
+
+    // Callable ptrcall arg (Phase 1.4 iOS Callable-args): build object+method Callables and pass them
+    // through the PT_CALLABLE ptrcall path. Control has a lightweight constructor (safe at SCENE-init,
+    // unlike TextEdit which pulls in the TextServer), and set_drag_forwarding(drag, can_drop, drop)
+    // takes three Callables + void return — exercising the multi-cell layout (three PT_CALLABLE cells +
+    // three method-name StringName cells built and destroyed in one call). Each Callable targets the
+    // Control itself with a valid Object method ("get_class"). Fire-later sink with no getter, so the
+    // row asserts construct -> ptrcall -> destroy round-trips without corrupting the heap.
+    {
+        int64_t ctrl = kanama_ios_godot_construct_object("Control");
+        int64_t bind = kanama_ios_godot_get_method_bind("Control", "set_drag_forwarding", 1076571380);
+        KanamaIosCallableArgDesc d0 = { ctrl, "get_class" };
+        KanamaIosCallableArgDesc d1 = { ctrl, "get_class" };
+        KanamaIosCallableArgDesc d2 = { ctrl, "get_class" };
+        const void *ca[3] = { &d0, &d1, &d2 };
+        int32_t ct[3] = { KANAMA_IOS_PT_CALLABLE, KANAMA_IOS_PT_CALLABLE, KANAMA_IOS_PT_CALLABLE };
+        kanama_ios_godot_ptrcall(bind, ctrl, ct, ca, 3, KANAMA_IOS_PT_VOID, NULL);
+        KANAMA_IOS_ST_CHECK("callable ptrcall args x3: Control.set_drag_forwarding", ctrl != 0 && bind != 0);
+        kanama_ios_godot_object_queue_free(ctrl);
     }
 
     // RID arg+return: a GPUParticles3D auto-assigns a particles base RID. Read it

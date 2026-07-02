@@ -1870,5 +1870,22 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         KanamaIosRuntime.freeScriptResource(handle)
     }
 
+    // Callable-arg helper (task 09 / Phase 1.4): the generated ptrcallWithThreeCallableArgs builds a
+    // KanamaIosCallableArgDesc from each (target.handle, method) pair and drives the PT_CALLABLE
+    // ptrcall path. Control has a lightweight constructor (safe at SCENE-init, unlike TextEdit), and
+    // set_drag_forwarding takes three Callables -> void, exercising the multi-cell layout end to end
+    // from Kotlin. Fire-later sink with no getter, so this checks the Kotlin helper -> C construct/
+    // pass/destroy round-trip survives (a marshalling or destroy bug crashes here or on a later alloc).
+    run {
+        val ctrl = ObjectCalls.constructObject("Control")
+        ObjectCalls.ptrcallWithThreeCallableArgs(
+            ObjectCalls.getMethodBind("Control", "set_drag_forwarding", 1076571380L),
+            ctrl,
+            ctrl, "get_class",
+            ctrl, "get_class",
+            ctrl, "get_class")
+        check("callable-args-x3 (ptrcallWithThreeCallableArgs)", ctrl.address() != 0L)
+    }
+
     println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
 }

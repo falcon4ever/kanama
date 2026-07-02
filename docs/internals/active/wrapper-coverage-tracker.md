@@ -26,6 +26,7 @@ commands outside this public repo.
 | 1.2 Container returns | done |
 | 1.3 Variant / RID returns | done |
 | 1.4 Callable argument design | done |
+| 1.4 Callable/vararg cross-platform impl | done (desktop/Android shipped; iOS Callable-args via PT_CALLABLE ptrcall + iOS varargs via callWithVariantArgs — self-test rows added, device validation pending). Callable-as-Variant-arg (1 method) + the Kotlin-lambda→Callable path stay deferred per design Decision 4 |
 
 ### Phase 2 — iOS Audited Type Widening
 
@@ -78,7 +79,9 @@ These are the active forward-looking items. Keep the strategic ordering in
 2. **Android hardening**: current-device Godot 4.7 stable smoke plus R8-minified APK gate.
 3. **`commonMain` wrapper unification**: migrate toward shared generated wrappers with
    `expect/actual ObjectCalls`.
-4. **Long-tail shapes**: Callable/vararg, conservative container policies, and non-POD virtual returns.
+4. **Long-tail shapes**: conservative container policies and non-POD virtual returns. (Callable-arg +
+   vararg landed cross-platform — object+method Callable form on desktop/Android/iOS; the
+   Kotlin-lambda→Callable custom-callable path and Callable-as-Variant-arg remain deferred.)
 5. **Generator policy cleanup**: explicit class-collision handling, subclass override generation, and
    tighter fixture coverage for custom member/companion sections.
 6. **Optional iOS polish**: `GodotReal` centralization.

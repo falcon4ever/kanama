@@ -1010,7 +1010,18 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         const val themeChanged: String = "theme_changed"
     }
 
+    // Callable-arg method (task 09 / Phase 1.4): object+method GodotCallable via the PT_CALLABLE
+    // ptrcall path (each Callable expands to target.handle + method at the call site).
+    fun setDragForwarding(dragFunc: GodotCallable, canDropFunc: GodotCallable, dropFunc: GodotCallable) {
+        ObjectCalls.ptrcallWithThreeCallableArgs(setDragForwardingBind, handle, dragFunc.target.handle, dragFunc.method, canDropFunc.target.handle, canDropFunc.method, dropFunc.target.handle, dropFunc.method)
+    }
+
     companion object {
+        private const val SET_DRAG_FORWARDING_HASH = 1076571380L
+        private val setDragForwardingBind by lazy {
+            ObjectCalls.getMethodBind("Control", "set_drag_forwarding", SET_DRAG_FORWARDING_HASH)
+        }
+
         const val NOTIFICATION_RESIZED: Long = 40L
         const val NOTIFICATION_MOUSE_ENTER: Long = 41L
         const val NOTIFICATION_MOUSE_EXIT: Long = 42L
