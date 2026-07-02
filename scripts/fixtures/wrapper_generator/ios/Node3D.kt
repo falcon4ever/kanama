@@ -368,7 +368,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallNoArgs(setIdentityBind, handle)
     }
 
-    fun lookAt(target: Vector3, up: Vector3, useModelFront: Boolean = false) {
+    fun lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
         ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(lookAtBind, handle, target, up, useModelFront)
     }
 

@@ -396,6 +396,28 @@ def check_ios_policies(output_dir: Path) -> int:
               "(subclass-override policy regressed — breaks the SceneTree F2 fix)", file=sys.stderr)
         return 1
 
+    # Composite default-value override: Node3D.lookAt(up = Vector3.UP) — demos call the 1-arg
+    # lookAt(target) form and rely on this default; a regen must not drop it.
+    _gen_ios(policy_dir, "Node3D")
+    node3d = (policy_dir / "Node3D.kt").read_text(encoding="utf-8")
+    if "up: Vector3 = Vector3.UP" not in node3d:
+        print("[wrapper_generator] FAIL Node3D.lookAt lost its `up = Vector3.UP` default "
+              "(composite default-value override regressed)", file=sys.stderr)
+        return 1
+
+    # Non-null factory policy: Resource.fromHandle must be non-null so KanamaScript's
+    # (MemorySegment) -> Resource selfFactory for @ScriptClass(attachTo = "Resource") type-checks.
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py"),
+         "--class", "Resource", "--output-dir", str(policy_dir)],
+        cwd=ROOT, check=True, capture_output=True,
+    )
+    resource = (policy_dir / "Resource.kt").read_text(encoding="utf-8")
+    if "fun fromHandle(handle: MemorySegment): Resource =" not in resource:
+        print("[wrapper_generator] FAIL Resource.fromHandle is not non-null "
+              "(script-attachable non-null factory policy regressed)", file=sys.stderr)
+        return 1
+
     collision = _gen_ios(policy_dir, "SceneTree")
     if (policy_dir / "SceneTree.kt").exists():
         print("[wrapper_generator] FAIL SceneTree.kt emitted despite being hand-written "

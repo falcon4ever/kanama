@@ -80,11 +80,22 @@ in `scripts/check_wrapper_generator.py`:
   the class and breaks the compile. When a class graduates to a real generated wrapper
   (as `Time`/`InputMap`/`PhysicsServer3D` did), delete its entry so generation is allowed.
 
-Known residual regen drift (tracked, not yet closed): some committed wrappers differ from a
-fresh regen on **default-value expressions** (e.g. `Node3D.lookAt(up = Vector3.UP)` — the
-generator has no `Vector3` default-value case yet) and the **non-null `fromHandle`** on
-script-attachable base classes (`Resource`). These are cross-platform (they affect the
-desktop source too) and are separate from the iOS collision/override policy above.
+Two cross-platform load-bearing wrapper shapes are reproduced by explicit policy (so a regen
+does not drop them), locked by `check_ios_policies`:
+
+- **Composite default-value overrides.** `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` injects a final
+  Kotlin default expression by exact `(class, method, arg)`. `Node3D.look_at(up = Vector3.UP)`
+  is the current entry — demos call the 1-arg `lookAt(target)` form and rely on it. Kept
+  surgical (per exact arg) so no other method silently gains a default.
+- **Non-null factory.** `NON_NULL_FROM_HANDLE_CLASSES` (currently `{Resource}`) emits
+  `fromHandle(handle): Resource` (non-null) so a `@ScriptClass(attachTo = "Resource")` script's
+  `(MemorySegment) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays.
+
+Separately, the committed wrappers carry **broad pre-existing regen drift** unrelated to the
+policies above: a fresh regen changes ~273 of ~1027 desktop generated files (accumulated
+generator improvements that were never re-adopted into the committed sources). Closing that is a
+dedicated cross-platform re-adoption pass, not part of the policy work here — see the
+platform-convergence note in the roadmap.
 
 ## Coverage Triage
 

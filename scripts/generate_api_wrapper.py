@@ -343,6 +343,15 @@ METHOD_NAME_OVERRIDES = {
 DEFAULT_VALUE_OVERRIDES = {
     ("Time", "get_datetime_string_from_datetime_dict", "use_space"): "false",
 }
+
+# Final Kotlin default expressions injected by (class, method, arg), bypassing
+# kotlin_default_expression. Use for composite defaults the generic renderer can't express but that
+# a wrapper needs — kept surgical (per exact arg) so no other method silently gains a default.
+# Node3D.look_at up defaults to Godot's Vector3(0, 1, 0); demos call the 1-arg lookAt(target) form
+# and rely on the named Vector3.UP default, so reproduce it here rather than dropping it on regen.
+KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
+    ("Node3D", "look_at", "up"): "Vector3.UP",
+}
 CUSTOM_MEMBER_SECTIONS = {
     "AnimationMixer": """
     fun setParameter(path: String, value: Any?) {
@@ -1449,7 +1458,9 @@ def render_method(
         strict=True,
     ):
         default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
-        default_expression = kotlin_default_expression(default_value, kind)
+        default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
+            (class_name, method.name, raw_name),
+        ) or kotlin_default_expression(default_value, kind)
         type_text = kotlin_type(kind, type_name, wrapper_classes, api_classes)
         param_texts.append(
             f"{name}: {type_text} = {default_expression}" if default_expression is not None else f"{name}: {type_text}",
@@ -1514,7 +1525,9 @@ def render_vararg_method(
         strict=True,
     ):
         default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
-        default_expression = kotlin_default_expression(default_value, kind)
+        default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
+            (class_name, method.name, raw_name),
+        ) or kotlin_default_expression(default_value, kind)
         type_text = kotlin_type(kind, type_name, wrapper_classes, api_classes)
         fixed_params.append(
             f"{name}: {type_text} = {default_expression}" if default_expression is not None else f"{name}: {type_text}",
@@ -1711,19 +1724,38 @@ def has_api_subclasses(class_name: str, api_classes: dict[str, ApiClass]) -> boo
     return any(candidate.inherits == class_name for candidate in api_classes.values())
 
 
+# Classes whose `fromHandle` must return a NON-NULL wrapper. KanamaScript's selfFactory is
+# `(MemorySegment) -> Self` (non-null); a `@ScriptClass(attachTo = "Resource")` script uses
+# `Resource::fromHandle` as that factory, so `Resource.fromHandle` must be `-> Resource`, not
+# `-> Resource?`. The nullable `wrap` helper stays for the general object-return path. Keep this
+# minimal — only classes actually used as a non-null script selfFactory base belong here.
+NON_NULL_FROM_HANDLE_CLASSES = {"Resource"}
+
+
 def render_wrap_helpers(class_name: str) -> str:
     # @JvmStatic is a JVM-only annotation; Kotlin/Native (iOS) rejects it. Omit it for
     # the iOS target — fromHandle works the same without it.
     lines = [] if IOS_AUDIT_ONLY else ["        @JvmStatic"]
-    lines.extend(
-        [
-            f"        fun fromHandle(handle: MemorySegment): {class_name}? =",
-            "            wrap(handle)",
-            "",
-            f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
-            f"            if (handle.address() == 0L) null else {class_name}(handle)",
-        ],
-    )
+    if class_name in NON_NULL_FROM_HANDLE_CLASSES:
+        lines.extend(
+            [
+                f"        fun fromHandle(handle: MemorySegment): {class_name} =",
+                f"            {class_name}(handle)",
+                "",
+                f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
+                f"            if (handle.address() == 0L) null else {class_name}(handle)",
+            ],
+        )
+    else:
+        lines.extend(
+            [
+                f"        fun fromHandle(handle: MemorySegment): {class_name}? =",
+                "            wrap(handle)",
+                "",
+                f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
+                f"            if (handle.address() == 0L) null else {class_name}(handle)",
+            ],
+        )
     return "\n".join(lines)
 
 
