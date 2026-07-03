@@ -11,58 +11,139 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: PhysicsTestMotionResult3D
  */
 class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the moving object's travel before collision.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_travel
+     */
     fun getTravel(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
     }
 
+    /**
+     * Returns the moving object's remaining movement vector.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_remainder
+     */
     fun getRemainder(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
     }
 
+    /**
+     * Returns the maximum fraction of the motion that can occur without a collision, between `0` and
+     * `1`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_safe_fraction
+     */
     fun getCollisionSafeFraction(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, handle)
     }
 
+    /**
+     * Returns the minimum fraction of the motion needed to collide, if a collision occurred, between
+     * `0` and `1`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_unsafe_fraction
+     */
     fun getCollisionUnsafeFraction(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, handle)
     }
 
+    /**
+     * Returns the number of detected collisions.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_count
+     */
     fun getCollisionCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCollisionCountBind, handle)
     }
 
+    /**
+     * Returns the point of collision in global coordinates given a collision index (the deepest
+     * collision by default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_point
+     */
     fun getCollisionPoint(collisionIndex: Int = 0): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's shape's normal at the point of collision given a collision index
+     * (the deepest collision by default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_normal
+     */
     fun getCollisionNormal(collisionIndex: Int = 0): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's velocity given a collision index (the deepest collision by
+     * default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_velocity
+     */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the unique instance ID of the colliding body's attached `Object` given a collision index
+     * (the deepest collision by default), if a collision occurred. See `Object.get_instance_id`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_id
+     */
     fun getColliderId(collisionIndex: Int = 0): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's `RID` used by the `PhysicsServer3D` given a collision index (the
+     * deepest collision by default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_rid
+     */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's attached `Object` given a collision index (the deepest collision by
+     * default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider
+     */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
     }
 
+    /**
+     * Returns the colliding body's shape index given a collision index (the deepest collision by
+     * default), if a collision occurred. See `CollisionObject3D`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_shape
+     */
     fun getColliderShape(collisionIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the moving object's colliding shape given a collision index (the deepest collision by
+     * default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_local_shape
+     */
     fun getCollisionLocalShape(collisionIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionLocalShapeBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the length of overlap along the collision normal given a collision index (the deepest
+     * collision by default), if a collision occurred.
+     *
+     * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_depth
+     */
     fun getCollisionDepth(collisionIndex: Int = 0): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCollisionDepthBind, handle, collisionIndex)
     }

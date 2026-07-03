@@ -16,30 +16,77 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCodeProperty")
         set(value) = setCode(value)
 
+    /**
+     * Returns the shader mode for the shader.
+     *
+     * Generated from Godot docs: Shader.get_mode
+     */
     fun getMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
+    /**
+     * Returns the shader's code as the user has written it, not the full generated code used
+     * internally.
+     *
+     * Generated from Godot docs: Shader.set_code
+     */
     fun setCode(code: String) {
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
+    /**
+     * Returns the shader's code as the user has written it, not the full generated code used
+     * internally.
+     *
+     * Generated from Godot docs: Shader.get_code
+     */
     fun getCode(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }
 
+    /**
+     * Sets the default texture to be used with a texture uniform. The default is used if a texture is
+     * not set in the `ShaderMaterial`. Note: `name` must match the name of the uniform in the code
+     * exactly. Note: If the sampler array is used use `index` to access the specified texture.
+     *
+     * Generated from Godot docs: Shader.set_default_texture_parameter
+     */
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
         ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
+    /**
+     * Returns the texture that is set as default for the specified parameter. Note: `name` must match
+     * the name of the uniform in the code exactly. Note: If the sampler array is used use `index` to
+     * access the specified texture.
+     *
+     * Generated from Godot docs: Shader.get_default_texture_parameter
+     */
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
         return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, handle, name, index))
     }
 
+    /**
+     * Returns the list of shader uniforms that can be assigned to a `ShaderMaterial`, for use with
+     * `ShaderMaterial.set_shader_parameter` and `ShaderMaterial.get_shader_parameter`. The parameters
+     * returned are contained in dictionaries in a similar format to the ones returned by
+     * `Object.get_property_list`. If argument `get_groups` is `true`, parameter grouping hints are
+     * also included in the list.
+     *
+     * Generated from Godot docs: Shader.get_shader_uniform_list
+     */
     fun getShaderUniformList(getGroups: Boolean = false): List<Any?> {
         return ObjectCalls.ptrcallWithBoolArgRetArray(getShaderUniformListBind, handle, getGroups)
     }
 
+    /**
+     * Only available when running in the editor. Opens a popup that visualizes the generated shader
+     * code, including all variants and internal shader code. See also
+     * `Material.inspect_native_shader_code`.
+     *
+     * Generated from Godot docs: Shader.inspect_native_shader_code
+     */
     fun inspectNativeShaderCode() {
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
     }

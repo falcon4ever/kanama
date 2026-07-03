@@ -18,6 +18,14 @@ class DTLSServer(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, handle, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Try to initiate the DTLS handshake with the given `udp_peer` which must be already connected
+     * (see `PacketPeerUDP.connect_to_host`). Note: You must check that the state of the return
+     * PacketPeerUDP is `PacketPeerDTLS.STATUS_HANDSHAKING`, as it is normal that 50% of the new
+     * connections will be invalid due to cookie exchange.
+     *
+     * Generated from Godot docs: DTLSServer.take_connection
+     */
     fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
         return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, handle, udpPeer?.requireOpenHandle() ?: MemorySegment.NULL))
     }

@@ -172,11 +172,22 @@ def builtin_class_description(description: str) -> str:
     )
 
 
+def _is_single_line_block(stripped: str) -> bool:
+    """A one-line KDoc block: `/** ... */`. Older syncs emitted these for brief-only
+    class docs; the new multi-line block must REPLACE one, not stack above it."""
+    return stripped.startswith("/**") and stripped.endswith("*/") and len(stripped) > len("/**/")
+
+
 def find_generated_kdoc_start(lines: list[str], declaration_index: int) -> int | None:
     index = declaration_index - 1
     while index >= 0 and lines[index].strip().startswith("@"):
         index -= 1
-    if index < 0 or lines[index].strip() != "*/":
+    if index < 0:
+        return None
+    stripped = lines[index].strip()
+    if _is_single_line_block(stripped):
+        return index if GENERATED_MARKER in stripped else None
+    if stripped != "*/":
         return None
     end = index
     while index >= 0 and lines[index].strip() != "/**":
@@ -189,7 +200,12 @@ def find_generated_kdoc_start(lines: list[str], declaration_index: int) -> int |
 
 
 def find_kdoc_start_ending_at(lines: list[str], end_index: int) -> int | None:
-    if end_index < 0 or lines[end_index].strip() != "*/":
+    if end_index < 0:
+        return None
+    stripped = lines[end_index].strip()
+    if _is_single_line_block(stripped):
+        return end_index
+    if stripped != "*/":
         return None
     index = end_index
     while index >= 0 and lines[index].strip() != "/**":

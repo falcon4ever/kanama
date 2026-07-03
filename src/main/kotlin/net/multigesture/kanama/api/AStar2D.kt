@@ -18,82 +18,193 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setNeighborFilterEnabledProperty")
         set(value) = setNeighborFilterEnabled(value)
 
+    /**
+     * Returns the next available point ID with no point associated to it.
+     *
+     * Generated from Godot docs: AStar2D.get_available_point_id
+     */
     fun getAvailablePointId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAvailablePointIdBind, handle)
     }
 
+    /**
+     * Adds a new point at the given position with the given identifier. The `id` must be 0 or larger,
+     * and the `weight_scale` must be 0.0 or greater. The `weight_scale` is multiplied by the result of
+     * `_compute_cost` when determining the overall cost of traveling across a segment from a
+     * neighboring point to this point. Thus, all else being equal, the algorithm prefers points with
+     * lower `weight_scale`s to form a path.
+     *
+     * Generated from Godot docs: AStar2D.add_point
+     */
     fun addPoint(id: Long, position: Vector2, weightScale: Double = 1.0) {
         ObjectCalls.ptrcallWithLongVector2AndDoubleArgs(addPointBind, handle, id, position, weightScale)
     }
 
+    /**
+     * Returns the position of the point associated with the given `id`.
+     *
+     * Generated from Godot docs: AStar2D.get_point_position
+     */
     fun getPointPosition(id: Long): Vector2 {
         return ObjectCalls.ptrcallWithLongArgRetVector2(getPointPositionBind, handle, id)
     }
 
+    /**
+     * Sets the `position` for the point with the given `id`.
+     *
+     * Generated from Godot docs: AStar2D.set_point_position
+     */
     fun setPointPosition(id: Long, position: Vector2) {
         ObjectCalls.ptrcallWithLongAndVector2Arg(setPointPositionBind, handle, id, position)
     }
 
+    /**
+     * Returns the weight scale of the point associated with the given `id`.
+     *
+     * Generated from Godot docs: AStar2D.get_point_weight_scale
+     */
     fun getPointWeightScale(id: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getPointWeightScaleBind, handle, id)
     }
 
+    /**
+     * Sets the `weight_scale` for the point with the given `id`. The `weight_scale` is multiplied by
+     * the result of `_compute_cost` when determining the overall cost of traveling across a segment
+     * from a neighboring point to this point.
+     *
+     * Generated from Godot docs: AStar2D.set_point_weight_scale
+     */
     fun setPointWeightScale(id: Long, weightScale: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
     }
 
+    /**
+     * Removes the point associated with the given `id` from the points pool.
+     *
+     * Generated from Godot docs: AStar2D.remove_point
+     */
     fun removePoint(id: Long) {
         ObjectCalls.ptrcallWithLongArg(removePointBind, handle, id)
     }
 
+    /**
+     * Returns whether a point associated with the given `id` exists.
+     *
+     * Generated from Godot docs: AStar2D.has_point
+     */
     fun hasPoint(id: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(hasPointBind, handle, id)
     }
 
+    /**
+     * Returns an array with the IDs of the points that form the connection with the given point.
+     *
+     * Generated from Godot docs: AStar2D.get_point_connections
+     */
     fun getPointConnections(id: Long): List<Long> {
         return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(getPointConnectionsBind, handle, id)
     }
 
+    /**
+     * Returns an array of all point IDs.
+     *
+     * Generated from Godot docs: AStar2D.get_point_ids
+     */
     fun getPointIds(): List<Long> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPointIdsBind, handle)
     }
 
+    /**
+     * If `true` enables the filtering of neighbors via `_filter_neighbor`.
+     *
+     * Generated from Godot docs: AStar2D.set_neighbor_filter_enabled
+     */
     fun setNeighborFilterEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNeighborFilterEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true` enables the filtering of neighbors via `_filter_neighbor`.
+     *
+     * Generated from Godot docs: AStar2D.is_neighbor_filter_enabled
+     */
     fun isNeighborFilterEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isNeighborFilterEnabledBind, handle)
     }
 
+    /**
+     * Disables or enables the specified point for pathfinding. Useful for making a temporary obstacle.
+     *
+     * Generated from Godot docs: AStar2D.set_point_disabled
+     */
     fun setPointDisabled(id: Long, disabled: Boolean = true) {
         ObjectCalls.ptrcallWithLongAndBoolArgs(setPointDisabledBind, handle, id, disabled)
     }
 
+    /**
+     * Returns whether a point is disabled or not for pathfinding. By default, all points are enabled.
+     *
+     * Generated from Godot docs: AStar2D.is_point_disabled
+     */
     fun isPointDisabled(id: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(isPointDisabledBind, handle, id)
     }
 
+    /**
+     * Creates a segment between the given points. If `bidirectional` is `false`, only movement from
+     * `id` to `to_id` is allowed, not the reverse direction.
+     *
+     * Generated from Godot docs: AStar2D.connect_points
+     */
     fun connectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         ObjectCalls.ptrcallWithTwoLongAndBoolArgs(connectPointsBind, handle, id, toId, bidirectional)
     }
 
+    /**
+     * Deletes the segment between the given points. If `bidirectional` is `false`, only movement from
+     * `id` to `to_id` is prevented, and a unidirectional segment possibly remains.
+     *
+     * Generated from Godot docs: AStar2D.disconnect_points
+     */
     fun disconnectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         ObjectCalls.ptrcallWithTwoLongAndBoolArgs(disconnectPointsBind, handle, id, toId, bidirectional)
     }
 
+    /**
+     * Returns whether there is a connection/segment between the given points. If `bidirectional` is
+     * `false`, returns whether movement from `id` to `to_id` is possible through this segment.
+     *
+     * Generated from Godot docs: AStar2D.are_points_connected
+     */
     fun arePointsConnected(id: Long, toId: Long, bidirectional: Boolean = true): Boolean {
         return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(arePointsConnectedBind, handle, id, toId, bidirectional)
     }
 
+    /**
+     * Returns the number of points currently in the points pool.
+     *
+     * Generated from Godot docs: AStar2D.get_point_count
+     */
     fun getPointCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPointCountBind, handle)
     }
 
+    /**
+     * Returns the capacity of the structure backing the points, useful in conjunction with
+     * `reserve_space`.
+     *
+     * Generated from Godot docs: AStar2D.get_point_capacity
+     */
     fun getPointCapacity(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPointCapacityBind, handle)
     }
 
+    /**
+     * Reserves space internally for `num_nodes` points. Useful if you're adding a known large number
+     * of points at once, such as points on a grid.
+     *
+     * Generated from Godot docs: AStar2D.reserve_space
+     */
     fun reserveSpace(numNodes: Long) {
         ObjectCalls.ptrcallWithLongArg(reserveSpaceBind, handle, numNodes)
     }
@@ -107,18 +218,56 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    /**
+     * Returns the ID of the closest point to `to_position`, optionally taking disabled points into
+     * account. Returns `-1` if there are no points in the points pool. Note: If several points are the
+     * closest to `to_position`, the one with the smallest ID will be returned, ensuring a
+     * deterministic result.
+     *
+     * Generated from Godot docs: AStar2D.get_closest_point
+     */
     fun getClosestPoint(toPosition: Vector2, includeDisabled: Boolean = false): Long {
         return ObjectCalls.ptrcallWithVector2AndBoolArgRetLong(getClosestPointBind, handle, toPosition, includeDisabled)
     }
 
+    /**
+     * Returns the closest position to `to_position` that resides inside a segment between two
+     * connected points.
+     *
+     * Generated from Godot docs: AStar2D.get_closest_position_in_segment
+     */
     fun getClosestPositionInSegment(toPosition: Vector2): Vector2 {
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPositionInSegmentBind, handle, toPosition)
     }
 
+    /**
+     * Returns an array with the points that are in the path found by AStar2D between the given points.
+     * The array is ordered from the starting point to the ending point of the path. If `from_id` point
+     * is disabled, returns an empty array (even if `from_id == to_id`). If `from_id` point is not
+     * disabled, there is no valid path to the target, and `allow_partial_path` is `true`, returns a
+     * path to the point closest to the target that can be reached. Note: This method is not
+     * thread-safe; it can only be used from a single `Thread` at a given time. Consider using `Mutex`
+     * to ensure exclusive access to one thread to avoid race conditions. Additionally, when
+     * `allow_partial_path` is `true` and `to_id` is disabled the search may take an unusually long
+     * time to finish.
+     *
+     * Generated from Godot docs: AStar2D.get_point_path
+     */
     fun getPointPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Vector2> {
         return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(getPointPathBind, handle, fromId, toId, allowPartialPath)
     }
 
+    /**
+     * Returns an array with the IDs of the points that form the path found by AStar2D between the
+     * given points. The array is ordered from the starting point to the ending point of the path. If
+     * `from_id` point is disabled, returns an empty array (even if `from_id == to_id`). If `from_id`
+     * point is not disabled, there is no valid path to the target, and `allow_partial_path` is `true`,
+     * returns a path to the point closest to the target that can be reached. Note: When
+     * `allow_partial_path` is `true` and `to_id` is disabled the search may take an unusually long
+     * time to finish.
+     *
+     * Generated from Godot docs: AStar2D.get_id_path
+     */
     fun getIdPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Long> {
         return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(getIdPathBind, handle, fromId, toId, allowPartialPath)
     }

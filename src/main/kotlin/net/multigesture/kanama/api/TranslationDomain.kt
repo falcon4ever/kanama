@@ -70,14 +70,30 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setPseudolocalizationSuffixProperty")
         set(value) = setPseudolocalizationSuffix(value)
 
+    /**
+     * Returns the `Translation` instance that best matches `locale`. Returns `null` if there are no
+     * matches.
+     *
+     * Generated from Godot docs: TranslationDomain.get_translation_object
+     */
     fun getTranslationObject(locale: String): Translation? {
         return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, handle, locale))
     }
 
+    /**
+     * Adds a translation.
+     *
+     * Generated from Godot docs: TranslationDomain.add_translation
+     */
     fun addTranslation(translation: Translation?) {
         ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Removes the given translation.
+     *
+     * Generated from Godot docs: TranslationDomain.remove_translation
+     */
     fun removeTranslation(translation: Translation?) {
         ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
@@ -91,18 +107,42 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    /**
+     * Returns all available `Translation` instances as added by `add_translation`.
+     *
+     * Generated from Godot docs: TranslationDomain.get_translations
+     */
     fun getTranslations(): List<Translation> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, handle, Translation::fromHandle)
     }
 
+    /**
+     * Returns `true` if there are any `Translation` instances that match `locale` (see
+     * `TranslationServer.compare_locales`). If `exact` is `true`, only instances whose locale exactly
+     * equals `locale` are considered.
+     *
+     * Generated from Godot docs: TranslationDomain.has_translation_for_locale
+     */
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, handle, locale, exact)
     }
 
+    /**
+     * Returns `true` if this translation domain contains the given `translation`.
+     *
+     * Generated from Godot docs: TranslationDomain.has_translation
+     */
     fun hasTranslation(translation: Translation?): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, handle, translation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the `Translation` instances that match `locale` (see
+     * `TranslationServer.compare_locales`). If `exact` is `true`, only instances whose locale exactly
+     * equals `locale` will be returned.
+     *
+     * Generated from Godot docs: TranslationDomain.find_translations
+     */
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, handle, locale, exact, Translation::fromHandle)
     }
@@ -116,94 +156,281 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, handle, message, context)
     }
 
+    /**
+     * Returns the current locale's translation for the given message, plural message and context. The
+     * number `n` is the number or quantity of the plural object. It will be used to guide the
+     * translation system to fetch the correct plural form for the selected language.
+     *
+     * Generated from Godot docs: TranslationDomain.translate_plural
+     */
     fun translatePlural(message: String, messagePlural: String, n: Int, context: String = ""): String {
         return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, handle, message, messagePlural, n, context)
     }
 
+    /**
+     * Returns the locale override of the domain. Returns an empty string if locale override is
+     * disabled.
+     *
+     * Generated from Godot docs: TranslationDomain.get_locale_override
+     */
     fun getLocaleOverride(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleOverrideBind, handle)
     }
 
+    /**
+     * Sets the locale override of the domain. If `locale` is an empty string, locale override is
+     * disabled. Otherwise, `locale` will be standardized to match known locales (e.g. `en-US` would be
+     * matched to `en_US`). Note: Calling this method does not automatically update texts in the scene
+     * tree. Please propagate the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` signal manually.
+     *
+     * Generated from Godot docs: TranslationDomain.set_locale_override
+     */
     fun setLocaleOverride(locale: String) {
         ObjectCalls.ptrcallWithStringArg(setLocaleOverrideBind, handle, locale)
     }
 
+    /**
+     * If `true`, translation is enabled. Otherwise, `translate` and `translate_plural` will return the
+     * input message unchanged regardless of the current locale.
+     *
+     * Generated from Godot docs: TranslationDomain.is_enabled
+     */
     fun isEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
     }
 
+    /**
+     * If `true`, translation is enabled. Otherwise, `translate` and `translate_plural` will return the
+     * input message unchanged regardless of the current locale.
+     *
+     * Generated from Godot docs: TranslationDomain.set_enabled
+     */
     fun setEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, enables pseudolocalization for the project. This can be used to spot untranslatable
+     * strings or layout issues that may occur once the project is localized to languages that have
+     * longer strings than the source language. Note: Updating this property does not automatically
+     * update texts in the scene tree. Please propagate the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED`
+     * notification manually after you have finished modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.is_pseudolocalization_enabled
+     */
     fun isPseudolocalizationEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, handle)
     }
 
+    /**
+     * If `true`, enables pseudolocalization for the project. This can be used to spot untranslatable
+     * strings or layout issues that may occur once the project is localized to languages that have
+     * longer strings than the source language. Note: Updating this property does not automatically
+     * update texts in the scene tree. Please propagate the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED`
+     * notification manually after you have finished modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_enabled
+     */
     fun setPseudolocalizationEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, handle, enabled)
     }
 
+    /**
+     * Replace all characters with their accented variants during pseudolocalization. Note: Updating
+     * this property does not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.is_pseudolocalization_accents_enabled
+     */
     fun isPseudolocalizationAccentsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationAccentsEnabledBind, handle)
     }
 
+    /**
+     * Replace all characters with their accented variants during pseudolocalization. Note: Updating
+     * this property does not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_accents_enabled
+     */
     fun setPseudolocalizationAccentsEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationAccentsEnabledBind, handle, enabled)
     }
 
+    /**
+     * Double vowels in strings during pseudolocalization to simulate the lengthening of text due to
+     * localization. Note: Updating this property does not automatically update texts in the scene
+     * tree. Please propagate the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually
+     * after you have finished modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.is_pseudolocalization_double_vowels_enabled
+     */
     fun isPseudolocalizationDoubleVowelsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationDoubleVowelsEnabledBind, handle)
     }
 
+    /**
+     * Double vowels in strings during pseudolocalization to simulate the lengthening of text due to
+     * localization. Note: Updating this property does not automatically update texts in the scene
+     * tree. Please propagate the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually
+     * after you have finished modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_double_vowels_enabled
+     */
     fun setPseudolocalizationDoubleVowelsEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationDoubleVowelsEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, emulate bidirectional (right-to-left) text when pseudolocalization is enabled. This
+     * can be used to spot issues with RTL layout and UI mirroring that will crop up if the project is
+     * localized to RTL languages such as Arabic or Hebrew. Note: Updating this property does not
+     * automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.is_pseudolocalization_fake_bidi_enabled
+     */
     fun isPseudolocalizationFakeBidiEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationFakeBidiEnabledBind, handle)
     }
 
+    /**
+     * If `true`, emulate bidirectional (right-to-left) text when pseudolocalization is enabled. This
+     * can be used to spot issues with RTL layout and UI mirroring that will crop up if the project is
+     * localized to RTL languages such as Arabic or Hebrew. Note: Updating this property does not
+     * automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_fake_bidi_enabled
+     */
     fun setPseudolocalizationFakeBidiEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationFakeBidiEnabledBind, handle, enabled)
     }
 
+    /**
+     * Replace all characters in the string with `*`. Useful for finding non-localizable strings. Note:
+     * Updating this property does not automatically update texts in the scene tree. Please propagate
+     * the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.is_pseudolocalization_override_enabled
+     */
     fun isPseudolocalizationOverrideEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationOverrideEnabledBind, handle)
     }
 
+    /**
+     * Replace all characters in the string with `*`. Useful for finding non-localizable strings. Note:
+     * Updating this property does not automatically update texts in the scene tree. Please propagate
+     * the `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_override_enabled
+     */
     fun setPseudolocalizationOverrideEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationOverrideEnabledBind, handle, enabled)
     }
 
+    /**
+     * Skip placeholders for string formatting like `%s` or `%f` during pseudolocalization. Useful to
+     * identify strings which need additional control characters to display correctly. Note: Updating
+     * this property does not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.is_pseudolocalization_skip_placeholders_enabled
+     */
     fun isPseudolocalizationSkipPlaceholdersEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationSkipPlaceholdersEnabledBind, handle)
     }
 
+    /**
+     * Skip placeholders for string formatting like `%s` or `%f` during pseudolocalization. Useful to
+     * identify strings which need additional control characters to display correctly. Note: Updating
+     * this property does not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_skip_placeholders_enabled
+     */
     fun setPseudolocalizationSkipPlaceholdersEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationSkipPlaceholdersEnabledBind, handle, enabled)
     }
 
+    /**
+     * The expansion ratio to use during pseudolocalization. A value of `0.3` is sufficient for most
+     * practical purposes, and will increase the length of each string by 30%. Note: Updating this
+     * property does not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.get_pseudolocalization_expansion_ratio
+     */
     fun getPseudolocalizationExpansionRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPseudolocalizationExpansionRatioBind, handle)
     }
 
+    /**
+     * The expansion ratio to use during pseudolocalization. A value of `0.3` is sufficient for most
+     * practical purposes, and will increase the length of each string by 30%. Note: Updating this
+     * property does not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_expansion_ratio
+     */
     fun setPseudolocalizationExpansionRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPseudolocalizationExpansionRatioBind, handle, ratio)
     }
 
+    /**
+     * Prefix that will be prepended to the pseudolocalized string. Note: Updating this property does
+     * not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.get_pseudolocalization_prefix
+     */
     fun getPseudolocalizationPrefix(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationPrefixBind, handle)
     }
 
+    /**
+     * Prefix that will be prepended to the pseudolocalized string. Note: Updating this property does
+     * not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_prefix
+     */
     fun setPseudolocalizationPrefix(prefix: String) {
         ObjectCalls.ptrcallWithStringArg(setPseudolocalizationPrefixBind, handle, prefix)
     }
 
+    /**
+     * Suffix that will be appended to the pseudolocalized string. Note: Updating this property does
+     * not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.get_pseudolocalization_suffix
+     */
     fun getPseudolocalizationSuffix(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationSuffixBind, handle)
     }
 
+    /**
+     * Suffix that will be appended to the pseudolocalized string. Note: Updating this property does
+     * not automatically update texts in the scene tree. Please propagate the
+     * `MainLoop.NOTIFICATION_TRANSLATION_CHANGED` notification manually after you have finished
+     * modifying pseudolocalization related options.
+     *
+     * Generated from Godot docs: TranslationDomain.set_pseudolocalization_suffix
+     */
     fun setPseudolocalizationSuffix(suffix: String) {
         ObjectCalls.ptrcallWithStringArg(setPseudolocalizationSuffixBind, handle, suffix)
     }

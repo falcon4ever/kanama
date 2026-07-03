@@ -10,6 +10,11 @@ import net.multigesture.kanama.types.RID
  * Generated from Godot docs: EditorResourcePreviewGenerator
  */
 class EditorResourcePreviewGenerator(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Call from within `_generate` to request the rendering server draw to the `viewport`.
+     *
+     * Generated from Godot docs: EditorResourcePreviewGenerator.request_draw_and_wait
+     */
     fun requestDrawAndWait(viewport: RID) {
         ObjectCalls.ptrcallWithRIDArg(requestDrawAndWaitBind, handle, viewport)
     }

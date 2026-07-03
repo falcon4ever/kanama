@@ -31,22 +31,52 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         @JvmName("setProjectedObstructionsProperty")
         set(value) = setProjectedObstructions(value)
 
+    /**
+     * Sets the parsed source geometry data vertices. The vertices need to be matched with appropriated
+     * indices. Warning: Inappropriate data can crash the baking process of the involved third-party
+     * libraries.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_vertices
+     */
     fun setVertices(vertices: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setVerticesBind, handle, vertices)
     }
 
+    /**
+     * Returns the parsed source geometry data vertices array.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_vertices
+     */
     fun getVertices(): List<Float> {
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getVerticesBind, handle)
     }
 
+    /**
+     * Sets the parsed source geometry data indices. The indices need to be matched with appropriated
+     * vertices. Warning: Inappropriate data can crash the baking process of the involved third-party
+     * libraries.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_indices
+     */
     fun setIndices(indices: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, handle, indices)
     }
 
+    /**
+     * Returns the parsed source geometry data indices array.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_indices
+     */
     fun getIndices(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }
 
+    /**
+     * Appends arrays of `vertices` and `indices` at the end of the existing arrays. Adds the existing
+     * index as an offset to the appended indices.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.append_arrays
+     */
     fun appendArrays(vertices: List<Float>, indices: List<Int>) {
         ObjectCalls.ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(appendArraysBind, handle, vertices, indices)
     }
@@ -60,18 +90,46 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    /**
+     * Returns `true` when parsed source geometry data exists.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.has_data
+     */
     fun hasData(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
     }
 
+    /**
+     * Adds the geometry data of a `Mesh` resource to the navigation mesh baking data. The mesh must
+     * have valid triangulated mesh data to be considered. Since `NavigationMesh` resources have no
+     * transform, all vertex positions need to be offset by the node's transform using `xform`.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_mesh
+     */
     fun addMesh(mesh: Mesh?, xform: Transform3D) {
         ObjectCalls.ptrcallWithObjectAndTransform3DArg(addMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, xform)
     }
 
+    /**
+     * Adds an `Array` the size of `Mesh.ARRAY_MAX` and with vertices at index `Mesh.ARRAY_VERTEX` and
+     * indices at index `Mesh.ARRAY_INDEX` to the navigation mesh baking data. The array must have
+     * valid triangulated mesh data to be considered. Since `NavigationMesh` resources have no
+     * transform, all vertex positions need to be offset by the node's transform using `xform`.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_mesh_array
+     */
     fun addMeshArray(meshArray: List<Any?>, xform: Transform3D) {
         ObjectCalls.ptrcallWithArrayTransform3DArgs(addMeshArrayBind, handle, meshArray, xform)
     }
 
+    /**
+     * Adds an array of vertex positions to the geometry data for navigation mesh baking to form
+     * triangulated faces. For each face the array must have three vertex positions in clockwise
+     * winding order. Since `NavigationMesh` resources have no transform, all vertex positions need to
+     * be offset by the node's transform using `xform`.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_faces
+     */
     fun addFaces(faces: List<Vector3>, xform: Transform3D) {
         ObjectCalls.ptrcallWithPackedVector3ListAndTransform3DArg(addFacesBind, handle, faces, xform)
     }
@@ -86,22 +144,58 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Adds a projected obstruction shape to the source geometry. The `vertices` are considered
+     * projected on an xz-axes plane, placed at the global y-axis `elevation` and extruded by `height`.
+     * If `carve` is `true` the carved shape will not be affected by additional offsets (e.g. agent
+     * radius) of the navigation mesh baking process.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_projected_obstruction
+     */
     fun addProjectedObstruction(vertices: List<Vector3>, elevation: Double, height: Double, carve: Boolean) {
         ObjectCalls.ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(addProjectedObstructionBind, handle, vertices, elevation, height, carve)
     }
 
+    /**
+     * Clears all projected obstructions.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.clear_projected_obstructions
+     */
     fun clearProjectedObstructions() {
         ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
     }
 
+    /**
+     * Sets the projected obstructions with an Array of Dictionaries with the following key value
+     * pairs:
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_projected_obstructions
+     */
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, handle, projectedObstructions)
     }
 
+    /**
+     * Returns the projected obstructions as an `Array` of dictionaries. Each `Dictionary` contains the
+     * following entries: - `vertices` - A `PackedFloat32Array` that defines the outline points of the
+     * projected shape. - `elevation` - A `float` that defines the projected shape placement on the
+     * y-axis. - `height` - A `float` that defines how much the projected shape is extruded along the
+     * y-axis. - `carve` - A `bool` that defines how the obstacle affects the navigation mesh baking.
+     * If `true` the projected shape will not be affected by addition offsets, e.g. agent radius.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_projected_obstructions
+     */
     fun getProjectedObstructions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, handle)
     }
 
+    /**
+     * Returns an axis-aligned bounding box that covers all the stored geometry data. The bounds are
+     * calculated when calling this function with the result cached until further geometry changes are
+     * made.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_bounds
+     */
     fun getBounds(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
     }

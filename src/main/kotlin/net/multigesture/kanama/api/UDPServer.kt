@@ -40,18 +40,40 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
+    /**
+     * Returns `true` if a packet with a new address/port combination was received on the socket.
+     *
+     * Generated from Godot docs: UDPServer.is_connection_available
+     */
     fun isConnectionAvailable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
+    /**
+     * Returns the local port this server is listening to.
+     *
+     * Generated from Godot docs: UDPServer.get_local_port
+     */
     fun getLocalPort(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
+    /**
+     * Returns `true` if the socket is open and listening on a port.
+     *
+     * Generated from Godot docs: UDPServer.is_listening
+     */
     fun isListening(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
 
+    /**
+     * Returns the first pending connection (connected to the appropriate address/port). Will return
+     * `null` if no new connection is available. See also `is_connection_available`,
+     * `PacketPeerUDP.connect_to_host`.
+     *
+     * Generated from Godot docs: UDPServer.take_connection
+     */
     fun takeConnection(): PacketPeerUDP? {
         return PacketPeerUDP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
@@ -66,10 +88,24 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
+    /**
+     * Define the maximum number of pending connections, during `poll`, any new pending connection
+     * exceeding that value will be automatically dropped. Setting this value to `0` effectively
+     * prevents any new pending connection to be accepted (e.g. when all your players have connected).
+     *
+     * Generated from Godot docs: UDPServer.set_max_pending_connections
+     */
     fun setMaxPendingConnections(maxPendingConnections: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxPendingConnectionsBind, handle, maxPendingConnections)
     }
 
+    /**
+     * Define the maximum number of pending connections, during `poll`, any new pending connection
+     * exceeding that value will be automatically dropped. Setting this value to `0` effectively
+     * prevents any new pending connection to be accepted (e.g. when all your players have connected).
+     *
+     * Generated from Godot docs: UDPServer.get_max_pending_connections
+     */
     fun getMaxPendingConnections(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxPendingConnectionsBind, handle)
     }

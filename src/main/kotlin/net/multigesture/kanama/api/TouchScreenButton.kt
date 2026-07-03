@@ -64,78 +64,179 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setVisibilityModeProperty")
         set(value) = setVisibilityMode(value)
 
+    /**
+     * The button's texture for the normal state.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_texture_normal
+     */
     fun setTextureNormal(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The button's texture for the normal state.
+     *
+     * Generated from Godot docs: TouchScreenButton.get_texture_normal
+     */
     fun getTextureNormal(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, handle))
     }
 
+    /**
+     * The button's texture for the pressed state.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_texture_pressed
+     */
     fun setTexturePressed(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The button's texture for the pressed state.
+     *
+     * Generated from Godot docs: TouchScreenButton.get_texture_pressed
+     */
     fun getTexturePressed(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, handle))
     }
 
+    /**
+     * The button's bitmask.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_bitmask
+     */
     fun setBitmask(bitmask: BitMap?) {
         ObjectCalls.ptrcallWithObjectArgs(setBitmaskBind, handle, listOf(bitmask?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The button's bitmask.
+     *
+     * Generated from Godot docs: TouchScreenButton.get_bitmask
+     */
     fun getBitmask(): BitMap? {
         return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBitmaskBind, handle))
     }
 
+    /**
+     * The button's shape.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_shape
+     */
     fun setShape(shape: Shape2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The button's shape.
+     *
+     * Generated from Godot docs: TouchScreenButton.get_shape
+     */
     fun getShape(): Shape2D? {
         return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
     }
 
+    /**
+     * If `true`, the button's shape is centered in the provided texture. If no texture is used, this
+     * property has no effect.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_shape_centered
+     */
     fun setShapeCentered(bool: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShapeCenteredBind, handle, bool)
     }
 
+    /**
+     * If `true`, the button's shape is centered in the provided texture. If no texture is used, this
+     * property has no effect.
+     *
+     * Generated from Godot docs: TouchScreenButton.is_shape_centered
+     */
     fun isShapeCentered(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShapeCenteredBind, handle)
     }
 
+    /**
+     * If `true`, the button's shape is visible in the editor.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_shape_visible
+     */
     fun setShapeVisible(bool: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShapeVisibleBind, handle, bool)
     }
 
+    /**
+     * If `true`, the button's shape is visible in the editor.
+     *
+     * Generated from Godot docs: TouchScreenButton.is_shape_visible
+     */
     fun isShapeVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShapeVisibleBind, handle)
     }
 
+    /**
+     * The button's action. Actions can be handled with `InputEventAction`.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_action
+     */
     fun setAction(action: String) {
         ObjectCalls.ptrcallWithStringArg(setActionBind, handle, action)
     }
 
+    /**
+     * The button's action. Actions can be handled with `InputEventAction`.
+     *
+     * Generated from Godot docs: TouchScreenButton.get_action
+     */
     fun getAction(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getActionBind, handle)
     }
 
+    /**
+     * The button's visibility mode.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_visibility_mode
+     */
     fun setVisibilityMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, handle, mode)
     }
 
+    /**
+     * The button's visibility mode.
+     *
+     * Generated from Godot docs: TouchScreenButton.get_visibility_mode
+     */
     fun getVisibilityMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, handle)
     }
 
+    /**
+     * If `true`, the `pressed` and `released` signals are emitted whenever a pressed finger goes in
+     * and out of the button, even if the pressure started outside the active area of the button. Note:
+     * This is a "pass-by" (not "bypass") press mode.
+     *
+     * Generated from Godot docs: TouchScreenButton.set_passby_press
+     */
     fun setPassbyPress(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPassbyPressBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the `pressed` and `released` signals are emitted whenever a pressed finger goes in
+     * and out of the button, even if the pressure started outside the active area of the button. Note:
+     * This is a "pass-by" (not "bypass") press mode.
+     *
+     * Generated from Godot docs: TouchScreenButton.is_passby_press_enabled
+     */
     fun isPassbyPressEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPassbyPressEnabledBind, handle)
     }
 
+    /**
+     * Returns `true` if this button is currently pressed.
+     *
+     * Generated from Godot docs: TouchScreenButton.is_pressed
+     */
     fun isPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
     }

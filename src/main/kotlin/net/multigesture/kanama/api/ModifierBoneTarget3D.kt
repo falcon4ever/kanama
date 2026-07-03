@@ -22,18 +22,38 @@ class ModifierBoneTarget3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setBoneProperty")
         set(value) = setBone(value)
 
+    /**
+     * The name of the attached bone.
+     *
+     * Generated from Godot docs: ModifierBoneTarget3D.set_bone_name
+     */
     fun setBoneName(boneName: String) {
         ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
     }
 
+    /**
+     * The name of the attached bone.
+     *
+     * Generated from Godot docs: ModifierBoneTarget3D.get_bone_name
+     */
     fun getBoneName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
     }
 
+    /**
+     * The index of the attached bone.
+     *
+     * Generated from Godot docs: ModifierBoneTarget3D.set_bone
+     */
     fun setBone(bone: Int) {
         ObjectCalls.ptrcallWithIntArg(setBoneBind, handle, bone)
     }
 
+    /**
+     * The index of the attached bone.
+     *
+     * Generated from Godot docs: ModifierBoneTarget3D.get_bone
+     */
     fun getBone(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, handle)
     }

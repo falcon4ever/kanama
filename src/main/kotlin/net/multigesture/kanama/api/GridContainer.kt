@@ -16,10 +16,22 @@ class GridContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setColumnsProperty")
         set(value) = setColumns(value)
 
+    /**
+     * The number of columns in the `GridContainer`. If modified, `GridContainer` reorders its
+     * Control-derived children to accommodate the new layout.
+     *
+     * Generated from Godot docs: GridContainer.set_columns
+     */
     fun setColumns(columns: Int) {
         ObjectCalls.ptrcallWithIntArg(setColumnsBind, handle, columns)
     }
 
+    /**
+     * The number of columns in the `GridContainer`. If modified, `GridContainer` reorders its
+     * Control-derived children to accommodate the new layout.
+     *
+     * Generated from Godot docs: GridContainer.get_columns
+     */
     fun getColumns(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, handle)
     }

@@ -56,110 +56,273 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         @JvmName("setItemCountProperty")
         set(value) = setItemCount(value)
 
+    /**
+     * Adds an item, with text `label` and (optionally) `id`. If no `id` is passed, the item index will
+     * be used as the item's ID. New items are appended at the end. Note: The item will be selected if
+     * there are no other items.
+     *
+     * Generated from Godot docs: OptionButton.add_item
+     */
     fun addItem(label: String, id: Int = -1) {
         ObjectCalls.ptrcallWithStringAndIntArg(addItemBind, handle, label, id)
     }
 
+    /**
+     * Adds an item, with a `texture` icon, text `label` and (optionally) `id`. If no `id` is passed,
+     * the item index will be used as the item's ID. New items are appended at the end. Note: The item
+     * will be selected if there are no other items.
+     *
+     * Generated from Godot docs: OptionButton.add_icon_item
+     */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1) {
         ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
     }
 
+    /**
+     * Sets the text of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.set_item_text
+     */
     fun setItemText(idx: Int, text: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, idx, text)
     }
 
+    /**
+     * Sets the icon of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.set_item_icon
+     */
     fun setItemIcon(idx: Int, texture: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Sets whether the item at index `idx` is disabled. Disabled items are drawn differently in the
+     * dropdown and are not selectable by the user. If the current selected item is set as disabled, it
+     * will remain selected.
+     *
+     * Generated from Godot docs: OptionButton.set_item_disabled
+     */
     fun setItemDisabled(idx: Int, disabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, idx, disabled)
     }
 
+    /**
+     * Sets the ID of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.set_item_id
+     */
     fun setItemId(idx: Int, id: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, handle, idx, id)
     }
 
+    /**
+     * Sets the metadata of an item. Metadata may be of any type and can be used to store extra
+     * information about an item, such as an external string ID.
+     *
+     * Generated from Godot docs: OptionButton.set_item_metadata
+     */
     fun setItemMetadata(idx: Int, metadata: Any?) {
         ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
     }
 
+    /**
+     * Sets the tooltip of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.set_item_tooltip
+     */
     fun setItemTooltip(idx: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, idx, tooltip)
     }
 
+    /**
+     * Sets the auto translate mode of the item at index `idx`. Items use
+     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `OptionButton` itself.
+     *
+     * Generated from Godot docs: OptionButton.set_item_auto_translate_mode
+     */
     fun setItemAutoTranslateMode(idx: Int, mode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, idx, mode)
     }
 
+    /**
+     * If `true`, shows a search bar at the top of the `PopupMenu` for filtering items. See
+     * `search_bar_min_item_count` for dynamically controlling its visibility based on the number of
+     * items.
+     *
+     * Generated from Godot docs: OptionButton.set_search_bar_enabled
+     */
     fun setSearchBarEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, handle, enabled)
     }
 
+    /**
+     * Sets the minimum number of items required for the `PopupMenu` search bar to be visible.
+     * `search_bar_enabled` must be `true` for this to have any effect.
+     *
+     * Generated from Godot docs: OptionButton.set_search_bar_min_item_count
+     */
     fun setSearchBarMinItemCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, handle, count)
     }
 
+    /**
+     * Sets the minimum number of items required for the `PopupMenu` search bar to be visible.
+     * `search_bar_enabled` must be `true` for this to have any effect.
+     *
+     * Generated from Godot docs: OptionButton.get_search_bar_min_item_count
+     */
     fun getSearchBarMinItemCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, handle)
     }
 
+    /**
+     * If `true`, enables fuzzy searching in the `PopupMenu` search bar. This allows the search results
+     * to include items that almost match the search query, as well items that match the individual
+     * characters of the search query, but not in sequence. Use `search_bar_fuzzy_search_max_misses` to
+     * set the maximum number of mismatches allowed in the search results.
+     *
+     * Generated from Godot docs: OptionButton.set_search_bar_fuzzy_search_enabled
+     */
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, enables fuzzy searching in the `PopupMenu` search bar. This allows the search results
+     * to include items that almost match the search query, as well items that match the individual
+     * characters of the search query, but not in sequence. Use `search_bar_fuzzy_search_max_misses` to
+     * set the maximum number of mismatches allowed in the search results.
+     *
+     * Generated from Godot docs: OptionButton.is_search_bar_fuzzy_search_enabled
+     */
     fun isSearchBarFuzzySearchEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, handle)
     }
 
+    /**
+     * Sets the maximum number of mismatches allowed in each search result when fuzzy searching is
+     * enabled for the `PopupMenu` search bar. Any item with more mismatches will be hidden from the
+     * search results.
+     *
+     * Generated from Godot docs: OptionButton.set_search_bar_fuzzy_search_max_misses
+     */
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
         ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, handle, maxMisses)
     }
 
+    /**
+     * Sets the maximum number of mismatches allowed in each search result when fuzzy searching is
+     * enabled for the `PopupMenu` search bar. Any item with more mismatches will be hidden from the
+     * search results.
+     *
+     * Generated from Godot docs: OptionButton.get_search_bar_fuzzy_search_max_misses
+     */
     fun getSearchBarFuzzySearchMaxMisses(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, handle)
     }
 
+    /**
+     * Returns the text of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_text
+     */
     fun getItemText(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
     }
 
+    /**
+     * Returns the icon of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_icon
+     */
     fun getItemIcon(idx: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, idx))
     }
 
+    /**
+     * Returns the ID of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_id
+     */
     fun getItemId(idx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, handle, idx)
     }
 
+    /**
+     * Returns the index of the item with the given `id`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_index
+     */
     fun getItemIndex(id: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, handle, id)
     }
 
+    /**
+     * Retrieves the metadata of an item. Metadata may be any type and can be used to store extra
+     * information about an item, such as an external string ID.
+     *
+     * Generated from Godot docs: OptionButton.get_item_metadata
+     */
     fun getItemMetadata(idx: Int): Any? {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
     }
 
+    /**
+     * Returns the tooltip of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_tooltip
+     */
     fun getItemTooltip(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
     }
 
+    /**
+     * Returns the auto translate mode of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_auto_translate_mode
+     */
     fun getItemAutoTranslateMode(idx: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, idx)
     }
 
+    /**
+     * Returns `true` if the item at index `idx` is disabled.
+     *
+     * Generated from Godot docs: OptionButton.is_item_disabled
+     */
     fun isItemDisabled(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, idx)
     }
 
+    /**
+     * Returns `true` if the item at index `idx` is marked as a separator.
+     *
+     * Generated from Godot docs: OptionButton.is_item_separator
+     */
     fun isItemSeparator(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, handle, idx)
     }
 
+    /**
+     * If `true`, shows a search bar at the top of the `PopupMenu` for filtering items. See
+     * `search_bar_min_item_count` for dynamically controlling its visibility based on the number of
+     * items.
+     *
+     * Generated from Godot docs: OptionButton.is_search_bar_enabled
+     */
     fun isSearchBarEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, handle)
     }
 
+    /**
+     * Adds a separator to the list of items. Separators help to group items, and can optionally be
+     * given a `text` header. A separator also gets an index assigned, and is appended at the end of
+     * the item list.
+     *
+     * Generated from Godot docs: OptionButton.add_separator
+     */
     fun addSeparator(text: String = "") {
         ObjectCalls.ptrcallWithStringArg(addSeparatorBind, handle, text)
     }
@@ -183,62 +346,147 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         ObjectCalls.ptrcallWithIntArg(selectBind, handle, idx)
     }
 
+    /**
+     * The index of the currently selected item, or `-1` if no item is selected.
+     *
+     * Generated from Godot docs: OptionButton.get_selected
+     */
     fun getSelected(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSelectedBind, handle)
     }
 
+    /**
+     * Returns the ID of the selected item, or `-1` if no item is selected.
+     *
+     * Generated from Godot docs: OptionButton.get_selected_id
+     */
     fun getSelectedId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSelectedIdBind, handle)
     }
 
+    /**
+     * Gets the metadata of the selected item. Metadata for items can be set using `set_item_metadata`.
+     *
+     * Generated from Godot docs: OptionButton.get_selected_metadata
+     */
     fun getSelectedMetadata(): Any? {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getSelectedMetadataBind, handle)
     }
 
+    /**
+     * Removes the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.remove_item
+     */
     fun removeItem(idx: Int) {
         ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, idx)
     }
 
+    /**
+     * Returns the `PopupMenu` contained in this button. Warning: This is a required internal node,
+     * removing and freeing it may cause a crash. If you wish to hide it or any of its children, use
+     * their `Window.visible` property.
+     *
+     * Generated from Godot docs: OptionButton.get_popup
+     */
     fun getPopup(): PopupMenu? {
         return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
     }
 
+    /**
+     * Adjusts popup position and sizing for the `OptionButton`, then shows the `PopupMenu`. Prefer
+     * this over using `get_popup().popup()`.
+     *
+     * Generated from Godot docs: OptionButton.show_popup
+     */
     fun showPopup() {
         ObjectCalls.ptrcallNoArgs(showPopupBind, handle)
     }
 
+    /**
+     * The number of items to select from.
+     *
+     * Generated from Godot docs: OptionButton.set_item_count
+     */
     fun setItemCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
     }
 
+    /**
+     * The number of items to select from.
+     *
+     * Generated from Godot docs: OptionButton.get_item_count
+     */
     fun getItemCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
     }
 
+    /**
+     * Returns `true` if this button contains at least one item which is not disabled, or marked as a
+     * separator.
+     *
+     * Generated from Godot docs: OptionButton.has_selectable_items
+     */
     fun hasSelectableItems(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasSelectableItemsBind, handle)
     }
 
+    /**
+     * Returns the index of the first item which is not disabled, or marked as a separator. If
+     * `from_last` is `true`, the items will be searched in reverse order. Returns `-1` if no item is
+     * found.
+     *
+     * Generated from Godot docs: OptionButton.get_selectable_item
+     */
     fun getSelectableItem(fromLast: Boolean = false): Int {
         return ObjectCalls.ptrcallWithBoolArgRetInt(getSelectableItemBind, handle, fromLast)
     }
 
+    /**
+     * If `true`, minimum size will be determined by the longest item's text, instead of the currently
+     * selected one's. Note: For performance reasons, the minimum size doesn't update immediately when
+     * adding, removing or modifying items.
+     *
+     * Generated from Godot docs: OptionButton.set_fit_to_longest_item
+     */
     fun setFitToLongestItem(fit: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFitToLongestItemBind, handle, fit)
     }
 
+    /**
+     * If `true`, minimum size will be determined by the longest item's text, instead of the currently
+     * selected one's. Note: For performance reasons, the minimum size doesn't update immediately when
+     * adding, removing or modifying items.
+     *
+     * Generated from Godot docs: OptionButton.is_fit_to_longest_item
+     */
     fun isFitToLongestItem(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFitToLongestItemBind, handle)
     }
 
+    /**
+     * If `true`, the currently selected item can be selected again.
+     *
+     * Generated from Godot docs: OptionButton.set_allow_reselect
+     */
     fun setAllowReselect(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
     }
 
+    /**
+     * If `true`, the currently selected item can be selected again.
+     *
+     * Generated from Godot docs: OptionButton.get_allow_reselect
+     */
     fun getAllowReselect(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
     }
 
+    /**
+     * If `true`, shortcuts are disabled and cannot be used to trigger the button.
+     *
+     * Generated from Godot docs: OptionButton.set_disable_shortcuts
+     */
     fun setDisableShortcuts(disabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
     }

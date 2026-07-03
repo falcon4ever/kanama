@@ -17,46 +17,113 @@ class Bone2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setRestProperty")
         set(value) = setRest(value)
 
+    /**
+     * Rest transform of the bone. You can reset the node's transforms to this value using
+     * `apply_rest`.
+     *
+     * Generated from Godot docs: Bone2D.set_rest
+     */
     fun setRest(rest: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setRestBind, handle, rest)
     }
 
+    /**
+     * Rest transform of the bone. You can reset the node's transforms to this value using
+     * `apply_rest`.
+     *
+     * Generated from Godot docs: Bone2D.get_rest
+     */
     fun getRest(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getRestBind, handle)
     }
 
+    /**
+     * Resets the bone to the rest pose. This is equivalent to setting `Node2D.transform` to `rest`.
+     *
+     * Generated from Godot docs: Bone2D.apply_rest
+     */
     fun applyRest() {
         ObjectCalls.ptrcallNoArgs(applyRestBind, handle)
     }
 
+    /**
+     * Returns the node's `rest` `Transform2D` if it doesn't have a parent, or its rest pose relative
+     * to its parent.
+     *
+     * Generated from Godot docs: Bone2D.get_skeleton_rest
+     */
     fun getSkeletonRest(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getSkeletonRestBind, handle)
     }
 
+    /**
+     * Returns the node's index as part of the entire skeleton. See `Skeleton2D`.
+     *
+     * Generated from Godot docs: Bone2D.get_index_in_skeleton
+     */
     fun getIndexInSkeleton(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getIndexInSkeletonBind, handle)
     }
 
+    /**
+     * When set to `true`, the `Bone2D` node will attempt to automatically calculate the bone angle and
+     * length using the first child `Bone2D` node, if one exists. If none exist, the `Bone2D` cannot
+     * automatically calculate these values and will print a warning.
+     *
+     * Generated from Godot docs: Bone2D.set_autocalculate_length_and_angle
+     */
     fun setAutocalculateLengthAndAngle(autoCalculate: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutocalculateLengthAndAngleBind, handle, autoCalculate)
     }
 
+    /**
+     * Returns whether this `Bone2D` is going to autocalculate its length and bone angle using its
+     * first `Bone2D` child node, if one exists. If there are no `Bone2D` children, then it cannot
+     * autocalculate these values and will print a warning.
+     *
+     * Generated from Godot docs: Bone2D.get_autocalculate_length_and_angle
+     */
     fun getAutocalculateLengthAndAngle(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAutocalculateLengthAndAngleBind, handle)
     }
 
+    /**
+     * Sets the length of the bone in the `Bone2D`.
+     *
+     * Generated from Godot docs: Bone2D.set_length
+     */
     fun setLength(length: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
     }
 
+    /**
+     * Returns the length of the bone in the `Bone2D` node.
+     *
+     * Generated from Godot docs: Bone2D.get_length
+     */
     fun getLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
+    /**
+     * Sets the bone angle for the `Bone2D`. This is typically set to the rotation from the `Bone2D` to
+     * a child `Bone2D` node. Note: This is different from the `Bone2D`'s rotation. The bone's angle is
+     * the rotation of the bone shown by the gizmo, which is unaffected by the `Bone2D`'s
+     * `Node2D.transform`.
+     *
+     * Generated from Godot docs: Bone2D.set_bone_angle
+     */
     fun setBoneAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBoneAngleBind, handle, angle)
     }
 
+    /**
+     * Returns the angle of the bone in the `Bone2D`. Note: This is different from the `Bone2D`'s
+     * rotation. The bone's angle is the rotation of the bone shown by the gizmo, which is unaffected
+     * by the `Bone2D`'s `Node2D.transform`.
+     *
+     * Generated from Godot docs: Bone2D.get_bone_angle
+     */
     fun getBoneAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBoneAngleBind, handle)
     }

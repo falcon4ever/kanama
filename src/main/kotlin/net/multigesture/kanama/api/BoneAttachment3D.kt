@@ -42,50 +42,124 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setExternalSkeletonProperty")
         set(value) = setExternalSkeleton(value)
 
+    /**
+     * Returns the parent or external `Skeleton3D` node if it exists, otherwise returns `null`.
+     *
+     * Generated from Godot docs: BoneAttachment3D.get_skeleton
+     */
     fun getSkeleton(): Skeleton3D? {
         return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
     }
 
+    /**
+     * The name of the attached bone.
+     *
+     * Generated from Godot docs: BoneAttachment3D.set_bone_name
+     */
     fun setBoneName(boneName: String) {
         ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
     }
 
+    /**
+     * The name of the attached bone.
+     *
+     * Generated from Godot docs: BoneAttachment3D.get_bone_name
+     */
     fun getBoneName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
     }
 
+    /**
+     * The index of the attached bone.
+     *
+     * Generated from Godot docs: BoneAttachment3D.set_bone_idx
+     */
     fun setBoneIdx(boneIdx: Int) {
         ObjectCalls.ptrcallWithIntArg(setBoneIdxBind, handle, boneIdx)
     }
 
+    /**
+     * The index of the attached bone.
+     *
+     * Generated from Godot docs: BoneAttachment3D.get_bone_idx
+     */
     fun getBoneIdx(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdxBind, handle)
     }
 
+    /**
+     * A function that is called automatically when the `Skeleton3D` is updated. This function is where
+     * the `BoneAttachment3D` node updates its position so it is correctly bound when it is not set to
+     * override the bone pose.
+     *
+     * Generated from Godot docs: BoneAttachment3D.on_skeleton_update
+     */
     fun onSkeletonUpdate() {
         ObjectCalls.ptrcallNoArgs(onSkeletonUpdateBind, handle)
     }
 
+    /**
+     * Whether the `BoneAttachment3D` node will override the bone pose of the bone it is attached to.
+     * When set to `true`, the `BoneAttachment3D` node can change the pose of the bone. When set to
+     * `false`, the `BoneAttachment3D` will always be set to the bone's transform. Note: This override
+     * performs interruptively in the skeleton update process using signals due to the old design. It
+     * may cause unintended behavior when used at the same time with `SkeletonModifier3D`.
+     *
+     * Generated from Godot docs: BoneAttachment3D.set_override_pose
+     */
     fun setOverridePose(overridePose: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setOverridePoseBind, handle, overridePose)
     }
 
+    /**
+     * Whether the `BoneAttachment3D` node will override the bone pose of the bone it is attached to.
+     * When set to `true`, the `BoneAttachment3D` node can change the pose of the bone. When set to
+     * `false`, the `BoneAttachment3D` will always be set to the bone's transform. Note: This override
+     * performs interruptively in the skeleton update process using signals due to the old design. It
+     * may cause unintended behavior when used at the same time with `SkeletonModifier3D`.
+     *
+     * Generated from Godot docs: BoneAttachment3D.get_override_pose
+     */
     fun getOverridePose(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getOverridePoseBind, handle)
     }
 
+    /**
+     * Whether the `BoneAttachment3D` node will use an external `Skeleton3D` node rather than
+     * attempting to use its parent node as the `Skeleton3D`. When set to `true`, the
+     * `BoneAttachment3D` node will use the external `Skeleton3D` node set in `external_skeleton`.
+     *
+     * Generated from Godot docs: BoneAttachment3D.set_use_external_skeleton
+     */
     fun setUseExternalSkeleton(useExternalSkeleton: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseExternalSkeletonBind, handle, useExternalSkeleton)
     }
 
+    /**
+     * Whether the `BoneAttachment3D` node will use an external `Skeleton3D` node rather than
+     * attempting to use its parent node as the `Skeleton3D`. When set to `true`, the
+     * `BoneAttachment3D` node will use the external `Skeleton3D` node set in `external_skeleton`.
+     *
+     * Generated from Godot docs: BoneAttachment3D.get_use_external_skeleton
+     */
     fun getUseExternalSkeleton(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseExternalSkeletonBind, handle)
     }
 
+    /**
+     * The `NodePath` to the external `Skeleton3D` node.
+     *
+     * Generated from Godot docs: BoneAttachment3D.set_external_skeleton
+     */
     fun setExternalSkeleton(externalSkeleton: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setExternalSkeletonBind, handle, externalSkeleton)
     }
 
+    /**
+     * The `NodePath` to the external `Skeleton3D` node.
+     *
+     * Generated from Godot docs: BoneAttachment3D.get_external_skeleton
+     */
     fun getExternalSkeleton(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getExternalSkeletonBind, handle)
     }

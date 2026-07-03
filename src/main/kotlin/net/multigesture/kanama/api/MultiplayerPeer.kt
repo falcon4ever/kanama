@@ -28,34 +28,98 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
         @JvmName("setTransferChannelProperty")
         set(value) = setTransferChannel(value)
 
+    /**
+     * The channel to use to send packets. Many network APIs such as ENet and WebRTC allow the creation
+     * of multiple independent channels which behaves, in a way, like separate connections. This means
+     * that reliable data will only block delivery of other packets on that channel, and ordering will
+     * only be in respect to the channel the packet is being sent on. Using different channels to send
+     * different and independent state updates is a common way to optimize network usage and decrease
+     * latency in fast-paced games. Note: The default channel (`0`) actually works as 3 separate
+     * channels (one for each `TransferMode`) so that `TRANSFER_MODE_RELIABLE` and
+     * `TRANSFER_MODE_UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
+     * specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels
+     * correctly.
+     *
+     * Generated from Godot docs: MultiplayerPeer.set_transfer_channel
+     */
     fun setTransferChannel(channel: Int) {
         ObjectCalls.ptrcallWithIntArg(setTransferChannelBind, handle, channel)
     }
 
+    /**
+     * The channel to use to send packets. Many network APIs such as ENet and WebRTC allow the creation
+     * of multiple independent channels which behaves, in a way, like separate connections. This means
+     * that reliable data will only block delivery of other packets on that channel, and ordering will
+     * only be in respect to the channel the packet is being sent on. Using different channels to send
+     * different and independent state updates is a common way to optimize network usage and decrease
+     * latency in fast-paced games. Note: The default channel (`0`) actually works as 3 separate
+     * channels (one for each `TransferMode`) so that `TRANSFER_MODE_RELIABLE` and
+     * `TRANSFER_MODE_UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
+     * specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels
+     * correctly.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_transfer_channel
+     */
     fun getTransferChannel(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTransferChannelBind, handle)
     }
 
+    /**
+     * The manner in which to send packets to the target peer. See the `set_target_peer` method.
+     *
+     * Generated from Godot docs: MultiplayerPeer.set_transfer_mode
+     */
     fun setTransferMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setTransferModeBind, handle, mode)
     }
 
+    /**
+     * The manner in which to send packets to the target peer. See the `set_target_peer` method.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_transfer_mode
+     */
     fun getTransferMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, handle)
     }
 
+    /**
+     * Sets the peer to which packets will be sent. The `id` can be one of: `TARGET_PEER_BROADCAST` to
+     * send to all connected peers, `TARGET_PEER_SERVER` to send to the peer acting as server, a valid
+     * peer ID to send to that specific peer, a negative peer ID to send to all peers except that one.
+     * By default, the target peer is `TARGET_PEER_BROADCAST`.
+     *
+     * Generated from Godot docs: MultiplayerPeer.set_target_peer
+     */
     fun setTargetPeer(id: Int) {
         ObjectCalls.ptrcallWithIntArg(setTargetPeerBind, handle, id)
     }
 
+    /**
+     * Returns the ID of the `MultiplayerPeer` who sent the next available packet. See
+     * `PacketPeer.get_available_packet_count`.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_packet_peer
+     */
     fun getPacketPeer(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketPeerBind, handle)
     }
 
+    /**
+     * Returns the channel over which the next available packet was received. See
+     * `PacketPeer.get_available_packet_count`.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_packet_channel
+     */
     fun getPacketChannel(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketChannelBind, handle)
     }
 
+    /**
+     * Returns the transfer mode the remote peer used to send the next available packet. See
+     * `PacketPeer.get_available_packet_count`.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_packet_mode
+     */
     fun getPacketMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, handle)
     }
@@ -73,30 +137,68 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
+    /**
+     * Disconnects the given `peer` from this host. If `force` is `true` the `peer_disconnected` signal
+     * will not be emitted for this peer.
+     *
+     * Generated from Godot docs: MultiplayerPeer.disconnect_peer
+     */
     fun disconnectPeer(peer: Int, force: Boolean = false) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(disconnectPeerBind, handle, peer, force)
     }
 
+    /**
+     * Returns the current state of the connection.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_connection_status
+     */
     fun getConnectionStatus(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, handle)
     }
 
+    /**
+     * Returns the ID of this `MultiplayerPeer`.
+     *
+     * Generated from Godot docs: MultiplayerPeer.get_unique_id
+     */
     fun getUniqueId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
     }
 
+    /**
+     * Returns a randomly generated integer that can be used as a network unique ID.
+     *
+     * Generated from Godot docs: MultiplayerPeer.generate_unique_id
+     */
     fun generateUniqueId(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(generateUniqueIdBind, handle)
     }
 
+    /**
+     * If `true`, this `MultiplayerPeer` refuses new connections.
+     *
+     * Generated from Godot docs: MultiplayerPeer.set_refuse_new_connections
+     */
     fun setRefuseNewConnections(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, handle, enable)
     }
 
+    /**
+     * If `true`, this `MultiplayerPeer` refuses new connections.
+     *
+     * Generated from Godot docs: MultiplayerPeer.is_refusing_new_connections
+     */
     fun isRefusingNewConnections(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, handle)
     }
 
+    /**
+     * Returns `true` if the server can act as a relay in the current configuration. That is, if the
+     * higher level `MultiplayerAPI` should notify connected clients of other peers, and implement a
+     * relay protocol to allow communication between them.
+     *
+     * Generated from Godot docs: MultiplayerPeer.is_server_relay_supported
+     */
     fun isServerRelaySupported(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, handle)
     }

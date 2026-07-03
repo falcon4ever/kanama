@@ -22,22 +22,49 @@ open class SkeletonModifier3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setInfluenceProperty")
         set(value) = setInfluence(value)
 
+    /**
+     * Returns the parent `Skeleton3D` node if it exists. Otherwise, returns `null`.
+     *
+     * Generated from Godot docs: SkeletonModifier3D.get_skeleton
+     */
     fun getSkeleton(): Skeleton3D? {
         return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
     }
 
+    /**
+     * If `true`, the `SkeletonModifier3D` will be processing.
+     *
+     * Generated from Godot docs: SkeletonModifier3D.set_active
+     */
     fun setActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
     }
 
+    /**
+     * If `true`, the `SkeletonModifier3D` will be processing.
+     *
+     * Generated from Godot docs: SkeletonModifier3D.is_active
+     */
     fun isActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
+    /**
+     * Sets the influence of the modification. Note: This value is used by `Skeleton3D` to blend, so
+     * the `SkeletonModifier3D` should always apply only 100% of the result without interpolation.
+     *
+     * Generated from Godot docs: SkeletonModifier3D.set_influence
+     */
     fun setInfluence(influence: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setInfluenceBind, handle, influence)
     }
 
+    /**
+     * Sets the influence of the modification. Note: This value is used by `Skeleton3D` to blend, so
+     * the `SkeletonModifier3D` should always apply only 100% of the result without interpolation.
+     *
+     * Generated from Godot docs: SkeletonModifier3D.get_influence
+     */
     fun getInfluence(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInfluenceBind, handle)
     }

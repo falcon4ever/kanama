@@ -29,26 +29,60 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
         @JvmName("setEditorOnlyProperty")
         set(value) = setEditorOnly(value)
 
+    /**
+     * Sets the border color of the `ReferenceRect`.
+     *
+     * Generated from Godot docs: ReferenceRect.get_border_color
+     */
     fun getBorderColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
     }
 
+    /**
+     * Sets the border color of the `ReferenceRect`.
+     *
+     * Generated from Godot docs: ReferenceRect.set_border_color
+     */
     fun setBorderColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setBorderColorBind, handle, color)
     }
 
+    /**
+     * Sets the border width of the `ReferenceRect`. The border grows both inwards and outwards with
+     * respect to the rectangle box.
+     *
+     * Generated from Godot docs: ReferenceRect.get_border_width
+     */
     fun getBorderWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderWidthBind, handle)
     }
 
+    /**
+     * Sets the border width of the `ReferenceRect`. The border grows both inwards and outwards with
+     * respect to the rectangle box.
+     *
+     * Generated from Godot docs: ReferenceRect.set_border_width
+     */
     fun setBorderWidth(width: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBorderWidthBind, handle, width)
     }
 
+    /**
+     * If `true`, the `ReferenceRect` will only be visible while in editor. Otherwise, `ReferenceRect`
+     * will be visible in the running project.
+     *
+     * Generated from Godot docs: ReferenceRect.get_editor_only
+     */
     fun getEditorOnly(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEditorOnlyBind, handle)
     }
 
+    /**
+     * If `true`, the `ReferenceRect` will only be visible while in editor. Otherwise, `ReferenceRect`
+     * will be visible in the running project.
+     *
+     * Generated from Godot docs: ReferenceRect.set_editor_only
+     */
     fun setEditorOnly(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, handle, enabled)
     }

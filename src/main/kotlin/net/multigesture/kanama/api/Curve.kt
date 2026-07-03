@@ -47,34 +47,76 @@ class Curve(handle: MemorySegment) : Resource(handle) {
         @JvmName("setPointCountProperty")
         set(value) = setPointCount(value)
 
+    /**
+     * The number of points describing the curve.
+     *
+     * Generated from Godot docs: Curve.get_point_count
+     */
     fun getPointCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
+    /**
+     * The number of points describing the curve.
+     *
+     * Generated from Godot docs: Curve.set_point_count
+     */
     fun setPointCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
+    /**
+     * Adds a point to the curve. For each side, if the `*_mode` is `TANGENT_LINEAR`, the `*_tangent`
+     * angle (in degrees) uses the slope of the curve halfway to the adjacent point. Allows custom
+     * assignments to the `*_tangent` angle if `*_mode` is set to `TANGENT_FREE`.
+     *
+     * Generated from Godot docs: Curve.add_point
+     */
     fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Long = 0L, rightMode: Long = 0L): Int {
         return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, handle, position, leftTangent, rightTangent, leftMode, rightMode)
     }
 
+    /**
+     * Removes the point at `index` from the curve.
+     *
+     * Generated from Godot docs: Curve.remove_point
+     */
     fun removePoint(index: Int) {
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, index)
     }
 
+    /**
+     * Removes all points from the curve.
+     *
+     * Generated from Godot docs: Curve.clear_points
+     */
     fun clearPoints() {
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
 
+    /**
+     * Returns the curve coordinates for the point at `index`.
+     *
+     * Generated from Godot docs: Curve.get_point_position
+     */
     fun getPointPosition(index: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, index)
     }
 
+    /**
+     * Assigns the vertical position `y` to the point at `index`.
+     *
+     * Generated from Godot docs: Curve.set_point_value
+     */
     fun setPointValue(index: Int, y: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointValueBind, handle, index, y)
     }
 
+    /**
+     * Assigns the horizontal position `offset` to the point at `index`.
+     *
+     * Generated from Godot docs: Curve.set_point_offset
+     */
     fun setPointOffset(index: Int, offset: Double): Int {
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(setPointOffsetBind, handle, index, offset)
     }
@@ -88,82 +130,188 @@ class Curve(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBind, handle, offset)
     }
 
+    /**
+     * Returns the Y value for the point that would exist at the X position `offset` along the curve
+     * using the baked cache. Bakes the curve's points if not already baked.
+     *
+     * Generated from Godot docs: Curve.sample_baked
+     */
     fun sampleBaked(offset: Double): Double {
         return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBakedBind, handle, offset)
     }
 
+    /**
+     * Returns the left tangent angle (in degrees) for the point at `index`.
+     *
+     * Generated from Godot docs: Curve.get_point_left_tangent
+     */
     fun getPointLeftTangent(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointLeftTangentBind, handle, index)
     }
 
+    /**
+     * Returns the right tangent angle (in degrees) for the point at `index`.
+     *
+     * Generated from Godot docs: Curve.get_point_right_tangent
+     */
     fun getPointRightTangent(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointRightTangentBind, handle, index)
     }
 
+    /**
+     * Returns the left `TangentMode` for the point at `index`.
+     *
+     * Generated from Godot docs: Curve.get_point_left_mode
+     */
     fun getPointLeftMode(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, handle, index)
     }
 
+    /**
+     * Returns the right `TangentMode` for the point at `index`.
+     *
+     * Generated from Godot docs: Curve.get_point_right_mode
+     */
     fun getPointRightMode(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, handle, index)
     }
 
+    /**
+     * Sets the left tangent angle for the point at `index` to `tangent`.
+     *
+     * Generated from Godot docs: Curve.set_point_left_tangent
+     */
     fun setPointLeftTangent(index: Int, tangent: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointLeftTangentBind, handle, index, tangent)
     }
 
+    /**
+     * Sets the right tangent angle for the point at `index` to `tangent`.
+     *
+     * Generated from Godot docs: Curve.set_point_right_tangent
+     */
     fun setPointRightTangent(index: Int, tangent: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointRightTangentBind, handle, index, tangent)
     }
 
+    /**
+     * Sets the left `TangentMode` for the point at `index` to `mode`.
+     *
+     * Generated from Godot docs: Curve.set_point_left_mode
+     */
     fun setPointLeftMode(index: Int, mode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, handle, index, mode)
     }
 
+    /**
+     * Sets the right `TangentMode` for the point at `index` to `mode`.
+     *
+     * Generated from Godot docs: Curve.set_point_right_mode
+     */
     fun setPointRightMode(index: Int, mode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, handle, index, mode)
     }
 
+    /**
+     * The minimum value (y-coordinate) that points can have. Tangents can cause lower values between
+     * points.
+     *
+     * Generated from Godot docs: Curve.get_min_value
+     */
     fun getMinValue(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinValueBind, handle)
     }
 
+    /**
+     * The minimum value (y-coordinate) that points can have. Tangents can cause lower values between
+     * points.
+     *
+     * Generated from Godot docs: Curve.set_min_value
+     */
     fun setMinValue(min: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMinValueBind, handle, min)
     }
 
+    /**
+     * The maximum value (y-coordinate) that points can have. Tangents can cause higher values between
+     * points.
+     *
+     * Generated from Godot docs: Curve.get_max_value
+     */
     fun getMaxValue(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxValueBind, handle)
     }
 
+    /**
+     * The maximum value (y-coordinate) that points can have. Tangents can cause higher values between
+     * points.
+     *
+     * Generated from Godot docs: Curve.set_max_value
+     */
     fun setMaxValue(max: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMaxValueBind, handle, max)
     }
 
+    /**
+     * Returns the difference between `min_value` and `max_value`.
+     *
+     * Generated from Godot docs: Curve.get_value_range
+     */
     fun getValueRange(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getValueRangeBind, handle)
     }
 
+    /**
+     * The minimum domain (x-coordinate) that points can have.
+     *
+     * Generated from Godot docs: Curve.get_min_domain
+     */
     fun getMinDomain(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinDomainBind, handle)
     }
 
+    /**
+     * The minimum domain (x-coordinate) that points can have.
+     *
+     * Generated from Godot docs: Curve.set_min_domain
+     */
     fun setMinDomain(min: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMinDomainBind, handle, min)
     }
 
+    /**
+     * The maximum domain (x-coordinate) that points can have.
+     *
+     * Generated from Godot docs: Curve.get_max_domain
+     */
     fun getMaxDomain(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDomainBind, handle)
     }
 
+    /**
+     * The maximum domain (x-coordinate) that points can have.
+     *
+     * Generated from Godot docs: Curve.set_max_domain
+     */
     fun setMaxDomain(max: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMaxDomainBind, handle, max)
     }
 
+    /**
+     * Returns the difference between `min_domain` and `max_domain`.
+     *
+     * Generated from Godot docs: Curve.get_domain_range
+     */
     fun getDomainRange(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDomainRangeBind, handle)
     }
 
+    /**
+     * Removes duplicate points, i.e. points that are less than 0.00001 units (engine epsilon value)
+     * away from their neighbor on the curve.
+     *
+     * Generated from Godot docs: Curve.clean_dupes
+     */
     fun cleanDupes() {
         ObjectCalls.ptrcallNoArgs(cleanDupesBind, handle)
     }
@@ -177,10 +325,20 @@ class Curve(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(bakeBind, handle)
     }
 
+    /**
+     * The number of points to include in the baked (i.e. cached) curve data.
+     *
+     * Generated from Godot docs: Curve.get_bake_resolution
+     */
     fun getBakeResolution(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBakeResolutionBind, handle)
     }
 
+    /**
+     * The number of points to include in the baked (i.e. cached) curve data.
+     *
+     * Generated from Godot docs: Curve.set_bake_resolution
+     */
     fun setBakeResolution(resolution: Int) {
         ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, handle, resolution)
     }

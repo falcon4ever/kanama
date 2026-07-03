@@ -16,10 +16,22 @@ open class VideoStream(handle: MemorySegment) : Resource(handle) {
         @JvmName("setFileProperty")
         set(value) = setFile(value)
 
+    /**
+     * The video file path or URI that this `VideoStream` resource handles. For `VideoStreamTheora`,
+     * this filename should be an Ogg Theora video file with the `.ogv` extension.
+     *
+     * Generated from Godot docs: VideoStream.set_file
+     */
     fun setFile(file: String) {
         ObjectCalls.ptrcallWithStringArg(setFileBind, handle, file)
     }
 
+    /**
+     * The video file path or URI that this `VideoStream` resource handles. For `VideoStreamTheora`,
+     * this filename should be an Ogg Theora video file with the `.ogv` extension.
+     *
+     * Generated from Godot docs: VideoStream.get_file
+     */
     fun getFile(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getFileBind, handle)
     }

@@ -17,10 +17,24 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
         @JvmName("setPolygonProperty")
         set(value) = setPolygon(value)
 
+    /**
+     * The polygon to use for occlusion culling. The polygon can be convex or concave, but it should
+     * have as few points as possible to maximize performance. The polygon must not have intersecting
+     * lines. Otherwise, triangulation will fail (with an error message printed).
+     *
+     * Generated from Godot docs: PolygonOccluder3D.set_polygon
+     */
     fun setPolygon(polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
+    /**
+     * The polygon to use for occlusion culling. The polygon can be convex or concave, but it should
+     * have as few points as possible to maximize performance. The polygon must not have intersecting
+     * lines. Otherwise, triangulation will fail (with an error message printed).
+     *
+     * Generated from Godot docs: PolygonOccluder3D.get_polygon
+     */
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }

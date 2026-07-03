@@ -14,10 +14,20 @@ class EditorScriptPicker(handle: MemorySegment) : EditorResourcePicker(handle) {
         @JvmName("scriptOwnerProperty")
         get() = getScriptOwner()
 
+    /**
+     * The owner `Node` of the script property that holds the edited resource.
+     *
+     * Generated from Godot docs: EditorScriptPicker.set_script_owner
+     */
     fun setScriptOwner(ownerNode: Node) {
         ObjectCalls.ptrcallWithObjectArgs(setScriptOwnerBind, handle, listOf(ownerNode.handle))
     }
 
+    /**
+     * The owner `Node` of the script property that holds the edited resource.
+     *
+     * Generated from Godot docs: EditorScriptPicker.get_script_owner
+     */
     fun getScriptOwner(): Node? {
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScriptOwnerBind, handle))
     }

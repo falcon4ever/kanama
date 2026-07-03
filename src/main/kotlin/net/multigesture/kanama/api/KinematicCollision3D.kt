@@ -11,58 +11,137 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: KinematicCollision3D
  */
 class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the moving object's travel before collision.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_travel
+     */
     fun getTravel(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
     }
 
+    /**
+     * Returns the moving object's remaining movement vector.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_remainder
+     */
     fun getRemainder(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
     }
 
+    /**
+     * Returns the colliding body's length of overlap along the collision normal.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_depth
+     */
     fun getDepth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
+    /**
+     * Returns the number of detected collisions.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collision_count
+     */
     fun getCollisionCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCollisionCountBind, handle)
     }
 
+    /**
+     * Returns the point of collision in global coordinates given a collision index (the deepest
+     * collision by default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_position
+     */
     fun getPosition(collisionIndex: Int = 0): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getPositionBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's shape's normal at the point of collision given a collision index
+     * (the deepest collision by default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_normal
+     */
     fun getNormal(collisionIndex: Int = 0): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getNormalBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the collision angle according to `up_direction`, which is `Vector3.UP` by default. This
+     * value is always positive.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_angle
+     */
     fun getAngle(collisionIndex: Int = 0, upDirection: Vector3): Double {
         return ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(getAngleBind, handle, collisionIndex, upDirection)
     }
 
+    /**
+     * Returns the moving object's colliding shape given a collision index (the deepest collision by
+     * default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_local_shape
+     */
     fun getLocalShape(collisionIndex: Int = 0): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLocalShapeBind, handle, collisionIndex))
     }
 
+    /**
+     * Returns the colliding body's attached `Object` given a collision index (the deepest collision by
+     * default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collider
+     */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
     }
 
+    /**
+     * Returns the unique instance ID of the colliding body's attached `Object` given a collision index
+     * (the deepest collision by default). See `Object.get_instance_id`.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collider_id
+     */
     fun getColliderId(collisionIndex: Int = 0): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's `RID` used by the `PhysicsServer3D` given a collision index (the
+     * deepest collision by default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collider_rid
+     */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's shape given a collision index (the deepest collision by default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collider_shape
+     */
     fun getColliderShape(collisionIndex: Int = 0): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderShapeBind, handle, collisionIndex))
     }
 
+    /**
+     * Returns the colliding body's shape index given a collision index (the deepest collision by
+     * default). See `CollisionObject3D`.
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collider_shape_index
+     */
     fun getColliderShapeIndex(collisionIndex: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeIndexBind, handle, collisionIndex)
     }
 
+    /**
+     * Returns the colliding body's velocity given a collision index (the deepest collision by
+     * default).
+     *
+     * Generated from Godot docs: KinematicCollision3D.get_collider_velocity
+     */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
     }

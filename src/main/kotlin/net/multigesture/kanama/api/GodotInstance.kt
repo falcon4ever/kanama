@@ -18,6 +18,11 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(startBind, handle)
     }
 
+    /**
+     * Returns `true` if this instance has been fully started.
+     *
+     * Generated from Godot docs: GodotInstance.is_started
+     */
     fun isStarted(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, handle)
     }
@@ -31,10 +36,20 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(iterationBind, handle)
     }
 
+    /**
+     * Notifies the instance that it is now in focus.
+     *
+     * Generated from Godot docs: GodotInstance.focus_in
+     */
     fun focusIn() {
         ObjectCalls.ptrcallNoArgs(focusInBind, handle)
     }
 
+    /**
+     * Notifies the instance that it is now not in focus.
+     *
+     * Generated from Godot docs: GodotInstance.focus_out
+     */
     fun focusOut() {
         ObjectCalls.ptrcallNoArgs(focusOutBind, handle)
     }

@@ -3,7 +3,11 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
-/** Reference-counted custom logger object. Generated from Godot docs: Logger */
+/**
+ * Custom logger to receive messages from the internal error/warning stream.
+ *
+ * Generated from Godot docs: Logger
+ */
 class Logger(handle: MemorySegment) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 

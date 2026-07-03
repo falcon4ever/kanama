@@ -10,10 +10,20 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: PinJoint3D
  */
 class PinJoint3D(handle: MemorySegment) : Joint3D(handle) {
+    /**
+     * If above 0, this value is the maximum value for an impulse that this Joint3D produces.
+     *
+     * Generated from Godot docs: PinJoint3D.set_param
+     */
     fun setParam(param: Long, value: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
     }
 
+    /**
+     * If above 0, this value is the maximum value for an impulse that this Joint3D produces.
+     *
+     * Generated from Godot docs: PinJoint3D.get_param
+     */
     fun getParam(param: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
     }

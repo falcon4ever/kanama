@@ -88,106 +88,240 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
         @JvmName("setProjectHullVerticesProperty")
         set(value) = setProjectHullVertices(value)
 
+    /**
+     * Maximum concavity. Ranges from `0.0` to `1.0`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_max_concavity
+     */
     fun setMaxConcavity(maxConcavity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMaxConcavityBind, handle, maxConcavity)
     }
 
+    /**
+     * Maximum concavity. Ranges from `0.0` to `1.0`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_max_concavity
+     */
     fun getMaxConcavity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxConcavityBind, handle)
     }
 
+    /**
+     * Controls the bias toward clipping along symmetry planes. Ranges from `0.0` to `1.0`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_symmetry_planes_clipping_bias
+     */
     fun setSymmetryPlanesClippingBias(symmetryPlanesClippingBias: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSymmetryPlanesClippingBiasBind, handle, symmetryPlanesClippingBias)
     }
 
+    /**
+     * Controls the bias toward clipping along symmetry planes. Ranges from `0.0` to `1.0`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_symmetry_planes_clipping_bias
+     */
     fun getSymmetryPlanesClippingBias(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSymmetryPlanesClippingBiasBind, handle)
     }
 
+    /**
+     * Controls the bias toward clipping along revolution axes. Ranges from `0.0` to `1.0`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_revolution_axes_clipping_bias
+     */
     fun setRevolutionAxesClippingBias(revolutionAxesClippingBias: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRevolutionAxesClippingBiasBind, handle, revolutionAxesClippingBias)
     }
 
+    /**
+     * Controls the bias toward clipping along revolution axes. Ranges from `0.0` to `1.0`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_revolution_axes_clipping_bias
+     */
     fun getRevolutionAxesClippingBias(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRevolutionAxesClippingBiasBind, handle)
     }
 
+    /**
+     * Controls the adaptive sampling of the generated convex-hulls. Ranges from `0.0` to `0.01`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_min_volume_per_convex_hull
+     */
     fun setMinVolumePerConvexHull(minVolumePerConvexHull: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMinVolumePerConvexHullBind, handle, minVolumePerConvexHull)
     }
 
+    /**
+     * Controls the adaptive sampling of the generated convex-hulls. Ranges from `0.0` to `0.01`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_min_volume_per_convex_hull
+     */
     fun getMinVolumePerConvexHull(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinVolumePerConvexHullBind, handle)
     }
 
+    /**
+     * Maximum number of voxels generated during the voxelization stage.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_resolution
+     */
     fun setResolution(minVolumePerConvexHull: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setResolutionBind, handle, minVolumePerConvexHull)
     }
 
+    /**
+     * Maximum number of voxels generated during the voxelization stage.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_resolution
+     */
     fun getResolution(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getResolutionBind, handle)
     }
 
+    /**
+     * Controls the maximum number of triangles per convex-hull. Ranges from `4` to `1024`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_max_num_vertices_per_convex_hull
+     */
     fun setMaxNumVerticesPerConvexHull(maxNumVerticesPerConvexHull: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setMaxNumVerticesPerConvexHullBind, handle, maxNumVerticesPerConvexHull)
     }
 
+    /**
+     * Controls the maximum number of triangles per convex-hull. Ranges from `4` to `1024`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_max_num_vertices_per_convex_hull
+     */
     fun getMaxNumVerticesPerConvexHull(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxNumVerticesPerConvexHullBind, handle)
     }
 
+    /**
+     * Controls the granularity of the search for the "best" clipping plane. Ranges from `1` to `16`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_plane_downsampling
+     */
     fun setPlaneDownsampling(planeDownsampling: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setPlaneDownsamplingBind, handle, planeDownsampling)
     }
 
+    /**
+     * Controls the granularity of the search for the "best" clipping plane. Ranges from `1` to `16`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_plane_downsampling
+     */
     fun getPlaneDownsampling(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getPlaneDownsamplingBind, handle)
     }
 
+    /**
+     * Controls the precision of the convex-hull generation process during the clipping plane selection
+     * stage. Ranges from `1` to `16`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_convex_hull_downsampling
+     */
     fun setConvexHullDownsampling(convexHullDownsampling: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setConvexHullDownsamplingBind, handle, convexHullDownsampling)
     }
 
+    /**
+     * Controls the precision of the convex-hull generation process during the clipping plane selection
+     * stage. Ranges from `1` to `16`.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_convex_hull_downsampling
+     */
     fun getConvexHullDownsampling(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getConvexHullDownsamplingBind, handle)
     }
 
+    /**
+     * If `true`, normalizes the mesh before applying the convex decomposition.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_normalize_mesh
+     */
     fun setNormalizeMesh(normalizeMesh: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNormalizeMeshBind, handle, normalizeMesh)
     }
 
+    /**
+     * If `true`, normalizes the mesh before applying the convex decomposition.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_normalize_mesh
+     */
     fun getNormalizeMesh(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getNormalizeMeshBind, handle)
     }
 
+    /**
+     * Mode for the approximate convex decomposition.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_mode
+     */
     fun setMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
+    /**
+     * Mode for the approximate convex decomposition.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_mode
+     */
     fun getMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
+    /**
+     * If `true`, uses approximation for computing convex hulls.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_convex_hull_approximation
+     */
     fun setConvexHullApproximation(convexHullApproximation: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setConvexHullApproximationBind, handle, convexHullApproximation)
     }
 
+    /**
+     * If `true`, uses approximation for computing convex hulls.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_convex_hull_approximation
+     */
     fun getConvexHullApproximation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getConvexHullApproximationBind, handle)
     }
 
+    /**
+     * The maximum number of convex hulls to produce from the merge operation.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_max_convex_hulls
+     */
     fun setMaxConvexHulls(maxConvexHulls: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setMaxConvexHullsBind, handle, maxConvexHulls)
     }
 
+    /**
+     * The maximum number of convex hulls to produce from the merge operation.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_max_convex_hulls
+     */
     fun getMaxConvexHulls(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxConvexHullsBind, handle)
     }
 
+    /**
+     * If `true`, projects output convex hull vertices onto the original source mesh to increase
+     * floating-point accuracy of the results.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.set_project_hull_vertices
+     */
     fun setProjectHullVertices(projectHullVertices: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setProjectHullVerticesBind, handle, projectHullVertices)
     }
 
+    /**
+     * If `true`, projects output convex hull vertices onto the original source mesh to increase
+     * floating-point accuracy of the results.
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.get_project_hull_vertices
+     */
     fun getProjectHullVertices(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, handle)
     }

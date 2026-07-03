@@ -17,26 +17,66 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setDopplerTrackingProperty")
         set(value) = setDopplerTracking(value)
 
+    /**
+     * Enables the listener. This will override the current camera's listener.
+     *
+     * Generated from Godot docs: AudioListener3D.make_current
+     */
     fun makeCurrent() {
         ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
     }
 
+    /**
+     * Disables the listener to use the current camera's listener instead.
+     *
+     * Generated from Godot docs: AudioListener3D.clear_current
+     */
     fun clearCurrent() {
         ObjectCalls.ptrcallNoArgs(clearCurrentBind, handle)
     }
 
+    /**
+     * Returns `true` if the listener was made current using `make_current`, `false` otherwise. Note:
+     * There may be more than one AudioListener3D marked as "current" in the scene tree, but only the
+     * one that was made current last will be used.
+     *
+     * Generated from Godot docs: AudioListener3D.is_current
+     */
     fun isCurrent(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
     }
 
+    /**
+     * Returns the listener's global orthonormalized `Transform3D`.
+     *
+     * Generated from Godot docs: AudioListener3D.get_listener_transform
+     */
     fun getListenerTransform(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getListenerTransformBind, handle)
     }
 
+    /**
+     * If not `DOPPLER_TRACKING_DISABLED`, this listener will simulate the Doppler effect
+     * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
+     * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
+     * `AudioStreamPlayer3D.doppler_tracking` is not set to
+     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     *
+     * Generated from Godot docs: AudioListener3D.set_doppler_tracking
+     */
     fun setDopplerTracking(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, handle, mode)
     }
 
+    /**
+     * If not `DOPPLER_TRACKING_DISABLED`, this listener will simulate the Doppler effect
+     * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
+     * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
+     * `AudioStreamPlayer3D.doppler_tracking` is not set to
+     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     *
+     * Generated from Godot docs: AudioListener3D.get_doppler_tracking
+     */
     fun getDopplerTracking(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, handle)
     }

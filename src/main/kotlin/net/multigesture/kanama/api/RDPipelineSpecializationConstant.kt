@@ -22,18 +22,42 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
         @JvmName("setConstantIdProperty")
         set(value) = setConstantId(value)
 
+    /**
+     * The specialization constant's value. Only `bool`, `int` and `float` types are valid for
+     * specialization constants.
+     *
+     * Generated from Godot docs: RDPipelineSpecializationConstant.set_value
+     */
     fun setValue(value: Any?) {
         ObjectCalls.ptrcallWithVariantArg(setValueBind, handle, value)
     }
 
+    /**
+     * The specialization constant's value. Only `bool`, `int` and `float` types are valid for
+     * specialization constants.
+     *
+     * Generated from Godot docs: RDPipelineSpecializationConstant.get_value
+     */
     fun getValue(): Any? {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getValueBind, handle)
     }
 
+    /**
+     * The identifier of the specialization constant. This is a value starting from `0` and that
+     * increments for every different specialization constant for a given shader.
+     *
+     * Generated from Godot docs: RDPipelineSpecializationConstant.set_constant_id
+     */
     fun setConstantId(constantId: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setConstantIdBind, handle, constantId)
     }
 
+    /**
+     * The identifier of the specialization constant. This is a value starting from `0` and that
+     * increments for every different specialization constant for a given shader.
+     *
+     * Generated from Godot docs: RDPipelineSpecializationConstant.get_constant_id
+     */
     fun getConstantId(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getConstantIdBind, handle)
     }

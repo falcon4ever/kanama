@@ -48,50 +48,114 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
         @JvmName("setBlasProperty")
         set(value) = setBlas(value)
 
+    /**
+     * Transform applied to the referenced BLAS for this instance.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.set_transform
+     */
     fun setTransform(pMember: Transform3D) {
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, pMember)
     }
 
+    /**
+     * Transform applied to the referenced BLAS for this instance.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.get_transform
+     */
     fun getTransform(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
+    /**
+     * Custom instance ID that can be accessed in GLSL using `gl_InstanceCustomIndexEXT`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.set_id
+     */
     fun setId(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setIdBind, handle, pMember)
     }
 
+    /**
+     * Custom instance ID that can be accessed in GLSL using `gl_InstanceCustomIndexEXT`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.get_id
+     */
     fun getId(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIdBind, handle)
     }
 
+    /**
+     * Visibility mask used to control which rays can intersect this instance.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.set_mask
+     */
     fun setMask(pMember: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaskBind, handle, pMember)
     }
 
+    /**
+     * Visibility mask used to control which rays can intersect this instance.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.get_mask
+     */
     fun getMask(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaskBind, handle)
     }
 
+    /**
+     * Hit shader binding table range used for this instance, allocated using the
+     * `RenderingDevice.hit_sbt_range_alloc` method.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.set_hit_sbt_range
+     */
     fun setHitSbtRange(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setHitSbtRangeBind, handle, pMember)
     }
 
+    /**
+     * Hit shader binding table range used for this instance, allocated using the
+     * `RenderingDevice.hit_sbt_range_alloc` method.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.get_hit_sbt_range
+     */
     fun getHitSbtRange(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHitSbtRangeBind, handle)
     }
 
+    /**
+     * Flags for the instance.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.set_flags
+     */
     fun setFlags(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
     }
 
+    /**
+     * Flags for the instance.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.get_flags
+     */
     fun getFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
+    /**
+     * The BLAS referenced by this instance. If `null`, the instance is treated as a placeholder but
+     * still contributes to `gl_InstanceIndex` in GLSL.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.set_blas
+     */
     fun setBlas(pMember: RID) {
         ObjectCalls.ptrcallWithRIDArg(setBlasBind, handle, pMember)
     }
 
+    /**
+     * The BLAS referenced by this instance. If `null`, the instance is treated as a placeholder but
+     * still contributes to `gl_InstanceIndex` in GLSL.
+     *
+     * Generated from Godot docs: RDAccelerationStructureInstance.get_blas
+     */
     fun getBlas(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getBlasBind, handle)
     }

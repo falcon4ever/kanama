@@ -22,18 +22,40 @@ class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    /**
+     * The `Mesh` that will be drawn by the `MeshInstance2D`.
+     *
+     * Generated from Godot docs: MeshInstance2D.set_mesh
+     */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Mesh` that will be drawn by the `MeshInstance2D`.
+     *
+     * Generated from Godot docs: MeshInstance2D.get_mesh
+     */
     fun getMesh(): Mesh? {
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
+    /**
+     * The `Texture2D` that will be used if using the default `CanvasItemMaterial`. Can be accessed as
+     * `TEXTURE` in CanvasItem shader.
+     *
+     * Generated from Godot docs: MeshInstance2D.set_texture
+     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Texture2D` that will be used if using the default `CanvasItemMaterial`. Can be accessed as
+     * `TEXTURE` in CanvasItem shader.
+     *
+     * Generated from Godot docs: MeshInstance2D.get_texture
+     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }

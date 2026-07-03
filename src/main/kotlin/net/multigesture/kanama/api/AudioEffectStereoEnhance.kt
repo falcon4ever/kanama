@@ -29,26 +29,62 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setSurroundProperty")
         set(value) = setSurround(value)
 
+    /**
+     * Gain of the side channels, if they exist. A value of 0 will downmix stereo to mono. Value can
+     * range from 0 to 4.
+     *
+     * Generated from Godot docs: AudioEffectStereoEnhance.set_pan_pullout
+     */
     fun setPanPullout(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPanPulloutBind, handle, amount)
     }
 
+    /**
+     * Gain of the side channels, if they exist. A value of 0 will downmix stereo to mono. Value can
+     * range from 0 to 4.
+     *
+     * Generated from Godot docs: AudioEffectStereoEnhance.get_pan_pullout
+     */
     fun getPanPullout(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPanPulloutBind, handle)
     }
 
+    /**
+     * Widens the stereo image through phase shifting in conjunction with `surround`. Just delays the
+     * right channel if `surround` is 0. Value is in milliseconds, and can range from 0 to 50.
+     *
+     * Generated from Godot docs: AudioEffectStereoEnhance.set_time_pullout
+     */
     fun setTimePullout(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTimePulloutBind, handle, amount)
     }
 
+    /**
+     * Widens the stereo image through phase shifting in conjunction with `surround`. Just delays the
+     * right channel if `surround` is 0. Value is in milliseconds, and can range from 0 to 50.
+     *
+     * Generated from Godot docs: AudioEffectStereoEnhance.get_time_pullout
+     */
     fun getTimePullout(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimePulloutBind, handle)
     }
 
+    /**
+     * Widens the stereo image through phase shifting in conjunction with `time_pullout_ms`. Just pans
+     * sound to the left channel if `time_pullout_ms` is 0. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectStereoEnhance.set_surround
+     */
     fun setSurround(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSurroundBind, handle, amount)
     }
 
+    /**
+     * Widens the stereo image through phase shifting in conjunction with `time_pullout_ms`. Just pans
+     * sound to the left channel if `time_pullout_ms` is 0. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectStereoEnhance.get_surround
+     */
     fun getSurround(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSurroundBind, handle)
     }

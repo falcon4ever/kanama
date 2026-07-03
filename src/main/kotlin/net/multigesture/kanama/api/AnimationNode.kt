@@ -17,70 +17,167 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
         @JvmName("setFilterEnabledProperty")
         set(value) = setFilterEnabled(value)
 
+    /**
+     * Adds an input to the animation node. This is only useful for animation nodes created for use in
+     * an `AnimationNodeBlendTree`. If the addition fails, returns `false`.
+     *
+     * Generated from Godot docs: AnimationNode.add_input
+     */
     fun addInput(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(addInputBind, handle, name)
     }
 
+    /**
+     * Removes an input, call this only when inactive.
+     *
+     * Generated from Godot docs: AnimationNode.remove_input
+     */
     fun removeInput(index: Int) {
         ObjectCalls.ptrcallWithIntArg(removeInputBind, handle, index)
     }
 
+    /**
+     * Sets the name of the input at the given `input` index. If the setting fails, returns `false`.
+     *
+     * Generated from Godot docs: AnimationNode.set_input_name
+     */
     fun setInputName(input: Int, name: String): Boolean {
         return ObjectCalls.ptrcallWithIntAndStringArgRetBool(setInputNameBind, handle, input, name)
     }
 
+    /**
+     * Gets the name of an input by index.
+     *
+     * Generated from Godot docs: AnimationNode.get_input_name
+     */
     fun getInputName(input: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, handle, input)
     }
 
+    /**
+     * Amount of inputs in this animation node, only useful for animation nodes that go into
+     * `AnimationNodeBlendTree`.
+     *
+     * Generated from Godot docs: AnimationNode.get_input_count
+     */
     fun getInputCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getInputCountBind, handle)
     }
 
+    /**
+     * Returns the input index which corresponds to `name`. If not found, returns `-1`.
+     *
+     * Generated from Godot docs: AnimationNode.find_input
+     */
     fun findInput(name: String): Int {
         return ObjectCalls.ptrcallWithStringArgRetInt(findInputBind, handle, name)
     }
 
+    /**
+     * Adds or removes a path for the filter.
+     *
+     * Generated from Godot docs: AnimationNode.set_filter_path
+     */
     fun setFilterPath(path: NodePath, enable: Boolean) {
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(setFilterPathBind, handle, path, enable)
     }
 
+    /**
+     * Returns `true` if the given path is filtered.
+     *
+     * Generated from Godot docs: AnimationNode.is_path_filtered
+     */
     fun isPathFiltered(path: NodePath): Boolean {
         return ObjectCalls.ptrcallWithNodePathArgRetBool(isPathFilteredBind, handle, path)
     }
 
+    /**
+     * If `true`, filtering is enabled.
+     *
+     * Generated from Godot docs: AnimationNode.set_filter_enabled
+     */
     fun setFilterEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilterEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, filtering is enabled.
+     *
+     * Generated from Godot docs: AnimationNode.is_filter_enabled
+     */
     fun isFilterEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFilterEnabledBind, handle)
     }
 
+    /**
+     * Returns the object id of the `AnimationTree` that owns this node. Note: This method should only
+     * be called from within the `AnimationNodeExtension._process_animation_node` method, and will
+     * return an invalid id otherwise.
+     *
+     * Generated from Godot docs: AnimationNode.get_processing_animation_tree_instance_id
+     */
     fun getProcessingAnimationTreeInstanceId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessingAnimationTreeInstanceIdBind, handle)
     }
 
+    /**
+     * Returns `true` if this animation node is being processed in test-only mode.
+     *
+     * Generated from Godot docs: AnimationNode.is_process_testing
+     */
     fun isProcessTesting(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isProcessTestingBind, handle)
     }
 
+    /**
+     * Blends an animation by `blend` amount (name must be valid in the linked `AnimationPlayer`). A
+     * `time` and `delta` may be passed, as well as whether `seeked` happened. A `looped_flag` is used
+     * by internal processing immediately after the loop.
+     *
+     * Generated from Godot docs: AnimationNode.blend_animation
+     */
     fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Long = 0L) {
         ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, handle, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag)
     }
 
+    /**
+     * Blend another animation node (in case this animation node contains child animation nodes). This
+     * function is only useful if you inherit from `AnimationRootNode` instead, otherwise editors will
+     * not display your animation node for addition.
+     *
+     * Generated from Godot docs: AnimationNode.blend_node
+     */
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
         return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
+    /**
+     * Blends an input. This is only useful for animation nodes created for an
+     * `AnimationNodeBlendTree`. The `time` parameter is a relative delta, unless `seek` is `true`, in
+     * which case it is absolute. A filter mode may be optionally passed.
+     *
+     * Generated from Godot docs: AnimationNode.blend_input
+     */
     fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
         return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, handle, inputIndex, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
+    /**
+     * Sets a custom parameter. These are used as local memory, because resources can be reused across
+     * the tree or scenes.
+     *
+     * Generated from Godot docs: AnimationNode.set_parameter
+     */
     fun setParameter(name: String, value: Any?) {
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, handle, name, value)
     }
 
+    /**
+     * Gets the value of a parameter. Parameters are custom local memory used for your animation nodes,
+     * given a resource can be reused in multiple trees.
+     *
+     * Generated from Godot docs: AnimationNode.get_parameter
+     */
     fun getParameter(name: String): Any? {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, handle, name)
     }

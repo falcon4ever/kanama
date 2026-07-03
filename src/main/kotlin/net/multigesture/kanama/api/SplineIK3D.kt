@@ -10,34 +10,84 @@ import net.multigesture.kanama.types.NodePath
  * Generated from Godot docs: SplineIK3D
  */
 class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
+    /**
+     * Sets the node path of the `Path3D` which is describing the path.
+     *
+     * Generated from Godot docs: SplineIK3D.set_path_3d
+     */
     fun setPath3d(index: Int, path3d: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setPath3dBind, handle, index, path3d)
     }
 
+    /**
+     * Returns the node path of the `Path3D` which is describing the path.
+     *
+     * Generated from Godot docs: SplineIK3D.get_path_3d
+     */
     fun getPath3d(index: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getPath3dBind, handle, index)
     }
 
+    /**
+     * Sets if the tilt property of the `Curve3D` should affect the bone twist.
+     *
+     * Generated from Godot docs: SplineIK3D.set_tilt_enabled
+     */
     fun setTiltEnabled(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setTiltEnabledBind, handle, index, enabled)
     }
 
+    /**
+     * Returns if the tilt property of the `Curve3D` affects the bone twist.
+     *
+     * Generated from Godot docs: SplineIK3D.is_tilt_enabled
+     */
     fun isTiltEnabled(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isTiltEnabledBind, handle, index)
     }
 
+    /**
+     * If `size` is greater than `0`, the tilt is interpolated between `size` start bones from the
+     * start point of the `Curve3D` when they are apart. If `size` is equal `0`, the tilts between the
+     * root bone head and the start point of the `Curve3D` are unified with a tilt of the start point
+     * of the `Curve3D`. If `size` is less than `0`, the tilts between the root bone and the start
+     * point of the `Curve3D` are `0.0`.
+     *
+     * Generated from Godot docs: SplineIK3D.set_tilt_fade_in
+     */
     fun setTiltFadeIn(index: Int, size: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeInBind, handle, index, size)
     }
 
+    /**
+     * Returns the tilt interpolation method used between the root bone and the start point of the
+     * `Curve3D` when they are apart. See also `set_tilt_fade_in`.
+     *
+     * Generated from Godot docs: SplineIK3D.get_tilt_fade_in
+     */
     fun getTiltFadeIn(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeInBind, handle, index)
     }
 
+    /**
+     * If `size` is greater than `0`, the tilt is interpolated between `size` end bones from the end
+     * point of the `Curve3D` when they are apart. If `size` is equal `0`, the tilts between the end
+     * bone tail and the end point of the `Curve3D` are unified with a tilt of the end point of the
+     * `Curve3D`. If `size` is less than `0`, the tilts between the end bone and the end point of the
+     * `Curve3D` are `0.0`.
+     *
+     * Generated from Godot docs: SplineIK3D.set_tilt_fade_out
+     */
     fun setTiltFadeOut(index: Int, size: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeOutBind, handle, index, size)
     }
 
+    /**
+     * Returns the tilt interpolation method used between the end bone and the end point of the
+     * `Curve3D` when they are apart. See also `set_tilt_fade_out`.
+     *
+     * Generated from Godot docs: SplineIK3D.get_tilt_fade_out
+     */
     fun getTiltFadeOut(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeOutBind, handle, index)
     }

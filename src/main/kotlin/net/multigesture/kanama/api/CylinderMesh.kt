@@ -52,58 +52,152 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setCapBottomProperty")
         set(value) = setCapBottom(value)
 
+    /**
+     * Top radius of the cylinder. If set to `0.0`, the top faces will not be generated, resulting in a
+     * conic shape. See also `cap_top`.
+     *
+     * Generated from Godot docs: CylinderMesh.set_top_radius
+     */
     fun setTopRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTopRadiusBind, handle, radius)
     }
 
+    /**
+     * Top radius of the cylinder. If set to `0.0`, the top faces will not be generated, resulting in a
+     * conic shape. See also `cap_top`.
+     *
+     * Generated from Godot docs: CylinderMesh.get_top_radius
+     */
     fun getTopRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTopRadiusBind, handle)
     }
 
+    /**
+     * Bottom radius of the cylinder. If set to `0.0`, the bottom faces will not be generated,
+     * resulting in a conic shape. See also `cap_bottom`.
+     *
+     * Generated from Godot docs: CylinderMesh.set_bottom_radius
+     */
     fun setBottomRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBottomRadiusBind, handle, radius)
     }
 
+    /**
+     * Bottom radius of the cylinder. If set to `0.0`, the bottom faces will not be generated,
+     * resulting in a conic shape. See also `cap_bottom`.
+     *
+     * Generated from Godot docs: CylinderMesh.get_bottom_radius
+     */
     fun getBottomRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBottomRadiusBind, handle)
     }
 
+    /**
+     * Full height of the cylinder.
+     *
+     * Generated from Godot docs: CylinderMesh.set_height
+     */
     fun setHeight(height: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
+    /**
+     * Full height of the cylinder.
+     *
+     * Generated from Godot docs: CylinderMesh.get_height
+     */
     fun getHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
+    /**
+     * Number of radial segments on the cylinder. Higher values result in a more detailed cylinder/cone
+     * at the cost of performance.
+     *
+     * Generated from Godot docs: CylinderMesh.set_radial_segments
+     */
     fun setRadialSegments(segments: Int) {
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
     }
 
+    /**
+     * Number of radial segments on the cylinder. Higher values result in a more detailed cylinder/cone
+     * at the cost of performance.
+     *
+     * Generated from Godot docs: CylinderMesh.get_radial_segments
+     */
     fun getRadialSegments(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
+    /**
+     * Number of edge rings along the height of the cylinder. Changing `rings` does not have any visual
+     * impact unless a shader or procedural mesh tool is used to alter the vertex data. Higher values
+     * result in more subdivisions, which can be used to create smoother-looking effects with shaders
+     * or procedural mesh tools (at the cost of performance). When not altering the vertex data using a
+     * shader or procedural mesh tool, `rings` should be kept to its default value.
+     *
+     * Generated from Godot docs: CylinderMesh.set_rings
+     */
     fun setRings(rings: Int) {
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
+    /**
+     * Number of edge rings along the height of the cylinder. Changing `rings` does not have any visual
+     * impact unless a shader or procedural mesh tool is used to alter the vertex data. Higher values
+     * result in more subdivisions, which can be used to create smoother-looking effects with shaders
+     * or procedural mesh tools (at the cost of performance). When not altering the vertex data using a
+     * shader or procedural mesh tool, `rings` should be kept to its default value.
+     *
+     * Generated from Godot docs: CylinderMesh.get_rings
+     */
     fun getRings(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
+    /**
+     * If `true`, generates a cap at the top of the cylinder. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera. See also `top_radius`. Note:
+     * If `top_radius` is `0.0`, cap generation is always skipped even if `cap_top` is `true`.
+     *
+     * Generated from Godot docs: CylinderMesh.set_cap_top
+     */
     fun setCapTop(capTop: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
     }
 
+    /**
+     * If `true`, generates a cap at the top of the cylinder. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera. See also `top_radius`. Note:
+     * If `top_radius` is `0.0`, cap generation is always skipped even if `cap_top` is `true`.
+     *
+     * Generated from Godot docs: CylinderMesh.is_cap_top
+     */
     fun isCapTop(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
     }
 
+    /**
+     * If `true`, generates a cap at the bottom of the cylinder. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera. See also `bottom_radius`.
+     * Note: If `bottom_radius` is `0.0`, cap generation is always skipped even if `cap_bottom` is
+     * `true`.
+     *
+     * Generated from Godot docs: CylinderMesh.set_cap_bottom
+     */
     fun setCapBottom(capBottom: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
     }
 
+    /**
+     * If `true`, generates a cap at the bottom of the cylinder. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera. See also `bottom_radius`.
+     * Note: If `bottom_radius` is `0.0`, cap generation is always skipped even if `cap_bottom` is
+     * `true`.
+     *
+     * Generated from Godot docs: CylinderMesh.is_cap_bottom
+     */
     fun isCapBottom(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
     }

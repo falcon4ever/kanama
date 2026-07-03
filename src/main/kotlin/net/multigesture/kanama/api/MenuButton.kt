@@ -22,30 +22,70 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
         @JvmName("setItemCountProperty")
         set(value) = setItemCount(value)
 
+    /**
+     * Returns the `PopupMenu` contained in this button. Warning: This is a required internal node,
+     * removing and freeing it may cause a crash. If you wish to hide it or any of its children, use
+     * their `Window.visible` property.
+     *
+     * Generated from Godot docs: MenuButton.get_popup
+     */
     fun getPopup(): PopupMenu? {
         return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
     }
 
+    /**
+     * Adjusts popup position and sizing for the `MenuButton`, then shows the `PopupMenu`. Prefer this
+     * over using `get_popup().popup()`.
+     *
+     * Generated from Godot docs: MenuButton.show_popup
+     */
     fun showPopup() {
         ObjectCalls.ptrcallNoArgs(showPopupBind, handle)
     }
 
+    /**
+     * If `true`, when the cursor hovers above another `MenuButton` within the same parent which also
+     * has `switch_on_hover` enabled, it will close the current `MenuButton` and open the other one.
+     *
+     * Generated from Godot docs: MenuButton.set_switch_on_hover
+     */
     fun setSwitchOnHover(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, handle, enable)
     }
 
+    /**
+     * If `true`, when the cursor hovers above another `MenuButton` within the same parent which also
+     * has `switch_on_hover` enabled, it will close the current `MenuButton` and open the other one.
+     *
+     * Generated from Godot docs: MenuButton.is_switch_on_hover
+     */
     fun isSwitchOnHover(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, handle)
     }
 
+    /**
+     * If `true`, shortcuts are disabled and cannot be used to trigger the button.
+     *
+     * Generated from Godot docs: MenuButton.set_disable_shortcuts
+     */
     fun setDisableShortcuts(disabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
     }
 
+    /**
+     * The number of items currently in the list.
+     *
+     * Generated from Godot docs: MenuButton.set_item_count
+     */
     fun setItemCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
     }
 
+    /**
+     * The number of items currently in the list.
+     *
+     * Generated from Godot docs: MenuButton.get_item_count
+     */
     fun getItemCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
     }

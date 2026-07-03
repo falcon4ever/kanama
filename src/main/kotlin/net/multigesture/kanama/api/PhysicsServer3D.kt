@@ -166,136 +166,313 @@ object PhysicsServer3D {
     const val BODY_AXIS_ANGULAR_Y: Long = 16L
     const val BODY_AXIS_ANGULAR_Z: Long = 32L
 
+    /**
+     * Creates a 3D world boundary shape in the physics server, and returns the `RID` that identifies
+     * it. Use `shape_set_data` to set the shape's normal direction and distance properties.
+     *
+     * Generated from Godot docs: PhysicsServer3D.world_boundary_shape_create
+     */
     @JvmStatic
     fun worldBoundaryShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(worldBoundaryShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D separation ray shape in the physics server, and returns the `RID` that identifies
+     * it. Use `shape_set_data` to set the shape's `length` and `slide_on_slope` properties.
+     *
+     * Generated from Godot docs: PhysicsServer3D.separation_ray_shape_create
+     */
     @JvmStatic
     fun separationRayShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(separationRayShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D sphere shape in the physics server, and returns the `RID` that identifies it. Use
+     * `shape_set_data` to set the sphere's radius.
+     *
+     * Generated from Godot docs: PhysicsServer3D.sphere_shape_create
+     */
     @JvmStatic
     fun sphereShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(sphereShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D box shape in the physics server, and returns the `RID` that identifies it. Use
+     * `shape_set_data` to set the box's half-extents.
+     *
+     * Generated from Godot docs: PhysicsServer3D.box_shape_create
+     */
     @JvmStatic
     fun boxShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(boxShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D capsule shape in the physics server, and returns the `RID` that identifies it. Use
+     * `shape_set_data` to set the capsule's height and radius.
+     *
+     * Generated from Godot docs: PhysicsServer3D.capsule_shape_create
+     */
     @JvmStatic
     fun capsuleShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(capsuleShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D cylinder shape in the physics server, and returns the `RID` that identifies it. Use
+     * `shape_set_data` to set the cylinder's height and radius.
+     *
+     * Generated from Godot docs: PhysicsServer3D.cylinder_shape_create
+     */
     @JvmStatic
     fun cylinderShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(cylinderShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D convex polygon shape in the physics server, and returns the `RID` that identifies
+     * it. Use `shape_set_data` to set the convex polygon's points.
+     *
+     * Generated from Godot docs: PhysicsServer3D.convex_polygon_shape_create
+     */
     @JvmStatic
     fun convexPolygonShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(convexPolygonShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D concave polygon shape in the physics server, and returns the `RID` that identifies
+     * it. Use `shape_set_data` to set the concave polygon's triangles.
+     *
+     * Generated from Godot docs: PhysicsServer3D.concave_polygon_shape_create
+     */
     @JvmStatic
     fun concavePolygonShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(concavePolygonShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a 3D heightmap shape in the physics server, and returns the `RID` that identifies it.
+     * Use `shape_set_data` to set the heightmap's data.
+     *
+     * Generated from Godot docs: PhysicsServer3D.heightmap_shape_create
+     */
     @JvmStatic
     fun heightmapShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(heightmapShapeCreateBind, singleton)
     }
 
+    /**
+     * Creates a custom shape in the physics server, and returns the `RID` that identifies it. Use
+     * `shape_set_data` to set the shape's data. Note: Custom shapes are not supported by the built-in
+     * physics servers, so calling this method always produces an error when using Godot Physics or
+     * Jolt Physics. Custom physics servers implemented as GDExtensions may support a custom shape.
+     *
+     * Generated from Godot docs: PhysicsServer3D.custom_shape_create
+     */
     @JvmStatic
     fun customShapeCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(customShapeCreateBind, singleton)
     }
 
+    /**
+     * Sets the shape data that configures the shape. The `data` to be passed depends on the shape's
+     * type (see `shape_get_type`): - `SHAPE_WORLD_BOUNDARY`: a `Plane`, - `SHAPE_SEPARATION_RAY`: a
+     * dictionary containing the key `"length"` with a `float` value and the key `"slide_on_slope"`
+     * with a `bool` value, - `SHAPE_SPHERE`: a `float` that is the radius of the sphere, -
+     * `SHAPE_BOX`: a `Vector3` containing the half-extents of the box, - `SHAPE_CAPSULE`: a dictionary
+     * containing the keys `"height"` and `"radius"` with `float` values, - `SHAPE_CYLINDER`: a
+     * dictionary containing the keys `"height"` and `"radius"` with `float` values, -
+     * `SHAPE_CONVEX_POLYGON`: a `PackedVector3Array` of points defining a convex polygon (the shape
+     * will be the convex hull of the points), - `SHAPE_CONCAVE_POLYGON`: a dictionary containing the
+     * key `"faces"` with a `PackedVector3Array` value (with a length divisible by 3, so that each
+     * 3-tuple of points forms a face) and the key `"backface_collision"` with a `bool` value, -
+     * `SHAPE_HEIGHTMAP`: a dictionary containing the keys `"width"` and `"depth"` with `int` values,
+     * and the key `"heights"` with a value that is a packed array of `float`s of length `width *
+     * depth` (that is a `PackedFloat32Array`, or a `PackedFloat64Array` if Godot was compiled with the
+     * `precision=double` option), and optionally the keys `"min_height"` and `"max_height"` with
+     * `float` values, - `SHAPE_SOFT_BODY`: the input `data` is ignored and this method has no effect,
+     * - `SHAPE_CUSTOM`: the input `data` is interpreted by a custom physics server, if it supports
+     * custom shapes.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_set_data
+     */
     @JvmStatic
     fun shapeSetData(shape: RID, data: Any?) {
         ObjectCalls.ptrcallWithRIDAndVariantArg(shapeSetDataBind, singleton, shape, data)
     }
 
+    /**
+     * Sets the collision margin for the shape. Note: This is not used in Godot Physics.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_set_margin
+     */
     @JvmStatic
     fun shapeSetMargin(shape: RID, margin: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(shapeSetMarginBind, singleton, shape, margin)
     }
 
+    /**
+     * Returns the shape's type.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_get_type
+     */
     @JvmStatic
     fun shapeGetType(shape: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape)
     }
 
+    /**
+     * Returns the shape data that configures the shape, such as the half-extents of a box or the
+     * triangles of a concave (trimesh) shape. See `shape_set_data` for the precise format of this data
+     * in each case.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_get_data
+     */
     @JvmStatic
     fun shapeGetData(shape: RID): Any? {
         return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, singleton, shape)
     }
 
+    /**
+     * Returns the collision margin for the shape. Note: This is not used in Godot Physics, so will
+     * always return `0`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_get_margin
+     */
     @JvmStatic
     fun shapeGetMargin(shape: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapeGetMarginBind, singleton, shape)
     }
 
+    /**
+     * Creates a space. A space is a collection of parameters for the physics engine that can be
+     * assigned to an area or a body. It can be assigned to an area with `area_set_space`, or to a body
+     * with `body_set_space`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.space_create
+     */
     @JvmStatic
     fun spaceCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(spaceCreateBind, singleton)
     }
 
+    /**
+     * Marks a space as active. It will not have an effect, unless it is assigned to an area or body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.space_set_active
+     */
     @JvmStatic
     fun spaceSetActive(space: RID, active: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(spaceSetActiveBind, singleton, space, active)
     }
 
+    /**
+     * Returns whether the space is active.
+     *
+     * Generated from Godot docs: PhysicsServer3D.space_is_active
+     */
     @JvmStatic
     fun spaceIsActive(space: RID): Boolean {
         return ObjectCalls.ptrcallWithRIDArgRetBool(spaceIsActiveBind, singleton, space)
     }
 
+    /**
+     * Sets the value for a space parameter. A list of available parameters is on the `SpaceParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.space_set_param
+     */
     @JvmStatic
     fun spaceSetParam(space: RID, param: Long, value: Double) {
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param, value)
     }
 
+    /**
+     * Returns the value of a space parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.space_get_param
+     */
     @JvmStatic
     fun spaceGetParam(space: RID, param: Long): Double {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param)
     }
 
+    /**
+     * Returns the state of a space, a `PhysicsDirectSpaceState3D`. This object can be used to make
+     * collision/intersection queries.
+     *
+     * Generated from Godot docs: PhysicsServer3D.space_get_direct_state
+     */
     @JvmStatic
     fun spaceGetDirectState(space: RID): PhysicsDirectSpaceState3D? {
         return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(spaceGetDirectStateBind, singleton, space))
     }
 
+    /**
+     * Creates a 3D area object in the physics server, and returns the `RID` that identifies it. The
+     * default settings for the created area include a collision layer and mask set to `1`, and
+     * `monitorable` set to `false`. Use `area_add_shape` to add shapes to it, use `area_set_transform`
+     * to set its transform, and use `area_set_space` to add the area to a space. If you want the area
+     * to be detectable use `area_set_monitorable`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_create
+     */
     @JvmStatic
     fun areaCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(areaCreateBind, singleton)
     }
 
+    /**
+     * Assigns a space to the area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_space
+     */
     @JvmStatic
     fun areaSetSpace(area: RID, space: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(areaSetSpaceBind, singleton, area, space)
     }
 
+    /**
+     * Returns the space assigned to the area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_space
+     */
     @JvmStatic
     fun areaGetSpace(area: RID): RID {
         return ObjectCalls.ptrcallWithRIDArgRetRID(areaGetSpaceBind, singleton, area)
     }
 
+    /**
+     * Adds a shape to the area, along with a transform matrix. Shapes are usually referenced by their
+     * index, so you should track which shape has a given index.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_add_shape
+     */
     @JvmStatic
     fun areaAddShape(area: RID, shape: RID, transform: Transform3D, disabled: Boolean = false) {
         ObjectCalls.ptrcallWithTwoRIDTransform3DBoolArgs(areaAddShapeBind, singleton, area, shape, transform, disabled)
     }
 
+    /**
+     * Substitutes a given area shape by another. The old shape is selected by its index, the new one
+     * by its `RID`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_shape
+     */
     @JvmStatic
     fun areaSetShape(area: RID, shapeIdx: Int, shape: RID) {
         ObjectCalls.ptrcallWithRIDIntAndRIDArgs(areaSetShapeBind, singleton, area, shapeIdx, shape)
     }
 
+    /**
+     * Sets the transform matrix for an area shape.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_shape_transform
+     */
     @JvmStatic
     fun areaSetShapeTransform(area: RID, shapeIdx: Int, transform: Transform3D) {
         ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(areaSetShapeTransformBind, singleton, area, shapeIdx, transform)
@@ -306,86 +483,190 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithRIDIntAndBoolArgs(areaSetShapeDisabledBind, singleton, area, shapeIdx, disabled)
     }
 
+    /**
+     * Returns the number of shapes assigned to an area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_shape_count
+     */
     @JvmStatic
     fun areaGetShapeCount(area: RID): Int {
         return ObjectCalls.ptrcallWithRIDArgRetInt(areaGetShapeCountBind, singleton, area)
     }
 
+    /**
+     * Returns the `RID` of the nth shape of an area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_shape
+     */
     @JvmStatic
     fun areaGetShape(area: RID, shapeIdx: Int): RID {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(areaGetShapeBind, singleton, area, shapeIdx)
     }
 
+    /**
+     * Returns the transform matrix of a shape within an area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_shape_transform
+     */
     @JvmStatic
     fun areaGetShapeTransform(area: RID, shapeIdx: Int): Transform3D {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(areaGetShapeTransformBind, singleton, area, shapeIdx)
     }
 
+    /**
+     * Removes a shape from an area. It does not delete the shape, so it can be reassigned later.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_remove_shape
+     */
     @JvmStatic
     fun areaRemoveShape(area: RID, shapeIdx: Int) {
         ObjectCalls.ptrcallWithRIDAndIntArg(areaRemoveShapeBind, singleton, area, shapeIdx)
     }
 
+    /**
+     * Removes all shapes from an area. It does not delete the shapes, so they can be reassigned later.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_clear_shapes
+     */
     @JvmStatic
     fun areaClearShapes(area: RID) {
         ObjectCalls.ptrcallWithRIDArg(areaClearShapesBind, singleton, area)
     }
 
+    /**
+     * Assigns the area to one or many physics layers.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_collision_layer
+     */
     @JvmStatic
     fun areaSetCollisionLayer(area: RID, layer: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(areaSetCollisionLayerBind, singleton, area, layer)
     }
 
+    /**
+     * Returns the physics layer or layers an area belongs to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_collision_layer
+     */
     @JvmStatic
     fun areaGetCollisionLayer(area: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionLayerBind, singleton, area)
     }
 
+    /**
+     * Sets which physics layers the area will monitor.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_collision_mask
+     */
     @JvmStatic
     fun areaSetCollisionMask(area: RID, mask: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(areaSetCollisionMaskBind, singleton, area, mask)
     }
 
+    /**
+     * Returns the physics layer or layers an area can contact with.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_collision_mask
+     */
     @JvmStatic
     fun areaGetCollisionMask(area: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionMaskBind, singleton, area)
     }
 
+    /**
+     * Sets the value for an area parameter. A list of available parameters is on the `AreaParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_param
+     */
     @JvmStatic
     fun areaSetParam(area: RID, param: Long, value: Any?) {
         ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param, value)
     }
 
+    /**
+     * Sets the transform matrix for an area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_transform
+     */
     @JvmStatic
     fun areaSetTransform(area: RID, transform: Transform3D) {
         ObjectCalls.ptrcallWithRIDAndTransform3DArg(areaSetTransformBind, singleton, area, transform)
     }
 
+    /**
+     * Returns an area parameter value. A list of available parameters is on the `AreaParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_param
+     */
     @JvmStatic
     fun areaGetParam(area: RID, param: Long): Any? {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param)
     }
 
+    /**
+     * Returns the transform matrix for an area.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_transform
+     */
     @JvmStatic
     fun areaGetTransform(area: RID): Transform3D {
         return ObjectCalls.ptrcallWithRIDArgRetTransform3D(areaGetTransformBind, singleton, area)
     }
 
+    /**
+     * Assigns the area to a descendant of `Object`, so it can exist in the node tree.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_attach_object_instance_id
+     */
     @JvmStatic
     fun areaAttachObjectInstanceId(area: RID, id: Long) {
         ObjectCalls.ptrcallWithRIDAndLongArg(areaAttachObjectInstanceIdBind, singleton, area, id)
     }
 
+    /**
+     * Gets the instance ID of the object the area is assigned to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_object_instance_id
+     */
     @JvmStatic
     fun areaGetObjectInstanceId(area: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(areaGetObjectInstanceIdBind, singleton, area)
     }
 
+    /**
+     * Sets the area's body monitor callback. This callback will be called when any other (shape of a)
+     * body enters or exits (a shape of) the given area, and must take the following five parameters:
+     * 1. an integer `status`: either `AREA_BODY_ADDED` or `AREA_BODY_REMOVED` depending on whether the
+     * other body shape entered or exited the area, 2. an `RID` `body_rid`: the `RID` of the body that
+     * entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached to the body, 4.
+     * an integer `body_shape_idx`: the index of the shape of the body that entered or exited the area,
+     * 5. an integer `self_shape_idx`: the index of the shape of the area where the body entered or
+     * exited. By counting (or keeping track of) the shapes that enter and exit, it can be determined
+     * if a body (with all its shapes) is entering for the first time or exiting for the last time.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_monitor_callback
+     */
     @JvmStatic
     fun areaSetMonitorCallback(area: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(areaSetMonitorCallbackBind, singleton, area, callback.target.handle, callback.method)
     }
 
+    /**
+     * Sets the area's area monitor callback. This callback will be called when any other (shape of an)
+     * area enters or exits (a shape of) the given area, and must take the following five parameters:
+     * 1. an integer `status`: either `AREA_BODY_ADDED` or `AREA_BODY_REMOVED` depending on whether the
+     * other area's shape entered or exited the area, 2. an `RID` `area_rid`: the `RID` of the other
+     * area that entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached to
+     * the other area, 4. an integer `area_shape_idx`: the index of the shape of the other area that
+     * entered or exited the area, 5. an integer `self_shape_idx`: the index of the shape of the area
+     * where the other area entered or exited. By counting (or keeping track of) the shapes that enter
+     * and exit, it can be determined if an area (with all its shapes) is entering for the first time
+     * or exiting for the last time.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_area_monitor_callback
+     */
     @JvmStatic
     fun areaSetAreaMonitorCallback(area: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(areaSetAreaMonitorCallbackBind, singleton, area, callback.target.handle, callback.method)
@@ -396,76 +677,156 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithRIDAndBoolArg(areaSetMonitorableBind, singleton, area, monitorable)
     }
 
+    /**
+     * Sets object pickable with rays.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_ray_pickable
+     */
     @JvmStatic
     fun areaSetRayPickable(area: RID, enable: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(areaSetRayPickableBind, singleton, area, enable)
     }
 
+    /**
+     * Creates a 3D body object in the physics server, and returns the `RID` that identifies it. The
+     * default settings for the created area include a collision layer and mask set to `1`, and body
+     * mode set to `BODY_MODE_RIGID`. Use `body_add_shape` to add shapes to it, use `body_set_state` to
+     * set its transform, and use `body_set_space` to add the body to a space.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_create
+     */
     @JvmStatic
     fun bodyCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(bodyCreateBind, singleton)
     }
 
+    /**
+     * Assigns a space to the body (see `space_create`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_space
+     */
     @JvmStatic
     fun bodySetSpace(body: RID, space: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(bodySetSpaceBind, singleton, body, space)
     }
 
+    /**
+     * Returns the `RID` of the space assigned to a body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_space
+     */
     @JvmStatic
     fun bodyGetSpace(body: RID): RID {
         return ObjectCalls.ptrcallWithRIDArgRetRID(bodyGetSpaceBind, singleton, body)
     }
 
+    /**
+     * Sets the body mode.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_mode
+     */
     @JvmStatic
     fun bodySetMode(body: RID, mode: Long) {
         ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode)
     }
 
+    /**
+     * Returns the body mode.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_mode
+     */
     @JvmStatic
     fun bodyGetMode(body: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body)
     }
 
+    /**
+     * Sets the physics layer or layers a body belongs to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_collision_layer
+     */
     @JvmStatic
     fun bodySetCollisionLayer(body: RID, layer: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(bodySetCollisionLayerBind, singleton, body, layer)
     }
 
+    /**
+     * Returns the physics layer or layers a body belongs to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_collision_layer
+     */
     @JvmStatic
     fun bodyGetCollisionLayer(body: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(bodyGetCollisionLayerBind, singleton, body)
     }
 
+    /**
+     * Sets the physics layer or layers a body can collide with.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_collision_mask
+     */
     @JvmStatic
     fun bodySetCollisionMask(body: RID, mask: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(bodySetCollisionMaskBind, singleton, body, mask)
     }
 
+    /**
+     * Returns the physics layer or layers a body can collide with.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_collision_mask
+     */
     @JvmStatic
     fun bodyGetCollisionMask(body: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(bodyGetCollisionMaskBind, singleton, body)
     }
 
+    /**
+     * Sets the body's collision priority.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_collision_priority
+     */
     @JvmStatic
     fun bodySetCollisionPriority(body: RID, priority: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(bodySetCollisionPriorityBind, singleton, body, priority)
     }
 
+    /**
+     * Returns the body's collision priority.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_collision_priority
+     */
     @JvmStatic
     fun bodyGetCollisionPriority(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(bodyGetCollisionPriorityBind, singleton, body)
     }
 
+    /**
+     * Adds a shape to the body, along with a transform matrix. Shapes are usually referenced by their
+     * index, so you should track which shape has a given index.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_add_shape
+     */
     @JvmStatic
     fun bodyAddShape(body: RID, shape: RID, transform: Transform3D, disabled: Boolean = false) {
         ObjectCalls.ptrcallWithTwoRIDTransform3DBoolArgs(bodyAddShapeBind, singleton, body, shape, transform, disabled)
     }
 
+    /**
+     * Substitutes a given body shape by another. The old shape is selected by its index, the new one
+     * by its `RID`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_shape
+     */
     @JvmStatic
     fun bodySetShape(body: RID, shapeIdx: Int, shape: RID) {
         ObjectCalls.ptrcallWithRIDIntAndRIDArgs(bodySetShapeBind, singleton, body, shapeIdx, shape)
     }
 
+    /**
+     * Sets the transform matrix for a body shape.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_shape_transform
+     */
     @JvmStatic
     fun bodySetShapeTransform(body: RID, shapeIdx: Int, transform: Transform3D) {
         ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(bodySetShapeTransformBind, singleton, body, shapeIdx, transform)
@@ -476,141 +837,308 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithRIDIntAndBoolArgs(bodySetShapeDisabledBind, singleton, body, shapeIdx, disabled)
     }
 
+    /**
+     * Returns the number of shapes assigned to a body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_shape_count
+     */
     @JvmStatic
     fun bodyGetShapeCount(body: RID): Int {
         return ObjectCalls.ptrcallWithRIDArgRetInt(bodyGetShapeCountBind, singleton, body)
     }
 
+    /**
+     * Returns the `RID` of the nth shape of a body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_shape
+     */
     @JvmStatic
     fun bodyGetShape(body: RID, shapeIdx: Int): RID {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(bodyGetShapeBind, singleton, body, shapeIdx)
     }
 
+    /**
+     * Returns the transform matrix of a body shape.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_shape_transform
+     */
     @JvmStatic
     fun bodyGetShapeTransform(body: RID, shapeIdx: Int): Transform3D {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(bodyGetShapeTransformBind, singleton, body, shapeIdx)
     }
 
+    /**
+     * Removes a shape from a body. The shape is not deleted, so it can be reused afterwards.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_remove_shape
+     */
     @JvmStatic
     fun bodyRemoveShape(body: RID, shapeIdx: Int) {
         ObjectCalls.ptrcallWithRIDAndIntArg(bodyRemoveShapeBind, singleton, body, shapeIdx)
     }
 
+    /**
+     * Removes all shapes from a body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_clear_shapes
+     */
     @JvmStatic
     fun bodyClearShapes(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(bodyClearShapesBind, singleton, body)
     }
 
+    /**
+     * Assigns the area to a descendant of `Object`, so it can exist in the node tree.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_attach_object_instance_id
+     */
     @JvmStatic
     fun bodyAttachObjectInstanceId(body: RID, id: Long) {
         ObjectCalls.ptrcallWithRIDAndLongArg(bodyAttachObjectInstanceIdBind, singleton, body, id)
     }
 
+    /**
+     * Gets the instance ID of the object the area is assigned to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_object_instance_id
+     */
     @JvmStatic
     fun bodyGetObjectInstanceId(body: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetObjectInstanceIdBind, singleton, body)
     }
 
+    /**
+     * If `true`, the continuous collision detection mode is enabled. Continuous collision detection
+     * tries to predict where a moving body will collide, instead of moving it and correcting its
+     * movement if it collided.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_enable_continuous_collision_detection
+     */
     @JvmStatic
     fun bodySetEnableContinuousCollisionDetection(body: RID, enable: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetEnableContinuousCollisionDetectionBind, singleton, body, enable)
     }
 
+    /**
+     * If `true`, the continuous collision detection mode is enabled.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_is_continuous_collision_detection_enabled
+     */
     @JvmStatic
     fun bodyIsContinuousCollisionDetectionEnabled(body: RID): Boolean {
         return ObjectCalls.ptrcallWithRIDArgRetBool(bodyIsContinuousCollisionDetectionEnabledBind, singleton, body)
     }
 
+    /**
+     * Sets a body parameter. A list of available parameters is on the `BodyParameter` constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_param
+     */
     @JvmStatic
     fun bodySetParam(body: RID, param: Long, value: Any?) {
         ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param, value)
     }
 
+    /**
+     * Returns the value of a body parameter. A list of available parameters is on the `BodyParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_param
+     */
     @JvmStatic
     fun bodyGetParam(body: RID, param: Long): Any? {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param)
     }
 
+    /**
+     * Restores the default inertia and center of mass based on shapes to cancel any custom values
+     * previously set using `body_set_param`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_reset_mass_properties
+     */
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
     }
 
+    /**
+     * Sets a body state.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_state
+     */
     @JvmStatic
     fun bodySetState(body: RID, state: Long, value: Any?) {
         ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state, value)
     }
 
+    /**
+     * Returns a body state.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_state
+     */
     @JvmStatic
     fun bodyGetState(body: RID, state: Long): Any? {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state)
     }
 
+    /**
+     * Applies a directional impulse without affecting rotation. An impulse is time-independent!
+     * Applying an impulse every frame would result in a framerate-dependent force. For this reason, it
+     * should only be used when simulating one-time impacts (use the "_force" functions otherwise).
+     * This is equivalent to using `body_apply_impulse` at the body's center of mass.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_apply_central_impulse
+     */
     @JvmStatic
     fun bodyApplyCentralImpulse(body: RID, impulse: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyCentralImpulseBind, singleton, body, impulse)
     }
 
+    /**
+     * Applies a positioned impulse to the body. An impulse is time-independent! Applying an impulse
+     * every frame would result in a framerate-dependent force. For this reason, it should only be used
+     * when simulating one-time impacts (use the "_force" functions otherwise). `position` is the
+     * offset from the body origin in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_apply_impulse
+     */
     @JvmStatic
     fun bodyApplyImpulse(body: RID, impulse: Vector3, position: Vector3) {
         ObjectCalls.ptrcallWithRIDAndTwoVector3Args(bodyApplyImpulseBind, singleton, body, impulse, position)
     }
 
+    /**
+     * Applies a rotational impulse to the body without affecting the position. An impulse is
+     * time-independent! Applying an impulse every frame would result in a framerate-dependent force.
+     * For this reason, it should only be used when simulating one-time impacts (use the "_force"
+     * functions otherwise).
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_apply_torque_impulse
+     */
     @JvmStatic
     fun bodyApplyTorqueImpulse(body: RID, impulse: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyTorqueImpulseBind, singleton, body, impulse)
     }
 
+    /**
+     * Applies a directional force without affecting rotation. A force is time dependent and meant to
+     * be applied every physics update. This is equivalent to using `body_apply_force` at the body's
+     * center of mass.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_apply_central_force
+     */
     @JvmStatic
     fun bodyApplyCentralForce(body: RID, force: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyCentralForceBind, singleton, body, force)
     }
 
+    /**
+     * Applies a positioned force to the body. A force is time dependent and meant to be applied every
+     * physics update. `position` is the offset from the body origin in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_apply_force
+     */
     @JvmStatic
     fun bodyApplyForce(body: RID, force: Vector3, position: Vector3) {
         ObjectCalls.ptrcallWithRIDAndTwoVector3Args(bodyApplyForceBind, singleton, body, force, position)
     }
 
+    /**
+     * Applies a rotational force without affecting position. A force is time dependent and meant to be
+     * applied every physics update.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_apply_torque
+     */
     @JvmStatic
     fun bodyApplyTorque(body: RID, torque: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyTorqueBind, singleton, body, torque)
     }
 
+    /**
+     * Adds a constant directional force without affecting rotation that keeps being applied over time
+     * until cleared with `body_set_constant_force(body, Vector3(0, 0, 0))`. This is equivalent to
+     * using `body_add_constant_force` at the body's center of mass.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_add_constant_central_force
+     */
     @JvmStatic
     fun bodyAddConstantCentralForce(body: RID, force: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyAddConstantCentralForceBind, singleton, body, force)
     }
 
+    /**
+     * Adds a constant positioned force to the body that keeps being applied over time until cleared
+     * with `body_set_constant_force(body, Vector3(0, 0, 0))`. `position` is the offset from the body
+     * origin in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_add_constant_force
+     */
     @JvmStatic
     fun bodyAddConstantForce(body: RID, force: Vector3, position: Vector3) {
         ObjectCalls.ptrcallWithRIDAndTwoVector3Args(bodyAddConstantForceBind, singleton, body, force, position)
     }
 
+    /**
+     * Adds a constant rotational force without affecting position that keeps being applied over time
+     * until cleared with `body_set_constant_torque(body, Vector3(0, 0, 0))`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_add_constant_torque
+     */
     @JvmStatic
     fun bodyAddConstantTorque(body: RID, torque: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyAddConstantTorqueBind, singleton, body, torque)
     }
 
+    /**
+     * Sets the body's total constant positional forces applied during each physics update. See
+     * `body_add_constant_force` and `body_add_constant_central_force`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_constant_force
+     */
     @JvmStatic
     fun bodySetConstantForce(body: RID, force: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodySetConstantForceBind, singleton, body, force)
     }
 
+    /**
+     * Returns the body's total constant positional forces applied during each physics update. See
+     * `body_add_constant_force` and `body_add_constant_central_force`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_constant_force
+     */
     @JvmStatic
     fun bodyGetConstantForce(body: RID): Vector3 {
         return ObjectCalls.ptrcallWithRIDArgRetVector3(bodyGetConstantForceBind, singleton, body)
     }
 
+    /**
+     * Sets the body's total constant rotational forces applied during each physics update. See
+     * `body_add_constant_torque`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_constant_torque
+     */
     @JvmStatic
     fun bodySetConstantTorque(body: RID, torque: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodySetConstantTorqueBind, singleton, body, torque)
     }
 
+    /**
+     * Returns the body's total constant rotational forces applied during each physics update. See
+     * `body_add_constant_torque`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_constant_torque
+     */
     @JvmStatic
     fun bodyGetConstantTorque(body: RID): Vector3 {
         return ObjectCalls.ptrcallWithRIDArgRetVector3(bodyGetConstantTorqueBind, singleton, body)
     }
 
+    /**
+     * Sets an axis velocity. The velocity in the given vector axis will be set as the given vector
+     * length. This is useful for jumping behavior.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_axis_velocity
+     */
     @JvmStatic
     fun bodySetAxisVelocity(body: RID, axisVelocity: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(bodySetAxisVelocityBind, singleton, body, axisVelocity)
@@ -626,251 +1154,543 @@ object PhysicsServer3D {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(bodyIsAxisLockedBind, singleton, body, axis)
     }
 
+    /**
+     * Adds a body to the list of bodies exempt from collisions.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_add_collision_exception
+     */
     @JvmStatic
     fun bodyAddCollisionException(body: RID, exceptedBody: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(bodyAddCollisionExceptionBind, singleton, body, exceptedBody)
     }
 
+    /**
+     * Removes a body from the list of bodies exempt from collisions. Continuous collision detection
+     * tries to predict where a moving body will collide, instead of moving it and correcting its
+     * movement if it collided.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_remove_collision_exception
+     */
     @JvmStatic
     fun bodyRemoveCollisionException(body: RID, exceptedBody: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(bodyRemoveCollisionExceptionBind, singleton, body, exceptedBody)
     }
 
+    /**
+     * Sets the maximum contacts to report. Bodies can keep a log of the contacts with other bodies.
+     * This is enabled by setting the maximum number of contacts reported to a number greater than 0.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_max_contacts_reported
+     */
     @JvmStatic
     fun bodySetMaxContactsReported(body: RID, amount: Int) {
         ObjectCalls.ptrcallWithRIDAndIntArg(bodySetMaxContactsReportedBind, singleton, body, amount)
     }
 
+    /**
+     * Returns the maximum contacts that can be reported. See `body_set_max_contacts_reported`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_max_contacts_reported
+     */
     @JvmStatic
     fun bodyGetMaxContactsReported(body: RID): Int {
         return ObjectCalls.ptrcallWithRIDArgRetInt(bodyGetMaxContactsReportedBind, singleton, body)
     }
 
+    /**
+     * Sets whether the body omits the standard force integration. If `enable` is `true`, the body will
+     * not automatically use applied forces, torques, and damping to update the body's linear and
+     * angular velocity. In this case, `body_set_force_integration_callback` can be used to manually
+     * update the linear and angular velocity instead. This method is called when the property
+     * `RigidBody3D.custom_integrator` is set.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_omit_force_integration
+     */
     @JvmStatic
     fun bodySetOmitForceIntegration(body: RID, enable: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetOmitForceIntegrationBind, singleton, body, enable)
     }
 
+    /**
+     * Returns `true` if the body is omitting the standard force integration. See
+     * `body_set_omit_force_integration`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_is_omitting_force_integration
+     */
     @JvmStatic
     fun bodyIsOmittingForceIntegration(body: RID): Boolean {
         return ObjectCalls.ptrcallWithRIDArgRetBool(bodyIsOmittingForceIntegrationBind, singleton, body)
     }
 
+    /**
+     * Sets the body's state synchronization callback function to `callable`. Use an empty `Callable`
+     * (`Callable()`) to clear the callback. The function `callable` will be called every physics
+     * frame, assuming that the body was active during the previous physics tick, and can be used to
+     * fetch the latest state from the physics server. The function `callable` must take the following
+     * parameters: 1. `state`: a `PhysicsDirectBodyState3D`, used to retrieve the body's state.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_state_sync_callback
+     */
     @JvmStatic
     fun bodySetStateSyncCallback(body: RID, callable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(bodySetStateSyncCallbackBind, singleton, body, callable.target.handle, callable.method)
     }
 
+    /**
+     * Sets the body's custom force integration callback function to `callable`. Use an empty
+     * `Callable` (`Callable()`) to clear the custom callback. The function `callable` will be called
+     * every physics tick, before the standard force integration (see
+     * `body_set_omit_force_integration`). It can be used for example to update the body's linear and
+     * angular velocity based on contact with other bodies. If `userdata` is not `null`, the function
+     * `callable` must take the following two parameters: 1. `state`: a `PhysicsDirectBodyState3D`,
+     * used to retrieve and modify the body's state, 2. `userdata`: a `Variant`; its value will be the
+     * `userdata` passed into this method. If `userdata` is `null`, then `callable` must take only the
+     * `state` parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_force_integration_callback
+     */
     @JvmStatic
     fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
         ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.handle, callable.method, userdata)
     }
 
+    /**
+     * Sets the body pickable with rays if `enable` is set.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_ray_pickable
+     */
     @JvmStatic
     fun bodySetRayPickable(body: RID, enable: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetRayPickableBind, singleton, body, enable)
     }
 
+    /**
+     * Returns `true` if a collision would result from moving along a motion vector from a given point
+     * in space. `PhysicsTestMotionParameters3D` is passed to set motion parameters.
+     * `PhysicsTestMotionResult3D` can be passed to return additional information.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_test_motion
+     */
     @JvmStatic
     fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters3D?, result: PhysicsTestMotionResult3D?): Boolean {
         return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters?.requireOpenHandle() ?: MemorySegment.NULL, result?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the `PhysicsDirectBodyState3D` of the body. Returns `null` if the body is destroyed or
+     * removed from the physics space.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_direct_state
+     */
     @JvmStatic
     fun bodyGetDirectState(body: RID): PhysicsDirectBodyState3D? {
         return PhysicsDirectBodyState3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(bodyGetDirectStateBind, singleton, body))
     }
 
+    /**
+     * Creates a new soft body and returns its internal `RID`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_create
+     */
     @JvmStatic
     fun softBodyCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(softBodyCreateBind, singleton)
     }
 
+    /**
+     * Requests that the physics server updates the rendering server with the latest positions of the
+     * given soft body's points through the `rendering_server_handler` interface.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_update_rendering_server
+     */
     @JvmStatic
     fun softBodyUpdateRenderingServer(body: RID, renderingServerHandler: PhysicsServer3DRenderingServerHandler) {
         ObjectCalls.ptrcallWithRIDAndObjectArg(softBodyUpdateRenderingServerBind, singleton, body, renderingServerHandler.handle)
     }
 
+    /**
+     * Assigns a space to the given soft body (see `space_create`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_space
+     */
     @JvmStatic
     fun softBodySetSpace(body: RID, space: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(softBodySetSpaceBind, singleton, body, space)
     }
 
+    /**
+     * Returns the `RID` of the space assigned to the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_space
+     */
     @JvmStatic
     fun softBodyGetSpace(body: RID): RID {
         return ObjectCalls.ptrcallWithRIDArgRetRID(softBodyGetSpaceBind, singleton, body)
     }
 
+    /**
+     * Sets the mesh of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_mesh
+     */
     @JvmStatic
     fun softBodySetMesh(body: RID, mesh: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(softBodySetMeshBind, singleton, body, mesh)
     }
 
+    /**
+     * Returns the bounds of the given soft body in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_bounds
+     */
     @JvmStatic
     fun softBodyGetBounds(body: RID): AABB {
         return ObjectCalls.ptrcallWithRIDArgRetAABB(softBodyGetBoundsBind, singleton, body)
     }
 
+    /**
+     * Sets the physics layer or layers the given soft body belongs to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_collision_layer
+     */
     @JvmStatic
     fun softBodySetCollisionLayer(body: RID, layer: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(softBodySetCollisionLayerBind, singleton, body, layer)
     }
 
+    /**
+     * Returns the physics layer or layers that the given soft body belongs to.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_collision_layer
+     */
     @JvmStatic
     fun softBodyGetCollisionLayer(body: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(softBodyGetCollisionLayerBind, singleton, body)
     }
 
+    /**
+     * Sets the physics layer or layers the given soft body can collide with.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_collision_mask
+     */
     @JvmStatic
     fun softBodySetCollisionMask(body: RID, mask: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(softBodySetCollisionMaskBind, singleton, body, mask)
     }
 
+    /**
+     * Returns the physics layer or layers that the given soft body can collide with.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_collision_mask
+     */
     @JvmStatic
     fun softBodyGetCollisionMask(body: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(softBodyGetCollisionMaskBind, singleton, body)
     }
 
+    /**
+     * Adds the given body to the list of bodies exempt from collisions.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_add_collision_exception
+     */
     @JvmStatic
     fun softBodyAddCollisionException(body: RID, bodyB: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(softBodyAddCollisionExceptionBind, singleton, body, bodyB)
     }
 
+    /**
+     * Removes the given body from the list of bodies exempt from collisions.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_remove_collision_exception
+     */
     @JvmStatic
     fun softBodyRemoveCollisionException(body: RID, bodyB: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(softBodyRemoveCollisionExceptionBind, singleton, body, bodyB)
     }
 
+    /**
+     * Sets the given body state for the given body. Note: Godot's default physics implementation does
+     * not support `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`,
+     * or `BODY_STATE_CAN_SLEEP`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_state
+     */
     @JvmStatic
     fun softBodySetState(body: RID, state: Long, variant: Any?) {
         ObjectCalls.ptrcallWithRIDLongAndVariantArgs(softBodySetStateBind, singleton, body, state, variant)
     }
 
+    /**
+     * Returns the given soft body state. Note: Godot's default physics implementation does not support
+     * `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`, or
+     * `BODY_STATE_CAN_SLEEP`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_state
+     */
     @JvmStatic
     fun softBodyGetState(body: RID, state: Long): Any? {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(softBodyGetStateBind, singleton, body, state)
     }
 
+    /**
+     * Sets the global transform of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_transform
+     */
     @JvmStatic
     fun softBodySetTransform(body: RID, transform: Transform3D) {
         ObjectCalls.ptrcallWithRIDAndTransform3DArg(softBodySetTransformBind, singleton, body, transform)
     }
 
+    /**
+     * Sets whether the given soft body will be pickable when using object picking.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_ray_pickable
+     */
     @JvmStatic
     fun softBodySetRayPickable(body: RID, enable: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(softBodySetRayPickableBind, singleton, body, enable)
     }
 
+    /**
+     * Sets the simulation precision of the given soft body. Increasing this value will improve the
+     * resulting simulation, but can affect performance. Use with care.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_simulation_precision
+     */
     @JvmStatic
     fun softBodySetSimulationPrecision(body: RID, simulationPrecision: Int) {
         ObjectCalls.ptrcallWithRIDAndIntArg(softBodySetSimulationPrecisionBind, singleton, body, simulationPrecision)
     }
 
+    /**
+     * Returns the simulation precision of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_simulation_precision
+     */
     @JvmStatic
     fun softBodyGetSimulationPrecision(body: RID): Int {
         return ObjectCalls.ptrcallWithRIDArgRetInt(softBodyGetSimulationPrecisionBind, singleton, body)
     }
 
+    /**
+     * Sets the total mass for the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_total_mass
+     */
     @JvmStatic
     fun softBodySetTotalMass(body: RID, totalMass: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetTotalMassBind, singleton, body, totalMass)
     }
 
+    /**
+     * Returns the total mass assigned to the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_total_mass
+     */
     @JvmStatic
     fun softBodyGetTotalMass(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetTotalMassBind, singleton, body)
     }
 
+    /**
+     * Sets the linear stiffness of the given soft body. Higher values will result in a stiffer body,
+     * while lower values will increase the body's ability to bend. The value can be between `0.0` and
+     * `1.0` (inclusive).
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_linear_stiffness
+     */
     @JvmStatic
     fun softBodySetLinearStiffness(body: RID, stiffness: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetLinearStiffnessBind, singleton, body, stiffness)
     }
 
+    /**
+     * Returns the linear stiffness of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_linear_stiffness
+     */
     @JvmStatic
     fun softBodyGetLinearStiffness(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetLinearStiffnessBind, singleton, body)
     }
 
+    /**
+     * Sets the shrinking factor of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_shrinking_factor
+     */
     @JvmStatic
     fun softBodySetShrinkingFactor(body: RID, shrinkingFactor: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetShrinkingFactorBind, singleton, body, shrinkingFactor)
     }
 
+    /**
+     * Returns the shrinking factor of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_shrinking_factor
+     */
     @JvmStatic
     fun softBodyGetShrinkingFactor(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetShrinkingFactorBind, singleton, body)
     }
 
+    /**
+     * Sets the pressure coefficient of the given soft body. Simulates pressure build-up from inside
+     * this body. Higher values increase the strength of this effect.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_pressure_coefficient
+     */
     @JvmStatic
     fun softBodySetPressureCoefficient(body: RID, pressureCoefficient: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetPressureCoefficientBind, singleton, body, pressureCoefficient)
     }
 
+    /**
+     * Returns the pressure coefficient of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_pressure_coefficient
+     */
     @JvmStatic
     fun softBodyGetPressureCoefficient(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetPressureCoefficientBind, singleton, body)
     }
 
+    /**
+     * Sets the damping coefficient of the given soft body. Higher values will slow down the body more
+     * noticeably when forces are applied.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_damping_coefficient
+     */
     @JvmStatic
     fun softBodySetDampingCoefficient(body: RID, dampingCoefficient: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetDampingCoefficientBind, singleton, body, dampingCoefficient)
     }
 
+    /**
+     * Returns the damping coefficient of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_damping_coefficient
+     */
     @JvmStatic
     fun softBodyGetDampingCoefficient(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetDampingCoefficientBind, singleton, body)
     }
 
+    /**
+     * Sets the drag coefficient of the given soft body. Higher values increase this body's air
+     * resistance. Note: This value is currently unused by Godot's default physics implementation.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_drag_coefficient
+     */
     @JvmStatic
     fun softBodySetDragCoefficient(body: RID, dragCoefficient: Double) {
         ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetDragCoefficientBind, singleton, body, dragCoefficient)
     }
 
+    /**
+     * Returns the drag coefficient of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_drag_coefficient
+     */
     @JvmStatic
     fun softBodyGetDragCoefficient(body: RID): Double {
         return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetDragCoefficientBind, singleton, body)
     }
 
+    /**
+     * Moves the given soft body point to a position in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_move_point
+     */
     @JvmStatic
     fun softBodyMovePoint(body: RID, pointIndex: Int, globalPosition: Vector3) {
         ObjectCalls.ptrcallWithRIDIntAndVector3Arg(softBodyMovePointBind, singleton, body, pointIndex, globalPosition)
     }
 
+    /**
+     * Returns the current position of the given soft body point in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_point_global_position
+     */
     @JvmStatic
     fun softBodyGetPointGlobalPosition(body: RID, pointIndex: Int): Vector3 {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetVector3(softBodyGetPointGlobalPositionBind, singleton, body, pointIndex)
     }
 
+    /**
+     * Unpins all points of the given soft body.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_remove_all_pinned_points
+     */
     @JvmStatic
     fun softBodyRemoveAllPinnedPoints(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(softBodyRemoveAllPinnedPointsBind, singleton, body)
     }
 
+    /**
+     * Pins or unpins the given soft body point based on the value of `pin`. Note: Pinning a point
+     * effectively makes it kinematic, preventing it from being affected by forces, but you can still
+     * move it using `soft_body_move_point`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_pin_point
+     */
     @JvmStatic
     fun softBodyPinPoint(body: RID, pointIndex: Int, pin: Boolean) {
         ObjectCalls.ptrcallWithRIDIntAndBoolArgs(softBodyPinPointBind, singleton, body, pointIndex, pin)
     }
 
+    /**
+     * Returns whether the given soft body point is pinned.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_is_point_pinned
+     */
     @JvmStatic
     fun softBodyIsPointPinned(body: RID, pointIndex: Int): Boolean {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(softBodyIsPointPinnedBind, singleton, body, pointIndex)
     }
 
+    /**
+     * Applies an impulse to a point. An impulse is time-independent! Applying an impulse every frame
+     * would result in a framerate-dependent force. For this reason, it should only be used when
+     * simulating one-time impacts (use the "_force" functions otherwise).
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_apply_point_impulse
+     */
     @JvmStatic
     fun softBodyApplyPointImpulse(body: RID, pointIndex: Int, impulse: Vector3) {
         ObjectCalls.ptrcallWithRIDIntAndVector3Arg(softBodyApplyPointImpulseBind, singleton, body, pointIndex, impulse)
     }
 
+    /**
+     * Applies a force to a point. A force is time dependent and meant to be applied every physics
+     * update.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_apply_point_force
+     */
     @JvmStatic
     fun softBodyApplyPointForce(body: RID, pointIndex: Int, force: Vector3) {
         ObjectCalls.ptrcallWithRIDIntAndVector3Arg(softBodyApplyPointForceBind, singleton, body, pointIndex, force)
     }
 
+    /**
+     * Distributes and applies an impulse to all points. An impulse is time-independent! Applying an
+     * impulse every frame would result in a framerate-dependent force. For this reason, it should only
+     * be used when simulating one-time impacts (use the "_force" functions otherwise).
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_apply_central_impulse
+     */
     @JvmStatic
     fun softBodyApplyCentralImpulse(body: RID, impulse: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(softBodyApplyCentralImpulseBind, singleton, body, impulse)
     }
 
+    /**
+     * Distributes and applies a force to all points. A force is time dependent and meant to be applied
+     * every physics update.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_apply_central_force
+     */
     @JvmStatic
     fun softBodyApplyCentralForce(body: RID, force: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(softBodyApplyCentralForceBind, singleton, body, force)
@@ -891,31 +1711,61 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithTwoRIDVector3RIDVector3Args(jointMakePinBind, singleton, joint, bodyA, localA, bodyB, localB)
     }
 
+    /**
+     * Sets a pin joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.pin_joint_set_param
+     */
     @JvmStatic
     fun pinJointSetParam(joint: RID, param: Long, value: Double) {
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param, value)
     }
 
+    /**
+     * Gets a pin joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.pin_joint_get_param
+     */
     @JvmStatic
     fun pinJointGetParam(joint: RID, param: Long): Double {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param)
     }
 
+    /**
+     * Sets position of the joint in the local space of body a of the joint.
+     *
+     * Generated from Godot docs: PhysicsServer3D.pin_joint_set_local_a
+     */
     @JvmStatic
     fun pinJointSetLocalA(joint: RID, localA: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(pinJointSetLocalABind, singleton, joint, localA)
     }
 
+    /**
+     * Returns position of the joint in the local space of body a of the joint.
+     *
+     * Generated from Godot docs: PhysicsServer3D.pin_joint_get_local_a
+     */
     @JvmStatic
     fun pinJointGetLocalA(joint: RID): Vector3 {
         return ObjectCalls.ptrcallWithRIDArgRetVector3(pinJointGetLocalABind, singleton, joint)
     }
 
+    /**
+     * Sets position of the joint in the local space of body b of the joint.
+     *
+     * Generated from Godot docs: PhysicsServer3D.pin_joint_set_local_b
+     */
     @JvmStatic
     fun pinJointSetLocalB(joint: RID, localB: Vector3) {
         ObjectCalls.ptrcallWithRIDAndVector3Arg(pinJointSetLocalBBind, singleton, joint, localB)
     }
 
+    /**
+     * Returns position of the joint in the local space of body b of the joint.
+     *
+     * Generated from Godot docs: PhysicsServer3D.pin_joint_get_local_b
+     */
     @JvmStatic
     fun pinJointGetLocalB(joint: RID): Vector3 {
         return ObjectCalls.ptrcallWithRIDArgRetVector3(pinJointGetLocalBBind, singleton, joint)
@@ -926,21 +1776,41 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeHingeBind, singleton, joint, bodyA, hingeA, bodyB, hingeB)
     }
 
+    /**
+     * Sets a hinge joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.hinge_joint_set_param
+     */
     @JvmStatic
     fun hingeJointSetParam(joint: RID, param: Long, value: Double) {
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(hingeJointSetParamBind, singleton, joint, param, value)
     }
 
+    /**
+     * Gets a hinge joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.hinge_joint_get_param
+     */
     @JvmStatic
     fun hingeJointGetParam(joint: RID, param: Long): Double {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(hingeJointGetParamBind, singleton, joint, param)
     }
 
+    /**
+     * Sets a hinge joint flag.
+     *
+     * Generated from Godot docs: PhysicsServer3D.hinge_joint_set_flag
+     */
     @JvmStatic
     fun hingeJointSetFlag(joint: RID, flag: Long, enabled: Boolean) {
         ObjectCalls.ptrcallWithRIDLongAndBoolArgs(hingeJointSetFlagBind, singleton, joint, flag, enabled)
     }
 
+    /**
+     * Gets a hinge joint flag.
+     *
+     * Generated from Godot docs: PhysicsServer3D.hinge_joint_get_flag
+     */
     @JvmStatic
     fun hingeJointGetFlag(joint: RID, flag: Long): Boolean {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(hingeJointGetFlagBind, singleton, joint, flag)
@@ -951,11 +1821,21 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeSliderBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
     }
 
+    /**
+     * Gets a slider joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.slider_joint_set_param
+     */
     @JvmStatic
     fun sliderJointSetParam(joint: RID, param: Long, value: Double) {
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(sliderJointSetParamBind, singleton, joint, param, value)
     }
 
+    /**
+     * Gets a slider joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.slider_joint_get_param
+     */
     @JvmStatic
     fun sliderJointGetParam(joint: RID, param: Long): Double {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(sliderJointGetParamBind, singleton, joint, param)
@@ -966,76 +1846,155 @@ object PhysicsServer3D {
         ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeConeTwistBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
     }
 
+    /**
+     * Sets a cone twist joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.cone_twist_joint_set_param
+     */
     @JvmStatic
     fun coneTwistJointSetParam(joint: RID, param: Long, value: Double) {
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(coneTwistJointSetParamBind, singleton, joint, param, value)
     }
 
+    /**
+     * Gets a cone twist joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.cone_twist_joint_get_param
+     */
     @JvmStatic
     fun coneTwistJointGetParam(joint: RID, param: Long): Double {
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(coneTwistJointGetParamBind, singleton, joint, param)
     }
 
+    /**
+     * Returns the type of the Joint3D.
+     *
+     * Generated from Godot docs: PhysicsServer3D.joint_get_type
+     */
     @JvmStatic
     fun jointGetType(joint: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint)
     }
 
+    /**
+     * Sets the priority value of the Joint3D. Note: Only supported when using GodotPhysics3D. This
+     * method has no effect when using Jolt Physics, as it does not support joint solver priority.
+     *
+     * Generated from Godot docs: PhysicsServer3D.joint_set_solver_priority
+     */
     @JvmStatic
     fun jointSetSolverPriority(joint: RID, priority: Int) {
         ObjectCalls.ptrcallWithRIDAndIntArg(jointSetSolverPriorityBind, singleton, joint, priority)
     }
 
+    /**
+     * Gets the priority value of the Joint3D. Note: Only supported when using GodotPhysics3D. This
+     * method always returns `1` when using Jolt Physics, as it does not support joint solver priority.
+     *
+     * Generated from Godot docs: PhysicsServer3D.joint_get_solver_priority
+     */
     @JvmStatic
     fun jointGetSolverPriority(joint: RID): Int {
         return ObjectCalls.ptrcallWithRIDArgRetInt(jointGetSolverPriorityBind, singleton, joint)
     }
 
+    /**
+     * Sets whether the bodies attached to the `Joint3D` will collide with each other.
+     *
+     * Generated from Godot docs: PhysicsServer3D.joint_disable_collisions_between_bodies
+     */
     @JvmStatic
     fun jointDisableCollisionsBetweenBodies(joint: RID, disable: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(jointDisableCollisionsBetweenBodiesBind, singleton, joint, disable)
     }
 
+    /**
+     * Returns whether the bodies attached to the `Joint3D` will collide with each other.
+     *
+     * Generated from Godot docs: PhysicsServer3D.joint_is_disabled_collisions_between_bodies
+     */
     @JvmStatic
     fun jointIsDisabledCollisionsBetweenBodies(joint: RID): Boolean {
         return ObjectCalls.ptrcallWithRIDArgRetBool(jointIsDisabledCollisionsBetweenBodiesBind, singleton, joint)
     }
 
+    /**
+     * Make the joint a generic six degrees of freedom (6DOF) joint. Use `generic_6dof_joint_set_flag`
+     * and `generic_6dof_joint_set_param` to set the joint's flags and parameters respectively.
+     *
+     * Generated from Godot docs: PhysicsServer3D.joint_make_generic_6dof
+     */
     @JvmStatic
     fun jointMakeGeneric6dof(joint: RID, bodyA: RID, localRefA: Transform3D, bodyB: RID, localRefB: Transform3D) {
         ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeGeneric6dofBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
     }
 
+    /**
+     * Sets the value of a given generic 6DOF joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_set_param
+     */
     @JvmStatic
     fun generic6dofJointSetParam(joint: RID, axis: Long, param: Long, value: Double) {
         ObjectCalls.ptrcallWithRIDTwoLongDoubleArgs(generic6dofJointSetParamBind, singleton, joint, axis, param, value)
     }
 
+    /**
+     * Returns the value of a generic 6DOF joint parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_get_param
+     */
     @JvmStatic
     fun generic6dofJointGetParam(joint: RID, axis: Long, param: Long): Double {
         return ObjectCalls.ptrcallWithRIDTwoLongArgsRetDouble(generic6dofJointGetParamBind, singleton, joint, axis, param)
     }
 
+    /**
+     * Sets the value of a given generic 6DOF joint flag.
+     *
+     * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_set_flag
+     */
     @JvmStatic
     fun generic6dofJointSetFlag(joint: RID, axis: Long, flag: Long, enable: Boolean) {
         ObjectCalls.ptrcallWithRIDTwoLongBoolArgs(generic6dofJointSetFlagBind, singleton, joint, axis, flag, enable)
     }
 
+    /**
+     * Returns the value of a generic 6DOF joint flag.
+     *
+     * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_get_flag
+     */
     @JvmStatic
     fun generic6dofJointGetFlag(joint: RID, axis: Long, flag: Long): Boolean {
         return ObjectCalls.ptrcallWithRIDTwoLongArgsRetBool(generic6dofJointGetFlagBind, singleton, joint, axis, flag)
     }
 
+    /**
+     * Destroys any of the objects created by PhysicsServer3D. If the `RID` passed is not one of the
+     * objects that can be created by PhysicsServer3D, an error will be sent to the console.
+     *
+     * Generated from Godot docs: PhysicsServer3D.free_rid
+     */
     @JvmStatic
     fun freeRid(rid: RID) {
         ObjectCalls.ptrcallWithRIDArg(freeRidBind, singleton, rid)
     }
 
+    /**
+     * Activates or deactivates the 3D physics engine.
+     *
+     * Generated from Godot docs: PhysicsServer3D.set_active
+     */
     @JvmStatic
     fun setActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setActiveBind, singleton, active)
     }
 
+    /**
+     * Returns the value of a physics engine state specified by `process_info`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.get_process_info
+     */
     @JvmStatic
     fun getProcessInfo(processInfo: Long): Int {
         return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo)

@@ -72,82 +72,188 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
         @JvmName("setAnisotropicFilteringLevelProperty")
         set(value) = setAnisotropicFilteringLevel(value)
 
+    /**
+     * The render target associated with these buffer.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_render_target
+     */
     fun getRenderTarget(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, handle)
     }
 
+    /**
+     * The render target associated with these buffer.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_render_target
+     */
     fun setRenderTarget(renderTarget: RID) {
         ObjectCalls.ptrcallWithRIDArg(setRenderTargetBind, handle, renderTarget)
     }
 
+    /**
+     * The size of the 3D render buffer used for rendering.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_internal_size
+     */
     fun getInternalSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, handle)
     }
 
+    /**
+     * The size of the 3D render buffer used for rendering.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_internal_size
+     */
     fun setInternalSize(internalSize: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setInternalSizeBind, handle, internalSize)
     }
 
+    /**
+     * The target (upscale) size if scaling is used.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_target_size
+     */
     fun getTargetSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, handle)
     }
 
+    /**
+     * The target (upscale) size if scaling is used.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_target_size
+     */
     fun setTargetSize(targetSize: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setTargetSizeBind, handle, targetSize)
     }
 
+    /**
+     * The number of views we're rendering.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_view_count
+     */
     fun getViewCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
+    /**
+     * The number of views we're rendering.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_view_count
+     */
     fun setViewCount(viewCount: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setViewCountBind, handle, viewCount)
     }
 
+    /**
+     * The requested scaling mode with which we upscale/downscale if `internal_size` and `target_size`
+     * are not equal.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_scaling_3d_mode
+     */
     fun getScaling3dMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
     }
 
+    /**
+     * The requested scaling mode with which we upscale/downscale if `internal_size` and `target_size`
+     * are not equal.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_scaling_3d_mode
+     */
     fun setScaling3dMode(scaling3dMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, handle, scaling3dMode)
     }
 
+    /**
+     * The MSAA mode we're using for 3D rendering.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_msaa_3d
+     */
     fun getMsaa3d(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
     }
 
+    /**
+     * The MSAA mode we're using for 3D rendering.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_msaa_3d
+     */
     fun setMsaa3d(msaa3d: Long) {
         ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, handle, msaa3d)
     }
 
+    /**
+     * The requested screen space AA applied in post processing.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_screen_space_aa
+     */
     fun getScreenSpaceAa(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
     }
 
+    /**
+     * The requested screen space AA applied in post processing.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_screen_space_aa
+     */
     fun setScreenSpaceAa(screenSpaceAa: Long) {
         ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, handle, screenSpaceAa)
     }
 
+    /**
+     * FSR Sharpness applicable if FSR upscaling is used.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_fsr_sharpness
+     */
     fun getFsrSharpness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
     }
 
+    /**
+     * FSR Sharpness applicable if FSR upscaling is used.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_fsr_sharpness
+     */
     fun setFsrSharpness(fsrSharpness: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, handle, fsrSharpness)
     }
 
+    /**
+     * Bias applied to mipmaps. Note: This property is only supported in the Forward+ and Mobile
+     * renderers, not Compatibility. In Compatibility, this property is always treated as if it was set
+     * to `0.0`.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_texture_mipmap_bias
+     */
     fun getTextureMipmapBias(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, handle)
     }
 
+    /**
+     * Bias applied to mipmaps. Note: This property is only supported in the Forward+ and Mobile
+     * renderers, not Compatibility. In Compatibility, this property is always treated as if it was set
+     * to `0.0`.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_texture_mipmap_bias
+     */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, handle, textureMipmapBias)
     }
 
+    /**
+     * Level of the anisotropic filter.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.get_anisotropic_filtering_level
+     */
     fun getAnisotropicFilteringLevel(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, handle)
     }
 
+    /**
+     * Level of the anisotropic filter.
+     *
+     * Generated from Godot docs: RenderSceneBuffersConfiguration.set_anisotropic_filtering_level
+     */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
         ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, handle, anisotropicFilteringLevel)
     }

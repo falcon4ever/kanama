@@ -18,54 +18,128 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(readBind, handle)
     }
 
+    /**
+     * Returns the type of the current node. Compare with `NodeType` constants.
+     *
+     * Generated from Godot docs: XMLParser.get_node_type
+     */
     fun getNodeType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, handle)
     }
 
+    /**
+     * Returns the name of a node. This method will raise an error if the currently parsed node is a
+     * text node. Note: The content of a `NODE_CDATA` node and the comment string of a `NODE_COMMENT`
+     * node are also considered names.
+     *
+     * Generated from Godot docs: XMLParser.get_node_name
+     */
     fun getNodeName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getNodeNameBind, handle)
     }
 
+    /**
+     * Returns the contents of a text node. This method will raise an error if the current parsed node
+     * is of any other type.
+     *
+     * Generated from Godot docs: XMLParser.get_node_data
+     */
     fun getNodeData(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getNodeDataBind, handle)
     }
 
+    /**
+     * Returns the byte offset of the currently parsed node since the beginning of the file or buffer.
+     * This is usually equivalent to the number of characters before the read position.
+     *
+     * Generated from Godot docs: XMLParser.get_node_offset
+     */
     fun getNodeOffset(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getNodeOffsetBind, handle)
     }
 
+    /**
+     * Returns the number of attributes in the currently parsed element. Note: If this method is used
+     * while the currently parsed node is not `NODE_ELEMENT` or `NODE_ELEMENT_END`, this count will not
+     * be updated and will still reflect the last element.
+     *
+     * Generated from Godot docs: XMLParser.get_attribute_count
+     */
     fun getAttributeCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAttributeCountBind, handle)
     }
 
+    /**
+     * Returns the name of an attribute of the currently parsed element, specified by the `idx` index.
+     *
+     * Generated from Godot docs: XMLParser.get_attribute_name
+     */
     fun getAttributeName(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getAttributeNameBind, handle, idx)
     }
 
+    /**
+     * Returns the value of an attribute of the currently parsed element, specified by the `idx` index.
+     *
+     * Generated from Godot docs: XMLParser.get_attribute_value
+     */
     fun getAttributeValue(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getAttributeValueBind, handle, idx)
     }
 
+    /**
+     * Returns `true` if the currently parsed element has an attribute with the `name`.
+     *
+     * Generated from Godot docs: XMLParser.has_attribute
+     */
     fun hasAttribute(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasAttributeBind, handle, name)
     }
 
+    /**
+     * Returns the value of an attribute of the currently parsed element, specified by its `name`. This
+     * method will raise an error if the element has no such attribute.
+     *
+     * Generated from Godot docs: XMLParser.get_named_attribute_value
+     */
     fun getNamedAttributeValue(name: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueBind, handle, name)
     }
 
+    /**
+     * Returns the value of an attribute of the currently parsed element, specified by its `name`. This
+     * method will return an empty string if the element has no such attribute.
+     *
+     * Generated from Godot docs: XMLParser.get_named_attribute_value_safe
+     */
     fun getNamedAttributeValueSafe(name: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueSafeBind, handle, name)
     }
 
+    /**
+     * Returns `true` if the currently parsed element is empty, e.g. `<element />`.
+     *
+     * Generated from Godot docs: XMLParser.is_empty
+     */
     fun isEmpty(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
+    /**
+     * Returns the current line in the parsed file, counting from 0.
+     *
+     * Generated from Godot docs: XMLParser.get_current_line
+     */
     fun getCurrentLine(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentLineBind, handle)
     }
 
+    /**
+     * Skips the current section. If the currently parsed node contains more inner nodes, they will be
+     * ignored and the cursor will go to the closing of the current element.
+     *
+     * Generated from Godot docs: XMLParser.skip_section
+     */
     fun skipSection() {
         ObjectCalls.ptrcallNoArgs(skipSectionBind, handle)
     }
@@ -89,6 +163,11 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, file)
     }
 
+    /**
+     * Opens an XML raw `buffer` for parsing. This method returns an error code.
+     *
+     * Generated from Godot docs: XMLParser.open_buffer
+     */
     fun openBuffer(buffer: ByteArray): Long {
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, handle, buffer)
     }

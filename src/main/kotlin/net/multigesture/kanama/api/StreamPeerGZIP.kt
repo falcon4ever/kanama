@@ -9,10 +9,22 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: StreamPeerGZIP
  */
 class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
+    /**
+     * Start the stream in compression mode with the given `buffer_size`, if `use_deflate` is `true`
+     * uses deflate instead of GZIP.
+     *
+     * Generated from Godot docs: StreamPeerGZIP.start_compression
+     */
     fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, handle, useDeflate, bufferSize)
     }
 
+    /**
+     * Start the stream in decompression mode with the given `buffer_size`, if `use_deflate` is `true`
+     * uses deflate instead of GZIP.
+     *
+     * Generated from Godot docs: StreamPeerGZIP.start_decompression
+     */
     fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, handle, useDeflate, bufferSize)
     }

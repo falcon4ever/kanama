@@ -29,66 +29,154 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
         @JvmName("setTargetNodepathProperty")
         set(value) = setTargetNode(value)
 
+    /**
+     * The `Bone2D` node that the modification will operate on.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_bone2d_node
+     */
     fun setBone2dNode(bone2dNodepath: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setBone2dNodeBind, handle, bone2dNodepath)
     }
 
+    /**
+     * The `Bone2D` node that the modification will operate on.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_bone2d_node
+     */
     fun getBone2dNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodeBind, handle)
     }
 
+    /**
+     * The index of the `Bone2D` node that the modification will operate on.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_bone_index
+     */
     fun setBoneIndex(boneIdx: Int) {
         ObjectCalls.ptrcallWithIntArg(setBoneIndexBind, handle, boneIdx)
     }
 
+    /**
+     * The index of the `Bone2D` node that the modification will operate on.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_bone_index
+     */
     fun getBoneIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneIndexBind, handle)
     }
 
+    /**
+     * The NodePath to the node that is the target for the LookAt modification. This node is what the
+     * modification will rotate the `Bone2D` to.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_target_node
+     */
     fun setTargetNode(targetNodepath: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
+    /**
+     * The NodePath to the node that is the target for the LookAt modification. This node is what the
+     * modification will rotate the `Bone2D` to.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_target_node
+     */
     fun getTargetNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
+    /**
+     * Sets the amount of additional rotation that is to be applied after executing the modification.
+     * This allows for offsetting the results by the inputted rotation amount.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_additional_rotation
+     */
     fun setAdditionalRotation(rotation: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAdditionalRotationBind, handle, rotation)
     }
 
+    /**
+     * Returns the amount of additional rotation that is applied after the LookAt modification
+     * executes.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_additional_rotation
+     */
     fun getAdditionalRotation(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdditionalRotationBind, handle)
     }
 
+    /**
+     * Sets whether this modification will use constraints or not. When `true`, constraints will be
+     * applied when solving the LookAt modification.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_enable_constraint
+     */
     fun setEnableConstraint(enableConstraint: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableConstraintBind, handle, enableConstraint)
     }
 
+    /**
+     * Returns `true` if the LookAt modification is using constraints.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_enable_constraint
+     */
     fun getEnableConstraint(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableConstraintBind, handle)
     }
 
+    /**
+     * Sets the constraint's minimum allowed angle.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_constraint_angle_min
+     */
     fun setConstraintAngleMin(angleMin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMinBind, handle, angleMin)
     }
 
+    /**
+     * Returns the constraint's minimum allowed angle.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_constraint_angle_min
+     */
     fun getConstraintAngleMin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMinBind, handle)
     }
 
+    /**
+     * Sets the constraint's maximum allowed angle.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_constraint_angle_max
+     */
     fun setConstraintAngleMax(angleMax: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMaxBind, handle, angleMax)
     }
 
+    /**
+     * Returns the constraint's maximum allowed angle.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_constraint_angle_max
+     */
     fun getConstraintAngleMax(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMaxBind, handle)
     }
 
+    /**
+     * When `true`, the modification will use an inverted joint constraint. An inverted joint
+     * constraint only constraints the `Bone2D` to the angles outside of the inputted minimum and
+     * maximum angles. For this reason, it is referred to as an inverted joint constraint, as it
+     * constraints the joint to the outside of the inputted values.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.set_constraint_angle_invert
+     */
     fun setConstraintAngleInvert(invert: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setConstraintAngleInvertBind, handle, invert)
     }
 
+    /**
+     * Returns whether the constraints to this modification are inverted or not.
+     *
+     * Generated from Godot docs: SkeletonModification2DLookAt.get_constraint_angle_invert
+     */
     fun getConstraintAngleInvert(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getConstraintAngleInvertBind, handle)
     }

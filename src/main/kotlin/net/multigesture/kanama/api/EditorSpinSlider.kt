@@ -58,66 +58,162 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
         @JvmName("setDeferredDragModeProperty")
         set(value) = setDeferredDragModeEnabled(value)
 
+    /**
+     * The text that displays to the left of the value.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_label
+     */
     fun setLabel(label: String) {
         ObjectCalls.ptrcallWithStringArg(setLabelBind, handle, label)
     }
 
+    /**
+     * The text that displays to the left of the value.
+     *
+     * Generated from Godot docs: EditorSpinSlider.get_label
+     */
     fun getLabel(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, handle)
     }
 
+    /**
+     * The suffix to display after the value (in a faded color). This should generally be a plural
+     * word. You may have to use an abbreviation if the suffix is too long to be displayed.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_suffix
+     */
     fun setSuffix(suffix: String) {
         ObjectCalls.ptrcallWithStringArg(setSuffixBind, handle, suffix)
     }
 
+    /**
+     * The suffix to display after the value (in a faded color). This should generally be a plural
+     * word. You may have to use an abbreviation if the suffix is too long to be displayed.
+     *
+     * Generated from Godot docs: EditorSpinSlider.get_suffix
+     */
     fun getSuffix(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, handle)
     }
 
+    /**
+     * If `true`, the slider can't be interacted with.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_read_only
+     */
     fun setReadOnly(readOnly: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, handle, readOnly)
     }
 
+    /**
+     * If `true`, the slider can't be interacted with.
+     *
+     * Generated from Godot docs: EditorSpinSlider.is_read_only
+     */
     fun isReadOnly(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, handle)
     }
 
+    /**
+     * If `true`, the slider will not draw background.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_flat
+     */
     fun setFlat(flat: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, flat)
     }
 
+    /**
+     * If `true`, the slider will not draw background.
+     *
+     * Generated from Godot docs: EditorSpinSlider.is_flat
+     */
     fun isFlat(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
     }
 
+    /**
+     * The state in which the control used to manipulate the value will be.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_control_state
+     */
     fun setControlState(state: Long) {
         ObjectCalls.ptrcallWithLongArg(setControlStateBind, handle, state)
     }
 
+    /**
+     * The state in which the control used to manipulate the value will be.
+     *
+     * Generated from Godot docs: EditorSpinSlider.get_control_state
+     */
     fun getControlState(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getControlStateBind, handle)
     }
 
+    /**
+     * If `true`, the slider and up/down arrows are hidden.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_hide_slider
+     */
     fun setHideSlider(hideSlider: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideSliderBind, handle, hideSlider)
     }
 
+    /**
+     * If `true`, the slider and up/down arrows are hidden.
+     *
+     * Generated from Godot docs: EditorSpinSlider.is_hiding_slider
+     */
     fun isHidingSlider(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHidingSliderBind, handle)
     }
 
+    /**
+     * If `true`, the `EditorSpinSlider` is considered to be editing an integer value. If `false`, the
+     * `EditorSpinSlider` is considered to be editing a floating-point value. This is used to determine
+     * whether a slider should be drawn by default. The slider is only drawn for floats; integers use
+     * up-down arrows similar to `SpinBox` instead, unless `control_state` is set to
+     * `CONTROL_STATE_PREFER_SLIDER`. It will also use
+     * `EditorSettings.interface/inspector/integer_drag_speed` instead of
+     * `EditorSettings.interface/inspector/float_drag_speed` if the slider is available.
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_editing_integer
+     */
     fun setEditingInteger(editingInteger: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditingIntegerBind, handle, editingInteger)
     }
 
+    /**
+     * If `true`, the `EditorSpinSlider` is considered to be editing an integer value. If `false`, the
+     * `EditorSpinSlider` is considered to be editing a floating-point value. This is used to determine
+     * whether a slider should be drawn by default. The slider is only drawn for floats; integers use
+     * up-down arrows similar to `SpinBox` instead, unless `control_state` is set to
+     * `CONTROL_STATE_PREFER_SLIDER`. It will also use
+     * `EditorSettings.interface/inspector/integer_drag_speed` instead of
+     * `EditorSettings.interface/inspector/float_drag_speed` if the slider is available.
+     *
+     * Generated from Godot docs: EditorSpinSlider.is_editing_integer
+     */
     fun isEditingInteger(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntegerBind, handle)
     }
 
+    /**
+     * If `true`, changing via dragging is applied only at the end of the input (for example, when the
+     * user releases a mouse button).
+     *
+     * Generated from Godot docs: EditorSpinSlider.set_deferred_drag_mode_enabled
+     */
     fun setDeferredDragModeEnabled(enabled: Boolean = true) {
         ObjectCalls.ptrcallWithBoolArg(setDeferredDragModeEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, changing via dragging is applied only at the end of the input (for example, when the
+     * user releases a mouse button).
+     *
+     * Generated from Godot docs: EditorSpinSlider.is_deferred_drag_mode_enabled
+     */
     fun isDeferredDragModeEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeferredDragModeEnabledBind, handle)
     }

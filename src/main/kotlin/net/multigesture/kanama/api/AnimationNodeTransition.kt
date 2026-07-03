@@ -28,54 +28,134 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
         @JvmName("setAllowTransitionToSelfProperty")
         set(value) = setAllowTransitionToSelf(value)
 
+    /**
+     * The number of enabled input ports for this animation node.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_input_count
+     */
     fun setInputCount(inputCount: Int) {
         ObjectCalls.ptrcallWithIntArg(setInputCountBind, handle, inputCount)
     }
 
+    /**
+     * Enables or disables auto-advance for the given `input` index. If enabled, state changes to the
+     * next input after playing the animation once. If enabled for the last input state, it loops to
+     * the first.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_input_as_auto_advance
+     */
     fun setInputAsAutoAdvance(input: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputAsAutoAdvanceBind, handle, input, enable)
     }
 
+    /**
+     * Returns `true` if auto-advance is enabled for the given `input` index.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.is_input_set_as_auto_advance
+     */
     fun isInputSetAsAutoAdvance(input: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputSetAsAutoAdvanceBind, handle, input)
     }
 
+    /**
+     * If `true`, breaks the loop at the end of the loop cycle for transition, even if the animation is
+     * looping.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_input_break_loop_at_end
+     */
     fun setInputBreakLoopAtEnd(input: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputBreakLoopAtEndBind, handle, input, enable)
     }
 
+    /**
+     * Returns whether the animation breaks the loop at the end of the loop cycle for transition.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.is_input_loop_broken_at_end
+     */
     fun isInputLoopBrokenAtEnd(input: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputLoopBrokenAtEndBind, handle, input)
     }
 
+    /**
+     * If `true`, the destination animation is restarted when the animation transitions.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_input_reset
+     */
     fun setInputReset(input: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputResetBind, handle, input, enable)
     }
 
+    /**
+     * Returns whether the animation restarts when the animation transitions from the other animation.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.is_input_reset
+     */
     fun isInputReset(input: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputResetBind, handle, input)
     }
 
+    /**
+     * Cross-fading time (in seconds) between each animation connected to the inputs. Note:
+     * `AnimationNodeTransition` transitions the current state immediately after the start of the
+     * fading. The precise remaining time can only be inferred from the main animation. When
+     * `AnimationNodeOutput` is considered as the most upstream, so the `xfade_time` is not scaled
+     * depending on the downstream delta. See also `AnimationNodeOneShot.fadeout_time`.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_xfade_time
+     */
     fun setXfadeTime(time: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, time)
     }
 
+    /**
+     * Cross-fading time (in seconds) between each animation connected to the inputs. Note:
+     * `AnimationNodeTransition` transitions the current state immediately after the start of the
+     * fading. The precise remaining time can only be inferred from the main animation. When
+     * `AnimationNodeOutput` is considered as the most upstream, so the `xfade_time` is not scaled
+     * depending on the downstream delta. See also `AnimationNodeOneShot.fadeout_time`.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.get_xfade_time
+     */
     fun getXfadeTime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
     }
 
+    /**
+     * Determines how cross-fading between animations is eased. If empty, the transition will be
+     * linear. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_xfade_curve
+     */
     fun setXfadeCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Determines how cross-fading between animations is eased. If empty, the transition will be
+     * linear. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.get_xfade_curve
+     */
     fun getXfadeCurve(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
     }
 
+    /**
+     * If `true`, allows transition to the self state. When the reset option is enabled in input, the
+     * animation is restarted. If `false`, nothing happens on the transition to the self state.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.set_allow_transition_to_self
+     */
     fun setAllowTransitionToSelf(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
     }
 
+    /**
+     * If `true`, allows transition to the self state. When the reset option is enabled in input, the
+     * animation is restarted. If `false`, nothing happens on the transition to the self state.
+     *
+     * Generated from Godot docs: AnimationNodeTransition.is_allow_transition_to_self
+     */
     fun isAllowTransitionToSelf(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
     }

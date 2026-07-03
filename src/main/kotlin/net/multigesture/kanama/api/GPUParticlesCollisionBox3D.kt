@@ -17,10 +17,20 @@ class GPUParticlesCollisionBox3D(handle: MemorySegment) : GPUParticlesCollision3
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The collision box's size in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionBox3D.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The collision box's size in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionBox3D.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }

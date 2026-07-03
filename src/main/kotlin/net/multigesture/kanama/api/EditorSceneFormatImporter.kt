@@ -9,10 +9,21 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorSceneFormatImporter
  */
 open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Add a specific import option (name and default value only). This function can only be called
+     * from `_get_import_options`.
+     *
+     * Generated from Godot docs: EditorSceneFormatImporter.add_import_option
+     */
     fun addImportOption(name: String, value: Any?) {
         ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, handle, name, value)
     }
 
+    /**
+     * Add a specific import option. This function can only be called from `_get_import_options`.
+     *
+     * Generated from Godot docs: EditorSceneFormatImporter.add_import_option_advanced
+     */
     fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
         ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, handle, type, name, defaultValue, hint, hintString, usageFlags)
     }

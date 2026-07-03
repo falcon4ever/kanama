@@ -17,10 +17,20 @@ class QuadOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The quad's size in 3D units.
+     *
+     * Generated from Godot docs: QuadOccluder3D.set_size
+     */
     fun setSize(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The quad's size in 3D units.
+     *
+     * Generated from Godot docs: QuadOccluder3D.get_size
+     */
     fun getSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }

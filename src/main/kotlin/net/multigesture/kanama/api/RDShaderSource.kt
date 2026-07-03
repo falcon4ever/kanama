@@ -16,18 +16,38 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
+    /**
+     * Source code for the shader's vertex stage.
+     *
+     * Generated from Godot docs: RDShaderSource.set_stage_source
+     */
     fun setStageSource(stage: Long, source: String) {
         ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, handle, stage, source)
     }
 
+    /**
+     * Source code for the shader's vertex stage.
+     *
+     * Generated from Godot docs: RDShaderSource.get_stage_source
+     */
     fun getStageSource(stage: Long): String {
         return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, handle, stage)
     }
 
+    /**
+     * The language the shader is written in.
+     *
+     * Generated from Godot docs: RDShaderSource.set_language
+     */
     fun setLanguage(language: Long) {
         ObjectCalls.ptrcallWithLongArg(setLanguageBind, handle, language)
     }
 
+    /**
+     * The language the shader is written in.
+     *
+     * Generated from Godot docs: RDShaderSource.get_language
+     */
     fun getLanguage(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, handle)
     }

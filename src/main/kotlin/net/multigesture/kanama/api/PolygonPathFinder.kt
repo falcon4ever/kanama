@@ -32,6 +32,11 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, point)
     }
 
+    /**
+     * Returns `true` if `point` falls inside the polygon area.
+     *
+     * Generated from Godot docs: PolygonPathFinder.is_point_inside
+     */
     fun isPointInside(point: Vector2): Boolean {
         return ObjectCalls.ptrcallWithVector2ArgRetBool(isPointInsideBind, handle, point)
     }

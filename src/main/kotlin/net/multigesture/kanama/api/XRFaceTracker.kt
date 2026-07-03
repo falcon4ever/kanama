@@ -16,18 +16,38 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
         @JvmName("setBlendShapesProperty")
         set(value) = setBlendShapes(value)
 
+    /**
+     * Returns the requested face blend shape weight.
+     *
+     * Generated from Godot docs: XRFaceTracker.get_blend_shape
+     */
     fun getBlendShape(blendShape: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, handle, blendShape)
     }
 
+    /**
+     * Sets a face blend shape weight.
+     *
+     * Generated from Godot docs: XRFaceTracker.set_blend_shape
+     */
     fun setBlendShape(blendShape: Long, weight: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, handle, blendShape, weight)
     }
 
+    /**
+     * The array of face blend shape weights with indices corresponding to the `BlendShapeEntry` enum.
+     *
+     * Generated from Godot docs: XRFaceTracker.get_blend_shapes
+     */
     fun getBlendShapes(): List<Float> {
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendShapesBind, handle)
     }
 
+    /**
+     * The array of face blend shape weights with indices corresponding to the `BlendShapeEntry` enum.
+     *
+     * Generated from Godot docs: XRFaceTracker.set_blend_shapes
+     */
     fun setBlendShapes(weights: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, handle, weights)
     }

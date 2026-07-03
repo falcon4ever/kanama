@@ -9,6 +9,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: JNISingleton
  */
 class JNISingleton(handle: MemorySegment) : GodotObject(handle) {
+    /**
+     * Returns `true` if the given `method` name exists in the JNISingleton's Java methods.
+     *
+     * Generated from Godot docs: JNISingleton.has_java_method
+     */
     fun hasJavaMethod(method: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
     }

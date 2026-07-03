@@ -40,42 +40,94 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setIsHemisphereProperty")
         set(value) = setIsHemisphere(value)
 
+    /**
+     * Radius of sphere.
+     *
+     * Generated from Godot docs: SphereMesh.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * Radius of sphere.
+     *
+     * Generated from Godot docs: SphereMesh.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * Full height of the sphere.
+     *
+     * Generated from Godot docs: SphereMesh.set_height
+     */
     fun setHeight(height: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
+    /**
+     * Full height of the sphere.
+     *
+     * Generated from Godot docs: SphereMesh.get_height
+     */
     fun getHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
+    /**
+     * Number of radial segments on the sphere.
+     *
+     * Generated from Godot docs: SphereMesh.set_radial_segments
+     */
     fun setRadialSegments(radialSegments: Int) {
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, radialSegments)
     }
 
+    /**
+     * Number of radial segments on the sphere.
+     *
+     * Generated from Godot docs: SphereMesh.get_radial_segments
+     */
     fun getRadialSegments(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
+    /**
+     * Number of segments along the height of the sphere.
+     *
+     * Generated from Godot docs: SphereMesh.set_rings
+     */
     fun setRings(rings: Int) {
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
+    /**
+     * Number of segments along the height of the sphere.
+     *
+     * Generated from Godot docs: SphereMesh.get_rings
+     */
     fun getRings(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
+    /**
+     * If `true`, a hemisphere is created rather than a full sphere. Note: To get a regular hemisphere,
+     * the height and radius of the sphere must be equal.
+     *
+     * Generated from Godot docs: SphereMesh.set_is_hemisphere
+     */
     fun setIsHemisphere(isHemisphere: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setIsHemisphereBind, handle, isHemisphere)
     }
 
+    /**
+     * If `true`, a hemisphere is created rather than a full sphere. Note: To get a regular hemisphere,
+     * the height and radius of the sphere must be equal.
+     *
+     * Generated from Godot docs: SphereMesh.get_is_hemisphere
+     */
     fun getIsHemisphere(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getIsHemisphereBind, handle)
     }

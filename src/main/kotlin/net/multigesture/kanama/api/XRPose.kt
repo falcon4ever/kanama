@@ -48,54 +48,136 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setTrackingConfidenceProperty")
         set(value) = setTrackingConfidence(value)
 
+    /**
+     * If `true` our tracking data is up to date. If `false` we're no longer receiving new tracking
+     * data and our state is whatever that last valid state was.
+     *
+     * Generated from Godot docs: XRPose.set_has_tracking_data
+     */
     fun setHasTrackingData(hasTrackingData: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasTrackingData)
     }
 
+    /**
+     * If `true` our tracking data is up to date. If `false` we're no longer receiving new tracking
+     * data and our state is whatever that last valid state was.
+     *
+     * Generated from Godot docs: XRPose.get_has_tracking_data
+     */
     fun getHasTrackingData(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
+    /**
+     * The name of this pose. Usually, this name is derived from an action map set up by the user.
+     * Godot also suggests some pose names that `XRInterface` objects are expected to implement: -
+     * `root` is the root location, often used for tracked objects that do not have further nodes. -
+     * `aim` is the tip of a controller with its orientation pointing outwards, often used for
+     * raycasts. - `grip` is the location where the user grips the controller. - `skeleton` is the root
+     * location for a hand mesh, when using hand tracking and an animated skeleton is supplied by the
+     * XR runtime.
+     *
+     * Generated from Godot docs: XRPose.set_name
+     */
     fun setName(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setNameBind, handle, name)
     }
 
+    /**
+     * The name of this pose. Usually, this name is derived from an action map set up by the user.
+     * Godot also suggests some pose names that `XRInterface` objects are expected to implement: -
+     * `root` is the root location, often used for tracked objects that do not have further nodes. -
+     * `aim` is the tip of a controller with its orientation pointing outwards, often used for
+     * raycasts. - `grip` is the location where the user grips the controller. - `skeleton` is the root
+     * location for a hand mesh, when using hand tracking and an animated skeleton is supplied by the
+     * XR runtime.
+     *
+     * Generated from Godot docs: XRPose.get_name
+     */
     fun getName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
     }
 
+    /**
+     * The transform containing the original and transform as reported by the XR runtime.
+     *
+     * Generated from Godot docs: XRPose.set_transform
+     */
     fun setTransform(transform: Transform3D) {
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
     }
 
+    /**
+     * The transform containing the original and transform as reported by the XR runtime.
+     *
+     * Generated from Godot docs: XRPose.get_transform
+     */
     fun getTransform(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
+    /**
+     * Returns the `transform` with world scale and our reference frame applied. This is the transform
+     * used to position `XRNode3D` objects.
+     *
+     * Generated from Godot docs: XRPose.get_adjusted_transform
+     */
     fun getAdjustedTransform(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getAdjustedTransformBind, handle)
     }
 
+    /**
+     * The linear velocity of this pose.
+     *
+     * Generated from Godot docs: XRPose.set_linear_velocity
+     */
     fun setLinearVelocity(velocity: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, velocity)
     }
 
+    /**
+     * The linear velocity of this pose.
+     *
+     * Generated from Godot docs: XRPose.get_linear_velocity
+     */
     fun getLinearVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
     }
 
+    /**
+     * The angular velocity for this pose.
+     *
+     * Generated from Godot docs: XRPose.set_angular_velocity
+     */
     fun setAngularVelocity(velocity: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, velocity)
     }
 
+    /**
+     * The angular velocity for this pose.
+     *
+     * Generated from Godot docs: XRPose.get_angular_velocity
+     */
     fun getAngularVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
     }
 
+    /**
+     * The tracking confidence for this pose, provides insight on how accurate the spatial positioning
+     * of this record is.
+     *
+     * Generated from Godot docs: XRPose.set_tracking_confidence
+     */
     fun setTrackingConfidence(trackingConfidence: Long) {
         ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, handle, trackingConfidence)
     }
 
+    /**
+     * The tracking confidence for this pose, provides insight on how accurate the spatial positioning
+     * of this record is.
+     *
+     * Generated from Godot docs: XRPose.get_tracking_confidence
+     */
     fun getTrackingConfidence(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, handle)
     }

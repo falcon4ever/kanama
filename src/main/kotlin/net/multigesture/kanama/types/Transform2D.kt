@@ -32,6 +32,12 @@ data class Transform2D(
     val origin: Vector2,
 ) {
     /** Godot-style fuzzy compare: true if every column is approximately equal. */
+    /**
+     * Returns `true` if this transform and `xform` are approximately equal, by running
+     * `@GlobalScope.is_equal_approx` on each component.
+     *
+     * Generated from Godot docs: Transform2D.is_equal_approx
+     */
     fun isEqualApprox(other: Transform2D): Boolean =
         x.isEqualApprox(other.x) && y.isEqualApprox(other.y) && origin.isEqualApprox(other.origin)
 

@@ -10,22 +10,56 @@ import net.multigesture.kanama.types.Color
  * Generated from Godot docs: EditorNode3DGizmoPlugin
  */
 class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Creates an unshaded material with its variants (selected and/or editable) and adds them to the
+     * internal material list. They can then be accessed with `get_material` and used in
+     * `EditorNode3DGizmo.add_mesh` and `EditorNode3DGizmo.add_lines`. Should not be overridden.
+     *
+     * Generated from Godot docs: EditorNode3DGizmoPlugin.create_material
+     */
     fun createMaterial(name: String, color: Color, billboard: Boolean = false, onTop: Boolean = false, useVertexColor: Boolean = false) {
         ObjectCalls.ptrcallWithStringColorThreeBoolArgs(createMaterialBind, handle, name, color, billboard, onTop, useVertexColor)
     }
 
+    /**
+     * Creates an icon material with its variants (selected and/or editable) and adds them to the
+     * internal material list. They can then be accessed with `get_material` and used in
+     * `EditorNode3DGizmo.add_unscaled_billboard`. Should not be overridden.
+     *
+     * Generated from Godot docs: EditorNode3DGizmoPlugin.create_icon_material
+     */
     fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = false, color: Color) {
         ObjectCalls.ptrcallWithStringObjectBoolColorArgs(createIconMaterialBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, onTop, color)
     }
 
+    /**
+     * Creates a handle material with its variants (selected and/or editable) and adds them to the
+     * internal material list. They can then be accessed with `get_material` and used in
+     * `EditorNode3DGizmo.add_handles`. Should not be overridden. You can optionally provide a texture
+     * to use instead of the default icon.
+     *
+     * Generated from Godot docs: EditorNode3DGizmoPlugin.create_handle_material
+     */
     fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
         ObjectCalls.ptrcallWithStringBoolObjectArgs(createHandleMaterialBind, handle, name, billboard, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Adds a new material to the internal material list for the plugin. It can then be accessed with
+     * `get_material`. Should not be overridden.
+     *
+     * Generated from Godot docs: EditorNode3DGizmoPlugin.add_material
+     */
     fun addMaterial(name: String, material: StandardMaterial3D?) {
         ObjectCalls.ptrcallWithStringAndObjectArg(addMaterialBind, handle, name, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Gets material from the internal list of materials. If an `EditorNode3DGizmo` is provided, it
+     * will try to get the corresponding variant (selected and/or editable).
+     *
+     * Generated from Godot docs: EditorNode3DGizmoPlugin.get_material
+     */
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
         return StandardMaterial3D.wrap(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, handle, name, gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
     }

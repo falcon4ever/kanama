@@ -25,10 +25,20 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
         ObjectCalls.ptrcallWithIntArg(seekBind, handle, position)
     }
 
+    /**
+     * Returns the size of `data_array`.
+     *
+     * Generated from Godot docs: StreamPeerBuffer.get_size
+     */
     fun getSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSizeBind, handle)
     }
 
+    /**
+     * Returns the current cursor position.
+     *
+     * Generated from Godot docs: StreamPeerBuffer.get_position
+     */
     fun getPosition(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPositionBind, handle)
     }
@@ -42,10 +52,20 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
         ObjectCalls.ptrcallWithIntArg(resizeBind, handle, size)
     }
 
+    /**
+     * The underlying data buffer. Setting this value resets the cursor.
+     *
+     * Generated from Godot docs: StreamPeerBuffer.set_data_array
+     */
     fun setDataArray(data: ByteArray) {
         ObjectCalls.ptrcallWithByteArrayArg(setDataArrayBind, handle, data)
     }
 
+    /**
+     * The underlying data buffer. Setting this value resets the cursor.
+     *
+     * Generated from Godot docs: StreamPeerBuffer.get_data_array
+     */
     fun getDataArray(): ByteArray {
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataArrayBind, handle)
     }

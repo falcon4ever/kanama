@@ -122,134 +122,309 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         @JvmName("setFixedIconSizeProperty")
         set(value) = setFixedIconSize(value)
 
+    /**
+     * Adds an item to the item list with specified text. Returns the index of an added item. Specify
+     * an `icon`, or use `null` as the `icon` for a list item with no icon. If `selectable` is `true`,
+     * the list item will be selectable.
+     *
+     * Generated from Godot docs: ItemList.add_item
+     */
     fun addItem(text: String, icon: Texture2D?, selectable: Boolean = true): Int {
         return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(addItemBind, handle, text, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
     }
 
+    /**
+     * Adds an item to the item list with no text, only an icon. Returns the index of an added item.
+     *
+     * Generated from Godot docs: ItemList.add_icon_item
+     */
     fun addIconItem(icon: Texture2D?, selectable: Boolean = true): Int {
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(addIconItemBind, handle, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
     }
 
+    /**
+     * Sets text of the item associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_text
+     */
     fun setItemText(idx: Int, text: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, idx, text)
     }
 
+    /**
+     * Returns the text associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_text
+     */
     fun getItemText(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
     }
 
+    /**
+     * Sets (or replaces) the icon's `Texture2D` associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_icon
+     */
     fun setItemIcon(idx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, idx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the icon associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_icon
+     */
     fun getItemIcon(idx: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, idx))
     }
 
+    /**
+     * Sets item's text base writing direction.
+     *
+     * Generated from Godot docs: ItemList.set_item_text_direction
+     */
     fun setItemTextDirection(idx: Int, direction: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, handle, idx, direction)
     }
 
+    /**
+     * Returns item's text base writing direction.
+     *
+     * Generated from Godot docs: ItemList.get_item_text_direction
+     */
     fun getItemTextDirection(idx: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, handle, idx)
     }
 
+    /**
+     * Sets the language code of the text for the item at the given index to `language`. This is used
+     * for line-breaking and text shaping algorithms. If `language` is empty, the current locale is
+     * used.
+     *
+     * Generated from Godot docs: ItemList.set_item_language
+     */
     fun setItemLanguage(idx: Int, language: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, handle, idx, language)
     }
 
+    /**
+     * Returns item's text language code.
+     *
+     * Generated from Godot docs: ItemList.get_item_language
+     */
     fun getItemLanguage(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, idx)
     }
 
+    /**
+     * Sets the auto translate mode of the item associated with the specified index. Items use
+     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `ItemList` itself.
+     *
+     * Generated from Godot docs: ItemList.set_item_auto_translate_mode
+     */
     fun setItemAutoTranslateMode(idx: Int, mode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, idx, mode)
     }
 
+    /**
+     * Returns item's auto translate mode.
+     *
+     * Generated from Godot docs: ItemList.get_item_auto_translate_mode
+     */
     fun getItemAutoTranslateMode(idx: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, idx)
     }
 
+    /**
+     * Sets whether the item icon will be drawn transposed.
+     *
+     * Generated from Godot docs: ItemList.set_item_icon_transposed
+     */
     fun setItemIconTransposed(idx: Int, transposed: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemIconTransposedBind, handle, idx, transposed)
     }
 
+    /**
+     * Returns `true` if the item icon will be drawn transposed, i.e. the X and Y axes are swapped.
+     *
+     * Generated from Godot docs: ItemList.is_item_icon_transposed
+     */
     fun isItemIconTransposed(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemIconTransposedBind, handle, idx)
     }
 
+    /**
+     * Sets the region of item's icon used. The whole icon will be used if the region has no area.
+     *
+     * Generated from Godot docs: ItemList.set_item_icon_region
+     */
     fun setItemIconRegion(idx: Int, rect: Rect2) {
         ObjectCalls.ptrcallWithIntAndRect2Arg(setItemIconRegionBind, handle, idx, rect)
     }
 
+    /**
+     * Returns the region of item's icon used. The whole icon will be used if the region has no area.
+     *
+     * Generated from Godot docs: ItemList.get_item_icon_region
+     */
     fun getItemIconRegion(idx: Int): Rect2 {
         return ObjectCalls.ptrcallWithIntArgRetRect2(getItemIconRegionBind, handle, idx)
     }
 
+    /**
+     * Sets a modulating `Color` of the item associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_icon_modulate
+     */
     fun setItemIconModulate(idx: Int, modulate: Color) {
         ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, handle, idx, modulate)
     }
 
+    /**
+     * Returns a `Color` modulating item's icon at the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_icon_modulate
+     */
     fun getItemIconModulate(idx: Int): Color {
         return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, handle, idx)
     }
 
+    /**
+     * Allows or disallows selection of the item associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_selectable
+     */
     fun setItemSelectable(idx: Int, selectable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemSelectableBind, handle, idx, selectable)
     }
 
+    /**
+     * Returns `true` if the item at the specified index is selectable.
+     *
+     * Generated from Godot docs: ItemList.is_item_selectable
+     */
     fun isItemSelectable(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemSelectableBind, handle, idx)
     }
 
+    /**
+     * Disables (or enables) the item at the specified index. Disabled items cannot be selected and do
+     * not trigger activation signals (when double-clicking or pressing Enter).
+     *
+     * Generated from Godot docs: ItemList.set_item_disabled
+     */
     fun setItemDisabled(idx: Int, disabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, idx, disabled)
     }
 
+    /**
+     * Returns `true` if the item at the specified index is disabled.
+     *
+     * Generated from Godot docs: ItemList.is_item_disabled
+     */
     fun isItemDisabled(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, idx)
     }
 
+    /**
+     * Sets a value (of any type) to be stored with the item associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_metadata
+     */
     fun setItemMetadata(idx: Int, metadata: Any?) {
         ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
     }
 
+    /**
+     * Returns the metadata value of the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_metadata
+     */
     fun getItemMetadata(idx: Int): Any? {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
     }
 
+    /**
+     * Sets the background color of the item specified by `idx` index to the specified `Color`.
+     *
+     * Generated from Godot docs: ItemList.set_item_custom_bg_color
+     */
     fun setItemCustomBgColor(idx: Int, customBgColor: Color) {
         ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomBgColorBind, handle, idx, customBgColor)
     }
 
+    /**
+     * Returns the custom background color of the item specified by `idx` index.
+     *
+     * Generated from Godot docs: ItemList.get_item_custom_bg_color
+     */
     fun getItemCustomBgColor(idx: Int): Color {
         return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomBgColorBind, handle, idx)
     }
 
+    /**
+     * Sets the foreground color of the item specified by `idx` index to the specified `Color`.
+     *
+     * Generated from Godot docs: ItemList.set_item_custom_fg_color
+     */
     fun setItemCustomFgColor(idx: Int, customFgColor: Color) {
         ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomFgColorBind, handle, idx, customFgColor)
     }
 
+    /**
+     * Returns the custom foreground color of the item specified by `idx` index.
+     *
+     * Generated from Godot docs: ItemList.get_item_custom_fg_color
+     */
     fun getItemCustomFgColor(idx: Int): Color {
         return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomFgColorBind, handle, idx)
     }
 
+    /**
+     * Returns the position and size of the item with the specified index, in the coordinate system of
+     * the `ItemList` node. If `expand` is `true` the last column expands to fill the rest of the row.
+     * Note: The returned value is unreliable if called right after modifying the `ItemList`, before it
+     * redraws in the next frame.
+     *
+     * Generated from Godot docs: ItemList.get_item_rect
+     */
     fun getItemRect(idx: Int, expand: Boolean = true): Rect2 {
         return ObjectCalls.ptrcallWithIntAndBoolArgRetRect2(getItemRectBind, handle, idx, expand)
     }
 
+    /**
+     * Sets whether the tooltip hint is enabled for specified item index.
+     *
+     * Generated from Godot docs: ItemList.set_item_tooltip_enabled
+     */
     fun setItemTooltipEnabled(idx: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemTooltipEnabledBind, handle, idx, enable)
     }
 
+    /**
+     * Returns `true` if the tooltip is enabled for specified item index.
+     *
+     * Generated from Godot docs: ItemList.is_item_tooltip_enabled
+     */
     fun isItemTooltipEnabled(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemTooltipEnabledBind, handle, idx)
     }
 
+    /**
+     * Sets the tooltip hint for the item associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_tooltip
+     */
     fun setItemTooltip(idx: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, idx, tooltip)
     }
 
+    /**
+     * Returns the tooltip hint associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_tooltip
+     */
     fun getItemTooltip(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
     }
@@ -273,30 +448,65 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallWithIntArg(deselectBind, handle, idx)
     }
 
+    /**
+     * Ensures there are no items selected.
+     *
+     * Generated from Godot docs: ItemList.deselect_all
+     */
     fun deselectAll() {
         ObjectCalls.ptrcallNoArgs(deselectAllBind, handle)
     }
 
+    /**
+     * Returns `true` if the item at the specified index is currently selected.
+     *
+     * Generated from Godot docs: ItemList.is_selected
+     */
     fun isSelected(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isSelectedBind, handle, idx)
     }
 
+    /**
+     * Returns an array with the indexes of the selected items.
+     *
+     * Generated from Godot docs: ItemList.get_selected_items
+     */
     fun getSelectedItems(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSelectedItemsBind, handle)
     }
 
+    /**
+     * Moves item from index `from_idx` to `to_idx`.
+     *
+     * Generated from Godot docs: ItemList.move_item
+     */
     fun moveItem(fromIdx: Int, toIdx: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(moveItemBind, handle, fromIdx, toIdx)
     }
 
+    /**
+     * The number of items currently in the list.
+     *
+     * Generated from Godot docs: ItemList.set_item_count
+     */
     fun setItemCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
     }
 
+    /**
+     * The number of items currently in the list.
+     *
+     * Generated from Godot docs: ItemList.get_item_count
+     */
     fun getItemCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
     }
 
+    /**
+     * Removes the item specified by `idx` index from the list.
+     *
+     * Generated from Godot docs: ItemList.remove_item
+     */
     fun removeItem(idx: Int) {
         ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, idx)
     }
@@ -310,170 +520,413 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    /**
+     * Sorts items in the list by their text.
+     *
+     * Generated from Godot docs: ItemList.sort_items_by_text
+     */
     fun sortItemsByText() {
         ObjectCalls.ptrcallNoArgs(sortItemsByTextBind, handle)
     }
 
+    /**
+     * The width all columns will be adjusted to. A value of zero disables the adjustment, each item
+     * will have a width equal to the width of its content and the columns will have an uneven width.
+     *
+     * Generated from Godot docs: ItemList.set_fixed_column_width
+     */
     fun setFixedColumnWidth(width: Int) {
         ObjectCalls.ptrcallWithIntArg(setFixedColumnWidthBind, handle, width)
     }
 
+    /**
+     * The width all columns will be adjusted to. A value of zero disables the adjustment, each item
+     * will have a width equal to the width of its content and the columns will have an uneven width.
+     *
+     * Generated from Godot docs: ItemList.get_fixed_column_width
+     */
     fun getFixedColumnWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFixedColumnWidthBind, handle)
     }
 
+    /**
+     * Whether all columns will have the same width. If `true`, the width is equal to the largest
+     * column width of all columns.
+     *
+     * Generated from Godot docs: ItemList.set_same_column_width
+     */
     fun setSameColumnWidth(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSameColumnWidthBind, handle, enable)
     }
 
+    /**
+     * Whether all columns will have the same width. If `true`, the width is equal to the largest
+     * column width of all columns.
+     *
+     * Generated from Godot docs: ItemList.is_same_column_width
+     */
     fun isSameColumnWidth(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSameColumnWidthBind, handle)
     }
 
+    /**
+     * Maximum lines of text allowed in each item. Space will be reserved even when there is not enough
+     * lines of text to display. Note: This property takes effect only when `icon_mode` is
+     * `ICON_MODE_TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
+     *
+     * Generated from Godot docs: ItemList.set_max_text_lines
+     */
     fun setMaxTextLines(lines: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxTextLinesBind, handle, lines)
     }
 
+    /**
+     * Maximum lines of text allowed in each item. Space will be reserved even when there is not enough
+     * lines of text to display. Note: This property takes effect only when `icon_mode` is
+     * `ICON_MODE_TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
+     *
+     * Generated from Godot docs: ItemList.get_max_text_lines
+     */
     fun getMaxTextLines(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextLinesBind, handle)
     }
 
+    /**
+     * Maximum columns the list will have. If greater than zero, the content will be split among the
+     * specified columns. A value of zero means unlimited columns, i.e. all items will be put in the
+     * same row.
+     *
+     * Generated from Godot docs: ItemList.set_max_columns
+     */
     fun setMaxColumns(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxColumnsBind, handle, amount)
     }
 
+    /**
+     * Maximum columns the list will have. If greater than zero, the content will be split among the
+     * specified columns. A value of zero means unlimited columns, i.e. all items will be put in the
+     * same row.
+     *
+     * Generated from Godot docs: ItemList.get_max_columns
+     */
     fun getMaxColumns(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxColumnsBind, handle)
     }
 
+    /**
+     * Allows single or multiple item selection. See the `SelectMode` constants.
+     *
+     * Generated from Godot docs: ItemList.set_select_mode
+     */
     fun setSelectMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSelectModeBind, handle, mode)
     }
 
+    /**
+     * Allows single or multiple item selection. See the `SelectMode` constants.
+     *
+     * Generated from Godot docs: ItemList.get_select_mode
+     */
     fun getSelectMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, handle)
     }
 
+    /**
+     * The icon position, whether above or to the left of the text. See the `IconMode` constants.
+     *
+     * Generated from Godot docs: ItemList.set_icon_mode
+     */
     fun setIconMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setIconModeBind, handle, mode)
     }
 
+    /**
+     * The icon position, whether above or to the left of the text. See the `IconMode` constants.
+     *
+     * Generated from Godot docs: ItemList.get_icon_mode
+     */
     fun getIconMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getIconModeBind, handle)
     }
 
+    /**
+     * The size all icons will be adjusted to. If either X or Y component is not greater than zero,
+     * icon size won't be affected.
+     *
+     * Generated from Godot docs: ItemList.set_fixed_icon_size
+     */
     fun setFixedIconSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setFixedIconSizeBind, handle, size)
     }
 
+    /**
+     * The size all icons will be adjusted to. If either X or Y component is not greater than zero,
+     * icon size won't be affected.
+     *
+     * Generated from Godot docs: ItemList.get_fixed_icon_size
+     */
     fun getFixedIconSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getFixedIconSizeBind, handle)
     }
 
+    /**
+     * The scale of icon applied after `fixed_icon_size` and transposing takes effect.
+     *
+     * Generated from Godot docs: ItemList.set_icon_scale
+     */
     fun setIconScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setIconScaleBind, handle, scale)
     }
 
+    /**
+     * The scale of icon applied after `fixed_icon_size` and transposing takes effect.
+     *
+     * Generated from Godot docs: ItemList.get_icon_scale
+     */
     fun getIconScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getIconScaleBind, handle)
     }
 
+    /**
+     * If `true`, right mouse button click can select items.
+     *
+     * Generated from Godot docs: ItemList.set_allow_rmb_select
+     */
     fun setAllowRmbSelect(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, handle, allow)
     }
 
+    /**
+     * If `true`, right mouse button click can select items.
+     *
+     * Generated from Godot docs: ItemList.get_allow_rmb_select
+     */
     fun getAllowRmbSelect(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, handle)
     }
 
+    /**
+     * If `true`, the currently selected item can be selected again.
+     *
+     * Generated from Godot docs: ItemList.set_allow_reselect
+     */
     fun setAllowReselect(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
     }
 
+    /**
+     * If `true`, the currently selected item can be selected again.
+     *
+     * Generated from Godot docs: ItemList.get_allow_reselect
+     */
     fun getAllowReselect(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
     }
 
+    /**
+     * If `true`, allows navigating the `ItemList` with letter keys through incremental search.
+     *
+     * Generated from Godot docs: ItemList.set_allow_search
+     */
     fun setAllowSearch(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, handle, allow)
     }
 
+    /**
+     * If `true`, allows navigating the `ItemList` with letter keys through incremental search.
+     *
+     * Generated from Godot docs: ItemList.get_allow_search
+     */
     fun getAllowSearch(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, handle)
     }
 
+    /**
+     * If `true`, the control will automatically resize the width to fit its content.
+     *
+     * Generated from Godot docs: ItemList.set_auto_width
+     */
     fun setAutoWidth(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoWidthBind, handle, enable)
     }
 
+    /**
+     * If `true`, the control will automatically resize the width to fit its content.
+     *
+     * Generated from Godot docs: ItemList.has_auto_width
+     */
     fun hasAutoWidth(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutoWidthBind, handle)
     }
 
+    /**
+     * If `true`, the control will automatically resize the height to fit its content.
+     *
+     * Generated from Godot docs: ItemList.set_auto_height
+     */
     fun setAutoHeight(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoHeightBind, handle, enable)
     }
 
+    /**
+     * If `true`, the control will automatically resize the height to fit its content.
+     *
+     * Generated from Godot docs: ItemList.has_auto_height
+     */
     fun hasAutoHeight(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutoHeightBind, handle)
     }
 
+    /**
+     * Returns `true` if one or more items are selected.
+     *
+     * Generated from Godot docs: ItemList.is_anything_selected
+     */
     fun isAnythingSelected(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAnythingSelectedBind, handle)
     }
 
+    /**
+     * Returns the item index at the given `position`. When there is no item at that point, -1 will be
+     * returned if `exact` is `true`, and the closest item index will be returned otherwise. Note: The
+     * returned value is unreliable if called right after modifying the `ItemList`, before it redraws
+     * in the next frame.
+     *
+     * Generated from Godot docs: ItemList.get_item_at_position
+     */
     fun getItemAtPosition(position: Vector2, exact: Boolean = false): Int {
         return ObjectCalls.ptrcallWithVector2AndBoolArgRetInt(getItemAtPositionBind, handle, position, exact)
     }
 
+    /**
+     * Ensures the currently selected item (the first selected item if multiple selection is enabled)
+     * is visible, adjusting the scroll position as necessary. See also `center_on_current`.
+     *
+     * Generated from Godot docs: ItemList.ensure_current_is_visible
+     */
     fun ensureCurrentIsVisible() {
         ObjectCalls.ptrcallNoArgs(ensureCurrentIsVisibleBind, handle)
     }
 
+    /**
+     * Ensures the currently selected item (the first selected item if multiple selection is enabled)
+     * is visible, adjusting the scroll position as necessary to place the item at the center of the
+     * list if possible. See also `ensure_current_is_visible`. Fails and prints an error if both
+     * arguments are `false`.
+     *
+     * Generated from Godot docs: ItemList.center_on_current
+     */
     fun centerOnCurrent(centerVerically: Boolean = true, centerHorizontally: Boolean = true) {
         ObjectCalls.ptrcallWithTwoBoolArgs(centerOnCurrentBind, handle, centerVerically, centerHorizontally)
     }
 
+    /**
+     * Returns the vertical scrollbar. Warning: This is a required internal node, removing and freeing
+     * it may cause a crash. If you wish to hide it or any of its children, use their
+     * `CanvasItem.visible` property.
+     *
+     * Generated from Godot docs: ItemList.get_v_scroll_bar
+     */
     fun getVScrollBar(): VScrollBar? {
         return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
     }
 
+    /**
+     * Returns the horizontal scrollbar. Warning: This is a required internal node, removing and
+     * freeing it may cause a crash. If you wish to hide it or any of its children, use their
+     * `CanvasItem.visible` property.
+     *
+     * Generated from Godot docs: ItemList.get_h_scroll_bar
+     */
     fun getHScrollBar(): HScrollBar? {
         return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, handle))
     }
 
+    /**
+     * The way which scroll hints (indicators that show that the content can still be scrolled in a
+     * certain direction) will be shown.
+     *
+     * Generated from Godot docs: ItemList.set_scroll_hint_mode
+     */
     fun setScrollHintMode(scrollHintMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, handle, scrollHintMode)
     }
 
+    /**
+     * The way which scroll hints (indicators that show that the content can still be scrolled in a
+     * certain direction) will be shown.
+     *
+     * Generated from Godot docs: ItemList.get_scroll_hint_mode
+     */
     fun getScrollHintMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, handle)
     }
 
+    /**
+     * If `true`, the scroll hint texture will be tiled instead of stretched. See `scroll_hint_mode`.
+     *
+     * Generated from Godot docs: ItemList.set_tile_scroll_hint
+     */
     fun setTileScrollHint(tileScrollHint: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, handle, tileScrollHint)
     }
 
+    /**
+     * If `true`, the scroll hint texture will be tiled instead of stretched. See `scroll_hint_mode`.
+     *
+     * Generated from Godot docs: ItemList.is_scroll_hint_tiled
+     */
     fun isScrollHintTiled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, handle)
     }
 
+    /**
+     * The clipping behavior when the text exceeds an item's bounding rectangle.
+     *
+     * Generated from Godot docs: ItemList.set_text_overrun_behavior
+     */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
+    /**
+     * The clipping behavior when the text exceeds an item's bounding rectangle.
+     *
+     * Generated from Godot docs: ItemList.get_text_overrun_behavior
+     */
     fun getTextOverrunBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
+    /**
+     * If `true`, the control will automatically move items into a new row to fit its content. See also
+     * `HFlowContainer` for this behavior. If `false`, the control will add a horizontal scrollbar to
+     * make all items visible.
+     *
+     * Generated from Godot docs: ItemList.set_wraparound_items
+     */
     fun setWraparoundItems(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWraparoundItemsBind, handle, enable)
     }
 
+    /**
+     * If `true`, the control will automatically move items into a new row to fit its content. See also
+     * `HFlowContainer` for this behavior. If `false`, the control will add a horizontal scrollbar to
+     * make all items visible.
+     *
+     * Generated from Godot docs: ItemList.has_wraparound_items
+     */
     fun hasWraparoundItems(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasWraparoundItemsBind, handle)
     }
 
+    /**
+     * Forces an update to the list size based on its items. This happens automatically whenever size
+     * of the items, or other relevant settings like `auto_height`, change. The method can be used to
+     * trigger the update ahead of next drawing pass.
+     *
+     * Generated from Godot docs: ItemList.force_update_list_size
+     */
     fun forceUpdateListSize() {
         ObjectCalls.ptrcallNoArgs(forceUpdateListSizeBind, handle)
     }

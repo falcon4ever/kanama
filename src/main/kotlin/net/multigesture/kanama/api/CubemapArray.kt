@@ -9,6 +9,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: CubemapArray
  */
 class CubemapArray(handle: MemorySegment) : ImageTextureLayered(handle) {
+    /**
+     * Creates a placeholder version of this resource (`PlaceholderCubemapArray`).
+     *
+     * Generated from Godot docs: CubemapArray.create_placeholder
+     */
     fun createPlaceholder(): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle))
     }

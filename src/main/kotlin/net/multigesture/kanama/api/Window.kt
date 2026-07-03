@@ -182,130 +182,335 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         @JvmName("setThemeTypeVariationProperty")
         set(value) = setThemeTypeVariation(value)
 
+    /**
+     * The window's title. If the `Window` is native, title styles set in `Theme` will have no effect.
+     *
+     * Generated from Godot docs: Window.set_title
+     */
     fun setTitle(title: String) {
         ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
     }
 
+    /**
+     * The window's title. If the `Window` is native, title styles set in `Theme` will have no effect.
+     *
+     * Generated from Godot docs: Window.get_title
+     */
     fun getTitle(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
     }
 
+    /**
+     * Specifies the initial type of position for the `Window`.
+     *
+     * Generated from Godot docs: Window.set_initial_position
+     */
     fun setInitialPosition(initialPosition: Long) {
         ObjectCalls.ptrcallWithLongArg(setInitialPositionBind, handle, initialPosition)
     }
 
+    /**
+     * Specifies the initial type of position for the `Window`.
+     *
+     * Generated from Godot docs: Window.get_initial_position
+     */
     fun getInitialPosition(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getInitialPositionBind, handle)
     }
 
+    /**
+     * The screen the window is currently on.
+     *
+     * Generated from Godot docs: Window.set_current_screen
+     */
     fun setCurrentScreen(index: Int) {
         ObjectCalls.ptrcallWithIntArg(setCurrentScreenBind, handle, index)
     }
 
+    /**
+     * The screen the window is currently on.
+     *
+     * Generated from Godot docs: Window.get_current_screen
+     */
     fun getCurrentScreen(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentScreenBind, handle)
     }
 
+    /**
+     * The window's position in pixels. If `ProjectSettings.display/window/subwindows/embed_subwindows`
+     * is `false`, the position is in absolute screen coordinates. This typically applies to editor
+     * plugins. If the setting is `true`, the window's position is in the coordinates of its parent
+     * `Viewport`. Note: This property only works if `initial_position` is set to
+     * `WINDOW_INITIAL_POSITION_ABSOLUTE`.
+     *
+     * Generated from Godot docs: Window.set_position
+     */
     fun setPosition(position: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setPositionBind, handle, position)
     }
 
+    /**
+     * The window's position in pixels. If `ProjectSettings.display/window/subwindows/embed_subwindows`
+     * is `false`, the position is in absolute screen coordinates. This typically applies to editor
+     * plugins. If the setting is `true`, the window's position is in the coordinates of its parent
+     * `Viewport`. Note: This property only works if `initial_position` is set to
+     * `WINDOW_INITIAL_POSITION_ABSOLUTE`.
+     *
+     * Generated from Godot docs: Window.get_position
+     */
     fun getPosition(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionBind, handle)
     }
 
+    /**
+     * Centers the window in the current screen. If the window is embedded, it is centered in the
+     * embedder `Viewport` instead.
+     *
+     * Generated from Godot docs: Window.move_to_center
+     */
     fun moveToCenter() {
         ObjectCalls.ptrcallNoArgs(moveToCenterBind, handle)
     }
 
+    /**
+     * The window's size in pixels. See also `content_scale_size`, which doesn't set the window's
+     * physical size but affects how scaling works relative to the current `content_scale_mode`.
+     *
+     * Generated from Godot docs: Window.set_size
+     */
     fun setSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
+    /**
+     * The window's size in pixels. See also `content_scale_size`, which doesn't set the window's
+     * physical size but affects how scaling works relative to the current `content_scale_mode`.
+     *
+     * Generated from Godot docs: Window.get_size
+     */
     fun getSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
+    /**
+     * Resets the size to the minimum size, which is the max of `min_size` and (if `wrap_controls` is
+     * enabled) `get_contents_minimum_size`. This is equivalent to calling `set_size(Vector2i())` (or
+     * any size below the minimum).
+     *
+     * Generated from Godot docs: Window.reset_size
+     */
     fun resetSize() {
         ObjectCalls.ptrcallNoArgs(resetSizeBind, handle)
     }
 
+    /**
+     * Returns the window's position including its border. Note: If `visible` is `false`, this method
+     * returns the same value as `position`.
+     *
+     * Generated from Godot docs: Window.get_position_with_decorations
+     */
     fun getPositionWithDecorations(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionWithDecorationsBind, handle)
     }
 
+    /**
+     * Returns the window's size including its border. Note: If `visible` is `false`, this method
+     * returns the same value as `size`.
+     *
+     * Generated from Godot docs: Window.get_size_with_decorations
+     */
     fun getSizeWithDecorations(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeWithDecorationsBind, handle)
     }
 
+    /**
+     * If non-zero, the `Window` can't be resized to be bigger than this size. Note: This property will
+     * be ignored if the value is lower than `min_size`.
+     *
+     * Generated from Godot docs: Window.set_max_size
+     */
     fun setMaxSize(maxSize: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setMaxSizeBind, handle, maxSize)
     }
 
+    /**
+     * If non-zero, the `Window` can't be resized to be bigger than this size. Note: This property will
+     * be ignored if the value is lower than `min_size`.
+     *
+     * Generated from Godot docs: Window.get_max_size
+     */
     fun getMaxSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getMaxSizeBind, handle)
     }
 
+    /**
+     * If non-zero, the `Window` can't be resized to be smaller than this size. Note: This property
+     * will be ignored in favor of `get_contents_minimum_size` if `wrap_controls` is enabled and if its
+     * size is bigger.
+     *
+     * Generated from Godot docs: Window.set_min_size
+     */
     fun setMinSize(minSize: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setMinSizeBind, handle, minSize)
     }
 
+    /**
+     * If non-zero, the `Window` can't be resized to be smaller than this size. Note: This property
+     * will be ignored in favor of `get_contents_minimum_size` if `wrap_controls` is enabled and if its
+     * size is bigger.
+     *
+     * Generated from Godot docs: Window.get_min_size
+     */
     fun getMinSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getMinSizeBind, handle)
     }
 
+    /**
+     * Set's the window's current mode. Note: Fullscreen mode is not exclusive full screen on Windows
+     * and Linux. Note: This method only works with native windows, i.e. the main window and
+     * `Window`-derived nodes when `Viewport.gui_embed_subwindows` is disabled in the main viewport.
+     *
+     * Generated from Godot docs: Window.set_mode
+     */
     fun setMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
+    /**
+     * Set's the window's current mode. Note: Fullscreen mode is not exclusive full screen on Windows
+     * and Linux. Note: This method only works with native windows, i.e. the main window and
+     * `Window`-derived nodes when `Viewport.gui_embed_subwindows` is disabled in the main viewport.
+     *
+     * Generated from Godot docs: Window.get_mode
+     */
     fun getMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
+    /**
+     * If `true`, the window can't be resized.
+     *
+     * Generated from Godot docs: Window.set_flag
+     */
     fun setFlag(flag: Long, enabled: Boolean) {
         ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, handle, flag, enabled)
     }
 
+    /**
+     * If `true`, the window can't be resized.
+     *
+     * Generated from Godot docs: Window.get_flag
+     */
     fun getFlag(flag: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, handle, flag)
     }
 
+    /**
+     * If `true`, requests HDR output for the `Window`, falling back to SDR if not supported, and
+     * automatically switching between HDR and SDR as the window moves between screens, screen
+     * capabilities change, or system settings are modified. This will internally force
+     * `Viewport.use_hdr_2d` to be enabled on the main `Viewport`. All other `SubViewport` of this
+     * `Window` must have their `Viewport.use_hdr_2d` property enabled to produce HDR output.
+     *
+     * Generated from Godot docs: Window.set_hdr_output_requested
+     */
     fun setHdrOutputRequested(requested: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHdrOutputRequestedBind, handle, requested)
     }
 
+    /**
+     * If `true`, requests HDR output for the `Window`, falling back to SDR if not supported, and
+     * automatically switching between HDR and SDR as the window moves between screens, screen
+     * capabilities change, or system settings are modified. This will internally force
+     * `Viewport.use_hdr_2d` to be enabled on the main `Viewport`. All other `SubViewport` of this
+     * `Window` must have their `Viewport.use_hdr_2d` property enabled to produce HDR output.
+     *
+     * Generated from Godot docs: Window.is_hdr_output_requested
+     */
     fun isHdrOutputRequested(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHdrOutputRequestedBind, handle)
     }
 
+    /**
+     * Returns the maximum value for linear color components that can be displayed in this window,
+     * regardless of SDR or HDR output. Returns `1.0` if HDR is not enabled or not supported. The
+     * `output_max_linear_value_changed` signal will be emitted whenever this value changes. This value
+     * is used by tonemapping and other `Environment` effects to ensure that bright colors are
+     * presented in the range that can be displayed by this window. When using this maximum linear
+     * value in your project, it should only be used to present colors directly to the screen without
+     * tonemapping and without influencing lighting, post-processing effects, or surrounding color. The
+     * following is an example that produces the brightest purple color that the screen can produce:
+     *
+     * Generated from Godot docs: Window.get_output_max_linear_value
+     */
     fun getOutputMaxLinearValue(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOutputMaxLinearValueBind, handle)
     }
 
+    /**
+     * Returns `true` if the window can be maximized (the maximize button is enabled).
+     *
+     * Generated from Godot docs: Window.is_maximize_allowed
+     */
     fun isMaximizeAllowed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMaximizeAllowedBind, handle)
     }
 
+    /**
+     * Tells the OS that the `Window` needs an attention. This makes the window stand out in some way
+     * depending on the system, e.g. it might blink on the task bar.
+     *
+     * Generated from Godot docs: Window.request_attention
+     */
     fun requestAttention() {
         ObjectCalls.ptrcallNoArgs(requestAttentionBind, handle)
     }
 
+    /**
+     * Creates a progress bar on the taskbar/dock icon of the `Window` if it does not exist, sets the
+     * progress of the icon. `value` acts as a relative percentage value, ranges from `0.0` (lowest) to
+     * `1.0` (highest). Note: This method is implemented only on Windows and macOS.
+     *
+     * Generated from Godot docs: Window.set_taskbar_progress_value
+     */
     fun setTaskbarProgressValue(value: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTaskbarProgressValueBind, handle, value)
     }
 
+    /**
+     * Sets the type and state of the progress bar on the taskbar/dock icon of the `Window`. See
+     * `DisplayServer.ProgressState` for possible values and how each mode behaves. Note: This method
+     * is implemented only on Windows and macOS.
+     *
+     * Generated from Godot docs: Window.set_taskbar_progress_state
+     */
     fun setTaskbarProgressState(state: Long) {
         ObjectCalls.ptrcallWithLongArg(setTaskbarProgressStateBind, handle, state)
     }
 
+    /**
+     * Causes the window to grab focus, allowing it to receive user input.
+     *
+     * Generated from Godot docs: Window.move_to_foreground
+     */
     fun moveToForeground() {
         ObjectCalls.ptrcallNoArgs(moveToForegroundBind, handle)
     }
 
+    /**
+     * If `true`, the window is visible.
+     *
+     * Generated from Godot docs: Window.set_visible
+     */
     fun setVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the window is visible.
+     *
+     * Generated from Godot docs: Window.is_visible
+     */
     fun isVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
     }
@@ -330,354 +535,912 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         ObjectCalls.ptrcallNoArgs(showBind, handle)
     }
 
+    /**
+     * If `true`, the `Window` is transient, i.e. it's considered a child of another `Window`. The
+     * transient window will be destroyed with its transient parent and will return focus to their
+     * parent when closed. The transient window is displayed on top of a non-exclusive full-screen
+     * parent window. Transient windows can't enter full-screen mode. Note that behavior might be
+     * different depending on the platform.
+     *
+     * Generated from Godot docs: Window.set_transient
+     */
     fun setTransient(transient: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTransientBind, handle, transient)
     }
 
+    /**
+     * If `true`, the `Window` is transient, i.e. it's considered a child of another `Window`. The
+     * transient window will be destroyed with its transient parent and will return focus to their
+     * parent when closed. The transient window is displayed on top of a non-exclusive full-screen
+     * parent window. Transient windows can't enter full-screen mode. Note that behavior might be
+     * different depending on the platform.
+     *
+     * Generated from Godot docs: Window.is_transient
+     */
     fun isTransient(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, handle)
     }
 
+    /**
+     * If `true`, and the `Window` is `transient`, this window will (at the time of becoming visible)
+     * become transient to the currently focused window instead of the immediate parent window in the
+     * hierarchy. Note that the transient parent is assigned at the time this window becomes visible,
+     * so changing it afterwards has no effect until re-shown.
+     *
+     * Generated from Godot docs: Window.set_transient_to_focused
+     */
     fun setTransientToFocused(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTransientToFocusedBind, handle, enable)
     }
 
+    /**
+     * If `true`, and the `Window` is `transient`, this window will (at the time of becoming visible)
+     * become transient to the currently focused window instead of the immediate parent window in the
+     * hierarchy. Note that the transient parent is assigned at the time this window becomes visible,
+     * so changing it afterwards has no effect until re-shown.
+     *
+     * Generated from Godot docs: Window.is_transient_to_focused
+     */
     fun isTransientToFocused(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTransientToFocusedBind, handle)
     }
 
+    /**
+     * If `true`, the `Window` will be in exclusive mode. Exclusive windows are always on top of their
+     * parent and will block all input going to the parent `Window`. Needs `transient` enabled to work.
+     *
+     * Generated from Godot docs: Window.set_exclusive
+     */
     fun setExclusive(exclusive: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setExclusiveBind, handle, exclusive)
     }
 
+    /**
+     * If `true`, the `Window` will be in exclusive mode. Exclusive windows are always on top of their
+     * parent and will block all input going to the parent `Window`. Needs `transient` enabled to work.
+     *
+     * Generated from Godot docs: Window.is_exclusive
+     */
     fun isExclusive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isExclusiveBind, handle)
     }
 
+    /**
+     * If `unparent` is `true`, the window is automatically unparented when going invisible. Note: Make
+     * sure to keep a reference to the node, otherwise it will be orphaned. You also need to manually
+     * call `Node.queue_free` to free the window if it's not parented.
+     *
+     * Generated from Godot docs: Window.set_unparent_when_invisible
+     */
     fun setUnparentWhenInvisible(unparent: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUnparentWhenInvisibleBind, handle, unparent)
     }
 
+    /**
+     * Returns whether the window is being drawn to the screen.
+     *
+     * Generated from Godot docs: Window.can_draw
+     */
     fun canDraw(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(canDrawBind, handle)
     }
 
+    /**
+     * Returns `true` if the window is focused.
+     *
+     * Generated from Godot docs: Window.has_focus
+     */
     fun hasFocus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasFocusBind, handle)
     }
 
+    /**
+     * Causes the window to grab focus, allowing it to receive user input.
+     *
+     * Generated from Godot docs: Window.grab_focus
+     */
     fun grabFocus() {
         ObjectCalls.ptrcallNoArgs(grabFocusBind, handle)
     }
 
+    /**
+     * Starts an interactive drag operation on the window, using the current mouse position. Call this
+     * method when handling a mouse button being pressed to simulate a pressed event on the window's
+     * title bar. Using this method allows the window to participate in space switching, tiling, and
+     * other system features.
+     *
+     * Generated from Godot docs: Window.start_drag
+     */
     fun startDrag() {
         ObjectCalls.ptrcallNoArgs(startDragBind, handle)
     }
 
+    /**
+     * Starts an interactive resize operation on the window, using the current mouse position. Call
+     * this method when handling a mouse button being pressed to simulate a pressed event on the
+     * window's edge.
+     *
+     * Generated from Godot docs: Window.start_resize
+     */
     fun startResize(edge: Long) {
         ObjectCalls.ptrcallWithLongArg(startResizeBind, handle, edge)
     }
 
+    /**
+     * If `active` is `true`, enables system's native IME (Input Method Editor).
+     *
+     * Generated from Godot docs: Window.set_ime_active
+     */
     fun setImeActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setImeActiveBind, handle, active)
     }
 
+    /**
+     * Moves IME to the given position.
+     *
+     * Generated from Godot docs: Window.set_ime_position
+     */
     fun setImePosition(position: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setImePositionBind, handle, position)
     }
 
+    /**
+     * Returns `true` if the window is currently embedded in another window.
+     *
+     * Generated from Godot docs: Window.is_embedded
+     */
     fun isEmbedded(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddedBind, handle)
     }
 
+    /**
+     * Returns the combined minimum size from the child `Control` nodes of the window. Use
+     * `child_controls_changed` to update it when child nodes have changed. The value returned by this
+     * method can be overridden with `_get_contents_minimum_size`.
+     *
+     * Generated from Godot docs: Window.get_contents_minimum_size
+     */
     fun getContentsMinimumSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getContentsMinimumSizeBind, handle)
     }
 
+    /**
+     * If `true`, native window will be used regardless of parent viewport and project settings.
+     *
+     * Generated from Godot docs: Window.set_force_native
+     */
     fun setForceNative(forceNative: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setForceNativeBind, handle, forceNative)
     }
 
+    /**
+     * If `true`, native window will be used regardless of parent viewport and project settings.
+     *
+     * Generated from Godot docs: Window.get_force_native
+     */
     fun getForceNative(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getForceNativeBind, handle)
     }
 
+    /**
+     * The content's base size in "virtual" pixels. Not to be confused with `size`, which sets the
+     * actual window's physical size in pixels. If set to a value greater than `0` and
+     * `content_scale_mode` is set to a value other than `CONTENT_SCALE_MODE_DISABLED`, the `Window`'s
+     * content will be scaled when the window is resized to a different size. Higher values will make
+     * the content appear smaller, as it will be able to fit more of the project in view. On the root
+     * `Window`, this is set to match `ProjectSettings.display/window/size/viewport_width` and
+     * `ProjectSettings.display/window/size/viewport_height` by default. For example, when using
+     * `CONTENT_SCALE_MODE_CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
+     * window size of `2560×1440` will make 2D elements appear at double their original size, as the
+     * content is scaled by a factor of `2.0` (`2560.0 / 1280.0 = 2.0`, `1440.0 / 720.0 = 2.0`). See
+     * the Base size section of the Multiple resolutions documentation
+     * ($DOCS_URL/tutorials/rendering/multiple_resolutions.html#base-size) for details.
+     *
+     * Generated from Godot docs: Window.set_content_scale_size
+     */
     fun setContentScaleSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setContentScaleSizeBind, handle, size)
     }
 
+    /**
+     * The content's base size in "virtual" pixels. Not to be confused with `size`, which sets the
+     * actual window's physical size in pixels. If set to a value greater than `0` and
+     * `content_scale_mode` is set to a value other than `CONTENT_SCALE_MODE_DISABLED`, the `Window`'s
+     * content will be scaled when the window is resized to a different size. Higher values will make
+     * the content appear smaller, as it will be able to fit more of the project in view. On the root
+     * `Window`, this is set to match `ProjectSettings.display/window/size/viewport_width` and
+     * `ProjectSettings.display/window/size/viewport_height` by default. For example, when using
+     * `CONTENT_SCALE_MODE_CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
+     * window size of `2560×1440` will make 2D elements appear at double their original size, as the
+     * content is scaled by a factor of `2.0` (`2560.0 / 1280.0 = 2.0`, `1440.0 / 720.0 = 2.0`). See
+     * the Base size section of the Multiple resolutions documentation
+     * ($DOCS_URL/tutorials/rendering/multiple_resolutions.html#base-size) for details.
+     *
+     * Generated from Godot docs: Window.get_content_scale_size
+     */
     fun getContentScaleSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getContentScaleSizeBind, handle)
     }
 
+    /**
+     * Specifies how the content is scaled when the `Window` is resized.
+     *
+     * Generated from Godot docs: Window.set_content_scale_mode
+     */
     fun setContentScaleMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setContentScaleModeBind, handle, mode)
     }
 
+    /**
+     * Specifies how the content is scaled when the `Window` is resized.
+     *
+     * Generated from Godot docs: Window.get_content_scale_mode
+     */
     fun getContentScaleMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleModeBind, handle)
     }
 
+    /**
+     * Specifies how the content's aspect behaves when the `Window` is resized. The base aspect is
+     * determined by `content_scale_size`.
+     *
+     * Generated from Godot docs: Window.set_content_scale_aspect
+     */
     fun setContentScaleAspect(aspect: Long) {
         ObjectCalls.ptrcallWithLongArg(setContentScaleAspectBind, handle, aspect)
     }
 
+    /**
+     * Specifies how the content's aspect behaves when the `Window` is resized. The base aspect is
+     * determined by `content_scale_size`.
+     *
+     * Generated from Godot docs: Window.get_content_scale_aspect
+     */
     fun getContentScaleAspect(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleAspectBind, handle)
     }
 
+    /**
+     * The policy to use to determine the final scale factor for 2D elements. This affects how
+     * `content_scale_factor` is applied, in addition to the automatic scale factor determined by
+     * `content_scale_size`.
+     *
+     * Generated from Godot docs: Window.set_content_scale_stretch
+     */
     fun setContentScaleStretch(stretch: Long) {
         ObjectCalls.ptrcallWithLongArg(setContentScaleStretchBind, handle, stretch)
     }
 
+    /**
+     * The policy to use to determine the final scale factor for 2D elements. This affects how
+     * `content_scale_factor` is applied, in addition to the automatic scale factor determined by
+     * `content_scale_size`.
+     *
+     * Generated from Godot docs: Window.get_content_scale_stretch
+     */
     fun getContentScaleStretch(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleStretchBind, handle)
     }
 
+    /**
+     * If set, defines the window's custom decoration area which will receive mouse input, even if
+     * normal input to the window is blocked (such as when it has an exclusive child opened). See also
+     * `nonclient_window_input`.
+     *
+     * Generated from Godot docs: Window.set_nonclient_area
+     */
     fun setNonclientArea(area: Rect2i) {
         ObjectCalls.ptrcallWithRect2iArg(setNonclientAreaBind, handle, area)
     }
 
+    /**
+     * If set, defines the window's custom decoration area which will receive mouse input, even if
+     * normal input to the window is blocked (such as when it has an exclusive child opened). See also
+     * `nonclient_window_input`.
+     *
+     * Generated from Godot docs: Window.get_nonclient_area
+     */
     fun getNonclientArea(): Rect2i {
         return ObjectCalls.ptrcallNoArgsRetRect2i(getNonclientAreaBind, handle)
     }
 
+    /**
+     * If `true`, the `Window` width is expanded to keep the title bar text fully visible.
+     *
+     * Generated from Godot docs: Window.set_keep_title_visible
+     */
     fun setKeepTitleVisible(titleVisible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setKeepTitleVisibleBind, handle, titleVisible)
     }
 
+    /**
+     * If `true`, the `Window` width is expanded to keep the title bar text fully visible.
+     *
+     * Generated from Godot docs: Window.get_keep_title_visible
+     */
     fun getKeepTitleVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepTitleVisibleBind, handle)
     }
 
+    /**
+     * Specifies the base scale of `Window`'s content when its `size` is equal to `content_scale_size`.
+     * See also `Viewport.get_stretch_transform`.
+     *
+     * Generated from Godot docs: Window.set_content_scale_factor
+     */
     fun setContentScaleFactor(factor: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setContentScaleFactorBind, handle, factor)
     }
 
+    /**
+     * Specifies the base scale of `Window`'s content when its `size` is equal to `content_scale_size`.
+     * See also `Viewport.get_stretch_transform`.
+     *
+     * Generated from Godot docs: Window.get_content_scale_factor
+     */
     fun getContentScaleFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getContentScaleFactorBind, handle)
     }
 
+    /**
+     * Sets a polygonal region of the window which accepts mouse events. Mouse events outside the
+     * region will be passed through. Passing an empty array will disable passthrough support (all
+     * mouse events will be intercepted by the window, which is the default behavior).
+     *
+     * Generated from Godot docs: Window.set_mouse_passthrough_polygon
+     */
     fun setMousePassthroughPolygon(polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setMousePassthroughPolygonBind, handle, polygon)
     }
 
+    /**
+     * Sets a polygonal region of the window which accepts mouse events. Mouse events outside the
+     * region will be passed through. Passing an empty array will disable passthrough support (all
+     * mouse events will be intercepted by the window, which is the default behavior).
+     *
+     * Generated from Godot docs: Window.get_mouse_passthrough_polygon
+     */
     fun getMousePassthroughPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getMousePassthroughPolygonBind, handle)
     }
 
+    /**
+     * If `true`, the window's size will automatically update when a child node is added or removed,
+     * ignoring `min_size` if the new size is bigger. If `false`, you need to call
+     * `child_controls_changed` manually.
+     *
+     * Generated from Godot docs: Window.set_wrap_controls
+     */
     fun setWrapControls(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWrapControlsBind, handle, enable)
     }
 
+    /**
+     * If `true`, the window's size will automatically update when a child node is added or removed,
+     * ignoring `min_size` if the new size is bigger. If `false`, you need to call
+     * `child_controls_changed` manually.
+     *
+     * Generated from Godot docs: Window.is_wrapping_controls
+     */
     fun isWrappingControls(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isWrappingControlsBind, handle)
     }
 
+    /**
+     * Requests an update of the `Window` size to fit underlying `Control` nodes.
+     *
+     * Generated from Godot docs: Window.child_controls_changed
+     */
     fun childControlsChanged() {
         ObjectCalls.ptrcallNoArgs(childControlsChangedBind, handle)
     }
 
+    /**
+     * The `Theme` resource this node and all its `Control` and `Window` children use. If a child node
+     * has its own `Theme` resource set, theme items are merged with child's definitions having higher
+     * priority. Note: `Window` styles will have no effect unless the window is embedded.
+     *
+     * Generated from Godot docs: Window.set_theme
+     */
     fun setTheme(theme: Theme?) {
         ObjectCalls.ptrcallWithObjectArgs(setThemeBind, handle, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Theme` resource this node and all its `Control` and `Window` children use. If a child node
+     * has its own `Theme` resource set, theme items are merged with child's definitions having higher
+     * priority. Note: `Window` styles will have no effect unless the window is embedded.
+     *
+     * Generated from Godot docs: Window.get_theme
+     */
     fun getTheme(): Theme? {
         return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, handle))
     }
 
+    /**
+     * The name of a theme type variation used by this `Window` to look up its own theme items. See
+     * `Control.theme_type_variation` for more details.
+     *
+     * Generated from Godot docs: Window.set_theme_type_variation
+     */
     fun setThemeTypeVariation(themeType: String) {
         ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, handle, themeType)
     }
 
+    /**
+     * The name of a theme type variation used by this `Window` to look up its own theme items. See
+     * `Control.theme_type_variation` for more details.
+     *
+     * Generated from Godot docs: Window.get_theme_type_variation
+     */
     fun getThemeTypeVariation(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, handle)
     }
 
+    /**
+     * Prevents `*_theme_*_override` methods from emitting `NOTIFICATION_THEME_CHANGED` until
+     * `end_bulk_theme_override` is called.
+     *
+     * Generated from Godot docs: Window.begin_bulk_theme_override
+     */
     fun beginBulkThemeOverride() {
         ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, handle)
     }
 
+    /**
+     * Ends a bulk theme override update. See `begin_bulk_theme_override`.
+     *
+     * Generated from Godot docs: Window.end_bulk_theme_override
+     */
     fun endBulkThemeOverride() {
         ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, handle)
     }
 
+    /**
+     * Creates a local override for a theme icon with the specified `name`. Local overrides always take
+     * precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_icon_override`. See also `get_theme_icon`.
+     *
+     * Generated from Godot docs: Window.add_theme_icon_override
+     */
     fun addThemeIconOverride(name: String, texture: Texture2D?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Creates a local override for a theme `StyleBox` with the specified `name`. Local overrides
+     * always take precedence when fetching theme items for the control. An override can be removed
+     * with `remove_theme_stylebox_override`. See also `get_theme_stylebox` and
+     * `Control.add_theme_stylebox_override` for more details.
+     *
+     * Generated from Godot docs: Window.add_theme_stylebox_override
+     */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Creates a local override for a theme `Font` with the specified `name`. Local overrides always
+     * take precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_font_override`. See also `get_theme_font`.
+     *
+     * Generated from Godot docs: Window.add_theme_font_override
+     */
     fun addThemeFontOverride(name: String, font: Font?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Creates a local override for a theme font size with the specified `name`. Local overrides always
+     * take precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_font_size_override`. See also `get_theme_font_size`.
+     *
+     * Generated from Godot docs: Window.add_theme_font_size_override
+     */
     fun addThemeFontSizeOverride(name: String, fontSize: Int) {
         ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, handle, name, fontSize)
     }
 
+    /**
+     * Creates a local override for a theme `Color` with the specified `name`. Local overrides always
+     * take precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_color_override`. See also `get_theme_color` and `Control.add_theme_color_override`
+     * for more details.
+     *
+     * Generated from Godot docs: Window.add_theme_color_override
+     */
     fun addThemeColorOverride(name: String, color: Color) {
         ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, handle, name, color)
     }
 
+    /**
+     * Creates a local override for a theme constant with the specified `name`. Local overrides always
+     * take precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_constant_override`. See also `get_theme_constant`.
+     *
+     * Generated from Godot docs: Window.add_theme_constant_override
+     */
     fun addThemeConstantOverride(name: String, constant: Int) {
         ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, handle, name, constant)
     }
 
+    /**
+     * Removes a local override for a theme icon with the specified `name` previously added by
+     * `add_theme_icon_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_icon_override
+     */
     fun removeThemeIconOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, handle, name)
     }
 
+    /**
+     * Removes a local override for a theme `StyleBox` with the specified `name` previously added by
+     * `add_theme_stylebox_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_stylebox_override
+     */
     fun removeThemeStyleboxOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, handle, name)
     }
 
+    /**
+     * Removes a local override for a theme `Font` with the specified `name` previously added by
+     * `add_theme_font_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_font_override
+     */
     fun removeThemeFontOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, handle, name)
     }
 
+    /**
+     * Removes a local override for a theme font size with the specified `name` previously added by
+     * `add_theme_font_size_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_font_size_override
+     */
     fun removeThemeFontSizeOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, handle, name)
     }
 
+    /**
+     * Removes a local override for a theme `Color` with the specified `name` previously added by
+     * `add_theme_color_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_color_override
+     */
     fun removeThemeColorOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, handle, name)
     }
 
+    /**
+     * Removes a local override for a theme constant with the specified `name` previously added by
+     * `add_theme_constant_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_constant_override
+     */
     fun removeThemeConstantOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, handle, name)
     }
 
+    /**
+     * Returns an icon from the first matching `Theme` in the tree if that `Theme` has an icon item
+     * with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_icon
+     */
     fun getThemeIcon(name: String, themeType: String = ""): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, handle, name, themeType))
     }
 
+    /**
+     * Returns a `StyleBox` from the first matching `Theme` in the tree if that `Theme` has a stylebox
+     * item with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_stylebox
+     */
     fun getThemeStylebox(name: String, themeType: String = ""): StyleBox? {
         return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, handle, name, themeType))
     }
 
+    /**
+     * Returns a `Font` from the first matching `Theme` in the tree if that `Theme` has a font item
+     * with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_font
+     */
     fun getThemeFont(name: String, themeType: String = ""): Font? {
         return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, handle, name, themeType))
     }
 
+    /**
+     * Returns a font size from the first matching `Theme` in the tree if that `Theme` has a font size
+     * item with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_font_size
+     */
     fun getThemeFontSize(name: String, themeType: String = ""): Int {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, handle, name, themeType)
     }
 
+    /**
+     * Returns a `Color` from the first matching `Theme` in the tree if that `Theme` has a color item
+     * with the specified `name` and `theme_type`. See `Control.get_theme_color` for more details.
+     *
+     * Generated from Godot docs: Window.get_theme_color
+     */
     fun getThemeColor(name: String, themeType: String = ""): Color {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, handle, name, themeType)
     }
 
+    /**
+     * Returns a constant from the first matching `Theme` in the tree if that `Theme` has a constant
+     * item with the specified `name` and `theme_type`. See `Control.get_theme_color` for more details.
+     *
+     * Generated from Godot docs: Window.get_theme_constant
+     */
     fun getThemeConstant(name: String, themeType: String = ""): Int {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, handle, name, themeType)
     }
 
+    /**
+     * Returns `true` if there is a local override for a theme icon with the specified `name` in this
+     * `Control` node. See `add_theme_icon_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_icon_override
+     */
     fun hasThemeIconOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, handle, name)
     }
 
+    /**
+     * Returns `true` if there is a local override for a theme `StyleBox` with the specified `name` in
+     * this `Control` node. See `add_theme_stylebox_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_stylebox_override
+     */
     fun hasThemeStyleboxOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, handle, name)
     }
 
+    /**
+     * Returns `true` if there is a local override for a theme `Font` with the specified `name` in this
+     * `Control` node. See `add_theme_font_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_font_override
+     */
     fun hasThemeFontOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, handle, name)
     }
 
+    /**
+     * Returns `true` if there is a local override for a theme font size with the specified `name` in
+     * this `Control` node. See `add_theme_font_size_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_font_size_override
+     */
     fun hasThemeFontSizeOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, handle, name)
     }
 
+    /**
+     * Returns `true` if there is a local override for a theme `Color` with the specified `name` in
+     * this `Control` node. See `add_theme_color_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_color_override
+     */
     fun hasThemeColorOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, handle, name)
     }
 
+    /**
+     * Returns `true` if there is a local override for a theme constant with the specified `name` in
+     * this `Control` node. See `add_theme_constant_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_constant_override
+     */
     fun hasThemeConstantOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, handle, name)
     }
 
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has an icon item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_icon
+     */
     fun hasThemeIcon(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, handle, name, themeType)
     }
 
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a stylebox item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_stylebox
+     */
     fun hasThemeStylebox(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, handle, name, themeType)
     }
 
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a font item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_font
+     */
     fun hasThemeFont(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, handle, name, themeType)
     }
 
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a font size item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_font_size
+     */
     fun hasThemeFontSize(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, handle, name, themeType)
     }
 
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a color item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_color
+     */
     fun hasThemeColor(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, handle, name, themeType)
     }
 
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a constant item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_constant
+     */
     fun hasThemeConstant(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, handle, name, themeType)
     }
 
+    /**
+     * Returns the default base scale value from the first matching `Theme` in the tree if that `Theme`
+     * has a valid `Theme.default_base_scale` value. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_default_base_scale
+     */
     fun getThemeDefaultBaseScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, handle)
     }
 
+    /**
+     * Returns the default font from the first matching `Theme` in the tree if that `Theme` has a valid
+     * `Theme.default_font` value. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_default_font
+     */
     fun getThemeDefaultFont(): Font? {
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, handle))
     }
 
+    /**
+     * Returns the default font size value from the first matching `Theme` in the tree if that `Theme`
+     * has a valid `Theme.default_font_size` value. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_default_font_size
+     */
     fun getThemeDefaultFontSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, handle)
     }
 
+    /**
+     * Returns the ID of the window.
+     *
+     * Generated from Godot docs: Window.get_window_id
+     */
     fun getWindowId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getWindowIdBind, handle)
     }
 
+    /**
+     * The human-readable node name that is reported to assistive apps.
+     *
+     * Generated from Godot docs: Window.set_accessibility_name
+     */
     fun setAccessibilityName(name: String) {
         ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, handle, name)
     }
 
+    /**
+     * The human-readable node name that is reported to assistive apps.
+     *
+     * Generated from Godot docs: Window.get_accessibility_name
+     */
     fun getAccessibilityName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, handle)
     }
 
+    /**
+     * The human-readable node description that is reported to assistive apps.
+     *
+     * Generated from Godot docs: Window.set_accessibility_description
+     */
     fun setAccessibilityDescription(description: String) {
         ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, handle, description)
     }
 
+    /**
+     * The human-readable node description that is reported to assistive apps.
+     *
+     * Generated from Godot docs: Window.get_accessibility_description
+     */
     fun getAccessibilityDescription(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, handle)
     }
 
+    /**
+     * Sets layout direction and text writing direction. Right-to-left layouts are necessary for
+     * certain languages (e.g. Arabic and Hebrew).
+     *
+     * Generated from Godot docs: Window.set_layout_direction
+     */
     fun setLayoutDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, handle, direction)
     }
 
+    /**
+     * Returns layout direction and text writing direction.
+     *
+     * Generated from Godot docs: Window.get_layout_direction
+     */
     fun getLayoutDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, handle)
     }
 
+    /**
+     * Returns `true` if the layout is right-to-left.
+     *
+     * Generated from Godot docs: Window.is_layout_rtl
+     */
     fun isLayoutRtl(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, handle)
     }
 
+    /**
+     * Toggles if any text should automatically change to its translated version depending on the
+     * current locale.
+     *
+     * Generated from Godot docs: Window.set_auto_translate
+     */
     fun setAutoTranslate(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, handle, enable)
     }
 
+    /**
+     * Toggles if any text should automatically change to its translated version depending on the
+     * current locale.
+     *
+     * Generated from Godot docs: Window.is_auto_translating
+     */
     fun isAutoTranslating(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, handle)
     }
 
+    /**
+     * Enables font oversampling. This makes fonts look better when they are scaled up.
+     *
+     * Generated from Godot docs: Window.set_use_font_oversampling
+     */
     fun setUseFontOversampling(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseFontOversamplingBind, handle, enable)
     }
 
+    /**
+     * Returns `true` if font oversampling is enabled. See `set_use_font_oversampling`.
+     *
+     * Generated from Godot docs: Window.is_using_font_oversampling
+     */
     fun isUsingFontOversampling(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingFontOversamplingBind, handle)
     }
@@ -700,38 +1463,100 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         ObjectCalls.ptrcallWithRect2iArg(popupBind, handle, rect)
     }
 
+    /**
+     * Popups the `Window` with a position shifted by parent `Window`'s position. If the `Window` is
+     * embedded, has the same effect as `popup`.
+     *
+     * Generated from Godot docs: Window.popup_on_parent
+     */
     fun popupOnParent(parentRect: Rect2i) {
         ObjectCalls.ptrcallWithRect2iArg(popupOnParentBind, handle, parentRect)
     }
 
+    /**
+     * Popups the `Window` at the center of the current screen, with optionally given minimum size. If
+     * the `Window` is embedded, it will be centered in the parent `Viewport` instead. Note: Calling it
+     * with the default value of `minsize` is equivalent to calling it with `size`.
+     *
+     * Generated from Godot docs: Window.popup_centered
+     */
     fun popupCentered(minsize: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(popupCenteredBind, handle, minsize)
     }
 
+    /**
+     * If `Window` is embedded, popups the `Window` centered inside its embedder and sets its size as a
+     * `ratio` of embedder's size. If `Window` is a native window, popups the `Window` centered inside
+     * the screen of its parent `Window` and sets its size as a `ratio` of the screen size.
+     *
+     * Generated from Godot docs: Window.popup_centered_ratio
+     */
     fun popupCenteredRatio(ratio: Double = 0.8) {
         ObjectCalls.ptrcallWithDoubleArg(popupCenteredRatioBind, handle, ratio)
     }
 
+    /**
+     * Popups the `Window` centered inside its parent `Window`. `fallback_ratio` determines the maximum
+     * size of the `Window`, in relation to its parent. Note: Calling it with the default value of
+     * `minsize` is equivalent to calling it with `size`.
+     *
+     * Generated from Godot docs: Window.popup_centered_clamped
+     */
     fun popupCenteredClamped(minsize: Vector2i, fallbackRatio: Double = 0.75) {
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(popupCenteredClampedBind, handle, minsize, fallbackRatio)
     }
 
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup` on it. The dialog must have no current parent, otherwise the method fails.
+     * See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive
+     */
     fun popupExclusive(fromNode: Node, rect: Rect2i) {
         ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveBind, handle, fromNode.handle, rect)
     }
 
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup_on_parent` on it. The dialog must have no current parent, otherwise the
+     * method fails. See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive_on_parent
+     */
     fun popupExclusiveOnParent(fromNode: Node, parentRect: Rect2i) {
         ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveOnParentBind, handle, fromNode.handle, parentRect)
     }
 
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup_centered` on it. The dialog must have no current parent, otherwise the
+     * method fails. See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive_centered
+     */
     fun popupExclusiveCentered(fromNode: Node, minsize: Vector2i) {
         ObjectCalls.ptrcallWithObjectAndVector2iArg(popupExclusiveCenteredBind, handle, fromNode.handle, minsize)
     }
 
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup_centered_ratio` on it. The dialog must have no current parent, otherwise the
+     * method fails. See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive_centered_ratio
+     */
     fun popupExclusiveCenteredRatio(fromNode: Node, ratio: Double = 0.8) {
         ObjectCalls.ptrcallWithObjectAndDoubleArg(popupExclusiveCenteredRatioBind, handle, fromNode.handle, ratio)
     }
 
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup_centered_clamped` on it. The dialog must have no current parent, otherwise
+     * the method fails. See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive_centered_clamped
+     */
     fun popupExclusiveCenteredClamped(fromNode: Node, minsize: Vector2i, fallbackRatio: Double = 0.75) {
         ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupExclusiveCenteredClampedBind, handle, fromNode.handle, minsize, fallbackRatio)
     }
@@ -756,6 +1581,11 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
     }
 
     companion object {
+        /**
+         * Returns the focused window.
+         *
+         * Generated from Godot docs: Window.get_focused_window
+         */
         fun getFocusedWindow(): Window? {
             return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFocusedWindowBind, MemorySegment.NULL))
         }

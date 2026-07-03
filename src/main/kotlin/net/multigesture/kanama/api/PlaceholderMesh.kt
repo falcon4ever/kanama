@@ -10,6 +10,11 @@ import net.multigesture.kanama.types.AABB
  * Generated from Godot docs: PlaceholderMesh
  */
 class PlaceholderMesh(handle: MemorySegment) : Mesh(handle) {
+    /**
+     * The smallest `AABB` enclosing this mesh in local space.
+     *
+     * Generated from Godot docs: PlaceholderMesh.set_aabb
+     */
     fun setAabb(aabb: AABB) {
         ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
     }

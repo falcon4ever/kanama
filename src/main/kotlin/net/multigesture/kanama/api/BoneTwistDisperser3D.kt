@@ -23,138 +23,330 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setSettingCountProperty")
         set(value) = setSettingCount(value)
 
+    /**
+     * The number of settings.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_setting_count
+     */
     fun setSettingCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setSettingCountBind, handle, count)
     }
 
+    /**
+     * The number of settings.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_setting_count
+     */
     fun getSettingCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, handle)
     }
 
+    /**
+     * Clears all settings.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.clear_settings
+     */
     fun clearSettings() {
         ObjectCalls.ptrcallNoArgs(clearSettingsBind, handle)
     }
 
+    /**
+     * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
+     * solver retrieves the bone axis from the bone rest and caches it.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_mutable_bone_axes
+     */
     fun setMutableBoneAxes(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
+     * solver retrieves the bone axis from the bone rest and caches it.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.are_bone_axes_mutable
+     */
     fun areBoneAxesMutable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, handle)
     }
 
+    /**
+     * Sets the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_root_bone_name
+     */
     fun setRootBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_root_bone_name
+     */
     fun getRootBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the root bone index of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_root_bone
+     */
     fun setRootBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the root bone index of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_root_bone
+     */
     fun getRootBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
     }
 
+    /**
+     * Sets the end bone name of the bone chain. Note: The end bone must be a child of the root bone.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone_name
+     */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone_name
+     */
     fun getEndBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the end bone index of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone
+     */
     fun setEndBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the end bone index of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone
+     */
     fun getEndBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
     }
 
+    /**
+     * Returns the reference bone name to extract twist of the setting at `index`. This bone is either
+     * the end of the chain or its parent, depending on `is_end_bone_extended`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_reference_bone_name
+     */
     fun getReferenceBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, handle, index)
     }
 
+    /**
+     * Returns the reference bone to extract twist of the setting at `index`. This bone is either the
+     * end of the chain or its parent, depending on `is_end_bone_extended`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_reference_bone
+     */
     fun getReferenceBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getReferenceBoneBind, handle, index)
     }
 
+    /**
+     * If `enabled` is `true`, the end bone is extended to have a tail. If `enabled` is `false`,
+     * `get_reference_bone` becomes a parent of the end bone and it uses the vector to the end bone as
+     * a twist axis.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_extend_end_bone
+     */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if the end bone is extended to have a tail.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.is_end_bone_extended
+     */
     fun isEndBoneExtended(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, handle, index)
     }
 
+    /**
+     * Sets the end bone tail direction of the bone chain when `is_end_bone_extended` is `true`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone_direction
+     */
     fun setEndBoneDirection(index: Int, boneDirection: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, handle, index, boneDirection)
     }
 
+    /**
+     * Returns the tail direction of the end bone of the bone chain when `is_end_bone_extended` is
+     * `true`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone_direction
+     */
     fun getEndBoneDirection(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, handle, index)
     }
 
+    /**
+     * If `enabled` is `true`, it extracts the twist amount from the difference between the bone rest
+     * and the current bone pose. If `enabled` is `false`, it extracts the twist amount from the
+     * difference between `get_twist_from` and the current bone pose. See also `set_twist_from`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_twist_from_rest
+     */
     fun setTwistFromRest(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setTwistFromRestBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if extracting the twist amount from the difference between the bone rest and the
+     * current bone pose.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.is_twist_from_rest
+     */
     fun isTwistFromRest(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isTwistFromRestBind, handle, index)
     }
 
+    /**
+     * Sets the rotation to an arbitrary state before twisting for the current bone pose to extract the
+     * twist when `is_twist_from_rest` is `false`. In other words, by calling `set_twist_from` by
+     * `SkeletonModifier3D.modification_processed` of a specific `SkeletonModifier3D`, you can extract
+     * only the twists generated by modifiers processed after that but before this
+     * `BoneTwistDisperser3D`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_twist_from
+     */
     fun setTwistFrom(index: Int, from: Quaternion) {
         ObjectCalls.ptrcallWithIntAndQuaternionArg(setTwistFromBind, handle, index, from)
     }
 
+    /**
+     * Returns the rotation to an arbitrary state before twisting for the current bone pose to extract
+     * the twist when `is_twist_from_rest` is `false`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_twist_from
+     */
     fun getTwistFrom(index: Int): Quaternion {
         return ObjectCalls.ptrcallWithIntArgRetQuaternion(getTwistFromBind, handle, index)
     }
 
+    /**
+     * Sets whether to use automatic amount assignment or to allow manual assignment.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_disperse_mode
+     */
     fun setDisperseMode(index: Int, disperseMode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setDisperseModeBind, handle, index, disperseMode)
     }
 
+    /**
+     * Returns whether to use automatic amount assignment or to allow manual assignment.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_disperse_mode
+     */
     fun getDisperseMode(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getDisperseModeBind, handle, index)
     }
 
+    /**
+     * Sets the position at which to divide the segment between joints for weight assignment when
+     * `get_disperse_mode` is `DISPERSE_MODE_WEIGHTED`. For example, when `weight_position` is `0.5`,
+     * if two bone segments with a length of `1.0` exist between three joints, weights are assigned to
+     * each joint from root to end at ratios of `0.5`, `1.0`, and `0.5`. Then amounts become `0.25`,
+     * `0.75`, and `1.0` respectively.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_weight_position
+     */
     fun setWeightPosition(index: Int, weightPosition: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setWeightPositionBind, handle, index, weightPosition)
     }
 
+    /**
+     * Returns the position at which to divide the segment between joints for weight assignment when
+     * `get_disperse_mode` is `DISPERSE_MODE_WEIGHTED`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_weight_position
+     */
     fun getWeightPosition(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getWeightPositionBind, handle, index)
     }
 
+    /**
+     * Sets the damping curve when `get_disperse_mode` is `DISPERSE_MODE_CUSTOM`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_damping_curve
+     */
     fun setDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the damping curve when `get_disperse_mode` is `DISPERSE_MODE_CUSTOM`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_damping_curve
+     */
     fun getDampingCurve(index: Int): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDampingCurveBind, handle, index))
     }
 
+    /**
+     * Returns the bone name at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_joint_bone_name
+     */
     fun getJointBoneName(index: Int, joint: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
     }
 
+    /**
+     * Returns the bone index at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_joint_bone
+     */
     fun getJointBone(index: Int, joint: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, handle, index, joint)
     }
 
+    /**
+     * Returns the twist amount at `joint` in the bone chain's joint list when `get_disperse_mode` is
+     * `DISPERSE_MODE_CUSTOM`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_joint_twist_amount
+     */
     fun getJointTwistAmount(index: Int, joint: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointTwistAmountBind, handle, index, joint)
     }
 
+    /**
+     * Sets the twist amount at `joint` in the bone chain's joint list when `get_disperse_mode` is
+     * `DISPERSE_MODE_CUSTOM`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.set_joint_twist_amount
+     */
     fun setJointTwistAmount(index: Int, joint: Int, twistAmount: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointTwistAmountBind, handle, index, joint, twistAmount)
     }
 
+    /**
+     * Returns the joint count of the bone chain's joint list.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_joint_count
+     */
     fun getJointCount(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, handle, index)
     }

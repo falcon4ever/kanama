@@ -23,18 +23,38 @@ class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setRectProperty")
         set(value) = setRect(value)
 
+    /**
+     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `COPY_MODE_RECT`.
+     *
+     * Generated from Godot docs: BackBufferCopy.set_rect
+     */
     fun setRect(rect: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setRectBind, handle, rect)
     }
 
+    /**
+     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `COPY_MODE_RECT`.
+     *
+     * Generated from Godot docs: BackBufferCopy.get_rect
+     */
     fun getRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
     }
 
+    /**
+     * Buffer mode.
+     *
+     * Generated from Godot docs: BackBufferCopy.set_copy_mode
+     */
     fun setCopyMode(copyMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setCopyModeBind, handle, copyMode)
     }
 
+    /**
+     * Buffer mode.
+     *
+     * Generated from Godot docs: BackBufferCopy.get_copy_mode
+     */
     fun getCopyMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, handle)
     }

@@ -9,10 +9,21 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ScriptEditorBase
  */
 class ScriptEditorBase(handle: MemorySegment) : VBoxContainer(handle) {
+    /**
+     * Adds an `EditorSyntaxHighlighter` to the open script.
+     *
+     * Generated from Godot docs: ScriptEditorBase.add_syntax_highlighter
+     */
     fun addSyntaxHighlighter(highlighter: EditorSyntaxHighlighter?) {
         ObjectCalls.ptrcallWithObjectArgs(addSyntaxHighlighterBind, handle, listOf(highlighter?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the underlying `Control` used for editing scripts. For text scripts, this is a
+     * `CodeEdit`.
+     *
+     * Generated from Godot docs: ScriptEditorBase.get_base_editor
+     */
     fun getBaseEditor(): Control? {
         return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseEditorBind, handle))
     }

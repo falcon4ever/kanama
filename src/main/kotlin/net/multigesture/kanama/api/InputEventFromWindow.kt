@@ -16,10 +16,20 @@ open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
         @JvmName("setWindowIdProperty")
         set(value) = setWindowId(value)
 
+    /**
+     * The ID of a `Window` that received this event.
+     *
+     * Generated from Godot docs: InputEventFromWindow.set_window_id
+     */
     fun setWindowId(id: Long) {
         ObjectCalls.ptrcallWithLongArg(setWindowIdBind, handle, id)
     }
 
+    /**
+     * The ID of a `Window` that received this event.
+     *
+     * Generated from Godot docs: InputEventFromWindow.get_window_id
+     */
     fun getWindowId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getWindowIdBind, handle)
     }

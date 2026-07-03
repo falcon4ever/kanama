@@ -41,50 +41,136 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    /**
+     * The collision SDF's size in 3D units. To improve SDF quality, the `size` should be set as small
+     * as possible while covering the parts of the scene you need.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The collision SDF's size in 3D units. To improve SDF quality, the `size` should be set as small
+     * as possible while covering the parts of the scene you need.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
+    /**
+     * The bake resolution to use for the signed distance field `texture`. The texture must be baked
+     * again for changes to the `resolution` property to be effective. Higher resolutions have a
+     * greater performance cost and take more time to bake. Higher resolutions also result in larger
+     * baked textures, leading to increased VRAM and storage space requirements. To improve performance
+     * and reduce bake times, use the lowest resolution possible for the object you're representing the
+     * collision of.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_resolution
+     */
     fun setResolution(resolution: Long) {
         ObjectCalls.ptrcallWithLongArg(setResolutionBind, handle, resolution)
     }
 
+    /**
+     * The bake resolution to use for the signed distance field `texture`. The texture must be baked
+     * again for changes to the `resolution` property to be effective. Higher resolutions have a
+     * greater performance cost and take more time to bake. Higher resolutions also result in larger
+     * baked textures, leading to increased VRAM and storage space requirements. To improve performance
+     * and reduce bake times, use the lowest resolution possible for the object you're representing the
+     * collision of.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_resolution
+     */
     fun getResolution(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, handle)
     }
 
+    /**
+     * The 3D texture representing the signed distance field.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_texture
+     */
     fun setTexture(texture: Texture3D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The 3D texture representing the signed distance field.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_texture
+     */
     fun getTexture(): Texture3D? {
         return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
+    /**
+     * The collision shape's thickness. Unlike other particle colliders, `GPUParticlesCollisionSDF3D`
+     * is actually hollow on the inside. `thickness` can be increased to prevent particles from
+     * tunneling through the collision shape at high speeds, or when the `GPUParticlesCollisionSDF3D`
+     * is moved.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_thickness
+     */
     fun setThickness(thickness: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setThicknessBind, handle, thickness)
     }
 
+    /**
+     * The collision shape's thickness. Unlike other particle colliders, `GPUParticlesCollisionSDF3D`
+     * is actually hollow on the inside. `thickness` can be increased to prevent particles from
+     * tunneling through the collision shape at high speeds, or when the `GPUParticlesCollisionSDF3D`
+     * is moved.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_thickness
+     */
     fun getThickness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getThicknessBind, handle)
     }
 
+    /**
+     * The visual layers to account for when baking the particle collision SDF. Only `MeshInstance3D`s
+     * whose `VisualInstance3D.layers` match with this `bake_mask` will be included in the generated
+     * particle collision SDF. By default, all objects are taken into account for the particle
+     * collision SDF baking.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_bake_mask
+     */
     fun setBakeMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, handle, mask)
     }
 
+    /**
+     * The visual layers to account for when baking the particle collision SDF. Only `MeshInstance3D`s
+     * whose `VisualInstance3D.layers` match with this `bake_mask` will be included in the generated
+     * particle collision SDF. By default, all objects are taken into account for the particle
+     * collision SDF baking.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_bake_mask
+     */
     fun getBakeMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, handle)
     }
 
+    /**
+     * Based on `value`, enables or disables the specified layer in the `bake_mask`, given a
+     * `layer_number` between 1 and 32.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_bake_mask_value
+     */
     fun setBakeMaskValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, handle, layerNumber, value)
     }
 
+    /**
+     * Returns whether or not the specified layer of the `bake_mask` is enabled, given a `layer_number`
+     * between 1 and 32.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_bake_mask_value
+     */
     fun getBakeMaskValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, handle, layerNumber)
     }

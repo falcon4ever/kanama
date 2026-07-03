@@ -29,34 +29,76 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
         @JvmName("setAnimPlayerProperty")
         set(value) = setAnimationPlayer(value)
 
+    /**
+     * The root animation node of this `AnimationTree`. See `AnimationRootNode`.
+     *
+     * Generated from Godot docs: AnimationTree.set_tree_root
+     */
     fun setTreeRoot(animationNode: AnimationRootNode?) {
         ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, handle, listOf(animationNode?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The root animation node of this `AnimationTree`. See `AnimationRootNode`.
+     *
+     * Generated from Godot docs: AnimationTree.get_tree_root
+     */
     fun getTreeRoot(): AnimationRootNode? {
         return AnimationRootNode.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, handle))
     }
 
+    /**
+     * The path to the `Node` used to evaluate the `AnimationNode` `Expression` if one is not
+     * explicitly specified internally.
+     *
+     * Generated from Godot docs: AnimationTree.set_advance_expression_base_node
+     */
     fun setAdvanceExpressionBaseNode(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setAdvanceExpressionBaseNodeBind, handle, path)
     }
 
+    /**
+     * The path to the `Node` used to evaluate the `AnimationNode` `Expression` if one is not
+     * explicitly specified internally.
+     *
+     * Generated from Godot docs: AnimationTree.get_advance_expression_base_node
+     */
     fun getAdvanceExpressionBaseNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getAdvanceExpressionBaseNodeBind, handle)
     }
 
+    /**
+     * The path to the `AnimationPlayer` used for animating.
+     *
+     * Generated from Godot docs: AnimationTree.set_animation_player
+     */
     fun setAnimationPlayer(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setAnimationPlayerBind, handle, path)
     }
 
+    /**
+     * The path to the `AnimationPlayer` used for animating.
+     *
+     * Generated from Godot docs: AnimationTree.get_animation_player
+     */
     fun getAnimationPlayer(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPlayerBind, handle)
     }
 
+    /**
+     * Sets the process notification in which to update animations.
+     *
+     * Generated from Godot docs: AnimationTree.set_process_callback
+     */
     fun setProcessCallback(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
     }
 
+    /**
+     * Returns the process notification in which to update animations.
+     *
+     * Generated from Godot docs: AnimationTree.get_process_callback
+     */
     fun getProcessCallback(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
     }

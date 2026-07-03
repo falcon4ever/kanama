@@ -88,174 +88,450 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         @JvmName("setCurrentPathProperty")
         set(value) = setCurrentPath(value)
 
+    /**
+     * Clear all the added filters in the dialog.
+     *
+     * Generated from Godot docs: FileDialog.clear_filters
+     */
     fun clearFilters() {
         ObjectCalls.ptrcallNoArgs(clearFiltersBind, handle)
     }
 
+    /**
+     * Adds a comma-separated file extension `filter` and comma-separated MIME type `mime_type` option
+     * to the `FileDialog` with an optional `description`, which restricts what files can be picked. A
+     * `filter` should be of the form `"filename.extension"`, where filename and extension can be `*`
+     * to match any string. Filters starting with `.` (i.e. empty filenames) are not allowed. For
+     * example, a `filter` of `"*.png, *.jpg"`, a `mime_type` of `image/png, image/jpeg`, and a
+     * `description` of `"Images"` results in filter text "Images (*.png, *.jpg)". Note: Embedded file
+     * dialogs and Windows file dialogs support only file extensions, while Android, Linux, and macOS
+     * file dialogs also support MIME types.
+     *
+     * Generated from Godot docs: FileDialog.add_filter
+     */
     fun addFilter(filter: String, description: String = "", mimeType: String = "") {
         ObjectCalls.ptrcallWithThreeStringArgs(addFilterBind, handle, filter, description, mimeType)
     }
 
+    /**
+     * The available file type filters. Each filter string in the array should be formatted like this:
+     * `*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg`. The description text of the filter is
+     * optional and can be omitted. Both file extensions and MIME type should be always set. Note:
+     * Embedded file dialogs and Windows file dialogs support only file extensions, while Android,
+     * Linux, and macOS file dialogs also support MIME types.
+     *
+     * Generated from Godot docs: FileDialog.set_filters
+     */
     fun setFilters(filters: List<String>) {
         ObjectCalls.ptrcallWithPackedStringListArg(setFiltersBind, handle, filters)
     }
 
+    /**
+     * The available file type filters. Each filter string in the array should be formatted like this:
+     * `*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg`. The description text of the filter is
+     * optional and can be omitted. Both file extensions and MIME type should be always set. Note:
+     * Embedded file dialogs and Windows file dialogs support only file extensions, while Android,
+     * Linux, and macOS file dialogs also support MIME types.
+     *
+     * Generated from Godot docs: FileDialog.get_filters
+     */
     fun getFilters(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFiltersBind, handle)
     }
 
+    /**
+     * Clear the filter for file names.
+     *
+     * Generated from Godot docs: FileDialog.clear_filename_filter
+     */
     fun clearFilenameFilter() {
         ObjectCalls.ptrcallNoArgs(clearFilenameFilterBind, handle)
     }
 
+    /**
+     * The filter for file names (case-insensitive). When set to a non-empty string, only files that
+     * contains the substring will be shown. `filename_filter` can be edited by the user with the
+     * filter button at the top of the file dialog. See also `filters`, which should be used to
+     * restrict the file types that can be selected instead of `filename_filter` which is meant to be
+     * set by the user.
+     *
+     * Generated from Godot docs: FileDialog.set_filename_filter
+     */
     fun setFilenameFilter(filter: String) {
         ObjectCalls.ptrcallWithStringArg(setFilenameFilterBind, handle, filter)
     }
 
+    /**
+     * The filter for file names (case-insensitive). When set to a non-empty string, only files that
+     * contains the substring will be shown. `filename_filter` can be edited by the user with the
+     * filter button at the top of the file dialog. See also `filters`, which should be used to
+     * restrict the file types that can be selected instead of `filename_filter` which is meant to be
+     * set by the user.
+     *
+     * Generated from Godot docs: FileDialog.get_filename_filter
+     */
     fun getFilenameFilter(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getFilenameFilterBind, handle)
     }
 
+    /**
+     * Returns the name of the `OptionButton` or `CheckBox` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.get_option_name
+     */
     fun getOptionName(option: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getOptionNameBind, handle, option)
     }
 
+    /**
+     * Returns an array of values of the `OptionButton` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.get_option_values
+     */
     fun getOptionValues(option: Int): List<String> {
         return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getOptionValuesBind, handle, option)
     }
 
+    /**
+     * Returns the default value index of the `OptionButton` or `CheckBox` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.get_option_default
+     */
     fun getOptionDefault(option: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getOptionDefaultBind, handle, option)
     }
 
+    /**
+     * Sets the name of the `OptionButton` or `CheckBox` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.set_option_name
+     */
     fun setOptionName(option: Int, name: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setOptionNameBind, handle, option, name)
     }
 
+    /**
+     * Sets the option values of the `OptionButton` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.set_option_values
+     */
     fun setOptionValues(option: Int, values: List<String>) {
         ObjectCalls.ptrcallWithIntAndPackedStringListArg(setOptionValuesBind, handle, option, values)
     }
 
+    /**
+     * Sets the default value index of the `OptionButton` or `CheckBox` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.set_option_default
+     */
     fun setOptionDefault(option: Int, defaultValueIndex: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setOptionDefaultBind, handle, option, defaultValueIndex)
     }
 
+    /**
+     * The number of additional `OptionButton`s and `CheckBox`es in the dialog.
+     *
+     * Generated from Godot docs: FileDialog.set_option_count
+     */
     fun setOptionCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setOptionCountBind, handle, count)
     }
 
+    /**
+     * The number of additional `OptionButton`s and `CheckBox`es in the dialog.
+     *
+     * Generated from Godot docs: FileDialog.get_option_count
+     */
     fun getOptionCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOptionCountBind, handle)
     }
 
+    /**
+     * Adds an additional `OptionButton` to the file dialog. If `values` is empty, a `CheckBox` is
+     * added instead. `default_value_index` should be an index of the value in the `values`. If
+     * `values` is empty it should be either `1` (checked), or `0` (unchecked).
+     *
+     * Generated from Godot docs: FileDialog.add_option
+     */
     fun addOption(name: String, values: List<String>, defaultValueIndex: Int) {
         ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(addOptionBind, handle, name, values, defaultValueIndex)
     }
 
+    /**
+     * Returns a `Dictionary` with the selected values of the additional `OptionButton`s and/or
+     * `CheckBox`es. `Dictionary` keys are names and values are selected value indices.
+     *
+     * Generated from Godot docs: FileDialog.get_selected_options
+     */
     fun getSelectedOptions(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getSelectedOptionsBind, handle)
     }
 
+    /**
+     * The current working directory of the file dialog. Note: For native file dialogs, this property
+     * is only treated as a hint and may not be respected by specific OS implementations.
+     *
+     * Generated from Godot docs: FileDialog.get_current_dir
+     */
     fun getCurrentDir(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCurrentDirBind, handle)
     }
 
+    /**
+     * The currently selected file of the file dialog.
+     *
+     * Generated from Godot docs: FileDialog.get_current_file
+     */
     fun getCurrentFile(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCurrentFileBind, handle)
     }
 
+    /**
+     * The currently selected file path of the file dialog.
+     *
+     * Generated from Godot docs: FileDialog.get_current_path
+     */
     fun getCurrentPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCurrentPathBind, handle)
     }
 
+    /**
+     * The current working directory of the file dialog. Note: For native file dialogs, this property
+     * is only treated as a hint and may not be respected by specific OS implementations.
+     *
+     * Generated from Godot docs: FileDialog.set_current_dir
+     */
     fun setCurrentDir(dir: String) {
         ObjectCalls.ptrcallWithStringArg(setCurrentDirBind, handle, dir)
     }
 
+    /**
+     * The currently selected file of the file dialog.
+     *
+     * Generated from Godot docs: FileDialog.set_current_file
+     */
     fun setCurrentFile(file: String) {
         ObjectCalls.ptrcallWithStringArg(setCurrentFileBind, handle, file)
     }
 
+    /**
+     * The currently selected file path of the file dialog.
+     *
+     * Generated from Godot docs: FileDialog.set_current_path
+     */
     fun setCurrentPath(path: String) {
         ObjectCalls.ptrcallWithStringArg(setCurrentPathBind, handle, path)
     }
 
+    /**
+     * If `true`, changing the `file_mode` property will set the window title accordingly (e.g. setting
+     * `file_mode` to `FILE_MODE_OPEN_FILE` will change the window title to "Open a File").
+     *
+     * Generated from Godot docs: FileDialog.set_mode_overrides_title
+     */
     fun setModeOverridesTitle(override: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setModeOverridesTitleBind, handle, override)
     }
 
+    /**
+     * If `true`, changing the `file_mode` property will set the window title accordingly (e.g. setting
+     * `file_mode` to `FILE_MODE_OPEN_FILE` will change the window title to "Open a File").
+     *
+     * Generated from Godot docs: FileDialog.is_mode_overriding_title
+     */
     fun isModeOverridingTitle(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isModeOverridingTitleBind, handle)
     }
 
+    /**
+     * The dialog's open or save mode, which affects the selection behavior.
+     *
+     * Generated from Godot docs: FileDialog.set_file_mode
+     */
     fun setFileMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setFileModeBind, handle, mode)
     }
 
+    /**
+     * The dialog's open or save mode, which affects the selection behavior.
+     *
+     * Generated from Godot docs: FileDialog.get_file_mode
+     */
     fun getFileMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFileModeBind, handle)
     }
 
+    /**
+     * Display mode of the dialog's file list.
+     *
+     * Generated from Godot docs: FileDialog.set_display_mode
+     */
     fun setDisplayMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setDisplayModeBind, handle, mode)
     }
 
+    /**
+     * Display mode of the dialog's file list.
+     *
+     * Generated from Godot docs: FileDialog.get_display_mode
+     */
     fun getDisplayMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDisplayModeBind, handle)
     }
 
+    /**
+     * Returns the vertical box container of the dialog, custom controls can be added to it. Warning:
+     * This is a required internal node, removing and freeing it may cause a crash. If you wish to hide
+     * it or any of its children, use their `CanvasItem.visible` property. Note: Changes to this node
+     * are ignored by native file dialogs, use `add_option` to add custom elements to the dialog
+     * instead.
+     *
+     * Generated from Godot docs: FileDialog.get_vbox
+     */
     fun getVbox(): VBoxContainer? {
         return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVboxBind, handle))
     }
 
+    /**
+     * Returns the LineEdit for the selected file. Warning: This is a required internal node, removing
+     * and freeing it may cause a crash. If you wish to hide it or any of its children, use their
+     * `CanvasItem.visible` property.
+     *
+     * Generated from Godot docs: FileDialog.get_line_edit
+     */
     fun getLineEdit(): LineEdit? {
         return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, handle))
     }
 
+    /**
+     * The file system access scope. Warning: In Web builds, FileDialog cannot access the host file
+     * system. In sandboxed Linux and macOS environments, `use_native_dialog` is automatically used to
+     * allow limited access to host file system.
+     *
+     * Generated from Godot docs: FileDialog.set_access
+     */
     fun setAccess(access: Long) {
         ObjectCalls.ptrcallWithLongArg(setAccessBind, handle, access)
     }
 
+    /**
+     * The file system access scope. Warning: In Web builds, FileDialog cannot access the host file
+     * system. In sandboxed Linux and macOS environments, `use_native_dialog` is automatically used to
+     * allow limited access to host file system.
+     *
+     * Generated from Godot docs: FileDialog.get_access
+     */
     fun getAccess(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAccessBind, handle)
     }
 
+    /**
+     * If non-empty, the given sub-folder will be "root" of this `FileDialog`, i.e. user won't be able
+     * to go to its parent directory. Note: This property is ignored by native file dialogs.
+     *
+     * Generated from Godot docs: FileDialog.set_root_subfolder
+     */
     fun setRootSubfolder(dir: String) {
         ObjectCalls.ptrcallWithStringArg(setRootSubfolderBind, handle, dir)
     }
 
+    /**
+     * If non-empty, the given sub-folder will be "root" of this `FileDialog`, i.e. user won't be able
+     * to go to its parent directory. Note: This property is ignored by native file dialogs.
+     *
+     * Generated from Godot docs: FileDialog.get_root_subfolder
+     */
     fun getRootSubfolder(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getRootSubfolderBind, handle)
     }
 
+    /**
+     * If `true`, the dialog will show hidden files. Note: This property is ignored by native file
+     * dialogs on Android and Linux.
+     *
+     * Generated from Godot docs: FileDialog.set_show_hidden_files
+     */
     fun setShowHiddenFiles(show: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShowHiddenFilesBind, handle, show)
     }
 
+    /**
+     * If `true`, the dialog will show hidden files. Note: This property is ignored by native file
+     * dialogs on Android and Linux.
+     *
+     * Generated from Godot docs: FileDialog.is_showing_hidden_files
+     */
     fun isShowingHiddenFiles(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShowingHiddenFilesBind, handle)
     }
 
+    /**
+     * If `true`, and if supported by the current `DisplayServer`, OS native dialog will be used
+     * instead of custom one. Note: On Android, it is only supported when using `ACCESS_FILESYSTEM`.
+     * For access mode `ACCESS_RESOURCES` and `ACCESS_USERDATA`, the system will fall back to custom
+     * FileDialog. Note: On Linux and macOS, sandboxed apps always use native dialogs to access the
+     * host file system. Note: On macOS, sandboxed apps will save security-scoped bookmarks to retain
+     * access to the opened folders across multiple sessions. Use `OS.get_granted_permissions` to get a
+     * list of saved bookmarks. Note: Native dialogs are isolated from the base process, file dialog
+     * properties can't be modified once the dialog is shown. Note: This property is ignored in
+     * `EditorFileDialog`.
+     *
+     * Generated from Godot docs: FileDialog.set_use_native_dialog
+     */
     fun setUseNativeDialog(native: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseNativeDialogBind, handle, native)
     }
 
+    /**
+     * If `true`, and if supported by the current `DisplayServer`, OS native dialog will be used
+     * instead of custom one. Note: On Android, it is only supported when using `ACCESS_FILESYSTEM`.
+     * For access mode `ACCESS_RESOURCES` and `ACCESS_USERDATA`, the system will fall back to custom
+     * FileDialog. Note: On Linux and macOS, sandboxed apps always use native dialogs to access the
+     * host file system. Note: On macOS, sandboxed apps will save security-scoped bookmarks to retain
+     * access to the opened folders across multiple sessions. Use `OS.get_granted_permissions` to get a
+     * list of saved bookmarks. Note: Native dialogs are isolated from the base process, file dialog
+     * properties can't be modified once the dialog is shown. Note: This property is ignored in
+     * `EditorFileDialog`.
+     *
+     * Generated from Godot docs: FileDialog.get_use_native_dialog
+     */
     fun getUseNativeDialog(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseNativeDialogBind, handle)
     }
 
+    /**
+     * If `true`, shows the recent directories list on the left side of the dialog.
+     *
+     * Generated from Godot docs: FileDialog.set_customization_flag_enabled
+     */
     fun setCustomizationFlagEnabled(flag: Long, enabled: Boolean) {
         ObjectCalls.ptrcallWithLongAndBoolArgs(setCustomizationFlagEnabledBind, handle, flag, enabled)
     }
 
+    /**
+     * If `true`, shows the recent directories list on the left side of the dialog.
+     *
+     * Generated from Godot docs: FileDialog.is_customization_flag_enabled
+     */
     fun isCustomizationFlagEnabled(flag: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(isCustomizationFlagEnabledBind, handle, flag)
     }
 
+    /**
+     * Clear all currently selected items in the dialog.
+     *
+     * Generated from Godot docs: FileDialog.deselect_all
+     */
     fun deselectAll() {
         ObjectCalls.ptrcallNoArgs(deselectAllBind, handle)
     }
 
+    /**
+     * Shows the `FileDialog` using the default size and position for file dialogs, and selects the
+     * file name if there is a current file.
+     *
+     * Generated from Godot docs: FileDialog.popup_file_dialog
+     */
     fun popupFileDialog() {
         ObjectCalls.ptrcallNoArgs(popupFileDialogBind, handle)
     }
@@ -278,26 +554,74 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
     }
 
     companion object {
+        /**
+         * Sets the list of favorite directories, which is shared by all `FileDialog` nodes. Useful to
+         * restore the list of favorites saved with `get_favorite_list`. This method can be called only
+         * from the main thread. Note: `FileDialog` will update its internal `ItemList` of favorites when
+         * its visibility changes. Be sure to call this method earlier if you want your changes to have
+         * effect.
+         *
+         * Generated from Godot docs: FileDialog.set_favorite_list
+         */
         fun setFavoriteList(favorites: List<String>) {
             ObjectCalls.ptrcallWithPackedStringListArg(setFavoriteListBind, MemorySegment.NULL, favorites)
         }
 
+        /**
+         * Returns the list of favorite directories, which is shared by all `FileDialog` nodes. Useful to
+         * store the list of favorites between project sessions. This method can be called only from the
+         * main thread.
+         *
+         * Generated from Godot docs: FileDialog.get_favorite_list
+         */
         fun getFavoriteList(): List<String> {
             return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoriteListBind, MemorySegment.NULL)
         }
 
+        /**
+         * Sets the list of recent directories, which is shared by all `FileDialog` nodes. Useful to
+         * restore the list of recents saved with `set_recent_list`. This method can be called only from
+         * the main thread. Note: `FileDialog` will update its internal `ItemList` of recent directories
+         * when its visibility changes. Be sure to call this method earlier if you want your changes to
+         * have effect.
+         *
+         * Generated from Godot docs: FileDialog.set_recent_list
+         */
         fun setRecentList(recents: List<String>) {
             ObjectCalls.ptrcallWithPackedStringListArg(setRecentListBind, MemorySegment.NULL, recents)
         }
 
+        /**
+         * Returns the list of recent directories, which is shared by all `FileDialog` nodes. Useful to
+         * store the list of recents between project sessions. This method can be called only from the main
+         * thread.
+         *
+         * Generated from Godot docs: FileDialog.get_recent_list
+         */
         fun getRecentList(): List<String> {
             return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentListBind, MemorySegment.NULL)
         }
 
+        /**
+         * Sets the callback used by the `FileDialog` nodes to get a file icon, when `DISPLAY_LIST` mode is
+         * used. The callback should take a single `String` argument (file path), and return a `Texture2D`.
+         * If an invalid texture is returned, the `file` icon will be used instead.
+         *
+         * Generated from Godot docs: FileDialog.set_get_icon_callback
+         */
         fun setGetIconCallback(callback: GodotCallable) {
             ObjectCalls.ptrcallWithCallableArg(setGetIconCallbackBind, MemorySegment.NULL, callback.target.handle, callback.method)
         }
 
+        /**
+         * Sets the callback used by the `FileDialog` nodes to get a file icon, when `DISPLAY_THUMBNAILS`
+         * mode is used. The callback should take a single `String` argument (file path), and return a
+         * `Texture2D`. If an invalid texture is returned, the `file_thumbnail` icon will be used instead.
+         * Thumbnails are usually more complex and may take a while to load. To avoid stalling the
+         * application, you can use `ImageTexture` to asynchronously create the thumbnail.
+         *
+         * Generated from Godot docs: FileDialog.set_get_thumbnail_callback
+         */
         fun setGetThumbnailCallback(callback: GodotCallable) {
             ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, MemorySegment.NULL, callback.target.handle, callback.method)
         }

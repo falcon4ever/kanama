@@ -10,6 +10,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: Texture2DArray
  */
 class Texture2DArray(handle: MemorySegment) : ImageTextureLayered(handle) {
+    /**
+     * Creates a placeholder version of this resource (`PlaceholderTexture2DArray`).
+     *
+     * Generated from Godot docs: Texture2DArray.create_placeholder
+     */
     fun createPlaceholder(): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle))
     }

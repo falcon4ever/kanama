@@ -95,306 +95,794 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
         @JvmName("setItemCountProperty")
         set(value) = setItemCount(value)
 
+    /**
+     * Checks the provided `event` against the `PopupMenu`'s shortcuts and accelerators, and activates
+     * the first item with matching events. If `for_global_only` is `true`, only shortcuts and
+     * accelerators with `global` set to `true` will be called. Returns `true` if an item was
+     * successfully activated. Note: Certain `Control`s, such as `MenuButton`, will call this method
+     * automatically.
+     *
+     * Generated from Godot docs: PopupMenu.activate_item_by_event
+     */
     fun activateItemByEvent(event: InputEvent?, forGlobalOnly: Boolean = false): Boolean {
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(activateItemByEventBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, forGlobalOnly)
     }
 
+    /**
+     * If `true`, `MenuBar` will use native menu when supported. Note: If `PopupMenu` is linked to
+     * `StatusIndicator`, `MenuBar`, or another `PopupMenu` item it can use native menu regardless of
+     * this property, use `is_native_menu` to check it.
+     *
+     * Generated from Godot docs: PopupMenu.set_prefer_native_menu
+     */
     fun setPreferNativeMenu(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPreferNativeMenuBind, handle, enabled)
     }
 
+    /**
+     * If `true`, `MenuBar` will use native menu when supported. Note: If `PopupMenu` is linked to
+     * `StatusIndicator`, `MenuBar`, or another `PopupMenu` item it can use native menu regardless of
+     * this property, use `is_native_menu` to check it.
+     *
+     * Generated from Godot docs: PopupMenu.is_prefer_native_menu
+     */
     fun isPreferNativeMenu(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPreferNativeMenuBind, handle)
     }
 
+    /**
+     * Returns `true` if the system native menu is supported and currently used by this `PopupMenu`.
+     *
+     * Generated from Godot docs: PopupMenu.is_native_menu
+     */
     fun isNativeMenu(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, handle)
     }
 
+    /**
+     * Adds a new item with text `label`. An `id` can optionally be provided, as well as an accelerator
+     * (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is
+     * provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be
+     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
+     * more info on accelerators. Note: The provided `id` is used only in `id_pressed` and `id_focused`
+     * signals. It's not related to the `index` arguments in e.g. `set_item_checked`.
+     *
+     * Generated from Godot docs: PopupMenu.add_item
+     */
     fun addItem(label: String, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, handle, label, id, accel)
     }
 
+    /**
+     * Adds a new item with text `label` and icon `texture`. An `id` can optionally be provided, as
+     * well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If
+     * no `accel` is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`)
+     * will be assigned to the item (which means it won't have any accelerator). See
+     * `get_item_accelerator` for more info on accelerators.
+     *
+     * Generated from Godot docs: PopupMenu.add_icon_item
+     */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
     }
 
+    /**
+     * Adds a new checkable item with text `label`. An `id` can optionally be provided, as well as an
+     * accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel`
+     * is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be
+     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
+     * more info on accelerators. Note: Checkable items just display a checkmark, but don't have any
+     * built-in checking behavior and must be checked/unchecked manually. See `set_item_checked` for
+     * more info on how to control it.
+     *
+     * Generated from Godot docs: PopupMenu.add_check_item
+     */
     fun addCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, handle, label, id, accel)
     }
 
+    /**
+     * Adds a new checkable item with text `label` and icon `texture`. An `id` can optionally be
+     * provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from
+     * the index. If no `accel` is provided, then the default value of 0 (corresponding to
+     * `@GlobalScope.KEY_NONE`) will be assigned to the item (which means it won't have any
+     * accelerator). See `get_item_accelerator` for more info on accelerators. Note: Checkable items
+     * just display a checkmark, but don't have any built-in checking behavior and must be
+     * checked/unchecked manually. See `set_item_checked` for more info on how to control it.
+     *
+     * Generated from Godot docs: PopupMenu.add_icon_check_item
+     */
     fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
     }
 
+    /**
+     * Adds a new radio check button with text `label`. An `id` can optionally be provided, as well as
+     * an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no
+     * `accel` is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will
+     * be assigned to the item (which means it won't have any accelerator). See `get_item_accelerator`
+     * for more info on accelerators. Note: Checkable items just display a checkmark, but don't have
+     * any built-in checking behavior and must be checked/unchecked manually. See `set_item_checked`
+     * for more info on how to control it.
+     *
+     * Generated from Godot docs: PopupMenu.add_radio_check_item
+     */
     fun addRadioCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, handle, label, id, accel)
     }
 
+    /**
+     * Same as `add_icon_check_item`, but uses a radio check button.
+     *
+     * Generated from Godot docs: PopupMenu.add_icon_radio_check_item
+     */
     fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
     }
 
+    /**
+     * Adds a new multistate item with text `label`. Contrarily to normal binary items, multistate
+     * items can have more than two states, as defined by `max_states`. The default value is defined by
+     * `default_state`. An `id` can optionally be provided, as well as an accelerator (`accel`). If no
+     * `id` is provided, one will be created from the index. If no `accel` is provided, then the
+     * default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be assigned to the item
+     * (which means it won't have any accelerator). See `get_item_accelerator` for more info on
+     * accelerators.
+     *
+     * Generated from Godot docs: PopupMenu.add_multistate_item
+     */
     fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Long = 0L) {
         ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, handle, label, maxStates, defaultState, id, accel)
     }
 
+    /**
+     * Adds a `Shortcut`. An `id` can optionally be provided. If no `id` is provided, one will be
+     * created from the index. If `allow_echo` is `true`, the shortcut can be activated with echo
+     * events.
+     *
+     * Generated from Godot docs: PopupMenu.add_shortcut
+     */
     fun addShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
         ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(addShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
     }
 
+    /**
+     * Adds a new item and assigns the specified `Shortcut` and icon `texture` to it. Sets the label of
+     * the checkbox to the `Shortcut`'s name. An `id` can optionally be provided. If no `id` is
+     * provided, one will be created from the index. If `allow_echo` is `true`, the shortcut can be
+     * activated with echo events.
+     *
+     * Generated from Godot docs: PopupMenu.add_icon_shortcut
+     */
     fun addIconShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
         ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(addIconShortcutBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
     }
 
+    /**
+     * Adds a new checkable item and assigns the specified `Shortcut` to it. Sets the label of the
+     * checkbox to the `Shortcut`'s name. An `id` can optionally be provided. If no `id` is provided,
+     * one will be created from the index. Note: Checkable items just display a checkmark, but don't
+     * have any built-in checking behavior and must be checked/unchecked manually. See
+     * `set_item_checked` for more info on how to control it.
+     *
+     * Generated from Godot docs: PopupMenu.add_check_shortcut
+     */
     fun addCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectIntBoolArgs(addCheckShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
+    /**
+     * Adds a new checkable item and assigns the specified `Shortcut` and icon `texture` to it. Sets
+     * the label of the checkbox to the `Shortcut`'s name. An `id` can optionally be provided. If no
+     * `id` is provided, one will be created from the index. Note: Checkable items just display a
+     * checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually.
+     * See `set_item_checked` for more info on how to control it.
+     *
+     * Generated from Godot docs: PopupMenu.add_icon_check_shortcut
+     */
     fun addIconCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconCheckShortcutBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
+    /**
+     * Adds a new radio check button and assigns a `Shortcut` to it. Sets the label of the checkbox to
+     * the `Shortcut`'s name. An `id` can optionally be provided. If no `id` is provided, one will be
+     * created from the index. Note: Checkable items just display a checkmark, but don't have any
+     * built-in checking behavior and must be checked/unchecked manually. See `set_item_checked` for
+     * more info on how to control it.
+     *
+     * Generated from Godot docs: PopupMenu.add_radio_check_shortcut
+     */
     fun addRadioCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectIntBoolArgs(addRadioCheckShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
+    /**
+     * Same as `add_icon_check_shortcut`, but uses a radio check button.
+     *
+     * Generated from Godot docs: PopupMenu.add_icon_radio_check_shortcut
+     */
     fun addIconRadioCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconRadioCheckShortcutBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
+    /**
+     * Adds an item that will act as a submenu of the parent `PopupMenu` node when clicked. The
+     * `submenu` argument must be the name of an existing `PopupMenu` that has been added as a child to
+     * this node. This submenu will be shown when the item is clicked, hovered for long enough, or
+     * activated using the `ui_select` or `ui_right` input actions. An `id` can optionally be provided.
+     * If no `id` is provided, one will be created from the index.
+     *
+     * Generated from Godot docs: PopupMenu.add_submenu_item
+     */
     fun addSubmenuItem(label: String, submenu: String, id: Int = -1) {
         ObjectCalls.ptrcallWithTwoStringAndIntArgs(addSubmenuItemBind, handle, label, submenu, id)
     }
 
+    /**
+     * Adds an item that will act as a submenu of the parent `PopupMenu` node when clicked. This
+     * submenu will be shown when the item is clicked, hovered for long enough, or activated using the
+     * `ui_select` or `ui_right` input actions. `submenu` must be either child of this `PopupMenu` or
+     * has no parent node (in which case it will be automatically added as a child). If the `submenu`
+     * popup has another parent, this method will fail. An `id` can optionally be provided. If no `id`
+     * is provided, one will be created from the index.
+     *
+     * Generated from Godot docs: PopupMenu.add_submenu_node_item
+     */
     fun addSubmenuNodeItem(label: String, submenu: PopupMenu, id: Int = -1) {
         ObjectCalls.ptrcallWithStringObjectIntArgs(addSubmenuNodeItemBind, handle, label, submenu.handle, id)
     }
 
+    /**
+     * Sets the text of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_text
+     */
     fun setItemText(index: Int, text: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, index, text)
     }
 
+    /**
+     * Sets item's text base writing direction.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_text_direction
+     */
     fun setItemTextDirection(index: Int, direction: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, handle, index, direction)
     }
 
+    /**
+     * Sets the language code of the text for the item at the given index to `language`. This is used
+     * for line-breaking and text shaping algorithms. If `language` is empty, the current locale is
+     * used.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_language
+     */
     fun setItemLanguage(index: Int, language: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, handle, index, language)
     }
 
+    /**
+     * Sets the auto translate mode of the item at the given `index`. Items use
+     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `PopupMenu` itself.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_auto_translate_mode
+     */
     fun setItemAutoTranslateMode(index: Int, mode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, index, mode)
     }
 
+    /**
+     * Replaces the `Texture2D` icon of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_icon
+     */
     fun setItemIcon(index: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, index, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Sets the maximum allowed width of the icon for the item at the given `index`. This limit is
+     * applied on top of the default size of the icon and on top of `icon_max_width`. The height is
+     * adjusted according to the icon's ratio.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_icon_max_width
+     */
     fun setItemIconMaxWidth(index: Int, width: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemIconMaxWidthBind, handle, index, width)
     }
 
+    /**
+     * Sets a modulating `Color` of the item's icon at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_icon_modulate
+     */
     fun setItemIconModulate(index: Int, modulate: Color) {
         ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, handle, index, modulate)
     }
 
+    /**
+     * Sets the checkstate status of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_checked
+     */
     fun setItemChecked(index: Int, checked: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemCheckedBind, handle, index, checked)
     }
 
+    /**
+     * Sets the `id` of the item at the given `index`. The `id` is used in `id_pressed` and
+     * `id_focused` signals.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_id
+     */
     fun setItemId(index: Int, id: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, handle, index, id)
     }
 
+    /**
+     * Sets the accelerator of the item at the given `index`. An accelerator is a keyboard shortcut
+     * that can be pressed to trigger the menu button even if it's not currently open. `accel` is
+     * generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL
+     * | KEY_A` (Ctrl + A).
+     *
+     * Generated from Godot docs: PopupMenu.set_item_accelerator
+     */
     fun setItemAccelerator(index: Int, accel: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, handle, index, accel)
     }
 
+    /**
+     * Sets the metadata of an item, which may be of any type. You can later get it with
+     * `get_item_metadata`, which provides a simple way of assigning context data to items.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_metadata
+     */
     fun setItemMetadata(index: Int, metadata: Any?) {
         ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, index, metadata)
     }
 
+    /**
+     * Enables/disables the item at the given `index`. When it is disabled, it can't be selected and
+     * its action can't be invoked.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_disabled
+     */
     fun setItemDisabled(index: Int, disabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, index, disabled)
     }
 
+    /**
+     * Sets the submenu of the item at the given `index`. The submenu is the name of a child
+     * `PopupMenu` node that would be shown when the item is clicked.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_submenu
+     */
     fun setItemSubmenu(index: Int, submenu: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemSubmenuBind, handle, index, submenu)
     }
 
+    /**
+     * Sets the submenu of the item at the given `index`. The submenu is a `PopupMenu` node that would
+     * be shown when the item is clicked. It must either be a child of this `PopupMenu` or has no
+     * parent (in which case it will be automatically added as a child). If the `submenu` popup has
+     * another parent, this method will fail.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_submenu_node
+     */
     fun setItemSubmenuNode(index: Int, submenu: PopupMenu) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemSubmenuNodeBind, handle, index, submenu.handle)
     }
 
+    /**
+     * Mark the item at the given `index` as a separator, which means that it would be displayed as a
+     * line. If `false`, sets the type of the item to plain text.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_as_separator
+     */
     fun setItemAsSeparator(index: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsSeparatorBind, handle, index, enable)
     }
 
+    /**
+     * Sets whether the item at the given `index` has a checkbox. If `false`, sets the type of the item
+     * to plain text. Note: Checkable items just display a checkmark, but don't have any built-in
+     * checking behavior and must be checked/unchecked manually.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_as_checkable
+     */
     fun setItemAsCheckable(index: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsCheckableBind, handle, index, enable)
     }
 
+    /**
+     * Sets the type of the item at the given `index` to radio button. If `false`, sets the type of the
+     * item to plain text.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_as_radio_checkable
+     */
     fun setItemAsRadioCheckable(index: Int, enable: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsRadioCheckableBind, handle, index, enable)
     }
 
+    /**
+     * Sets the `String` tooltip of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_tooltip
+     */
     fun setItemTooltip(index: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, index, tooltip)
     }
 
+    /**
+     * Sets a `Shortcut` for the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_shortcut
+     */
     fun setItemShortcut(index: Int, shortcut: Shortcut?, global: Boolean = false) {
         ObjectCalls.ptrcallWithIntObjectBoolArgs(setItemShortcutBind, handle, index, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, global)
     }
 
+    /**
+     * Sets the horizontal offset of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_indent
+     */
     fun setItemIndent(index: Int, indent: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemIndentBind, handle, index, indent)
     }
 
+    /**
+     * Sets the state of a multistate item. See `add_multistate_item` for details.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_multistate
+     */
     fun setItemMultistate(index: Int, state: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateBind, handle, index, state)
     }
 
+    /**
+     * Sets the max states of a multistate item. See `add_multistate_item` for details.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_multistate_max
+     */
     fun setItemMultistateMax(index: Int, maxStates: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateMaxBind, handle, index, maxStates)
     }
 
+    /**
+     * Disables the `Shortcut` of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_shortcut_disabled
+     */
     fun setItemShortcutDisabled(index: Int, disabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setItemShortcutDisabledBind, handle, index, disabled)
     }
 
+    /**
+     * Changes the index of the item at index `index` to be at index `target_index`. This can be used
+     * to move an item above other items. The moved item will keep the same ID, even if it was
+     * generated from the original index. Note: The indices of any items between index `index` and
+     * index `target_index` will be shifted by one.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_index
+     */
     fun setItemIndex(index: Int, targetIndex: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setItemIndexBind, handle, index, targetIndex)
     }
 
+    /**
+     * Toggles the check state of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.toggle_item_checked
+     */
     fun toggleItemChecked(index: Int) {
         ObjectCalls.ptrcallWithIntArg(toggleItemCheckedBind, handle, index)
     }
 
+    /**
+     * Cycle to the next state of a multistate item. See `add_multistate_item` for details.
+     *
+     * Generated from Godot docs: PopupMenu.toggle_item_multistate
+     */
     fun toggleItemMultistate(index: Int) {
         ObjectCalls.ptrcallWithIntArg(toggleItemMultistateBind, handle, index)
     }
 
+    /**
+     * Returns the text of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_text
+     */
     fun getItemText(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, index)
     }
 
+    /**
+     * Returns item's text base writing direction.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_text_direction
+     */
     fun getItemTextDirection(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, handle, index)
     }
 
+    /**
+     * Returns item's text language code.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_language
+     */
     fun getItemLanguage(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, index)
     }
 
+    /**
+     * Returns the auto translate mode of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_auto_translate_mode
+     */
     fun getItemAutoTranslateMode(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, index)
     }
 
+    /**
+     * Returns the icon of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_icon
+     */
     fun getItemIcon(index: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, index))
     }
 
+    /**
+     * Returns the maximum allowed width of the icon for the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_icon_max_width
+     */
     fun getItemIconMaxWidth(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIconMaxWidthBind, handle, index)
     }
 
+    /**
+     * Returns a `Color` modulating the item's icon at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_icon_modulate
+     */
     fun getItemIconModulate(index: Int): Color {
         return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, handle, index)
     }
 
+    /**
+     * Returns `true` if the item at the given `index` is checked.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_checked
+     */
     fun isItemChecked(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckedBind, handle, index)
     }
 
+    /**
+     * Returns the ID of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_id
+     */
     fun getItemId(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, handle, index)
     }
 
+    /**
+     * Returns the index of the item containing the specified `id`. The index is automatically assigned
+     * to each item by the engine when added and represents the order items will be displayed.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_index
+     */
     fun getItemIndex(id: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, handle, id)
     }
 
+    /**
+     * Returns the accelerator of the item at the given `index`. An accelerator is a keyboard shortcut
+     * that can be pressed to trigger the menu button even if it's not currently open. The return value
+     * is an integer which is generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR
+     * such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). If no accelerator is defined for the specified
+     * `index`, `get_item_accelerator` returns `0` (corresponding to `@GlobalScope.KEY_NONE`).
+     *
+     * Generated from Godot docs: PopupMenu.get_item_accelerator
+     */
     fun getItemAccelerator(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, handle, index)
     }
 
+    /**
+     * Returns the metadata of the specified item, which might be of any type. You can set it with
+     * `set_item_metadata`, which provides a simple way of assigning context data to items.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_metadata
+     */
     fun getItemMetadata(index: Int): Any? {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, index)
     }
 
+    /**
+     * Returns `true` if the item at the given `index` is disabled. When it is disabled it can't be
+     * selected, or its action invoked. See `set_item_disabled` for more info on how to disable an
+     * item.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_disabled
+     */
     fun isItemDisabled(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, index)
     }
 
+    /**
+     * Returns the submenu name of the item at the given `index`. See `add_submenu_item` for more info
+     * on how to add a submenu.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_submenu
+     */
     fun getItemSubmenu(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemSubmenuBind, handle, index)
     }
 
+    /**
+     * Returns the submenu of the item at the given `index`, or `null` if no submenu was added. See
+     * `add_submenu_node_item` for more info on how to add a submenu.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_submenu_node
+     */
     fun getItemSubmenuNode(index: Int): PopupMenu? {
         return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemSubmenuNodeBind, handle, index))
     }
 
+    /**
+     * Returns `true` if the item is a separator. If it is, it will be displayed as a line. See
+     * `add_separator` for more info on how to add a separator.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_separator
+     */
     fun isItemSeparator(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, handle, index)
     }
 
+    /**
+     * Returns `true` if the item at the given `index` is checkable in some way, i.e. if it has a
+     * checkbox or radio button. Note: Checkable items just display a checkmark or radio button, but
+     * don't have any built-in checking behavior and must be checked/unchecked manually.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_checkable
+     */
     fun isItemCheckable(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckableBind, handle, index)
     }
 
+    /**
+     * Returns `true` if the item at the given `index` has radio button-style checkability. Note: This
+     * is purely cosmetic; you must add the logic for checking/unchecking items in radio groups.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_radio_checkable
+     */
     fun isItemRadioCheckable(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemRadioCheckableBind, handle, index)
     }
 
+    /**
+     * Returns `true` if the specified item's shortcut is disabled.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_shortcut_disabled
+     */
     fun isItemShortcutDisabled(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemShortcutDisabledBind, handle, index)
     }
 
+    /**
+     * Returns the tooltip associated with the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_tooltip
+     */
     fun getItemTooltip(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, index)
     }
 
+    /**
+     * Returns the `Shortcut` associated with the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_shortcut
+     */
     fun getItemShortcut(index: Int): Shortcut? {
         return Shortcut.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemShortcutBind, handle, index))
     }
 
+    /**
+     * Returns the horizontal offset of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_indent
+     */
     fun getItemIndent(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndentBind, handle, index)
     }
 
+    /**
+     * Returns the max states of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_multistate_max
+     */
     fun getItemMultistateMax(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateMaxBind, handle, index)
     }
 
+    /**
+     * Returns the state of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_multistate
+     */
     fun getItemMultistate(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateBind, handle, index)
     }
 
+    /**
+     * Sets the currently focused item as the given `index`. Passing `-1` as the index makes so that no
+     * item is focused.
+     *
+     * Generated from Godot docs: PopupMenu.set_focused_item
+     */
     fun setFocusedItem(index: Int) {
         ObjectCalls.ptrcallWithIntArg(setFocusedItemBind, handle, index)
     }
 
+    /**
+     * Returns the index of the currently focused item. Returns `-1` if no item is focused.
+     *
+     * Generated from Godot docs: PopupMenu.get_focused_item
+     */
     fun getFocusedItem(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFocusedItemBind, handle)
     }
 
+    /**
+     * The number of items currently in the list.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_count
+     */
     fun setItemCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
     }
 
+    /**
+     * The number of items currently in the list.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_count
+     */
     fun getItemCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
     }
 
+    /**
+     * Moves the scroll view to make the item at the given `index` visible.
+     *
+     * Generated from Godot docs: PopupMenu.scroll_to_item
+     */
     fun scrollToItem(index: Int) {
         ObjectCalls.ptrcallWithIntArg(scrollToItemBind, handle, index)
     }
 
+    /**
+     * Removes the item at the given `index` from the menu. Note: The indices of items after the
+     * removed item will be shifted by one.
+     *
+     * Generated from Godot docs: PopupMenu.remove_item
+     */
     fun removeItem(index: Int) {
         ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, index)
     }
 
+    /**
+     * Adds a separator between items. Separators also occupy an index, which you can set by using the
+     * `id` parameter. A `label` can optionally be provided, which will appear at the center of the
+     * separator.
+     *
+     * Generated from Godot docs: PopupMenu.add_separator
+     */
     fun addSeparator(label: String = "", id: Int = -1) {
         ObjectCalls.ptrcallWithStringAndIntArg(addSeparatorBind, handle, label, id)
     }
@@ -409,102 +897,261 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
         ObjectCalls.ptrcallWithBoolArg(clearBind, handle, freeSubmenus)
     }
 
+    /**
+     * If `true`, hides the `PopupMenu` when an item is selected.
+     *
+     * Generated from Godot docs: PopupMenu.set_hide_on_item_selection
+     */
     fun setHideOnItemSelection(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideOnItemSelectionBind, handle, enable)
     }
 
+    /**
+     * If `true`, hides the `PopupMenu` when an item is selected.
+     *
+     * Generated from Godot docs: PopupMenu.is_hide_on_item_selection
+     */
     fun isHideOnItemSelection(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHideOnItemSelectionBind, handle)
     }
 
+    /**
+     * If `true`, hides the `PopupMenu` when a checkbox or radio button is selected.
+     *
+     * Generated from Godot docs: PopupMenu.set_hide_on_checkable_item_selection
+     */
     fun setHideOnCheckableItemSelection(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideOnCheckableItemSelectionBind, handle, enable)
     }
 
+    /**
+     * If `true`, hides the `PopupMenu` when a checkbox or radio button is selected.
+     *
+     * Generated from Godot docs: PopupMenu.is_hide_on_checkable_item_selection
+     */
     fun isHideOnCheckableItemSelection(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHideOnCheckableItemSelectionBind, handle)
     }
 
+    /**
+     * If `true`, hides the `PopupMenu` when a state item is selected.
+     *
+     * Generated from Godot docs: PopupMenu.set_hide_on_state_item_selection
+     */
     fun setHideOnStateItemSelection(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHideOnStateItemSelectionBind, handle, enable)
     }
 
+    /**
+     * If `true`, hides the `PopupMenu` when a state item is selected.
+     *
+     * Generated from Godot docs: PopupMenu.is_hide_on_state_item_selection
+     */
     fun isHideOnStateItemSelection(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHideOnStateItemSelectionBind, handle)
     }
 
+    /**
+     * Sets the delay time in seconds for the submenu item to popup on mouse hovering. If the popup
+     * menu is added as a child of another (acting as a submenu), it will inherit the delay time of the
+     * parent menu item. Note: If the mouse is exiting a submenu item with an open submenu and enters a
+     * different submenu item, the submenu popup delay time is affected by the direction of the mouse
+     * movement toward the open submenu. If the mouse is moving toward the submenu, the open submenu
+     * will wait approximately `0.5` seconds before closing, which then allows the hovered submenu item
+     * to open. This additional delay allows the mouse time to move to the open submenu across other
+     * menu items without prematurely closing. If the mouse is not moving toward the open submenu, for
+     * example in a downward direction, the open submenu will close immediately.
+     *
+     * Generated from Godot docs: PopupMenu.set_submenu_popup_delay
+     */
     fun setSubmenuPopupDelay(seconds: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSubmenuPopupDelayBind, handle, seconds)
     }
 
+    /**
+     * Sets the delay time in seconds for the submenu item to popup on mouse hovering. If the popup
+     * menu is added as a child of another (acting as a submenu), it will inherit the delay time of the
+     * parent menu item. Note: If the mouse is exiting a submenu item with an open submenu and enters a
+     * different submenu item, the submenu popup delay time is affected by the direction of the mouse
+     * movement toward the open submenu. If the mouse is moving toward the submenu, the open submenu
+     * will wait approximately `0.5` seconds before closing, which then allows the hovered submenu item
+     * to open. This additional delay allows the mouse time to move to the open submenu across other
+     * menu items without prematurely closing. If the mouse is not moving toward the open submenu, for
+     * example in a downward direction, the open submenu will close immediately.
+     *
+     * Generated from Godot docs: PopupMenu.get_submenu_popup_delay
+     */
     fun getSubmenuPopupDelay(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSubmenuPopupDelayBind, handle)
     }
 
+    /**
+     * If `true`, allows navigating `PopupMenu` with letter keys.
+     *
+     * Generated from Godot docs: PopupMenu.set_allow_search
+     */
     fun setAllowSearch(allow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, handle, allow)
     }
 
+    /**
+     * If `true`, allows navigating `PopupMenu` with letter keys.
+     *
+     * Generated from Godot docs: PopupMenu.get_allow_search
+     */
     fun getAllowSearch(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, handle)
     }
 
+    /**
+     * Returns `true` if the menu is bound to the special system menu.
+     *
+     * Generated from Godot docs: PopupMenu.is_system_menu
+     */
     fun isSystemMenu(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSystemMenuBind, handle)
     }
 
+    /**
+     * If set to one of the values of `NativeMenu.SystemMenus`, this `PopupMenu` is bound to the
+     * special system menu. Only one `PopupMenu` can be bound to each special menu at a time.
+     *
+     * Generated from Godot docs: PopupMenu.set_system_menu
+     */
     fun setSystemMenu(systemMenuId: Long) {
         ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, handle, systemMenuId)
     }
 
+    /**
+     * If set to one of the values of `NativeMenu.SystemMenus`, this `PopupMenu` is bound to the
+     * special system menu. Only one `PopupMenu` can be bound to each special menu at a time.
+     *
+     * Generated from Godot docs: PopupMenu.get_system_menu
+     */
     fun getSystemMenu(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, handle)
     }
 
+    /**
+     * If `true`, shows a search bar at the top of the `PopupMenu` for filtering items. See
+     * `search_bar_min_item_count` for dynamically controlling its visibility based on the number of
+     * items. Note: When enabled, `allow_search` is ignored.
+     *
+     * Generated from Godot docs: PopupMenu.set_search_bar_enabled
+     */
     fun setSearchBarEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, shows a search bar at the top of the `PopupMenu` for filtering items. See
+     * `search_bar_min_item_count` for dynamically controlling its visibility based on the number of
+     * items. Note: When enabled, `allow_search` is ignored.
+     *
+     * Generated from Godot docs: PopupMenu.is_search_bar_enabled
+     */
     fun isSearchBarEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, handle)
     }
 
+    /**
+     * Sets the minimum number of items required for the search bar to be visible. `search_bar_enabled`
+     * must be `true` for this to have any effect. Separator items are not counted.
+     *
+     * Generated from Godot docs: PopupMenu.set_search_bar_min_item_count
+     */
     fun setSearchBarMinItemCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, handle, count)
     }
 
+    /**
+     * Sets the minimum number of items required for the search bar to be visible. `search_bar_enabled`
+     * must be `true` for this to have any effect. Separator items are not counted.
+     *
+     * Generated from Godot docs: PopupMenu.get_search_bar_min_item_count
+     */
     fun getSearchBarMinItemCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, handle)
     }
 
+    /**
+     * If `true`, enables fuzzy searching in the `PopupMenu` search bar. This allows the search results
+     * to include items that almost match the search query, as well items that match the individual
+     * characters of the search query, but not in sequence. Use `search_bar_fuzzy_search_max_misses` to
+     * set the maximum number of mismatches allowed in the search results.
+     *
+     * Generated from Godot docs: PopupMenu.set_search_bar_fuzzy_search_enabled
+     */
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, enables fuzzy searching in the `PopupMenu` search bar. This allows the search results
+     * to include items that almost match the search query, as well items that match the individual
+     * characters of the search query, but not in sequence. Use `search_bar_fuzzy_search_max_misses` to
+     * set the maximum number of mismatches allowed in the search results.
+     *
+     * Generated from Godot docs: PopupMenu.is_search_bar_fuzzy_search_enabled
+     */
     fun isSearchBarFuzzySearchEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, handle)
     }
 
+    /**
+     * Sets the maximum number of mismatches allowed in each search result when fuzzy searching is
+     * enabled for the `PopupMenu` search bar. Any item with more mismatches will be hidden from the
+     * search results.
+     *
+     * Generated from Godot docs: PopupMenu.set_search_bar_fuzzy_search_max_misses
+     */
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
         ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, handle, maxMisses)
     }
 
+    /**
+     * Sets the maximum number of mismatches allowed in each search result when fuzzy searching is
+     * enabled for the `PopupMenu` search bar. Any item with more mismatches will be hidden from the
+     * search results.
+     *
+     * Generated from Godot docs: PopupMenu.get_search_bar_fuzzy_search_max_misses
+     */
     fun getSearchBarFuzzySearchMaxMisses(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, handle)
     }
 
+    /**
+     * If `true`, shrinks `PopupMenu` to minimum height when it's shown.
+     *
+     * Generated from Godot docs: PopupMenu.set_shrink_height
+     */
     fun setShrinkHeight(shrink: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShrinkHeightBind, handle, shrink)
     }
 
+    /**
+     * If `true`, shrinks `PopupMenu` to minimum height when it's shown.
+     *
+     * Generated from Godot docs: PopupMenu.get_shrink_height
+     */
     fun getShrinkHeight(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getShrinkHeightBind, handle)
     }
 
+    /**
+     * If `true`, shrinks `PopupMenu` to minimum width when it's shown.
+     *
+     * Generated from Godot docs: PopupMenu.set_shrink_width
+     */
     fun setShrinkWidth(shrink: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShrinkWidthBind, handle, shrink)
     }
 
+    /**
+     * If `true`, shrinks `PopupMenu` to minimum width when it's shown.
+     *
+     * Generated from Godot docs: PopupMenu.get_shrink_width
+     */
     fun getShrinkWidth(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getShrinkWidthBind, handle)
     }

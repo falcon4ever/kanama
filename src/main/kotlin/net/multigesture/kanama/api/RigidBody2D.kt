@@ -149,234 +149,632 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
         @JvmName("setConstantTorqueProperty")
         set(value) = setConstantTorque(value)
 
+    /**
+     * The body's mass.
+     *
+     * Generated from Godot docs: RigidBody2D.set_mass
+     */
     fun setMass(mass: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
     }
 
+    /**
+     * The body's mass.
+     *
+     * Generated from Godot docs: RigidBody2D.get_mass
+     */
     fun getMass(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
     }
 
+    /**
+     * The body's moment of inertia. This is like mass, but for rotation: it determines how much torque
+     * it takes to rotate the body. The moment of inertia is usually computed automatically from the
+     * mass and the shapes, but this property allows you to set a custom value. If set to `0`, inertia
+     * is automatically computed (default value). Note: This value does not change when inertia is
+     * automatically computed. Use `PhysicsServer2D` to get the computed inertia.
+     *
+     * Generated from Godot docs: RigidBody2D.get_inertia
+     */
     fun getInertia(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInertiaBind, handle)
     }
 
+    /**
+     * The body's moment of inertia. This is like mass, but for rotation: it determines how much torque
+     * it takes to rotate the body. The moment of inertia is usually computed automatically from the
+     * mass and the shapes, but this property allows you to set a custom value. If set to `0`, inertia
+     * is automatically computed (default value). Note: This value does not change when inertia is
+     * automatically computed. Use `PhysicsServer2D` to get the computed inertia.
+     *
+     * Generated from Godot docs: RigidBody2D.set_inertia
+     */
     fun setInertia(inertia: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setInertiaBind, handle, inertia)
     }
 
+    /**
+     * Defines the way the body's center of mass is set.
+     *
+     * Generated from Godot docs: RigidBody2D.set_center_of_mass_mode
+     */
     fun setCenterOfMassMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, handle, mode)
     }
 
+    /**
+     * Defines the way the body's center of mass is set.
+     *
+     * Generated from Godot docs: RigidBody2D.get_center_of_mass_mode
+     */
     fun getCenterOfMassMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, handle)
     }
 
+    /**
+     * The body's custom center of mass, relative to the body's origin position, when
+     * `center_of_mass_mode` is set to `CENTER_OF_MASS_MODE_CUSTOM`. This is the balanced point of the
+     * body, where applied forces only cause linear acceleration. Applying forces outside of the center
+     * of mass causes angular acceleration. When `center_of_mass_mode` is set to
+     * `CENTER_OF_MASS_MODE_AUTO` (default value), the center of mass is automatically determined, but
+     * this does not update the value of `center_of_mass`.
+     *
+     * Generated from Godot docs: RigidBody2D.set_center_of_mass
+     */
     fun setCenterOfMass(centerOfMass: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setCenterOfMassBind, handle, centerOfMass)
     }
 
+    /**
+     * The body's custom center of mass, relative to the body's origin position, when
+     * `center_of_mass_mode` is set to `CENTER_OF_MASS_MODE_CUSTOM`. This is the balanced point of the
+     * body, where applied forces only cause linear acceleration. Applying forces outside of the center
+     * of mass causes angular acceleration. When `center_of_mass_mode` is set to
+     * `CENTER_OF_MASS_MODE_AUTO` (default value), the center of mass is automatically determined, but
+     * this does not update the value of `center_of_mass`.
+     *
+     * Generated from Godot docs: RigidBody2D.get_center_of_mass
+     */
     fun getCenterOfMass(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getCenterOfMassBind, handle)
     }
 
+    /**
+     * The physics material override for the body. If a material is assigned to this property, it will
+     * be used instead of any other physics material, such as an inherited one.
+     *
+     * Generated from Godot docs: RigidBody2D.set_physics_material_override
+     */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
         ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, handle, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The physics material override for the body. If a material is assigned to this property, it will
+     * be used instead of any other physics material, such as an inherited one.
+     *
+     * Generated from Godot docs: RigidBody2D.get_physics_material_override
+     */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
         return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, handle))
     }
 
+    /**
+     * Multiplies the gravity applied to the body. The body's gravity is calculated from the
+     * `ProjectSettings.physics/2d/default_gravity` project setting and/or any additional gravity
+     * vector applied by `Area2D`s.
+     *
+     * Generated from Godot docs: RigidBody2D.set_gravity_scale
+     */
     fun setGravityScale(gravityScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, handle, gravityScale)
     }
 
+    /**
+     * Multiplies the gravity applied to the body. The body's gravity is calculated from the
+     * `ProjectSettings.physics/2d/default_gravity` project setting and/or any additional gravity
+     * vector applied by `Area2D`s.
+     *
+     * Generated from Godot docs: RigidBody2D.get_gravity_scale
+     */
     fun getGravityScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, handle)
     }
 
+    /**
+     * Defines how `linear_damp` is applied.
+     *
+     * Generated from Godot docs: RigidBody2D.set_linear_damp_mode
+     */
     fun setLinearDampMode(linearDampMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, handle, linearDampMode)
     }
 
+    /**
+     * Defines how `linear_damp` is applied.
+     *
+     * Generated from Godot docs: RigidBody2D.get_linear_damp_mode
+     */
     fun getLinearDampMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, handle)
     }
 
+    /**
+     * Defines how `angular_damp` is applied.
+     *
+     * Generated from Godot docs: RigidBody2D.set_angular_damp_mode
+     */
     fun setAngularDampMode(angularDampMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, handle, angularDampMode)
     }
 
+    /**
+     * Defines how `angular_damp` is applied.
+     *
+     * Generated from Godot docs: RigidBody2D.get_angular_damp_mode
+     */
     fun getAngularDampMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, handle)
     }
 
+    /**
+     * Damps the body's movement. By default, the body will use the
+     * `ProjectSettings.physics/2d/default_linear_damp` setting or any value override set by an
+     * `Area2D` the body is in. Depending on `linear_damp_mode`, you can set `linear_damp` to be added
+     * to or to replace the body's damping value. See `ProjectSettings.physics/2d/default_linear_damp`
+     * for more details about damping.
+     *
+     * Generated from Godot docs: RigidBody2D.set_linear_damp
+     */
     fun setLinearDamp(linearDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
     }
 
+    /**
+     * Damps the body's movement. By default, the body will use the
+     * `ProjectSettings.physics/2d/default_linear_damp` setting or any value override set by an
+     * `Area2D` the body is in. Depending on `linear_damp_mode`, you can set `linear_damp` to be added
+     * to or to replace the body's damping value. See `ProjectSettings.physics/2d/default_linear_damp`
+     * for more details about damping.
+     *
+     * Generated from Godot docs: RigidBody2D.get_linear_damp
+     */
     fun getLinearDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
     }
 
+    /**
+     * Damps the body's rotation. By default, the body will use the
+     * `ProjectSettings.physics/2d/default_angular_damp` setting or any value override set by an
+     * `Area2D` the body is in. Depending on `angular_damp_mode`, you can set `angular_damp` to be
+     * added to or to replace the body's damping value. See
+     * `ProjectSettings.physics/2d/default_angular_damp` for more details about damping.
+     *
+     * Generated from Godot docs: RigidBody2D.set_angular_damp
+     */
     fun setAngularDamp(angularDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
     }
 
+    /**
+     * Damps the body's rotation. By default, the body will use the
+     * `ProjectSettings.physics/2d/default_angular_damp` setting or any value override set by an
+     * `Area2D` the body is in. Depending on `angular_damp_mode`, you can set `angular_damp` to be
+     * added to or to replace the body's damping value. See
+     * `ProjectSettings.physics/2d/default_angular_damp` for more details about damping.
+     *
+     * Generated from Godot docs: RigidBody2D.get_angular_damp
+     */
     fun getAngularDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
     }
 
+    /**
+     * The body's linear velocity in pixels per second. Can be used sporadically, but don't set this
+     * every frame, because physics may run in another thread and runs at a different granularity. Use
+     * `_integrate_forces` as your process loop for precise control of the body state.
+     *
+     * Generated from Godot docs: RigidBody2D.set_linear_velocity
+     */
     fun setLinearVelocity(linearVelocity: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setLinearVelocityBind, handle, linearVelocity)
     }
 
+    /**
+     * The body's linear velocity in pixels per second. Can be used sporadically, but don't set this
+     * every frame, because physics may run in another thread and runs at a different granularity. Use
+     * `_integrate_forces` as your process loop for precise control of the body state.
+     *
+     * Generated from Godot docs: RigidBody2D.get_linear_velocity
+     */
     fun getLinearVelocity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getLinearVelocityBind, handle)
     }
 
+    /**
+     * The body's rotational velocity in radians per second.
+     *
+     * Generated from Godot docs: RigidBody2D.set_angular_velocity
+     */
     fun setAngularVelocity(angularVelocity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularVelocityBind, handle, angularVelocity)
     }
 
+    /**
+     * The body's rotational velocity in radians per second.
+     *
+     * Generated from Godot docs: RigidBody2D.get_angular_velocity
+     */
     fun getAngularVelocity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularVelocityBind, handle)
     }
 
+    /**
+     * The maximum number of contacts that will be recorded. Requires a value greater than 0 and
+     * `contact_monitor` to be set to `true` to start to register contacts. Use `get_contact_count` to
+     * retrieve the count or `get_colliding_bodies` to retrieve bodies that have been collided with.
+     * Note: The number of contacts is different from the number of collisions. Collisions between
+     * parallel edges will result in two contacts (one at each end), and collisions between parallel
+     * faces will result in four contacts (one at each corner).
+     *
+     * Generated from Godot docs: RigidBody2D.set_max_contacts_reported
+     */
     fun setMaxContactsReported(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setMaxContactsReportedBind, handle, amount)
     }
 
+    /**
+     * The maximum number of contacts that will be recorded. Requires a value greater than 0 and
+     * `contact_monitor` to be set to `true` to start to register contacts. Use `get_contact_count` to
+     * retrieve the count or `get_colliding_bodies` to retrieve bodies that have been collided with.
+     * Note: The number of contacts is different from the number of collisions. Collisions between
+     * parallel edges will result in two contacts (one at each end), and collisions between parallel
+     * faces will result in four contacts (one at each corner).
+     *
+     * Generated from Godot docs: RigidBody2D.get_max_contacts_reported
+     */
     fun getMaxContactsReported(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxContactsReportedBind, handle)
     }
 
+    /**
+     * Returns the number of contacts this body has with other bodies. By default, this returns 0
+     * unless bodies are configured to monitor contacts (see `contact_monitor`). Note: To retrieve the
+     * colliding bodies, use `get_colliding_bodies`.
+     *
+     * Generated from Godot docs: RigidBody2D.get_contact_count
+     */
     fun getContactCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, handle)
     }
 
+    /**
+     * If `true`, the standard force integration (like gravity or damping) will be disabled for this
+     * body. Other than collision response, the body will only move as determined by the
+     * `_integrate_forces` method, if that virtual method is overridden. Setting this property will
+     * call the method `PhysicsServer2D.body_set_omit_force_integration` internally.
+     *
+     * Generated from Godot docs: RigidBody2D.set_use_custom_integrator
+     */
     fun setUseCustomIntegrator(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, handle, enable)
     }
 
+    /**
+     * If `true`, the standard force integration (like gravity or damping) will be disabled for this
+     * body. Other than collision response, the body will only move as determined by the
+     * `_integrate_forces` method, if that virtual method is overridden. Setting this property will
+     * call the method `PhysicsServer2D.body_set_omit_force_integration` internally.
+     *
+     * Generated from Godot docs: RigidBody2D.is_using_custom_integrator
+     */
     fun isUsingCustomIntegrator(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, handle)
     }
 
+    /**
+     * If `true`, the RigidBody2D will emit signals when it collides with another body. Note: By
+     * default the maximum contacts reported is set to 0, meaning nothing will be recorded, see
+     * `max_contacts_reported`.
+     *
+     * Generated from Godot docs: RigidBody2D.set_contact_monitor
+     */
     fun setContactMonitor(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setContactMonitorBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the RigidBody2D will emit signals when it collides with another body. Note: By
+     * default the maximum contacts reported is set to 0, meaning nothing will be recorded, see
+     * `max_contacts_reported`.
+     *
+     * Generated from Godot docs: RigidBody2D.is_contact_monitor_enabled
+     */
     fun isContactMonitorEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isContactMonitorEnabledBind, handle)
     }
 
+    /**
+     * Continuous collision detection mode. Continuous collision detection tries to predict where a
+     * moving body will collide instead of moving it and correcting its movement after collision.
+     * Continuous collision detection is slower, but more precise and misses fewer collisions with
+     * small, fast-moving objects. Raycasting and shapecasting methods are available.
+     *
+     * Generated from Godot docs: RigidBody2D.set_continuous_collision_detection_mode
+     */
     fun setContinuousCollisionDetectionMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setContinuousCollisionDetectionModeBind, handle, mode)
     }
 
+    /**
+     * Continuous collision detection mode. Continuous collision detection tries to predict where a
+     * moving body will collide instead of moving it and correcting its movement after collision.
+     * Continuous collision detection is slower, but more precise and misses fewer collisions with
+     * small, fast-moving objects. Raycasting and shapecasting methods are available.
+     *
+     * Generated from Godot docs: RigidBody2D.get_continuous_collision_detection_mode
+     */
     fun getContinuousCollisionDetectionMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getContinuousCollisionDetectionModeBind, handle)
     }
 
+    /**
+     * Sets the body's velocity on the given axis. The velocity in the given vector axis will be set as
+     * the given vector length. This is useful for jumping behavior.
+     *
+     * Generated from Godot docs: RigidBody2D.set_axis_velocity
+     */
     fun setAxisVelocity(axisVelocity: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setAxisVelocityBind, handle, axisVelocity)
     }
 
+    /**
+     * Applies a directional impulse without affecting rotation. An impulse is time-independent!
+     * Applying an impulse every frame would result in a framerate-dependent force. For this reason, it
+     * should only be used when simulating one-time impacts (use the "_force" functions otherwise).
+     * This is equivalent to using `apply_impulse` at the body's center of mass.
+     *
+     * Generated from Godot docs: RigidBody2D.apply_central_impulse
+     */
     fun applyCentralImpulse(impulse: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralImpulseBind, handle, impulse)
     }
 
+    /**
+     * Applies a positioned impulse to the body. An impulse is time-independent! Applying an impulse
+     * every frame would result in a framerate-dependent force. For this reason, it should only be used
+     * when simulating one-time impacts (use the "_force" functions otherwise). `position` is the
+     * offset from the body origin in global coordinates.
+     *
+     * Generated from Godot docs: RigidBody2D.apply_impulse
+     */
     fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, handle, impulse, position)
     }
 
+    /**
+     * Applies a rotational impulse to the body without affecting the position. An impulse is
+     * time-independent! Applying an impulse every frame would result in a framerate-dependent force.
+     * For this reason, it should only be used when simulating one-time impacts (use the "_force"
+     * functions otherwise). Note: `inertia` is required for this to work. To have `inertia`, an active
+     * `CollisionShape2D` must be a child of the node, or you can manually set `inertia`.
+     *
+     * Generated from Godot docs: RigidBody2D.apply_torque_impulse
+     */
     fun applyTorqueImpulse(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(applyTorqueImpulseBind, handle, torque)
     }
 
+    /**
+     * Applies a directional force without affecting rotation. A force is time dependent and meant to
+     * be applied every physics update. This is equivalent to using `apply_force` at the body's center
+     * of mass.
+     *
+     * Generated from Godot docs: RigidBody2D.apply_central_force
+     */
     fun applyCentralForce(force: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralForceBind, handle, force)
     }
 
+    /**
+     * Applies a positioned force to the body. A force is time dependent and meant to be applied every
+     * physics update. `position` is the offset from the body origin in global coordinates.
+     *
+     * Generated from Godot docs: RigidBody2D.apply_force
+     */
     fun applyForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, handle, force, position)
     }
 
+    /**
+     * Applies a rotational force without affecting position. A force is time dependent and meant to be
+     * applied every physics update. Note: `inertia` is required for this to work. To have `inertia`,
+     * an active `CollisionShape2D` must be a child of the node, or you can manually set `inertia`.
+     *
+     * Generated from Godot docs: RigidBody2D.apply_torque
+     */
     fun applyTorque(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(applyTorqueBind, handle, torque)
     }
 
+    /**
+     * Adds a constant directional force without affecting rotation that keeps being applied over time
+     * until cleared with `constant_force = Vector2(0, 0)`. This is equivalent to using
+     * `add_constant_force` at the body's center of mass.
+     *
+     * Generated from Godot docs: RigidBody2D.add_constant_central_force
+     */
     fun addConstantCentralForce(force: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(addConstantCentralForceBind, handle, force)
     }
 
+    /**
+     * Adds a constant positioned force to the body that keeps being applied over time until cleared
+     * with `constant_force = Vector2(0, 0)`. `position` is the offset from the body origin in global
+     * coordinates.
+     *
+     * Generated from Godot docs: RigidBody2D.add_constant_force
+     */
     fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, handle, force, position)
     }
 
+    /**
+     * Adds a constant rotational force without affecting position that keeps being applied over time
+     * until cleared with `constant_torque = 0`.
+     *
+     * Generated from Godot docs: RigidBody2D.add_constant_torque
+     */
     fun addConstantTorque(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(addConstantTorqueBind, handle, torque)
     }
 
+    /**
+     * The body's total constant positional forces applied during each physics update. See
+     * `add_constant_force` and `add_constant_central_force`.
+     *
+     * Generated from Godot docs: RigidBody2D.set_constant_force
+     */
     fun setConstantForce(force: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setConstantForceBind, handle, force)
     }
 
+    /**
+     * The body's total constant positional forces applied during each physics update. See
+     * `add_constant_force` and `add_constant_central_force`.
+     *
+     * Generated from Godot docs: RigidBody2D.get_constant_force
+     */
     fun getConstantForce(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getConstantForceBind, handle)
     }
 
+    /**
+     * The body's total constant rotational forces applied during each physics update. See
+     * `add_constant_torque`.
+     *
+     * Generated from Godot docs: RigidBody2D.set_constant_torque
+     */
     fun setConstantTorque(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setConstantTorqueBind, handle, torque)
     }
 
+    /**
+     * The body's total constant rotational forces applied during each physics update. See
+     * `add_constant_torque`.
+     *
+     * Generated from Godot docs: RigidBody2D.get_constant_torque
+     */
     fun getConstantTorque(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstantTorqueBind, handle)
     }
 
+    /**
+     * If `true`, the body will not move and will not calculate forces until woken up by another body
+     * through, for example, a collision, or by using the `apply_impulse` or `apply_force` methods.
+     *
+     * Generated from Godot docs: RigidBody2D.set_sleeping
+     */
     fun setSleeping(sleeping: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSleepingBind, handle, sleeping)
     }
 
+    /**
+     * If `true`, the body will not move and will not calculate forces until woken up by another body
+     * through, for example, a collision, or by using the `apply_impulse` or `apply_force` methods.
+     *
+     * Generated from Godot docs: RigidBody2D.is_sleeping
+     */
     fun isSleeping(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, handle)
     }
 
+    /**
+     * If `true`, the body can enter sleep mode when there is no movement. See `sleeping`.
+     *
+     * Generated from Godot docs: RigidBody2D.set_can_sleep
+     */
     fun setCanSleep(ableToSleep: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, handle, ableToSleep)
     }
 
+    /**
+     * If `true`, the body can enter sleep mode when there is no movement. See `sleeping`.
+     *
+     * Generated from Godot docs: RigidBody2D.is_able_to_sleep
+     */
     fun isAbleToSleep(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, handle)
     }
 
+    /**
+     * If `true`, the body cannot rotate. Gravity and forces only apply linear movement.
+     *
+     * Generated from Godot docs: RigidBody2D.set_lock_rotation_enabled
+     */
     fun setLockRotationEnabled(lockRotation: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLockRotationEnabledBind, handle, lockRotation)
     }
 
+    /**
+     * If `true`, the body cannot rotate. Gravity and forces only apply linear movement.
+     *
+     * Generated from Godot docs: RigidBody2D.is_lock_rotation_enabled
+     */
     fun isLockRotationEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLockRotationEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the body is frozen. Gravity and forces are not applied anymore. See `freeze_mode` to
+     * set the body's behavior when frozen. Note: For a body that is always frozen, use `StaticBody2D`
+     * or `AnimatableBody2D` instead.
+     *
+     * Generated from Godot docs: RigidBody2D.set_freeze_enabled
+     */
     fun setFreezeEnabled(freezeMode: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFreezeEnabledBind, handle, freezeMode)
     }
 
+    /**
+     * If `true`, the body is frozen. Gravity and forces are not applied anymore. See `freeze_mode` to
+     * set the body's behavior when frozen. Note: For a body that is always frozen, use `StaticBody2D`
+     * or `AnimatableBody2D` instead.
+     *
+     * Generated from Godot docs: RigidBody2D.is_freeze_enabled
+     */
     fun isFreezeEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFreezeEnabledBind, handle)
     }
 
+    /**
+     * The body's freeze mode. Determines the body's behavior when `freeze` is `true`. Note: For a body
+     * that is always frozen, use `StaticBody2D` or `AnimatableBody2D` instead.
+     *
+     * Generated from Godot docs: RigidBody2D.set_freeze_mode
+     */
     fun setFreezeMode(freezeMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, handle, freezeMode)
     }
 
+    /**
+     * The body's freeze mode. Determines the body's behavior when `freeze` is `true`. Note: For a body
+     * that is always frozen, use `StaticBody2D` or `AnimatableBody2D` instead.
+     *
+     * Generated from Godot docs: RigidBody2D.get_freeze_mode
+     */
     fun getFreezeMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, handle)
     }
 
+    /**
+     * Returns a list of the bodies colliding with this one. Requires `contact_monitor` to be set to
+     * `true` and `max_contacts_reported` to be set high enough to detect all the collisions. Note: The
+     * result of this test is not immediate after moving objects. For performance, list of collisions
+     * is updated once per frame and before the physics step. Consider using signals instead.
+     *
+     * Generated from Godot docs: RigidBody2D.get_colliding_bodies
+     */
     fun getCollidingBodies(): List<Node2D> {
         return ObjectCalls.ptrcallNoArgsRetTypedNode2DList(getCollidingBodiesBind, handle)
     }

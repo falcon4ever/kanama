@@ -16,10 +16,22 @@ class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setPanProperty")
         set(value) = setPan(value)
 
+    /**
+     * Pan position. Negative values pan the sound to the left, positive pan to the right. Value can
+     * range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectPanner.set_pan
+     */
     fun setPan(cpanume: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPanBind, handle, cpanume)
     }
 
+    /**
+     * Pan position. Negative values pan the sound to the left, positive pan to the right. Value can
+     * range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectPanner.get_pan
+     */
     fun getPan(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, handle)
     }

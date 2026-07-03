@@ -9,62 +9,156 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ScriptBacktrace
  */
 class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the name of the script language that this backtrace was captured from.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_language_name
+     */
     fun getLanguageName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageNameBind, handle)
     }
 
+    /**
+     * Returns `true` if the backtrace has no stack frames.
+     *
+     * Generated from Godot docs: ScriptBacktrace.is_empty
+     */
     fun isEmpty(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
+    /**
+     * Returns the number of stack frames in the backtrace.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_frame_count
+     */
     fun getFrameCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFrameCountBind, handle)
     }
 
+    /**
+     * Returns the name of the function called at the stack frame at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_frame_function
+     */
     fun getFrameFunction(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getFrameFunctionBind, handle, index)
     }
 
+    /**
+     * Returns the file name of the call site represented by the stack frame at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_frame_file
+     */
     fun getFrameFile(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getFrameFileBind, handle, index)
     }
 
+    /**
+     * Returns the line number of the call site represented by the stack frame at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_frame_line
+     */
     fun getFrameLine(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getFrameLineBind, handle, index)
     }
 
+    /**
+     * Returns the number of global variables (e.g. autoload singletons) in the backtrace. Note: This
+     * will be non-zero only if the `include_variables` parameter was `true` when capturing the
+     * backtrace with `Engine.capture_script_backtraces`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_global_variable_count
+     */
     fun getGlobalVariableCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getGlobalVariableCountBind, handle)
     }
 
+    /**
+     * Returns the name of the global variable at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_global_variable_name
+     */
     fun getGlobalVariableName(variableIndex: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getGlobalVariableNameBind, handle, variableIndex)
     }
 
+    /**
+     * Returns the value of the global variable at the specified index. Warning: With GDScript
+     * backtraces, the returned `Variant` will be the variable's actual value, including any object
+     * references. This means that storing the returned `Variant` will prevent any such object from
+     * being deallocated, so it's generally recommended not to do so.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_global_variable_value
+     */
     fun getGlobalVariableValue(variableIndex: Int): Any? {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getGlobalVariableValueBind, handle, variableIndex)
     }
 
+    /**
+     * Returns the number of local variables in the stack frame at the specified index. Note: This will
+     * be non-zero only if the `include_variables` parameter was `true` when capturing the backtrace
+     * with `Engine.capture_script_backtraces`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_local_variable_count
+     */
     fun getLocalVariableCount(frameIndex: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getLocalVariableCountBind, handle, frameIndex)
     }
 
+    /**
+     * Returns the name of the local variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_local_variable_name
+     */
     fun getLocalVariableName(frameIndex: Int, variableIndex: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLocalVariableNameBind, handle, frameIndex, variableIndex)
     }
 
+    /**
+     * Returns the value of the local variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`. Warning: With GDScript backtraces, the returned `Variant` will be
+     * the variable's actual value, including any object references. This means that storing the
+     * returned `Variant` will prevent any such object from being deallocated, so it's generally
+     * recommended not to do so.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_local_variable_value
+     */
     fun getLocalVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLocalVariableValueBind, handle, frameIndex, variableIndex)
     }
 
+    /**
+     * Returns the number of member variables in the stack frame at the specified index. Note: This
+     * will be non-zero only if the `include_variables` parameter was `true` when capturing the
+     * backtrace with `Engine.capture_script_backtraces`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_member_variable_count
+     */
     fun getMemberVariableCount(frameIndex: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, handle, frameIndex)
     }
 
+    /**
+     * Returns the name of the member variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_member_variable_name
+     */
     fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, handle, frameIndex, variableIndex)
     }
 
+    /**
+     * Returns the value of the member variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`. Warning: With GDScript backtraces, the returned `Variant` will be
+     * the variable's actual value, including any object references. This means that storing the
+     * returned `Variant` will prevent any such object from being deallocated, so it's generally
+     * recommended not to do so.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_member_variable_value
+     */
     fun getMemberVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getMemberVariableValueBind, handle, frameIndex, variableIndex)
     }

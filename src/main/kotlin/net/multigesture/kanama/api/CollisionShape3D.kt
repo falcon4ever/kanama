@@ -35,42 +35,103 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setDebugFillProperty")
         set(value) = setEnableDebugFill(value)
 
+    /**
+     * This method does nothing.
+     *
+     * Generated from Godot docs: CollisionShape3D.resource_changed
+     */
     fun resourceChanged(resource: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, handle, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The actual shape owned by this collision shape.
+     *
+     * Generated from Godot docs: CollisionShape3D.set_shape
+     */
     fun setShape(shape: Shape3D?) {
         ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The actual shape owned by this collision shape.
+     *
+     * Generated from Godot docs: CollisionShape3D.get_shape
+     */
     fun getShape(): Shape3D? {
         return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
     }
 
+    /**
+     * A disabled collision shape has no effect in the world. This property should be changed with
+     * `Object.set_deferred`.
+     *
+     * Generated from Godot docs: CollisionShape3D.set_disabled
+     */
     fun setDisabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, enable)
     }
 
+    /**
+     * A disabled collision shape has no effect in the world. This property should be changed with
+     * `Object.set_deferred`.
+     *
+     * Generated from Godot docs: CollisionShape3D.is_disabled
+     */
     fun isDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
     }
 
+    /**
+     * Sets the collision shape's shape to the addition of all its convexed `MeshInstance3D` siblings
+     * geometry.
+     *
+     * Generated from Godot docs: CollisionShape3D.make_convex_from_siblings
+     */
     fun makeConvexFromSiblings() {
         ObjectCalls.ptrcallNoArgs(makeConvexFromSiblingsBind, handle)
     }
 
+    /**
+     * The collision shape color that is displayed in the editor, or in the running project if Debug >
+     * Visible Collision Shapes is checked at the top of the editor. Note: The default value is
+     * `ProjectSettings.debug/shapes/collision/shape_color`. The `Color(0, 0, 0, 0)` value documented
+     * here is a placeholder, and not the actual default debug color.
+     *
+     * Generated from Godot docs: CollisionShape3D.set_debug_color
+     */
     fun setDebugColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setDebugColorBind, handle, color)
     }
 
+    /**
+     * The collision shape color that is displayed in the editor, or in the running project if Debug >
+     * Visible Collision Shapes is checked at the top of the editor. Note: The default value is
+     * `ProjectSettings.debug/shapes/collision/shape_color`. The `Color(0, 0, 0, 0)` value documented
+     * here is a placeholder, and not the actual default debug color.
+     *
+     * Generated from Godot docs: CollisionShape3D.get_debug_color
+     */
     fun getDebugColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, handle)
     }
 
+    /**
+     * If `true`, when the shape is displayed, it will show a solid fill color in addition to its
+     * wireframe.
+     *
+     * Generated from Godot docs: CollisionShape3D.set_enable_debug_fill
+     */
     fun setEnableDebugFill(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, handle, enable)
     }
 
+    /**
+     * If `true`, when the shape is displayed, it will show a solid fill color in addition to its
+     * wireframe.
+     *
+     * Generated from Godot docs: CollisionShape3D.get_enable_debug_fill
+     */
     fun getEnableDebugFill(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, handle)
     }

@@ -58,66 +58,160 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setCurveProperty")
         set(value) = setCurve(value)
 
+    /**
+     * The baseline radius of the tube. The radius of a particular section ring is obtained by
+     * multiplying this radius by the value of the `curve` at the given distance.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The baseline radius of the tube. The radius of a particular section ring is obtained by
+     * multiplying this radius by the value of the `curve` at the given distance.
+     *
+     * Generated from Godot docs: TubeTrailMesh.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * The number of sides on the tube. For example, a value of `5` means the tube will be pentagonal.
+     * Higher values result in a more detailed tube at the cost of performance.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_radial_steps
+     */
     fun setRadialSteps(radialSteps: Int) {
         ObjectCalls.ptrcallWithIntArg(setRadialStepsBind, handle, radialSteps)
     }
 
+    /**
+     * The number of sides on the tube. For example, a value of `5` means the tube will be pentagonal.
+     * Higher values result in a more detailed tube at the cost of performance.
+     *
+     * Generated from Godot docs: TubeTrailMesh.get_radial_steps
+     */
     fun getRadialSteps(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialStepsBind, handle)
     }
 
+    /**
+     * The total number of sections on the tube.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_sections
+     */
     fun setSections(sections: Int) {
         ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
     }
 
+    /**
+     * The total number of sections on the tube.
+     *
+     * Generated from Godot docs: TubeTrailMesh.get_sections
+     */
     fun getSections(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
     }
 
+    /**
+     * The length of a section of the tube.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_section_length
+     */
     fun setSectionLength(sectionLength: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
     }
 
+    /**
+     * The length of a section of the tube.
+     *
+     * Generated from Godot docs: TubeTrailMesh.get_section_length
+     */
     fun getSectionLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
     }
 
+    /**
+     * The number of rings in a section. The `curve` is sampled on each ring to determine its radius.
+     * Higher values result in a more detailed tube at the cost of performance.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_section_rings
+     */
     fun setSectionRings(sectionRings: Int) {
         ObjectCalls.ptrcallWithIntArg(setSectionRingsBind, handle, sectionRings)
     }
 
+    /**
+     * The number of rings in a section. The `curve` is sampled on each ring to determine its radius.
+     * Higher values result in a more detailed tube at the cost of performance.
+     *
+     * Generated from Godot docs: TubeTrailMesh.get_section_rings
+     */
     fun getSectionRings(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionRingsBind, handle)
     }
 
+    /**
+     * If `true`, generates a cap at the top of the tube. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_cap_top
+     */
     fun setCapTop(capTop: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
     }
 
+    /**
+     * If `true`, generates a cap at the top of the tube. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera.
+     *
+     * Generated from Godot docs: TubeTrailMesh.is_cap_top
+     */
     fun isCapTop(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
     }
 
+    /**
+     * If `true`, generates a cap at the bottom of the tube. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_cap_bottom
+     */
     fun setCapBottom(capBottom: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
     }
 
+    /**
+     * If `true`, generates a cap at the bottom of the tube. This can be set to `false` to speed up
+     * generation and rendering when the cap is never seen by the camera.
+     *
+     * Generated from Godot docs: TubeTrailMesh.is_cap_bottom
+     */
     fun isCapBottom(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
     }
 
+    /**
+     * Determines the radius of the tube along its length. The radius of a particular section ring is
+     * obtained by multiplying the baseline `radius` by the value of this curve at the given distance.
+     * For values smaller than `0`, the faces will be inverted. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: TubeTrailMesh.set_curve
+     */
     fun setCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Determines the radius of the tube along its length. The radius of a particular section ring is
+     * obtained by multiplying the baseline `radius` by the value of this curve at the given distance.
+     * For values smaller than `0`, the faces will be inverted. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: TubeTrailMesh.get_curve
+     */
     fun getCurve(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }

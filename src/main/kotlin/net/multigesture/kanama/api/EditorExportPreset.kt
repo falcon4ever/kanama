@@ -18,98 +18,226 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasBind, handle, property)
     }
 
+    /**
+     * Returns array of files to export.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_files_to_export
+     */
     fun getFilesToExport(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesToExportBind, handle)
     }
 
+    /**
+     * Returns a dictionary of files selected in the "Resources" tab of the export dialog. The
+     * dictionary's keys are file paths, and its values are the corresponding export modes: `"strip"`,
+     * `"keep"`, or `"remove"`. See also `get_file_export_mode`.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_customized_files
+     */
     fun getCustomizedFiles(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getCustomizedFilesBind, handle)
     }
 
+    /**
+     * Returns the number of files selected in the "Resources" tab of the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_customized_files_count
+     */
     fun getCustomizedFilesCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCustomizedFilesCountBind, handle)
     }
 
+    /**
+     * Returns `true` if the file at the specified `path` will be exported.
+     *
+     * Generated from Godot docs: EditorExportPreset.has_export_file
+     */
     fun hasExportFile(path: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasExportFileBind, handle, path)
     }
 
+    /**
+     * Returns file export mode for the specified file.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_file_export_mode
+     */
     fun getFileExportMode(path: String, default: Long = 0L): Long {
         return ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, handle, path, default)
     }
 
+    /**
+     * Returns the value of the setting identified by `name` using export preset feature tag overrides
+     * instead of current OS features.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_project_setting
+     */
     fun getProjectSetting(name: String): Any? {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getProjectSettingBind, handle, name)
     }
 
+    /**
+     * Returns this export preset's name.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_preset_name
+     */
     fun getPresetName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPresetNameBind, handle)
     }
 
+    /**
+     * Returns `true` if the "Runnable" toggle is enabled in the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.is_runnable
+     */
     fun isRunnable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRunnableBind, handle)
     }
 
+    /**
+     * Returns `true` if the "Advanced" toggle is enabled in the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.are_advanced_options_enabled
+     */
     fun areAdvancedOptionsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areAdvancedOptionsEnabledBind, handle)
     }
 
+    /**
+     * Returns `true` if the dedicated server export mode is selected in the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.is_dedicated_server
+     */
     fun isDedicatedServer(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDedicatedServerBind, handle)
     }
 
+    /**
+     * Returns export file filter mode selected in the "Resources" tab of the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_export_filter
+     */
     fun getExportFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, handle)
     }
 
+    /**
+     * Returns file filters to include during export.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_include_filter
+     */
     fun getIncludeFilter(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getIncludeFilterBind, handle)
     }
 
+    /**
+     * Returns file filters to exclude during export.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_exclude_filter
+     */
     fun getExcludeFilter(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getExcludeFilterBind, handle)
     }
 
+    /**
+     * Returns a comma-separated list of custom features added to this preset, as a string. See Feature
+     * tags ($DOCS_URL/tutorials/export/feature_tags.html) in the documentation for more information.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_custom_features
+     */
     fun getCustomFeatures(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCustomFeaturesBind, handle)
     }
 
+    /**
+     * Returns the list of packs on which to base a patch export on.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_patches
+     */
     fun getPatches(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPatchesBind, handle)
     }
 
+    /**
+     * Returns export target path.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_export_path
+     */
     fun getExportPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getExportPathBind, handle)
     }
 
+    /**
+     * Returns file filters to include during PCK encryption.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_encryption_in_filter
+     */
     fun getEncryptionInFilter(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionInFilterBind, handle)
     }
 
+    /**
+     * Returns file filters to exclude during PCK encryption.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_encryption_ex_filter
+     */
     fun getEncryptionExFilter(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionExFilterBind, handle)
     }
 
+    /**
+     * Returns `true` if PCK encryption is enabled in the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_encrypt_pck
+     */
     fun getEncryptPck(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEncryptPckBind, handle)
     }
 
+    /**
+     * Returns `true` if PCK directory encryption is enabled in the export dialog.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_encrypt_directory
+     */
     fun getEncryptDirectory(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEncryptDirectoryBind, handle)
     }
 
+    /**
+     * Returns PCK encryption key.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_encryption_key
+     */
     fun getEncryptionKey(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionKeyBind, handle)
     }
 
+    /**
+     * Returns the export mode used by GDScript files. `0` for "Text", `1` for "Binary tokens", and `2`
+     * for "Compressed binary tokens (smaller files)".
+     *
+     * Generated from Godot docs: EditorExportPreset.get_script_export_mode
+     */
     fun getScriptExportMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, handle)
     }
 
+    /**
+     * Returns export option value or value of environment variable if it is set.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_or_env
+     */
     fun getOrEnv(name: String, envVar: String): Any? {
         return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, handle, name, envVar)
     }
 
+    /**
+     * Returns the preset's version number, or fall back to the
+     * `ProjectSettings.application/config/version` project setting if set to an empty string. If
+     * `windows_version` is `true`, formats the returned version number to be compatible with Windows
+     * executable metadata.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_version
+     */
     fun getVersion(name: String, windowsVersion: Boolean): String {
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, handle, name, windowsVersion)
     }

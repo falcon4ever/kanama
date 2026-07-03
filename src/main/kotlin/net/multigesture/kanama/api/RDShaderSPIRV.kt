@@ -9,18 +9,40 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: RDShaderSPIRV
  */
 class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
+    /**
+     * The SPIR-V bytecode for the vertex shader stage.
+     *
+     * Generated from Godot docs: RDShaderSPIRV.set_stage_bytecode
+     */
     fun setStageBytecode(stage: Long, bytecode: ByteArray) {
         ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, handle, stage, bytecode)
     }
 
+    /**
+     * The SPIR-V bytecode for the vertex shader stage.
+     *
+     * Generated from Godot docs: RDShaderSPIRV.get_stage_bytecode
+     */
     fun getStageBytecode(stage: Long): ByteArray {
         return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, handle, stage)
     }
 
+    /**
+     * The compilation error message for the vertex shader stage (set by the SPIR-V compiler and
+     * Godot). If empty, shader compilation was successful.
+     *
+     * Generated from Godot docs: RDShaderSPIRV.set_stage_compile_error
+     */
     fun setStageCompileError(stage: Long, compileError: String) {
         ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, handle, stage, compileError)
     }
 
+    /**
+     * The compilation error message for the vertex shader stage (set by the SPIR-V compiler and
+     * Godot). If empty, shader compilation was successful.
+     *
+     * Generated from Godot docs: RDShaderSPIRV.get_stage_compile_error
+     */
     fun getStageCompileError(stage: Long): String {
         return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, handle, stage)
     }

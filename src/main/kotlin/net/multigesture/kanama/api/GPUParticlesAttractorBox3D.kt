@@ -17,10 +17,20 @@ class GPUParticlesAttractorBox3D(handle: MemorySegment) : GPUParticlesAttractor3
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The attractor box's size in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorBox3D.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The attractor box's size in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorBox3D.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }

@@ -10,42 +10,92 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: TileMapPattern
  */
 class TileMapPattern(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Sets the tile identifiers for the cell at coordinates `coords`. See `TileMap.set_cell`.
+     *
+     * Generated from Godot docs: TileMapPattern.set_cell
+     */
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1) {
         ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, handle, coords, sourceId, atlasCoords, alternativeTile)
     }
 
+    /**
+     * Returns whether the pattern has a tile at the given coordinates.
+     *
+     * Generated from Godot docs: TileMapPattern.has_cell
+     */
     fun hasCell(coords: Vector2i): Boolean {
         return ObjectCalls.ptrcallWithVector2iArgRetBool(hasCellBind, handle, coords)
     }
 
+    /**
+     * Remove the cell at the given coordinates.
+     *
+     * Generated from Godot docs: TileMapPattern.remove_cell
+     */
     fun removeCell(coords: Vector2i, updateSize: Boolean) {
         ObjectCalls.ptrcallWithVector2iAndBoolArg(removeCellBind, handle, coords, updateSize)
     }
 
+    /**
+     * Returns the tile source ID of the cell at `coords`.
+     *
+     * Generated from Godot docs: TileMapPattern.get_cell_source_id
+     */
     fun getCellSourceId(coords: Vector2i): Int {
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, handle, coords)
     }
 
+    /**
+     * Returns the tile atlas coordinates ID of the cell at `coords`.
+     *
+     * Generated from Godot docs: TileMapPattern.get_cell_atlas_coords
+     */
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, handle, coords)
     }
 
+    /**
+     * Returns the tile alternative ID of the cell at `coords`.
+     *
+     * Generated from Godot docs: TileMapPattern.get_cell_alternative_tile
+     */
     fun getCellAlternativeTile(coords: Vector2i): Int {
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, handle, coords)
     }
 
+    /**
+     * Returns the list of used cell coordinates in the pattern.
+     *
+     * Generated from Godot docs: TileMapPattern.get_used_cells
+     */
     fun getUsedCells(): List<Vector2i> {
         return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, handle)
     }
 
+    /**
+     * Returns the size, in cells, of the pattern.
+     *
+     * Generated from Godot docs: TileMapPattern.get_size
+     */
     fun getSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
+    /**
+     * Sets the size of the pattern.
+     *
+     * Generated from Godot docs: TileMapPattern.set_size
+     */
     fun setSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
+    /**
+     * Returns whether the pattern is empty or not.
+     *
+     * Generated from Godot docs: TileMapPattern.is_empty
+     */
     fun isEmpty(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }

@@ -83,206 +83,493 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setDeselectEnabledProperty")
         set(value) = setDeselectEnabled(value)
 
+    /**
+     * Returns the number of tabs.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_count
+     */
     fun getTabCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, handle)
     }
 
+    /**
+     * The current tab index. When set, this index's `Control` node's `visible` property is set to
+     * `true` and all others are set to `false`. A value of `-1` means that no tab is selected.
+     *
+     * Generated from Godot docs: TabContainer.set_current_tab
+     */
     fun setCurrentTab(tabIdx: Int) {
         ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, handle, tabIdx)
     }
 
+    /**
+     * The current tab index. When set, this index's `Control` node's `visible` property is set to
+     * `true` and all others are set to `false`. A value of `-1` means that no tab is selected.
+     *
+     * Generated from Godot docs: TabContainer.get_current_tab
+     */
     fun getCurrentTab(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, handle)
     }
 
+    /**
+     * Returns the previously active tab index.
+     *
+     * Generated from Godot docs: TabContainer.get_previous_tab
+     */
     fun getPreviousTab(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, handle)
     }
 
+    /**
+     * Selects the first available tab with lower index than the currently selected. Returns `true` if
+     * tab selection changed.
+     *
+     * Generated from Godot docs: TabContainer.select_previous_available
+     */
     fun selectPreviousAvailable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, handle)
     }
 
+    /**
+     * Selects the first available tab with greater index than the currently selected. Returns `true`
+     * if tab selection changed.
+     *
+     * Generated from Godot docs: TabContainer.select_next_available
+     */
     fun selectNextAvailable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, handle)
     }
 
+    /**
+     * Returns the child `Control` node located at the active tab index.
+     *
+     * Generated from Godot docs: TabContainer.get_current_tab_control
+     */
     fun getCurrentTabControl(): Control? {
         return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentTabControlBind, handle))
     }
 
+    /**
+     * Returns the `TabBar` contained in this container. Warning: This is a required internal node,
+     * removing and freeing it or editing its tabs may cause a crash. If you wish to edit the tabs, use
+     * the methods provided in `TabContainer`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_bar
+     */
     fun getTabBar(): TabBar? {
         return TabBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTabBarBind, handle))
     }
 
+    /**
+     * Returns the `Control` node from the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_control
+     */
     fun getTabControl(tabIdx: Int): Control? {
         return Control.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabControlBind, handle, tabIdx))
     }
 
+    /**
+     * The position at which tabs will be placed.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_alignment
+     */
     fun setTabAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, handle, alignment)
     }
 
+    /**
+     * The position at which tabs will be placed.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_alignment
+     */
     fun getTabAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, handle)
     }
 
+    /**
+     * The horizontal alignment of the tabs.
+     *
+     * Generated from Godot docs: TabContainer.set_tabs_position
+     */
     fun setTabsPosition(tabsPosition: Long) {
         ObjectCalls.ptrcallWithLongArg(setTabsPositionBind, handle, tabsPosition)
     }
 
+    /**
+     * The horizontal alignment of the tabs.
+     *
+     * Generated from Godot docs: TabContainer.get_tabs_position
+     */
     fun getTabsPosition(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTabsPositionBind, handle)
     }
 
+    /**
+     * If `true`, tabs overflowing this node's width will be hidden, displaying two navigation buttons
+     * instead. Otherwise, this node's minimum size is updated so that all tabs are visible.
+     *
+     * Generated from Godot docs: TabContainer.set_clip_tabs
+     */
     fun setClipTabs(clipTabs: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, handle, clipTabs)
     }
 
+    /**
+     * If `true`, tabs overflowing this node's width will be hidden, displaying two navigation buttons
+     * instead. Otherwise, this node's minimum size is updated so that all tabs are visible.
+     *
+     * Generated from Godot docs: TabContainer.get_clip_tabs
+     */
     fun getClipTabs(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, handle)
     }
 
+    /**
+     * If `true`, tabs are visible. If `false`, tabs' content and titles are hidden.
+     *
+     * Generated from Godot docs: TabContainer.set_tabs_visible
+     */
     fun setTabsVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTabsVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, tabs are visible. If `false`, tabs' content and titles are hidden.
+     *
+     * Generated from Godot docs: TabContainer.are_tabs_visible
+     */
     fun areTabsVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areTabsVisibleBind, handle)
     }
 
+    /**
+     * This doesn't do anything.
+     *
+     * Generated from Godot docs: TabContainer.set_all_tabs_in_front
+     */
     fun setAllTabsInFront(isFront: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllTabsInFrontBind, handle, isFront)
     }
 
+    /**
+     * This doesn't do anything.
+     *
+     * Generated from Godot docs: TabContainer.is_all_tabs_in_front
+     */
     fun isAllTabsInFront(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllTabsInFrontBind, handle)
     }
 
+    /**
+     * Sets a custom title for the tab at index `tab_idx` (tab titles default to the name of the
+     * indexed child node). Set it back to the child's name to make the tab default to it again.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_title
+     */
     fun setTabTitle(tabIdx: Int, title: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, handle, tabIdx, title)
     }
 
+    /**
+     * Returns the title of the tab at index `tab_idx`. Tab titles default to the name of the indexed
+     * child node, but this can be overridden with `set_tab_title`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_title
+     */
     fun getTabTitle(tabIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, handle, tabIdx)
     }
 
+    /**
+     * Sets a custom tooltip text for tab at index `tab_idx`. Note: By default, if the `tooltip` is
+     * empty and the tab text is truncated (not all characters fit into the tab), the title will be
+     * displayed as a tooltip. To hide the tooltip, assign `" "` as the `tooltip` text.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_tooltip
+     */
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, handle, tabIdx, tooltip)
     }
 
+    /**
+     * Returns the tooltip text of the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_tooltip
+     */
     fun getTabTooltip(tabIdx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, handle, tabIdx)
     }
 
+    /**
+     * Sets an icon for the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_icon
+     */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the `Texture2D` for the tab at index `tab_idx` or `null` if the tab has no `Texture2D`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_icon
+     */
     fun getTabIcon(tabIdx: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, handle, tabIdx))
     }
 
+    /**
+     * Sets the maximum allowed width of the icon for the tab at index `tab_idx`. This limit is applied
+     * on top of the default size of the icon and on top of `icon_max_width`. The height is adjusted
+     * according to the icon's ratio.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_icon_max_width
+     */
     fun setTabIconMaxWidth(tabIdx: Int, width: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, handle, tabIdx, width)
     }
 
+    /**
+     * Returns the maximum allowed width of the icon for the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_icon_max_width
+     */
     fun getTabIconMaxWidth(tabIdx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, handle, tabIdx)
     }
 
+    /**
+     * If `disabled` is `true`, disables the tab at index `tab_idx`, making it non-interactable.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_disabled
+     */
     fun setTabDisabled(tabIdx: Int, disabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, handle, tabIdx, disabled)
     }
 
+    /**
+     * Returns `true` if the tab at index `tab_idx` is disabled.
+     *
+     * Generated from Godot docs: TabContainer.is_tab_disabled
+     */
     fun isTabDisabled(tabIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, handle, tabIdx)
     }
 
+    /**
+     * If `hidden` is `true`, hides the tab at index `tab_idx`, making it disappear from the tab area.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_hidden
+     */
     fun setTabHidden(tabIdx: Int, hidden: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, handle, tabIdx, hidden)
     }
 
+    /**
+     * Returns `true` if the tab at index `tab_idx` is hidden.
+     *
+     * Generated from Godot docs: TabContainer.is_tab_hidden
+     */
     fun isTabHidden(tabIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, handle, tabIdx)
     }
 
+    /**
+     * Sets the metadata value for the tab at index `tab_idx`, which can be retrieved later using
+     * `get_tab_metadata`.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_metadata
+     */
     fun setTabMetadata(tabIdx: Int, metadata: Any?) {
         ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, handle, tabIdx, metadata)
     }
 
+    /**
+     * Returns the metadata value set to the tab at index `tab_idx` using `set_tab_metadata`. If no
+     * metadata was previously set, returns `null` by default.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_metadata
+     */
     fun getTabMetadata(tabIdx: Int): Any? {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, handle, tabIdx)
     }
 
+    /**
+     * Sets the button icon from the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_button_icon
+     */
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the button icon from the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_button_icon
+     */
     fun getTabButtonIcon(tabIdx: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, handle, tabIdx))
     }
 
+    /**
+     * Returns the index of the tab at local coordinates `point`. Returns `-1` if the point is outside
+     * the control boundaries or if there's no tab at the queried position.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_idx_at_point
+     */
     fun getTabIdxAtPoint(point: Vector2): Int {
         return ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, handle, point)
     }
 
+    /**
+     * Returns the index of the tab tied to the given `control`. The control must be a child of the
+     * `TabContainer`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_idx_from_control
+     */
     fun getTabIdxFromControl(control: Control): Int {
         return ObjectCalls.ptrcallWithObjectArgRetInt(getTabIdxFromControlBind, handle, control.handle)
     }
 
+    /**
+     * If set on a `Popup` node instance, a popup menu icon appears in the top-right corner of the
+     * `TabContainer` (setting it to `null` will make it go away). Clicking it will expand the `Popup`
+     * node.
+     *
+     * Generated from Godot docs: TabContainer.set_popup
+     */
     fun setPopup(popup: Node) {
         ObjectCalls.ptrcallWithObjectArgs(setPopupBind, handle, listOf(popup.handle))
     }
 
+    /**
+     * Returns the `Popup` node instance if one has been set already with `set_popup`. Warning: This is
+     * a required internal node, removing and freeing it may cause a crash. If you wish to hide it or
+     * any of its children, use their `Window.visible` property.
+     *
+     * Generated from Godot docs: TabContainer.get_popup
+     */
     fun getPopup(): Popup? {
         return Popup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
     }
 
+    /**
+     * If `true`, hovering over a tab while dragging something will switch to that tab. Does not have
+     * effect when hovering another tab to rearrange.
+     *
+     * Generated from Godot docs: TabContainer.set_switch_on_drag_hover
+     */
     fun setSwitchOnDragHover(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, handle, enabled)
     }
 
+    /**
+     * If `true`, hovering over a tab while dragging something will switch to that tab. Does not have
+     * effect when hovering another tab to rearrange.
+     *
+     * Generated from Godot docs: TabContainer.get_switch_on_drag_hover
+     */
     fun getSwitchOnDragHover(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, handle)
     }
 
+    /**
+     * If `true`, tabs can be rearranged with mouse drag.
+     *
+     * Generated from Godot docs: TabContainer.set_drag_to_rearrange_enabled
+     */
     fun setDragToRearrangeEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, tabs can be rearranged with mouse drag.
+     *
+     * Generated from Godot docs: TabContainer.get_drag_to_rearrange_enabled
+     */
     fun getDragToRearrangeEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, handle)
     }
 
+    /**
+     * `TabContainer`s with the same rearrange group ID will allow dragging the tabs between them.
+     * Enable drag with `drag_to_rearrange_enabled`. Setting this to `-1` will disable rearranging
+     * between `TabContainer`s.
+     *
+     * Generated from Godot docs: TabContainer.set_tabs_rearrange_group
+     */
     fun setTabsRearrangeGroup(groupId: Int) {
         ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, handle, groupId)
     }
 
+    /**
+     * `TabContainer`s with the same rearrange group ID will allow dragging the tabs between them.
+     * Enable drag with `drag_to_rearrange_enabled`. Setting this to `-1` will disable rearranging
+     * between `TabContainer`s.
+     *
+     * Generated from Godot docs: TabContainer.get_tabs_rearrange_group
+     */
     fun getTabsRearrangeGroup(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, handle)
     }
 
+    /**
+     * If `true`, child `Control` nodes that are hidden have their minimum size take into account in
+     * the total, instead of only the currently visible one.
+     *
+     * Generated from Godot docs: TabContainer.set_use_hidden_tabs_for_min_size
+     */
     fun setUseHiddenTabsForMinSize(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseHiddenTabsForMinSizeBind, handle, enabled)
     }
 
+    /**
+     * If `true`, child `Control` nodes that are hidden have their minimum size take into account in
+     * the total, instead of only the currently visible one.
+     *
+     * Generated from Godot docs: TabContainer.get_use_hidden_tabs_for_min_size
+     */
     fun getUseHiddenTabsForMinSize(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseHiddenTabsForMinSizeBind, handle)
     }
 
+    /**
+     * The focus access mode for the internal `TabBar` node.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_focus_mode
+     */
     fun setTabFocusMode(focusMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setTabFocusModeBind, handle, focusMode)
     }
 
+    /**
+     * The focus access mode for the internal `TabBar` node.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_focus_mode
+     */
     fun getTabFocusMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTabFocusModeBind, handle)
     }
 
+    /**
+     * If `true`, all tabs can be deselected so that no tab is selected. Click on the `current_tab` to
+     * deselect it. Only the tab header will be shown if no tabs are selected.
+     *
+     * Generated from Godot docs: TabContainer.set_deselect_enabled
+     */
     fun setDeselectEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, all tabs can be deselected so that no tab is selected. Click on the `current_tab` to
+     * deselect it. Only the tab header will be shown if no tabs are selected.
+     *
+     * Generated from Godot docs: TabContainer.get_deselect_enabled
+     */
     fun getDeselectEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, handle)
     }

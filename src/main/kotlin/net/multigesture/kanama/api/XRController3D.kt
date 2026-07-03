@@ -10,22 +10,56 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: XRController3D
  */
 class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
+    /**
+     * Returns `true` if the button with the given `name` is pressed. Note: The current `XRInterface`
+     * defines the `name` for each input. In the case of OpenXR, these are the names of actions in the
+     * current action set.
+     *
+     * Generated from Godot docs: XRController3D.is_button_pressed
+     */
     fun isButtonPressed(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isButtonPressedBind, handle, name)
     }
 
+    /**
+     * Returns a `Variant` for the input with the given `name`. This works for any input type, the
+     * variant will be typed according to the actions configuration. Note: The current `XRInterface`
+     * defines the `name` for each input. In the case of OpenXR, these are the names of actions in the
+     * current action set.
+     *
+     * Generated from Godot docs: XRController3D.get_input
+     */
     fun getInput(name: String): Any? {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, handle, name)
     }
 
+    /**
+     * Returns a numeric value for the input with the given `name`. This is used for triggers and grip
+     * sensors. Note: The current `XRInterface` defines the `name` for each input. In the case of
+     * OpenXR, these are the names of actions in the current action set.
+     *
+     * Generated from Godot docs: XRController3D.get_float
+     */
     fun getFloat(name: String): Double {
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(getFloatBind, handle, name)
     }
 
+    /**
+     * Returns a `Vector2` for the input with the given `name`. This is used for thumbsticks and
+     * thumbpads found on many controllers. Note: The current `XRInterface` defines the `name` for each
+     * input. In the case of OpenXR, these are the names of actions in the current action set.
+     *
+     * Generated from Godot docs: XRController3D.get_vector2
+     */
     fun getVector2(name: String): Vector2 {
         return ObjectCalls.ptrcallWithStringNameArgRetVector2(getVector2Bind, handle, name)
     }
 
+    /**
+     * Returns the hand holding this controller, if known.
+     *
+     * Generated from Godot docs: XRController3D.get_tracker_hand
+     */
     fun getTrackerHand(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, handle)
     }

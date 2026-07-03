@@ -22,18 +22,40 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
         @JvmName("setAxisValueProperty")
         set(value) = setAxisValue(value)
 
+    /**
+     * Axis identifier.
+     *
+     * Generated from Godot docs: InputEventJoypadMotion.set_axis
+     */
     fun setAxis(axis: Long) {
         ObjectCalls.ptrcallWithLongArg(setAxisBind, handle, axis)
     }
 
+    /**
+     * Axis identifier.
+     *
+     * Generated from Godot docs: InputEventJoypadMotion.get_axis
+     */
     fun getAxis(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, handle)
     }
 
+    /**
+     * Current position of the joystick on the given axis. The value ranges from `-1.0` to `1.0`. A
+     * value of `0` means the axis is in its resting position.
+     *
+     * Generated from Godot docs: InputEventJoypadMotion.set_axis_value
+     */
     fun setAxisValue(axisValue: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAxisValueBind, handle, axisValue)
     }
 
+    /**
+     * Current position of the joystick on the given axis. The value ranges from `-1.0` to `1.0`. A
+     * value of `0` means the axis is in its resting position.
+     *
+     * Generated from Godot docs: InputEventJoypadMotion.get_axis_value
+     */
     fun getAxisValue(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAxisValueBind, handle)
     }

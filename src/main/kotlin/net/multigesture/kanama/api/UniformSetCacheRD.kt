@@ -13,6 +13,11 @@ class UniformSetCacheRD(handle: MemorySegment) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
+        /**
+         * Creates/returns a cached uniform set based on the provided uniforms for a given shader.
+         *
+         * Generated from Godot docs: UniformSetCacheRD.get_cache
+         */
         fun getCache(shader: RID, set: Long, uniforms: List<RDUniform>): RID {
             return ObjectCalls.ptrcallWithRIDUInt32ObjectListArgsRetRID(getCacheBind, MemorySegment.NULL, shader, set, uniforms)
         }

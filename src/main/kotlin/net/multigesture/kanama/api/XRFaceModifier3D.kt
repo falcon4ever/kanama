@@ -23,18 +23,38 @@ class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setTargetProperty")
         set(value) = setTarget(value)
 
+    /**
+     * The `XRFaceTracker` path.
+     *
+     * Generated from Godot docs: XRFaceModifier3D.set_face_tracker
+     */
     fun setFaceTracker(trackerName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setFaceTrackerBind, handle, trackerName)
     }
 
+    /**
+     * The `XRFaceTracker` path.
+     *
+     * Generated from Godot docs: XRFaceModifier3D.get_face_tracker
+     */
     fun getFaceTracker(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getFaceTrackerBind, handle)
     }
 
+    /**
+     * The `NodePath` of the face `MeshInstance3D`.
+     *
+     * Generated from Godot docs: XRFaceModifier3D.set_target
+     */
     fun setTarget(target: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTargetBind, handle, target)
     }
 
+    /**
+     * The `NodePath` of the face `MeshInstance3D`.
+     *
+     * Generated from Godot docs: XRFaceModifier3D.get_target
+     */
     fun getTarget(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetBind, handle)
     }

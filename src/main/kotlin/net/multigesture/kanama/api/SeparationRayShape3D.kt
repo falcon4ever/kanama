@@ -22,18 +22,42 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setSlideOnSlopeProperty")
         set(value) = setSlideOnSlope(value)
 
+    /**
+     * The ray's length.
+     *
+     * Generated from Godot docs: SeparationRayShape3D.set_length
+     */
     fun setLength(length: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
     }
 
+    /**
+     * The ray's length.
+     *
+     * Generated from Godot docs: SeparationRayShape3D.get_length
+     */
     fun getLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
+    /**
+     * If `false` (default), the shape always separates and returns a normal along its own direction.
+     * If `true`, the shape can return the correct normal and separate in any direction, allowing
+     * sliding motion on slopes.
+     *
+     * Generated from Godot docs: SeparationRayShape3D.set_slide_on_slope
+     */
     fun setSlideOnSlope(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSlideOnSlopeBind, handle, active)
     }
 
+    /**
+     * If `false` (default), the shape always separates and returns a normal along its own direction.
+     * If `true`, the shape can return the correct normal and separate in any direction, allowing
+     * sliding motion on slopes.
+     *
+     * Generated from Godot docs: SeparationRayShape3D.get_slide_on_slope
+     */
     fun getSlideOnSlope(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getSlideOnSlopeBind, handle)
     }

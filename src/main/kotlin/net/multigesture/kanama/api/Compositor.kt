@@ -16,10 +16,22 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCompositorEffectsProperty")
         set(value) = setCompositorEffects(value)
 
+    /**
+     * The custom `CompositorEffect`s that are applied during rendering of viewports using this
+     * compositor.
+     *
+     * Generated from Godot docs: Compositor.set_compositor_effects
+     */
     fun setCompositorEffects(compositorEffects: List<CompositorEffect>) {
         ObjectCalls.ptrcallWithObjectListArg(setCompositorEffectsBind, handle, compositorEffects)
     }
 
+    /**
+     * The custom `CompositorEffect`s that are applied during rendering of viewports using this
+     * compositor.
+     *
+     * Generated from Godot docs: Compositor.get_compositor_effects
+     */
     fun getCompositorEffects(): List<CompositorEffect> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, handle, CompositorEffect::fromHandle)
     }

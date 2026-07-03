@@ -24,6 +24,12 @@ data class Rect2(
     val size: Vector2,
 ) {
     /** Godot-style fuzzy compare: true if position and size are approximately equal. */
+    /**
+     * Returns `true` if this rectangle and `rect` are approximately equal, by calling
+     * `Vector2.is_equal_approx` on the `position` and the `size`.
+     *
+     * Generated from Godot docs: Rect2.is_equal_approx
+     */
     fun isEqualApprox(other: Rect2): Boolean =
         position.isEqualApprox(other.position) && size.isEqualApprox(other.size)
 

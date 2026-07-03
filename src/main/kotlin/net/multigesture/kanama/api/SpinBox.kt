@@ -58,66 +58,162 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
         @JvmName("setSelectAllOnFocusProperty")
         set(value) = setSelectAllOnFocus(value)
 
+    /**
+     * Changes the alignment of the underlying `LineEdit`.
+     *
+     * Generated from Godot docs: SpinBox.set_horizontal_alignment
+     */
     fun setHorizontalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
+    /**
+     * Changes the alignment of the underlying `LineEdit`.
+     *
+     * Generated from Godot docs: SpinBox.get_horizontal_alignment
+     */
     fun getHorizontalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
+    /**
+     * Adds the specified suffix string after the numerical value of the `SpinBox`.
+     *
+     * Generated from Godot docs: SpinBox.set_suffix
+     */
     fun setSuffix(suffix: String) {
         ObjectCalls.ptrcallWithStringArg(setSuffixBind, handle, suffix)
     }
 
+    /**
+     * Adds the specified suffix string after the numerical value of the `SpinBox`.
+     *
+     * Generated from Godot docs: SpinBox.get_suffix
+     */
     fun getSuffix(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, handle)
     }
 
+    /**
+     * Adds the specified prefix string before the numerical value of the `SpinBox`.
+     *
+     * Generated from Godot docs: SpinBox.set_prefix
+     */
     fun setPrefix(prefix: String) {
         ObjectCalls.ptrcallWithStringArg(setPrefixBind, handle, prefix)
     }
 
+    /**
+     * Adds the specified prefix string before the numerical value of the `SpinBox`.
+     *
+     * Generated from Godot docs: SpinBox.get_prefix
+     */
     fun getPrefix(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPrefixBind, handle)
     }
 
+    /**
+     * If `true`, the `SpinBox` will be editable. Otherwise, it will be read only.
+     *
+     * Generated from Godot docs: SpinBox.set_editable
+     */
     fun setEditable(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enabled)
     }
 
+    /**
+     * If not `0`, sets the step when interacting with the arrow buttons of the `SpinBox`. Note:
+     * `Range.value` will still be rounded to a multiple of `Range.step`.
+     *
+     * Generated from Godot docs: SpinBox.set_custom_arrow_step
+     */
     fun setCustomArrowStep(arrowStep: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCustomArrowStepBind, handle, arrowStep)
     }
 
+    /**
+     * If not `0`, sets the step when interacting with the arrow buttons of the `SpinBox`. Note:
+     * `Range.value` will still be rounded to a multiple of `Range.step`.
+     *
+     * Generated from Godot docs: SpinBox.get_custom_arrow_step
+     */
     fun getCustomArrowStep(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomArrowStepBind, handle)
     }
 
+    /**
+     * If `true`, the value will be rounded to a multiple of `custom_arrow_step` when interacting with
+     * the arrow buttons. Otherwise, increments the value by `custom_arrow_step` and then rounds it
+     * according to `Range.step`.
+     *
+     * Generated from Godot docs: SpinBox.set_custom_arrow_round
+     */
     fun setCustomArrowRound(round: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCustomArrowRoundBind, handle, round)
     }
 
+    /**
+     * If `true`, the value will be rounded to a multiple of `custom_arrow_step` when interacting with
+     * the arrow buttons. Otherwise, increments the value by `custom_arrow_step` and then rounds it
+     * according to `Range.step`.
+     *
+     * Generated from Godot docs: SpinBox.is_custom_arrow_rounding
+     */
     fun isCustomArrowRounding(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCustomArrowRoundingBind, handle)
     }
 
+    /**
+     * If `true`, the `SpinBox` will be editable. Otherwise, it will be read only.
+     *
+     * Generated from Godot docs: SpinBox.is_editable
+     */
     fun isEditable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
     }
 
+    /**
+     * Sets the value of the `Range` for this `SpinBox` when the `LineEdit` text is changed instead of
+     * submitted. See `LineEdit.text_changed` and `LineEdit.text_submitted`. Note: If set to `true`,
+     * this will interfere with entering mathematical expressions in the `SpinBox`. The `SpinBox` will
+     * try to evaluate the expression as you type, which means symbols like a trailing `+` are removed
+     * immediately by the expression being evaluated.
+     *
+     * Generated from Godot docs: SpinBox.set_update_on_text_changed
+     */
     fun setUpdateOnTextChanged(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdateOnTextChangedBind, handle, enabled)
     }
 
+    /**
+     * Sets the value of the `Range` for this `SpinBox` when the `LineEdit` text is changed instead of
+     * submitted. See `LineEdit.text_changed` and `LineEdit.text_submitted`. Note: If set to `true`,
+     * this will interfere with entering mathematical expressions in the `SpinBox`. The `SpinBox` will
+     * try to evaluate the expression as you type, which means symbols like a trailing `+` are removed
+     * immediately by the expression being evaluated.
+     *
+     * Generated from Godot docs: SpinBox.get_update_on_text_changed
+     */
     fun getUpdateOnTextChanged(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdateOnTextChangedBind, handle)
     }
 
+    /**
+     * If `true`, the `SpinBox` will select the whole text when the `LineEdit` gains focus. Clicking
+     * the up and down arrows won't trigger this behavior.
+     *
+     * Generated from Godot docs: SpinBox.set_select_all_on_focus
+     */
     fun setSelectAllOnFocus(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the `SpinBox` will select the whole text when the `LineEdit` gains focus. Clicking
+     * the up and down arrows won't trigger this behavior.
+     *
+     * Generated from Godot docs: SpinBox.is_select_all_on_focus
+     */
     fun isSelectAllOnFocus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, handle)
     }
@@ -133,6 +229,14 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
         ObjectCalls.ptrcallNoArgs(applyBind, handle)
     }
 
+    /**
+     * Returns the `LineEdit` instance from this `SpinBox`. You can use it to access properties and
+     * methods of `LineEdit`. Warning: This is a required internal node, removing and freeing it may
+     * cause a crash. If you wish to hide it or any of its children, use their `CanvasItem.visible`
+     * property.
+     *
+     * Generated from Godot docs: SpinBox.get_line_edit
+     */
     fun getLineEdit(): LineEdit? {
         return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, handle))
     }

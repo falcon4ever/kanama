@@ -21,34 +21,76 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithVector2iArg(createBind, handle, size)
     }
 
+    /**
+     * Creates a bitmap that matches the given image dimensions, every element of the bitmap is set to
+     * `false` if the alpha value of the image at that position is equal to `threshold` or less, and
+     * `true` in other case.
+     *
+     * Generated from Godot docs: BitMap.create_from_image_alpha
+     */
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
         ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, threshold)
     }
 
+    /**
+     * Sets the bitmap's element at the specified position, to the specified value.
+     *
+     * Generated from Godot docs: BitMap.set_bitv
+     */
     fun setBitv(position: Vector2i, bit: Boolean) {
         ObjectCalls.ptrcallWithVector2iAndBoolArg(setBitvBind, handle, position, bit)
     }
 
+    /**
+     * Sets the bitmap's element at the specified position, to the specified value.
+     *
+     * Generated from Godot docs: BitMap.set_bit
+     */
     fun setBit(x: Int, y: Int, bit: Boolean) {
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setBitBind, handle, x, y, bit)
     }
 
+    /**
+     * Returns bitmap's value at the specified position.
+     *
+     * Generated from Godot docs: BitMap.get_bitv
+     */
     fun getBitv(position: Vector2i): Boolean {
         return ObjectCalls.ptrcallWithVector2iArgRetBool(getBitvBind, handle, position)
     }
 
+    /**
+     * Returns bitmap's value at the specified position.
+     *
+     * Generated from Godot docs: BitMap.get_bit
+     */
     fun getBit(x: Int, y: Int): Boolean {
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getBitBind, handle, x, y)
     }
 
+    /**
+     * Sets a rectangular portion of the bitmap to the specified value.
+     *
+     * Generated from Godot docs: BitMap.set_bit_rect
+     */
     fun setBitRect(rect: Rect2i, bit: Boolean) {
         ObjectCalls.ptrcallWithRect2iAndBoolArg(setBitRectBind, handle, rect, bit)
     }
 
+    /**
+     * Returns the number of bitmap elements that are set to `true`.
+     *
+     * Generated from Godot docs: BitMap.get_true_bit_count
+     */
     fun getTrueBitCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTrueBitCountBind, handle)
     }
 
+    /**
+     * Returns bitmap's dimensions.
+     *
+     * Generated from Godot docs: BitMap.get_size
+     */
     fun getSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
@@ -62,14 +104,37 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithVector2iArg(resizeBind, handle, newSize)
     }
 
+    /**
+     * Applies morphological dilation or erosion to the bitmap. If `pixels` is positive, dilation is
+     * applied to the bitmap. If `pixels` is negative, erosion is applied to the bitmap. `rect` defines
+     * the area where the morphological operation is applied. Pixels located outside the `rect` are
+     * unaffected by `grow_mask`.
+     *
+     * Generated from Godot docs: BitMap.grow_mask
+     */
     fun growMask(pixels: Int, rect: Rect2i) {
         ObjectCalls.ptrcallWithIntAndRect2iArg(growMaskBind, handle, pixels, rect)
     }
 
+    /**
+     * Returns an image of the same size as the bitmap and with an `Image.Format` of type
+     * `Image.FORMAT_L8`. `true` bits of the bitmap are being converted into white pixels, and `false`
+     * bits into black.
+     *
+     * Generated from Godot docs: BitMap.convert_to_image
+     */
     fun convertToImage(): Image? {
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, handle))
     }
 
+    /**
+     * Creates an `Array` of polygons covering a rectangular portion of the bitmap. It uses a marching
+     * squares algorithm, followed by Ramer-Douglas-Peucker (RDP) reduction of the number of vertices.
+     * Each polygon is described as a `PackedVector2Array` of its vertices. To get polygons covering
+     * the whole bitmap, pass:
+     *
+     * Generated from Godot docs: BitMap.opaque_to_polygons
+     */
     fun opaqueToPolygons(rect: Rect2i, epsilon: Double = 2.0): List<List<Vector2>> {
         return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(opaqueToPolygonsBind, handle, rect, epsilon)
     }

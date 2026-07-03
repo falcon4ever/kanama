@@ -10,26 +10,63 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: AudioStreamGeneratorPlayback
  */
 class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackResampled(handle) {
+    /**
+     * Pushes a single audio data frame to the buffer. This is usually less efficient than
+     * `push_buffer` in C# and compiled languages via GDExtension, but `push_frame` may be more
+     * efficient in GDScript.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.push_frame
+     */
     fun pushFrame(frame: Vector2): Boolean {
         return ObjectCalls.ptrcallWithVector2ArgRetBool(pushFrameBind, handle, frame)
     }
 
+    /**
+     * Returns `true` if a buffer of the size `amount` can be pushed to the audio sample data buffer
+     * without overflowing it, `false` otherwise.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.can_push_buffer
+     */
     fun canPushBuffer(amount: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(canPushBufferBind, handle, amount)
     }
 
+    /**
+     * Pushes several audio data frames to the buffer. This is usually more efficient than `push_frame`
+     * in C# and compiled languages via GDExtension, but `push_buffer` may be less efficient in
+     * GDScript.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.push_buffer
+     */
     fun pushBuffer(frames: List<Vector2>): Boolean {
         return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(pushBufferBind, handle, frames)
     }
 
+    /**
+     * Returns the number of frames that can be pushed to the audio sample data buffer without
+     * overflowing it. If the result is `0`, the buffer is full.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.get_frames_available
+     */
     fun getFramesAvailable(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
     }
 
+    /**
+     * Returns the number of times the playback skipped due to a buffer underrun in the audio sample
+     * data. This value is reset at the start of the playback.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.get_skips
+     */
     fun getSkips(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSkipsBind, handle)
     }
 
+    /**
+     * Clears the audio sample data buffer.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.clear_buffer
+     */
     fun clearBuffer() {
         ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
     }

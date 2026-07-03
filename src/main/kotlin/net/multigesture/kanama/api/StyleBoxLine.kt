@@ -41,42 +41,96 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
         @JvmName("setVerticalProperty")
         set(value) = setVertical(value)
 
+    /**
+     * The line's color.
+     *
+     * Generated from Godot docs: StyleBoxLine.set_color
+     */
     fun setColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
+    /**
+     * The line's color.
+     *
+     * Generated from Godot docs: StyleBoxLine.get_color
+     */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
+    /**
+     * The line's thickness in pixels.
+     *
+     * Generated from Godot docs: StyleBoxLine.set_thickness
+     */
     fun setThickness(thickness: Int) {
         ObjectCalls.ptrcallWithIntArg(setThicknessBind, handle, thickness)
     }
 
+    /**
+     * The line's thickness in pixels.
+     *
+     * Generated from Godot docs: StyleBoxLine.get_thickness
+     */
     fun getThickness(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getThicknessBind, handle)
     }
 
+    /**
+     * The number of pixels the line will extend before the `StyleBoxLine`'s bounds. If set to a
+     * negative value, the line will begin inside the `StyleBoxLine`'s bounds.
+     *
+     * Generated from Godot docs: StyleBoxLine.set_grow_begin
+     */
     fun setGrowBegin(offset: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGrowBeginBind, handle, offset)
     }
 
+    /**
+     * The number of pixels the line will extend before the `StyleBoxLine`'s bounds. If set to a
+     * negative value, the line will begin inside the `StyleBoxLine`'s bounds.
+     *
+     * Generated from Godot docs: StyleBoxLine.get_grow_begin
+     */
     fun getGrowBegin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBeginBind, handle)
     }
 
+    /**
+     * The number of pixels the line will extend past the `StyleBoxLine`'s bounds. If set to a negative
+     * value, the line will end inside the `StyleBoxLine`'s bounds.
+     *
+     * Generated from Godot docs: StyleBoxLine.set_grow_end
+     */
     fun setGrowEnd(offset: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGrowEndBind, handle, offset)
     }
 
+    /**
+     * The number of pixels the line will extend past the `StyleBoxLine`'s bounds. If set to a negative
+     * value, the line will end inside the `StyleBoxLine`'s bounds.
+     *
+     * Generated from Godot docs: StyleBoxLine.get_grow_end
+     */
     fun getGrowEnd(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowEndBind, handle)
     }
 
+    /**
+     * If `true`, the line will be vertical. If `false`, the line will be horizontal.
+     *
+     * Generated from Godot docs: StyleBoxLine.set_vertical
+     */
     fun setVertical(vertical: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
     }
 
+    /**
+     * If `true`, the line will be vertical. If `false`, the line will be horizontal.
+     *
+     * Generated from Godot docs: StyleBoxLine.is_vertical
+     */
     fun isVertical(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
     }

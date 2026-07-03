@@ -58,66 +58,172 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
         @JvmName("setLoopModeProperty")
         set(value) = setLoopMode(value)
 
+    /**
+     * Animation to use as an output. It is one of the animations provided by
+     * `AnimationTree.anim_player`.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_animation
+     */
     fun setAnimation(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
     }
 
+    /**
+     * Animation to use as an output. It is one of the animations provided by
+     * `AnimationTree.anim_player`.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.get_animation
+     */
     fun getAnimation(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
     }
 
+    /**
+     * Determines the playback direction of the animation.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_play_mode
+     */
     fun setPlayMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setPlayModeBind, handle, mode)
     }
 
+    /**
+     * Determines the playback direction of the animation.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.get_play_mode
+     */
     fun getPlayMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, handle)
     }
 
+    /**
+     * If `true`, on receiving a request to play an animation from the start, the first frame is not
+     * drawn, but only processed, and playback starts from the next frame. See also the notes of
+     * `AnimationPlayer.play`.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_advance_on_start
+     */
     fun setAdvanceOnStart(advanceOnStart: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAdvanceOnStartBind, handle, advanceOnStart)
     }
 
+    /**
+     * If `true`, on receiving a request to play an animation from the start, the first frame is not
+     * drawn, but only processed, and playback starts from the next frame. See also the notes of
+     * `AnimationPlayer.play`.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.is_advance_on_start
+     */
     fun isAdvanceOnStart(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAdvanceOnStartBind, handle)
     }
 
+    /**
+     * If `true`, `AnimationNode` provides an animation based on the `Animation` resource with some
+     * parameters adjusted.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_use_custom_timeline
+     */
     fun setUseCustomTimeline(useCustomTimeline: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseCustomTimelineBind, handle, useCustomTimeline)
     }
 
+    /**
+     * If `true`, `AnimationNode` provides an animation based on the `Animation` resource with some
+     * parameters adjusted.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.is_using_custom_timeline
+     */
     fun isUsingCustomTimeline(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomTimelineBind, handle)
     }
 
+    /**
+     * The length of the custom timeline. If `stretch_time_scale` is `true`, scales the animation to
+     * this length.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_timeline_length
+     */
     fun setTimelineLength(timelineLength: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTimelineLengthBind, handle, timelineLength)
     }
 
+    /**
+     * The length of the custom timeline. If `stretch_time_scale` is `true`, scales the animation to
+     * this length.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.get_timeline_length
+     */
     fun getTimelineLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimelineLengthBind, handle)
     }
 
+    /**
+     * If `true`, scales the time so that the length specified in `timeline_length` is one cycle. This
+     * is useful for matching the periods of walking and running animations. If `false`, the original
+     * animation length is respected. If you set the loop to `loop_mode`, the animation will loop in
+     * `timeline_length`.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_stretch_time_scale
+     */
     fun setStretchTimeScale(stretchTimeScale: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setStretchTimeScaleBind, handle, stretchTimeScale)
     }
 
+    /**
+     * If `true`, scales the time so that the length specified in `timeline_length` is one cycle. This
+     * is useful for matching the periods of walking and running animations. If `false`, the original
+     * animation length is respected. If you set the loop to `loop_mode`, the animation will loop in
+     * `timeline_length`.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.is_stretching_time_scale
+     */
     fun isStretchingTimeScale(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isStretchingTimeScaleBind, handle)
     }
 
+    /**
+     * If `use_custom_timeline` is `true`, offset the start position of the animation. This is useful
+     * for adjusting which foot steps first in 3D walking animations.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_start_offset
+     */
     fun setStartOffset(startOffset: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setStartOffsetBind, handle, startOffset)
     }
 
+    /**
+     * If `use_custom_timeline` is `true`, offset the start position of the animation. This is useful
+     * for adjusting which foot steps first in 3D walking animations.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.get_start_offset
+     */
     fun getStartOffset(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStartOffsetBind, handle)
     }
 
+    /**
+     * If `use_custom_timeline` is `true`, override the loop settings of the original `Animation`
+     * resource with the value. Note: If the `Animation.loop_mode` isn't set to looping, the
+     * `Animation.track_set_interpolation_loop_wrap` option will not be respected. If you cannot get
+     * the expected behavior, consider duplicating the `Animation` resource and changing the loop
+     * settings.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.set_loop_mode
+     */
     fun setLoopMode(loopMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
+    /**
+     * If `use_custom_timeline` is `true`, override the loop settings of the original `Animation`
+     * resource with the value. Note: If the `Animation.loop_mode` isn't set to looping, the
+     * `Animation.track_set_interpolation_loop_wrap` option will not be respected. If you cannot get
+     * the expected behavior, consider duplicating the `Animation` resource and changing the loop
+     * settings.
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.get_loop_mode
+     */
     fun getLoopMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }

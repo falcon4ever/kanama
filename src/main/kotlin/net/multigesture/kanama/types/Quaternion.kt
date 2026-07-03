@@ -72,6 +72,12 @@ data class Quaternion(
     }
 
     /** Godot `Quaternion.is_equal_approx`: per-component fuzzy compare (CMP_EPSILON tolerance). */
+    /**
+     * Returns `true` if this quaternion and `to` are approximately equal, by calling
+     * `@GlobalScope.is_equal_approx` on each component.
+     *
+     * Generated from Godot docs: Quaternion.is_equal_approx
+     */
     fun isEqualApprox(other: Quaternion): Boolean =
         isEqualApprox(x, other.x) && isEqualApprox(y, other.y) &&
             isEqualApprox(z, other.z) && isEqualApprox(w, other.w)

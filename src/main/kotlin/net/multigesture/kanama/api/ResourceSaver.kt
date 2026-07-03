@@ -36,26 +36,57 @@ object ResourceSaver {
         return ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource?.requireOpenHandle() ?: MemorySegment.NULL, path, flags)
     }
 
+    /**
+     * Sets the UID of the given `resource` path to `uid`. You can generate a new UID using
+     * `ResourceUID.create_id`. Since resources will normally get a UID automatically, this method is
+     * only useful in very specific cases.
+     *
+     * Generated from Godot docs: ResourceSaver.set_uid
+     */
     @JvmStatic
     fun setUid(resource: String, uid: Long): Long {
         return ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUidBind, singleton, resource, uid)
     }
 
+    /**
+     * Returns the list of extensions available for saving a resource of a given type.
+     *
+     * Generated from Godot docs: ResourceSaver.get_recognized_extensions
+     */
     @JvmStatic
     fun getRecognizedExtensions(type: Resource?): List<String> {
         return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getRecognizedExtensionsBind, singleton, type?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Registers a new `ResourceFormatSaver`. The ResourceSaver will use the ResourceFormatSaver as
+     * described in `save`. This method is performed implicitly for ResourceFormatSavers written in
+     * GDScript (see `ResourceFormatSaver` for more information).
+     *
+     * Generated from Godot docs: ResourceSaver.add_resource_format_saver
+     */
     @JvmStatic
     fun addResourceFormatSaver(formatSaver: ResourceFormatSaver?, atFront: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(addResourceFormatSaverBind, singleton, formatSaver?.requireOpenHandle() ?: MemorySegment.NULL, atFront)
     }
 
+    /**
+     * Unregisters the given `ResourceFormatSaver`.
+     *
+     * Generated from Godot docs: ResourceSaver.remove_resource_format_saver
+     */
     @JvmStatic
     fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver?) {
         ObjectCalls.ptrcallWithObjectArgs(removeResourceFormatSaverBind, singleton, listOf(formatSaver?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the resource ID for the given path. If `generate` is `true`, a new resource ID will be
+     * generated if one for the path is not found. If `generate` is `false` and the path is not found,
+     * `ResourceUID.INVALID_ID` is returned.
+     *
+     * Generated from Godot docs: ResourceSaver.get_resource_id_for_path
+     */
     @JvmStatic
     fun getResourceIdForPath(path: String, generate: Boolean = false): Long {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(getResourceIdForPathBind, singleton, path, generate)

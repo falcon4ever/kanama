@@ -17,10 +17,22 @@ open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(ha
         @JvmName("setPositionProperty")
         set(value) = setPosition(value)
 
+    /**
+     * The local gesture position relative to the `Viewport`. If used in `Control._gui_input`, the
+     * position is relative to the current `Control` that received this gesture.
+     *
+     * Generated from Godot docs: InputEventGesture.set_position
+     */
     fun setPosition(position: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
+    /**
+     * The local gesture position relative to the `Viewport`. If used in `Control._gui_input`, the
+     * position is relative to the current `Control` that received this gesture.
+     *
+     * Generated from Godot docs: InputEventGesture.get_position
+     */
     fun getPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }

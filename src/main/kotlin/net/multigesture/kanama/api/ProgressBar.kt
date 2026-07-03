@@ -34,34 +34,76 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
         @JvmName("setEditorPreviewIndeterminateProperty")
         set(value) = setEditorPreviewIndeterminate(value)
 
+    /**
+     * The fill direction. See `FillMode` for possible values.
+     *
+     * Generated from Godot docs: ProgressBar.set_fill_mode
+     */
     fun setFillMode(mode: Int) {
         ObjectCalls.ptrcallWithIntArg(setFillModeBind, handle, mode)
     }
 
+    /**
+     * The fill direction. See `FillMode` for possible values.
+     *
+     * Generated from Godot docs: ProgressBar.get_fill_mode
+     */
     fun getFillMode(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, handle)
     }
 
+    /**
+     * If `true`, the fill percentage is displayed on the bar.
+     *
+     * Generated from Godot docs: ProgressBar.set_show_percentage
+     */
     fun setShowPercentage(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShowPercentageBind, handle, visible)
     }
 
+    /**
+     * If `true`, the fill percentage is displayed on the bar.
+     *
+     * Generated from Godot docs: ProgressBar.is_percentage_shown
+     */
     fun isPercentageShown(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPercentageShownBind, handle)
     }
 
+    /**
+     * When set to `true`, the progress bar indicates that something is happening with an animation,
+     * but does not show the fill percentage or value.
+     *
+     * Generated from Godot docs: ProgressBar.set_indeterminate
+     */
     fun setIndeterminate(indeterminate: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setIndeterminateBind, handle, indeterminate)
     }
 
+    /**
+     * When set to `true`, the progress bar indicates that something is happening with an animation,
+     * but does not show the fill percentage or value.
+     *
+     * Generated from Godot docs: ProgressBar.is_indeterminate
+     */
     fun isIndeterminate(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isIndeterminateBind, handle)
     }
 
+    /**
+     * If `false`, the `indeterminate` animation will be paused in the editor.
+     *
+     * Generated from Godot docs: ProgressBar.set_editor_preview_indeterminate
+     */
     fun setEditorPreviewIndeterminate(previewIndeterminate: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditorPreviewIndeterminateBind, handle, previewIndeterminate)
     }
 
+    /**
+     * If `false`, the `indeterminate` animation will be paused in the editor.
+     *
+     * Generated from Godot docs: ProgressBar.is_editor_preview_indeterminate_enabled
+     */
     fun isEditorPreviewIndeterminateEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditorPreviewIndeterminateEnabledBind, handle)
     }

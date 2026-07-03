@@ -17,14 +17,29 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The size of each texture layer (in pixels).
+     *
+     * Generated from Godot docs: PlaceholderTextureLayered.set_size
+     */
     fun setSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
+    /**
+     * The size of each texture layer (in pixels).
+     *
+     * Generated from Godot docs: PlaceholderTextureLayered.get_size
+     */
     fun getSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
+    /**
+     * The number of layers in the texture array.
+     *
+     * Generated from Godot docs: PlaceholderTextureLayered.set_layers
+     */
     fun setLayers(layers: Int) {
         ObjectCalls.ptrcallWithIntArg(setLayersBind, handle, layers)
     }

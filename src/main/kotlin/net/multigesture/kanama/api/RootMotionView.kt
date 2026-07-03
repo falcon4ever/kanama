@@ -42,42 +42,96 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
         @JvmName("setZeroYProperty")
         set(value) = setZeroY(value)
 
+    /**
+     * Path to an `AnimationMixer` node to use as a basis for root motion.
+     *
+     * Generated from Godot docs: RootMotionView.set_animation_path
+     */
     fun setAnimationPath(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setAnimationPathBind, handle, path)
     }
 
+    /**
+     * Path to an `AnimationMixer` node to use as a basis for root motion.
+     *
+     * Generated from Godot docs: RootMotionView.get_animation_path
+     */
     fun getAnimationPath(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPathBind, handle)
     }
 
+    /**
+     * The grid's color.
+     *
+     * Generated from Godot docs: RootMotionView.set_color
+     */
     fun setColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
+    /**
+     * The grid's color.
+     *
+     * Generated from Godot docs: RootMotionView.get_color
+     */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
+    /**
+     * The grid's cell size in 3D units.
+     *
+     * Generated from Godot docs: RootMotionView.set_cell_size
+     */
     fun setCellSize(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, size)
     }
 
+    /**
+     * The grid's cell size in 3D units.
+     *
+     * Generated from Godot docs: RootMotionView.get_cell_size
+     */
     fun getCellSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
+    /**
+     * The grid's radius in 3D units. The grid's opacity will fade gradually as the distance from the
+     * origin increases until this `radius` is reached.
+     *
+     * Generated from Godot docs: RootMotionView.set_radius
+     */
     fun setRadius(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, size)
     }
 
+    /**
+     * The grid's radius in 3D units. The grid's opacity will fade gradually as the distance from the
+     * origin increases until this `radius` is reached.
+     *
+     * Generated from Godot docs: RootMotionView.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * If `true`, the grid's points will all be on the same Y coordinate (local Y = 0). If `false`, the
+     * points' original Y coordinate is preserved.
+     *
+     * Generated from Godot docs: RootMotionView.set_zero_y
+     */
     fun setZeroY(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setZeroYBind, handle, enable)
     }
 
+    /**
+     * If `true`, the grid's points will all be on the same Y coordinate (local Y = 0). If `false`, the
+     * points' original Y coordinate is preserved.
+     *
+     * Generated from Godot docs: RootMotionView.get_zero_y
+     */
     fun getZeroY(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getZeroYBind, handle)
     }

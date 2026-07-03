@@ -79,218 +79,509 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
         @JvmName("setProbabilityProperty")
         set(value) = setProbability(value)
 
+    /**
+     * If `true`, the tile will have its texture flipped horizontally.
+     *
+     * Generated from Godot docs: TileData.set_flip_h
+     */
     fun setFlipH(flipH: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, flipH)
     }
 
+    /**
+     * If `true`, the tile will have its texture flipped horizontally.
+     *
+     * Generated from Godot docs: TileData.get_flip_h
+     */
     fun getFlipH(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipHBind, handle)
     }
 
+    /**
+     * If `true`, the tile will have its texture flipped vertically.
+     *
+     * Generated from Godot docs: TileData.set_flip_v
+     */
     fun setFlipV(flipV: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, flipV)
     }
 
+    /**
+     * If `true`, the tile will have its texture flipped vertically.
+     *
+     * Generated from Godot docs: TileData.get_flip_v
+     */
     fun getFlipV(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipVBind, handle)
     }
 
+    /**
+     * If `true`, the tile will display transposed, i.e. with horizontal and vertical texture UVs
+     * swapped.
+     *
+     * Generated from Godot docs: TileData.set_transpose
+     */
     fun setTranspose(transpose: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTransposeBind, handle, transpose)
     }
 
+    /**
+     * If `true`, the tile will display transposed, i.e. with horizontal and vertical texture UVs
+     * swapped.
+     *
+     * Generated from Godot docs: TileData.get_transpose
+     */
     fun getTranspose(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getTransposeBind, handle)
     }
 
+    /**
+     * The `Material` to use for this `TileData`. This can be a `CanvasItemMaterial` to use the default
+     * shader, or a `ShaderMaterial` to use a custom shader.
+     *
+     * Generated from Godot docs: TileData.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Material` to use for this `TileData`. This can be a `CanvasItemMaterial` to use the default
+     * shader, or a `ShaderMaterial` to use a custom shader.
+     *
+     * Generated from Godot docs: TileData.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 
+    /**
+     * Offsets the position of where the tile is drawn.
+     *
+     * Generated from Godot docs: TileData.set_texture_origin
+     */
     fun setTextureOrigin(textureOrigin: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setTextureOriginBind, handle, textureOrigin)
     }
 
+    /**
+     * Offsets the position of where the tile is drawn.
+     *
+     * Generated from Godot docs: TileData.get_texture_origin
+     */
     fun getTextureOrigin(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureOriginBind, handle)
     }
 
+    /**
+     * Color modulation of the tile.
+     *
+     * Generated from Godot docs: TileData.set_modulate
+     */
     fun setModulate(modulate: Color) {
         ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, modulate)
     }
 
+    /**
+     * Color modulation of the tile.
+     *
+     * Generated from Godot docs: TileData.get_modulate
+     */
     fun getModulate(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
     }
 
+    /**
+     * Ordering index of this tile, relative to `TileMapLayer`.
+     *
+     * Generated from Godot docs: TileData.set_z_index
+     */
     fun setZIndex(zIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(setZIndexBind, handle, zIndex)
     }
 
+    /**
+     * Ordering index of this tile, relative to `TileMapLayer`.
+     *
+     * Generated from Godot docs: TileData.get_z_index
+     */
     fun getZIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, handle)
     }
 
+    /**
+     * Vertical point of the tile used for determining y-sorted order.
+     *
+     * Generated from Godot docs: TileData.set_y_sort_origin
+     */
     fun setYSortOrigin(ySortOrigin: Int) {
         ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, handle, ySortOrigin)
     }
 
+    /**
+     * Vertical point of the tile used for determining y-sorted order.
+     *
+     * Generated from Godot docs: TileData.get_y_sort_origin
+     */
     fun getYSortOrigin(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, handle)
     }
 
+    /**
+     * Sets the occluder polygon count in the TileSet occlusion layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_occluder_polygons_count
+     */
     fun setOccluderPolygonsCount(layerId: Int, polygonsCount: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setOccluderPolygonsCountBind, handle, layerId, polygonsCount)
     }
 
+    /**
+     * Returns the number of occluder polygons of the tile in the TileSet occlusion layer with index
+     * `layer_id`.
+     *
+     * Generated from Godot docs: TileData.get_occluder_polygons_count
+     */
     fun getOccluderPolygonsCount(layerId: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getOccluderPolygonsCountBind, handle, layerId)
     }
 
+    /**
+     * Adds an occlusion polygon to the tile on the TileSet occlusion layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.add_occluder_polygon
+     */
     fun addOccluderPolygon(layerId: Int) {
         ObjectCalls.ptrcallWithIntArg(addOccluderPolygonBind, handle, layerId)
     }
 
+    /**
+     * Removes the polygon at index `polygon_index` for TileSet occlusion layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.remove_occluder_polygon
+     */
     fun removeOccluderPolygon(layerId: Int, polygonIndex: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(removeOccluderPolygonBind, handle, layerId, polygonIndex)
     }
 
+    /**
+     * Sets the occluder for polygon with index `polygon_index` in the TileSet occlusion layer with
+     * index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_occluder_polygon
+     */
     fun setOccluderPolygon(layerId: Int, polygonIndex: Int, polygon: OccluderPolygon2D?) {
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(setOccluderPolygonBind, handle, layerId, polygonIndex, polygon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the occluder polygon at index `polygon_index` from the TileSet occlusion layer with
+     * index `layer_id`. The `flip_h`, `flip_v`, and `transpose` parameters can be `true` to transform
+     * the returned polygon.
+     *
+     * Generated from Godot docs: TileData.get_occluder_polygon
+     */
     fun getOccluderPolygon(layerId: Int, polygonIndex: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
         return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getOccluderPolygonBind, handle, layerId, polygonIndex, flipH, flipV, transpose))
     }
 
+    /**
+     * Sets the occluder for the TileSet occlusion layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_occluder
+     */
     fun setOccluder(layerId: Int, occluderPolygon: OccluderPolygon2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setOccluderBind, handle, layerId, occluderPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the occluder polygon of the tile for the TileSet occlusion layer with index `layer_id`.
+     * `flip_h`, `flip_v`, and `transpose` allow transforming the returned polygon.
+     *
+     * Generated from Godot docs: TileData.get_occluder
+     */
     fun getOccluder(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
         return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getOccluderBind, handle, layerId, flipH, flipV, transpose))
     }
 
+    /**
+     * Sets the constant linear velocity. This does not move the tile. This linear velocity is applied
+     * to objects colliding with this tile. This is useful to create conveyor belts.
+     *
+     * Generated from Godot docs: TileData.set_constant_linear_velocity
+     */
     fun setConstantLinearVelocity(layerId: Int, velocity: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setConstantLinearVelocityBind, handle, layerId, velocity)
     }
 
+    /**
+     * Returns the constant linear velocity applied to objects colliding with this tile.
+     *
+     * Generated from Godot docs: TileData.get_constant_linear_velocity
+     */
     fun getConstantLinearVelocity(layerId: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getConstantLinearVelocityBind, handle, layerId)
     }
 
+    /**
+     * Sets the constant angular velocity. This does not rotate the tile. This angular velocity is
+     * applied to objects colliding with this tile.
+     *
+     * Generated from Godot docs: TileData.set_constant_angular_velocity
+     */
     fun setConstantAngularVelocity(layerId: Int, velocity: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setConstantAngularVelocityBind, handle, layerId, velocity)
     }
 
+    /**
+     * Returns the constant angular velocity applied to objects colliding with this tile.
+     *
+     * Generated from Godot docs: TileData.get_constant_angular_velocity
+     */
     fun getConstantAngularVelocity(layerId: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getConstantAngularVelocityBind, handle, layerId)
     }
 
+    /**
+     * Sets the polygons count for TileSet physics layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_collision_polygons_count
+     */
     fun setCollisionPolygonsCount(layerId: Int, polygonsCount: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setCollisionPolygonsCountBind, handle, layerId, polygonsCount)
     }
 
+    /**
+     * Returns how many polygons the tile has for TileSet physics layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.get_collision_polygons_count
+     */
     fun getCollisionPolygonsCount(layerId: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionPolygonsCountBind, handle, layerId)
     }
 
+    /**
+     * Adds a collision polygon to the tile on the given TileSet physics layer.
+     *
+     * Generated from Godot docs: TileData.add_collision_polygon
+     */
     fun addCollisionPolygon(layerId: Int) {
         ObjectCalls.ptrcallWithIntArg(addCollisionPolygonBind, handle, layerId)
     }
 
+    /**
+     * Removes the polygon at index `polygon_index` for TileSet physics layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.remove_collision_polygon
+     */
     fun removeCollisionPolygon(layerId: Int, polygonIndex: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(removeCollisionPolygonBind, handle, layerId, polygonIndex)
     }
 
+    /**
+     * Sets the points of the polygon at index `polygon_index` for TileSet physics layer with index
+     * `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_collision_polygon_points
+     */
     fun setCollisionPolygonPoints(layerId: Int, polygonIndex: Int, polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, handle, layerId, polygonIndex, polygon)
     }
 
+    /**
+     * Returns the points of the polygon at index `polygon_index` for TileSet physics layer with index
+     * `layer_id`.
+     *
+     * Generated from Godot docs: TileData.get_collision_polygon_points
+     */
     fun getCollisionPolygonPoints(layerId: Int, polygonIndex: Int): List<Vector2> {
         return ObjectCalls.ptrcallWithTwoIntArgsRetPackedVector2List(getCollisionPolygonPointsBind, handle, layerId, polygonIndex)
     }
 
+    /**
+     * Enables/disables one-way collisions on the polygon at index `polygon_index` for TileSet physics
+     * layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_collision_polygon_one_way
+     */
     fun setCollisionPolygonOneWay(layerId: Int, polygonIndex: Int, oneWay: Boolean) {
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setCollisionPolygonOneWayBind, handle, layerId, polygonIndex, oneWay)
     }
 
+    /**
+     * Returns whether one-way collisions are enabled for the polygon at index `polygon_index` for
+     * TileSet physics layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.is_collision_polygon_one_way
+     */
     fun isCollisionPolygonOneWay(layerId: Int, polygonIndex: Int): Boolean {
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isCollisionPolygonOneWayBind, handle, layerId, polygonIndex)
     }
 
+    /**
+     * Sets the one-way margin (for one-way platforms) of the polygon at index `polygon_index` for
+     * TileSet physics layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_collision_polygon_one_way_margin
+     */
     fun setCollisionPolygonOneWayMargin(layerId: Int, polygonIndex: Int, oneWayMargin: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCollisionPolygonOneWayMarginBind, handle, layerId, polygonIndex, oneWayMargin)
     }
 
+    /**
+     * Returns the one-way margin (for one-way platforms) of the polygon at index `polygon_index` for
+     * TileSet physics layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.get_collision_polygon_one_way_margin
+     */
     fun getCollisionPolygonOneWayMargin(layerId: Int, polygonIndex: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCollisionPolygonOneWayMarginBind, handle, layerId, polygonIndex)
     }
 
+    /**
+     * ID of the terrain set that the tile uses.
+     *
+     * Generated from Godot docs: TileData.set_terrain_set
+     */
     fun setTerrainSet(terrainSet: Int) {
         ObjectCalls.ptrcallWithIntArg(setTerrainSetBind, handle, terrainSet)
     }
 
+    /**
+     * ID of the terrain set that the tile uses.
+     *
+     * Generated from Godot docs: TileData.get_terrain_set
+     */
     fun getTerrainSet(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetBind, handle)
     }
 
+    /**
+     * ID of the terrain from the terrain set that the tile uses.
+     *
+     * Generated from Godot docs: TileData.set_terrain
+     */
     fun setTerrain(terrain: Int) {
         ObjectCalls.ptrcallWithIntArg(setTerrainBind, handle, terrain)
     }
 
+    /**
+     * ID of the terrain from the terrain set that the tile uses.
+     *
+     * Generated from Godot docs: TileData.get_terrain
+     */
     fun getTerrain(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTerrainBind, handle)
     }
 
+    /**
+     * Sets the tile's terrain bit for the given `peering_bit` direction. To check that a direction is
+     * valid, use `is_valid_terrain_peering_bit`.
+     *
+     * Generated from Godot docs: TileData.set_terrain_peering_bit
+     */
     fun setTerrainPeeringBit(peeringBit: Long, terrain: Int) {
         ObjectCalls.ptrcallWithLongAndIntArgs(setTerrainPeeringBitBind, handle, peeringBit, terrain)
     }
 
+    /**
+     * Returns the tile's terrain bit for the given `peering_bit` direction. To check that a direction
+     * is valid, use `is_valid_terrain_peering_bit`.
+     *
+     * Generated from Godot docs: TileData.get_terrain_peering_bit
+     */
     fun getTerrainPeeringBit(peeringBit: Long): Int {
         return ObjectCalls.ptrcallWithLongArgRetInt(getTerrainPeeringBitBind, handle, peeringBit)
     }
 
+    /**
+     * Returns whether the given `peering_bit` direction is valid for this tile.
+     *
+     * Generated from Godot docs: TileData.is_valid_terrain_peering_bit
+     */
     fun isValidTerrainPeeringBit(peeringBit: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(isValidTerrainPeeringBitBind, handle, peeringBit)
     }
 
+    /**
+     * Sets the navigation polygon for the TileSet navigation layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_navigation_polygon
+     */
     fun setNavigationPolygon(layerId: Int, navigationPolygon: NavigationPolygon?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setNavigationPolygonBind, handle, layerId, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the navigation polygon of the tile for the TileSet navigation layer with index
+     * `layer_id`. `flip_h`, `flip_v`, and `transpose` allow transforming the returned polygon.
+     *
+     * Generated from Godot docs: TileData.get_navigation_polygon
+     */
     fun getNavigationPolygon(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): NavigationPolygon? {
         return NavigationPolygon.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getNavigationPolygonBind, handle, layerId, flipH, flipV, transpose))
     }
 
+    /**
+     * Relative probability of this tile being selected when drawing a pattern of random tiles.
+     *
+     * Generated from Godot docs: TileData.set_probability
+     */
     fun setProbability(probability: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setProbabilityBind, handle, probability)
     }
 
+    /**
+     * Relative probability of this tile being selected when drawing a pattern of random tiles.
+     *
+     * Generated from Godot docs: TileData.get_probability
+     */
     fun getProbability(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getProbabilityBind, handle)
     }
 
+    /**
+     * Sets the tile's custom data value for the TileSet custom data layer with name `layer_name`.
+     *
+     * Generated from Godot docs: TileData.set_custom_data
+     */
     fun setCustomData(layerName: String, value: Any?) {
         ObjectCalls.ptrcallWithStringAndVariantArg(setCustomDataBind, handle, layerName, value)
     }
 
+    /**
+     * Returns the custom data value for custom data layer named `layer_name`. To check if a custom
+     * data layer exists, use `has_custom_data`.
+     *
+     * Generated from Godot docs: TileData.get_custom_data
+     */
     fun getCustomData(layerName: String): Any? {
         return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getCustomDataBind, handle, layerName)
     }
 
+    /**
+     * Returns whether there exists a custom data layer named `layer_name`.
+     *
+     * Generated from Godot docs: TileData.has_custom_data
+     */
     fun hasCustomData(layerName: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataBind, handle, layerName)
     }
 
+    /**
+     * Sets the tile's custom data value for the TileSet custom data layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_custom_data_by_layer_id
+     */
     fun setCustomDataByLayerId(layerId: Int, value: Any?) {
         ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, handle, layerId, value)
     }
 
+    /**
+     * Returns the custom data value for custom data layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.get_custom_data_by_layer_id
+     */
     fun getCustomDataByLayerId(layerId: Int): Any? {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, handle, layerId)
     }

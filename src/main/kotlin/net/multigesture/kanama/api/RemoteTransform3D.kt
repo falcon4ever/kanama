@@ -41,46 +41,102 @@ class RemoteTransform3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setUpdateScaleProperty")
         set(value) = setUpdateScale(value)
 
+    /**
+     * The `NodePath` to the remote node, relative to the RemoteTransform3D's position in the scene.
+     *
+     * Generated from Godot docs: RemoteTransform3D.set_remote_node
+     */
     fun setRemoteNode(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setRemoteNodeBind, handle, path)
     }
 
+    /**
+     * The `NodePath` to the remote node, relative to the RemoteTransform3D's position in the scene.
+     *
+     * Generated from Godot docs: RemoteTransform3D.get_remote_node
+     */
     fun getRemoteNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getRemoteNodeBind, handle)
     }
 
+    /**
+     * `RemoteTransform3D` caches the remote node. It may not notice if the remote node disappears;
+     * `force_update_cache` forces it to update the cache again.
+     *
+     * Generated from Godot docs: RemoteTransform3D.force_update_cache
+     */
     fun forceUpdateCache() {
         ObjectCalls.ptrcallNoArgs(forceUpdateCacheBind, handle)
     }
 
+    /**
+     * If `true`, global coordinates are used. If `false`, local coordinates are used.
+     *
+     * Generated from Godot docs: RemoteTransform3D.set_use_global_coordinates
+     */
     fun setUseGlobalCoordinates(useGlobalCoordinates: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseGlobalCoordinatesBind, handle, useGlobalCoordinates)
     }
 
+    /**
+     * If `true`, global coordinates are used. If `false`, local coordinates are used.
+     *
+     * Generated from Godot docs: RemoteTransform3D.get_use_global_coordinates
+     */
     fun getUseGlobalCoordinates(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseGlobalCoordinatesBind, handle)
     }
 
+    /**
+     * If `true`, the remote node's position is updated.
+     *
+     * Generated from Godot docs: RemoteTransform3D.set_update_position
+     */
     fun setUpdatePosition(updateRemotePosition: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdatePositionBind, handle, updateRemotePosition)
     }
 
+    /**
+     * If `true`, the remote node's position is updated.
+     *
+     * Generated from Godot docs: RemoteTransform3D.get_update_position
+     */
     fun getUpdatePosition(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdatePositionBind, handle)
     }
 
+    /**
+     * If `true`, the remote node's rotation is updated.
+     *
+     * Generated from Godot docs: RemoteTransform3D.set_update_rotation
+     */
     fun setUpdateRotation(updateRemoteRotation: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdateRotationBind, handle, updateRemoteRotation)
     }
 
+    /**
+     * If `true`, the remote node's rotation is updated.
+     *
+     * Generated from Godot docs: RemoteTransform3D.get_update_rotation
+     */
     fun getUpdateRotation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdateRotationBind, handle)
     }
 
+    /**
+     * If `true`, the remote node's scale is updated.
+     *
+     * Generated from Godot docs: RemoteTransform3D.set_update_scale
+     */
     fun setUpdateScale(updateRemoteScale: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUpdateScaleBind, handle, updateRemoteScale)
     }
 
+    /**
+     * If `true`, the remote node's scale is updated.
+     *
+     * Generated from Godot docs: RemoteTransform3D.get_update_scale
+     */
     fun getUpdateScale(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUpdateScaleBind, handle)
     }

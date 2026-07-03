@@ -3,7 +3,11 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
-/** Reference-counted resource saver extension object. Generated from Godot docs: ResourceFormatSaver */
+/**
+ * Saves a specific resource type to a file.
+ *
+ * Generated from Godot docs: ResourceFormatSaver
+ */
 class ResourceFormatSaver(handle: MemorySegment) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 

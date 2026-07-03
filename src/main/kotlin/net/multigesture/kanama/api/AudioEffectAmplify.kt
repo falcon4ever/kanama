@@ -22,18 +22,46 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setVolumeLinearProperty")
         set(value) = setVolumeLinear(value)
 
+    /**
+     * Amount of amplification in dB. Positive values make the sound louder, negative values make it
+     * quieter. Value can range from -80 to 24.
+     *
+     * Generated from Godot docs: AudioEffectAmplify.set_volume_db
+     */
     fun setVolumeDb(volume: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, volume)
     }
 
+    /**
+     * Amount of amplification in dB. Positive values make the sound louder, negative values make it
+     * quieter. Value can range from -80 to 24.
+     *
+     * Generated from Godot docs: AudioEffectAmplify.get_volume_db
+     */
     fun getVolumeDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
     }
 
+    /**
+     * Amount of amplification as a linear value. Note: This member modifies `volume_db` for
+     * convenience. The returned value is equivalent to the result of `@GlobalScope.db_to_linear` on
+     * `volume_db`. Setting this member is equivalent to setting `volume_db` to the result of
+     * `@GlobalScope.linear_to_db` on a value.
+     *
+     * Generated from Godot docs: AudioEffectAmplify.set_volume_linear
+     */
     fun setVolumeLinear(volume: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, handle, volume)
     }
 
+    /**
+     * Amount of amplification as a linear value. Note: This member modifies `volume_db` for
+     * convenience. The returned value is equivalent to the result of `@GlobalScope.db_to_linear` on
+     * `volume_db`. Setting this member is equivalent to setting `volume_db` to the result of
+     * `@GlobalScope.linear_to_db` on a value.
+     *
+     * Generated from Godot docs: AudioEffectAmplify.get_volume_linear
+     */
     fun getVolumeLinear(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, handle)
     }

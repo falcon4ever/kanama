@@ -18,10 +18,20 @@ class ColorPalette(handle: MemorySegment) : Resource(handle) {
         @JvmName("setColorsProperty")
         set(value) = setColors(value)
 
+    /**
+     * A `PackedColorArray` containing the colors in the palette.
+     *
+     * Generated from Godot docs: ColorPalette.set_colors
+     */
     fun setColors(colors: List<Color>) {
         ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
     }
 
+    /**
+     * A `PackedColorArray` containing the colors in the palette.
+     *
+     * Generated from Godot docs: ColorPalette.get_colors
+     */
     fun getColors(): List<Color> {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
     }

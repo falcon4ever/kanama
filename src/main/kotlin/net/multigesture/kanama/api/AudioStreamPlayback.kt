@@ -10,14 +10,34 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: AudioStreamPlayback
  */
 open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Associates `AudioSamplePlayback` to this `AudioStreamPlayback` for playing back the audio sample
+     * of this stream.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.set_sample_playback
+     */
     fun setSamplePlayback(playbackSample: AudioSamplePlayback?) {
         ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, handle, listOf(playbackSample?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the `AudioSamplePlayback` associated with this `AudioStreamPlayback` for playing back
+     * the audio sample of this stream.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.get_sample_playback
+     */
     fun getSamplePlayback(): AudioSamplePlayback? {
         return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, handle))
     }
 
+    /**
+     * Mixes up to `frames` of audio from the stream from the current position, at a rate of
+     * `rate_scale`, advancing the stream. Returns a `PackedVector2Array` where each element holds the
+     * left and right channel volume levels of each frame. Note: Can return fewer frames than
+     * requested, make sure to use the size of the return value.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.mix_audio
+     */
     fun mixAudio(rateScale: Double, frames: Int): List<Vector2> {
         return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(mixAudioBind, handle, rateScale, frames)
     }
@@ -49,14 +69,29 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
+    /**
+     * Returns the number of times the stream has looped.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.get_loop_count
+     */
     fun getLoopCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopCountBind, handle)
     }
 
+    /**
+     * Returns the current position in the stream, in seconds.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.get_playback_position
+     */
     fun getPlaybackPosition(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, handle)
     }
 
+    /**
+     * Returns `true` if the stream is playing.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.is_playing
+     */
     fun isPlaying(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }

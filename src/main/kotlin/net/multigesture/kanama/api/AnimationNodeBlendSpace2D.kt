@@ -72,142 +72,334 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
         @JvmName("setCyclicLengthProperty")
         set(value) = setCyclicLength(value)
 
+    /**
+     * Adds a new point with `name` that represents a `node` at the position set by `pos`. You can
+     * insert it at a specific index using the `at_index` argument. If you use the default value for
+     * `at_index`, the point is inserted at the end of the blend points array. Note: If no name is
+     * provided, safe index is used as reference. In the future, empty names will be deprecated, so
+     * explicitly passing a name is recommended.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.add_blend_point
+     */
     fun addBlendPoint(node: AnimationRootNode?, pos: Vector2, atIndex: Int = -1, name: String = "") {
         ObjectCalls.ptrcallWithObjectVector2IntStringNameArgs(addBlendPointBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
     }
 
+    /**
+     * Updates the position of the point at index `point` in the blend space.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_position
+     */
     fun setBlendPointPosition(point: Int, pos: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setBlendPointPositionBind, handle, point, pos)
     }
 
+    /**
+     * Returns the position of the point at index `point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_position
+     */
     fun getBlendPointPosition(point: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getBlendPointPositionBind, handle, point)
     }
 
+    /**
+     * Changes the `AnimationNode` referenced by the point at index `point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_node
+     */
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, handle, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the `AnimationRootNode` referenced by the point at index `point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_node
+     */
     fun getBlendPointNode(point: Int): AnimationRootNode? {
         return AnimationRootNode.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, handle, point))
     }
 
+    /**
+     * Sets the name of the blend point at index `point`. If the name conflicts with an existing point,
+     * a unique name will be generated automatically.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_name
+     */
     fun setBlendPointName(point: Int, name: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, handle, point, name)
     }
 
+    /**
+     * Returns the name of the blend point at index `point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_name
+     */
     fun getBlendPointName(point: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, handle, point)
     }
 
+    /**
+     * Returns the index of the blend point with the given `name`. Returns `-1` if no blend point with
+     * that name is found.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.find_blend_point_by_name
+     */
     fun findBlendPointByName(name: String): Int {
         return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, handle, name)
     }
 
+    /**
+     * Removes the point at index `point` from the blend space.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.remove_blend_point
+     */
     fun removeBlendPoint(point: Int) {
         ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, handle, point)
     }
 
+    /**
+     * Returns the number of points in the blend space.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_count
+     */
     fun getBlendPointCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, handle)
     }
 
+    /**
+     * Swaps the blend points at indices `from_index` and `to_index`, exchanging their positions and
+     * properties.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.reorder_blend_point
+     */
     fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, handle, fromIndex, toIndex)
     }
 
+    /**
+     * Creates a new triangle using three points `x`, `y`, and `z`. Triangles can overlap. You can
+     * insert the triangle at a specific index using the `at_index` argument. If you use the default
+     * value for `at_index`, the point is inserted at the end of the blend points array.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.add_triangle
+     */
     fun addTriangle(x: Int, y: Int, z: Int, atIndex: Int = -1) {
         ObjectCalls.ptrcallWithFourIntArgs(addTriangleBind, handle, x, y, z, atIndex)
     }
 
+    /**
+     * Returns the position of the point at index `point` in the triangle of index `triangle`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_triangle_point
+     */
     fun getTrianglePoint(triangle: Int, point: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTrianglePointBind, handle, triangle, point)
     }
 
+    /**
+     * Removes the triangle at index `triangle` from the blend space.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.remove_triangle
+     */
     fun removeTriangle(triangle: Int) {
         ObjectCalls.ptrcallWithIntArg(removeTriangleBind, handle, triangle)
     }
 
+    /**
+     * Returns the number of triangles in the blend space.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_triangle_count
+     */
     fun getTriangleCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTriangleCountBind, handle)
     }
 
+    /**
+     * The blend space's X and Y axes' lower limit for the points' position. See `add_blend_point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_min_space
+     */
     fun setMinSpace(minSpace: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setMinSpaceBind, handle, minSpace)
     }
 
+    /**
+     * The blend space's X and Y axes' lower limit for the points' position. See `add_blend_point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_min_space
+     */
     fun getMinSpace(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMinSpaceBind, handle)
     }
 
+    /**
+     * The blend space's X and Y axes' upper limit for the points' position. See `add_blend_point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_max_space
+     */
     fun setMaxSpace(maxSpace: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setMaxSpaceBind, handle, maxSpace)
     }
 
+    /**
+     * The blend space's X and Y axes' upper limit for the points' position. See `add_blend_point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_max_space
+     */
     fun getMaxSpace(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMaxSpaceBind, handle)
     }
 
+    /**
+     * Position increment to snap to when moving a point.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_snap
+     */
     fun setSnap(snap: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSnapBind, handle, snap)
     }
 
+    /**
+     * Position increment to snap to when moving a point.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_snap
+     */
     fun getSnap(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSnapBind, handle)
     }
 
+    /**
+     * Name of the blend space's X axis.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_x_label
+     */
     fun setXLabel(text: String) {
         ObjectCalls.ptrcallWithStringArg(setXLabelBind, handle, text)
     }
 
+    /**
+     * Name of the blend space's X axis.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_x_label
+     */
     fun getXLabel(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getXLabelBind, handle)
     }
 
+    /**
+     * Name of the blend space's Y axis.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_y_label
+     */
     fun setYLabel(text: String) {
         ObjectCalls.ptrcallWithStringArg(setYLabelBind, handle, text)
     }
 
+    /**
+     * Name of the blend space's Y axis.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_y_label
+     */
     fun getYLabel(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getYLabelBind, handle)
     }
 
+    /**
+     * If `true`, the blend space is triangulated automatically. The mesh updates every time you add or
+     * remove points with `add_blend_point` and `remove_blend_point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_auto_triangles
+     */
     fun setAutoTriangles(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoTrianglesBind, handle, enable)
     }
 
+    /**
+     * If `true`, the blend space is triangulated automatically. The mesh updates every time you add or
+     * remove points with `add_blend_point` and `remove_blend_point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_auto_triangles
+     */
     fun getAutoTriangles(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAutoTrianglesBind, handle)
     }
 
+    /**
+     * Controls the interpolation between animations.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_mode
+     */
     fun setBlendMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, mode)
     }
 
+    /**
+     * Controls the interpolation between animations.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_mode
+     */
     fun getBlendMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
+    /**
+     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
+     * for backward compatibility.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_use_sync
+     */
     fun setUseSync(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
+    /**
+     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
+     * for backward compatibility.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.is_using_sync
+     */
     fun isUsingSync(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
     }
 
+    /**
+     * Controls how animations are synced when blended. See `SyncMode` for available options.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_sync_mode
+     */
     fun setSyncMode(syncMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setSyncModeBind, handle, syncMode)
     }
 
+    /**
+     * Controls how animations are synced when blended. See `SyncMode` for available options.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_sync_mode
+     */
     fun getSyncMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, handle)
     }
 
+    /**
+     * The cycle length in seconds used by `SYNC_MODE_CYCLIC_CONSTANT`. All animations are time-scaled
+     * so they complete one full cycle in this duration. Must be greater than `0` for cyclic sync to
+     * take effect.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.set_cyclic_length
+     */
     fun setCyclicLength(length: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, handle, length)
     }
 
+    /**
+     * The cycle length in seconds used by `SYNC_MODE_CYCLIC_CONSTANT`. All animations are time-scaled
+     * so they complete one full cycle in this duration. Must be greater than `0` for cyclic sync to
+     * take effect.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_cyclic_length
+     */
     fun getCyclicLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, handle)
     }

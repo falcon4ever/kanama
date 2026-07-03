@@ -82,110 +82,272 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setTileScrollHintProperty")
         set(value) = setTileScrollHint(value)
 
+    /**
+     * The current horizontal scroll value. Note: If you are setting this value in the `Node._ready`
+     * function or earlier, it needs to be wrapped with `Object.set_deferred`, since scroll bar's
+     * `Range.max_value` is not initialized yet.
+     *
+     * Generated from Godot docs: ScrollContainer.set_h_scroll
+     */
     fun setHScroll(value: Int) {
         ObjectCalls.ptrcallWithIntArg(setHScrollBind, handle, value)
     }
 
+    /**
+     * The current horizontal scroll value. Note: If you are setting this value in the `Node._ready`
+     * function or earlier, it needs to be wrapped with `Object.set_deferred`, since scroll bar's
+     * `Range.max_value` is not initialized yet.
+     *
+     * Generated from Godot docs: ScrollContainer.get_h_scroll
+     */
     fun getHScroll(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, handle)
     }
 
+    /**
+     * The current vertical scroll value. Note: Setting it early needs to be deferred, just like in
+     * `scroll_horizontal`.
+     *
+     * Generated from Godot docs: ScrollContainer.set_v_scroll
+     */
     fun setVScroll(value: Int) {
         ObjectCalls.ptrcallWithIntArg(setVScrollBind, handle, value)
     }
 
+    /**
+     * The current vertical scroll value. Note: Setting it early needs to be deferred, just like in
+     * `scroll_horizontal`.
+     *
+     * Generated from Godot docs: ScrollContainer.get_v_scroll
+     */
     fun getVScroll(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVScrollBind, handle)
     }
 
+    /**
+     * Overrides the `ScrollBar.custom_step` used when clicking the internal scroll bar's horizontal
+     * increment and decrement buttons or when using arrow keys when the `ScrollBar` is focused.
+     *
+     * Generated from Godot docs: ScrollContainer.set_horizontal_custom_step
+     */
     fun setHorizontalCustomStep(value: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHorizontalCustomStepBind, handle, value)
     }
 
+    /**
+     * Overrides the `ScrollBar.custom_step` used when clicking the internal scroll bar's horizontal
+     * increment and decrement buttons or when using arrow keys when the `ScrollBar` is focused.
+     *
+     * Generated from Godot docs: ScrollContainer.get_horizontal_custom_step
+     */
     fun getHorizontalCustomStep(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHorizontalCustomStepBind, handle)
     }
 
+    /**
+     * Overrides the `ScrollBar.custom_step` used when clicking the internal scroll bar's vertical
+     * increment and decrement buttons or when using arrow keys when the `ScrollBar` is focused.
+     *
+     * Generated from Godot docs: ScrollContainer.set_vertical_custom_step
+     */
     fun setVerticalCustomStep(value: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVerticalCustomStepBind, handle, value)
     }
 
+    /**
+     * Overrides the `ScrollBar.custom_step` used when clicking the internal scroll bar's vertical
+     * increment and decrement buttons or when using arrow keys when the `ScrollBar` is focused.
+     *
+     * Generated from Godot docs: ScrollContainer.get_vertical_custom_step
+     */
     fun getVerticalCustomStep(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVerticalCustomStepBind, handle)
     }
 
+    /**
+     * Controls whether horizontal scrollbar can be used and when it should be visible.
+     *
+     * Generated from Godot docs: ScrollContainer.set_horizontal_scroll_mode
+     */
     fun setHorizontalScrollMode(enable: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalScrollModeBind, handle, enable)
     }
 
+    /**
+     * Controls whether horizontal scrollbar can be used and when it should be visible.
+     *
+     * Generated from Godot docs: ScrollContainer.get_horizontal_scroll_mode
+     */
     fun getHorizontalScrollMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalScrollModeBind, handle)
     }
 
+    /**
+     * Controls whether vertical scrollbar can be used and when it should be visible.
+     *
+     * Generated from Godot docs: ScrollContainer.set_vertical_scroll_mode
+     */
     fun setVerticalScrollMode(enable: Long) {
         ObjectCalls.ptrcallWithLongArg(setVerticalScrollModeBind, handle, enable)
     }
 
+    /**
+     * Controls whether vertical scrollbar can be used and when it should be visible.
+     *
+     * Generated from Godot docs: ScrollContainer.get_vertical_scroll_mode
+     */
     fun getVerticalScrollMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalScrollModeBind, handle)
     }
 
+    /**
+     * If `true`, the mouse wheel scrolls the view horizontally, and holding Shift scrolls vertically.
+     * If `false` (default), the mouse wheel scrolls the view vertically, and holding Shift scrolls
+     * horizontally.
+     *
+     * Generated from Godot docs: ScrollContainer.set_scroll_horizontal_by_default
+     */
     fun setScrollHorizontalByDefault(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScrollHorizontalByDefaultBind, handle, enable)
     }
 
+    /**
+     * If `true`, the mouse wheel scrolls the view horizontally, and holding Shift scrolls vertically.
+     * If `false` (default), the mouse wheel scrolls the view vertically, and holding Shift scrolls
+     * horizontally.
+     *
+     * Generated from Godot docs: ScrollContainer.is_scroll_horizontal_by_default
+     */
     fun isScrollHorizontalByDefault(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollHorizontalByDefaultBind, handle)
     }
 
+    /**
+     * Deadzone for touch scrolling. Lower deadzone makes the scrolling more sensitive.
+     *
+     * Generated from Godot docs: ScrollContainer.set_deadzone
+     */
     fun setDeadzone(deadzone: Int) {
         ObjectCalls.ptrcallWithIntArg(setDeadzoneBind, handle, deadzone)
     }
 
+    /**
+     * Deadzone for touch scrolling. Lower deadzone makes the scrolling more sensitive.
+     *
+     * Generated from Godot docs: ScrollContainer.get_deadzone
+     */
     fun getDeadzone(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDeadzoneBind, handle)
     }
 
+    /**
+     * The way which scroll hints (indicators that show that the content can still be scrolled in a
+     * certain direction) will be shown. Note: Hints won't be shown if the content can be scrolled both
+     * vertically and horizontally.
+     *
+     * Generated from Godot docs: ScrollContainer.set_scroll_hint_mode
+     */
     fun setScrollHintMode(scrollHintMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, handle, scrollHintMode)
     }
 
+    /**
+     * The way which scroll hints (indicators that show that the content can still be scrolled in a
+     * certain direction) will be shown. Note: Hints won't be shown if the content can be scrolled both
+     * vertically and horizontally.
+     *
+     * Generated from Godot docs: ScrollContainer.get_scroll_hint_mode
+     */
     fun getScrollHintMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, handle)
     }
 
+    /**
+     * If `true`, the scroll hint texture will be tiled instead of stretched. See `scroll_hint_mode`.
+     *
+     * Generated from Godot docs: ScrollContainer.set_tile_scroll_hint
+     */
     fun setTileScrollHint(tileScrollHint: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, handle, tileScrollHint)
     }
 
+    /**
+     * If `true`, the scroll hint texture will be tiled instead of stretched. See `scroll_hint_mode`.
+     *
+     * Generated from Godot docs: ScrollContainer.is_scroll_hint_tiled
+     */
     fun isScrollHintTiled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, handle)
     }
 
+    /**
+     * If `true`, the ScrollContainer will automatically scroll to focused children (including indirect
+     * children) to make sure they are fully visible.
+     *
+     * Generated from Godot docs: ScrollContainer.set_follow_focus
+     */
     fun setFollowFocus(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFollowFocusBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the ScrollContainer will automatically scroll to focused children (including indirect
+     * children) to make sure they are fully visible.
+     *
+     * Generated from Godot docs: ScrollContainer.is_following_focus
+     */
     fun isFollowingFocus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFollowingFocusBind, handle)
     }
 
+    /**
+     * Returns the horizontal scrollbar `HScrollBar` of this `ScrollContainer`. Warning: This is a
+     * required internal node, removing and freeing it may cause a crash. If you wish to disable or
+     * hide a scrollbar, you can use `horizontal_scroll_mode`.
+     *
+     * Generated from Godot docs: ScrollContainer.get_h_scroll_bar
+     */
     fun getHScrollBar(): HScrollBar? {
         return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, handle))
     }
 
+    /**
+     * Returns the vertical scrollbar `VScrollBar` of this `ScrollContainer`. Warning: This is a
+     * required internal node, removing and freeing it may cause a crash. If you wish to disable or
+     * hide a scrollbar, you can use `vertical_scroll_mode`.
+     *
+     * Generated from Godot docs: ScrollContainer.get_v_scroll_bar
+     */
     fun getVScrollBar(): VScrollBar? {
         return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
     }
 
+    /**
+     * Ensures the given `control` is visible (must be a direct or indirect child of the
+     * ScrollContainer). Used by `follow_focus`. Note: This will not work on a node that was just added
+     * during the same frame. If you want to scroll to a newly added child, you must wait until the
+     * next frame using `SceneTree.process_frame`:
+     *
+     * Generated from Godot docs: ScrollContainer.ensure_control_visible
+     */
     fun ensureControlVisible(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(ensureControlVisibleBind, handle, listOf(control.handle))
     }
 
+    /**
+     * If `true`, `focus` is drawn when the ScrollContainer or one of its descendant nodes is focused.
+     *
+     * Generated from Godot docs: ScrollContainer.set_draw_focus_border
+     */
     fun setDrawFocusBorder(draw: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawFocusBorderBind, handle, draw)
     }
 
+    /**
+     * If `true`, `focus` is drawn when the ScrollContainer or one of its descendant nodes is focused.
+     *
+     * Generated from Godot docs: ScrollContainer.get_draw_focus_border
+     */
     fun getDrawFocusBorder(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDrawFocusBorderBind, handle)
     }

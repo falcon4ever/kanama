@@ -86,138 +86,312 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
         return TextLine.wrap(ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle))
     }
 
+    /**
+     * Text writing direction.
+     *
+     * Generated from Godot docs: TextLine.set_direction
+     */
     fun setDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setDirectionBind, handle, direction)
     }
 
+    /**
+     * Text writing direction.
+     *
+     * Generated from Godot docs: TextLine.get_direction
+     */
     fun getDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, handle)
     }
 
+    /**
+     * Returns the text writing direction inferred by the BiDi algorithm.
+     *
+     * Generated from Godot docs: TextLine.get_inferred_direction
+     */
     fun getInferredDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, handle)
     }
 
+    /**
+     * Text orientation.
+     *
+     * Generated from Godot docs: TextLine.set_orientation
+     */
     fun setOrientation(orientation: Long) {
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
+    /**
+     * Text orientation.
+     *
+     * Generated from Godot docs: TextLine.get_orientation
+     */
     fun getOrientation(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 
+    /**
+     * If set to `true` text will display invalid characters.
+     *
+     * Generated from Godot docs: TextLine.set_preserve_invalid
+     */
     fun setPreserveInvalid(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, handle, enabled)
     }
 
+    /**
+     * If set to `true` text will display invalid characters.
+     *
+     * Generated from Godot docs: TextLine.get_preserve_invalid
+     */
     fun getPreserveInvalid(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, handle)
     }
 
+    /**
+     * If set to `true` text will display control characters.
+     *
+     * Generated from Godot docs: TextLine.set_preserve_control
+     */
     fun setPreserveControl(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, handle, enabled)
     }
 
+    /**
+     * If set to `true` text will display control characters.
+     *
+     * Generated from Godot docs: TextLine.get_preserve_control
+     */
     fun getPreserveControl(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, handle)
     }
 
+    /**
+     * Overrides BiDi for the structured text. Override ranges should cover full source text without
+     * overlaps. BiDi algorithm will be used on each range separately.
+     *
+     * Generated from Godot docs: TextLine.set_bidi_override
+     */
     fun setBidiOverride(override: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
     }
 
+    /**
+     * Adds text span and font to draw it.
+     *
+     * Generated from Godot docs: TextLine.add_string
+     */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
     }
 
+    /**
+     * Adds inline object to the text buffer, `key` must be unique. In the text, object is represented
+     * as `length` object replacement characters.
+     *
+     * Generated from Godot docs: TextLine.add_object
+     */
     fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
         return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
     }
 
+    /**
+     * Sets new size and alignment of embedded object.
+     *
+     * Generated from Godot docs: TextLine.resize_object
+     */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
         return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
     }
 
+    /**
+     * Returns `true` if an object with `key` is embedded in this line.
+     *
+     * Generated from Godot docs: TextLine.has_object
+     */
     fun hasObject(key: Any?): Boolean {
         return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
     }
 
+    /**
+     * Text line width.
+     *
+     * Generated from Godot docs: TextLine.set_width
+     */
     fun setWidth(width: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
+    /**
+     * Text line width.
+     *
+     * Generated from Godot docs: TextLine.get_width
+     */
     fun getWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
+    /**
+     * Sets text alignment within the line as if the line was horizontal.
+     *
+     * Generated from Godot docs: TextLine.set_horizontal_alignment
+     */
     fun setHorizontalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
+    /**
+     * Sets text alignment within the line as if the line was horizontal.
+     *
+     * Generated from Godot docs: TextLine.get_horizontal_alignment
+     */
     fun getHorizontalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
+    /**
+     * Aligns text to the given tab-stops.
+     *
+     * Generated from Godot docs: TextLine.tab_align
+     */
     fun tabAlign(tabStops: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, handle, tabStops)
     }
 
+    /**
+     * Line alignment rules. For more info see `TextServer`.
+     *
+     * Generated from Godot docs: TextLine.set_flags
+     */
     fun setFlags(flags: Long) {
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, flags)
     }
 
+    /**
+     * Line alignment rules. For more info see `TextServer`.
+     *
+     * Generated from Godot docs: TextLine.get_flags
+     */
     fun getFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
+    /**
+     * The clipping behavior when the text exceeds the text line's set width.
+     *
+     * Generated from Godot docs: TextLine.set_text_overrun_behavior
+     */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
+    /**
+     * The clipping behavior when the text exceeds the text line's set width.
+     *
+     * Generated from Godot docs: TextLine.get_text_overrun_behavior
+     */
     fun getTextOverrunBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
+    /**
+     * Ellipsis character used for text clipping.
+     *
+     * Generated from Godot docs: TextLine.set_ellipsis_char
+     */
     fun setEllipsisChar(char: String) {
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
+    /**
+     * Ellipsis character used for text clipping.
+     *
+     * Generated from Godot docs: TextLine.get_ellipsis_char
+     */
     fun getEllipsisChar(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
+    /**
+     * Returns array of inline objects.
+     *
+     * Generated from Godot docs: TextLine.get_objects
+     */
     fun getObjects(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getObjectsBind, handle)
     }
 
+    /**
+     * Returns bounding rectangle of the inline object.
+     *
+     * Generated from Godot docs: TextLine.get_object_rect
+     */
     fun getObjectRect(key: Any?): Rect2 {
         return ObjectCalls.ptrcallWithVariantArgRetRect2(getObjectRectBind, handle, key)
     }
 
+    /**
+     * Returns size of the bounding box of the text.
+     *
+     * Generated from Godot docs: TextLine.get_size
+     */
     fun getSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
+    /**
+     * Returns TextServer buffer RID.
+     *
+     * Generated from Godot docs: TextLine.get_rid
+     */
     fun getRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
+    /**
+     * Returns the text ascent (number of pixels above the baseline for horizontal layout or to the
+     * left of baseline for vertical).
+     *
+     * Generated from Godot docs: TextLine.get_line_ascent
+     */
     fun getLineAscent(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineAscentBind, handle)
     }
 
+    /**
+     * Returns the text descent (number of pixels below the baseline for horizontal layout or to the
+     * right of baseline for vertical).
+     *
+     * Generated from Godot docs: TextLine.get_line_descent
+     */
     fun getLineDescent(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineDescentBind, handle)
     }
 
+    /**
+     * Returns width (for horizontal layout) or height (for vertical) of the text.
+     *
+     * Generated from Godot docs: TextLine.get_line_width
+     */
     fun getLineWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
     }
 
+    /**
+     * Returns pixel offset of the underline below the baseline.
+     *
+     * Generated from Godot docs: TextLine.get_line_underline_position
+     */
     fun getLineUnderlinePosition(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlinePositionBind, handle)
     }
 
+    /**
+     * Returns thickness of the underline.
+     *
+     * Generated from Godot docs: TextLine.get_line_underline_thickness
+     */
     fun getLineUnderlineThickness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlineThicknessBind, handle)
     }
@@ -233,10 +407,23 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawBind, handle, canvas, pos, color, oversampling)
     }
 
+    /**
+     * Draw text into a canvas item at a given position, with `color`. `pos` specifies the top left
+     * corner of the bounding box. If `oversampling` is greater than zero, it is used as font
+     * oversampling factor, otherwise viewport oversampling settings are used.
+     *
+     * Generated from Godot docs: TextLine.draw_outline
+     */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawOutlineBind, handle, canvas, pos, outlineSize, color, oversampling)
     }
 
+    /**
+     * Returns caret character offset at the specified pixel offset at the baseline. This function
+     * always returns a valid position.
+     *
+     * Generated from Godot docs: TextLine.hit_test
+     */
     fun hitTest(coords: Double): Int {
         return ObjectCalls.ptrcallWithDoubleArgRetInt(hitTestBind, handle, coords)
     }

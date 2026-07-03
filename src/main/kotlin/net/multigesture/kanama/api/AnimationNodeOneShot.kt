@@ -70,82 +70,206 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
         @JvmName("setAutorestartRandomDelayProperty")
         set(value) = setAutorestartRandomDelay(value)
 
+    /**
+     * The fade-in duration. For example, setting this to `1.0` for a 5 second length animation will
+     * produce a cross-fade that starts at 0 second and ends at 1 second during the animation. Note:
+     * `AnimationNodeOneShot` transitions the current state after the fading has finished.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_fadein_time
+     */
     fun setFadeinTime(time: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFadeinTimeBind, handle, time)
     }
 
+    /**
+     * The fade-in duration. For example, setting this to `1.0` for a 5 second length animation will
+     * produce a cross-fade that starts at 0 second and ends at 1 second during the animation. Note:
+     * `AnimationNodeOneShot` transitions the current state after the fading has finished.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_fadein_time
+     */
     fun getFadeinTime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeinTimeBind, handle)
     }
 
+    /**
+     * Determines how cross-fading between animations is eased. If empty, the transition will be
+     * linear. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_fadein_curve
+     */
     fun setFadeinCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Determines how cross-fading between animations is eased. If empty, the transition will be
+     * linear. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_fadein_curve
+     */
     fun getFadeinCurve(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, handle))
     }
 
+    /**
+     * The fade-out duration. For example, setting this to `1.0` for a 5 second length animation will
+     * produce a cross-fade that starts at 4 second and ends at 5 second during the animation. Note:
+     * `AnimationNodeOneShot` transitions the current state after the fading has finished.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_fadeout_time
+     */
     fun setFadeoutTime(time: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFadeoutTimeBind, handle, time)
     }
 
+    /**
+     * The fade-out duration. For example, setting this to `1.0` for a 5 second length animation will
+     * produce a cross-fade that starts at 4 second and ends at 5 second during the animation. Note:
+     * `AnimationNodeOneShot` transitions the current state after the fading has finished.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_fadeout_time
+     */
     fun getFadeoutTime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeoutTimeBind, handle)
     }
 
+    /**
+     * Determines how cross-fading between animations is eased. If empty, the transition will be
+     * linear. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_fadeout_curve
+     */
     fun setFadeoutCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Determines how cross-fading between animations is eased. If empty, the transition will be
+     * linear. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_fadeout_curve
+     */
     fun getFadeoutCurve(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, handle))
     }
 
+    /**
+     * If `true`, breaks the loop at the end of the loop cycle for transition, even if the animation is
+     * looping.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_break_loop_at_end
+     */
     fun setBreakLoopAtEnd(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
     }
 
+    /**
+     * If `true`, breaks the loop at the end of the loop cycle for transition, even if the animation is
+     * looping.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.is_loop_broken_at_end
+     */
     fun isLoopBrokenAtEnd(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
     }
 
+    /**
+     * If `true`, the sub-animation will abort if resumed with a reset after a prior interruption.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_abort_on_reset
+     */
     fun setAbortOnReset(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAbortOnResetBind, handle, enable)
     }
 
+    /**
+     * If `true`, the sub-animation will abort if resumed with a reset after a prior interruption.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.is_aborted_on_reset
+     */
     fun isAbortedOnReset(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAbortedOnResetBind, handle)
     }
 
+    /**
+     * If `true`, the sub-animation will restart automatically after finishing. In other words, to
+     * start auto restarting, the animation must be played once with the `ONE_SHOT_REQUEST_FIRE`
+     * request. The `ONE_SHOT_REQUEST_ABORT` request stops the auto restarting, but it does not disable
+     * the `autorestart` itself. So, the `ONE_SHOT_REQUEST_FIRE` request will start auto restarting
+     * again.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_autorestart
+     */
     fun setAutorestart(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutorestartBind, handle, active)
     }
 
+    /**
+     * If `true`, the sub-animation will restart automatically after finishing. In other words, to
+     * start auto restarting, the animation must be played once with the `ONE_SHOT_REQUEST_FIRE`
+     * request. The `ONE_SHOT_REQUEST_ABORT` request stops the auto restarting, but it does not disable
+     * the `autorestart` itself. So, the `ONE_SHOT_REQUEST_FIRE` request will start auto restarting
+     * again.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.has_autorestart
+     */
     fun hasAutorestart(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutorestartBind, handle)
     }
 
+    /**
+     * The delay after which the automatic restart is triggered, in seconds.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_autorestart_delay
+     */
     fun setAutorestartDelay(time: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAutorestartDelayBind, handle, time)
     }
 
+    /**
+     * The delay after which the automatic restart is triggered, in seconds.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_autorestart_delay
+     */
     fun getAutorestartDelay(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartDelayBind, handle)
     }
 
+    /**
+     * If `autorestart` is `true`, a random additional delay (in seconds) between 0 and this value will
+     * be added to `autorestart_delay`.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_autorestart_random_delay
+     */
     fun setAutorestartRandomDelay(time: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAutorestartRandomDelayBind, handle, time)
     }
 
+    /**
+     * If `autorestart` is `true`, a random additional delay (in seconds) between 0 and this value will
+     * be added to `autorestart_delay`.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_autorestart_random_delay
+     */
     fun getAutorestartRandomDelay(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartRandomDelayBind, handle)
     }
 
+    /**
+     * The blend type.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.set_mix_mode
+     */
     fun setMixMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setMixModeBind, handle, mode)
     }
 
+    /**
+     * The blend type.
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.get_mix_mode
+     */
     fun getMixMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, handle)
     }

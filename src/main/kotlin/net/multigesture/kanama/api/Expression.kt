@@ -32,10 +32,20 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(executeBind, handle, inputs, baseInstance.handle, showError, constCallsOnly)
     }
 
+    /**
+     * Returns `true` if `execute` has failed.
+     *
+     * Generated from Godot docs: Expression.has_execute_failed
+     */
     fun hasExecuteFailed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasExecuteFailedBind, handle)
     }
 
+    /**
+     * Returns the error text if `parse` or `execute` has failed.
+     *
+     * Generated from Godot docs: Expression.get_error_text
+     */
     fun getErrorText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getErrorTextBind, handle)
     }

@@ -22,22 +22,52 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setVerticalProperty")
         set(value) = setVertical(value)
 
+    /**
+     * Adds a `Control` node to the box as a spacer. If `begin` is `true`, it will insert the `Control`
+     * node in front of all other children.
+     *
+     * Generated from Godot docs: BoxContainer.add_spacer
+     */
     fun addSpacer(begin: Boolean): Control? {
         return Control.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(addSpacerBind, handle, begin))
     }
 
+    /**
+     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
+     * or `ALIGNMENT_END`).
+     *
+     * Generated from Godot docs: BoxContainer.set_alignment
+     */
     fun setAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
     }
 
+    /**
+     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
+     * or `ALIGNMENT_END`).
+     *
+     * Generated from Godot docs: BoxContainer.get_alignment
+     */
     fun getAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
     }
 
+    /**
+     * If `true`, the `BoxContainer` will arrange its children vertically, rather than horizontally.
+     * Can't be changed when using `HBoxContainer` and `VBoxContainer`.
+     *
+     * Generated from Godot docs: BoxContainer.set_vertical
+     */
     fun setVertical(vertical: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
     }
 
+    /**
+     * If `true`, the `BoxContainer` will arrange its children vertically, rather than horizontally.
+     * Can't be changed when using `HBoxContainer` and `VBoxContainer`.
+     *
+     * Generated from Godot docs: BoxContainer.is_vertical
+     */
     fun isVertical(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
     }

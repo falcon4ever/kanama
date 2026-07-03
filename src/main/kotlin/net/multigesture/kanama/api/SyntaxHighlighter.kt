@@ -9,18 +9,44 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: SyntaxHighlighter
  */
 open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Returns the syntax highlighting data for the line at index `line`. If the line is not cached,
+     * calls `_get_line_syntax_highlighting` first to calculate the data. Each entry is a column number
+     * containing a nested `Dictionary`. The column number denotes the start of a region, the region
+     * will end if another region is found, or at the end of the line. The nested `Dictionary` contains
+     * the data for that region. Currently only the key `"color"` is supported.
+     *
+     * Generated from Godot docs: SyntaxHighlighter.get_line_syntax_highlighting
+     */
     fun getLineSyntaxHighlighting(line: Int): Map<String, Any?> {
         return ObjectCalls.ptrcallWithIntArgRetDictionary(getLineSyntaxHighlightingBind, handle, line)
     }
 
+    /**
+     * Clears then updates the `SyntaxHighlighter` caches. Override `_update_cache` for a callback.
+     * Note: This is called automatically when the associated `TextEdit` node, updates its own cache.
+     *
+     * Generated from Godot docs: SyntaxHighlighter.update_cache
+     */
     fun updateCache() {
         ObjectCalls.ptrcallNoArgs(updateCacheBind, handle)
     }
 
+    /**
+     * Clears all cached syntax highlighting data. Then calls overridable method
+     * `_clear_highlighting_cache`.
+     *
+     * Generated from Godot docs: SyntaxHighlighter.clear_highlighting_cache
+     */
     fun clearHighlightingCache() {
         ObjectCalls.ptrcallNoArgs(clearHighlightingCacheBind, handle)
     }
 
+    /**
+     * Returns the associated `TextEdit` node.
+     *
+     * Generated from Godot docs: SyntaxHighlighter.get_text_edit
+     */
     fun getTextEdit(): TextEdit? {
         return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextEditBind, handle))
     }

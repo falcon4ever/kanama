@@ -19,6 +19,12 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(lockBind, handle)
     }
 
+    /**
+     * Tries locking this `Mutex`, but does not block. Returns `true` on success, `false` otherwise.
+     * Note: This function returns `true` if the thread already has ownership of the mutex.
+     *
+     * Generated from Godot docs: Mutex.try_lock
+     */
     fun tryLock(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, handle)
     }

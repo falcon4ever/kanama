@@ -13,30 +13,65 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: Texture2D
  */
 open class Texture2D(handle: MemorySegment) : Texture(handle) {
+    /**
+     * Returns the image format of the texture.
+     *
+     * Generated from Godot docs: Texture2D.get_format
+     */
     fun getFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
+    /**
+     * Returns the number of mipmaps of the texture.
+     *
+     * Generated from Godot docs: Texture2D.get_mipmap_count
+     */
     fun getMipmapCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
     }
 
+    /**
+     * Returns the texture width in pixels.
+     *
+     * Generated from Godot docs: Texture2D.get_width
+     */
     fun getWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
+    /**
+     * Returns the texture height in pixels.
+     *
+     * Generated from Godot docs: Texture2D.get_height
+     */
     fun getHeight(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
+    /**
+     * Returns the texture size in pixels.
+     *
+     * Generated from Godot docs: Texture2D.get_size
+     */
     fun getSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
+    /**
+     * Returns `true` if this `Texture2D` has an alpha channel.
+     *
+     * Generated from Godot docs: Texture2D.has_alpha
+     */
     fun hasAlpha(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasAlphaBind, handle)
     }
 
+    /**
+     * Returns `true` if the texture has mipmaps.
+     *
+     * Generated from Godot docs: Texture2D.has_mipmaps
+     */
     fun hasMipmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
@@ -51,18 +86,42 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
         ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(drawBind, handle, canvasItem, position, modulate, transpose)
     }
 
+    /**
+     * Draws the texture using a `CanvasItem` with the `RenderingServer` API.
+     *
+     * Generated from Godot docs: Texture2D.draw_rect
+     */
     fun drawRect(canvasItem: RID, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
         ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(drawRectBind, handle, canvasItem, rect, tile, modulate, transpose)
     }
 
+    /**
+     * Draws a part of the texture using a `CanvasItem` with the `RenderingServer` API.
+     *
+     * Generated from Godot docs: Texture2D.draw_rect_region
+     */
     fun drawRectRegion(canvasItem: RID, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
         ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(drawRectRegionBind, handle, canvasItem, rect, srcRect, modulate, transpose, clipUv)
     }
 
+    /**
+     * Returns an `Image` that is a copy of data from this `Texture2D` (a new `Image` is created each
+     * time). `Image`s can be accessed and manipulated directly. Note: This will return `null` if this
+     * `Texture2D` is invalid. Note: This will fetch the texture data from the GPU, which might cause
+     * performance problems when overused. Avoid calling `get_image` every frame, especially on large
+     * textures.
+     *
+     * Generated from Godot docs: Texture2D.get_image
+     */
     fun getImage(): Image? {
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, handle))
     }
 
+    /**
+     * Creates a placeholder version of this resource (`PlaceholderTexture2D`).
+     *
+     * Generated from Godot docs: Texture2D.create_placeholder
+     */
     fun createPlaceholder(): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle))
     }

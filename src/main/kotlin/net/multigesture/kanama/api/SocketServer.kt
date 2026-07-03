@@ -9,10 +9,20 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: SocketServer
  */
 open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns `true` if a connection is available for taking.
+     *
+     * Generated from Godot docs: SocketServer.is_connection_available
+     */
     fun isConnectionAvailable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
+    /**
+     * Returns `true` if the server is currently listening for connections.
+     *
+     * Generated from Godot docs: SocketServer.is_listening
+     */
     fun isListening(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
@@ -26,6 +36,11 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
+    /**
+     * If a connection is available, returns a StreamPeerSocket with the connection.
+     *
+     * Generated from Godot docs: SocketServer.take_socket_connection
+     */
     fun takeSocketConnection(): StreamPeerSocket? {
         return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, handle))
     }

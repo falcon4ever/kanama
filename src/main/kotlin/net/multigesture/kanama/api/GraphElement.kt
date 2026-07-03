@@ -47,50 +47,114 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
         @JvmName("setScalingMenusProperty")
         set(value) = setScalingMenus(value)
 
+    /**
+     * If `true`, the user can resize the GraphElement. Note: Dragging the handle will only emit the
+     * `resize_request` and `resize_end` signals, the GraphElement needs to be resized manually.
+     *
+     * Generated from Godot docs: GraphElement.set_resizable
+     */
     fun setResizable(resizable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setResizableBind, handle, resizable)
     }
 
+    /**
+     * If `true`, the user can resize the GraphElement. Note: Dragging the handle will only emit the
+     * `resize_request` and `resize_end` signals, the GraphElement needs to be resized manually.
+     *
+     * Generated from Godot docs: GraphElement.is_resizable
+     */
     fun isResizable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isResizableBind, handle)
     }
 
+    /**
+     * If `true`, the user can drag the GraphElement.
+     *
+     * Generated from Godot docs: GraphElement.set_draggable
+     */
     fun setDraggable(draggable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDraggableBind, handle, draggable)
     }
 
+    /**
+     * If `true`, the user can drag the GraphElement.
+     *
+     * Generated from Godot docs: GraphElement.is_draggable
+     */
     fun isDraggable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDraggableBind, handle)
     }
 
+    /**
+     * If `true`, the user can select the GraphElement.
+     *
+     * Generated from Godot docs: GraphElement.set_selectable
+     */
     fun setSelectable(selectable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSelectableBind, handle, selectable)
     }
 
+    /**
+     * If `true`, the user can select the GraphElement.
+     *
+     * Generated from Godot docs: GraphElement.is_selectable
+     */
     fun isSelectable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, handle)
     }
 
+    /**
+     * If `true`, the GraphElement is selected.
+     *
+     * Generated from Godot docs: GraphElement.set_selected
+     */
     fun setSelected(selected: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSelectedBind, handle, selected)
     }
 
+    /**
+     * If `true`, the GraphElement is selected.
+     *
+     * Generated from Godot docs: GraphElement.is_selected
+     */
     fun isSelected(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, handle)
     }
 
+    /**
+     * If `true`, `PopupMenu`s that are descendants of the GraphElement are scaled with the `GraphEdit`
+     * zoom.
+     *
+     * Generated from Godot docs: GraphElement.set_scaling_menus
+     */
     fun setScalingMenus(scalingMenus: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScalingMenusBind, handle, scalingMenus)
     }
 
+    /**
+     * If `true`, `PopupMenu`s that are descendants of the GraphElement are scaled with the `GraphEdit`
+     * zoom.
+     *
+     * Generated from Godot docs: GraphElement.is_scaling_menus
+     */
     fun isScalingMenus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScalingMenusBind, handle)
     }
 
+    /**
+     * The offset of the GraphElement, relative to the scroll offset of the `GraphEdit`.
+     *
+     * Generated from Godot docs: GraphElement.set_position_offset
+     */
     fun setPositionOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setPositionOffsetBind, handle, offset)
     }
 
+    /**
+     * The offset of the GraphElement, relative to the scroll offset of the `GraphEdit`.
+     *
+     * Generated from Godot docs: GraphElement.get_position_offset
+     */
     fun getPositionOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionOffsetBind, handle)
     }

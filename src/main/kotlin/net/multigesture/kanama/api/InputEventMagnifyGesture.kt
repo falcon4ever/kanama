@@ -16,10 +16,22 @@ class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle
         @JvmName("setFactorProperty")
         set(value) = setFactor(value)
 
+    /**
+     * The amount (or delta) of the event. This value is closer to `1.0` the slower the gesture is
+     * performed.
+     *
+     * Generated from Godot docs: InputEventMagnifyGesture.set_factor
+     */
     fun setFactor(factor: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFactorBind, handle, factor)
     }
 
+    /**
+     * The amount (or delta) of the event. This value is closer to `1.0` the slower the gesture is
+     * performed.
+     *
+     * Generated from Godot docs: InputEventMagnifyGesture.get_factor
+     */
     fun getFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, handle)
     }

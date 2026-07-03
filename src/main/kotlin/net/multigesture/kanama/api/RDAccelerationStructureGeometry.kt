@@ -65,74 +65,164 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
         @JvmName("setIndexCountProperty")
         set(value) = setIndexCount(value)
 
+    /**
+     * Flags for the geometry.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_flags
+     */
     fun setFlags(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
     }
 
+    /**
+     * Flags for the geometry.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_flags
+     */
     fun getFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
+    /**
+     * Buffer containing vertices.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_buffer
+     */
     fun setVertexBuffer(pMember: RID) {
         ObjectCalls.ptrcallWithRIDArg(setVertexBufferBind, handle, pMember)
     }
 
+    /**
+     * Buffer containing vertices.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_buffer
+     */
     fun getVertexBuffer(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getVertexBufferBind, handle)
     }
 
+    /**
+     * Byte offset of the first vertex in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_offset
+     */
     fun setVertexOffset(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setVertexOffsetBind, handle, pMember)
     }
 
+    /**
+     * Byte offset of the first vertex in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_offset
+     */
     fun getVertexOffset(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexOffsetBind, handle)
     }
 
+    /**
+     * Number of bytes between each vertex in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_stride
+     */
     fun setVertexStride(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setVertexStrideBind, handle, pMember)
     }
 
+    /**
+     * Number of bytes between each vertex in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_stride
+     */
     fun getVertexStride(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexStrideBind, handle)
     }
 
+    /**
+     * Number of vertices used by this geometry in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_count
+     */
     fun setVertexCount(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setVertexCountBind, handle, pMember)
     }
 
+    /**
+     * Number of vertices used by this geometry in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_count
+     */
     fun getVertexCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexCountBind, handle)
     }
 
+    /**
+     * Format of the vertices in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_format
+     */
     fun setVertexFormat(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, handle, pMember)
     }
 
+    /**
+     * Format of the vertices in `vertex_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_format
+     */
     fun getVertexFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, handle)
     }
 
+    /**
+     * Buffer containing vertex indices. If `null`, triangles are non-indexed.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_index_buffer
+     */
     fun setIndexBuffer(pMember: RID) {
         ObjectCalls.ptrcallWithRIDArg(setIndexBufferBind, handle, pMember)
     }
 
+    /**
+     * Buffer containing vertex indices. If `null`, triangles are non-indexed.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_index_buffer
+     */
     fun getIndexBuffer(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getIndexBufferBind, handle)
     }
 
+    /**
+     * Byte offset of the first index in `index_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_index_offset
+     */
     fun setIndexOffset(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setIndexOffsetBind, handle, pMember)
     }
 
+    /**
+     * Byte offset of the first index in `index_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_index_offset
+     */
     fun getIndexOffset(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexOffsetBind, handle)
     }
 
+    /**
+     * Number of indices used by this geometry in `index_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.set_index_count
+     */
     fun setIndexCount(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setIndexCountBind, handle, pMember)
     }
 
+    /**
+     * Number of indices used by this geometry in `index_buffer`.
+     *
+     * Generated from Godot docs: RDAccelerationStructureGeometry.get_index_count
+     */
     fun getIndexCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexCountBind, handle)
     }

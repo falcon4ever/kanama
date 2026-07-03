@@ -34,42 +34,95 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
         @JvmName("setToggleModeProperty")
         set(value) = setToggleMode(value)
 
+    /**
+     * The base type of allowed resource types. Can be a comma-separated list of several options.
+     *
+     * Generated from Godot docs: EditorResourcePicker.set_base_type
+     */
     fun setBaseType(baseType: String) {
         ObjectCalls.ptrcallWithStringArg(setBaseTypeBind, handle, baseType)
     }
 
+    /**
+     * The base type of allowed resource types. Can be a comma-separated list of several options.
+     *
+     * Generated from Godot docs: EditorResourcePicker.get_base_type
+     */
     fun getBaseType(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getBaseTypeBind, handle)
     }
 
+    /**
+     * Returns a list of all allowed types and subtypes corresponding to the `base_type`. If the
+     * `base_type` is empty, an empty list is returned.
+     *
+     * Generated from Godot docs: EditorResourcePicker.get_allowed_types
+     */
     fun getAllowedTypes(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllowedTypesBind, handle)
     }
 
+    /**
+     * The edited resource value.
+     *
+     * Generated from Godot docs: EditorResourcePicker.set_edited_resource
+     */
     fun setEditedResource(resource: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(setEditedResourceBind, handle, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The edited resource value.
+     *
+     * Generated from Godot docs: EditorResourcePicker.get_edited_resource
+     */
     fun getEditedResource(): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedResourceBind, handle))
     }
 
+    /**
+     * If `true`, the main button with the resource preview works in the toggle mode. Use
+     * `set_toggle_pressed` to manually set the state.
+     *
+     * Generated from Godot docs: EditorResourcePicker.set_toggle_mode
+     */
     fun setToggleMode(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, handle, enable)
     }
 
+    /**
+     * If `true`, the main button with the resource preview works in the toggle mode. Use
+     * `set_toggle_pressed` to manually set the state.
+     *
+     * Generated from Godot docs: EditorResourcePicker.is_toggle_mode
+     */
     fun isToggleMode(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, handle)
     }
 
+    /**
+     * Sets the toggle mode state for the main button. Works only if `toggle_mode` is set to `true`.
+     *
+     * Generated from Godot docs: EditorResourcePicker.set_toggle_pressed
+     */
     fun setTogglePressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTogglePressedBind, handle, pressed)
     }
 
+    /**
+     * If `true`, the value can be selected and edited.
+     *
+     * Generated from Godot docs: EditorResourcePicker.set_editable
+     */
     fun setEditable(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enable)
     }
 
+    /**
+     * If `true`, the value can be selected and edited.
+     *
+     * Generated from Godot docs: EditorResourcePicker.is_editable
+     */
     fun isEditable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
     }

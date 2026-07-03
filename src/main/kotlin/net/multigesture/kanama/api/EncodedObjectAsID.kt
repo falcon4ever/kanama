@@ -16,10 +16,22 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setObjectIdProperty")
         set(value) = setObjectId(value)
 
+    /**
+     * The `Object` identifier stored in this `EncodedObjectAsID` instance. The object instance can be
+     * retrieved with `@GlobalScope.instance_from_id`.
+     *
+     * Generated from Godot docs: EncodedObjectAsID.set_object_id
+     */
     fun setObjectId(id: Long) {
         ObjectCalls.ptrcallWithLongArg(setObjectIdBind, handle, id)
     }
 
+    /**
+     * The `Object` identifier stored in this `EncodedObjectAsID` instance. The object instance can be
+     * retrieved with `@GlobalScope.instance_from_id`.
+     *
+     * Generated from Godot docs: EncodedObjectAsID.get_object_id
+     */
     fun getObjectId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, handle)
     }

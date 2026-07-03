@@ -77,90 +77,226 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setNightSkyProperty")
         set(value) = setNightSky(value)
 
+    /**
+     * Controls the strength of the Rayleigh scattering
+     * (https://en.wikipedia.org/wiki/Rayleigh_scattering). Rayleigh scattering results from light
+     * colliding with small particles. It is responsible for the blue color of the sky.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_rayleigh_coefficient
+     */
     fun setRayleighCoefficient(rayleigh: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRayleighCoefficientBind, handle, rayleigh)
     }
 
+    /**
+     * Controls the strength of the Rayleigh scattering
+     * (https://en.wikipedia.org/wiki/Rayleigh_scattering). Rayleigh scattering results from light
+     * colliding with small particles. It is responsible for the blue color of the sky.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_rayleigh_coefficient
+     */
     fun getRayleighCoefficient(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRayleighCoefficientBind, handle)
     }
 
+    /**
+     * Controls the `Color` of the Rayleigh scattering
+     * (https://en.wikipedia.org/wiki/Rayleigh_scattering). While not physically accurate, this allows
+     * for the creation of alien-looking planets. For example, setting this to a red `Color` results in
+     * a Mars-looking atmosphere with a corresponding blue sunset.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_rayleigh_color
+     */
     fun setRayleighColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setRayleighColorBind, handle, color)
     }
 
+    /**
+     * Controls the `Color` of the Rayleigh scattering
+     * (https://en.wikipedia.org/wiki/Rayleigh_scattering). While not physically accurate, this allows
+     * for the creation of alien-looking planets. For example, setting this to a red `Color` results in
+     * a Mars-looking atmosphere with a corresponding blue sunset.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_rayleigh_color
+     */
     fun getRayleighColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getRayleighColorBind, handle)
     }
 
+    /**
+     * Controls the strength of Mie scattering (https://en.wikipedia.org/wiki/Mie_scattering) for the
+     * sky. Mie scattering results from light colliding with larger particles (like water). On earth,
+     * Mie scattering results in a whitish color around the sun and horizon.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_mie_coefficient
+     */
     fun setMieCoefficient(mie: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMieCoefficientBind, handle, mie)
     }
 
+    /**
+     * Controls the strength of Mie scattering (https://en.wikipedia.org/wiki/Mie_scattering) for the
+     * sky. Mie scattering results from light colliding with larger particles (like water). On earth,
+     * Mie scattering results in a whitish color around the sun and horizon.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_mie_coefficient
+     */
     fun getMieCoefficient(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMieCoefficientBind, handle)
     }
 
+    /**
+     * Controls the direction of the Mie scattering (https://en.wikipedia.org/wiki/Mie_scattering). A
+     * value of `1` means that when light hits a particle it's passing through straight forward. A
+     * value of `-1` means that all light is scatter backwards.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_mie_eccentricity
+     */
     fun setMieEccentricity(eccentricity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMieEccentricityBind, handle, eccentricity)
     }
 
+    /**
+     * Controls the direction of the Mie scattering (https://en.wikipedia.org/wiki/Mie_scattering). A
+     * value of `1` means that when light hits a particle it's passing through straight forward. A
+     * value of `-1` means that all light is scatter backwards.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_mie_eccentricity
+     */
     fun getMieEccentricity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMieEccentricityBind, handle)
     }
 
+    /**
+     * Controls the `Color` of the Mie scattering (https://en.wikipedia.org/wiki/Mie_scattering)
+     * effect. While not physically accurate, this allows for the creation of alien-looking planets.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_mie_color
+     */
     fun setMieColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setMieColorBind, handle, color)
     }
 
+    /**
+     * Controls the `Color` of the Mie scattering (https://en.wikipedia.org/wiki/Mie_scattering)
+     * effect. While not physically accurate, this allows for the creation of alien-looking planets.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_mie_color
+     */
     fun getMieColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getMieColorBind, handle)
     }
 
+    /**
+     * Sets the thickness of the atmosphere. High turbidity creates a foggy-looking atmosphere, while a
+     * low turbidity results in a clearer atmosphere.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_turbidity
+     */
     fun setTurbidity(turbidity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTurbidityBind, handle, turbidity)
     }
 
+    /**
+     * Sets the thickness of the atmosphere. High turbidity creates a foggy-looking atmosphere, while a
+     * low turbidity results in a clearer atmosphere.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_turbidity
+     */
     fun getTurbidity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbidityBind, handle)
     }
 
+    /**
+     * Sets the size of the sun disk. Default value is based on Sol's perceived size from Earth.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_sun_disk_scale
+     */
     fun setSunDiskScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSunDiskScaleBind, handle, scale)
     }
 
+    /**
+     * Sets the size of the sun disk. Default value is based on Sol's perceived size from Earth.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_sun_disk_scale
+     */
     fun getSunDiskScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunDiskScaleBind, handle)
     }
 
+    /**
+     * Modulates the `Color` on the bottom half of the sky to represent the ground.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_ground_color
+     */
     fun setGroundColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setGroundColorBind, handle, color)
     }
 
+    /**
+     * Modulates the `Color` on the bottom half of the sky to represent the ground.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_ground_color
+     */
     fun getGroundColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundColorBind, handle)
     }
 
+    /**
+     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_energy_multiplier
+     */
     fun setEnergyMultiplier(multiplier: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
+    /**
+     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_energy_multiplier
+     */
     fun getEnergyMultiplier(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 
+    /**
+     * If `true`, enables debanding. Debanding adds a small amount of noise which helps reduce banding
+     * that appears from the smooth changes in color in the sky.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_use_debanding
+     */
     fun setUseDebanding(useDebanding: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
     }
 
+    /**
+     * If `true`, enables debanding. Debanding adds a small amount of noise which helps reduce banding
+     * that appears from the smooth changes in color in the sky.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_use_debanding
+     */
     fun getUseDebanding(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
     }
 
+    /**
+     * `Texture2D` for the night sky. This is added to the sky, so if it is bright enough, it may be
+     * visible during the day.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.set_night_sky
+     */
     fun setNightSky(nightSky: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setNightSkyBind, handle, listOf(nightSky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * `Texture2D` for the night sky. This is added to the sky, so if it is bright enough, it may be
+     * visible during the day.
+     *
+     * Generated from Godot docs: PhysicalSkyMaterial.get_night_sky
+     */
     fun getNightSky(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNightSkyBind, handle))
     }

@@ -33,11 +33,30 @@ object NavigationMeshGenerator {
         ObjectCalls.ptrcallWithObjectArgs(clearBind, singleton, listOf(navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Parses the `SceneTree` for source geometry according to the properties of `navigation_mesh`.
+     * Updates the provided `source_geometry_data` resource with the resulting data. The resource can
+     * then be used to bake a navigation mesh with `bake_from_source_geometry_data`. After the process
+     * is finished the optional `callback` will be called. Note: This function needs to run on the main
+     * thread or with a deferred call as the SceneTree is not thread-safe. Performance: While
+     * convenient, reading data arrays from `Mesh` resources can affect the frame rate negatively. The
+     * data needs to be received from the GPU, stalling the `RenderingServer` in the process. For
+     * performance prefer the use of e.g. collision shapes or creating the data arrays entirely in
+     * code.
+     *
+     * Generated from Godot docs: NavigationMeshGenerator.parse_source_geometry_data
+     */
     @JvmStatic
     fun parseSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, rootNode: Node, callback: GodotCallable) {
         ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.handle, callback.target.handle, callback.method)
     }
 
+    /**
+     * Bakes the provided `navigation_mesh` with the data from the provided `source_geometry_data`.
+     * After the process is finished the optional `callback` will be called.
+     *
+     * Generated from Godot docs: NavigationMeshGenerator.bake_from_source_geometry_data
+     */
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.handle, callback.method)

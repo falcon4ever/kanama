@@ -22,10 +22,20 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
         @JvmName("setPressureProperty")
         set(value) = setPressure(value)
 
+    /**
+     * Button identifier. One of the `JoyButton` button constants.
+     *
+     * Generated from Godot docs: InputEventJoypadButton.set_button_index
+     */
     fun setButtonIndex(buttonIndex: Long) {
         ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, handle, buttonIndex)
     }
 
+    /**
+     * Button identifier. One of the `JoyButton` button constants.
+     *
+     * Generated from Godot docs: InputEventJoypadButton.get_button_index
+     */
     fun getButtonIndex(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, handle)
     }
@@ -38,6 +48,11 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
     }
 
+    /**
+     * If `true`, the button's state is pressed. If `false`, the button's state is released.
+     *
+     * Generated from Godot docs: InputEventJoypadButton.set_pressed
+     */
     fun setPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }

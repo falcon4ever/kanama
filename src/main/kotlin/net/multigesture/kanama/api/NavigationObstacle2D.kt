@@ -55,78 +55,201 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setAvoidanceLayersProperty")
         set(value) = setAvoidanceLayers(value)
 
+    /**
+     * Returns the `RID` of this obstacle on the `NavigationServer2D`.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_rid
+     */
     fun getRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
+    /**
+     * If `true` the obstacle affects avoidance using agents.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_avoidance_enabled
+     */
     fun setAvoidanceEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true` the obstacle affects avoidance using agents.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_avoidance_enabled
+     */
     fun getAvoidanceEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, handle)
     }
 
+    /**
+     * Sets the `RID` of the navigation map this NavigationObstacle node should use and also updates
+     * the `obstacle` on the NavigationServer.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_navigation_map
+     */
     fun setNavigationMap(navigationMap: RID) {
         ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
     }
 
+    /**
+     * Returns the `RID` of the navigation map for this NavigationObstacle node. This function returns
+     * always the map set on the NavigationObstacle node and not the map of the abstract obstacle on
+     * the NavigationServer. If the obstacle map is changed directly with the NavigationServer API the
+     * NavigationObstacle node will not be aware of the map change. Use `set_navigation_map` to change
+     * the navigation map for the NavigationObstacle and also update the obstacle on the
+     * NavigationServer.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_navigation_map
+     */
     fun getNavigationMap(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
+    /**
+     * Sets the avoidance radius for the obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * Sets the avoidance radius for the obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * Sets the wanted velocity for the obstacle so other agent's can better predict the obstacle if it
+     * is moved with a velocity regularly (every frame) instead of warped to a new position. Does only
+     * affect avoidance for the obstacles `radius`. Does nothing for the obstacles static vertices.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_velocity
+     */
     fun setVelocity(velocity: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
     }
 
+    /**
+     * Sets the wanted velocity for the obstacle so other agent's can better predict the obstacle if it
+     * is moved with a velocity regularly (every frame) instead of warped to a new position. Does only
+     * affect avoidance for the obstacles `radius`. Does nothing for the obstacles static vertices.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_velocity
+     */
     fun getVelocity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
     }
 
+    /**
+     * The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will
+     * be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or
+     * overlap. Should the vertices using obstacle be warped to a new position agent's can not predict
+     * this movement and may get trapped inside the obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_vertices
+     */
     fun setVertices(vertices: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, handle, vertices)
     }
 
+    /**
+     * The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will
+     * be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or
+     * overlap. Should the vertices using obstacle be warped to a new position agent's can not predict
+     * this movement and may get trapped inside the obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_vertices
+     */
     fun getVertices(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
     }
 
+    /**
+     * A bitfield determining the avoidance layers for this obstacle. Agents with a matching bit on the
+     * their avoidance mask will avoid this obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_avoidance_layers
+     */
     fun setAvoidanceLayers(layers: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, handle, layers)
     }
 
+    /**
+     * A bitfield determining the avoidance layers for this obstacle. Agents with a matching bit on the
+     * their avoidance mask will avoid this obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_avoidance_layers
+     */
     fun getAvoidanceLayers(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, handle)
     }
 
+    /**
+     * Based on `value`, enables or disables the specified layer in the `avoidance_layers` bitmask,
+     * given a `layer_number` between 1 and 32.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_avoidance_layer_value
+     */
     fun setAvoidanceLayerValue(layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, handle, layerNumber, value)
     }
 
+    /**
+     * Returns whether or not the specified layer of the `avoidance_layers` bitmask is enabled, given a
+     * `layer_number` between 1 and 32.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_avoidance_layer_value
+     */
     fun getAvoidanceLayerValue(layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, handle, layerNumber)
     }
 
+    /**
+     * If enabled and parsed in a navigation mesh baking process the obstacle will discard source
+     * geometry inside its `vertices` defined shape.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_affect_navigation_mesh
+     */
     fun setAffectNavigationMesh(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAffectNavigationMeshBind, handle, enabled)
     }
 
+    /**
+     * If enabled and parsed in a navigation mesh baking process the obstacle will discard source
+     * geometry inside its `vertices` defined shape.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_affect_navigation_mesh
+     */
     fun getAffectNavigationMesh(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAffectNavigationMeshBind, handle)
     }
 
+    /**
+     * If enabled the obstacle vertices will carve into the baked navigation mesh with the shape
+     * unaffected by additional offsets (e.g. agent radius). It will still be affected by further
+     * postprocessing of the baking process, like edge and polygon simplification. Requires
+     * `affect_navigation_mesh` to be enabled.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.set_carve_navigation_mesh
+     */
     fun setCarveNavigationMesh(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCarveNavigationMeshBind, handle, enabled)
     }
 
+    /**
+     * If enabled the obstacle vertices will carve into the baked navigation mesh with the shape
+     * unaffected by additional offsets (e.g. agent radius). It will still be affected by further
+     * postprocessing of the baking process, like edge and polygon simplification. Requires
+     * `affect_navigation_mesh` to be enabled.
+     *
+     * Generated from Godot docs: NavigationObstacle2D.get_carve_navigation_mesh
+     */
     fun getCarveNavigationMesh(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getCarveNavigationMeshBind, handle)
     }

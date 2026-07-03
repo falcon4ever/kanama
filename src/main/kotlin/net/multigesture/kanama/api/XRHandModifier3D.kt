@@ -22,18 +22,40 @@ class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setBoneUpdateProperty")
         set(value) = setBoneUpdate(value)
 
+    /**
+     * The name of the `XRHandTracker` registered with `XRServer` to obtain the hand tracking data
+     * from.
+     *
+     * Generated from Godot docs: XRHandModifier3D.set_hand_tracker
+     */
     fun setHandTracker(trackerName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setHandTrackerBind, handle, trackerName)
     }
 
+    /**
+     * The name of the `XRHandTracker` registered with `XRServer` to obtain the hand tracking data
+     * from.
+     *
+     * Generated from Godot docs: XRHandModifier3D.get_hand_tracker
+     */
     fun getHandTracker(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getHandTrackerBind, handle)
     }
 
+    /**
+     * Specifies the type of updates to perform on the bones.
+     *
+     * Generated from Godot docs: XRHandModifier3D.set_bone_update
+     */
     fun setBoneUpdate(boneUpdate: Long) {
         ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, handle, boneUpdate)
     }
 
+    /**
+     * Specifies the type of updates to perform on the bones.
+     *
+     * Generated from Godot docs: XRHandModifier3D.get_bone_update
+     */
     fun getBoneUpdate(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, handle)
     }

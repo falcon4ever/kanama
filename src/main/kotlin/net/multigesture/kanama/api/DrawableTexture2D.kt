@@ -10,22 +10,47 @@ import net.multigesture.kanama.types.Color
  * Generated from Godot docs: DrawableTexture2D
  */
 class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
+    /**
+     * Sets the format of this DrawableTexture.
+     *
+     * Generated from Godot docs: DrawableTexture2D.set_format
+     */
     fun setFormat(format: Long) {
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
+    /**
+     * Sets if mipmaps should be used on this DrawableTexture.
+     *
+     * Generated from Godot docs: DrawableTexture2D.set_use_mipmaps
+     */
     fun setUseMipmaps(mipmaps: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, handle, mipmaps)
     }
 
+    /**
+     * Returns `true` if mipmaps are set to be used on this DrawableTexture.
+     *
+     * Generated from Godot docs: DrawableTexture2D.get_use_mipmaps
+     */
     fun getUseMipmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseMipmapsBind, handle)
     }
 
+    /**
+     * Initializes the DrawableTexture to a White texture of the given `width`, `height`, and `format`.
+     *
+     * Generated from Godot docs: DrawableTexture2D.setup
+     */
     fun setup(width: Int, height: Int, format: Long, color: Color, useMipmaps: Boolean = false) {
         ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, handle, width, height, format, color, useMipmaps)
     }
 
+    /**
+     * Re-calculates the mipmaps for this texture on demand.
+     *
+     * Generated from Godot docs: DrawableTexture2D.generate_mipmaps
+     */
     fun generateMipmaps() {
         ObjectCalls.ptrcallNoArgs(generateMipmapsBind, handle)
     }

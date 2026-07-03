@@ -17,10 +17,20 @@ class RectangleShape2D(handle: MemorySegment) : Shape2D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The rectangle's width and height.
+     *
+     * Generated from Godot docs: RectangleShape2D.set_size
+     */
     fun setSize(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The rectangle's width and height.
+     *
+     * Generated from Godot docs: RectangleShape2D.get_size
+     */
     fun getSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }

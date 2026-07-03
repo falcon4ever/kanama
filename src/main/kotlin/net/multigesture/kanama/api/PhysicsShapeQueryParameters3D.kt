@@ -67,74 +67,182 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
         @JvmName("setCollideWithAreasProperty")
         set(value) = setCollideWithAreas(value)
 
+    /**
+     * The `Shape3D` that will be used for collision/intersection queries. This stores the actual
+     * reference which avoids the shape to be released while being used for queries, so always prefer
+     * using this over `shape_rid`.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_shape
+     */
     fun setShape(shape: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Shape3D` that will be used for collision/intersection queries. This stores the actual
+     * reference which avoids the shape to be released while being used for queries, so always prefer
+     * using this over `shape_rid`.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_shape
+     */
     fun getShape(): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
     }
 
+    /**
+     * The queried shape's `RID` that will be used for collision/intersection queries. Use this over
+     * `shape` if you want to optimize for performance using the Servers API:
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_shape_rid
+     */
     fun setShapeRid(shape: RID) {
         ObjectCalls.ptrcallWithRIDArg(setShapeRidBind, handle, shape)
     }
 
+    /**
+     * The queried shape's `RID` that will be used for collision/intersection queries. Use this over
+     * `shape` if you want to optimize for performance using the Servers API:
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_shape_rid
+     */
     fun getShapeRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getShapeRidBind, handle)
     }
 
+    /**
+     * The queried shape's transform matrix.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_transform
+     */
     fun setTransform(transform: Transform3D) {
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
     }
 
+    /**
+     * The queried shape's transform matrix.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_transform
+     */
     fun getTransform(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
+    /**
+     * The motion of the shape being queried for.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_motion
+     */
     fun setMotion(motion: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setMotionBind, handle, motion)
     }
 
+    /**
+     * The motion of the shape being queried for.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_motion
+     */
     fun getMotion(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, handle)
     }
 
+    /**
+     * The collision margin for the shape.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_margin
+     */
     fun setMargin(margin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
+    /**
+     * The collision margin for the shape.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_margin
+     */
     fun getMargin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_collision_mask
+     */
     fun setCollisionMask(collisionMask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_collision_mask
+     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject3D.get_rid`
+     * to get the `RID` associated with a `CollisionObject3D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_exclude
+     */
     fun setExclude(exclude: List<RID>) {
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject3D.get_rid`
+     * to get the `RID` associated with a `CollisionObject3D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.get_exclude
+     */
     fun getExclude(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
+    /**
+     * If `true`, the query will take `PhysicsBody3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_collide_with_bodies
+     */
     fun setCollideWithBodies(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will take `PhysicsBody3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.is_collide_with_bodies_enabled
+     */
     fun isCollideWithBodiesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the query will take `Area3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.set_collide_with_areas
+     */
     fun setCollideWithAreas(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will take `Area3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters3D.is_collide_with_areas_enabled
+     */
     fun isCollideWithAreasEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }

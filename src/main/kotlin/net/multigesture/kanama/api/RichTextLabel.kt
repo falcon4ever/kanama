@@ -196,26 +196,72 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         @JvmName("setStructuredTextBidiOverrideOptionsProperty")
         set(value) = setStructuredTextBidiOverrideOptions(value)
 
+    /**
+     * Returns the text without BBCode mark-up.
+     *
+     * Generated from Godot docs: RichTextLabel.get_parsed_text
+     */
     fun getParsedText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, handle)
     }
 
+    /**
+     * Adds raw non-BBCode-parsed text to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.add_text
+     */
     fun addText(text: String) {
         ObjectCalls.ptrcallWithStringArg(addTextBind, handle, text)
     }
 
+    /**
+     * The label's text in BBCode format. Is not representative of manual modifications to the internal
+     * tag stack. Erases changes made by other methods when edited. Note: If `bbcode_enabled` is
+     * `true`, it is unadvised to use the `+=` operator with `text` (e.g. `text += "some string"`) as
+     * it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added
+     * to stack using `push_*` methods. Use `append_text` for adding text instead, unless you
+     * absolutely need to close a tag that was opened in an earlier method call.
+     *
+     * Generated from Godot docs: RichTextLabel.set_text
+     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
+    /**
+     * Adds a horizontal rule that can be used to separate content. If `width_in_percent` is set,
+     * `width` values are percentages of the control width instead of pixels. If `height_in_percent` is
+     * set, `height` values are percentages of the control width instead of pixels.
+     *
+     * Generated from Godot docs: RichTextLabel.add_hr
+     */
     fun addHr(width: Int = 90, height: Int = 2, color: Color, alignment: Long = 1L, widthInPercent: Boolean = true, heightInPercent: Boolean = false) {
         ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, handle, width, height, color, alignment, widthInPercent, heightInPercent)
     }
 
+    /**
+     * Adds an image's opening and closing tags to the tag stack, optionally providing a `width` and
+     * `height` to resize the image, a `color` to tint the image and a `region` to only use parts of
+     * the image. If `width` or `height` is set to 0, the image size will be adjusted in order to keep
+     * the original aspect ratio. If `width` and `height` are not set, but `region` is, the region's
+     * rect will be used. `key` is an optional identifier, that can be used to modify the image via
+     * `update_image`. If `pad` is set, and the image is smaller than the size specified by `width` and
+     * `height`, the image padding is added to match the size instead of upscaling. Parameters
+     * `width_unit` and `height_unit` determine the units used to calculate the image width and height,
+     * respectively. `alt_text` is used as the image description for assistive apps.
+     *
+     * Generated from Godot docs: RichTextLabel.add_image
+     */
     fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L, altText: String = "") {
         ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
     }
 
+    /**
+     * Updates the existing images with the key `key`. Only properties specified by `mask` bits are
+     * updated. See `add_image`.
+     *
+     * Generated from Godot docs: RichTextLabel.update_image
+     */
     fun updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
         ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, handle, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
     }
@@ -229,138 +275,342 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(newlineBind, handle)
     }
 
+    /**
+     * Removes a paragraph of content from the label. Returns `true` if the paragraph exists. The
+     * `paragraph` argument is the index of the paragraph to remove, it can take values in the interval
+     * `[0, get_paragraph_count() - 1]`. If `no_invalidate` is set to `true`, cache for the subsequent
+     * paragraphs is not invalidated. Use it for faster updates if deleted paragraph is fully
+     * self-contained (have no unclosed tags), or this call is part of the complex edit operation and
+     * `invalidate_paragraph` will be called at the end of operation.
+     *
+     * Generated from Godot docs: RichTextLabel.remove_paragraph
+     */
     fun removeParagraph(paragraph: Int, noInvalidate: Boolean = false): Boolean {
         return ObjectCalls.ptrcallWithIntAndBoolArgsRetBool(removeParagraphBind, handle, paragraph, noInvalidate)
     }
 
+    /**
+     * Invalidates `paragraph` and all subsequent paragraphs cache.
+     *
+     * Generated from Godot docs: RichTextLabel.invalidate_paragraph
+     */
     fun invalidateParagraph(paragraph: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(invalidateParagraphBind, handle, paragraph)
     }
 
+    /**
+     * Adds a ``font`` tag to the tag stack. Overrides default fonts for its duration. Passing `0` to
+     * `font_size` will use the existing default font size.
+     *
+     * Generated from Godot docs: RichTextLabel.push_font
+     */
     fun pushFont(font: Font?, fontSize: Int = 0) {
         ObjectCalls.ptrcallWithObjectAndIntArg(pushFontBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize)
     }
 
+    /**
+     * Adds a ``font_size`` tag to the tag stack. Overrides default font size for its duration.
+     *
+     * Generated from Godot docs: RichTextLabel.push_font_size
+     */
     fun pushFontSize(fontSize: Int) {
         ObjectCalls.ptrcallWithIntArg(pushFontSizeBind, handle, fontSize)
     }
 
+    /**
+     * Adds a ``font`` tag with a normal font to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.push_normal
+     */
     fun pushNormal() {
         ObjectCalls.ptrcallNoArgs(pushNormalBind, handle)
     }
 
+    /**
+     * Adds a ``font`` tag with a bold font to the tag stack. This is the same as adding a `` tag if
+     * not currently in a `` tag.
+     *
+     * Generated from Godot docs: RichTextLabel.push_bold
+     */
     fun pushBold() {
         ObjectCalls.ptrcallNoArgs(pushBoldBind, handle)
     }
 
+    /**
+     * Adds a ``font`` tag with a bold italics font to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.push_bold_italics
+     */
     fun pushBoldItalics() {
         ObjectCalls.ptrcallNoArgs(pushBoldItalicsBind, handle)
     }
 
+    /**
+     * Adds a ``font`` tag with an italics font to the tag stack. This is the same as adding an `` tag
+     * if not currently in a `` tag.
+     *
+     * Generated from Godot docs: RichTextLabel.push_italics
+     */
     fun pushItalics() {
         ObjectCalls.ptrcallNoArgs(pushItalicsBind, handle)
     }
 
+    /**
+     * Adds a ``font`` tag with a monospace font to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.push_mono
+     */
     fun pushMono() {
         ObjectCalls.ptrcallNoArgs(pushMonoBind, handle)
     }
 
+    /**
+     * Adds a ``color`` tag to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.push_color
+     */
     fun pushColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(pushColorBind, handle, color)
     }
 
+    /**
+     * Adds a ``outline_size`` tag to the tag stack. Overrides default text outline size for its
+     * duration.
+     *
+     * Generated from Godot docs: RichTextLabel.push_outline_size
+     */
     fun pushOutlineSize(outlineSize: Int) {
         ObjectCalls.ptrcallWithIntArg(pushOutlineSizeBind, handle, outlineSize)
     }
 
+    /**
+     * Adds a ``outline_color`` tag to the tag stack. Adds text outline for its duration.
+     *
+     * Generated from Godot docs: RichTextLabel.push_outline_color
+     */
     fun pushOutlineColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(pushOutlineColorBind, handle, color)
     }
 
+    /**
+     * Adds a ``p`` tag to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.push_paragraph
+     */
     fun pushParagraph(alignment: Long, baseDirection: Long = 0L, language: String = "", stParser: Long = 0L, justificationFlags: Long = 163L, tabStops: List<Float>) {
         ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, handle, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
     }
 
+    /**
+     * Adds an ``indent`` tag to the tag stack. Multiplies `level` by current `tab_size` to determine
+     * new margin length.
+     *
+     * Generated from Godot docs: RichTextLabel.push_indent
+     */
     fun pushIndent(level: Int) {
         ObjectCalls.ptrcallWithIntArg(pushIndentBind, handle, level)
     }
 
+    /**
+     * Adds ``ol`` or ``ul`` tag to the tag stack. Multiplies `level` by current `tab_size` to
+     * determine new margin length.
+     *
+     * Generated from Godot docs: RichTextLabel.push_list
+     */
     fun pushList(level: Int, type: Long, capitalize: Boolean, bullet: String = "•") {
         ObjectCalls.ptrcallWithIntLongBoolStringArgs(pushListBind, handle, level, type, capitalize, bullet)
     }
 
+    /**
+     * Adds a meta tag to the tag stack. Similar to the BBCode `{text} (something)`, but supports
+     * non-`String` metadata types. If `meta_underlined` is `true`, meta tags display an underline.
+     * This behavior can be customized with `underline_mode`. Note: Meta tags do nothing by default
+     * when clicked. To assign behavior when clicked, connect `meta_clicked` to a function that is
+     * called when the meta tag is clicked.
+     *
+     * Generated from Godot docs: RichTextLabel.push_meta
+     */
     fun pushMeta(data: Any?, underlineMode: Long = 1L, tooltip: String = "") {
         ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, handle, data, underlineMode, tooltip)
     }
 
+    /**
+     * Adds a ``hint`` tag to the tag stack. Same as BBCode `[hint=something]{text}`.
+     *
+     * Generated from Godot docs: RichTextLabel.push_hint
+     */
     fun pushHint(description: String) {
         ObjectCalls.ptrcallWithStringArg(pushHintBind, handle, description)
     }
 
+    /**
+     * Adds language code used for text shaping algorithm and Open-Type font features.
+     *
+     * Generated from Godot docs: RichTextLabel.push_language
+     */
     fun pushLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(pushLanguageBind, handle, language)
     }
 
+    /**
+     * Adds a `` tag to the tag stack. If `color`'s alpha value is `0.0`, the current font's color with
+     * its alpha multiplied by `underline_alpha` is used.
+     *
+     * Generated from Godot docs: RichTextLabel.push_underline
+     */
     fun pushUnderline(color: Color) {
         ObjectCalls.ptrcallWithColorArg(pushUnderlineBind, handle, color)
     }
 
+    /**
+     * Adds a ``s`` tag to the tag stack. If `color`'s alpha value is `0.0`, the current font's color
+     * with its alpha multiplied by `strikethrough_alpha` is used.
+     *
+     * Generated from Godot docs: RichTextLabel.push_strikethrough
+     */
     fun pushStrikethrough(color: Color) {
         ObjectCalls.ptrcallWithColorArg(pushStrikethroughBind, handle, color)
     }
 
+    /**
+     * Adds a `[table=columns,inline_align]` tag to the tag stack. Use `set_table_column_expand` to set
+     * column expansion ratio. Use `push_cell` to add cells. `name` is used as the table name for
+     * assistive apps.
+     *
+     * Generated from Godot docs: RichTextLabel.push_table
+     */
     fun pushTable(columns: Int, inlineAlign: Long = 0L, alignToRow: Int = -1, name: String = "") {
         ObjectCalls.ptrcallWithIntLongIntStringArgs(pushTableBind, handle, columns, inlineAlign, alignToRow, name)
     }
 
+    /**
+     * Adds a ``dropcap`` tag to the tag stack. Drop cap (dropped capital) is a decorative element at
+     * the beginning of a paragraph that is larger than the rest of the text.
+     *
+     * Generated from Godot docs: RichTextLabel.push_dropcap
+     */
     fun pushDropcap(string: String, font: Font?, size: Int, dropcapMargins: Rect2, color: Color, outlineSize: Int = 0, outlineColor: Color) {
         ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(pushDropcapBind, handle, string, font?.requireOpenHandle() ?: MemorySegment.NULL, size, dropcapMargins, color, outlineSize, outlineColor)
     }
 
+    /**
+     * Edits the selected column's expansion options. If `expand` is `true`, the column expands in
+     * proportion to its expansion ratio versus the other columns' ratios. For example, 2 columns with
+     * ratios 3 and 4 plus 70 pixels in available width would expand 30 and 40 pixels, respectively. If
+     * `expand` is `false`, the column will not contribute to the total ratio.
+     *
+     * Generated from Godot docs: RichTextLabel.set_table_column_expand
+     */
     fun setTableColumnExpand(column: Int, expand: Boolean, ratio: Int = 1, shrink: Boolean = true) {
         ObjectCalls.ptrcallWithIntBoolIntBoolArgs(setTableColumnExpandBind, handle, column, expand, ratio, shrink)
     }
 
+    /**
+     * Sets table column name for assistive apps.
+     *
+     * Generated from Godot docs: RichTextLabel.set_table_column_name
+     */
     fun setTableColumnName(column: Int, name: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTableColumnNameBind, handle, column, name)
     }
 
+    /**
+     * Sets color of a table cell. Separate colors for alternating rows can be specified.
+     *
+     * Generated from Godot docs: RichTextLabel.set_cell_row_background_color
+     */
     fun setCellRowBackgroundColor(oddRowBg: Color, evenRowBg: Color) {
         ObjectCalls.ptrcallWithTwoColorArgs(setCellRowBackgroundColorBind, handle, oddRowBg, evenRowBg)
     }
 
+    /**
+     * Sets color of a table cell border.
+     *
+     * Generated from Godot docs: RichTextLabel.set_cell_border_color
+     */
     fun setCellBorderColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setCellBorderColorBind, handle, color)
     }
 
+    /**
+     * Sets minimum and maximum size overrides for a table cell.
+     *
+     * Generated from Godot docs: RichTextLabel.set_cell_size_override
+     */
     fun setCellSizeOverride(minSize: Vector2, maxSize: Vector2) {
         ObjectCalls.ptrcallWithTwoVector2Args(setCellSizeOverrideBind, handle, minSize, maxSize)
     }
 
+    /**
+     * Sets inner padding of a table cell.
+     *
+     * Generated from Godot docs: RichTextLabel.set_cell_padding
+     */
     fun setCellPadding(padding: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setCellPaddingBind, handle, padding)
     }
 
+    /**
+     * Adds a ``cell`` tag to the tag stack. Must be inside a ``table`` tag. See `push_table` for
+     * details. Use `set_table_column_expand` to set column expansion ratio, `set_cell_border_color` to
+     * set cell border, `set_cell_row_background_color` to set cell background,
+     * `set_cell_size_override` to override cell size, and `set_cell_padding` to set padding.
+     *
+     * Generated from Godot docs: RichTextLabel.push_cell
+     */
     fun pushCell() {
         ObjectCalls.ptrcallNoArgs(pushCellBind, handle)
     }
 
+    /**
+     * Adds a ``fgcolor`` tag to the tag stack. Note: The foreground color has padding applied by
+     * default, which is controlled using `text_highlight_h_padding` and `text_highlight_v_padding`.
+     * This can lead to overlapping highlights if foreground colors are placed on neighboring
+     * lines/columns, so consider setting those theme items to `0` if you want to avoid this.
+     *
+     * Generated from Godot docs: RichTextLabel.push_fgcolor
+     */
     fun pushFgcolor(fgcolor: Color) {
         ObjectCalls.ptrcallWithColorArg(pushFgcolorBind, handle, fgcolor)
     }
 
+    /**
+     * Adds a ``bgcolor`` tag to the tag stack. Note: The background color has padding applied by
+     * default, which is controlled using `text_highlight_h_padding` and `text_highlight_v_padding`.
+     * This can lead to overlapping highlights if background colors are placed on neighboring
+     * lines/columns, so consider setting those theme items to `0` if you want to avoid this.
+     *
+     * Generated from Godot docs: RichTextLabel.push_bgcolor
+     */
     fun pushBgcolor(bgcolor: Color) {
         ObjectCalls.ptrcallWithColorArg(pushBgcolorBind, handle, bgcolor)
     }
 
+    /**
+     * Adds a custom effect tag to the tag stack. The effect does not need to be in `custom_effects`.
+     * The environment is directly passed to the effect.
+     *
+     * Generated from Godot docs: RichTextLabel.push_customfx
+     */
     fun pushCustomfx(effect: RichTextEffect?, env: Map<String, Any?>) {
         ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, handle, effect?.requireOpenHandle() ?: MemorySegment.NULL, env)
     }
 
+    /**
+     * Adds a context marker to the tag stack. See `pop_context`.
+     *
+     * Generated from Godot docs: RichTextLabel.push_context
+     */
     fun pushContext() {
         ObjectCalls.ptrcallNoArgs(pushContextBind, handle)
     }
 
+    /**
+     * Terminates tags opened after the last `push_context` call (including context marker), or all
+     * tags if there's no context marker on the stack.
+     *
+     * Generated from Godot docs: RichTextLabel.pop_context
+     */
     fun popContext() {
         ObjectCalls.ptrcallNoArgs(popContextBind, handle)
     }
@@ -375,6 +625,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(popBind, handle)
     }
 
+    /**
+     * Terminates all tags opened by `push_*` methods.
+     *
+     * Generated from Godot docs: RichTextLabel.pop_all
+     */
     fun popAll() {
         ObjectCalls.ptrcallNoArgs(popAllBind, handle)
     }
@@ -390,214 +645,515 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    /**
+     * Set BiDi algorithm override for the structured text.
+     *
+     * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override
+     */
     fun setStructuredTextBidiOverride(parser: Long) {
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
+    /**
+     * Set BiDi algorithm override for the structured text.
+     *
+     * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override
+     */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
+    /**
+     * Set additional options for BiDi override.
+     *
+     * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override_options
+     */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
+    /**
+     * Set additional options for BiDi override.
+     *
+     * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override_options
+     */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
+    /**
+     * Base text writing direction.
+     *
+     * Generated from Godot docs: RichTextLabel.set_text_direction
+     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
+    /**
+     * Base text writing direction.
+     *
+     * Generated from Godot docs: RichTextLabel.get_text_direction
+     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
+    /**
+     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
+     * locale is used instead.
+     *
+     * Generated from Godot docs: RichTextLabel.set_language
+     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
+    /**
+     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
+     * locale is used instead.
+     *
+     * Generated from Godot docs: RichTextLabel.get_language
+     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
+    /**
+     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
+     * justify).
+     *
+     * Generated from Godot docs: RichTextLabel.set_horizontal_alignment
+     */
     fun setHorizontalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
+    /**
+     * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
+     * justify).
+     *
+     * Generated from Godot docs: RichTextLabel.get_horizontal_alignment
+     */
     fun getHorizontalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
+    /**
+     * Controls the text's vertical alignment. Supports top, center, bottom, and fill.
+     *
+     * Generated from Godot docs: RichTextLabel.set_vertical_alignment
+     */
     fun setVerticalAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
     }
 
+    /**
+     * Controls the text's vertical alignment. Supports top, center, bottom, and fill.
+     *
+     * Generated from Godot docs: RichTextLabel.get_vertical_alignment
+     */
     fun getVerticalAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
     }
 
+    /**
+     * Line fill alignment rules.
+     *
+     * Generated from Godot docs: RichTextLabel.set_justification_flags
+     */
     fun setJustificationFlags(justificationFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
     }
 
+    /**
+     * Line fill alignment rules.
+     *
+     * Generated from Godot docs: RichTextLabel.get_justification_flags
+     */
     fun getJustificationFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
+    /**
+     * Aligns text to the given tab-stops.
+     *
+     * Generated from Godot docs: RichTextLabel.set_tab_stops
+     */
     fun setTabStops(tabStops: List<Float>) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, handle, tabStops)
     }
 
+    /**
+     * Aligns text to the given tab-stops.
+     *
+     * Generated from Godot docs: RichTextLabel.get_tab_stops
+     */
     fun getTabStops(): List<Float> {
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, handle)
     }
 
+    /**
+     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * node's bounding rectangle. Note: RichTextLabels with autowrapping and `fit_content` enabled must
+     * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
+     * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
+     * with `Control.propagate_maximum_size` enabled.
+     *
+     * Generated from Godot docs: RichTextLabel.set_autowrap_mode
+     */
     fun setAutowrapMode(autowrapMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
+    /**
+     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * node's bounding rectangle. Note: RichTextLabels with autowrapping and `fit_content` enabled must
+     * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
+     * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
+     * with `Control.propagate_maximum_size` enabled.
+     *
+     * Generated from Godot docs: RichTextLabel.get_autowrap_mode
+     */
     fun getAutowrapMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
+    /**
+     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
+     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     *
+     * Generated from Godot docs: RichTextLabel.set_autowrap_trim_flags
+     */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
         ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
     }
 
+    /**
+     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
+     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     *
+     * Generated from Godot docs: RichTextLabel.get_autowrap_trim_flags
+     */
     fun getAutowrapTrimFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
     }
 
+    /**
+     * If `true`, the label underlines meta tags such as ``url`{text}`. These tags can call a function
+     * when clicked if `meta_clicked` is connected to a function.
+     *
+     * Generated from Godot docs: RichTextLabel.set_meta_underline
+     */
     fun setMetaUnderline(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMetaUnderlineBind, handle, enable)
     }
 
+    /**
+     * If `true`, the label underlines meta tags such as ``url`{text}`. These tags can call a function
+     * when clicked if `meta_clicked` is connected to a function.
+     *
+     * Generated from Godot docs: RichTextLabel.is_meta_underlined
+     */
     fun isMetaUnderlined(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaUnderlinedBind, handle)
     }
 
+    /**
+     * If `true`, the label underlines hint tags such as `[hint=description]{text}`.
+     *
+     * Generated from Godot docs: RichTextLabel.set_hint_underline
+     */
     fun setHintUnderline(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHintUnderlineBind, handle, enable)
     }
 
+    /**
+     * If `true`, the label underlines hint tags such as `[hint=description]{text}`.
+     *
+     * Generated from Godot docs: RichTextLabel.is_hint_underlined
+     */
     fun isHintUnderlined(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHintUnderlinedBind, handle)
     }
 
+    /**
+     * If `true`, the scrollbar is visible. Setting this to `false` does not block scrolling
+     * completely. See `scroll_to_line`.
+     *
+     * Generated from Godot docs: RichTextLabel.set_scroll_active
+     */
     fun setScrollActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScrollActiveBind, handle, active)
     }
 
+    /**
+     * If `true`, the scrollbar is visible. Setting this to `false` does not block scrolling
+     * completely. See `scroll_to_line`.
+     *
+     * Generated from Godot docs: RichTextLabel.is_scroll_active
+     */
     fun isScrollActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollActiveBind, handle)
     }
 
+    /**
+     * If `true`, the window scrolls to display the last visible line when `visible_characters` or
+     * `visible_ratio` is changed.
+     *
+     * Generated from Godot docs: RichTextLabel.set_scroll_follow_visible_characters
+     */
     fun setScrollFollowVisibleCharacters(follow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScrollFollowVisibleCharactersBind, handle, follow)
     }
 
+    /**
+     * If `true`, the window scrolls to display the last visible line when `visible_characters` or
+     * `visible_ratio` is changed.
+     *
+     * Generated from Godot docs: RichTextLabel.is_scroll_following_visible_characters
+     */
     fun isScrollFollowingVisibleCharacters(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingVisibleCharactersBind, handle)
     }
 
+    /**
+     * If `true`, the window scrolls down to display new content automatically.
+     *
+     * Generated from Godot docs: RichTextLabel.set_scroll_follow
+     */
     fun setScrollFollow(follow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScrollFollowBind, handle, follow)
     }
 
+    /**
+     * If `true`, the window scrolls down to display new content automatically.
+     *
+     * Generated from Godot docs: RichTextLabel.is_scroll_following
+     */
     fun isScrollFollowing(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingBind, handle)
     }
 
+    /**
+     * Returns the vertical scrollbar. Warning: This is a required internal node, removing and freeing
+     * it may cause a crash. If you wish to hide it or any of its children, use their
+     * `CanvasItem.visible` property.
+     *
+     * Generated from Godot docs: RichTextLabel.get_v_scroll_bar
+     */
     fun getVScrollBar(): VScrollBar? {
         return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
     }
 
+    /**
+     * Scrolls the window's top line to match `line`.
+     *
+     * Generated from Godot docs: RichTextLabel.scroll_to_line
+     */
     fun scrollToLine(line: Int) {
         ObjectCalls.ptrcallWithIntArg(scrollToLineBind, handle, line)
     }
 
+    /**
+     * Scrolls the window's top line to match first line of the `paragraph`.
+     *
+     * Generated from Godot docs: RichTextLabel.scroll_to_paragraph
+     */
     fun scrollToParagraph(paragraph: Int) {
         ObjectCalls.ptrcallWithIntArg(scrollToParagraphBind, handle, paragraph)
     }
 
+    /**
+     * Scrolls to the beginning of the current selection.
+     *
+     * Generated from Godot docs: RichTextLabel.scroll_to_selection
+     */
     fun scrollToSelection() {
         ObjectCalls.ptrcallNoArgs(scrollToSelectionBind, handle)
     }
 
+    /**
+     * The number of spaces associated with a single tab length. Does not affect `\t` in text tags,
+     * only indent tags.
+     *
+     * Generated from Godot docs: RichTextLabel.set_tab_size
+     */
     fun setTabSize(spaces: Int) {
         ObjectCalls.ptrcallWithIntArg(setTabSizeBind, handle, spaces)
     }
 
+    /**
+     * The number of spaces associated with a single tab length. Does not affect `\t` in text tags,
+     * only indent tags.
+     *
+     * Generated from Godot docs: RichTextLabel.get_tab_size
+     */
     fun getTabSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, handle)
     }
 
+    /**
+     * If `true`, the label's minimum size will be automatically updated to fit its content, matching
+     * the behavior of `Label`. Note: RichTextLabels with autowrapping and `fit_content` enabled must
+     * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
+     * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
+     * with `Control.propagate_maximum_size` enabled.
+     *
+     * Generated from Godot docs: RichTextLabel.set_fit_content
+     */
     fun setFitContent(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFitContentBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the label's minimum size will be automatically updated to fit its content, matching
+     * the behavior of `Label`. Note: RichTextLabels with autowrapping and `fit_content` enabled must
+     * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
+     * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
+     * with `Control.propagate_maximum_size` enabled.
+     *
+     * Generated from Godot docs: RichTextLabel.is_fit_content_enabled
+     */
     fun isFitContentEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFitContentEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the label allows text selection.
+     *
+     * Generated from Godot docs: RichTextLabel.set_selection_enabled
+     */
     fun setSelectionEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSelectionEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the label allows text selection.
+     *
+     * Generated from Godot docs: RichTextLabel.is_selection_enabled
+     */
     fun isSelectionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectionEnabledBind, handle)
     }
 
+    /**
+     * If `true`, a right-click displays the context menu.
+     *
+     * Generated from Godot docs: RichTextLabel.set_context_menu_enabled
+     */
     fun setContextMenuEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, a right-click displays the context menu.
+     *
+     * Generated from Godot docs: RichTextLabel.is_context_menu_enabled
+     */
     fun isContextMenuEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, handle)
     }
 
+    /**
+     * If `true`, shortcut keys for context menu items are enabled, even if the context menu is
+     * disabled.
+     *
+     * Generated from Godot docs: RichTextLabel.set_shortcut_keys_enabled
+     */
     fun setShortcutKeysEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, shortcut keys for context menu items are enabled, even if the context menu is
+     * disabled.
+     *
+     * Generated from Godot docs: RichTextLabel.is_shortcut_keys_enabled
+     */
     fun isShortcutKeysEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the selected text will be deselected when focus is lost.
+     *
+     * Generated from Godot docs: RichTextLabel.set_deselect_on_focus_loss_enabled
+     */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, the selected text will be deselected when focus is lost.
+     *
+     * Generated from Godot docs: RichTextLabel.is_deselect_on_focus_loss_enabled
+     */
     fun isDeselectOnFocusLossEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, handle)
     }
 
+    /**
+     * If `true`, allow drag and drop of selected text.
+     *
+     * Generated from Godot docs: RichTextLabel.set_drag_and_drop_selection_enabled
+     */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, allow drag and drop of selected text.
+     *
+     * Generated from Godot docs: RichTextLabel.is_drag_and_drop_selection_enabled
+     */
     fun isDragAndDropSelectionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, handle)
     }
 
+    /**
+     * Returns the current selection first character index if a selection is active, `-1` otherwise.
+     * Does not include BBCodes.
+     *
+     * Generated from Godot docs: RichTextLabel.get_selection_from
+     */
     fun getSelectionFrom(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromBind, handle)
     }
 
+    /**
+     * Returns the current selection last character index if a selection is active, `-1` otherwise.
+     * Does not include BBCodes.
+     *
+     * Generated from Godot docs: RichTextLabel.get_selection_to
+     */
     fun getSelectionTo(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSelectionToBind, handle)
     }
 
+    /**
+     * Returns the current selection vertical line offset if a selection is active, `-1.0` otherwise.
+     *
+     * Generated from Godot docs: RichTextLabel.get_selection_line_offset
+     */
     fun getSelectionLineOffset(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSelectionLineOffsetBind, handle)
     }
 
+    /**
+     * Select all the text. If `selection_enabled` is `false`, no selection will occur.
+     *
+     * Generated from Godot docs: RichTextLabel.select_all
+     */
     fun selectAll() {
         ObjectCalls.ptrcallNoArgs(selectAllBind, handle)
     }
 
+    /**
+     * Returns the current selection text. Does not include BBCodes.
+     *
+     * Generated from Godot docs: RichTextLabel.get_selected_text
+     */
     fun getSelectedText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, handle)
     }
@@ -611,162 +1167,432 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(deselectBind, handle)
     }
 
+    /**
+     * The assignment version of `append_text`. Clears the tag stack and inserts the new content.
+     *
+     * Generated from Godot docs: RichTextLabel.parse_bbcode
+     */
     fun parseBbcode(bbcode: String) {
         ObjectCalls.ptrcallWithStringArg(parseBbcodeBind, handle, bbcode)
     }
 
+    /**
+     * Parses `bbcode` and adds tags to the tag stack as needed. Note: Using this method, you can't
+     * close a tag that was opened in a previous `append_text` call. This is done to improve
+     * performance, especially when updating large RichTextLabels since rebuilding the whole BBCode
+     * every time would be slower. If you absolutely need to close a tag in a future method call,
+     * append the `text` instead of using `append_text`.
+     *
+     * Generated from Godot docs: RichTextLabel.append_text
+     */
     fun appendText(bbcode: String) {
         ObjectCalls.ptrcallWithStringArg(appendTextBind, handle, bbcode)
     }
 
+    /**
+     * The label's text in BBCode format. Is not representative of manual modifications to the internal
+     * tag stack. Erases changes made by other methods when edited. Note: If `bbcode_enabled` is
+     * `true`, it is unadvised to use the `+=` operator with `text` (e.g. `text += "some string"`) as
+     * it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added
+     * to stack using `push_*` methods. Use `append_text` for adding text instead, unless you
+     * absolutely need to close a tag that was opened in an earlier method call.
+     *
+     * Generated from Godot docs: RichTextLabel.get_text
+     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
+    /**
+     * If `threaded` is enabled, returns `true` if the background thread has finished text processing,
+     * otherwise always return `true`.
+     *
+     * Generated from Godot docs: RichTextLabel.is_ready
+     */
     fun isReady(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isReadyBind, handle)
     }
 
+    /**
+     * If `threaded` is enabled, returns `true` if the background thread has finished text processing,
+     * otherwise always return `true`.
+     *
+     * Generated from Godot docs: RichTextLabel.is_finished
+     */
     fun isFinished(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFinishedBind, handle)
     }
 
+    /**
+     * If `true`, text processing is done in a background thread.
+     *
+     * Generated from Godot docs: RichTextLabel.set_threaded
+     */
     fun setThreaded(threaded: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setThreadedBind, handle, threaded)
     }
 
+    /**
+     * If `true`, text processing is done in a background thread.
+     *
+     * Generated from Godot docs: RichTextLabel.is_threaded
+     */
     fun isThreaded(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isThreadedBind, handle)
     }
 
+    /**
+     * The delay after which the loading progress bar is displayed, in milliseconds. Set to `-1` to
+     * disable progress bar entirely. Note: Progress bar is displayed only if `threaded` is enabled.
+     *
+     * Generated from Godot docs: RichTextLabel.set_progress_bar_delay
+     */
     fun setProgressBarDelay(delayMs: Int) {
         ObjectCalls.ptrcallWithIntArg(setProgressBarDelayBind, handle, delayMs)
     }
 
+    /**
+     * The delay after which the loading progress bar is displayed, in milliseconds. Set to `-1` to
+     * disable progress bar entirely. Note: Progress bar is displayed only if `threaded` is enabled.
+     *
+     * Generated from Godot docs: RichTextLabel.get_progress_bar_delay
+     */
     fun getProgressBarDelay(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getProgressBarDelayBind, handle)
     }
 
+    /**
+     * The number of characters to display. If set to `-1`, all characters are displayed. This can be
+     * useful when animating the text appearing in a dialog box. Note: Setting this property updates
+     * `visible_ratio` accordingly. Note: Characters are counted as Unicode codepoints. A single
+     * visible grapheme may contain multiple codepoints (e.g. certain emoji use three codepoints). A
+     * single codepoint may contain two UTF-16 characters, which are used in C# strings.
+     *
+     * Generated from Godot docs: RichTextLabel.set_visible_characters
+     */
     fun setVisibleCharacters(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, handle, amount)
     }
 
+    /**
+     * The number of characters to display. If set to `-1`, all characters are displayed. This can be
+     * useful when animating the text appearing in a dialog box. Note: Setting this property updates
+     * `visible_ratio` accordingly. Note: Characters are counted as Unicode codepoints. A single
+     * visible grapheme may contain multiple codepoints (e.g. certain emoji use three codepoints). A
+     * single codepoint may contain two UTF-16 characters, which are used in C# strings.
+     *
+     * Generated from Godot docs: RichTextLabel.get_visible_characters
+     */
     fun getVisibleCharacters(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, handle)
     }
 
+    /**
+     * The clipping behavior when `visible_characters` or `visible_ratio` is set.
+     *
+     * Generated from Godot docs: RichTextLabel.get_visible_characters_behavior
+     */
     fun getVisibleCharactersBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, handle)
     }
 
+    /**
+     * The clipping behavior when `visible_characters` or `visible_ratio` is set.
+     *
+     * Generated from Godot docs: RichTextLabel.set_visible_characters_behavior
+     */
     fun setVisibleCharactersBehavior(behavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, handle, behavior)
     }
 
+    /**
+     * The fraction of characters to display, relative to the total number of characters (see
+     * `get_total_character_count`). If set to `1.0`, all characters are displayed. If set to `0.5`,
+     * only half of the characters will be displayed. This can be useful when animating the text
+     * appearing in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
+     *
+     * Generated from Godot docs: RichTextLabel.set_visible_ratio
+     */
     fun setVisibleRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, handle, ratio)
     }
 
+    /**
+     * The fraction of characters to display, relative to the total number of characters (see
+     * `get_total_character_count`). If set to `1.0`, all characters are displayed. If set to `0.5`,
+     * only half of the characters will be displayed. This can be useful when animating the text
+     * appearing in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
+     *
+     * Generated from Godot docs: RichTextLabel.get_visible_ratio
+     */
     fun getVisibleRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, handle)
     }
 
+    /**
+     * Returns the line number of the character position provided. Line and character numbers are both
+     * zero-indexed. Note: If `threaded` is enabled, this method returns a value for the loaded part of
+     * the document. Use `is_finished` or `finished` to determine whether document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_character_line
+     */
     fun getCharacterLine(character: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterLineBind, handle, character)
     }
 
+    /**
+     * Returns the paragraph number of the character position provided. Paragraph and character numbers
+     * are both zero-indexed. Note: If `threaded` is enabled, this method returns a value for the
+     * loaded part of the document. Use `is_finished` or `finished` to determine whether document is
+     * fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_character_paragraph
+     */
     fun getCharacterParagraph(character: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterParagraphBind, handle, character)
     }
 
+    /**
+     * Returns the total number of characters from text tags. Does not include BBCodes.
+     *
+     * Generated from Godot docs: RichTextLabel.get_total_character_count
+     */
     fun getTotalCharacterCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, handle)
     }
 
+    /**
+     * If `true`, the label uses BBCode formatting. Note: This only affects the contents of `text`, not
+     * the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.set_use_bbcode
+     */
     fun setUseBbcode(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseBbcodeBind, handle, enable)
     }
 
+    /**
+     * If `true`, the label uses BBCode formatting. Note: This only affects the contents of `text`, not
+     * the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.is_using_bbcode
+     */
     fun isUsingBbcode(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingBbcodeBind, handle)
     }
 
+    /**
+     * Returns the total number of lines in the text. Wrapped text is counted as multiple lines. Note:
+     * If `threaded` is enabled, this method returns a value for the loaded part of the document. Use
+     * `is_finished` or `finished` to determine whether document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_line_count
+     */
     fun getLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
+    /**
+     * Returns the indexes of the first and last visible characters for the given `line`, as a
+     * `Vector2i`. Note: If `visible_characters_behavior` is set to
+     * `TextServer.VC_CHARS_BEFORE_SHAPING` only visible wrapped lines are counted. Note: If `threaded`
+     * is enabled, this method returns a value for the loaded part of the document. Use `is_finished`
+     * or `finished` to determine whether document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_line_range
+     */
     fun getLineRange(line: Int): Vector2i {
         return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, handle, line)
     }
 
+    /**
+     * Returns the number of visible lines. Note: This method returns a correct value only after the
+     * label has been drawn. Note: If `threaded` is enabled, this method returns a value for the loaded
+     * part of the document. Use `is_finished` or `finished` to determine whether document is fully
+     * loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_visible_line_count
+     */
     fun getVisibleLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, handle)
     }
 
+    /**
+     * Returns the total number of paragraphs (newlines or `p` tags in the tag stack's text tags).
+     * Considers wrapped text as one paragraph.
+     *
+     * Generated from Godot docs: RichTextLabel.get_paragraph_count
+     */
     fun getParagraphCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getParagraphCountBind, handle)
     }
 
+    /**
+     * Returns the number of visible paragraphs. A paragraph is considered visible if at least one of
+     * its lines is visible. Note: This method returns a correct value only after the label has been
+     * drawn. Note: If `threaded` is enabled, this method returns a value for the loaded part of the
+     * document. Use `is_finished` or `finished` to determine whether document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_visible_paragraph_count
+     */
     fun getVisibleParagraphCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleParagraphCountBind, handle)
     }
 
+    /**
+     * Returns the height of the content. Note: This method always returns the full content size, and
+     * is not affected by `visible_ratio` and `visible_characters`. To get the visible content size,
+     * use `get_visible_content_rect`. Note: If `threaded` is enabled, this method returns a value for
+     * the loaded part of the document. Use `is_finished` or `finished` to determine whether document
+     * is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_content_height
+     */
     fun getContentHeight(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getContentHeightBind, handle)
     }
 
+    /**
+     * Returns the width of the content. Note: This method always returns the full content size, and is
+     * not affected by `visible_ratio` and `visible_characters`. To get the visible content size, use
+     * `get_visible_content_rect`. Note: If `threaded` is enabled, this method returns a value for the
+     * loaded part of the document. Use `is_finished` or `finished` to determine whether document is
+     * fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_content_width
+     */
     fun getContentWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getContentWidthBind, handle)
     }
 
+    /**
+     * Returns the height of the line found at the provided index. Note: If `threaded` is enabled, this
+     * method returns a value for the loaded part of the document. Use `is_finished` or `finished` to
+     * determine whether the document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_line_height
+     */
     fun getLineHeight(line: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, handle, line)
     }
 
+    /**
+     * Returns the width of the line found at the provided index. Note: If `threaded` is enabled, this
+     * method returns a value for the loaded part of the document. Use `is_finished` or `finished` to
+     * determine whether the document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_line_width
+     */
     fun getLineWidth(line: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getLineWidthBind, handle, line)
     }
 
+    /**
+     * Returns the bounding rectangle of the visible content. Note: This method returns a correct value
+     * only after the label has been drawn.
+     *
+     * Generated from Godot docs: RichTextLabel.get_visible_content_rect
+     */
     fun getVisibleContentRect(): Rect2i {
         return ObjectCalls.ptrcallNoArgsRetRect2i(getVisibleContentRectBind, handle)
     }
 
+    /**
+     * Returns the vertical offset of the line found at the provided index. Note: If `threaded` is
+     * enabled, this method returns a value for the loaded part of the document. Use `is_finished` or
+     * `finished` to determine whether document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_line_offset
+     */
     fun getLineOffset(line: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineOffsetBind, handle, line)
     }
 
+    /**
+     * Returns the vertical offset of the paragraph found at the provided index. Note: If `threaded` is
+     * enabled, this method returns a value for the loaded part of the document. Use `is_finished` or
+     * `finished` to determine whether document is fully loaded.
+     *
+     * Generated from Godot docs: RichTextLabel.get_paragraph_offset
+     */
     fun getParagraphOffset(paragraph: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getParagraphOffsetBind, handle, paragraph)
     }
 
+    /**
+     * Parses BBCode parameter `expressions` into a dictionary.
+     *
+     * Generated from Godot docs: RichTextLabel.parse_expressions_for_values
+     */
     fun parseExpressionsForValues(expressions: List<String>): Map<String, Any?> {
         return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, handle, expressions)
     }
 
+    /**
+     * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
+     * effect, it's more convenient to use `install_effect`.
+     *
+     * Generated from Godot docs: RichTextLabel.set_effects
+     */
     fun setEffects(effects: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setEffectsBind, handle, effects)
     }
 
+    /**
+     * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
+     * effect, it's more convenient to use `install_effect`.
+     *
+     * Generated from Godot docs: RichTextLabel.get_effects
+     */
     fun getEffects(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getEffectsBind, handle)
     }
 
+    /**
+     * Installs a custom effect. This can also be done in the Inspector through the `custom_effects`
+     * property. `effect` should be a valid `RichTextEffect`.
+     *
+     * Generated from Godot docs: RichTextLabel.install_effect
+     */
     fun installEffect(effect: Any?) {
         ObjectCalls.ptrcallWithVariantArg(installEffectBind, handle, effect)
     }
 
+    /**
+     * Reloads custom effects. Useful when `custom_effects` is modified manually.
+     *
+     * Generated from Godot docs: RichTextLabel.reload_effects
+     */
     fun reloadEffects() {
         ObjectCalls.ptrcallNoArgs(reloadEffectsBind, handle)
     }
 
+    /**
+     * Returns the `PopupMenu` of this `RichTextLabel`. By default, this menu is displayed when
+     * right-clicking on the `RichTextLabel`. You can add custom menu items or remove standard ones.
+     * Make sure your IDs don't conflict with the standard ones (see `MenuItems`). For example:
+     *
+     * Generated from Godot docs: RichTextLabel.get_menu
+     */
     fun getMenu(): PopupMenu? {
         return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, handle))
     }
 
+    /**
+     * Returns whether the menu is visible. Use this instead of `get_menu().visible` to improve
+     * performance (so the creation of the menu is avoided).
+     *
+     * Generated from Godot docs: RichTextLabel.is_menu_visible
+     */
     fun isMenuVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, handle)
     }
 
+    /**
+     * Executes a given action as defined in the `MenuItems` enum.
+     *
+     * Generated from Godot docs: RichTextLabel.menu_option
+     */
     fun menuOption(option: Int) {
         ObjectCalls.ptrcallWithIntArg(menuOptionBind, handle, option)
     }

@@ -40,58 +40,144 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setSpeedScaleProperty")
         set(value) = setSpeedScale(value)
 
+    /**
+     * Number of frames to use in the animation. While you can create the frames independently with
+     * `set_frame_texture`, you need to set this value for the animation to take new frames into
+     * account. The maximum number of frames is `MAX_FRAMES`.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_frames
+     */
     fun setFrames(frames: Int) {
         ObjectCalls.ptrcallWithIntArg(setFramesBind, handle, frames)
     }
 
+    /**
+     * Number of frames to use in the animation. While you can create the frames independently with
+     * `set_frame_texture`, you need to set this value for the animation to take new frames into
+     * account. The maximum number of frames is `MAX_FRAMES`.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_frames
+     */
     fun getFrames(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesBind, handle)
     }
 
+    /**
+     * Sets the currently visible frame of the texture. Setting this frame while playing resets the
+     * current frame time, so the newly selected frame plays for its whole configured frame duration.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_current_frame
+     */
     fun setCurrentFrame(frame: Int) {
         ObjectCalls.ptrcallWithIntArg(setCurrentFrameBind, handle, frame)
     }
 
+    /**
+     * Sets the currently visible frame of the texture. Setting this frame while playing resets the
+     * current frame time, so the newly selected frame plays for its whole configured frame duration.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_current_frame
+     */
     fun getCurrentFrame(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentFrameBind, handle)
     }
 
+    /**
+     * If `true`, the animation will pause where it currently is (i.e. at `current_frame`). The
+     * animation will continue from where it was paused when changing this property to `false`.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_pause
+     */
     fun setPause(pause: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPauseBind, handle, pause)
     }
 
+    /**
+     * If `true`, the animation will pause where it currently is (i.e. at `current_frame`). The
+     * animation will continue from where it was paused when changing this property to `false`.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_pause
+     */
     fun getPause(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPauseBind, handle)
     }
 
+    /**
+     * If `true`, the animation will only play once and will not loop back to the first frame after
+     * reaching the end. Note that reaching the end will not set `pause` to `true`.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_one_shot
+     */
     fun setOneShot(oneShot: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, oneShot)
     }
 
+    /**
+     * If `true`, the animation will only play once and will not loop back to the first frame after
+     * reaching the end. Note that reaching the end will not set `pause` to `true`.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_one_shot
+     */
     fun getOneShot(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
     }
 
+    /**
+     * The animation speed is multiplied by this value. If set to a negative value, the animation is
+     * played in reverse.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_speed_scale
+     */
     fun setSpeedScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
     }
 
+    /**
+     * The animation speed is multiplied by this value. If set to a negative value, the animation is
+     * played in reverse.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_speed_scale
+     */
     fun getSpeedScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
+    /**
+     * Assigns a `Texture2D` to the given frame. Frame IDs start at 0, so the first frame has ID 0, and
+     * the last frame of the animation has ID `frames` - 1. You can define any number of textures up to
+     * `MAX_FRAMES`, but keep in mind that only frames from 0 to `frames` - 1 will be part of the
+     * animation.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_frame_texture
+     */
     fun setFrameTexture(frame: Int, texture: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setFrameTextureBind, handle, frame, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the given frame's `Texture2D`.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_frame_texture
+     */
     fun getFrameTexture(frame: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getFrameTextureBind, handle, frame))
     }
 
+    /**
+     * Sets the duration of any given `frame`. The final duration is affected by the `speed_scale`. If
+     * set to `0`, the frame is skipped during playback.
+     *
+     * Generated from Godot docs: AnimatedTexture.set_frame_duration
+     */
     fun setFrameDuration(frame: Int, duration: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameDurationBind, handle, frame, duration)
     }
 
+    /**
+     * Returns the given `frame`'s duration, in seconds.
+     *
+     * Generated from Godot docs: AnimatedTexture.get_frame_duration
+     */
     fun getFrameDuration(frame: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getFrameDurationBind, handle, frame)
     }

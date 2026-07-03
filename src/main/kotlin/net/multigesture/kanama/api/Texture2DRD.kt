@@ -17,10 +17,20 @@ class Texture2DRD(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setTextureRdRidProperty")
         set(value) = setTextureRdRid(value)
 
+    /**
+     * The RID of the texture object created on the `RenderingDevice`.
+     *
+     * Generated from Godot docs: Texture2DRD.set_texture_rd_rid
+     */
     fun setTextureRdRid(textureRdRid: RID) {
         ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, handle, textureRdRid)
     }
 
+    /**
+     * The RID of the texture object created on the `RenderingDevice`.
+     *
+     * Generated from Godot docs: Texture2DRD.get_texture_rd_rid
+     */
     fun getTextureRdRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, handle)
     }

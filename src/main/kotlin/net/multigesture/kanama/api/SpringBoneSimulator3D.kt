@@ -30,330 +30,811 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
         @JvmName("setSettingCountProperty")
         set(value) = setSettingCount(value)
 
+    /**
+     * Sets the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_root_bone_name
+     */
     fun setRootBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_root_bone_name
+     */
     fun getRootBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the root bone index of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_root_bone
+     */
     fun setRootBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the root bone index of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_root_bone
+     */
     fun getRootBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
     }
 
+    /**
+     * Sets the end bone name of the bone chain. Note: End bone must be the root bone or a child of the
+     * root bone. If they are the same, the tail must be extended by `set_extend_end_bone` to jiggle
+     * the bone.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_name
+     */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_name
+     */
     fun getEndBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the end bone index of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone
+     */
     fun setEndBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the end bone index of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone
+     */
     fun getEndBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
     }
 
+    /**
+     * If `enabled` is `true`, the end bone is extended to have a tail. The extended tail config is
+     * allocated to the last element in the joint list. In other words, if you set `enabled` to
+     * `false`, the config of the last element in the joint list has no effect in the simulated result.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_extend_end_bone
+     */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if the end bone is extended to have a tail.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.is_end_bone_extended
+     */
     fun isEndBoneExtended(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, handle, index)
     }
 
+    /**
+     * Sets the end bone tail direction of the bone chain when `is_end_bone_extended` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_direction
+     */
     fun setEndBoneDirection(index: Int, boneDirection: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, handle, index, boneDirection)
     }
 
+    /**
+     * Returns the tail direction of the end bone of the bone chain when `is_end_bone_extended` is
+     * `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_direction
+     */
     fun getEndBoneDirection(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, handle, index)
     }
 
+    /**
+     * Sets the end bone tail length of the bone chain when `is_end_bone_extended` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_length
+     */
     fun setEndBoneLength(index: Int, length: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, handle, index, length)
     }
 
+    /**
+     * Returns the end bone tail length of the bone chain when `is_end_bone_extended` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_length
+     */
     fun getEndBoneLength(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, handle, index)
     }
 
+    /**
+     * Sets what the center originates from in the bone chain. Bone movement is calculated based on the
+     * difference in relative distance between center and bone in the previous and next frames. For
+     * example, if the parent `Skeleton3D` is used as the center, the bones are considered to have not
+     * moved if the `Skeleton3D` moves in the world. In this case, only a change in the bone pose is
+     * considered to be a bone movement.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_center_from
+     */
     fun setCenterFrom(index: Int, centerFrom: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, handle, index, centerFrom)
     }
 
+    /**
+     * Returns what the center originates from in the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_center_from
+     */
     fun getCenterFrom(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, handle, index)
     }
 
+    /**
+     * Sets the center node path of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_center_node
+     */
     fun setCenterNode(index: Int, nodePath: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setCenterNodeBind, handle, index, nodePath)
     }
 
+    /**
+     * Returns the center node path of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_center_node
+     */
     fun getCenterNode(index: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getCenterNodeBind, handle, index)
     }
 
+    /**
+     * Sets the center bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_center_bone_name
+     */
     fun setCenterBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setCenterBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the center bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_center_bone_name
+     */
     fun getCenterBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getCenterBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the center bone index of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_center_bone
+     */
     fun setCenterBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setCenterBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the center bone index of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_center_bone
+     */
     fun getCenterBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCenterBoneBind, handle, index)
     }
 
+    /**
+     * Sets the joint radius of the bone chain. It is used to move and slide with the
+     * `SpringBoneCollision3D` in the collision list. The value is scaled by `set_radius_damping_curve`
+     * and cached in each joint setting in the joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_radius
+     */
     fun setRadius(index: Int, radius: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setRadiusBind, handle, index, radius)
     }
 
+    /**
+     * Returns the joint radius of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_radius
+     */
     fun getRadius(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getRadiusBind, handle, index)
     }
 
+    /**
+     * Sets the rotation axis of the bone chain. If set to a specific axis, it acts like a hinge joint.
+     * The value is cached in each joint setting in the joint list. The axes are based on the reference
+     * pose's space, if `axis` is `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify any axis.
+     * In here, the reference pose is the bone pose immediately before the simulation. Note: The
+     * rotation axis vector and the forward vector shouldn't be colinear to avoid unintended rotation
+     * since `SpringBoneSimulator3D` does not factor in twisting forces.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis
+     */
     fun setRotationAxis(index: Int, axis: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, handle, index, axis)
     }
 
+    /**
+     * Returns the rotation axis of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis
+     */
     fun getRotationAxis(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, handle, index)
     }
 
+    /**
+     * Sets the rotation axis vector of the bone chain. The value is cached in each joint setting in
+     * the joint list. This vector is normalized by an internal process and represents the axis around
+     * which the bone chain can rotate. If the vector length is `0`, it is considered synonymous with
+     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis_vector
+     */
     fun setRotationAxisVector(index: Int, vector: Vector3) {
         ObjectCalls.ptrcallWithIntAndVector3Arg(setRotationAxisVectorBind, handle, index, vector)
     }
 
+    /**
+     * Returns the rotation axis vector of the bone chain. This vector represents the axis around which
+     * the bone chain can rotate. It is determined based on the rotation axis set for the bone chain.
+     * If `get_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`, this method returns
+     * `Vector3(0, 0, 0)`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis_vector
+     */
     fun getRotationAxisVector(index: Int): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getRotationAxisVectorBind, handle, index)
     }
 
+    /**
+     * Sets the joint radius damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_radius_damping_curve
+     */
     fun setRadiusDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setRadiusDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the joint radius damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_radius_damping_curve
+     */
     fun getRadiusDampingCurve(index: Int): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getRadiusDampingCurveBind, handle, index))
     }
 
+    /**
+     * Sets the stiffness force of the bone chain. The greater the value, the faster it recovers to its
+     * initial pose. If `stiffness` is `0`, the modified pose will not return to the original pose. The
+     * value is scaled by `set_stiffness_damping_curve` and cached in each joint setting in the joint
+     * list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_stiffness
+     */
     fun setStiffness(index: Int, stiffness: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setStiffnessBind, handle, index, stiffness)
     }
 
+    /**
+     * Returns the stiffness force of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_stiffness
+     */
     fun getStiffness(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getStiffnessBind, handle, index)
     }
 
+    /**
+     * Sets the stiffness force damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_stiffness_damping_curve
+     */
     fun setStiffnessDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setStiffnessDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the stiffness force damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_stiffness_damping_curve
+     */
     fun getStiffnessDampingCurve(index: Int): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getStiffnessDampingCurveBind, handle, index))
     }
 
+    /**
+     * Sets the drag force of the bone chain. The greater the value, the more suppressed the wiggling.
+     * The value is scaled by `set_drag_damping_curve` and cached in each joint setting in the joint
+     * list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_drag
+     */
     fun setDrag(index: Int, drag: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setDragBind, handle, index, drag)
     }
 
+    /**
+     * Returns the drag force damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_drag
+     */
     fun getDrag(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getDragBind, handle, index)
     }
 
+    /**
+     * Sets the drag force damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_drag_damping_curve
+     */
     fun setDragDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setDragDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the drag force damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_drag_damping_curve
+     */
     fun getDragDampingCurve(index: Int): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDragDampingCurveBind, handle, index))
     }
 
+    /**
+     * Sets the gravity amount of the bone chain. This value is not an acceleration, but a constant
+     * velocity of movement in `set_gravity_direction`. If `gravity` is not `0`, the modified pose will
+     * not return to the original pose since it is always affected by gravity. The value is scaled by
+     * `set_gravity_damping_curve` and cached in each joint setting in the joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_gravity
+     */
     fun setGravity(index: Int, gravity: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setGravityBind, handle, index, gravity)
     }
 
+    /**
+     * Returns the gravity amount of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_gravity
+     */
     fun getGravity(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getGravityBind, handle, index)
     }
 
+    /**
+     * Sets the gravity amount damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_gravity_damping_curve
+     */
     fun setGravityDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setGravityDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the gravity amount damping curve of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_gravity_damping_curve
+     */
     fun getGravityDampingCurve(index: Int): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getGravityDampingCurveBind, handle, index))
     }
 
+    /**
+     * Sets the gravity direction of the bone chain. This value is internally normalized and then
+     * multiplied by `set_gravity`. The value is cached in each joint setting in the joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_gravity_direction
+     */
     fun setGravityDirection(index: Int, gravityDirection: Vector3) {
         ObjectCalls.ptrcallWithIntAndVector3Arg(setGravityDirectionBind, handle, index, gravityDirection)
     }
 
+    /**
+     * Returns the gravity direction of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_gravity_direction
+     */
     fun getGravityDirection(index: Int): Vector3 {
         return ObjectCalls.ptrcallWithIntArgRetVector3(getGravityDirectionBind, handle, index)
     }
 
+    /**
+     * The number of settings.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_setting_count
+     */
     fun setSettingCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setSettingCountBind, handle, count)
     }
 
+    /**
+     * The number of settings.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_setting_count
+     */
     fun getSettingCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, handle)
     }
 
+    /**
+     * Clears all settings.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.clear_settings
+     */
     fun clearSettings() {
         ObjectCalls.ptrcallNoArgs(clearSettingsBind, handle)
     }
 
+    /**
+     * If `enabled` is `true`, the config can be edited individually for each joint.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_individual_config
+     */
     fun setIndividualConfig(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setIndividualConfigBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if the config can be edited individually for each joint.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.is_config_individual
+     */
     fun isConfigIndividual(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isConfigIndividualBind, handle, index)
     }
 
+    /**
+     * Returns the bone name at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_bone_name
+     */
     fun getJointBoneName(index: Int, joint: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
     }
 
+    /**
+     * Returns the bone index at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_bone
+     */
     fun getJointBone(index: Int, joint: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, handle, index, joint)
     }
 
+    /**
+     * Sets the rotation axis at `joint` in the bone chain's joint list when `is_config_individual` is
+     * `true`. The axes are based on the reference pose's space, if `axis` is
+     * `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify any axis. In here, the reference pose
+     * is the bone pose immediately before the simulation. Note: The rotation axis and the forward
+     * vector shouldn't be colinear to avoid unintended rotation since `SpringBoneSimulator3D` does not
+     * factor in twisting forces.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis
+     */
     fun setJointRotationAxis(index: Int, joint: Int, axis: Long) {
         ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, handle, index, joint, axis)
     }
 
+    /**
+     * Returns the rotation axis at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis
+     */
     fun getJointRotationAxis(index: Int, joint: Int): Long {
         return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, handle, index, joint)
     }
 
+    /**
+     * Sets the rotation axis vector for the specified joint in the bone chain. This vector is
+     * normalized by an internal process and represents the axis around which the bone chain can
+     * rotate. If the vector length is `0`, it is considered synonymous with
+     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis_vector
+     */
     fun setJointRotationAxisVector(index: Int, joint: Int, vector: Vector3) {
         ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointRotationAxisVectorBind, handle, index, joint, vector)
     }
 
+    /**
+     * Returns the rotation axis vector for the specified joint in the bone chain. This vector
+     * represents the axis around which the joint can rotate. It is determined based on the rotation
+     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`,
+     * this method returns `Vector3(0, 0, 0)`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis_vector
+     */
     fun getJointRotationAxisVector(index: Int, joint: Int): Vector3 {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointRotationAxisVectorBind, handle, index, joint)
     }
 
+    /**
+     * Sets the joint radius at `joint` in the bone chain's joint list when `is_config_individual` is
+     * `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_radius
+     */
     fun setJointRadius(index: Int, joint: Int, radius: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointRadiusBind, handle, index, joint, radius)
     }
 
+    /**
+     * Returns the radius at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_radius
+     */
     fun getJointRadius(index: Int, joint: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointRadiusBind, handle, index, joint)
     }
 
+    /**
+     * Sets the stiffness force at `joint` in the bone chain's joint list when `is_config_individual`
+     * is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_stiffness
+     */
     fun setJointStiffness(index: Int, joint: Int, stiffness: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointStiffnessBind, handle, index, joint, stiffness)
     }
 
+    /**
+     * Returns the stiffness force at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_stiffness
+     */
     fun getJointStiffness(index: Int, joint: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointStiffnessBind, handle, index, joint)
     }
 
+    /**
+     * Sets the drag force at `joint` in the bone chain's joint list when `is_config_individual` is
+     * `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_drag
+     */
     fun setJointDrag(index: Int, joint: Int, drag: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointDragBind, handle, index, joint, drag)
     }
 
+    /**
+     * Returns the drag force at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_drag
+     */
     fun getJointDrag(index: Int, joint: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointDragBind, handle, index, joint)
     }
 
+    /**
+     * Sets the gravity amount at `joint` in the bone chain's joint list when `is_config_individual` is
+     * `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_gravity
+     */
     fun setJointGravity(index: Int, joint: Int, gravity: Double) {
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointGravityBind, handle, index, joint, gravity)
     }
 
+    /**
+     * Returns the gravity amount at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_gravity
+     */
     fun getJointGravity(index: Int, joint: Int): Double {
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointGravityBind, handle, index, joint)
     }
 
+    /**
+     * Sets the gravity direction at `joint` in the bone chain's joint list when `is_config_individual`
+     * is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_joint_gravity_direction
+     */
     fun setJointGravityDirection(index: Int, joint: Int, gravityDirection: Vector3) {
         ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointGravityDirectionBind, handle, index, joint, gravityDirection)
     }
 
+    /**
+     * Returns the gravity direction at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_gravity_direction
+     */
     fun getJointGravityDirection(index: Int, joint: Int): Vector3 {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointGravityDirectionBind, handle, index, joint)
     }
 
+    /**
+     * Returns the joint count of the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_count
+     */
     fun getJointCount(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, handle, index)
     }
 
+    /**
+     * If `enabled` is `true`, all child `SpringBoneCollision3D`s are colliding and
+     * `set_exclude_collision_path` is enabled as an exclusion list at `index` in the settings. If
+     * `enabled` is `false`, you need to manually register all valid collisions with
+     * `set_collision_path`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_enable_all_child_collisions
+     */
     fun setEnableAllChildCollisions(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setEnableAllChildCollisionsBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if all child `SpringBoneCollision3D`s are contained in the collision list at
+     * `index` in the settings.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.are_all_child_collisions_enabled
+     */
     fun areAllChildCollisionsEnabled(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(areAllChildCollisionsEnabledBind, handle, index)
     }
 
+    /**
+     * Sets the node path of the `SpringBoneCollision3D` at `collision` in the bone chain's exclude
+     * collision list when `are_all_child_collisions_enabled` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_exclude_collision_path
+     */
     fun setExcludeCollisionPath(index: Int, collision: Int, nodePath: NodePath) {
         ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setExcludeCollisionPathBind, handle, index, collision, nodePath)
     }
 
+    /**
+     * Returns the node path of the `SpringBoneCollision3D` at `collision` in the bone chain's exclude
+     * collision list when `are_all_child_collisions_enabled` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_exclude_collision_path
+     */
     fun getExcludeCollisionPath(index: Int, collision: Int): NodePath {
         return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getExcludeCollisionPathBind, handle, index, collision)
     }
 
+    /**
+     * Sets the number of exclude collisions in the exclude collision list at `index` in the settings
+     * when `are_all_child_collisions_enabled` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_exclude_collision_count
+     */
     fun setExcludeCollisionCount(index: Int, count: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setExcludeCollisionCountBind, handle, index, count)
     }
 
+    /**
+     * Returns the exclude collision count of the bone chain's exclude collision list when
+     * `are_all_child_collisions_enabled` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_exclude_collision_count
+     */
     fun getExcludeCollisionCount(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getExcludeCollisionCountBind, handle, index)
     }
 
+    /**
+     * Clears all exclude collisions from the collision list at `index` in the settings when
+     * `are_all_child_collisions_enabled` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.clear_exclude_collisions
+     */
     fun clearExcludeCollisions(index: Int) {
         ObjectCalls.ptrcallWithIntArg(clearExcludeCollisionsBind, handle, index)
     }
 
+    /**
+     * Sets the node path of the `SpringBoneCollision3D` at `collision` in the bone chain's collision
+     * list when `are_all_child_collisions_enabled` is `false`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_collision_path
+     */
     fun setCollisionPath(index: Int, collision: Int, nodePath: NodePath) {
         ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setCollisionPathBind, handle, index, collision, nodePath)
     }
 
+    /**
+     * Returns the node path of the `SpringBoneCollision3D` at `collision` in the bone chain's
+     * collision list when `are_all_child_collisions_enabled` is `false`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_collision_path
+     */
     fun getCollisionPath(index: Int, collision: Int): NodePath {
         return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getCollisionPathBind, handle, index, collision)
     }
 
+    /**
+     * Sets the number of collisions in the collision list at `index` in the settings when
+     * `are_all_child_collisions_enabled` is `false`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_collision_count
+     */
     fun setCollisionCount(index: Int, count: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setCollisionCountBind, handle, index, count)
     }
 
+    /**
+     * Returns the collision count of the bone chain's collision list when
+     * `are_all_child_collisions_enabled` is `false`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_collision_count
+     */
     fun getCollisionCount(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getCollisionCountBind, handle, index)
     }
 
+    /**
+     * Clears all collisions from the collision list at `index` in the settings when
+     * `are_all_child_collisions_enabled` is `false`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.clear_collisions
+     */
     fun clearCollisions(index: Int) {
         ObjectCalls.ptrcallWithIntArg(clearCollisionsBind, handle, index)
     }
 
+    /**
+     * The constant force that always affected bones. It is equal to the result when the parent
+     * `Skeleton3D` moves at this speed in the opposite direction. This is useful for effects such as
+     * wind and anti-gravity.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_external_force
+     */
     fun setExternalForce(force: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setExternalForceBind, handle, force)
     }
 
+    /**
+     * The constant force that always affected bones. It is equal to the result when the parent
+     * `Skeleton3D` moves at this speed in the opposite direction. This is useful for effects such as
+     * wind and anti-gravity.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_external_force
+     */
     fun getExternalForce(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getExternalForceBind, handle)
     }
 
+    /**
+     * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
+     * solver retrieves the bone axis from the bone rest and caches it, which increases performance
+     * slightly, but position changes in the bone pose made before processing this
+     * `SpringBoneSimulator3D` are ignored.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.set_mutable_bone_axes
+     */
     fun setMutableBoneAxes(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
+     * solver retrieves the bone axis from the bone rest and caches it, which increases performance
+     * slightly, but position changes in the bone pose made before processing this
+     * `SpringBoneSimulator3D` are ignored.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.are_bone_axes_mutable
+     */
     fun areBoneAxesMutable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, handle)
     }

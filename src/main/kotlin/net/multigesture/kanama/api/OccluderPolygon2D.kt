@@ -37,18 +37,38 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isPolygonClosedBind, handle)
     }
 
+    /**
+     * The culling mode to use.
+     *
+     * Generated from Godot docs: OccluderPolygon2D.set_cull_mode
+     */
     fun setCullMode(cullMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
     }
 
+    /**
+     * The culling mode to use.
+     *
+     * Generated from Godot docs: OccluderPolygon2D.get_cull_mode
+     */
     fun getCullMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
+    /**
+     * A `Vector2` array with the index for polygon's vertices positions.
+     *
+     * Generated from Godot docs: OccluderPolygon2D.set_polygon
+     */
     fun setPolygon(polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
+    /**
+     * A `Vector2` array with the index for polygon's vertices positions.
+     *
+     * Generated from Godot docs: OccluderPolygon2D.get_polygon
+     */
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }

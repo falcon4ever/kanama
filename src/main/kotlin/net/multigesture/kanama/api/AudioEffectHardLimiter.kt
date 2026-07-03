@@ -29,26 +29,62 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setReleaseProperty")
         set(value) = setRelease(value)
 
+    /**
+     * The waveform's maximum allowed value, in dB. This value can range from -24 to 0. The default
+     * value of -0.3 prevents potential inter-sample peaks (ISP) from crossing over 0 dB, which can
+     * cause slight distortion on some older hardware.
+     *
+     * Generated from Godot docs: AudioEffectHardLimiter.set_ceiling_db
+     */
     fun setCeilingDb(ceiling: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
     }
 
+    /**
+     * The waveform's maximum allowed value, in dB. This value can range from -24 to 0. The default
+     * value of -0.3 prevents potential inter-sample peaks (ISP) from crossing over 0 dB, which can
+     * cause slight distortion on some older hardware.
+     *
+     * Generated from Godot docs: AudioEffectHardLimiter.get_ceiling_db
+     */
     fun getCeilingDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
     }
 
+    /**
+     * Gain before limiting, in dB. Value can range from -24 to 24.
+     *
+     * Generated from Godot docs: AudioEffectHardLimiter.set_pre_gain_db
+     */
     fun setPreGainDb(preGain: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPreGainDbBind, handle, preGain)
     }
 
+    /**
+     * Gain before limiting, in dB. Value can range from -24 to 24.
+     *
+     * Generated from Godot docs: AudioEffectHardLimiter.get_pre_gain_db
+     */
     fun getPreGainDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainDbBind, handle)
     }
 
+    /**
+     * Time it takes in seconds for the gain reduction to fully release. Value can range from 0.01 to
+     * 3.
+     *
+     * Generated from Godot docs: AudioEffectHardLimiter.set_release
+     */
     fun setRelease(release: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setReleaseBind, handle, release)
     }
 
+    /**
+     * Time it takes in seconds for the gain reduction to fully release. Value can range from 0.01 to
+     * 3.
+     *
+     * Generated from Godot docs: AudioEffectHardLimiter.get_release
+     */
     fun getRelease(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseBind, handle)
     }

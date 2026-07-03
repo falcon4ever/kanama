@@ -9,18 +9,45 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: PCKPacker
  */
 class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Creates a new PCK file at the file path `pck_path`. The `.pck` file extension isn't added
+     * automatically, so it should be part of `pck_path` (even though it's not required).
+     *
+     * Generated from Godot docs: PCKPacker.pck_start
+     */
     fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): Long {
         return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, handle, pckPath, alignment, key, encryptDirectory)
     }
 
+    /**
+     * Adds the `source_path` file to the current PCK package at the `target_path` internal path. The
+     * `res://` prefix for `target_path` is optional and stripped internally. File content is
+     * immediately written to the PCK.
+     *
+     * Generated from Godot docs: PCKPacker.add_file
+     */
     fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): Long {
         return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, handle, targetPath, sourcePath, encrypt)
     }
 
+    /**
+     * Adds the `data` to the current PCK package at the `target_path` internal path. The `res://`
+     * prefix for `target_path` is optional and stripped internally. File content is immediately
+     * written to the PCK.
+     *
+     * Generated from Godot docs: PCKPacker.add_file_from_buffer
+     */
     fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): Long {
         return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, handle, targetPath, data, encrypt)
     }
 
+    /**
+     * Registers a file removal of the `target_path` internal path to the PCK. This is mainly used for
+     * patches. If the file at this path has been loaded from a previous PCK, it will be removed. The
+     * `res://` prefix for `target_path` is optional and stripped internally.
+     *
+     * Generated from Godot docs: PCKPacker.add_file_removal
+     */
     fun addFileRemoval(targetPath: String): Long {
         return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, handle, targetPath)
     }

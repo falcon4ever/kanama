@@ -24,18 +24,44 @@ class GPUParticlesAttractorVectorField3D(handle: MemorySegment) : GPUParticlesAt
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    /**
+     * The size of the vector field box in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorVectorField3D.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The size of the vector field box in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorVectorField3D.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
+    /**
+     * The 3D texture to be used. Values are linearly interpolated between the texture's pixels. Note:
+     * To get better performance, the 3D texture's resolution should reflect the `size` of the
+     * attractor. Since particle attraction is usually low-frequency data, the texture can be kept at a
+     * low resolution such as 64×64×64.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorVectorField3D.set_texture
+     */
     fun setTexture(texture: Texture3D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The 3D texture to be used. Values are linearly interpolated between the texture's pixels. Note:
+     * To get better performance, the 3D texture's resolution should reflect the `size` of the
+     * attractor. Since particle attraction is usually low-frequency data, the texture can be kept at a
+     * low resolution such as 64×64×64.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorVectorField3D.get_texture
+     */
     fun getTexture(): Texture3D? {
         return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }

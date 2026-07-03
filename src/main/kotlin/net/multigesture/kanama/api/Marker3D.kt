@@ -16,10 +16,20 @@ class Marker3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setGizmoExtentsProperty")
         set(value) = setGizmoExtents(value)
 
+    /**
+     * Size of the gizmo cross that appears in the editor.
+     *
+     * Generated from Godot docs: Marker3D.set_gizmo_extents
+     */
     fun setGizmoExtents(extents: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGizmoExtentsBind, handle, extents)
     }
 
+    /**
+     * Size of the gizmo cross that appears in the editor.
+     *
+     * Generated from Godot docs: Marker3D.get_gizmo_extents
+     */
     fun getGizmoExtents(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGizmoExtentsBind, handle)
     }

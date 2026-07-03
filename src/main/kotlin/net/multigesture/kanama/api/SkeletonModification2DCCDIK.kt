@@ -29,82 +29,194 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
         @JvmName("setCcdikDataChainLengthProperty")
         set(value) = setCcdikDataChainLength(value)
 
+    /**
+     * The NodePath to the node that is the target for the CCDIK modification. This node is what the
+     * CCDIK chain will attempt to rotate the bone chain to.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_target_node
+     */
     fun setTargetNode(targetNodepath: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
+    /**
+     * The NodePath to the node that is the target for the CCDIK modification. This node is what the
+     * CCDIK chain will attempt to rotate the bone chain to.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_target_node
+     */
     fun getTargetNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
+    /**
+     * The end position of the CCDIK chain. Typically, this should be a child of a `Bone2D` node
+     * attached to the final `Bone2D` in the CCDIK chain.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_tip_node
+     */
     fun setTipNode(tipNodepath: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTipNodeBind, handle, tipNodepath)
     }
 
+    /**
+     * The end position of the CCDIK chain. Typically, this should be a child of a `Bone2D` node
+     * attached to the final `Bone2D` in the CCDIK chain.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_tip_node
+     */
     fun getTipNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTipNodeBind, handle)
     }
 
+    /**
+     * The number of CCDIK joints in the CCDIK modification.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_data_chain_length
+     */
     fun setCcdikDataChainLength(length: Int) {
         ObjectCalls.ptrcallWithIntArg(setCcdikDataChainLengthBind, handle, length)
     }
 
+    /**
+     * The number of CCDIK joints in the CCDIK modification.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_data_chain_length
+     */
     fun getCcdikDataChainLength(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCcdikDataChainLengthBind, handle)
     }
 
+    /**
+     * Sets the `Bone2D` node assigned to the CCDIK joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_bone2d_node
+     */
     fun setCcdikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setCcdikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
     }
 
+    /**
+     * Returns the `Bone2D` node assigned to the CCDIK joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_bone2d_node
+     */
     fun getCcdikJointBone2dNode(jointIdx: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getCcdikJointBone2dNodeBind, handle, jointIdx)
     }
 
+    /**
+     * Sets the bone index, `bone_idx`, of the CCDIK joint at `joint_idx`. When possible, this will
+     * also update the `bone2d_node` of the CCDIK joint based on data provided by the linked skeleton.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_bone_index
+     */
     fun setCcdikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setCcdikJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
+    /**
+     * Returns the index of the `Bone2D` node assigned to the CCDIK joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_bone_index
+     */
     fun getCcdikJointBoneIndex(jointIdx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getCcdikJointBoneIndexBind, handle, jointIdx)
     }
 
+    /**
+     * Sets whether the joint at `joint_idx` is set to rotate from the joint, `true`, or to rotate from
+     * the tip, `false`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_rotate_from_joint
+     */
     fun setCcdikJointRotateFromJoint(jointIdx: Int, rotateFromJoint: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointRotateFromJointBind, handle, jointIdx, rotateFromJoint)
     }
 
+    /**
+     * Returns whether the joint at `joint_idx` is set to rotate from the joint, `true`, or to rotate
+     * from the tip, `false`. The default is to rotate from the tip.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_rotate_from_joint
+     */
     fun getCcdikJointRotateFromJoint(jointIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointRotateFromJointBind, handle, jointIdx)
     }
 
+    /**
+     * Determines whether angle constraints on the CCDIK joint at `joint_idx` are enabled. When `true`,
+     * constraints will be enabled and taken into account when solving.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_enable_constraint
+     */
     fun setCcdikJointEnableConstraint(jointIdx: Int, enableConstraint: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointEnableConstraintBind, handle, jointIdx, enableConstraint)
     }
 
+    /**
+     * Returns whether angle constraints on the CCDIK joint at `joint_idx` are enabled.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_enable_constraint
+     */
     fun getCcdikJointEnableConstraint(jointIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointEnableConstraintBind, handle, jointIdx)
     }
 
+    /**
+     * Sets the minimum angle constraint for the joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_constraint_angle_min
+     */
     fun setCcdikJointConstraintAngleMin(jointIdx: Int, angleMin: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMinBind, handle, jointIdx, angleMin)
     }
 
+    /**
+     * Returns the minimum angle constraint for the joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_constraint_angle_min
+     */
     fun getCcdikJointConstraintAngleMin(jointIdx: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMinBind, handle, jointIdx)
     }
 
+    /**
+     * Sets the maximum angle constraint for the joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_constraint_angle_max
+     */
     fun setCcdikJointConstraintAngleMax(jointIdx: Int, angleMax: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMaxBind, handle, jointIdx, angleMax)
     }
 
+    /**
+     * Returns the maximum angle constraint for the joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_constraint_angle_max
+     */
     fun getCcdikJointConstraintAngleMax(jointIdx: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMaxBind, handle, jointIdx)
     }
 
+    /**
+     * Sets whether the CCDIK joint at `joint_idx` uses an inverted joint constraint. An inverted joint
+     * constraint only constraints the CCDIK joint to the angles outside of the inputted minimum and
+     * maximum angles. For this reason, it is referred to as an inverted joint constraint, as it
+     * constraints the joint to the outside of the inputted values.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_constraint_angle_invert
+     */
     fun setCcdikJointConstraintAngleInvert(jointIdx: Int, invert: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointConstraintAngleInvertBind, handle, jointIdx, invert)
     }
 
+    /**
+     * Returns whether the CCDIK joint at `joint_idx` uses an inverted joint constraint. See
+     * `set_ccdik_joint_constraint_angle_invert` for details.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_constraint_angle_invert
+     */
     fun getCcdikJointConstraintAngleInvert(jointIdx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointConstraintAngleInvertBind, handle, jointIdx)
     }

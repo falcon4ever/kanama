@@ -16,10 +16,36 @@ open class GPUParticlesCollision3D(handle: MemorySegment) : VisualInstance3D(han
         @JvmName("setCullMaskProperty")
         set(value) = setCullMask(value)
 
+    /**
+     * The particle rendering layers (`VisualInstance3D.layers`) that will be affected by the collision
+     * shape. By default, all particles that have `ParticleProcessMaterial.collision_mode` set to
+     * `ParticleProcessMaterial.COLLISION_RIGID` or `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`
+     * will be affected by a collision shape. After configuring particle nodes accordingly, specific
+     * layers can be unchecked to prevent certain particles from being affected by colliders. For
+     * example, this can be used if you're using a collider as part of a spell effect but don't want
+     * the collider to affect unrelated weather particles at the same position. Particle collision can
+     * also be disabled on a per-process material basis by setting
+     * `ParticleProcessMaterial.collision_mode` on the `GPUParticles3D` node.
+     *
+     * Generated from Godot docs: GPUParticlesCollision3D.set_cull_mask
+     */
     fun setCullMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, mask)
     }
 
+    /**
+     * The particle rendering layers (`VisualInstance3D.layers`) that will be affected by the collision
+     * shape. By default, all particles that have `ParticleProcessMaterial.collision_mode` set to
+     * `ParticleProcessMaterial.COLLISION_RIGID` or `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`
+     * will be affected by a collision shape. After configuring particle nodes accordingly, specific
+     * layers can be unchecked to prevent certain particles from being affected by colliders. For
+     * example, this can be used if you're using a collider as part of a spell effect but don't want
+     * the collider to affect unrelated weather particles at the same position. Particle collision can
+     * also be disabled on a per-process material basis by setting
+     * `ParticleProcessMaterial.collision_mode` on the `GPUParticles3D` node.
+     *
+     * Generated from Godot docs: GPUParticlesCollision3D.get_cull_mask
+     */
     fun getCullMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
     }

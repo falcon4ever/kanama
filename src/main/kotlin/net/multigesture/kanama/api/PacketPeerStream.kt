@@ -28,10 +28,20 @@ class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
         @JvmName("setStreamPeerProperty")
         set(value) = setStreamPeer(value)
 
+    /**
+     * The wrapped `StreamPeer` object.
+     *
+     * Generated from Godot docs: PacketPeerStream.set_stream_peer
+     */
     fun setStreamPeer(peer: StreamPeer?) {
         ObjectCalls.ptrcallWithObjectArgs(setStreamPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The wrapped `StreamPeer` object.
+     *
+     * Generated from Godot docs: PacketPeerStream.get_stream_peer
+     */
     fun getStreamPeer(): StreamPeer? {
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, handle))
     }

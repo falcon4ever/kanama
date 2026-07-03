@@ -16,10 +16,20 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setTimeLeftProperty")
         set(value) = setTimeLeft(value)
 
+    /**
+     * The time remaining (in seconds).
+     *
+     * Generated from Godot docs: SceneTreeTimer.set_time_left
+     */
     fun setTimeLeft(time: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, handle, time)
     }
 
+    /**
+     * The time remaining (in seconds).
+     *
+     * Generated from Godot docs: SceneTreeTimer.get_time_left
+     */
     fun getTimeLeft(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, handle)
     }

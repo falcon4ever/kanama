@@ -11,14 +11,29 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: AudioEffectEQ
  */
 open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
+    /**
+     * Sets band's gain at the specified index, in dB.
+     *
+     * Generated from Godot docs: AudioEffectEQ.set_band_gain_db
+     */
     fun setBandGainDb(bandIdx: Int, volumeDb: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBandGainDbBind, handle, bandIdx, volumeDb)
     }
 
+    /**
+     * Returns the band's gain at the specified index, in dB.
+     *
+     * Generated from Godot docs: AudioEffectEQ.get_band_gain_db
+     */
     fun getBandGainDb(bandIdx: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getBandGainDbBind, handle, bandIdx)
     }
 
+    /**
+     * Returns the number of bands of the equalizer.
+     *
+     * Generated from Godot docs: AudioEffectEQ.get_band_count
+     */
     fun getBandCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBandCountBind, handle)
     }

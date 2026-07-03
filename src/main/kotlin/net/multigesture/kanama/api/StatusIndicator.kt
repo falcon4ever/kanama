@@ -37,38 +37,86 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
         @JvmName("setVisibleProperty")
         set(value) = setVisible(value)
 
+    /**
+     * Status indicator tooltip.
+     *
+     * Generated from Godot docs: StatusIndicator.set_tooltip
+     */
     fun setTooltip(tooltip: String) {
         ObjectCalls.ptrcallWithStringArg(setTooltipBind, handle, tooltip)
     }
 
+    /**
+     * Status indicator tooltip.
+     *
+     * Generated from Godot docs: StatusIndicator.get_tooltip
+     */
     fun getTooltip(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTooltipBind, handle)
     }
 
+    /**
+     * Status indicator icon.
+     *
+     * Generated from Godot docs: StatusIndicator.set_icon
+     */
     fun setIcon(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setIconBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Status indicator icon.
+     *
+     * Generated from Godot docs: StatusIndicator.get_icon
+     */
     fun getIcon(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIconBind, handle))
     }
 
+    /**
+     * If `true`, the status indicator is visible.
+     *
+     * Generated from Godot docs: StatusIndicator.set_visible
+     */
     fun setVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the status indicator is visible.
+     *
+     * Generated from Godot docs: StatusIndicator.is_visible
+     */
     fun isVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
     }
 
+    /**
+     * Status indicator native popup menu. If this is set, the `pressed` signal is not emitted. Note:
+     * Native popup is only supported if `NativeMenu` supports `NativeMenu.FEATURE_POPUP_MENU` feature.
+     *
+     * Generated from Godot docs: StatusIndicator.set_menu
+     */
     fun setMenu(menu: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setMenuBind, handle, menu)
     }
 
+    /**
+     * Status indicator native popup menu. If this is set, the `pressed` signal is not emitted. Note:
+     * Native popup is only supported if `NativeMenu` supports `NativeMenu.FEATURE_POPUP_MENU` feature.
+     *
+     * Generated from Godot docs: StatusIndicator.get_menu
+     */
     fun getMenu(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getMenuBind, handle)
     }
 
+    /**
+     * Returns the status indicator rectangle in screen coordinates. If this status indicator is not
+     * visible, returns an empty `Rect2`.
+     *
+     * Generated from Godot docs: StatusIndicator.get_rect
+     */
     fun getRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
     }

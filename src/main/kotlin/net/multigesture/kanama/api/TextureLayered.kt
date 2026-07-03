@@ -10,30 +10,66 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: TextureLayered
  */
 open class TextureLayered(handle: MemorySegment) : Texture(handle) {
+    /**
+     * Returns the current format being used by this texture.
+     *
+     * Generated from Godot docs: TextureLayered.get_format
+     */
     fun getFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
+    /**
+     * Returns the `TextureLayered`'s type. The type determines how the data is accessed, with cubemaps
+     * having special types.
+     *
+     * Generated from Godot docs: TextureLayered.get_layered_type
+     */
     fun getLayeredType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, handle)
     }
 
+    /**
+     * Returns the width of the texture in pixels. Width is typically represented by the X axis.
+     *
+     * Generated from Godot docs: TextureLayered.get_width
+     */
     fun getWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
+    /**
+     * Returns the height of the texture in pixels. Height is typically represented by the Y axis.
+     *
+     * Generated from Godot docs: TextureLayered.get_height
+     */
     fun getHeight(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
+    /**
+     * Returns the number of referenced `Image`s.
+     *
+     * Generated from Godot docs: TextureLayered.get_layers
+     */
     fun getLayers(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLayersBind, handle)
     }
 
+    /**
+     * Returns `true` if the layers have generated mipmaps.
+     *
+     * Generated from Godot docs: TextureLayered.has_mipmaps
+     */
     fun hasMipmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
+    /**
+     * Returns an `Image` resource with the data from specified `layer`.
+     *
+     * Generated from Godot docs: TextureLayered.get_layer_data
+     */
     fun getLayerData(layer: Int): Image? {
         return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, handle, layer))
     }

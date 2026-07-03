@@ -10,18 +10,38 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: HingeJoint3D
  */
 class HingeJoint3D(handle: MemorySegment) : Joint3D(handle) {
+    /**
+     * The speed with which the two bodies get pulled together when they move in different directions.
+     *
+     * Generated from Godot docs: HingeJoint3D.set_param
+     */
     fun setParam(param: Long, value: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
     }
 
+    /**
+     * The speed with which the two bodies get pulled together when they move in different directions.
+     *
+     * Generated from Godot docs: HingeJoint3D.get_param
+     */
     fun getParam(param: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
     }
 
+    /**
+     * When activated, a motor turns the hinge.
+     *
+     * Generated from Godot docs: HingeJoint3D.set_flag
+     */
     fun setFlag(flag: Long, enabled: Boolean) {
         ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, handle, flag, enabled)
     }
 
+    /**
+     * When activated, a motor turns the hinge.
+     *
+     * Generated from Godot docs: HingeJoint3D.get_flag
+     */
     fun getFlag(flag: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, handle, flag)
     }

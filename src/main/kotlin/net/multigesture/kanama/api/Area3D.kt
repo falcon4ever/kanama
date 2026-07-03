@@ -144,202 +144,517 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
         @JvmName("setReverbBusUniformityProperty")
         set(value) = setReverbUniformity(value)
 
+    /**
+     * Override mode for gravity calculations within this area.
+     *
+     * Generated from Godot docs: Area3D.set_gravity_space_override_mode
+     */
     fun setGravitySpaceOverrideMode(spaceOverrideMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, handle, spaceOverrideMode)
     }
 
+    /**
+     * Override mode for gravity calculations within this area.
+     *
+     * Generated from Godot docs: Area3D.get_gravity_space_override_mode
+     */
     fun getGravitySpaceOverrideMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, handle)
     }
 
+    /**
+     * If `true`, gravity is calculated from a point (set via `gravity_point_center`). See also
+     * `gravity_space_override`.
+     *
+     * Generated from Godot docs: Area3D.set_gravity_is_point
+     */
     fun setGravityIsPoint(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setGravityIsPointBind, handle, enable)
     }
 
+    /**
+     * If `true`, gravity is calculated from a point (set via `gravity_point_center`). See also
+     * `gravity_space_override`.
+     *
+     * Generated from Godot docs: Area3D.is_gravity_a_point
+     */
     fun isGravityAPoint(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isGravityAPointBind, handle)
     }
 
+    /**
+     * The distance at which the gravity strength is equal to `gravity`. For example, on a planet 100
+     * meters in radius with a surface gravity of 4.0 m/s², set the `gravity` to 4.0 and the unit
+     * distance to 100.0. The gravity will have falloff according to the inverse square law, so in the
+     * example, at 200 meters from the center the gravity will be 1.0 m/s² (twice the distance, 1/4th
+     * the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4x the gravity), and so on.
+     * The above is true only when the unit distance is a positive number. When this is set to 0.0, the
+     * gravity will be constant regardless of distance.
+     *
+     * Generated from Godot docs: Area3D.set_gravity_point_unit_distance
+     */
     fun setGravityPointUnitDistance(distanceScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGravityPointUnitDistanceBind, handle, distanceScale)
     }
 
+    /**
+     * The distance at which the gravity strength is equal to `gravity`. For example, on a planet 100
+     * meters in radius with a surface gravity of 4.0 m/s², set the `gravity` to 4.0 and the unit
+     * distance to 100.0. The gravity will have falloff according to the inverse square law, so in the
+     * example, at 200 meters from the center the gravity will be 1.0 m/s² (twice the distance, 1/4th
+     * the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4x the gravity), and so on.
+     * The above is true only when the unit distance is a positive number. When this is set to 0.0, the
+     * gravity will be constant regardless of distance.
+     *
+     * Generated from Godot docs: Area3D.get_gravity_point_unit_distance
+     */
     fun getGravityPointUnitDistance(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGravityPointUnitDistanceBind, handle)
     }
 
+    /**
+     * If gravity is a point (see `gravity_point`), this will be the point of attraction.
+     *
+     * Generated from Godot docs: Area3D.set_gravity_point_center
+     */
     fun setGravityPointCenter(center: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setGravityPointCenterBind, handle, center)
     }
 
+    /**
+     * If gravity is a point (see `gravity_point`), this will be the point of attraction.
+     *
+     * Generated from Godot docs: Area3D.get_gravity_point_center
+     */
     fun getGravityPointCenter(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getGravityPointCenterBind, handle)
     }
 
+    /**
+     * The area's gravity vector (not normalized).
+     *
+     * Generated from Godot docs: Area3D.set_gravity_direction
+     */
     fun setGravityDirection(direction: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setGravityDirectionBind, handle, direction)
     }
 
+    /**
+     * The area's gravity vector (not normalized).
+     *
+     * Generated from Godot docs: Area3D.get_gravity_direction
+     */
     fun getGravityDirection(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getGravityDirectionBind, handle)
     }
 
+    /**
+     * The area's gravity intensity (in meters per second squared). This value multiplies the gravity
+     * direction. This is useful to alter the force of gravity without altering its direction.
+     *
+     * Generated from Godot docs: Area3D.set_gravity
+     */
     fun setGravity(gravity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGravityBind, handle, gravity)
     }
 
+    /**
+     * The area's gravity intensity (in meters per second squared). This value multiplies the gravity
+     * direction. This is useful to alter the force of gravity without altering its direction.
+     *
+     * Generated from Godot docs: Area3D.get_gravity
+     */
     fun getGravity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGravityBind, handle)
     }
 
+    /**
+     * Override mode for linear damping calculations within this area.
+     *
+     * Generated from Godot docs: Area3D.set_linear_damp_space_override_mode
+     */
     fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, handle, spaceOverrideMode)
     }
 
+    /**
+     * Override mode for linear damping calculations within this area.
+     *
+     * Generated from Godot docs: Area3D.get_linear_damp_space_override_mode
+     */
     fun getLinearDampSpaceOverrideMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, handle)
     }
 
+    /**
+     * Override mode for angular damping calculations within this area.
+     *
+     * Generated from Godot docs: Area3D.set_angular_damp_space_override_mode
+     */
     fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, handle, spaceOverrideMode)
     }
 
+    /**
+     * Override mode for angular damping calculations within this area.
+     *
+     * Generated from Godot docs: Area3D.get_angular_damp_space_override_mode
+     */
     fun getAngularDampSpaceOverrideMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, handle)
     }
 
+    /**
+     * The rate at which objects stop spinning in this area. Represents the angular velocity lost per
+     * second. See `ProjectSettings.physics/3d/default_angular_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area3D.set_angular_damp
+     */
     fun setAngularDamp(angularDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
     }
 
+    /**
+     * The rate at which objects stop spinning in this area. Represents the angular velocity lost per
+     * second. See `ProjectSettings.physics/3d/default_angular_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area3D.get_angular_damp
+     */
     fun getAngularDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
     }
 
+    /**
+     * The rate at which objects stop moving in this area. Represents the linear velocity lost per
+     * second. See `ProjectSettings.physics/3d/default_linear_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area3D.set_linear_damp
+     */
     fun setLinearDamp(linearDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
     }
 
+    /**
+     * The rate at which objects stop moving in this area. Represents the linear velocity lost per
+     * second. See `ProjectSettings.physics/3d/default_linear_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area3D.get_linear_damp
+     */
     fun getLinearDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
     }
 
+    /**
+     * The area's priority. Higher priority areas are processed first. The `World3D`'s physics is
+     * always processed last, after all areas.
+     *
+     * Generated from Godot docs: Area3D.set_priority
+     */
     fun setPriority(priority: Int) {
         ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
     }
 
+    /**
+     * The area's priority. Higher priority areas are processed first. The `World3D`'s physics is
+     * always processed last, after all areas.
+     *
+     * Generated from Godot docs: Area3D.get_priority
+     */
     fun getPriority(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
     }
 
+    /**
+     * The magnitude of area-specific wind force. Note: This wind force only applies to `SoftBody3D`
+     * nodes. Other physics bodies are currently not affected by wind.
+     *
+     * Generated from Godot docs: Area3D.set_wind_force_magnitude
+     */
     fun setWindForceMagnitude(windForceMagnitude: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWindForceMagnitudeBind, handle, windForceMagnitude)
     }
 
+    /**
+     * The magnitude of area-specific wind force. Note: This wind force only applies to `SoftBody3D`
+     * nodes. Other physics bodies are currently not affected by wind.
+     *
+     * Generated from Godot docs: Area3D.get_wind_force_magnitude
+     */
     fun getWindForceMagnitude(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWindForceMagnitudeBind, handle)
     }
 
+    /**
+     * The exponential rate at which wind force decreases with distance from its origin. Note: This
+     * wind force only applies to `SoftBody3D` nodes. Other physics bodies are currently not affected
+     * by wind.
+     *
+     * Generated from Godot docs: Area3D.set_wind_attenuation_factor
+     */
     fun setWindAttenuationFactor(windAttenuationFactor: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWindAttenuationFactorBind, handle, windAttenuationFactor)
     }
 
+    /**
+     * The exponential rate at which wind force decreases with distance from its origin. Note: This
+     * wind force only applies to `SoftBody3D` nodes. Other physics bodies are currently not affected
+     * by wind.
+     *
+     * Generated from Godot docs: Area3D.get_wind_attenuation_factor
+     */
     fun getWindAttenuationFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWindAttenuationFactorBind, handle)
     }
 
+    /**
+     * The `Node3D` which is used to specify the direction and origin of an area-specific wind force.
+     * The direction is opposite to the z-axis of the `Node3D`'s local transform, and its origin is the
+     * origin of the `Node3D`'s local transform. Note: This wind force only applies to `SoftBody3D`
+     * nodes. Other physics bodies are currently not affected by wind.
+     *
+     * Generated from Godot docs: Area3D.set_wind_source_path
+     */
     fun setWindSourcePath(windSourcePath: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setWindSourcePathBind, handle, windSourcePath)
     }
 
+    /**
+     * The `Node3D` which is used to specify the direction and origin of an area-specific wind force.
+     * The direction is opposite to the z-axis of the `Node3D`'s local transform, and its origin is the
+     * origin of the `Node3D`'s local transform. Note: This wind force only applies to `SoftBody3D`
+     * nodes. Other physics bodies are currently not affected by wind.
+     *
+     * Generated from Godot docs: Area3D.get_wind_source_path
+     */
     fun getWindSourcePath(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getWindSourcePathBind, handle)
     }
 
+    /**
+     * If `true`, other monitoring areas can detect this area.
+     *
+     * Generated from Godot docs: Area3D.set_monitorable
+     */
     fun setMonitorable(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMonitorableBind, handle, enable)
     }
 
+    /**
+     * If `true`, other monitoring areas can detect this area.
+     *
+     * Generated from Godot docs: Area3D.is_monitorable
+     */
     fun isMonitorable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMonitorableBind, handle)
     }
 
+    /**
+     * If `true`, the area detects bodies or areas entering and exiting it.
+     *
+     * Generated from Godot docs: Area3D.set_monitoring
+     */
     fun setMonitoring(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMonitoringBind, handle, enable)
     }
 
+    /**
+     * If `true`, the area detects bodies or areas entering and exiting it.
+     *
+     * Generated from Godot docs: Area3D.is_monitoring
+     */
     fun isMonitoring(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringBind, handle)
     }
 
+    /**
+     * Returns a list of intersecting `PhysicsBody3D`s, `SoftBody3D`s, and `GridMap`s. The overlapping
+     * body's `CollisionObject3D.collision_layer` must be part of this area's
+     * `CollisionObject3D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) this list is modified once during the physics step, not
+     * immediately after objects are moved. Consider using signals instead. Note: Godot Physics does
+     * not support reporting overlaps with `SoftBody3D`, so will not return any such bodies.
+     *
+     * Generated from Godot docs: Area3D.get_overlapping_bodies
+     */
     fun getOverlappingBodies(): List<Node3D> {
         return ObjectCalls.ptrcallNoArgsRetTypedNode3DList(getOverlappingBodiesBind, handle)
     }
 
+    /**
+     * Returns a list of intersecting `Area3D`s. The overlapping area's
+     * `CollisionObject3D.collision_layer` must be part of this area's
+     * `CollisionObject3D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) this list is modified once during the physics step, not
+     * immediately after objects are moved. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area3D.get_overlapping_areas
+     */
     fun getOverlappingAreas(): List<Area3D> {
         return ObjectCalls.ptrcallNoArgsRetTypedArea3DList(getOverlappingAreasBind, handle)
     }
 
+    /**
+     * Returns `true` if intersecting any `PhysicsBody3D`s, `SoftBody3D`s, or `GridMap`s, otherwise
+     * returns `false`. The overlapping body's `CollisionObject3D.collision_layer` must be part of this
+     * area's `CollisionObject3D.collision_mask` in order to be detected. For performance reasons
+     * (collisions are all processed at the same time) the list of overlapping bodies is modified once
+     * during the physics step, not immediately after objects are moved. Consider using signals
+     * instead. Note: Godot Physics does not support reporting overlaps with `SoftBody3D`, so will not
+     * consider such bodies.
+     *
+     * Generated from Godot docs: Area3D.has_overlapping_bodies
+     */
     fun hasOverlappingBodies(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingBodiesBind, handle)
     }
 
+    /**
+     * Returns `true` if intersecting any `Area3D`s, otherwise returns `false`. The overlapping area's
+     * `CollisionObject3D.collision_layer` must be part of this area's
+     * `CollisionObject3D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) the list of overlapping areas is modified once during the
+     * physics step, not immediately after objects are moved. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area3D.has_overlapping_areas
+     */
     fun hasOverlappingAreas(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingAreasBind, handle)
     }
 
+    /**
+     * Returns `true` if the given physics body intersects or overlaps this `Area3D`, `false`
+     * otherwise. `body` argument can either be a `PhysicsBody3D`, `SoftBody3D`, or a `GridMap`
+     * instance. While GridMaps are not physics body themselves, they register their tiles with
+     * collision shapes as a virtual physics body. Note: The result of this test is not immediate after
+     * moving objects. For performance, list of overlaps is updated once per frame and before the
+     * physics step. Consider using signals instead. Note: Godot Physics does not support reporting
+     * overlaps with `SoftBody3D`, so will return `false` in such cases.
+     *
+     * Generated from Godot docs: Area3D.overlaps_body
+     */
     fun overlapsBody(body: Node): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsBodyBind, handle, body.handle)
     }
 
+    /**
+     * Returns `true` if the given `Area3D` intersects or overlaps this `Area3D`, `false` otherwise.
+     * Note: The result of this test is not immediate after moving objects. For performance, list of
+     * overlaps is updated once per frame and before the physics step. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area3D.overlaps_area
+     */
     fun overlapsArea(area: Node): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsAreaBind, handle, area.handle)
     }
 
+    /**
+     * If `true`, the area's audio bus overrides the default audio bus.
+     *
+     * Generated from Godot docs: Area3D.set_audio_bus_override
+     */
     fun setAudioBusOverride(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAudioBusOverrideBind, handle, enable)
     }
 
+    /**
+     * If `true`, the area's audio bus overrides the default audio bus.
+     *
+     * Generated from Godot docs: Area3D.is_overriding_audio_bus
+     */
     fun isOverridingAudioBus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOverridingAudioBusBind, handle)
     }
 
+    /**
+     * The name of the area's audio bus.
+     *
+     * Generated from Godot docs: Area3D.set_audio_bus_name
+     */
     fun setAudioBusName(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setAudioBusNameBind, handle, name)
     }
 
+    /**
+     * The name of the area's audio bus.
+     *
+     * Generated from Godot docs: Area3D.get_audio_bus_name
+     */
     fun getAudioBusName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getAudioBusNameBind, handle)
     }
 
+    /**
+     * If `true`, the area applies reverb to its associated audio.
+     *
+     * Generated from Godot docs: Area3D.set_use_reverb_bus
+     */
     fun setUseReverbBus(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseReverbBusBind, handle, enable)
     }
 
+    /**
+     * If `true`, the area applies reverb to its associated audio.
+     *
+     * Generated from Godot docs: Area3D.is_using_reverb_bus
+     */
     fun isUsingReverbBus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingReverbBusBind, handle)
     }
 
+    /**
+     * The name of the reverb bus to use for this area's associated audio.
+     *
+     * Generated from Godot docs: Area3D.set_reverb_bus_name
+     */
     fun setReverbBusName(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setReverbBusNameBind, handle, name)
     }
 
+    /**
+     * The name of the reverb bus to use for this area's associated audio.
+     *
+     * Generated from Godot docs: Area3D.get_reverb_bus_name
+     */
     fun getReverbBusName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getReverbBusNameBind, handle)
     }
 
+    /**
+     * The degree to which this area applies reverb to its associated audio. Ranges from `0` to `1`
+     * with `0.1` precision.
+     *
+     * Generated from Godot docs: Area3D.set_reverb_amount
+     */
     fun setReverbAmount(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setReverbAmountBind, handle, amount)
     }
 
+    /**
+     * The degree to which this area applies reverb to its associated audio. Ranges from `0` to `1`
+     * with `0.1` precision.
+     *
+     * Generated from Godot docs: Area3D.get_reverb_amount
+     */
     fun getReverbAmount(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getReverbAmountBind, handle)
     }
 
+    /**
+     * The degree to which this area's reverb is a uniform effect. Ranges from `0` to `1` with `0.1`
+     * precision.
+     *
+     * Generated from Godot docs: Area3D.set_reverb_uniformity
+     */
     fun setReverbUniformity(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setReverbUniformityBind, handle, amount)
     }
 
+    /**
+     * The degree to which this area's reverb is a uniform effect. Ranges from `0` to `1` with `0.1`
+     * precision.
+     *
+     * Generated from Godot docs: Area3D.get_reverb_uniformity
+     */
     fun getReverbUniformity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getReverbUniformityBind, handle)
     }

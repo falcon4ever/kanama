@@ -34,22 +34,48 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setArIsAnchorDetectionEnabledProperty")
         set(value) = setAnchorDetectionIsEnabled(value)
 
+    /**
+     * Returns the name of this interface (`"OpenXR"`, `"OpenVR"`, `"OpenHMD"`, `"ARKit"`, etc.).
+     *
+     * Generated from Godot docs: XRInterface.get_name
+     */
     fun getName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
     }
 
+    /**
+     * Returns a combination of `Capabilities` flags providing information about the capabilities of
+     * this interface.
+     *
+     * Generated from Godot docs: XRInterface.get_capabilities
+     */
     fun getCapabilities(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCapabilitiesBind, handle)
     }
 
+    /**
+     * `true` if this is the primary interface.
+     *
+     * Generated from Godot docs: XRInterface.is_primary
+     */
     fun isPrimary(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPrimaryBind, handle)
     }
 
+    /**
+     * `true` if this is the primary interface.
+     *
+     * Generated from Godot docs: XRInterface.set_primary
+     */
     fun setPrimary(primary: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPrimaryBind, handle, primary)
     }
 
+    /**
+     * Returns `true` if this interface has been initialized.
+     *
+     * Generated from Godot docs: XRInterface.is_initialized
+     */
     fun isInitialized(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, handle)
     }
@@ -83,86 +109,212 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(uninitializeBind, handle)
     }
 
+    /**
+     * Returns a `Dictionary` with extra system info. Interfaces are expected to return `XRRuntimeName`
+     * and `XRRuntimeVersion` providing info about the used XR runtime. Additional entries may be
+     * provided specific to an interface. Note:This information may only be available after
+     * `initialize` was successfully called.
+     *
+     * Generated from Godot docs: XRInterface.get_system_info
+     */
     fun getSystemInfo(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getSystemInfoBind, handle)
     }
 
+    /**
+     * If supported, returns the status of our tracking. This will allow you to provide feedback to the
+     * user whether there are issues with positional tracking.
+     *
+     * Generated from Godot docs: XRInterface.get_tracking_status
+     */
     fun getTrackingStatus(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, handle)
     }
 
+    /**
+     * Returns the resolution at which we should render our intermediate results before things like
+     * lens distortion are applied by the VR platform.
+     *
+     * Generated from Godot docs: XRInterface.get_render_target_size
+     */
     fun getRenderTargetSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getRenderTargetSizeBind, handle)
     }
 
+    /**
+     * Returns the number of views that need to be rendered for this device. 1 for Monoscopic, 2 for
+     * Stereoscopic.
+     *
+     * Generated from Godot docs: XRInterface.get_view_count
+     */
     fun getViewCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
+    /**
+     * Triggers a haptic pulse on a device associated with this interface. `action_name` is the name of
+     * the action for this pulse. `tracker_name` is optional and can be used to direct the pulse to a
+     * specific device provided that device is bound to this haptic. `frequency` is the frequency of
+     * the pulse, set to `0.0` to have the system use a default frequency. `amplitude` is the amplitude
+     * of the pulse between `0.0` and `1.0`. `duration_sec` is the duration of the pulse in seconds.
+     * `delay_sec` is a delay in seconds before the pulse is given.
+     *
+     * Generated from Godot docs: XRInterface.trigger_haptic_pulse
+     */
     fun triggerHapticPulse(actionName: String, trackerName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
         ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(triggerHapticPulseBind, handle, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
     }
 
+    /**
+     * Call this to find out if a given play area mode is supported by this interface.
+     *
+     * Generated from Godot docs: XRInterface.supports_play_area_mode
+     */
     fun supportsPlayAreaMode(mode: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, handle, mode)
     }
 
+    /**
+     * The play area mode for this interface.
+     *
+     * Generated from Godot docs: XRInterface.get_play_area_mode
+     */
     fun getPlayAreaMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, handle)
     }
 
+    /**
+     * The play area mode for this interface.
+     *
+     * Generated from Godot docs: XRInterface.set_play_area_mode
+     */
     fun setPlayAreaMode(mode: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, handle, mode)
     }
 
+    /**
+     * Returns an array of vectors that represent the physical play area mapped to the virtual space
+     * around the `XROrigin3D` point. The points form a convex polygon that can be used to react to or
+     * visualize the play area. This returns an empty array if this feature is not supported or if the
+     * information is not yet available.
+     *
+     * Generated from Godot docs: XRInterface.get_play_area
+     */
     fun getPlayArea(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPlayAreaBind, handle)
     }
 
+    /**
+     * On an AR interface, `true` if anchor detection is enabled.
+     *
+     * Generated from Godot docs: XRInterface.get_anchor_detection_is_enabled
+     */
     fun getAnchorDetectionIsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAnchorDetectionIsEnabledBind, handle)
     }
 
+    /**
+     * On an AR interface, `true` if anchor detection is enabled.
+     *
+     * Generated from Godot docs: XRInterface.set_anchor_detection_is_enabled
+     */
     fun setAnchorDetectionIsEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAnchorDetectionIsEnabledBind, handle, enable)
     }
 
+    /**
+     * If this is an AR interface that requires displaying a camera feed as the background, this method
+     * returns the feed ID in the `CameraServer` for this interface.
+     *
+     * Generated from Godot docs: XRInterface.get_camera_feed_id
+     */
     fun getCameraFeedId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
+    /**
+     * Returns `true` if this interface supports passthrough.
+     *
+     * Generated from Godot docs: XRInterface.is_passthrough_supported
+     */
     fun isPassthroughSupported(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughSupportedBind, handle)
     }
 
+    /**
+     * Returns `true` if passthrough is enabled.
+     *
+     * Generated from Godot docs: XRInterface.is_passthrough_enabled
+     */
     fun isPassthroughEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughEnabledBind, handle)
     }
 
+    /**
+     * Starts passthrough, will return `false` if passthrough couldn't be started. Note: The viewport
+     * used for XR must have a transparent background, otherwise passthrough may not properly render.
+     *
+     * Generated from Godot docs: XRInterface.start_passthrough
+     */
     fun startPassthrough(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(startPassthroughBind, handle)
     }
 
+    /**
+     * Stops passthrough.
+     *
+     * Generated from Godot docs: XRInterface.stop_passthrough
+     */
     fun stopPassthrough() {
         ObjectCalls.ptrcallNoArgs(stopPassthroughBind, handle)
     }
 
+    /**
+     * Returns the transform for a view/eye. `view` is the view/eye index. `cam_transform` is the
+     * transform that maps device coordinates to scene coordinates, typically the
+     * `Node3D.global_transform` of the current XROrigin3D.
+     *
+     * Generated from Godot docs: XRInterface.get_transform_for_view
+     */
     fun getTransformForView(view: Long, camTransform: Transform3D): Transform3D {
         return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(getTransformForViewBind, handle, view, camTransform)
     }
 
+    /**
+     * Returns the projection matrix for a view/eye.
+     *
+     * Generated from Godot docs: XRInterface.get_projection_for_view
+     */
     fun getProjectionForView(view: Long, aspect: Double, near: Double, far: Double): Projection {
         return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(getProjectionForViewBind, handle, view, aspect, near, far)
     }
 
+    /**
+     * Returns the an array of supported environment blend modes, see
+     * `XRInterface.EnvironmentBlendMode`.
+     *
+     * Generated from Godot docs: XRInterface.get_supported_environment_blend_modes
+     */
     fun getSupportedEnvironmentBlendModes(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getSupportedEnvironmentBlendModesBind, handle)
     }
 
+    /**
+     * Specify how XR should blend in the environment. This is specific to certain AR and passthrough
+     * devices where camera images are blended in by the XR compositor.
+     *
+     * Generated from Godot docs: XRInterface.set_environment_blend_mode
+     */
     fun setEnvironmentBlendMode(mode: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, handle, mode)
     }
 
+    /**
+     * Specify how XR should blend in the environment. This is specific to certain AR and passthrough
+     * devices where camera images are blended in by the XR compositor.
+     *
+     * Generated from Godot docs: XRInterface.get_environment_blend_mode
+     */
     fun getEnvironmentBlendMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, handle)
     }

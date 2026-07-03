@@ -34,6 +34,12 @@ data class Transform3D(
     val origin: Vector3,
 ) {
     /** Godot-style fuzzy compare: true if basis and origin are approximately equal. */
+    /**
+     * Returns `true` if this transform and `xform` are approximately equal, by running
+     * `@GlobalScope.is_equal_approx` on each component.
+     *
+     * Generated from Godot docs: Transform3D.is_equal_approx
+     */
     fun isEqualApprox(other: Transform3D): Boolean =
         basis.isEqualApprox(other.basis) && origin.isEqualApprox(other.origin)
 

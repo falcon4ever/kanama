@@ -176,16 +176,24 @@ imported from Godot's `doc/classes/*.xml` files. The generated blocks include a
 `Generated from Godot docs:` marker so they can be refreshed safely instead of
 hand-edited.
 
+**Docs version pin:** wrapper KDoc is synced from the **Godot 4.7-stable**
+`doc/classes` (commit `5b4e0cb0fd`), matching the shipped runtime baseline. Do
+not sync from a `-rc` / `latest` tree — a mismatched docs tree reintroduces
+version skew. Bump this pin when the Godot runtime baseline moves, and re-run the
+full refresh.
+
 To check whether KDoc is current against a local Godot source tree:
 
 ```sh
-python3 scripts/sync_kdoc_from_godot_docs.py --check
+python3 scripts/sync_kdoc_from_godot_docs.py \
+  --godot-docs /path/to/godot-4.7-stable/doc/classes --check
 ```
 
-To refresh it:
+To refresh the whole tree (the 4.7-stable baseline refresh, task 23):
 
 ```sh
-python3 scripts/sync_kdoc_from_godot_docs.py --write
+python3 scripts/sync_kdoc_from_godot_docs.py \
+  --godot-docs /path/to/godot-4.7-stable/doc/classes --write
 ```
 
 The script uses `$GODOT_DOCS` when set, otherwise it defaults to
@@ -193,7 +201,15 @@ The script uses `$GODOT_DOCS` when set, otherwise it defaults to
 `--godot-docs /path/to/godot/doc/classes` when syncing against a different
 Godot checkout. Use `--classes Node,Node3D,Tween` for a focused refresh while
 working on one wrapper slice, or `--scope types --classes Vector3` when
-working on builtin values.
+working on builtin values. Keep the default separate `--api-dir`
+(`.../kanama/api`) and `--types-dir` (`.../kanama/types`) — pointing `--types-dir`
+at the api dir mislabels node classes as value types.
+
+The refresh is **gate-neutral**: `check_full_drift_gate` strips
+`Generated from Godot docs:` blocks before comparing (`comparable_source`), so a
+KDoc refresh never affects drift-gate correctness and only touches comments. The
+sync replaces an existing generated block in place (multi-line **or** the older
+single-line `/** … */` form), so re-running is idempotent.
 
 ## Value-Type Audits
 

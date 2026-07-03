@@ -16,22 +16,48 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setFormatProperty")
         set(value) = setFormat(value)
 
+    /**
+     * If `true`, the sound will be recorded. Note that restarting the recording will remove the
+     * previously recorded sample.
+     *
+     * Generated from Godot docs: AudioEffectRecord.set_recording_active
+     */
     fun setRecordingActive(record: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRecordingActiveBind, handle, record)
     }
 
+    /**
+     * Returns whether the recording is active or not.
+     *
+     * Generated from Godot docs: AudioEffectRecord.is_recording_active
+     */
     fun isRecordingActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRecordingActiveBind, handle)
     }
 
+    /**
+     * Specifies the format in which the sample will be recorded.
+     *
+     * Generated from Godot docs: AudioEffectRecord.set_format
+     */
     fun setFormat(format: Long) {
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
+    /**
+     * Specifies the format in which the sample will be recorded.
+     *
+     * Generated from Godot docs: AudioEffectRecord.get_format
+     */
     fun getFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
+    /**
+     * Returns the recorded sample.
+     *
+     * Generated from Godot docs: AudioEffectRecord.get_recording
+     */
     fun getRecording(): AudioStreamWAV? {
         return AudioStreamWAV.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRecordingBind, handle))
     }

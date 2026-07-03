@@ -17,10 +17,24 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
         @JvmName("setSegmentsProperty")
         set(value) = setSegments(value)
 
+    /**
+     * The array of points that make up the `ConcavePolygonShape2D`'s line segments. The array (of
+     * length divisible by two) is naturally divided into pairs (one pair for each segment); each pair
+     * consists of the starting point of a segment and the endpoint of a segment.
+     *
+     * Generated from Godot docs: ConcavePolygonShape2D.set_segments
+     */
     fun setSegments(segments: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setSegmentsBind, handle, segments)
     }
 
+    /**
+     * The array of points that make up the `ConcavePolygonShape2D`'s line segments. The array (of
+     * length divisible by two) is naturally divided into pairs (one pair for each segment); each pair
+     * consists of the starting point of a segment and the endpoint of a segment.
+     *
+     * Generated from Godot docs: ConcavePolygonShape2D.get_segments
+     */
     fun getSegments(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getSegmentsBind, handle)
     }

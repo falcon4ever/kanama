@@ -10,6 +10,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: VideoStreamPlayback
  */
 class VideoStreamPlayback(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Render `num_frames` audio frames (of `_get_channels` floats each) from `buffer`, starting from
+     * index `offset` in the array. Returns the number of audio frames rendered, or -1 on error.
+     *
+     * Generated from Godot docs: VideoStreamPlayback.mix_audio
+     */
     fun mixAudio(numFrames: Int, buffer: List<Float>, offset: Int = 0): Int {
         return ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(mixAudioBind, handle, numFrames, buffer, offset)
     }

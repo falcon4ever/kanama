@@ -3,7 +3,11 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
-/** Reference-counted JavaScript object bridge handle. Generated from Godot docs: JavaScriptObject */
+/**
+ * A wrapper class for web native JavaScript objects.
+ *
+ * Generated from Godot docs: JavaScriptObject
+ */
 class JavaScriptObject(handle: MemorySegment) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 

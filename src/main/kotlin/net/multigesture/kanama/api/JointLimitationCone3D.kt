@@ -16,10 +16,22 @@ class JointLimitationCone3D(handle: MemorySegment) : JointLimitation3D(handle) {
         @JvmName("setAngleProperty")
         set(value) = setAngle(value)
 
+    /**
+     * The radius range of the hole made by the cone. `0` degrees makes a sphere without hole, `180`
+     * degrees makes a hemisphere, and `360` degrees become empty (no limitation).
+     *
+     * Generated from Godot docs: JointLimitationCone3D.set_angle
+     */
     fun setAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngleBind, handle, angle)
     }
 
+    /**
+     * The radius range of the hole made by the cone. `0` degrees makes a sphere without hole, `180`
+     * degrees makes a hemisphere, and `360` degrees become empty (no limitation).
+     *
+     * Generated from Godot docs: JointLimitationCone3D.get_angle
+     */
     fun getAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngleBind, handle)
     }

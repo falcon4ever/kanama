@@ -144,458 +144,1117 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         @JvmName("setAutoBraceCompletionPairsProperty")
         set(value) = setAutoBraceCompletionPairs(value)
 
+    /**
+     * Size of the tabulation indent (one Tab press) in characters. If `indent_use_spaces` is enabled
+     * the number of spaces to use.
+     *
+     * Generated from Godot docs: CodeEdit.set_indent_size
+     */
     fun setIndentSize(size: Int) {
         ObjectCalls.ptrcallWithIntArg(setIndentSizeBind, handle, size)
     }
 
+    /**
+     * Size of the tabulation indent (one Tab press) in characters. If `indent_use_spaces` is enabled
+     * the number of spaces to use.
+     *
+     * Generated from Godot docs: CodeEdit.get_indent_size
+     */
     fun getIndentSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getIndentSizeBind, handle)
     }
 
+    /**
+     * Use spaces instead of tabs for indentation.
+     *
+     * Generated from Godot docs: CodeEdit.set_indent_using_spaces
+     */
     fun setIndentUsingSpaces(useSpaces: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setIndentUsingSpacesBind, handle, useSpaces)
     }
 
+    /**
+     * Use spaces instead of tabs for indentation.
+     *
+     * Generated from Godot docs: CodeEdit.is_indent_using_spaces
+     */
     fun isIndentUsingSpaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isIndentUsingSpacesBind, handle)
     }
 
+    /**
+     * If `true`, an extra indent is automatically inserted when a new line is added and a prefix in
+     * `indent_automatic_prefixes` is found. If a brace pair opening key is found, the matching closing
+     * brace will be moved to another new line (see `auto_brace_completion_pairs`).
+     *
+     * Generated from Godot docs: CodeEdit.set_auto_indent_enabled
+     */
     fun setAutoIndentEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoIndentEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, an extra indent is automatically inserted when a new line is added and a prefix in
+     * `indent_automatic_prefixes` is found. If a brace pair opening key is found, the matching closing
+     * brace will be moved to another new line (see `auto_brace_completion_pairs`).
+     *
+     * Generated from Godot docs: CodeEdit.is_auto_indent_enabled
+     */
     fun isAutoIndentEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoIndentEnabledBind, handle)
     }
 
+    /**
+     * Prefixes to trigger an automatic indent. Used when `indent_automatic` is set to `true`.
+     *
+     * Generated from Godot docs: CodeEdit.set_auto_indent_prefixes
+     */
     fun setAutoIndentPrefixes(prefixes: List<String>) {
         ObjectCalls.ptrcallWithTypedStringListArg(setAutoIndentPrefixesBind, handle, prefixes)
     }
 
+    /**
+     * Prefixes to trigger an automatic indent. Used when `indent_automatic` is set to `true`.
+     *
+     * Generated from Godot docs: CodeEdit.get_auto_indent_prefixes
+     */
     fun getAutoIndentPrefixes(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getAutoIndentPrefixesBind, handle)
     }
 
+    /**
+     * If there is no selection, indentation is inserted at the caret. Otherwise, the selected lines
+     * are indented like `indent_lines`. Equivalent to the `ProjectSettings.input/ui_text_indent`
+     * action. The indentation characters used depend on `indent_use_spaces` and `indent_size`.
+     *
+     * Generated from Godot docs: CodeEdit.do_indent
+     */
     fun doIndent() {
         ObjectCalls.ptrcallNoArgs(doIndentBind, handle)
     }
 
+    /**
+     * Indents all lines that are selected or have a caret on them. Uses spaces or a tab depending on
+     * `indent_use_spaces`. See `unindent_lines`.
+     *
+     * Generated from Godot docs: CodeEdit.indent_lines
+     */
     fun indentLines() {
         ObjectCalls.ptrcallNoArgs(indentLinesBind, handle)
     }
 
+    /**
+     * Unindents all lines that are selected or have a caret on them. Uses spaces or a tab depending on
+     * `indent_use_spaces`. Equivalent to the `ProjectSettings.input/ui_text_dedent` action. See
+     * `indent_lines`.
+     *
+     * Generated from Godot docs: CodeEdit.unindent_lines
+     */
     fun unindentLines() {
         ObjectCalls.ptrcallNoArgs(unindentLinesBind, handle)
     }
 
+    /**
+     * Converts the indents of lines between `from_line` and `to_line` to tabs or spaces as set by
+     * `indent_use_spaces`. Values of `-1` convert the entire text.
+     *
+     * Generated from Godot docs: CodeEdit.convert_indent
+     */
     fun convertIndent(fromLine: Int = -1, toLine: Int = -1) {
         ObjectCalls.ptrcallWithTwoIntArgs(convertIndentBind, handle, fromLine, toLine)
     }
 
+    /**
+     * If `true`, uses `auto_brace_completion_pairs` to automatically insert the closing brace when the
+     * opening brace is inserted by typing or autocompletion. Also automatically removes the closing
+     * brace when using backspace on the opening brace.
+     *
+     * Generated from Godot docs: CodeEdit.set_auto_brace_completion_enabled
+     */
     fun setAutoBraceCompletionEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoBraceCompletionEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, uses `auto_brace_completion_pairs` to automatically insert the closing brace when the
+     * opening brace is inserted by typing or autocompletion. Also automatically removes the closing
+     * brace when using backspace on the opening brace.
+     *
+     * Generated from Godot docs: CodeEdit.is_auto_brace_completion_enabled
+     */
     fun isAutoBraceCompletionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoBraceCompletionEnabledBind, handle)
     }
 
+    /**
+     * If `true`, highlights brace pairs when the caret is on either one, using
+     * `auto_brace_completion_pairs`. If matching, the pairs will be underlined. If a brace is
+     * unmatched, it is colored with `brace_mismatch_color`.
+     *
+     * Generated from Godot docs: CodeEdit.set_highlight_matching_braces_enabled
+     */
     fun setHighlightMatchingBracesEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHighlightMatchingBracesEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, highlights brace pairs when the caret is on either one, using
+     * `auto_brace_completion_pairs`. If matching, the pairs will be underlined. If a brace is
+     * unmatched, it is colored with `brace_mismatch_color`.
+     *
+     * Generated from Godot docs: CodeEdit.is_highlight_matching_braces_enabled
+     */
     fun isHighlightMatchingBracesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHighlightMatchingBracesEnabledBind, handle)
     }
 
+    /**
+     * Adds a brace pair. Both the start and end keys must be symbols. Only the start key has to be
+     * unique.
+     *
+     * Generated from Godot docs: CodeEdit.add_auto_brace_completion_pair
+     */
     fun addAutoBraceCompletionPair(startKey: String, endKey: String) {
         ObjectCalls.ptrcallWithTwoStringArgs(addAutoBraceCompletionPairBind, handle, startKey, endKey)
     }
 
+    /**
+     * Sets the brace pairs to be autocompleted. For each entry in the dictionary, the key is the
+     * opening brace and the value is the closing brace that matches it. A brace is a `String` made of
+     * symbols. See `auto_brace_completion_enabled` and `auto_brace_completion_highlight_matching`.
+     *
+     * Generated from Godot docs: CodeEdit.set_auto_brace_completion_pairs
+     */
     fun setAutoBraceCompletionPairs(pairs: Map<String, Any?>) {
         ObjectCalls.ptrcallWithDictionaryArg(setAutoBraceCompletionPairsBind, handle, pairs)
     }
 
+    /**
+     * Sets the brace pairs to be autocompleted. For each entry in the dictionary, the key is the
+     * opening brace and the value is the closing brace that matches it. A brace is a `String` made of
+     * symbols. See `auto_brace_completion_enabled` and `auto_brace_completion_highlight_matching`.
+     *
+     * Generated from Godot docs: CodeEdit.get_auto_brace_completion_pairs
+     */
     fun getAutoBraceCompletionPairs(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getAutoBraceCompletionPairsBind, handle)
     }
 
+    /**
+     * Returns `true` if open key `open_key` exists.
+     *
+     * Generated from Godot docs: CodeEdit.has_auto_brace_completion_open_key
+     */
     fun hasAutoBraceCompletionOpenKey(openKey: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasAutoBraceCompletionOpenKeyBind, handle, openKey)
     }
 
+    /**
+     * Returns `true` if close key `close_key` exists.
+     *
+     * Generated from Godot docs: CodeEdit.has_auto_brace_completion_close_key
+     */
     fun hasAutoBraceCompletionCloseKey(closeKey: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasAutoBraceCompletionCloseKeyBind, handle, closeKey)
     }
 
+    /**
+     * Gets the matching auto brace close key for `open_key`.
+     *
+     * Generated from Godot docs: CodeEdit.get_auto_brace_completion_close_key
+     */
     fun getAutoBraceCompletionCloseKey(openKey: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getAutoBraceCompletionCloseKeyBind, handle, openKey)
     }
 
+    /**
+     * If `true`, breakpoints are drawn in the gutter. This gutter is shared with bookmarks and
+     * executing lines. Clicking the gutter will toggle the breakpoint for the line, see
+     * `set_line_as_breakpoint`.
+     *
+     * Generated from Godot docs: CodeEdit.set_draw_breakpoints_gutter
+     */
     fun setDrawBreakpointsGutter(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawBreakpointsGutterBind, handle, enable)
     }
 
+    /**
+     * If `true`, breakpoints are drawn in the gutter. This gutter is shared with bookmarks and
+     * executing lines. Clicking the gutter will toggle the breakpoint for the line, see
+     * `set_line_as_breakpoint`.
+     *
+     * Generated from Godot docs: CodeEdit.is_drawing_breakpoints_gutter
+     */
     fun isDrawingBreakpointsGutter(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingBreakpointsGutterBind, handle)
     }
 
+    /**
+     * If `true`, bookmarks are drawn in the gutter. This gutter is shared with breakpoints and
+     * executing lines. See `set_line_as_bookmarked`.
+     *
+     * Generated from Godot docs: CodeEdit.set_draw_bookmarks_gutter
+     */
     fun setDrawBookmarksGutter(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawBookmarksGutterBind, handle, enable)
     }
 
+    /**
+     * If `true`, bookmarks are drawn in the gutter. This gutter is shared with breakpoints and
+     * executing lines. See `set_line_as_bookmarked`.
+     *
+     * Generated from Godot docs: CodeEdit.is_drawing_bookmarks_gutter
+     */
     fun isDrawingBookmarksGutter(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingBookmarksGutterBind, handle)
     }
 
+    /**
+     * If `true`, executing lines are marked in the gutter. This gutter is shared with breakpoints and
+     * bookmarks. See `set_line_as_executing`.
+     *
+     * Generated from Godot docs: CodeEdit.set_draw_executing_lines_gutter
+     */
     fun setDrawExecutingLinesGutter(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawExecutingLinesGutterBind, handle, enable)
     }
 
+    /**
+     * If `true`, executing lines are marked in the gutter. This gutter is shared with breakpoints and
+     * bookmarks. See `set_line_as_executing`.
+     *
+     * Generated from Godot docs: CodeEdit.is_drawing_executing_lines_gutter
+     */
     fun isDrawingExecutingLinesGutter(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingExecutingLinesGutterBind, handle)
     }
 
+    /**
+     * Sets the given line as a breakpoint. If `true` and `gutters_draw_breakpoints_gutter` is `true`,
+     * draws the `breakpoint` icon in the gutter for this line. See `get_breakpointed_lines` and
+     * `is_line_breakpointed`.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_as_breakpoint
+     */
     fun setLineAsBreakpoint(line: Int, breakpointed: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsBreakpointBind, handle, line, breakpointed)
     }
 
+    /**
+     * Returns `true` if the given line is breakpointed. See `set_line_as_breakpoint`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_breakpointed
+     */
     fun isLineBreakpointed(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineBreakpointedBind, handle, line)
     }
 
+    /**
+     * Clears all breakpointed lines.
+     *
+     * Generated from Godot docs: CodeEdit.clear_breakpointed_lines
+     */
     fun clearBreakpointedLines() {
         ObjectCalls.ptrcallNoArgs(clearBreakpointedLinesBind, handle)
     }
 
+    /**
+     * Gets all breakpointed lines.
+     *
+     * Generated from Godot docs: CodeEdit.get_breakpointed_lines
+     */
     fun getBreakpointedLines(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getBreakpointedLinesBind, handle)
     }
 
+    /**
+     * Sets the given line as bookmarked. If `true` and `gutters_draw_bookmarks` is `true`, draws the
+     * `bookmark` icon in the gutter for this line. See `get_bookmarked_lines` and
+     * `is_line_bookmarked`.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_as_bookmarked
+     */
     fun setLineAsBookmarked(line: Int, bookmarked: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsBookmarkedBind, handle, line, bookmarked)
     }
 
+    /**
+     * Returns `true` if the given line is bookmarked. See `set_line_as_bookmarked`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_bookmarked
+     */
     fun isLineBookmarked(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineBookmarkedBind, handle, line)
     }
 
+    /**
+     * Clears all bookmarked lines.
+     *
+     * Generated from Godot docs: CodeEdit.clear_bookmarked_lines
+     */
     fun clearBookmarkedLines() {
         ObjectCalls.ptrcallNoArgs(clearBookmarkedLinesBind, handle)
     }
 
+    /**
+     * Gets all bookmarked lines.
+     *
+     * Generated from Godot docs: CodeEdit.get_bookmarked_lines
+     */
     fun getBookmarkedLines(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getBookmarkedLinesBind, handle)
     }
 
+    /**
+     * Sets the given line as executing. If `true` and `gutters_draw_executing_lines` is `true`, draws
+     * the `executing_line` icon in the gutter for this line. See `get_executing_lines` and
+     * `is_line_executing`.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_as_executing
+     */
     fun setLineAsExecuting(line: Int, executing: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsExecutingBind, handle, line, executing)
     }
 
+    /**
+     * Returns `true` if the given line is marked as executing. See `set_line_as_executing`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_executing
+     */
     fun isLineExecuting(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineExecutingBind, handle, line)
     }
 
+    /**
+     * Clears all executed lines.
+     *
+     * Generated from Godot docs: CodeEdit.clear_executing_lines
+     */
     fun clearExecutingLines() {
         ObjectCalls.ptrcallNoArgs(clearExecutingLinesBind, handle)
     }
 
+    /**
+     * Gets all executing lines.
+     *
+     * Generated from Godot docs: CodeEdit.get_executing_lines
+     */
     fun getExecutingLines(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getExecutingLinesBind, handle)
     }
 
+    /**
+     * If `true`, the line number gutter is drawn. Line numbers start at `1` and are incremented for
+     * each line of text. Clicking and dragging in the line number gutter will select entire lines of
+     * text.
+     *
+     * Generated from Godot docs: CodeEdit.set_draw_line_numbers
+     */
     fun setDrawLineNumbers(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawLineNumbersBind, handle, enable)
     }
 
+    /**
+     * If `true`, the line number gutter is drawn. Line numbers start at `1` and are incremented for
+     * each line of text. Clicking and dragging in the line number gutter will select entire lines of
+     * text.
+     *
+     * Generated from Godot docs: CodeEdit.is_draw_line_numbers_enabled
+     */
     fun isDrawLineNumbersEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawLineNumbersEnabledBind, handle)
     }
 
+    /**
+     * If `true`, line numbers drawn in the gutter are zero padded based on the total line count.
+     * Requires `gutters_draw_line_numbers` to be set to `true`.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_numbers_zero_padded
+     */
     fun setLineNumbersZeroPadded(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLineNumbersZeroPaddedBind, handle, enable)
     }
 
+    /**
+     * If `true`, line numbers drawn in the gutter are zero padded based on the total line count.
+     * Requires `gutters_draw_line_numbers` to be set to `true`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_numbers_zero_padded
+     */
     fun isLineNumbersZeroPadded(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLineNumbersZeroPaddedBind, handle)
     }
 
+    /**
+     * The minimum width in digits reserved for the line number gutter.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_numbers_min_digits
+     */
     fun setLineNumbersMinDigits(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setLineNumbersMinDigitsBind, handle, count)
     }
 
+    /**
+     * The minimum width in digits reserved for the line number gutter.
+     *
+     * Generated from Godot docs: CodeEdit.get_line_numbers_min_digits
+     */
     fun getLineNumbersMinDigits(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineNumbersMinDigitsBind, handle)
     }
 
+    /**
+     * If `true`, the fold gutter is drawn. In this gutter, the `can_fold_code_region` icon is drawn
+     * for each foldable line (see `can_fold_line`) and the `folded_code_region` icon is drawn for each
+     * folded line (see `is_line_folded`). These icons can be clicked to toggle the fold state, see
+     * `toggle_foldable_line`. `line_folding` must be `true` to show icons.
+     *
+     * Generated from Godot docs: CodeEdit.set_draw_fold_gutter
+     */
     fun setDrawFoldGutter(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawFoldGutterBind, handle, enable)
     }
 
+    /**
+     * If `true`, the fold gutter is drawn. In this gutter, the `can_fold_code_region` icon is drawn
+     * for each foldable line (see `can_fold_line`) and the `folded_code_region` icon is drawn for each
+     * folded line (see `is_line_folded`). These icons can be clicked to toggle the fold state, see
+     * `toggle_foldable_line`. `line_folding` must be `true` to show icons.
+     *
+     * Generated from Godot docs: CodeEdit.is_drawing_fold_gutter
+     */
     fun isDrawingFoldGutter(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawingFoldGutterBind, handle)
     }
 
+    /**
+     * If `true`, lines can be folded. Otherwise, line folding methods like `fold_line` will not work
+     * and `can_fold_line` will always return `false`. See `gutters_draw_fold_gutter`.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_folding_enabled
+     */
     fun setLineFoldingEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLineFoldingEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, lines can be folded. Otherwise, line folding methods like `fold_line` will not work
+     * and `can_fold_line` will always return `false`. See `gutters_draw_fold_gutter`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_folding_enabled
+     */
     fun isLineFoldingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLineFoldingEnabledBind, handle)
     }
 
+    /**
+     * Returns `true` if the given line is foldable. A line is foldable if it is the start of a valid
+     * code region (see `get_code_region_start_tag`), if it is the start of a comment or string block,
+     * or if the next non-empty line is more indented (see `TextEdit.get_indent_level`).
+     *
+     * Generated from Godot docs: CodeEdit.can_fold_line
+     */
     fun canFoldLine(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(canFoldLineBind, handle, line)
     }
 
+    /**
+     * Folds the given line, if possible (see `can_fold_line`).
+     *
+     * Generated from Godot docs: CodeEdit.fold_line
+     */
     fun foldLine(line: Int) {
         ObjectCalls.ptrcallWithIntArg(foldLineBind, handle, line)
     }
 
+    /**
+     * Unfolds the given line if it is folded or if it is hidden under a folded line.
+     *
+     * Generated from Godot docs: CodeEdit.unfold_line
+     */
     fun unfoldLine(line: Int) {
         ObjectCalls.ptrcallWithIntArg(unfoldLineBind, handle, line)
     }
 
+    /**
+     * Folds all lines that are possible to be folded (see `can_fold_line`).
+     *
+     * Generated from Godot docs: CodeEdit.fold_all_lines
+     */
     fun foldAllLines() {
         ObjectCalls.ptrcallNoArgs(foldAllLinesBind, handle)
     }
 
+    /**
+     * Unfolds all lines that are folded.
+     *
+     * Generated from Godot docs: CodeEdit.unfold_all_lines
+     */
     fun unfoldAllLines() {
         ObjectCalls.ptrcallNoArgs(unfoldAllLinesBind, handle)
     }
 
+    /**
+     * Toggle the folding of the code block at the given line.
+     *
+     * Generated from Godot docs: CodeEdit.toggle_foldable_line
+     */
     fun toggleFoldableLine(line: Int) {
         ObjectCalls.ptrcallWithIntArg(toggleFoldableLineBind, handle, line)
     }
 
+    /**
+     * Toggle the folding of the code block on all lines with a caret on them.
+     *
+     * Generated from Godot docs: CodeEdit.toggle_foldable_lines_at_carets
+     */
     fun toggleFoldableLinesAtCarets() {
         ObjectCalls.ptrcallNoArgs(toggleFoldableLinesAtCaretsBind, handle)
     }
 
+    /**
+     * Returns `true` if the given line is folded. See `fold_line`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_folded
+     */
     fun isLineFolded(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineFoldedBind, handle, line)
     }
 
+    /**
+     * Returns all lines that are currently folded.
+     *
+     * Generated from Godot docs: CodeEdit.get_folded_lines
+     */
     fun getFoldedLines(): List<Long> {
         return ObjectCalls.ptrcallNoArgsRetLongList(getFoldedLinesBind, handle)
     }
 
+    /**
+     * Creates a new code region with the selection. At least one single line comment delimiter have to
+     * be defined (see `add_comment_delimiter`). A code region is a part of code that is highlighted
+     * when folded and can help organize your script. Code region start and end tags can be customized
+     * (see `set_code_region_tags`). Code regions are delimited using start and end tags (respectively
+     * `region` and `endregion` by default) preceded by one line comment delimiter. (eg. `#region` and
+     * `#endregion`)
+     *
+     * Generated from Godot docs: CodeEdit.create_code_region
+     */
     fun createCodeRegion() {
         ObjectCalls.ptrcallNoArgs(createCodeRegionBind, handle)
     }
 
+    /**
+     * Returns the code region start tag (without comment delimiter).
+     *
+     * Generated from Godot docs: CodeEdit.get_code_region_start_tag
+     */
     fun getCodeRegionStartTag(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCodeRegionStartTagBind, handle)
     }
 
+    /**
+     * Returns the code region end tag (without comment delimiter).
+     *
+     * Generated from Godot docs: CodeEdit.get_code_region_end_tag
+     */
     fun getCodeRegionEndTag(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCodeRegionEndTagBind, handle)
     }
 
+    /**
+     * Sets the code region start and end tags (without comment delimiter).
+     *
+     * Generated from Godot docs: CodeEdit.set_code_region_tags
+     */
     fun setCodeRegionTags(start: String = "region", end: String = "endregion") {
         ObjectCalls.ptrcallWithTwoStringArgs(setCodeRegionTagsBind, handle, start, end)
     }
 
+    /**
+     * Returns `true` if the given line is a code region start. See `set_code_region_tags`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_code_region_start
+     */
     fun isLineCodeRegionStart(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineCodeRegionStartBind, handle, line)
     }
 
+    /**
+     * Returns `true` if the given line is a code region end. See `set_code_region_tags`.
+     *
+     * Generated from Godot docs: CodeEdit.is_line_code_region_end
+     */
     fun isLineCodeRegionEnd(line: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isLineCodeRegionEndBind, handle, line)
     }
 
+    /**
+     * Defines a string delimiter from `start_key` to `end_key`. Both keys should be symbols, and
+     * `start_key` must not be shared with other delimiters. If `line_only` is `true` or `end_key` is
+     * an empty `String`, the region does not carry over to the next line.
+     *
+     * Generated from Godot docs: CodeEdit.add_string_delimiter
+     */
     fun addStringDelimiter(startKey: String, endKey: String, lineOnly: Boolean = false) {
         ObjectCalls.ptrcallWithTwoStringAndBoolArgs(addStringDelimiterBind, handle, startKey, endKey, lineOnly)
     }
 
+    /**
+     * Removes the string delimiter with `start_key`.
+     *
+     * Generated from Godot docs: CodeEdit.remove_string_delimiter
+     */
     fun removeStringDelimiter(startKey: String) {
         ObjectCalls.ptrcallWithStringArg(removeStringDelimiterBind, handle, startKey)
     }
 
+    /**
+     * Returns `true` if string `start_key` exists.
+     *
+     * Generated from Godot docs: CodeEdit.has_string_delimiter
+     */
     fun hasStringDelimiter(startKey: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasStringDelimiterBind, handle, startKey)
     }
 
+    /**
+     * Sets the string delimiters. All existing string delimiters will be removed.
+     *
+     * Generated from Godot docs: CodeEdit.set_string_delimiters
+     */
     fun setStringDelimiters(stringDelimiters: List<String>) {
         ObjectCalls.ptrcallWithTypedStringListArg(setStringDelimitersBind, handle, stringDelimiters)
     }
 
+    /**
+     * Removes all string delimiters.
+     *
+     * Generated from Godot docs: CodeEdit.clear_string_delimiters
+     */
     fun clearStringDelimiters() {
         ObjectCalls.ptrcallNoArgs(clearStringDelimitersBind, handle)
     }
 
+    /**
+     * Sets the string delimiters. All existing string delimiters will be removed.
+     *
+     * Generated from Godot docs: CodeEdit.get_string_delimiters
+     */
     fun getStringDelimiters(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getStringDelimitersBind, handle)
     }
 
+    /**
+     * Returns the delimiter index if `line` `column` is in a string. If `column` is not provided, will
+     * return the delimiter index if the entire `line` is a string. Otherwise `-1`.
+     *
+     * Generated from Godot docs: CodeEdit.is_in_string
+     */
     fun isInString(line: Int, column: Int = -1): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(isInStringBind, handle, line, column)
     }
 
+    /**
+     * Adds a comment delimiter from `start_key` to `end_key`. Both keys should be symbols, and
+     * `start_key` must not be shared with other delimiters. If `line_only` is `true` or `end_key` is
+     * an empty `String`, the region does not carry over to the next line.
+     *
+     * Generated from Godot docs: CodeEdit.add_comment_delimiter
+     */
     fun addCommentDelimiter(startKey: String, endKey: String, lineOnly: Boolean = false) {
         ObjectCalls.ptrcallWithTwoStringAndBoolArgs(addCommentDelimiterBind, handle, startKey, endKey, lineOnly)
     }
 
+    /**
+     * Removes the comment delimiter with `start_key`.
+     *
+     * Generated from Godot docs: CodeEdit.remove_comment_delimiter
+     */
     fun removeCommentDelimiter(startKey: String) {
         ObjectCalls.ptrcallWithStringArg(removeCommentDelimiterBind, handle, startKey)
     }
 
+    /**
+     * Returns `true` if comment `start_key` exists.
+     *
+     * Generated from Godot docs: CodeEdit.has_comment_delimiter
+     */
     fun hasCommentDelimiter(startKey: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCommentDelimiterBind, handle, startKey)
     }
 
+    /**
+     * Sets the comment delimiters. All existing comment delimiters will be removed.
+     *
+     * Generated from Godot docs: CodeEdit.set_comment_delimiters
+     */
     fun setCommentDelimiters(commentDelimiters: List<String>) {
         ObjectCalls.ptrcallWithTypedStringListArg(setCommentDelimitersBind, handle, commentDelimiters)
     }
 
+    /**
+     * Removes all comment delimiters.
+     *
+     * Generated from Godot docs: CodeEdit.clear_comment_delimiters
+     */
     fun clearCommentDelimiters() {
         ObjectCalls.ptrcallNoArgs(clearCommentDelimitersBind, handle)
     }
 
+    /**
+     * Sets the comment delimiters. All existing comment delimiters will be removed.
+     *
+     * Generated from Godot docs: CodeEdit.get_comment_delimiters
+     */
     fun getCommentDelimiters(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCommentDelimitersBind, handle)
     }
 
+    /**
+     * Returns delimiter index if `line` `column` is in a comment. If `column` is not provided, will
+     * return delimiter index if the entire `line` is a comment. Otherwise `-1`.
+     *
+     * Generated from Godot docs: CodeEdit.is_in_comment
+     */
     fun isInComment(line: Int, column: Int = -1): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(isInCommentBind, handle, line, column)
     }
 
+    /**
+     * Gets the start key for a string or comment region index.
+     *
+     * Generated from Godot docs: CodeEdit.get_delimiter_start_key
+     */
     fun getDelimiterStartKey(delimiterIndex: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterStartKeyBind, handle, delimiterIndex)
     }
 
+    /**
+     * Gets the end key for a string or comment region index.
+     *
+     * Generated from Godot docs: CodeEdit.get_delimiter_end_key
+     */
     fun getDelimiterEndKey(delimiterIndex: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterEndKeyBind, handle, delimiterIndex)
     }
 
+    /**
+     * If `line` `column` is in a string or comment, returns the start position of the region. If not
+     * or no start could be found, both `Vector2` values will be `-1`.
+     *
+     * Generated from Godot docs: CodeEdit.get_delimiter_start_position
+     */
     fun getDelimiterStartPosition(line: Int, column: Int): Vector2 {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getDelimiterStartPositionBind, handle, line, column)
     }
 
+    /**
+     * If `line` `column` is in a string or comment, returns the end position of the region. If not or
+     * no end could be found, both `Vector2` values will be `-1`.
+     *
+     * Generated from Godot docs: CodeEdit.get_delimiter_end_position
+     */
     fun getDelimiterEndPosition(line: Int, column: Int): Vector2 {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getDelimiterEndPositionBind, handle, line, column)
     }
 
+    /**
+     * Sets the code hint text. Pass an empty string to clear.
+     *
+     * Generated from Godot docs: CodeEdit.set_code_hint
+     */
     fun setCodeHint(codeHint: String) {
         ObjectCalls.ptrcallWithStringArg(setCodeHintBind, handle, codeHint)
     }
 
+    /**
+     * If `true`, the code hint will draw below the main caret. If `false`, the code hint will draw
+     * above the main caret. See `set_code_hint`.
+     *
+     * Generated from Godot docs: CodeEdit.set_code_hint_draw_below
+     */
     fun setCodeHintDrawBelow(drawBelow: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCodeHintDrawBelowBind, handle, drawBelow)
     }
 
+    /**
+     * Returns the full text with char `0xFFFF` at the caret location.
+     *
+     * Generated from Godot docs: CodeEdit.get_text_for_code_completion
+     */
     fun getTextForCodeCompletion(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextForCodeCompletionBind, handle)
     }
 
+    /**
+     * Emits `code_completion_requested`, if `force` is `true` will bypass all checks. Otherwise will
+     * check that the caret is in a word or in front of a prefix. Will ignore the request if all
+     * current options are of type file path, node path, or signal.
+     *
+     * Generated from Godot docs: CodeEdit.request_code_completion
+     */
     fun requestCodeCompletion(force: Boolean = false) {
         ObjectCalls.ptrcallWithBoolArg(requestCodeCompletionBind, handle, force)
     }
 
+    /**
+     * Submits an item to the queue of potential candidates for the autocomplete menu. Call
+     * `update_code_completion_options` to update the list. `location` indicates location of the option
+     * relative to the location of the code completion query. See `CodeEdit.CodeCompletionLocation` for
+     * how to set this value. Note: This list will replace all current candidates.
+     *
+     * Generated from Godot docs: CodeEdit.add_code_completion_option
+     */
     fun addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
         ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, handle, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
     }
 
+    /**
+     * Submits all completion options added with `add_code_completion_option`. Will try to force the
+     * autocomplete menu to popup, if `force` is `true`. Note: This will replace all current
+     * candidates.
+     *
+     * Generated from Godot docs: CodeEdit.update_code_completion_options
+     */
     fun updateCodeCompletionOptions(force: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(updateCodeCompletionOptionsBind, handle, force)
     }
 
+    /**
+     * Gets all completion options, see `get_code_completion_option` for return content.
+     *
+     * Generated from Godot docs: CodeEdit.get_code_completion_options
+     */
     fun getCodeCompletionOptions(): List<Map<String, Any?>> {
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getCodeCompletionOptionsBind, handle)
     }
 
+    /**
+     * Gets the completion option at `index`. The return `Dictionary` has the following key-values:
+     * `kind`: `CodeCompletionKind` `display_text`: Text that is shown on the autocomplete menu.
+     * `insert_text`: Text that is to be inserted when this item is selected. `font_color`: Color of
+     * the text on the autocomplete menu. `icon`: Icon to draw on the autocomplete menu.
+     * `default_value`: Value of the symbol.
+     *
+     * Generated from Godot docs: CodeEdit.get_code_completion_option
+     */
     fun getCodeCompletionOption(index: Int): Map<String, Any?> {
         return ObjectCalls.ptrcallWithIntArgRetDictionary(getCodeCompletionOptionBind, handle, index)
     }
 
+    /**
+     * Gets the index of the current selected completion option.
+     *
+     * Generated from Godot docs: CodeEdit.get_code_completion_selected_index
+     */
     fun getCodeCompletionSelectedIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCodeCompletionSelectedIndexBind, handle)
     }
 
+    /**
+     * Sets the current selected completion option.
+     *
+     * Generated from Godot docs: CodeEdit.set_code_completion_selected_index
+     */
     fun setCodeCompletionSelectedIndex(index: Int) {
         ObjectCalls.ptrcallWithIntArg(setCodeCompletionSelectedIndexBind, handle, index)
     }
 
+    /**
+     * Inserts the selected entry into the text. If `replace` is `true`, any existing text is replaced
+     * rather than merged.
+     *
+     * Generated from Godot docs: CodeEdit.confirm_code_completion
+     */
     fun confirmCodeCompletion(replace: Boolean = false) {
         ObjectCalls.ptrcallWithBoolArg(confirmCodeCompletionBind, handle, replace)
     }
 
+    /**
+     * Cancels the autocomplete menu.
+     *
+     * Generated from Godot docs: CodeEdit.cancel_code_completion
+     */
     fun cancelCodeCompletion() {
         ObjectCalls.ptrcallNoArgs(cancelCodeCompletionBind, handle)
     }
 
+    /**
+     * If `true`, the `ProjectSettings.input/ui_text_completion_query` action requests code completion.
+     * To handle it, see `_request_code_completion` or `code_completion_requested`.
+     *
+     * Generated from Godot docs: CodeEdit.set_code_completion_enabled
+     */
     fun setCodeCompletionEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCodeCompletionEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, the `ProjectSettings.input/ui_text_completion_query` action requests code completion.
+     * To handle it, see `_request_code_completion` or `code_completion_requested`.
+     *
+     * Generated from Godot docs: CodeEdit.is_code_completion_enabled
+     */
     fun isCodeCompletionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCodeCompletionEnabledBind, handle)
     }
 
+    /**
+     * Sets prefixes that will trigger code completion.
+     *
+     * Generated from Godot docs: CodeEdit.set_code_completion_prefixes
+     */
     fun setCodeCompletionPrefixes(prefixes: List<String>) {
         ObjectCalls.ptrcallWithTypedStringListArg(setCodeCompletionPrefixesBind, handle, prefixes)
     }
 
+    /**
+     * Sets prefixes that will trigger code completion.
+     *
+     * Generated from Godot docs: CodeEdit.get_code_completion_prefixes
+     */
     fun getCodeCompletionPrefixes(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCodeCompletionPrefixesBind, handle)
     }
 
+    /**
+     * Draws vertical lines at the provided columns. The first entry is considered a main hard
+     * guideline and is drawn more prominently.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_length_guidelines
+     */
     fun setLineLengthGuidelines(guidelineColumns: List<Long>) {
         ObjectCalls.ptrcallWithTypedIntListArg(setLineLengthGuidelinesBind, handle, guidelineColumns)
     }
 
+    /**
+     * Draws vertical lines at the provided columns. The first entry is considered a main hard
+     * guideline and is drawn more prominently.
+     *
+     * Generated from Godot docs: CodeEdit.get_line_length_guidelines
+     */
     fun getLineLengthGuidelines(): List<Long> {
         return ObjectCalls.ptrcallNoArgsRetLongList(getLineLengthGuidelinesBind, handle)
     }
 
+    /**
+     * Set when a validated word from `symbol_validate` is clicked, the `symbol_lookup` should be
+     * emitted.
+     *
+     * Generated from Godot docs: CodeEdit.set_symbol_lookup_on_click_enabled
+     */
     fun setSymbolLookupOnClickEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSymbolLookupOnClickEnabledBind, handle, enable)
     }
 
+    /**
+     * Set when a validated word from `symbol_validate` is clicked, the `symbol_lookup` should be
+     * emitted.
+     *
+     * Generated from Godot docs: CodeEdit.is_symbol_lookup_on_click_enabled
+     */
     fun isSymbolLookupOnClickEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSymbolLookupOnClickEnabledBind, handle)
     }
 
+    /**
+     * Returns the full text with char `0xFFFF` at the cursor location.
+     *
+     * Generated from Godot docs: CodeEdit.get_text_for_symbol_lookup
+     */
     fun getTextForSymbolLookup(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextForSymbolLookupBind, handle)
     }
 
+    /**
+     * Returns the full text with char `0xFFFF` at the specified location.
+     *
+     * Generated from Godot docs: CodeEdit.get_text_with_cursor_char
+     */
     fun getTextWithCursorChar(line: Int, column: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTextWithCursorCharBind, handle, line, column)
     }
 
+    /**
+     * Sets the symbol emitted by `symbol_validate` as a valid lookup.
+     *
+     * Generated from Godot docs: CodeEdit.set_symbol_lookup_word_as_valid
+     */
     fun setSymbolLookupWordAsValid(valid: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSymbolLookupWordAsValidBind, handle, valid)
     }
 
+    /**
+     * If `true`, the `symbol_hovered` signal is emitted when hovering over a word.
+     *
+     * Generated from Godot docs: CodeEdit.set_symbol_tooltip_on_hover_enabled
+     */
     fun setSymbolTooltipOnHoverEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSymbolTooltipOnHoverEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, the `symbol_hovered` signal is emitted when hovering over a word.
+     *
+     * Generated from Godot docs: CodeEdit.is_symbol_tooltip_on_hover_enabled
+     */
     fun isSymbolTooltipOnHoverEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSymbolTooltipOnHoverEnabledBind, handle)
     }
 
+    /**
+     * Moves all lines up that are selected or have a caret on them.
+     *
+     * Generated from Godot docs: CodeEdit.move_lines_up
+     */
     fun moveLinesUp() {
         ObjectCalls.ptrcallNoArgs(moveLinesUpBind, handle)
     }
 
+    /**
+     * Moves all lines down that are selected or have a caret on them.
+     *
+     * Generated from Godot docs: CodeEdit.move_lines_down
+     */
     fun moveLinesDown() {
         ObjectCalls.ptrcallNoArgs(moveLinesDownBind, handle)
     }
 
+    /**
+     * Deletes all lines that are selected or have a caret on them.
+     *
+     * Generated from Godot docs: CodeEdit.delete_lines
+     */
     fun deleteLines() {
         ObjectCalls.ptrcallNoArgs(deleteLinesBind, handle)
     }
 
+    /**
+     * Joins all selected lines or lines containing a caret with their next line. Whitespace in between
+     * will be removed. If the next line has content, the `line_ending` will be inserted in between.
+     *
+     * Generated from Godot docs: CodeEdit.join_lines
+     */
     fun joinLines(lineEnding: String = " ") {
         ObjectCalls.ptrcallWithStringArg(joinLinesBind, handle, lineEnding)
     }
 
+    /**
+     * Duplicates all selected text and duplicates all lines with a caret on them.
+     *
+     * Generated from Godot docs: CodeEdit.duplicate_selection
+     */
     fun duplicateSelection() {
         ObjectCalls.ptrcallNoArgs(duplicateSelectionBind, handle)
     }
 
+    /**
+     * Duplicates all lines currently selected with any caret. Duplicates the entire line beneath the
+     * current one no matter where the caret is within the line.
+     *
+     * Generated from Godot docs: CodeEdit.duplicate_lines
+     */
     fun duplicateLines() {
         ObjectCalls.ptrcallNoArgs(duplicateLinesBind, handle)
     }

@@ -34,34 +34,74 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setRingSegmentsProperty")
         set(value) = setRingSegments(value)
 
+    /**
+     * The inner radius of the torus.
+     *
+     * Generated from Godot docs: TorusMesh.set_inner_radius
+     */
     fun setInnerRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, handle, radius)
     }
 
+    /**
+     * The inner radius of the torus.
+     *
+     * Generated from Godot docs: TorusMesh.get_inner_radius
+     */
     fun getInnerRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, handle)
     }
 
+    /**
+     * The outer radius of the torus.
+     *
+     * Generated from Godot docs: TorusMesh.set_outer_radius
+     */
     fun setOuterRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, handle, radius)
     }
 
+    /**
+     * The outer radius of the torus.
+     *
+     * Generated from Godot docs: TorusMesh.get_outer_radius
+     */
     fun getOuterRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, handle)
     }
 
+    /**
+     * The number of slices the torus is constructed of.
+     *
+     * Generated from Godot docs: TorusMesh.set_rings
+     */
     fun setRings(rings: Int) {
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
+    /**
+     * The number of slices the torus is constructed of.
+     *
+     * Generated from Godot docs: TorusMesh.get_rings
+     */
     fun getRings(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
+    /**
+     * The number of edges each ring of the torus is constructed of.
+     *
+     * Generated from Godot docs: TorusMesh.set_ring_segments
+     */
     fun setRingSegments(rings: Int) {
         ObjectCalls.ptrcallWithIntArg(setRingSegmentsBind, handle, rings)
     }
 
+    /**
+     * The number of edges each ring of the torus is constructed of.
+     *
+     * Generated from Godot docs: TorusMesh.get_ring_segments
+     */
     fun getRingSegments(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getRingSegmentsBind, handle)
     }

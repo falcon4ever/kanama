@@ -16,10 +16,22 @@ open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
         @JvmName("setSyncProperty")
         set(value) = setUseSync(value)
 
+    /**
+     * If `false`, the blended animations' frame are stopped when the blend value is `0`. If `true`,
+     * forcing the blended animations to advance frame.
+     *
+     * Generated from Godot docs: AnimationNodeSync.set_use_sync
+     */
     fun setUseSync(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
+    /**
+     * If `false`, the blended animations' frame are stopped when the blend value is `0`. If `true`,
+     * forcing the blended animations to advance frame.
+     *
+     * Generated from Godot docs: AnimationNodeSync.is_using_sync
+     */
     fun isUsingSync(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
     }

@@ -13,11 +13,23 @@ object PhysicsServer2DManager {
         ObjectCalls.getSingleton("PhysicsServer2DManager")
     }
 
+    /**
+     * Register a `PhysicsServer2D` implementation by passing a `name` and a `Callable` that returns a
+     * `PhysicsServer2D` object.
+     *
+     * Generated from Godot docs: PhysicsServer2DManager.register_server
+     */
     @JvmStatic
     fun registerServer(name: String, createCallback: GodotCallable) {
         ObjectCalls.ptrcallWithStringCallableArgs(registerServerBind, singleton, name, createCallback.target.handle, createCallback.method)
     }
 
+    /**
+     * Set the default `PhysicsServer2D` implementation to the one identified by `name`, if `priority`
+     * is greater than the priority of the current default implementation.
+     *
+     * Generated from Godot docs: PhysicsServer2DManager.set_default_server
+     */
     @JvmStatic
     fun setDefaultServer(name: String, priority: Int) {
         ObjectCalls.ptrcallWithStringAndIntArg(setDefaultServerBind, singleton, name, priority)

@@ -46,50 +46,118 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setFrequencyProperty")
         set(value) = setFrequency(value)
 
+    /**
+     * The index of the buffer in the vertex buffer array to bind this vertex attribute. When set to
+     * `-1`, it defaults to the index of the attribute. Note: You cannot mix binding explicitly
+     * assigned attributes with implicitly assigned ones (i.e. `-1`). Either all attributes must have
+     * their binding set to `-1`, or all must have explicit bindings.
+     *
+     * Generated from Godot docs: RDVertexAttribute.set_binding
+     */
     fun setBinding(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setBindingBind, handle, pMember)
     }
 
+    /**
+     * The index of the buffer in the vertex buffer array to bind this vertex attribute. When set to
+     * `-1`, it defaults to the index of the attribute. Note: You cannot mix binding explicitly
+     * assigned attributes with implicitly assigned ones (i.e. `-1`). Either all attributes must have
+     * their binding set to `-1`, or all must have explicit bindings.
+     *
+     * Generated from Godot docs: RDVertexAttribute.get_binding
+     */
     fun getBinding(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBindingBind, handle)
     }
 
+    /**
+     * The location in the shader that this attribute is bound to.
+     *
+     * Generated from Godot docs: RDVertexAttribute.set_location
+     */
     fun setLocation(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setLocationBind, handle, pMember)
     }
 
+    /**
+     * The location in the shader that this attribute is bound to.
+     *
+     * Generated from Godot docs: RDVertexAttribute.get_location
+     */
     fun getLocation(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getLocationBind, handle)
     }
 
+    /**
+     * The number of bytes between the start of the vertex buffer and the first instance of this
+     * attribute.
+     *
+     * Generated from Godot docs: RDVertexAttribute.set_offset
+     */
     fun setOffset(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setOffsetBind, handle, pMember)
     }
 
+    /**
+     * The number of bytes between the start of the vertex buffer and the first instance of this
+     * attribute.
+     *
+     * Generated from Godot docs: RDVertexAttribute.get_offset
+     */
     fun getOffset(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getOffsetBind, handle)
     }
 
+    /**
+     * The way that this attribute's data is interpreted when sent to a shader.
+     *
+     * Generated from Godot docs: RDVertexAttribute.set_format
+     */
     fun setFormat(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
+    /**
+     * The way that this attribute's data is interpreted when sent to a shader.
+     *
+     * Generated from Godot docs: RDVertexAttribute.get_format
+     */
     fun getFormat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
+    /**
+     * The number of bytes between the starts of consecutive instances of this attribute.
+     *
+     * Generated from Godot docs: RDVertexAttribute.set_stride
+     */
     fun setStride(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setStrideBind, handle, pMember)
     }
 
+    /**
+     * The number of bytes between the starts of consecutive instances of this attribute.
+     *
+     * Generated from Godot docs: RDVertexAttribute.get_stride
+     */
     fun getStride(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getStrideBind, handle)
     }
 
+    /**
+     * The rate at which this attribute is pulled from its vertex buffer.
+     *
+     * Generated from Godot docs: RDVertexAttribute.set_frequency
+     */
     fun setFrequency(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFrequencyBind, handle, pMember)
     }
 
+    /**
+     * The rate at which this attribute is pulled from its vertex buffer.
+     *
+     * Generated from Godot docs: RDVertexAttribute.get_frequency
+     */
     fun getFrequency(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, handle)
     }

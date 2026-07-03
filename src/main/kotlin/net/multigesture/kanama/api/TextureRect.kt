@@ -40,42 +40,92 @@ class TextureRect(handle: MemorySegment) : Control(handle) {
         @JvmName("setFlipVProperty")
         set(value) = setFlipV(value)
 
+    /**
+     * The node's `Texture2D` resource.
+     *
+     * Generated from Godot docs: TextureRect.set_texture
+     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The node's `Texture2D` resource.
+     *
+     * Generated from Godot docs: TextureRect.get_texture
+     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
+    /**
+     * Defines how minimum size is determined based on the texture's size.
+     *
+     * Generated from Godot docs: TextureRect.set_expand_mode
+     */
     fun setExpandMode(expandMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setExpandModeBind, handle, expandMode)
     }
 
+    /**
+     * Defines how minimum size is determined based on the texture's size.
+     *
+     * Generated from Godot docs: TextureRect.get_expand_mode
+     */
     fun getExpandMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, handle)
     }
 
+    /**
+     * If `true`, texture is flipped horizontally.
+     *
+     * Generated from Godot docs: TextureRect.set_flip_h
+     */
     fun setFlipH(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, enable)
     }
 
+    /**
+     * If `true`, texture is flipped horizontally.
+     *
+     * Generated from Godot docs: TextureRect.is_flipped_h
+     */
     fun isFlippedH(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
     }
 
+    /**
+     * If `true`, texture is flipped vertically.
+     *
+     * Generated from Godot docs: TextureRect.set_flip_v
+     */
     fun setFlipV(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, enable)
     }
 
+    /**
+     * If `true`, texture is flipped vertically.
+     *
+     * Generated from Godot docs: TextureRect.is_flipped_v
+     */
     fun isFlippedV(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
     }
 
+    /**
+     * Controls the texture's behavior when resizing the node's bounding rectangle.
+     *
+     * Generated from Godot docs: TextureRect.set_stretch_mode
+     */
     fun setStretchMode(stretchMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setStretchModeBind, handle, stretchMode)
     }
 
+    /**
+     * Controls the texture's behavior when resizing the node's bounding rectangle.
+     *
+     * Generated from Godot docs: TextureRect.get_stretch_mode
+     */
     fun getStretchMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, handle)
     }

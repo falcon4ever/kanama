@@ -81,194 +81,465 @@ open class PhysicsDirectBodyState2D(handle: MemorySegment) : GodotObject(handle)
         @JvmName("setTransformProperty")
         set(value) = setTransform(value)
 
+    /**
+     * The total gravity vector being currently applied to this body.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_total_gravity
+     */
     fun getTotalGravity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTotalGravityBind, handle)
     }
 
+    /**
+     * The rate at which the body stops moving, if there are not any other forces moving it.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_total_linear_damp
+     */
     fun getTotalLinearDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTotalLinearDampBind, handle)
     }
 
+    /**
+     * The rate at which the body stops rotating, if there are not any other forces moving it.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_total_angular_damp
+     */
     fun getTotalAngularDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTotalAngularDampBind, handle)
     }
 
+    /**
+     * The body's center of mass position relative to the body's center in the global coordinate
+     * system.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_center_of_mass
+     */
     fun getCenterOfMass(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getCenterOfMassBind, handle)
     }
 
+    /**
+     * The body's center of mass position in the body's local coordinate system.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_center_of_mass_local
+     */
     fun getCenterOfMassLocal(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getCenterOfMassLocalBind, handle)
     }
 
+    /**
+     * The inverse of the mass of the body.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_inverse_mass
+     */
     fun getInverseMass(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInverseMassBind, handle)
     }
 
+    /**
+     * The inverse of the inertia of the body.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_inverse_inertia
+     */
     fun getInverseInertia(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInverseInertiaBind, handle)
     }
 
+    /**
+     * The body's linear velocity in pixels per second.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_linear_velocity
+     */
     fun setLinearVelocity(velocity: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setLinearVelocityBind, handle, velocity)
     }
 
+    /**
+     * The body's linear velocity in pixels per second.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_linear_velocity
+     */
     fun getLinearVelocity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getLinearVelocityBind, handle)
     }
 
+    /**
+     * The body's rotational velocity in radians per second.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_angular_velocity
+     */
     fun setAngularVelocity(velocity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularVelocityBind, handle, velocity)
     }
 
+    /**
+     * The body's rotational velocity in radians per second.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_angular_velocity
+     */
     fun getAngularVelocity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularVelocityBind, handle)
     }
 
+    /**
+     * The body's transformation matrix.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_transform
+     */
     fun setTransform(transform: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
+    /**
+     * The body's transformation matrix.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_transform
+     */
     fun getTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
+    /**
+     * Returns the body's velocity at the given relative position. `local_position` is the offset from
+     * the body origin in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_velocity_at_local_position
+     */
     fun getVelocityAtLocalPosition(localPosition: Vector2): Vector2 {
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getVelocityAtLocalPositionBind, handle, localPosition)
     }
 
+    /**
+     * Applies a directional impulse without affecting rotation. An impulse is time-independent!
+     * Applying an impulse every frame would result in a framerate-dependent force. For this reason, it
+     * should only be used when simulating one-time impacts (use the "_force" functions otherwise).
+     * This is equivalent to using `apply_impulse` at the body's center of mass.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.apply_central_impulse
+     */
     fun applyCentralImpulse(impulse: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralImpulseBind, handle, impulse)
     }
 
+    /**
+     * Applies a rotational impulse to the body without affecting the position. An impulse is
+     * time-independent! Applying an impulse every frame would result in a framerate-dependent force.
+     * For this reason, it should only be used when simulating one-time impacts (use the "_force"
+     * functions otherwise). Note: `inverse_inertia` is required for this to work. To have
+     * `inverse_inertia`, an active `CollisionShape2D` must be a child of the node, or you can manually
+     * set `inverse_inertia`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.apply_torque_impulse
+     */
     fun applyTorqueImpulse(impulse: Double) {
         ObjectCalls.ptrcallWithDoubleArg(applyTorqueImpulseBind, handle, impulse)
     }
 
+    /**
+     * Applies a positioned impulse to the body. An impulse is time-independent! Applying an impulse
+     * every frame would result in a framerate-dependent force. For this reason, it should only be used
+     * when simulating one-time impacts (use the "_force" functions otherwise). `position` is the
+     * offset from the body origin in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.apply_impulse
+     */
     fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, handle, impulse, position)
     }
 
+    /**
+     * Applies a directional force without affecting rotation. A force is time dependent and meant to
+     * be applied every physics update. This is equivalent to using `apply_force` at the body's center
+     * of mass.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.apply_central_force
+     */
     fun applyCentralForce(force: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralForceBind, handle, force)
     }
 
+    /**
+     * Applies a positioned force to the body. A force is time dependent and meant to be applied every
+     * physics update. `position` is the offset from the body origin in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.apply_force
+     */
     fun applyForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, handle, force, position)
     }
 
+    /**
+     * Applies a rotational force without affecting position. A force is time dependent and meant to be
+     * applied every physics update. Note: `inverse_inertia` is required for this to work. To have
+     * `inverse_inertia`, an active `CollisionShape2D` must be a child of the node, or you can manually
+     * set `inverse_inertia`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.apply_torque
+     */
     fun applyTorque(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(applyTorqueBind, handle, torque)
     }
 
+    /**
+     * Adds a constant directional force without affecting rotation that keeps being applied over time
+     * until cleared with `constant_force = Vector2(0, 0)`. This is equivalent to using
+     * `add_constant_force` at the body's center of mass.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.add_constant_central_force
+     */
     fun addConstantCentralForce(force: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithVector2Arg(addConstantCentralForceBind, handle, force)
     }
 
+    /**
+     * Adds a constant positioned force to the body that keeps being applied over time until cleared
+     * with `constant_force = Vector2(0, 0)`. `position` is the offset from the body origin in global
+     * coordinates.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.add_constant_force
+     */
     fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
         ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, handle, force, position)
     }
 
+    /**
+     * Adds a constant rotational force without affecting position that keeps being applied over time
+     * until cleared with `constant_torque = 0`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.add_constant_torque
+     */
     fun addConstantTorque(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(addConstantTorqueBind, handle, torque)
     }
 
+    /**
+     * Sets the body's total constant positional forces applied during each physics update. See
+     * `add_constant_force` and `add_constant_central_force`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_constant_force
+     */
     fun setConstantForce(force: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setConstantForceBind, handle, force)
     }
 
+    /**
+     * Returns the body's total constant positional forces applied during each physics update. See
+     * `add_constant_force` and `add_constant_central_force`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_constant_force
+     */
     fun getConstantForce(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getConstantForceBind, handle)
     }
 
+    /**
+     * Sets the body's total constant rotational forces applied during each physics update. See
+     * `add_constant_torque`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_constant_torque
+     */
     fun setConstantTorque(torque: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setConstantTorqueBind, handle, torque)
     }
 
+    /**
+     * Returns the body's total constant rotational forces applied during each physics update. See
+     * `add_constant_torque`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_constant_torque
+     */
     fun getConstantTorque(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstantTorqueBind, handle)
     }
 
+    /**
+     * If `true`, this body is currently sleeping (not active).
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_sleep_state
+     */
     fun setSleepState(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSleepStateBind, handle, enabled)
     }
 
+    /**
+     * If `true`, this body is currently sleeping (not active).
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.is_sleeping
+     */
     fun isSleeping(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, handle)
     }
 
+    /**
+     * The body's collision layer.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_collision_layer
+     */
     fun setCollisionLayer(layer: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, layer)
     }
 
+    /**
+     * The body's collision layer.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_collision_layer
+     */
     fun getCollisionLayer(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
     }
 
+    /**
+     * The body's collision mask.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.set_collision_mask
+     */
     fun setCollisionMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
     }
 
+    /**
+     * The body's collision mask.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_collision_mask
+     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
+    /**
+     * Returns the number of contacts this body has with other bodies. Note: By default, this returns 0
+     * unless bodies are configured to monitor contacts. See `RigidBody2D.contact_monitor`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_count
+     */
     fun getContactCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, handle)
     }
 
+    /**
+     * Returns the position of the contact point on the body in the global coordinate system.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_local_position
+     */
     fun getContactLocalPosition(contactIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getContactLocalPositionBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the local normal at the contact point.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_local_normal
+     */
     fun getContactLocalNormal(contactIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getContactLocalNormalBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the local shape index of the collision.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_local_shape
+     */
     fun getContactLocalShape(contactIdx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getContactLocalShapeBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the velocity vector at the body's contact point.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_local_velocity_at_position
+     */
     fun getContactLocalVelocityAtPosition(contactIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getContactLocalVelocityAtPositionBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the collider's `RID`.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_collider
+     */
     fun getContactCollider(contactIdx: Int): RID {
         return ObjectCalls.ptrcallWithIntArgRetRID(getContactColliderBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the position of the contact point on the collider in the global coordinate system.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_collider_position
+     */
     fun getContactColliderPosition(contactIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getContactColliderPositionBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the collider's object id.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_collider_id
+     */
     fun getContactColliderId(contactIdx: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getContactColliderIdBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the collider object. This depends on how it was created (will return a scene node if
+     * such was used to create it).
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_collider_object
+     */
     fun getContactColliderObject(contactIdx: Int): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getContactColliderObjectBind, handle, contactIdx))
     }
 
+    /**
+     * Returns the collider's shape index.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_collider_shape
+     */
     fun getContactColliderShape(contactIdx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getContactColliderShapeBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the velocity vector at the collider's contact point.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_collider_velocity_at_position
+     */
     fun getContactColliderVelocityAtPosition(contactIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getContactColliderVelocityAtPositionBind, handle, contactIdx)
     }
 
+    /**
+     * Returns the impulse created by the contact.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_contact_impulse
+     */
     fun getContactImpulse(contactIdx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getContactImpulseBind, handle, contactIdx)
     }
 
+    /**
+     * The timestep (delta) used for the simulation.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_step
+     */
     fun getStep(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
     }
 
+    /**
+     * Updates the body's linear and angular velocity by applying gravity and damping for the
+     * equivalent of one physics tick.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.integrate_forces
+     */
     fun integrateForces() {
         ObjectCalls.ptrcallNoArgs(integrateForcesBind, handle)
     }
 
+    /**
+     * Returns the current state of the space, useful for queries.
+     *
+     * Generated from Godot docs: PhysicsDirectBodyState2D.get_space_state
+     */
     fun getSpaceState(): PhysicsDirectSpaceState2D? {
         return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpaceStateBind, handle))
     }

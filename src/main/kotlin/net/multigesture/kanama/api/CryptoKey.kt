@@ -29,14 +29,31 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, handle, path, publicOnly)
     }
 
+    /**
+     * Returns `true` if this CryptoKey only has the public part, and not the private one.
+     *
+     * Generated from Godot docs: CryptoKey.is_public_only
+     */
     fun isPublicOnly(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPublicOnlyBind, handle)
     }
 
+    /**
+     * Returns a string containing the key in PEM format. If `public_only` is `true`, only the public
+     * key will be included.
+     *
+     * Generated from Godot docs: CryptoKey.save_to_string
+     */
     fun saveToString(publicOnly: Boolean = false): String {
         return ObjectCalls.ptrcallWithBoolArgRetString(saveToStringBind, handle, publicOnly)
     }
 
+    /**
+     * Loads a key from the given `string_key`. If `public_only` is `true`, only the public key will be
+     * loaded.
+     *
+     * Generated from Godot docs: CryptoKey.load_from_string
+     */
     fun loadFromString(stringKey: String, publicOnly: Boolean = false): Long {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, handle, stringKey, publicOnly)
     }

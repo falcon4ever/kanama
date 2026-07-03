@@ -29,26 +29,56 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setImageSizeProperty")
         set(value) = setImageSize(value)
 
+    /**
+     * Sets the mesh used to draw. It must be a mesh using 2D vertices.
+     *
+     * Generated from Godot docs: MeshTexture.set_mesh
+     */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Sets the mesh used to draw. It must be a mesh using 2D vertices.
+     *
+     * Generated from Godot docs: MeshTexture.get_mesh
+     */
     fun getMesh(): Mesh? {
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
+    /**
+     * Sets the size of the image, needed for reference.
+     *
+     * Generated from Godot docs: MeshTexture.set_image_size
+     */
     fun setImageSize(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setImageSizeBind, handle, size)
     }
 
+    /**
+     * Sets the size of the image, needed for reference.
+     *
+     * Generated from Godot docs: MeshTexture.get_image_size
+     */
     fun getImageSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getImageSizeBind, handle)
     }
 
+    /**
+     * Sets the base texture that the Mesh will use to draw.
+     *
+     * Generated from Godot docs: MeshTexture.set_base_texture
+     */
     fun setBaseTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Sets the base texture that the Mesh will use to draw.
+     *
+     * Generated from Godot docs: MeshTexture.get_base_texture
+     */
     fun getBaseTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseTextureBind, handle))
     }

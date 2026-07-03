@@ -22,18 +22,38 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
+    /**
+     * The cylinder's radius.
+     *
+     * Generated from Godot docs: CylinderShape3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The cylinder's radius.
+     *
+     * Generated from Godot docs: CylinderShape3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * The cylinder's height.
+     *
+     * Generated from Godot docs: CylinderShape3D.set_height
+     */
     fun setHeight(height: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
+    /**
+     * The cylinder's height.
+     *
+     * Generated from Godot docs: CylinderShape3D.get_height
+     */
     fun getHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }

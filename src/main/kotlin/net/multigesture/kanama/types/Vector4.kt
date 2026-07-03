@@ -64,11 +64,24 @@ data class Vector4(
     }
 
     /** Godot `Vector4.is_equal_approx`: per-component fuzzy compare (CMP_EPSILON tolerance). */
+    /**
+     * Returns `true` if this vector and `to` are approximately equal, by running
+     * `@GlobalScope.is_equal_approx` on each component.
+     *
+     * Generated from Godot docs: Vector4.is_equal_approx
+     */
     fun isEqualApprox(other: Vector4): Boolean =
         isEqualApprox(x, other.x) && isEqualApprox(y, other.y) &&
             isEqualApprox(z, other.z) && isEqualApprox(w, other.w)
 
     /** Godot `Vector4.is_zero_approx`: true if every component is approximately zero. */
+    /**
+     * Returns `true` if this vector's values are approximately zero, by running
+     * `@GlobalScope.is_zero_approx` on each component. This method is faster than using
+     * `is_equal_approx` with one value as a zero vector.
+     *
+     * Generated from Godot docs: Vector4.is_zero_approx
+     */
     fun isZeroApprox(): Boolean =
         isZeroApprox(x) && isZeroApprox(y) && isZeroApprox(z) && isZeroApprox(w)
 

@@ -29,34 +29,74 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
         @JvmName("setDoubleTapProperty")
         set(value) = setDoubleTap(value)
 
+    /**
+     * The touch index in the case of a multi-touch event. One index = one finger.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.set_index
+     */
     fun setIndex(index: Int) {
         ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
     }
 
+    /**
+     * The touch index in the case of a multi-touch event. One index = one finger.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.get_index
+     */
     fun getIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
     }
 
+    /**
+     * The touch position in the viewport the node is in, using the coordinate system of this viewport.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.set_position
+     */
     fun setPosition(position: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
+    /**
+     * The touch position in the viewport the node is in, using the coordinate system of this viewport.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.get_position
+     */
     fun getPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
+    /**
+     * If `true`, the touch's state is pressed. If `false`, the touch's state is released.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.set_pressed
+     */
     fun setPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
+    /**
+     * If `true`, the touch event has been canceled.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.set_canceled
+     */
     fun setCanceled(canceled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCanceledBind, handle, canceled)
     }
 
+    /**
+     * If `true`, the touch's state is a double tap.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.set_double_tap
+     */
     fun setDoubleTap(doubleTap: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDoubleTapBind, handle, doubleTap)
     }
 
+    /**
+     * If `true`, the touch's state is a double tap.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.is_double_tap
+     */
     fun isDoubleTap(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDoubleTapBind, handle)
     }

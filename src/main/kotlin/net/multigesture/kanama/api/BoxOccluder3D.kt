@@ -17,10 +17,20 @@ class BoxOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The box's size in 3D units.
+     *
+     * Generated from Godot docs: BoxOccluder3D.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * The box's size in 3D units.
+     *
+     * Generated from Godot docs: BoxOccluder3D.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }

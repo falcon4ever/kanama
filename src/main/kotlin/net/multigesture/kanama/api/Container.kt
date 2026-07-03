@@ -17,18 +17,44 @@ open class Container(handle: MemorySegment) : Control(handle) {
         @JvmName("setAccessibilityRegionProperty")
         set(value) = setAccessibilityRegion(value)
 
+    /**
+     * Queue resort of the contained children. This is called automatically anyway, but can be called
+     * upon request.
+     *
+     * Generated from Godot docs: Container.queue_sort
+     */
     fun queueSort() {
         ObjectCalls.ptrcallNoArgs(queueSortBind, handle)
     }
 
+    /**
+     * Fit a child control in a given rect. This is mainly a helper for creating custom container
+     * classes.
+     *
+     * Generated from Godot docs: Container.fit_child_in_rect
+     */
     fun fitChildInRect(child: Control, rect: Rect2) {
         ObjectCalls.ptrcallWithObjectAndRect2Arg(fitChildInRectBind, handle, child.handle, rect)
     }
 
+    /**
+     * If `true`, this container is marked as a region for accessibility. Use
+     * `Control.accessibility_name` to give the region a descriptive name. Screen readers can navigate
+     * between regions using landmark navigation.
+     *
+     * Generated from Godot docs: Container.set_accessibility_region
+     */
     fun setAccessibilityRegion(region: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAccessibilityRegionBind, handle, region)
     }
 
+    /**
+     * If `true`, this container is marked as a region for accessibility. Use
+     * `Control.accessibility_name` to give the region a descriptive name. Screen readers can navigate
+     * between regions using landmark navigation.
+     *
+     * Generated from Godot docs: Container.is_accessibility_region
+     */
     fun isAccessibilityRegion(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilityRegionBind, handle)
     }

@@ -20,66 +20,138 @@ object TranslationServer {
         @JvmName("setPseudolocalizationEnabledProperty")
         set(value) = setPseudolocalizationEnabled(value)
 
+    /**
+     * Sets the locale of the project. The `locale` string will be standardized to match known locales
+     * (e.g. `en-US` would be matched to `en_US`). If translations have been loaded beforehand for the
+     * new locale, they will be applied.
+     *
+     * Generated from Godot docs: TranslationServer.set_locale
+     */
     @JvmStatic
     fun setLocale(locale: String) {
         ObjectCalls.ptrcallWithStringArg(setLocaleBind, singleton, locale)
     }
 
+    /**
+     * Returns the current locale of the project. See also `OS.get_locale` and `OS.get_locale_language`
+     * to query the locale of the user system.
+     *
+     * Generated from Godot docs: TranslationServer.get_locale
+     */
     @JvmStatic
     fun getLocale(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, singleton)
     }
 
+    /**
+     * Returns the current locale of the editor. Note: When called from an exported project returns the
+     * same value as `get_locale`.
+     *
+     * Generated from Godot docs: TranslationServer.get_tool_locale
+     */
     @JvmStatic
     fun getToolLocale(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getToolLocaleBind, singleton)
     }
 
+    /**
+     * Compares two locales and returns a similarity score between `0` (no match) and `10` (full
+     * match).
+     *
+     * Generated from Godot docs: TranslationServer.compare_locales
+     */
     @JvmStatic
     fun compareLocales(localeA: String, localeB: String): Int {
         return ObjectCalls.ptrcallWithTwoStringArgsRetInt(compareLocalesBind, singleton, localeA, localeB)
     }
 
+    /**
+     * Returns a `locale` string standardized to match known locales (e.g. `en-US` would be matched to
+     * `en_US`). If `add_defaults` is `true`, the locale may have a default script or country added.
+     *
+     * Generated from Godot docs: TranslationServer.standardize_locale
+     */
     @JvmStatic
     fun standardizeLocale(locale: String, addDefaults: Boolean = false): String {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetString(standardizeLocaleBind, singleton, locale, addDefaults)
     }
 
+    /**
+     * Returns array of known language codes.
+     *
+     * Generated from Godot docs: TranslationServer.get_all_languages
+     */
     @JvmStatic
     fun getAllLanguages(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllLanguagesBind, singleton)
     }
 
+    /**
+     * Returns a readable language name for the `language` code.
+     *
+     * Generated from Godot docs: TranslationServer.get_language_name
+     */
     @JvmStatic
     fun getLanguageName(language: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getLanguageNameBind, singleton, language)
     }
 
+    /**
+     * Returns an array of known script codes.
+     *
+     * Generated from Godot docs: TranslationServer.get_all_scripts
+     */
     @JvmStatic
     fun getAllScripts(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllScriptsBind, singleton)
     }
 
+    /**
+     * Returns a readable script name for the `script` code.
+     *
+     * Generated from Godot docs: TranslationServer.get_script_name
+     */
     @JvmStatic
     fun getScriptName(script: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getScriptNameBind, singleton, script)
     }
 
+    /**
+     * Returns an array of known country codes.
+     *
+     * Generated from Godot docs: TranslationServer.get_all_countries
+     */
     @JvmStatic
     fun getAllCountries(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllCountriesBind, singleton)
     }
 
+    /**
+     * Returns a readable country name for the `country` code.
+     *
+     * Generated from Godot docs: TranslationServer.get_country_name
+     */
     @JvmStatic
     fun getCountryName(country: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getCountryNameBind, singleton, country)
     }
 
+    /**
+     * Returns a locale's language and its variant (e.g. `"en_US"` would return `"English (United
+     * States)"`).
+     *
+     * Generated from Godot docs: TranslationServer.get_locale_name
+     */
     @JvmStatic
     fun getLocaleName(locale: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getLocaleNameBind, singleton, locale)
     }
 
+    /**
+     * Returns the default plural rules for the `locale`.
+     *
+     * Generated from Godot docs: TranslationServer.get_plural_rules
+     */
     @JvmStatic
     fun getPluralRules(locale: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getPluralRulesBind, singleton, locale)
@@ -96,56 +168,122 @@ object TranslationServer {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, singleton, message, context)
     }
 
+    /**
+     * Returns the current locale's translation for the given message, plural message and context. The
+     * number `n` is the number or quantity of the plural object. It will be used to guide the
+     * translation system to fetch the correct plural form for the selected language. Note: This method
+     * always uses the main translation domain.
+     *
+     * Generated from Godot docs: TranslationServer.translate_plural
+     */
     @JvmStatic
     fun translatePlural(message: String, pluralMessage: String, n: Int, context: String = ""): String {
         return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, singleton, message, pluralMessage, n, context)
     }
 
+    /**
+     * Adds a translation to the main translation domain.
+     *
+     * Generated from Godot docs: TranslationServer.add_translation
+     */
     @JvmStatic
     fun addTranslation(translation: Translation?) {
         ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Removes the given translation from the main translation domain.
+     *
+     * Generated from Godot docs: TranslationServer.remove_translation
+     */
     @JvmStatic
     fun removeTranslation(translation: Translation?) {
         ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the `Translation` instance that best matches `locale` in the main translation domain.
+     * Returns `null` if there are no matches.
+     *
+     * Generated from Godot docs: TranslationServer.get_translation_object
+     */
     @JvmStatic
     fun getTranslationObject(locale: String): Translation? {
         return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, singleton, locale))
     }
 
+    /**
+     * Returns all available `Translation` instances in the main translation domain as added by
+     * `add_translation`.
+     *
+     * Generated from Godot docs: TranslationServer.get_translations
+     */
     @JvmStatic
     fun getTranslations(): List<Translation> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, singleton, Translation::fromHandle)
     }
 
+    /**
+     * Returns the `Translation` instances in the main translation domain that match `locale` (see
+     * `compare_locales`). If `exact` is `true`, only instances whose locale exactly equals `locale`
+     * will be returned.
+     *
+     * Generated from Godot docs: TranslationServer.find_translations
+     */
     @JvmStatic
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, singleton, locale, exact, Translation::fromHandle)
     }
 
+    /**
+     * Returns `true` if there are any `Translation` instances in the main translation domain that
+     * match `locale` (see `compare_locales`). If `exact` is `true`, only instances whose locale
+     * exactly equals `locale` are considered.
+     *
+     * Generated from Godot docs: TranslationServer.has_translation_for_locale
+     */
     @JvmStatic
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, singleton, locale, exact)
     }
 
+    /**
+     * Returns `true` if the main translation domain contains the given `translation`.
+     *
+     * Generated from Godot docs: TranslationServer.has_translation
+     */
     @JvmStatic
     fun hasTranslation(translation: Translation?): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, singleton, translation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns `true` if a translation domain with the specified name exists.
+     *
+     * Generated from Godot docs: TranslationServer.has_domain
+     */
     @JvmStatic
     fun hasDomain(domain: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasDomainBind, singleton, domain)
     }
 
+    /**
+     * Returns the translation domain with the specified name. An empty translation domain will be
+     * created and added if it does not exist.
+     *
+     * Generated from Godot docs: TranslationServer.get_or_add_domain
+     */
     @JvmStatic
     fun getOrAddDomain(domain: String): TranslationDomain? {
         return TranslationDomain.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getOrAddDomainBind, singleton, domain))
     }
 
+    /**
+     * Removes the translation domain with the specified name. Note: Trying to remove the main
+     * translation domain is an error.
+     *
+     * Generated from Godot docs: TranslationServer.remove_domain
+     */
     @JvmStatic
     fun removeDomain(domain: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeDomainBind, singleton, domain)
@@ -161,36 +299,74 @@ object TranslationServer {
         ObjectCalls.ptrcallNoArgs(clearBind, singleton)
     }
 
+    /**
+     * Returns an array of all loaded locales of the project.
+     *
+     * Generated from Godot docs: TranslationServer.get_loaded_locales
+     */
     @JvmStatic
     fun getLoadedLocales(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLoadedLocalesBind, singleton)
     }
 
+    /**
+     * Converts a number from Western Arabic (0..9) to the numeral system used in the given `locale`.
+     *
+     * Generated from Godot docs: TranslationServer.format_number
+     */
     @JvmStatic
     fun formatNumber(number: String, locale: String): String {
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, singleton, number, locale)
     }
 
+    /**
+     * Returns the percent sign used in the given `locale`.
+     *
+     * Generated from Godot docs: TranslationServer.get_percent_sign
+     */
     @JvmStatic
     fun getPercentSign(locale: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getPercentSignBind, singleton, locale)
     }
 
+    /**
+     * Converts `number` from the numeral system used in the given `locale` to Western Arabic (0..9).
+     *
+     * Generated from Godot docs: TranslationServer.parse_number
+     */
     @JvmStatic
     fun parseNumber(number: String, locale: String): String {
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, singleton, number, locale)
     }
 
+    /**
+     * If `true`, enables the use of pseudolocalization on the main translation domain. See
+     * `ProjectSettings.internationalization/pseudolocalization/use_pseudolocalization` for details.
+     *
+     * Generated from Godot docs: TranslationServer.is_pseudolocalization_enabled
+     */
     @JvmStatic
     fun isPseudolocalizationEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, singleton)
     }
 
+    /**
+     * If `true`, enables the use of pseudolocalization on the main translation domain. See
+     * `ProjectSettings.internationalization/pseudolocalization/use_pseudolocalization` for details.
+     *
+     * Generated from Godot docs: TranslationServer.set_pseudolocalization_enabled
+     */
     @JvmStatic
     fun setPseudolocalizationEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, singleton, enabled)
     }
 
+    /**
+     * Reparses the pseudolocalization options and reloads the translation for the main translation
+     * domain.
+     *
+     * Generated from Godot docs: TranslationServer.reload_pseudolocalization
+     */
     @JvmStatic
     fun reloadPseudolocalization() {
         ObjectCalls.ptrcallNoArgs(reloadPseudolocalizationBind, singleton)

@@ -9,6 +9,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: AwaitTweener
  */
 class AwaitTweener(handle: MemorySegment) : Tweener(handle) {
+    /**
+     * Sets the maximum time an `AwaitTweener` can wait for the signal. Can be used as a safeguard for
+     * signals that may never be emitted. If not specified, the tweener will wait indefinitely.
+     *
+     * Generated from Godot docs: AwaitTweener.set_timeout
+     */
     fun setTimeout(timeout: Double): AwaitTweener? {
         return AwaitTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(setTimeoutBind, handle, timeout))
     }

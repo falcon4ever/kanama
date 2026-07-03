@@ -16,22 +16,53 @@ open class IKModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setMutableBoneAxesProperty")
         set(value) = setMutableBoneAxes(value)
 
+    /**
+     * Sets the number of settings.
+     *
+     * Generated from Godot docs: IKModifier3D.set_setting_count
+     */
     fun setSettingCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setSettingCountBind, handle, count)
     }
 
+    /**
+     * Returns the number of settings.
+     *
+     * Generated from Godot docs: IKModifier3D.get_setting_count
+     */
     fun getSettingCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, handle)
     }
 
+    /**
+     * Clears all settings.
+     *
+     * Generated from Godot docs: IKModifier3D.clear_settings
+     */
     fun clearSettings() {
         ObjectCalls.ptrcallNoArgs(clearSettingsBind, handle)
     }
 
+    /**
+     * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
+     * solver retrieves the bone axis from the bone rest and caches it, which increases performance
+     * slightly, but position changes in the bone pose made before processing this `IKModifier3D` are
+     * ignored.
+     *
+     * Generated from Godot docs: IKModifier3D.set_mutable_bone_axes
+     */
     fun setMutableBoneAxes(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
+     * solver retrieves the bone axis from the bone rest and caches it, which increases performance
+     * slightly, but position changes in the bone pose made before processing this `IKModifier3D` are
+     * ignored.
+     *
+     * Generated from Godot docs: IKModifier3D.are_bone_axes_mutable
+     */
     fun areBoneAxesMutable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, handle)
     }

@@ -22,18 +22,38 @@ class SpringBoneCollisionSphere3D(handle: MemorySegment) : SpringBoneCollision3D
         @JvmName("setInsideProperty")
         set(value) = setInside(value)
 
+    /**
+     * The sphere's radius.
+     *
+     * Generated from Godot docs: SpringBoneCollisionSphere3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The sphere's radius.
+     *
+     * Generated from Godot docs: SpringBoneCollisionSphere3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * If `true`, the collision acts to trap the joint within the collision.
+     *
+     * Generated from Godot docs: SpringBoneCollisionSphere3D.set_inside
+     */
     fun setInside(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setInsideBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the collision acts to trap the joint within the collision.
+     *
+     * Generated from Godot docs: SpringBoneCollisionSphere3D.is_inside
+     */
     fun isInside(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, handle)
     }

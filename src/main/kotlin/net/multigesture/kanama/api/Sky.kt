@@ -28,26 +28,66 @@ class Sky(handle: MemorySegment) : Resource(handle) {
         @JvmName("setRadianceSizeProperty")
         set(value) = setRadianceSize(value)
 
+    /**
+     * The `Sky`'s radiance map size. The higher the radiance map size, the more detailed the lighting
+     * from the `Sky` will be. Note: Some hardware will have trouble with higher radiance sizes,
+     * especially `RADIANCE_SIZE_512` and above. Only use such high values on high-end hardware.
+     *
+     * Generated from Godot docs: Sky.set_radiance_size
+     */
     fun setRadianceSize(size: Long) {
         ObjectCalls.ptrcallWithLongArg(setRadianceSizeBind, handle, size)
     }
 
+    /**
+     * The `Sky`'s radiance map size. The higher the radiance map size, the more detailed the lighting
+     * from the `Sky` will be. Note: Some hardware will have trouble with higher radiance sizes,
+     * especially `RADIANCE_SIZE_512` and above. Only use such high values on high-end hardware.
+     *
+     * Generated from Godot docs: Sky.get_radiance_size
+     */
     fun getRadianceSize(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getRadianceSizeBind, handle)
     }
 
+    /**
+     * The method for generating the radiance map from the sky. The radiance map is a cubemap with
+     * increasingly blurry versions of the sky corresponding to different levels of roughness. Radiance
+     * maps can be expensive to calculate.
+     *
+     * Generated from Godot docs: Sky.set_process_mode
+     */
     fun setProcessMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setProcessModeBind, handle, mode)
     }
 
+    /**
+     * The method for generating the radiance map from the sky. The radiance map is a cubemap with
+     * increasingly blurry versions of the sky corresponding to different levels of roughness. Radiance
+     * maps can be expensive to calculate.
+     *
+     * Generated from Godot docs: Sky.get_process_mode
+     */
     fun getProcessMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, handle)
     }
 
+    /**
+     * `Material` used to draw the background. Can be `PanoramaSkyMaterial`, `ProceduralSkyMaterial`,
+     * `PhysicalSkyMaterial`, or even a `ShaderMaterial` if you want to use your own custom shader.
+     *
+     * Generated from Godot docs: Sky.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * `Material` used to draw the background. Can be `PanoramaSkyMaterial`, `ProceduralSkyMaterial`,
+     * `PhysicalSkyMaterial`, or even a `ShaderMaterial` if you want to use your own custom shader.
+     *
+     * Generated from Godot docs: Sky.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }

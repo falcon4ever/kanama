@@ -17,14 +17,34 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
         @JvmName("setPointsProperty")
         set(value) = setPoints(value)
 
+    /**
+     * Based on the set of points provided, this assigns the `points` property using the convex hull
+     * algorithm, removing all unneeded points. See `Geometry2D.convex_hull` for details.
+     *
+     * Generated from Godot docs: ConvexPolygonShape2D.set_point_cloud
+     */
     fun setPointCloud(pointCloud: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPointCloudBind, handle, pointCloud)
     }
 
+    /**
+     * The polygon's list of vertices that form a convex hull. Can be in either clockwise or
+     * counterclockwise order. Warning: Only set this property to a list of points that actually form a
+     * convex hull. Use `set_point_cloud` to generate the convex hull of an arbitrary set of points.
+     *
+     * Generated from Godot docs: ConvexPolygonShape2D.set_points
+     */
     fun setPoints(points: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, handle, points)
     }
 
+    /**
+     * The polygon's list of vertices that form a convex hull. Can be in either clockwise or
+     * counterclockwise order. Warning: Only set this property to a list of points that actually form a
+     * convex hull. Use `set_point_cloud` to generate the convex hull of an arbitrary set of points.
+     *
+     * Generated from Godot docs: ConvexPolygonShape2D.get_points
+     */
     fun getPoints(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, handle)
     }

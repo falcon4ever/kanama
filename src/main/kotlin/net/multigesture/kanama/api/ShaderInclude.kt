@@ -16,10 +16,22 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCodeProperty")
         set(value) = setCode(value)
 
+    /**
+     * Returns the code of the shader include file. The returned text is what the user has written, not
+     * the full generated code used internally.
+     *
+     * Generated from Godot docs: ShaderInclude.set_code
+     */
     fun setCode(code: String) {
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
+    /**
+     * Returns the code of the shader include file. The returned text is what the user has written, not
+     * the full generated code used internally.
+     *
+     * Generated from Godot docs: ShaderInclude.get_code
+     */
     fun getCode(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }

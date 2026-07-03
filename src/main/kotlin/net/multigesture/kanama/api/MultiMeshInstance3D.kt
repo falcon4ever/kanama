@@ -16,10 +16,22 @@ class MultiMeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setMultimeshProperty")
         set(value) = setMultimesh(value)
 
+    /**
+     * The `MultiMesh` resource that will be used and shared among all instances of the
+     * `MultiMeshInstance3D`.
+     *
+     * Generated from Godot docs: MultiMeshInstance3D.set_multimesh
+     */
     fun setMultimesh(multimesh: MultiMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, handle, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `MultiMesh` resource that will be used and shared among all instances of the
+     * `MultiMeshInstance3D`.
+     *
+     * Generated from Godot docs: MultiMeshInstance3D.get_multimesh
+     */
     fun getMultimesh(): MultiMesh? {
         return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, handle))
     }

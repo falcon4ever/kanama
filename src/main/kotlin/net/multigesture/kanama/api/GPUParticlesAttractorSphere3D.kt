@@ -16,10 +16,22 @@ class GPUParticlesAttractorSphere3D(handle: MemorySegment) : GPUParticlesAttract
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
+    /**
+     * The attractor sphere's radius in 3D units. Note: Stretched ellipses can be obtained by using
+     * non-uniform scaling on the `GPUParticlesAttractorSphere3D` node.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorSphere3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The attractor sphere's radius in 3D units. Note: Stretched ellipses can be obtained by using
+     * non-uniform scaling on the `GPUParticlesAttractorSphere3D` node.
+     *
+     * Generated from Godot docs: GPUParticlesAttractorSphere3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }

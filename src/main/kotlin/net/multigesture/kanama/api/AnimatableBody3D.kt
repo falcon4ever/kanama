@@ -17,10 +17,24 @@ class AnimatableBody3D(handle: MemorySegment) : StaticBody3D(handle) {
         @JvmName("setSyncToPhysicsProperty")
         set(value) = setSyncToPhysics(value)
 
+    /**
+     * If `true`, the body's movement will be synchronized to the physics frame. This is useful when
+     * animating movement via `AnimationPlayer`, for example on moving platforms. Do not use together
+     * with `PhysicsBody3D.move_and_collide`.
+     *
+     * Generated from Godot docs: AnimatableBody3D.set_sync_to_physics
+     */
     fun setSyncToPhysics(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSyncToPhysicsBind, handle, enable)
     }
 
+    /**
+     * If `true`, the body's movement will be synchronized to the physics frame. This is useful when
+     * animating movement via `AnimationPlayer`, for example on moving platforms. Do not use together
+     * with `PhysicsBody3D.move_and_collide`.
+     *
+     * Generated from Godot docs: AnimatableBody3D.is_sync_to_physics_enabled
+     */
     fun isSyncToPhysicsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSyncToPhysicsEnabledBind, handle)
     }

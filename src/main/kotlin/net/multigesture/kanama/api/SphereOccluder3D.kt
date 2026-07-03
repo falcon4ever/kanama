@@ -16,10 +16,20 @@ class SphereOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
+    /**
+     * The sphere's radius in 3D units.
+     *
+     * Generated from Godot docs: SphereOccluder3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The sphere's radius in 3D units.
+     *
+     * Generated from Godot docs: SphereOccluder3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }

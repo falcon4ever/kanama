@@ -41,50 +41,126 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
         @JvmName("setUv2PaddingProperty")
         set(value) = setUv2Padding(value)
 
+    /**
+     * The current `Material` of the primitive mesh.
+     *
+     * Generated from Godot docs: PrimitiveMesh.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The current `Material` of the primitive mesh.
+     *
+     * Generated from Godot docs: PrimitiveMesh.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 
+    /**
+     * Returns the mesh arrays used to make up the surface of this primitive mesh.
+     *
+     * Generated from Godot docs: PrimitiveMesh.get_mesh_arrays
+     */
     fun getMeshArrays(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getMeshArraysBind, handle)
     }
 
+    /**
+     * Overrides the `AABB` with one defined by user for use with frustum culling. Especially useful to
+     * avoid unexpected culling when using a shader to offset vertices.
+     *
+     * Generated from Godot docs: PrimitiveMesh.set_custom_aabb
+     */
     fun setCustomAabb(aabb: AABB) {
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
+    /**
+     * Overrides the `AABB` with one defined by user for use with frustum culling. Especially useful to
+     * avoid unexpected culling when using a shader to offset vertices.
+     *
+     * Generated from Godot docs: PrimitiveMesh.get_custom_aabb
+     */
     fun getCustomAabb(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
+    /**
+     * If `true`, the order of the vertices in each triangle is reversed, resulting in the backside of
+     * the mesh being drawn. This gives the same result as using `BaseMaterial3D.CULL_FRONT` in
+     * `BaseMaterial3D.cull_mode`.
+     *
+     * Generated from Godot docs: PrimitiveMesh.set_flip_faces
+     */
     fun setFlipFaces(flipFaces: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, handle, flipFaces)
     }
 
+    /**
+     * If `true`, the order of the vertices in each triangle is reversed, resulting in the backside of
+     * the mesh being drawn. This gives the same result as using `BaseMaterial3D.CULL_FRONT` in
+     * `BaseMaterial3D.cull_mode`.
+     *
+     * Generated from Godot docs: PrimitiveMesh.get_flip_faces
+     */
     fun getFlipFaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, handle)
     }
 
+    /**
+     * If set, generates UV2 UV coordinates applying a padding using the `uv2_padding` setting. UV2 is
+     * needed for lightmapping.
+     *
+     * Generated from Godot docs: PrimitiveMesh.set_add_uv2
+     */
     fun setAddUv2(addUv2: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAddUv2Bind, handle, addUv2)
     }
 
+    /**
+     * If set, generates UV2 UV coordinates applying a padding using the `uv2_padding` setting. UV2 is
+     * needed for lightmapping.
+     *
+     * Generated from Godot docs: PrimitiveMesh.get_add_uv2
+     */
     fun getAddUv2(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAddUv2Bind, handle)
     }
 
+    /**
+     * If `add_uv2` is set, specifies the padding in pixels applied along seams of the mesh. Lower
+     * padding values allow making better use of the lightmap texture (resulting in higher texel
+     * density), but may introduce visible lightmap bleeding along edges. If the size of the lightmap
+     * texture can't be determined when generating the mesh, UV2 is calculated assuming a texture size
+     * of 1024x1024.
+     *
+     * Generated from Godot docs: PrimitiveMesh.set_uv2_padding
+     */
     fun setUv2Padding(uv2Padding: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setUv2PaddingBind, handle, uv2Padding)
     }
 
+    /**
+     * If `add_uv2` is set, specifies the padding in pixels applied along seams of the mesh. Lower
+     * padding values allow making better use of the lightmap texture (resulting in higher texel
+     * density), but may introduce visible lightmap bleeding along edges. If the size of the lightmap
+     * texture can't be determined when generating the mesh, UV2 is calculated assuming a texture size
+     * of 1024x1024.
+     *
+     * Generated from Godot docs: PrimitiveMesh.get_uv2_padding
+     */
     fun getUv2Padding(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv2PaddingBind, handle)
     }
 
+    /**
+     * Request an update of this primitive mesh based on its properties.
+     *
+     * Generated from Godot docs: PrimitiveMesh.request_update
+     */
     fun requestUpdate() {
         ObjectCalls.ptrcallNoArgs(requestUpdateBind, handle)
     }

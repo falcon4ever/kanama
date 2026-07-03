@@ -17,10 +17,20 @@ class WorldBoundaryShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setPlaneProperty")
         set(value) = setPlane(value)
 
+    /**
+     * The `Plane` used by the `WorldBoundaryShape3D` for collision.
+     *
+     * Generated from Godot docs: WorldBoundaryShape3D.set_plane
+     */
     fun setPlane(plane: Plane) {
         ObjectCalls.ptrcallWithPlaneArg(setPlaneBind, handle, plane)
     }
 
+    /**
+     * The `Plane` used by the `WorldBoundaryShape3D` for collision.
+     *
+     * Generated from Godot docs: WorldBoundaryShape3D.get_plane
+     */
     fun getPlane(): Plane {
         return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, handle)
     }

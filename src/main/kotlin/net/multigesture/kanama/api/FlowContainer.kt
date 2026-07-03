@@ -35,38 +35,95 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setReverseFillProperty")
         set(value) = setReverseFill(value)
 
+    /**
+     * Returns the current line count.
+     *
+     * Generated from Godot docs: FlowContainer.get_line_count
+     */
     fun getLineCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
+    /**
+     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
+     * or `ALIGNMENT_END`).
+     *
+     * Generated from Godot docs: FlowContainer.set_alignment
+     */
     fun setAlignment(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
     }
 
+    /**
+     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
+     * or `ALIGNMENT_END`).
+     *
+     * Generated from Godot docs: FlowContainer.get_alignment
+     */
     fun getAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
     }
 
+    /**
+     * The wrap behavior of the last, partially filled row or column (must be one of
+     * `LAST_WRAP_ALIGNMENT_INHERIT`, `LAST_WRAP_ALIGNMENT_BEGIN`, `LAST_WRAP_ALIGNMENT_CENTER`, or
+     * `LAST_WRAP_ALIGNMENT_END`).
+     *
+     * Generated from Godot docs: FlowContainer.set_last_wrap_alignment
+     */
     fun setLastWrapAlignment(lastWrapAlignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setLastWrapAlignmentBind, handle, lastWrapAlignment)
     }
 
+    /**
+     * The wrap behavior of the last, partially filled row or column (must be one of
+     * `LAST_WRAP_ALIGNMENT_INHERIT`, `LAST_WRAP_ALIGNMENT_BEGIN`, `LAST_WRAP_ALIGNMENT_CENTER`, or
+     * `LAST_WRAP_ALIGNMENT_END`).
+     *
+     * Generated from Godot docs: FlowContainer.get_last_wrap_alignment
+     */
     fun getLastWrapAlignment(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLastWrapAlignmentBind, handle)
     }
 
+    /**
+     * If `true`, the `FlowContainer` will arrange its children vertically, rather than horizontally.
+     * Can't be changed when using `HFlowContainer` and `VFlowContainer`.
+     *
+     * Generated from Godot docs: FlowContainer.set_vertical
+     */
     fun setVertical(vertical: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
     }
 
+    /**
+     * If `true`, the `FlowContainer` will arrange its children vertically, rather than horizontally.
+     * Can't be changed when using `HFlowContainer` and `VFlowContainer`.
+     *
+     * Generated from Godot docs: FlowContainer.is_vertical
+     */
     fun isVertical(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
     }
 
+    /**
+     * If `true`, reverses fill direction. Horizontal `FlowContainer`s will fill rows bottom to top,
+     * vertical `FlowContainer`s will fill columns right to left. When using a vertical `FlowContainer`
+     * with a right to left `Control.layout_direction`, columns will fill left to right instead.
+     *
+     * Generated from Godot docs: FlowContainer.set_reverse_fill
+     */
     fun setReverseFill(reverseFill: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setReverseFillBind, handle, reverseFill)
     }
 
+    /**
+     * If `true`, reverses fill direction. Horizontal `FlowContainer`s will fill rows bottom to top,
+     * vertical `FlowContainer`s will fill columns right to left. When using a vertical `FlowContainer`
+     * with a right to left `Control.layout_direction`, columns will fill left to right instead.
+     *
+     * Generated from Godot docs: FlowContainer.is_reverse_fill
+     */
     fun isReverseFill(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isReverseFillBind, handle)
     }

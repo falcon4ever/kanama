@@ -17,10 +17,20 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
         @JvmName("setPolyphonyProperty")
         set(value) = setPolyphony(value)
 
+    /**
+     * Maximum amount of simultaneous streams that can be played.
+     *
+     * Generated from Godot docs: AudioStreamPolyphonic.set_polyphony
+     */
     fun setPolyphony(voices: Int) {
         ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, handle, voices)
     }
 
+    /**
+     * Maximum amount of simultaneous streams that can be played.
+     *
+     * Generated from Godot docs: AudioStreamPolyphonic.get_polyphony
+     */
     fun getPolyphony(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, handle)
     }

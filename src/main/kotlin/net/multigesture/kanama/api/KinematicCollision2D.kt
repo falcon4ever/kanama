@@ -11,54 +11,121 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: KinematicCollision2D
  */
 class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the point of collision in global coordinates.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_position
+     */
     fun getPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
+    /**
+     * Returns the colliding body's shape's normal at the point of collision.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_normal
+     */
     fun getNormal(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, handle)
     }
 
+    /**
+     * Returns the moving object's travel before collision.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_travel
+     */
     fun getTravel(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTravelBind, handle)
     }
 
+    /**
+     * Returns the moving object's remaining movement vector.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_remainder
+     */
     fun getRemainder(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getRemainderBind, handle)
     }
 
+    /**
+     * Returns the collision angle according to `up_direction`, which is `Vector2.UP` by default. This
+     * value is always positive.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_angle
+     */
     fun getAngle(upDirection: Vector2): Double {
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleBind, handle, upDirection)
     }
 
+    /**
+     * Returns the colliding body's length of overlap along the collision normal.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_depth
+     */
     fun getDepth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
+    /**
+     * Returns the moving object's colliding shape.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_local_shape
+     */
     fun getLocalShape(): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalShapeBind, handle))
     }
 
+    /**
+     * Returns the colliding body's attached `Object`.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_collider
+     */
     fun getCollider(): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, handle))
     }
 
+    /**
+     * Returns the unique instance ID of the colliding body's attached `Object`. See
+     * `Object.get_instance_id`.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_collider_id
+     */
     fun getColliderId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getColliderIdBind, handle)
     }
 
+    /**
+     * Returns the colliding body's `RID` used by the `PhysicsServer2D`.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_collider_rid
+     */
     fun getColliderRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, handle)
     }
 
+    /**
+     * Returns the colliding body's shape.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_collider_shape
+     */
     fun getColliderShape(): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderShapeBind, handle))
     }
 
+    /**
+     * Returns the colliding body's shape index. See `CollisionObject2D`.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_collider_shape_index
+     */
     fun getColliderShapeIndex(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeIndexBind, handle)
     }
 
+    /**
+     * Returns the colliding body's velocity.
+     *
+     * Generated from Godot docs: KinematicCollision2D.get_collider_velocity
+     */
     fun getColliderVelocity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getColliderVelocityBind, handle)
     }

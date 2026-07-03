@@ -192,254 +192,640 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setSecondaryNegativeDampThresholdProperty")
         set(value) = setSecondaryNegativeDampThreshold(value)
 
+    /**
+     * The `NodePath` to the node that is the target for the look at modification. This node is what
+     * the modification will rotate the bone to.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_target_node
+     */
     fun setTargetNode(targetNode: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNode)
     }
 
+    /**
+     * The `NodePath` to the node that is the target for the look at modification. This node is what
+     * the modification will rotate the bone to.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_target_node
+     */
     fun getTargetNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
+    /**
+     * The bone name of the `Skeleton3D` that the modification will operate on.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_bone_name
+     */
     fun setBoneName(boneName: String) {
         ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
     }
 
+    /**
+     * The bone name of the `Skeleton3D` that the modification will operate on.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_bone_name
+     */
     fun getBoneName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
     }
 
+    /**
+     * Index of the `bone_name` in the parent `Skeleton3D`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_bone
+     */
     fun setBone(bone: Int) {
         ObjectCalls.ptrcallWithIntArg(setBoneBind, handle, bone)
     }
 
+    /**
+     * Index of the `bone_name` in the parent `Skeleton3D`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_bone
+     */
     fun getBone(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, handle)
     }
 
+    /**
+     * The forward axis of the bone. This `SkeletonModifier3D` modifies the bone so that this axis
+     * points toward the `target_node`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_forward_axis
+     */
     fun setForwardAxis(forwardAxis: Long) {
         ObjectCalls.ptrcallWithLongArg(setForwardAxisBind, handle, forwardAxis)
     }
 
+    /**
+     * The forward axis of the bone. This `SkeletonModifier3D` modifies the bone so that this axis
+     * points toward the `target_node`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_forward_axis
+     */
     fun getForwardAxis(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getForwardAxisBind, handle)
     }
 
+    /**
+     * The axis of the first rotation. This `SkeletonModifier3D` works by compositing the rotation by
+     * Euler angles to prevent to rotate the `forward_axis`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_rotation_axis
+     */
     fun setPrimaryRotationAxis(axis: Long) {
         ObjectCalls.ptrcallWithLongArg(setPrimaryRotationAxisBind, handle, axis)
     }
 
+    /**
+     * The axis of the first rotation. This `SkeletonModifier3D` works by compositing the rotation by
+     * Euler angles to prevent to rotate the `forward_axis`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_rotation_axis
+     */
     fun getPrimaryRotationAxis(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPrimaryRotationAxisBind, handle)
     }
 
+    /**
+     * If `true`, provides rotation by two axes.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_use_secondary_rotation
+     */
     fun setUseSecondaryRotation(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseSecondaryRotationBind, handle, enabled)
     }
 
+    /**
+     * If `true`, provides rotation by two axes.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_using_secondary_rotation
+     */
     fun isUsingSecondaryRotation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSecondaryRotationBind, handle)
     }
 
+    /**
+     * The relative option. If `true`, the rotation is applied relative to the pose. If `false`, the
+     * rotation is applied relative to the rest. It means to replace the current pose with the
+     * `LookAtModifier3D`'s result. Note: This option affects the base angle for
+     * `use_angle_limitation`. Since the `LookAtModifier3D` relies strongly on Euler rotation, the axis
+     * that determines the limitation and the actual rotation are strongly tied together.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_relative
+     */
     fun setRelative(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRelativeBind, handle, enabled)
     }
 
+    /**
+     * The relative option. If `true`, the rotation is applied relative to the pose. If `false`, the
+     * rotation is applied relative to the rest. It means to replace the current pose with the
+     * `LookAtModifier3D`'s result. Note: This option affects the base angle for
+     * `use_angle_limitation`. Since the `LookAtModifier3D` relies strongly on Euler rotation, the axis
+     * that determines the limitation and the actual rotation are strongly tied together.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_relative
+     */
     fun isRelative(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRelativeBind, handle)
     }
 
+    /**
+     * If the target passes through too close to the origin than this value, time-based interpolation
+     * is used even if the target is within the angular limitations, to prevent the angular velocity
+     * from becoming too high.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_origin_safe_margin
+     */
     fun setOriginSafeMargin(margin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setOriginSafeMarginBind, handle, margin)
     }
 
+    /**
+     * If the target passes through too close to the origin than this value, time-based interpolation
+     * is used even if the target is within the angular limitations, to prevent the angular velocity
+     * from becoming too high.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_origin_safe_margin
+     */
     fun getOriginSafeMargin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOriginSafeMarginBind, handle)
     }
 
+    /**
+     * This value determines from what origin is retrieved for use in the calculation of the forward
+     * vector.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_origin_from
+     */
     fun setOriginFrom(originFrom: Long) {
         ObjectCalls.ptrcallWithLongArg(setOriginFromBind, handle, originFrom)
     }
 
+    /**
+     * This value determines from what origin is retrieved for use in the calculation of the forward
+     * vector.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_origin_from
+     */
     fun getOriginFrom(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getOriginFromBind, handle)
     }
 
+    /**
+     * If `origin_from` is `ORIGIN_FROM_SPECIFIC_BONE`, the bone global pose position specified for
+     * this is used as origin.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_origin_bone_name
+     */
     fun setOriginBoneName(boneName: String) {
         ObjectCalls.ptrcallWithStringArg(setOriginBoneNameBind, handle, boneName)
     }
 
+    /**
+     * If `origin_from` is `ORIGIN_FROM_SPECIFIC_BONE`, the bone global pose position specified for
+     * this is used as origin.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_origin_bone_name
+     */
     fun getOriginBoneName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getOriginBoneNameBind, handle)
     }
 
+    /**
+     * Index of the `origin_bone_name` in the parent `Skeleton3D`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_origin_bone
+     */
     fun setOriginBone(bone: Int) {
         ObjectCalls.ptrcallWithIntArg(setOriginBoneBind, handle, bone)
     }
 
+    /**
+     * Index of the `origin_bone_name` in the parent `Skeleton3D`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_origin_bone
+     */
     fun getOriginBone(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOriginBoneBind, handle)
     }
 
+    /**
+     * If `origin_from` is `ORIGIN_FROM_EXTERNAL_NODE`, the global position of the `Node3D` specified
+     * for this is used as origin.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_origin_external_node
+     */
     fun setOriginExternalNode(externalNode: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setOriginExternalNodeBind, handle, externalNode)
     }
 
+    /**
+     * If `origin_from` is `ORIGIN_FROM_EXTERNAL_NODE`, the global position of the `Node3D` specified
+     * for this is used as origin.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_origin_external_node
+     */
     fun getOriginExternalNode(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getOriginExternalNodeBind, handle)
     }
 
+    /**
+     * The offset of the bone pose origin. Matching the origins by offset is useful for cases where
+     * multiple bones must always face the same direction, such as the eyes. Note: This value indicates
+     * the local position of the object set in `origin_from`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_origin_offset
+     */
     fun setOriginOffset(offset: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, handle, offset)
     }
 
+    /**
+     * The offset of the bone pose origin. Matching the origins by offset is useful for cases where
+     * multiple bones must always face the same direction, such as the eyes. Note: This value indicates
+     * the local position of the object set in `origin_from`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_origin_offset
+     */
     fun getOriginOffset(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, handle)
     }
 
+    /**
+     * The duration of the time-based interpolation. Interpolation is triggered at the following cases:
+     * - When the target node is changed - When an axis is flipped due to angle limitation Note: The
+     * flipping occurs when the target is outside the angle limitation and the internally computed
+     * secondary rotation axis of the forward vector is flipped. Visually, it occurs when the target is
+     * outside the angle limitation and crosses the plane of the `forward_axis` and
+     * `primary_rotation_axis`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_duration
+     */
     fun setDuration(duration: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDurationBind, handle, duration)
     }
 
+    /**
+     * The duration of the time-based interpolation. Interpolation is triggered at the following cases:
+     * - When the target node is changed - When an axis is flipped due to angle limitation Note: The
+     * flipping occurs when the target is outside the angle limitation and the internally computed
+     * secondary rotation axis of the forward vector is flipped. Visually, it occurs when the target is
+     * outside the angle limitation and crosses the plane of the `forward_axis` and
+     * `primary_rotation_axis`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_duration
+     */
     fun getDuration(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDurationBind, handle)
     }
 
+    /**
+     * The transition type of the time-based interpolation. See also `Tween.TransitionType`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_transition_type
+     */
     fun setTransitionType(transitionType: Long) {
         ObjectCalls.ptrcallWithLongArg(setTransitionTypeBind, handle, transitionType)
     }
 
+    /**
+     * The transition type of the time-based interpolation. See also `Tween.TransitionType`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_transition_type
+     */
     fun getTransitionType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTransitionTypeBind, handle)
     }
 
+    /**
+     * The ease type of the time-based interpolation. See also `Tween.EaseType`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_ease_type
+     */
     fun setEaseType(easeType: Long) {
         ObjectCalls.ptrcallWithLongArg(setEaseTypeBind, handle, easeType)
     }
 
+    /**
+     * The ease type of the time-based interpolation. See also `Tween.EaseType`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_ease_type
+     */
     fun getEaseType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getEaseTypeBind, handle)
     }
 
+    /**
+     * If `true`, limits the amount of rotation. For example, this helps to prevent a character's neck
+     * from rotating 360 degrees. Note: As with `AnimationTree` blending, interpolation is provided
+     * that favors `Skeleton3D.get_bone_rest` or `Skeleton3D.get_bone_pose` depends on the `relative`
+     * option. This means that interpolation does not select the shortest path in some cases. Note:
+     * Some values for `transition_type` (such as `Tween.TRANS_BACK`, `Tween.TRANS_ELASTIC`, and
+     * `Tween.TRANS_SPRING`) may exceed the limitations. If interpolation occurs while overshooting the
+     * limitations, the result might not respect the bone rest.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_use_angle_limitation
+     */
     fun setUseAngleLimitation(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseAngleLimitationBind, handle, enabled)
     }
 
+    /**
+     * If `true`, limits the amount of rotation. For example, this helps to prevent a character's neck
+     * from rotating 360 degrees. Note: As with `AnimationTree` blending, interpolation is provided
+     * that favors `Skeleton3D.get_bone_rest` or `Skeleton3D.get_bone_pose` depends on the `relative`
+     * option. This means that interpolation does not select the shortest path in some cases. Note:
+     * Some values for `transition_type` (such as `Tween.TRANS_BACK`, `Tween.TRANS_ELASTIC`, and
+     * `Tween.TRANS_SPRING`) may exceed the limitations. If interpolation occurs while overshooting the
+     * limitations, the result might not respect the bone rest.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_using_angle_limitation
+     */
     fun isUsingAngleLimitation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingAngleLimitationBind, handle)
     }
 
+    /**
+     * If `true`, the limitations are spread from the bone symmetrically. If `false`, the limitation
+     * can be specified separately for each side of the bone rest.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_symmetry_limitation
+     */
     fun setSymmetryLimitation(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSymmetryLimitationBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the limitations are spread from the bone symmetrically. If `false`, the limitation
+     * can be specified separately for each side of the bone rest.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_limitation_symmetry
+     */
     fun isLimitationSymmetry(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLimitationSymmetryBind, handle)
     }
 
+    /**
+     * The limit angle of the primary rotation when `symmetry_limitation` is `true`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_limit_angle
+     */
     fun setPrimaryLimitAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPrimaryLimitAngleBind, handle, angle)
     }
 
+    /**
+     * The limit angle of the primary rotation when `symmetry_limitation` is `true`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_limit_angle
+     */
     fun getPrimaryLimitAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryLimitAngleBind, handle)
     }
 
+    /**
+     * The threshold to start damping for `primary_limit_angle`. It provides non-linear (b-spline)
+     * interpolation, let it feel more resistance the more it rotate to the edge limit. This is useful
+     * for simulating the limits of human motion. If `1.0`, no damping is performed. If `0.0`, damping
+     * is always performed.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_damp_threshold
+     */
     fun setPrimaryDampThreshold(power: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPrimaryDampThresholdBind, handle, power)
     }
 
+    /**
+     * The threshold to start damping for `primary_limit_angle`. It provides non-linear (b-spline)
+     * interpolation, let it feel more resistance the more it rotate to the edge limit. This is useful
+     * for simulating the limits of human motion. If `1.0`, no damping is performed. If `0.0`, damping
+     * is always performed.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_damp_threshold
+     */
     fun getPrimaryDampThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryDampThresholdBind, handle)
     }
 
+    /**
+     * The limit angle of positive side of the primary rotation when `symmetry_limitation` is `false`,
+     * in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_positive_limit_angle
+     */
     fun setPrimaryPositiveLimitAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveLimitAngleBind, handle, angle)
     }
 
+    /**
+     * The limit angle of positive side of the primary rotation when `symmetry_limitation` is `false`,
+     * in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_positive_limit_angle
+     */
     fun getPrimaryPositiveLimitAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveLimitAngleBind, handle)
     }
 
+    /**
+     * The threshold to start damping for `primary_positive_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_positive_damp_threshold
+     */
     fun setPrimaryPositiveDampThreshold(power: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveDampThresholdBind, handle, power)
     }
 
+    /**
+     * The threshold to start damping for `primary_positive_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_positive_damp_threshold
+     */
     fun getPrimaryPositiveDampThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveDampThresholdBind, handle)
     }
 
+    /**
+     * The limit angle of negative side of the primary rotation when `symmetry_limitation` is `false`,
+     * in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_negative_limit_angle
+     */
     fun setPrimaryNegativeLimitAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeLimitAngleBind, handle, angle)
     }
 
+    /**
+     * The limit angle of negative side of the primary rotation when `symmetry_limitation` is `false`,
+     * in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_negative_limit_angle
+     */
     fun getPrimaryNegativeLimitAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeLimitAngleBind, handle)
     }
 
+    /**
+     * The threshold to start damping for `primary_negative_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_primary_negative_damp_threshold
+     */
     fun setPrimaryNegativeDampThreshold(power: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeDampThresholdBind, handle, power)
     }
 
+    /**
+     * The threshold to start damping for `primary_negative_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_primary_negative_damp_threshold
+     */
     fun getPrimaryNegativeDampThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeDampThresholdBind, handle)
     }
 
+    /**
+     * The limit angle of the secondary rotation when `symmetry_limitation` is `true`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_secondary_limit_angle
+     */
     fun setSecondaryLimitAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSecondaryLimitAngleBind, handle, angle)
     }
 
+    /**
+     * The limit angle of the secondary rotation when `symmetry_limitation` is `true`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_secondary_limit_angle
+     */
     fun getSecondaryLimitAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryLimitAngleBind, handle)
     }
 
+    /**
+     * The threshold to start damping for `secondary_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_secondary_damp_threshold
+     */
     fun setSecondaryDampThreshold(power: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSecondaryDampThresholdBind, handle, power)
     }
 
+    /**
+     * The threshold to start damping for `secondary_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_secondary_damp_threshold
+     */
     fun getSecondaryDampThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryDampThresholdBind, handle)
     }
 
+    /**
+     * The limit angle of positive side of the secondary rotation when `symmetry_limitation` is
+     * `false`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_secondary_positive_limit_angle
+     */
     fun setSecondaryPositiveLimitAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveLimitAngleBind, handle, angle)
     }
 
+    /**
+     * The limit angle of positive side of the secondary rotation when `symmetry_limitation` is
+     * `false`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_secondary_positive_limit_angle
+     */
     fun getSecondaryPositiveLimitAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveLimitAngleBind, handle)
     }
 
+    /**
+     * The threshold to start damping for `secondary_positive_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_secondary_positive_damp_threshold
+     */
     fun setSecondaryPositiveDampThreshold(power: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveDampThresholdBind, handle, power)
     }
 
+    /**
+     * The threshold to start damping for `secondary_positive_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_secondary_positive_damp_threshold
+     */
     fun getSecondaryPositiveDampThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveDampThresholdBind, handle)
     }
 
+    /**
+     * The limit angle of negative side of the secondary rotation when `symmetry_limitation` is
+     * `false`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_secondary_negative_limit_angle
+     */
     fun setSecondaryNegativeLimitAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeLimitAngleBind, handle, angle)
     }
 
+    /**
+     * The limit angle of negative side of the secondary rotation when `symmetry_limitation` is
+     * `false`, in radians.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_secondary_negative_limit_angle
+     */
     fun getSecondaryNegativeLimitAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeLimitAngleBind, handle)
     }
 
+    /**
+     * The threshold to start damping for `secondary_negative_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_secondary_negative_damp_threshold
+     */
     fun setSecondaryNegativeDampThreshold(power: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeDampThresholdBind, handle, power)
     }
 
+    /**
+     * The threshold to start damping for `secondary_negative_limit_angle`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_secondary_negative_damp_threshold
+     */
     fun getSecondaryNegativeDampThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeDampThresholdBind, handle)
     }
 
+    /**
+     * Returns the remaining seconds of the time-based interpolation.
+     *
+     * Generated from Godot docs: LookAtModifier3D.get_interpolation_remaining
+     */
     fun getInterpolationRemaining(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationRemainingBind, handle)
     }
 
+    /**
+     * Returns `true` if time-based interpolation is running. If `true`, it is equivalent to
+     * `get_interpolation_remaining` returning `0.0`. This is useful to determine whether a
+     * `LookAtModifier3D` can be removed safely.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_interpolating
+     */
     fun isInterpolating(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isInterpolatingBind, handle)
     }
 
+    /**
+     * Returns whether the target is within the angle limitations. It is useful for unsetting the
+     * `target_node` when the target is outside of the angle limitations. Note: The value is updated
+     * after `SkeletonModifier3D._process_modification`. To retrieve this value correctly, we recommend
+     * using the signal `SkeletonModifier3D.modification_processed`.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_target_within_limitation
+     */
     fun isTargetWithinLimitation(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTargetWithinLimitationBind, handle)
     }

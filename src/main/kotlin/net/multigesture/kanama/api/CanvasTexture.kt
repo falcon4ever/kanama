@@ -53,58 +53,150 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setTextureRepeatProperty")
         set(value) = setTextureRepeat(value)
 
+    /**
+     * The diffuse (color) texture to use. This is the main texture you want to set in most cases.
+     *
+     * Generated from Godot docs: CanvasTexture.set_diffuse_texture
+     */
     fun setDiffuseTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The diffuse (color) texture to use. This is the main texture you want to set in most cases.
+     *
+     * Generated from Godot docs: CanvasTexture.get_diffuse_texture
+     */
     fun getDiffuseTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDiffuseTextureBind, handle))
     }
 
+    /**
+     * The normal map texture to use. Only has a visible effect if `Light2D`s are affecting this
+     * `CanvasTexture`. Note: Godot expects the normal map to use X+, Y+, and Z+ coordinates. See this
+     * page (http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates)
+     * for a comparison of normal map coordinates expected by popular engines.
+     *
+     * Generated from Godot docs: CanvasTexture.set_normal_texture
+     */
     fun setNormalTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The normal map texture to use. Only has a visible effect if `Light2D`s are affecting this
+     * `CanvasTexture`. Note: Godot expects the normal map to use X+, Y+, and Z+ coordinates. See this
+     * page (http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates)
+     * for a comparison of normal map coordinates expected by popular engines.
+     *
+     * Generated from Godot docs: CanvasTexture.get_normal_texture
+     */
     fun getNormalTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNormalTextureBind, handle))
     }
 
+    /**
+     * The specular map to use for `Light2D` specular reflections. This should be a grayscale or
+     * colored texture, with brighter areas resulting in a higher `specular_shininess` value. Using a
+     * colored `specular_texture` allows controlling specular shininess on a per-channel basis. Only
+     * has a visible effect if `Light2D`s are affecting this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.set_specular_texture
+     */
     fun setSpecularTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The specular map to use for `Light2D` specular reflections. This should be a grayscale or
+     * colored texture, with brighter areas resulting in a higher `specular_shininess` value. Using a
+     * colored `specular_texture` allows controlling specular shininess on a per-channel basis. Only
+     * has a visible effect if `Light2D`s are affecting this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.get_specular_texture
+     */
     fun getSpecularTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpecularTextureBind, handle))
     }
 
+    /**
+     * The multiplier for specular reflection colors. The `Light2D`'s color is also taken into account
+     * when determining the reflection color. Only has a visible effect if `Light2D`s are affecting
+     * this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.set_specular_color
+     */
     fun setSpecularColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setSpecularColorBind, handle, color)
     }
 
+    /**
+     * The multiplier for specular reflection colors. The `Light2D`'s color is also taken into account
+     * when determining the reflection color. Only has a visible effect if `Light2D`s are affecting
+     * this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.get_specular_color
+     */
     fun getSpecularColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getSpecularColorBind, handle)
     }
 
+    /**
+     * The specular exponent for `Light2D` specular reflections. Higher values result in a more
+     * glossy/"wet" look, with reflections becoming more localized and less visible overall. The
+     * default value of `1.0` disables specular reflections entirely. Only has a visible effect if
+     * `Light2D`s are affecting this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.set_specular_shininess
+     */
     fun setSpecularShininess(shininess: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpecularShininessBind, handle, shininess)
     }
 
+    /**
+     * The specular exponent for `Light2D` specular reflections. Higher values result in a more
+     * glossy/"wet" look, with reflections becoming more localized and less visible overall. The
+     * default value of `1.0` disables specular reflections entirely. Only has a visible effect if
+     * `Light2D`s are affecting this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.get_specular_shininess
+     */
     fun getSpecularShininess(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularShininessBind, handle)
     }
 
+    /**
+     * The texture filtering mode to use when drawing this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.set_texture_filter
+     */
     fun setTextureFilter(filter: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, filter)
     }
 
+    /**
+     * The texture filtering mode to use when drawing this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.get_texture_filter
+     */
     fun getTextureFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
+    /**
+     * The texture repeat mode to use when drawing this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.set_texture_repeat
+     */
     fun setTextureRepeat(repeat: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, repeat)
     }
 
+    /**
+     * The texture repeat mode to use when drawing this `CanvasTexture`.
+     *
+     * Generated from Godot docs: CanvasTexture.get_texture_repeat
+     */
     fun getTextureRepeat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
     }

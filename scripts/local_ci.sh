@@ -132,6 +132,21 @@ python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/c
 echo "[local_ci] API wrapper generator report docs check"
 python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md" --check
 
+echo "[local_ci] wrapper KDoc staleness check (4.7-stable)"
+# Guarded: KDoc is synced from Godot's doc/classes (see docs/contributing/wrapper-maintenance.md
+# "Docs version pin"). Runners without a Godot source checkout skip this instead of failing.
+kdoc_docs="${GODOT_DOCS:-}"
+for candidate in "$HOME/godot-projects/godot/doc/classes" "$HOME/dev/godot/doc/classes"; do
+  if [[ -z "$kdoc_docs" && -d "$candidate" ]]; then
+    kdoc_docs="$candidate"
+  fi
+done
+if [[ -n "$kdoc_docs" && -d "$kdoc_docs" ]]; then
+  python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$kdoc_docs" --check
+else
+  echo "[local_ci] skip: no Godot doc/classes checkout found (set GODOT_DOCS to enable)"
+fi
+
 echo "[local_ci] API shell wrapper generator coverage check"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/generate_api_shell_wrappers.py" \
   --from-skip-report "$ROOT_DIR/build/wrapper-generator/skips.txt" --dry-run --fail-if-candidates

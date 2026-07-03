@@ -17,30 +17,71 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
         @JvmName("setPhysicalBoneChainLengthProperty")
         set(value) = setPhysicalBoneChainLength(value)
 
+    /**
+     * The number of `PhysicalBone2D` nodes linked in this modification.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.set_physical_bone_chain_length
+     */
     fun setPhysicalBoneChainLength(length: Int) {
         ObjectCalls.ptrcallWithIntArg(setPhysicalBoneChainLengthBind, handle, length)
     }
 
+    /**
+     * The number of `PhysicalBone2D` nodes linked in this modification.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.get_physical_bone_chain_length
+     */
     fun getPhysicalBoneChainLength(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPhysicalBoneChainLengthBind, handle)
     }
 
+    /**
+     * Sets the `PhysicalBone2D` node at `joint_idx`. Note: This is just the index used for this
+     * modification, not the bone index used in the `Skeleton2D`.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.set_physical_bone_node
+     */
     fun setPhysicalBoneNode(jointIdx: Int, physicalbone2dNode: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setPhysicalBoneNodeBind, handle, jointIdx, physicalbone2dNode)
     }
 
+    /**
+     * Returns the `PhysicalBone2D` node at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.get_physical_bone_node
+     */
     fun getPhysicalBoneNode(jointIdx: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getPhysicalBoneNodeBind, handle, jointIdx)
     }
 
+    /**
+     * Empties the list of `PhysicalBone2D` nodes and populates it with all `PhysicalBone2D` nodes that
+     * are children of the `Skeleton2D`.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.fetch_physical_bones
+     */
     fun fetchPhysicalBones() {
         ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, handle)
     }
 
+    /**
+     * Tell the `PhysicalBone2D` nodes to start simulating and interacting with the physics world.
+     * Optionally, an array of bone names can be passed to this function, and that will cause only
+     * `PhysicalBone2D` nodes with those names to start simulating.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.start_simulation
+     */
     fun startSimulation(bones: List<String>) {
         ObjectCalls.ptrcallWithStringNameListArg(startSimulationBind, handle, bones)
     }
 
+    /**
+     * Tell the `PhysicalBone2D` nodes to stop simulating and interacting with the physics world.
+     * Optionally, an array of bone names can be passed to this function, and that will cause only
+     * `PhysicalBone2D` nodes with those names to stop simulating.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.stop_simulation
+     */
     fun stopSimulation(bones: List<String>) {
         ObjectCalls.ptrcallWithStringNameListArg(stopSimulationBind, handle, bones)
     }

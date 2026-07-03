@@ -29,26 +29,56 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
         @JvmName("setCompositorProperty")
         set(value) = setCompositor(value)
 
+    /**
+     * The `Environment` resource used by this `WorldEnvironment`, defining the default properties.
+     *
+     * Generated from Godot docs: WorldEnvironment.set_environment
+     */
     fun setEnvironment(env: Environment?) {
         ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Environment` resource used by this `WorldEnvironment`, defining the default properties.
+     *
+     * Generated from Godot docs: WorldEnvironment.get_environment
+     */
     fun getEnvironment(): Environment? {
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
     }
 
+    /**
+     * The default `CameraAttributes` resource to use if none set on the `Camera3D`.
+     *
+     * Generated from Godot docs: WorldEnvironment.set_camera_attributes
+     */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The default `CameraAttributes` resource to use if none set on the `Camera3D`.
+     *
+     * Generated from Godot docs: WorldEnvironment.get_camera_attributes
+     */
     fun getCameraAttributes(): CameraAttributes? {
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
     }
 
+    /**
+     * The default `Compositor` resource to use if none set on the `Camera3D`.
+     *
+     * Generated from Godot docs: WorldEnvironment.set_compositor
+     */
     fun setCompositor(compositor: Compositor?) {
         ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, handle, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The default `Compositor` resource to use if none set on the `Camera3D`.
+     *
+     * Generated from Godot docs: WorldEnvironment.get_compositor
+     */
     fun getCompositor(): Compositor? {
         return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, handle))
     }

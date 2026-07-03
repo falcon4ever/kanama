@@ -23,18 +23,44 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setFftSizeProperty")
         set(value) = setFftSize(value)
 
+    /**
+     * The length of the buffer to keep, in seconds. Higher values keep data around for longer, but
+     * require more memory. Value can range from 0.1 to 4.
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzer.set_buffer_length
+     */
     fun setBufferLength(seconds: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
     }
 
+    /**
+     * The length of the buffer to keep, in seconds. Higher values keep data around for longer, but
+     * require more memory. Value can range from 0.1 to 4.
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzer.get_buffer_length
+     */
     fun getBufferLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 
+    /**
+     * The size of the Fast Fourier transform (https://en.wikipedia.org/wiki/Fast_Fourier_transform)
+     * buffer. Higher values smooth out the spectrum analysis over time, but have greater latency. The
+     * effects of this higher latency are especially noticeable with sudden amplitude changes.
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzer.set_fft_size
+     */
     fun setFftSize(size: Long) {
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
+    /**
+     * The size of the Fast Fourier transform (https://en.wikipedia.org/wiki/Fast_Fourier_transform)
+     * buffer. Higher values smooth out the spectrum analysis over time, but have greater latency. The
+     * effects of this higher latency are especially noticeable with sudden amplitude changes.
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzer.get_fft_size
+     */
     fun getFftSize(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }

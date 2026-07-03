@@ -64,74 +64,172 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
         @JvmName("setStructuredTextBidiOverrideOptionsProperty")
         set(value) = setStructuredTextBidiOverrideOptions(value)
 
+    /**
+     * The button's text that will be displayed inside the button's area.
+     *
+     * Generated from Godot docs: LinkButton.set_text
+     */
     fun setText(text: String) {
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
+    /**
+     * The button's text that will be displayed inside the button's area.
+     *
+     * Generated from Godot docs: LinkButton.get_text
+     */
     fun getText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
+    /**
+     * Sets the clipping behavior when the text exceeds the node's bounding rectangle.
+     *
+     * Generated from Godot docs: LinkButton.set_text_overrun_behavior
+     */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
+    /**
+     * Sets the clipping behavior when the text exceeds the node's bounding rectangle.
+     *
+     * Generated from Godot docs: LinkButton.get_text_overrun_behavior
+     */
     fun getTextOverrunBehavior(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
+    /**
+     * Ellipsis character used for text clipping.
+     *
+     * Generated from Godot docs: LinkButton.set_ellipsis_char
+     */
     fun setEllipsisChar(char: String) {
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
+    /**
+     * Ellipsis character used for text clipping.
+     *
+     * Generated from Godot docs: LinkButton.get_ellipsis_char
+     */
     fun getEllipsisChar(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
+    /**
+     * Base text writing direction.
+     *
+     * Generated from Godot docs: LinkButton.set_text_direction
+     */
     fun setTextDirection(direction: Long) {
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
+    /**
+     * Base text writing direction.
+     *
+     * Generated from Godot docs: LinkButton.get_text_direction
+     */
     fun getTextDirection(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
+    /**
+     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
+     * locale is used instead.
+     *
+     * Generated from Godot docs: LinkButton.set_language
+     */
     fun setLanguage(language: String) {
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
+    /**
+     * Language code used for line-breaking and text shaping algorithms. If left empty, the current
+     * locale is used instead.
+     *
+     * Generated from Godot docs: LinkButton.get_language
+     */
     fun getLanguage(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
+    /**
+     * The URI (https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) for this `LinkButton`. If
+     * set to a valid URI, pressing the button opens the URI using the operating system's default
+     * program for the protocol (via `OS.shell_open`). HTTP and HTTPS URLs open the default web
+     * browser.
+     *
+     * Generated from Godot docs: LinkButton.set_uri
+     */
     fun setUri(uri: String) {
         ObjectCalls.ptrcallWithStringArg(setUriBind, handle, uri)
     }
 
+    /**
+     * The URI (https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) for this `LinkButton`. If
+     * set to a valid URI, pressing the button opens the URI using the operating system's default
+     * program for the protocol (via `OS.shell_open`). HTTP and HTTPS URLs open the default web
+     * browser.
+     *
+     * Generated from Godot docs: LinkButton.get_uri
+     */
     fun getUri(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getUriBind, handle)
     }
 
+    /**
+     * The underline mode to use for the text.
+     *
+     * Generated from Godot docs: LinkButton.set_underline_mode
+     */
     fun setUnderlineMode(underlineMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setUnderlineModeBind, handle, underlineMode)
     }
 
+    /**
+     * The underline mode to use for the text.
+     *
+     * Generated from Godot docs: LinkButton.get_underline_mode
+     */
     fun getUnderlineMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getUnderlineModeBind, handle)
     }
 
+    /**
+     * Set BiDi algorithm override for the structured text.
+     *
+     * Generated from Godot docs: LinkButton.set_structured_text_bidi_override
+     */
     fun setStructuredTextBidiOverride(parser: Long) {
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
+    /**
+     * Set BiDi algorithm override for the structured text.
+     *
+     * Generated from Godot docs: LinkButton.get_structured_text_bidi_override
+     */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
+    /**
+     * Set additional options for BiDi override.
+     *
+     * Generated from Godot docs: LinkButton.set_structured_text_bidi_override_options
+     */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
+    /**
+     * Set additional options for BiDi override.
+     *
+     * Generated from Godot docs: LinkButton.get_structured_text_bidi_override_options
+     */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }

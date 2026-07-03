@@ -70,94 +70,240 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
         @JvmName("setShortcutInTooltipProperty")
         set(value) = setShortcutInTooltip(value)
 
+    /**
+     * If `true`, the button's state is pressed. Means the button is pressed down or toggled (if
+     * `toggle_mode` is active). Only works if `toggle_mode` is `true`. Note: Changing the value of
+     * `button_pressed` will result in `toggled` to be emitted. If you want to change the pressed state
+     * without emitting that signal, use `set_pressed_no_signal`.
+     *
+     * Generated from Godot docs: BaseButton.set_pressed
+     */
     fun setPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
+    /**
+     * If `true`, the button's state is pressed. Means the button is pressed down or toggled (if
+     * `toggle_mode` is active). Only works if `toggle_mode` is `true`. Note: Changing the value of
+     * `button_pressed` will result in `toggled` to be emitted. If you want to change the pressed state
+     * without emitting that signal, use `set_pressed_no_signal`.
+     *
+     * Generated from Godot docs: BaseButton.is_pressed
+     */
     fun isPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
     }
 
+    /**
+     * Changes the `button_pressed` state of the button, without emitting `toggled`. Use when you just
+     * want to change the state of the button without sending the pressed event (e.g. when initializing
+     * scene). Only works if `toggle_mode` is `true`. Note: This method doesn't unpress other buttons
+     * in `button_group`.
+     *
+     * Generated from Godot docs: BaseButton.set_pressed_no_signal
+     */
     fun setPressedNoSignal(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPressedNoSignalBind, handle, pressed)
     }
 
+    /**
+     * Returns `true` if the mouse has entered the button and has not left it yet.
+     *
+     * Generated from Godot docs: BaseButton.is_hovered
+     */
     fun isHovered(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHoveredBind, handle)
     }
 
+    /**
+     * If `true`, the button is in toggle mode. Makes the button flip state between pressed and
+     * unpressed each time its area is clicked.
+     *
+     * Generated from Godot docs: BaseButton.set_toggle_mode
+     */
     fun setToggleMode(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the button is in toggle mode. Makes the button flip state between pressed and
+     * unpressed each time its area is clicked.
+     *
+     * Generated from Godot docs: BaseButton.is_toggle_mode
+     */
     fun isToggleMode(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, handle)
     }
 
+    /**
+     * If `true`, the button will add information about its shortcut in the tooltip. This includes the
+     * shortcut's events and its `Resource.resource_name`. If both events and name are empty, the
+     * shortcut will not be included. Note: This property does nothing when the tooltip control is
+     * customized using `Control._make_custom_tooltip`.
+     *
+     * Generated from Godot docs: BaseButton.set_shortcut_in_tooltip
+     */
     fun setShortcutInTooltip(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShortcutInTooltipBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the button will add information about its shortcut in the tooltip. This includes the
+     * shortcut's events and its `Resource.resource_name`. If both events and name are empty, the
+     * shortcut will not be included. Note: This property does nothing when the tooltip control is
+     * customized using `Control._make_custom_tooltip`.
+     *
+     * Generated from Godot docs: BaseButton.is_shortcut_in_tooltip_enabled
+     */
     fun isShortcutInTooltipEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShortcutInTooltipEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the button is in disabled state and can't be clicked or toggled. Note: If the button
+     * is disabled while held down, `button_up` will be emitted.
+     *
+     * Generated from Godot docs: BaseButton.set_disabled
+     */
     fun setDisabled(disabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
     }
 
+    /**
+     * If `true`, the button is in disabled state and can't be clicked or toggled. Note: If the button
+     * is disabled while held down, `button_up` will be emitted.
+     *
+     * Generated from Godot docs: BaseButton.is_disabled
+     */
     fun isDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
     }
 
+    /**
+     * Determines when the button is considered clicked.
+     *
+     * Generated from Godot docs: BaseButton.set_action_mode
+     */
     fun setActionMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setActionModeBind, handle, mode)
     }
 
+    /**
+     * Determines when the button is considered clicked.
+     *
+     * Generated from Godot docs: BaseButton.get_action_mode
+     */
     fun getActionMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getActionModeBind, handle)
     }
 
+    /**
+     * Binary mask to choose which mouse buttons this button will respond to. To allow both left-click
+     * and right-click, use `MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT`.
+     *
+     * Generated from Godot docs: BaseButton.set_button_mask
+     */
     fun setButtonMask(mask: Long) {
         ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, handle, mask)
     }
 
+    /**
+     * Binary mask to choose which mouse buttons this button will respond to. To allow both left-click
+     * and right-click, use `MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT`.
+     *
+     * Generated from Godot docs: BaseButton.get_button_mask
+     */
     fun getButtonMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, handle)
     }
 
+    /**
+     * Returns the visual state used to draw the button. This is useful mainly when implementing your
+     * own draw code by either overriding _draw() or connecting to "draw" signal. The visual state of
+     * the button is defined by the `DrawMode` enum.
+     *
+     * Generated from Godot docs: BaseButton.get_draw_mode
+     */
     fun getDrawMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDrawModeBind, handle)
     }
 
+    /**
+     * If `true`, the button stays pressed when moving the cursor outside the button while pressing it.
+     * Note: This property only affects the button's visual appearance. Signals will be emitted at the
+     * same moment regardless of this property's value.
+     *
+     * Generated from Godot docs: BaseButton.set_keep_pressed_outside
+     */
     fun setKeepPressedOutside(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setKeepPressedOutsideBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the button stays pressed when moving the cursor outside the button while pressing it.
+     * Note: This property only affects the button's visual appearance. Signals will be emitted at the
+     * same moment regardless of this property's value.
+     *
+     * Generated from Godot docs: BaseButton.is_keep_pressed_outside
+     */
     fun isKeepPressedOutside(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isKeepPressedOutsideBind, handle)
     }
 
+    /**
+     * If `true`, the button will highlight for a short amount of time when its shortcut is activated.
+     * If `false` and `toggle_mode` is `false`, the shortcut will activate without any visual feedback.
+     *
+     * Generated from Godot docs: BaseButton.set_shortcut_feedback
+     */
     fun setShortcutFeedback(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShortcutFeedbackBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the button will highlight for a short amount of time when its shortcut is activated.
+     * If `false` and `toggle_mode` is `false`, the shortcut will activate without any visual feedback.
+     *
+     * Generated from Godot docs: BaseButton.is_shortcut_feedback
+     */
     fun isShortcutFeedback(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShortcutFeedbackBind, handle)
     }
 
+    /**
+     * `Shortcut` associated to the button.
+     *
+     * Generated from Godot docs: BaseButton.set_shortcut
+     */
     fun setShortcut(shortcut: Shortcut?) {
         ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * `Shortcut` associated to the button.
+     *
+     * Generated from Godot docs: BaseButton.get_shortcut
+     */
     fun getShortcut(): Shortcut? {
         return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, handle))
     }
 
+    /**
+     * The `ButtonGroup` associated with the button. Not to be confused with node groups. Note: The
+     * button will be configured as a radio button if a `ButtonGroup` is assigned to it.
+     *
+     * Generated from Godot docs: BaseButton.set_button_group
+     */
     fun setButtonGroup(buttonGroup: ButtonGroup?) {
         ObjectCalls.ptrcallWithObjectArgs(setButtonGroupBind, handle, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `ButtonGroup` associated with the button. Not to be confused with node groups. Note: The
+     * button will be configured as a radio button if a `ButtonGroup` is assigned to it.
+     *
+     * Generated from Godot docs: BaseButton.get_button_group
+     */
     fun getButtonGroup(): ButtonGroup? {
         return ButtonGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, handle))
     }

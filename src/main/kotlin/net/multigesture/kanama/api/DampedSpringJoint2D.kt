@@ -34,34 +34,84 @@ class DampedSpringJoint2D(handle: MemorySegment) : Joint2D(handle) {
         @JvmName("setDampingProperty")
         set(value) = setDamping(value)
 
+    /**
+     * The spring joint's maximum length. The two attached bodies cannot stretch it past this value.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.set_length
+     */
     fun setLength(length: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
     }
 
+    /**
+     * The spring joint's maximum length. The two attached bodies cannot stretch it past this value.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.get_length
+     */
     fun getLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
+    /**
+     * When the bodies attached to the spring joint move they stretch or squash it. The joint always
+     * tries to resize towards this length.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.set_rest_length
+     */
     fun setRestLength(restLength: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRestLengthBind, handle, restLength)
     }
 
+    /**
+     * When the bodies attached to the spring joint move they stretch or squash it. The joint always
+     * tries to resize towards this length.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.get_rest_length
+     */
     fun getRestLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRestLengthBind, handle)
     }
 
+    /**
+     * The higher the value, the less the bodies attached to the joint will deform it. The joint
+     * applies an opposing force to the bodies, the product of the stiffness multiplied by the size
+     * difference from its resting length.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.set_stiffness
+     */
     fun setStiffness(stiffness: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, handle, stiffness)
     }
 
+    /**
+     * The higher the value, the less the bodies attached to the joint will deform it. The joint
+     * applies an opposing force to the bodies, the product of the stiffness multiplied by the size
+     * difference from its resting length.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.get_stiffness
+     */
     fun getStiffness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, handle)
     }
 
+    /**
+     * The spring joint's damping ratio. A value between `0` and `1`. When the two bodies move into
+     * different directions the system tries to align them to the spring axis again. A high `damping`
+     * value forces the attached bodies to align faster.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.set_damping
+     */
     fun setDamping(damping: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, damping)
     }
 
+    /**
+     * The spring joint's damping ratio. A value between `0` and `1`. When the two bodies move into
+     * different directions the system tries to align them to the spring axis again. A high `damping`
+     * value forces the attached bodies to align faster.
+     *
+     * Generated from Godot docs: DampedSpringJoint2D.get_damping
+     */
     fun getDamping(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
     }

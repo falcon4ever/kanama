@@ -25,21 +25,45 @@ object CameraServer {
         @JvmName("setMonitoringFeedsProperty")
         set(value) = setMonitoringFeeds(value)
 
+    /**
+     * If `true`, the server is actively monitoring available camera feeds. This has a performance
+     * cost, so only set it to `true` when you're actively accessing the camera. Note: After setting it
+     * to `true`, you can receive updated camera feeds through the `camera_feeds_updated` signal.
+     *
+     * Generated from Godot docs: CameraServer.set_monitoring_feeds
+     */
     @JvmStatic
     fun setMonitoringFeeds(isMonitoringFeeds: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMonitoringFeedsBind, singleton, isMonitoringFeeds)
     }
 
+    /**
+     * If `true`, the server is actively monitoring available camera feeds. This has a performance
+     * cost, so only set it to `true` when you're actively accessing the camera. Note: After setting it
+     * to `true`, you can receive updated camera feeds through the `camera_feeds_updated` signal.
+     *
+     * Generated from Godot docs: CameraServer.is_monitoring_feeds
+     */
     @JvmStatic
     fun isMonitoringFeeds(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringFeedsBind, singleton)
     }
 
+    /**
+     * Returns the `CameraFeed` corresponding to the camera with the given `index`.
+     *
+     * Generated from Godot docs: CameraServer.get_feed
+     */
     @JvmStatic
     fun getFeed(index: Int): CameraFeed? {
         return CameraFeed.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getFeedBind, singleton, index))
     }
 
+    /**
+     * Returns the number of `CameraFeed`s registered.
+     *
+     * Generated from Godot docs: CameraServer.get_feed_count
+     */
     @JvmStatic
     fun getFeedCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFeedCountBind, singleton)
@@ -55,11 +79,21 @@ object CameraServer {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::fromHandle)
     }
 
+    /**
+     * Adds the camera `feed` to the camera server.
+     *
+     * Generated from Godot docs: CameraServer.add_feed
+     */
     @JvmStatic
     fun addFeed(feed: CameraFeed?) {
         ObjectCalls.ptrcallWithObjectArgs(addFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Removes the specified camera `feed`.
+     *
+     * Generated from Godot docs: CameraServer.remove_feed
+     */
     @JvmStatic
     fun removeFeed(feed: CameraFeed?) {
         ObjectCalls.ptrcallWithObjectArgs(removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: MemorySegment.NULL))

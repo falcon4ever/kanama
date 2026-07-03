@@ -47,58 +47,136 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setRepeatProperty")
         set(value) = setRepeat(value)
 
+    /**
+     * The `Gradient` used to fill the texture.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_gradient
+     */
     fun setGradient(gradient: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Gradient` used to fill the texture.
+     *
+     * Generated from Godot docs: GradientTexture2D.get_gradient
+     */
     fun getGradient(): Gradient? {
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
     }
 
+    /**
+     * The number of horizontal color samples that will be obtained from the `Gradient`, which also
+     * represents the texture's width.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_width
+     */
     fun setWidth(width: Int) {
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
+    /**
+     * The number of vertical color samples that will be obtained from the `Gradient`, which also
+     * represents the texture's height.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_height
+     */
     fun setHeight(height: Int) {
         ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
     }
 
+    /**
+     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
+     * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
+     * generated texture will use low dynamic range; overbright colors will be clamped
+     * (`Image.FORMAT_RGBA8` format).
+     *
+     * Generated from Godot docs: GradientTexture2D.set_use_hdr
+     */
     fun setUseHdr(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
+     * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
+     * generated texture will use low dynamic range; overbright colors will be clamped
+     * (`Image.FORMAT_RGBA8` format).
+     *
+     * Generated from Godot docs: GradientTexture2D.is_using_hdr
+     */
     fun isUsingHdr(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
     }
 
+    /**
+     * The gradient's fill type.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_fill
+     */
     fun setFill(fill: Long) {
         ObjectCalls.ptrcallWithLongArg(setFillBind, handle, fill)
     }
 
+    /**
+     * The gradient's fill type.
+     *
+     * Generated from Godot docs: GradientTexture2D.get_fill
+     */
     fun getFill(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFillBind, handle)
     }
 
+    /**
+     * The initial offset used to fill the texture specified in UV coordinates.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_fill_from
+     */
     fun setFillFrom(fillFrom: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setFillFromBind, handle, fillFrom)
     }
 
+    /**
+     * The initial offset used to fill the texture specified in UV coordinates.
+     *
+     * Generated from Godot docs: GradientTexture2D.get_fill_from
+     */
     fun getFillFrom(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getFillFromBind, handle)
     }
 
+    /**
+     * The final offset used to fill the texture specified in UV coordinates.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_fill_to
+     */
     fun setFillTo(fillTo: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setFillToBind, handle, fillTo)
     }
 
+    /**
+     * The final offset used to fill the texture specified in UV coordinates.
+     *
+     * Generated from Godot docs: GradientTexture2D.get_fill_to
+     */
     fun getFillTo(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getFillToBind, handle)
     }
 
+    /**
+     * The gradient's repeat type.
+     *
+     * Generated from Godot docs: GradientTexture2D.set_repeat
+     */
     fun setRepeat(repeat: Long) {
         ObjectCalls.ptrcallWithLongArg(setRepeatBind, handle, repeat)
     }
 
+    /**
+     * The gradient's repeat type.
+     *
+     * Generated from Godot docs: GradientTexture2D.get_repeat
+     */
     fun getRepeat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, handle)
     }

@@ -10,70 +10,161 @@ import net.multigesture.kanama.types.NodePath
  * Generated from Godot docs: BoneConstraint3D
  */
 open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+    /**
+     * Sets the apply amount of the setting at `index` to `amount`.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_amount
+     */
     fun setAmount(index: Int, amount: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setAmountBind, handle, index, amount)
     }
 
+    /**
+     * Returns the apply amount of the setting at `index`.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_amount
+     */
     fun getAmount(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getAmountBind, handle, index)
     }
 
+    /**
+     * Sets the apply bone of the setting at `index` to `bone_name`. This bone will be modified.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_apply_bone_name
+     */
     fun setApplyBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setApplyBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the apply bone name of the setting at `index`. This bone will be modified.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_apply_bone_name
+     */
     fun getApplyBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getApplyBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the apply bone of the setting at `index` to `bone`. This bone will be modified.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_apply_bone
+     */
     fun setApplyBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setApplyBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the apply bone of the setting at `index`. This bone will be modified.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_apply_bone
+     */
     fun getApplyBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getApplyBoneBind, handle, index)
     }
 
+    /**
+     * Sets the reference target type of the setting at `index` to `type`. See also `ReferenceType`.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_reference_type
+     */
     fun setReferenceType(index: Int, type: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTypeBind, handle, index, type)
     }
 
+    /**
+     * Returns the reference target type of the setting at `index`. See also `ReferenceType`.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_reference_type
+     */
     fun getReferenceType(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTypeBind, handle, index)
     }
 
+    /**
+     * Sets the reference bone of the setting at `index` to `bone_name`. This bone will be only
+     * referenced and not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_reference_bone_name
+     */
     fun setReferenceBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setReferenceBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the reference bone name of the setting at `index`. This bone will be only referenced and
+     * not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_reference_bone_name
+     */
     fun getReferenceBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the reference bone of the setting at `index` to `bone`. This bone will be only referenced
+     * and not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_reference_bone
+     */
     fun setReferenceBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setReferenceBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the reference bone of the setting at `index`. This bone will be only referenced and not
+     * modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_reference_bone
+     */
     fun getReferenceBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getReferenceBoneBind, handle, index)
     }
 
+    /**
+     * Sets the reference node path of the setting at `index` to `node`. This node will be only
+     * referenced and not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_reference_node
+     */
     fun setReferenceNode(index: Int, node: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setReferenceNodeBind, handle, index, node)
     }
 
+    /**
+     * Returns the reference node path of the setting at `index`. This node will be only referenced and
+     * not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_reference_node
+     */
     fun getReferenceNode(index: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getReferenceNodeBind, handle, index)
     }
 
+    /**
+     * Sets the number of settings in the modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.set_setting_count
+     */
     fun setSettingCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setSettingCountBind, handle, count)
     }
 
+    /**
+     * Returns the number of settings in the modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_setting_count
+     */
     fun getSettingCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, handle)
     }
 
+    /**
+     * Clear all settings.
+     *
+     * Generated from Godot docs: BoneConstraint3D.clear_setting
+     */
     fun clearSetting() {
         ObjectCalls.ptrcallNoArgs(clearSettingBind, handle)
     }

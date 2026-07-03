@@ -10,10 +10,22 @@ import net.multigesture.kanama.types.AABB
  * Generated from Godot docs: VisibleOnScreenNotifier3D
  */
 open class VisibleOnScreenNotifier3D(handle: MemorySegment) : VisualInstance3D(handle) {
+    /**
+     * The `VisibleOnScreenNotifier3D`'s bounding box.
+     *
+     * Generated from Godot docs: VisibleOnScreenNotifier3D.set_aabb
+     */
     fun setAabb(rect: AABB) {
         ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, rect)
     }
 
+    /**
+     * Returns `true` if the bounding box is on the screen. Note: It takes one frame for the
+     * `VisibleOnScreenNotifier3D`'s visibility to be assessed once added to the scene tree, so this
+     * method will always return `false` right after it is instantiated.
+     *
+     * Generated from Godot docs: VisibleOnScreenNotifier3D.is_on_screen
+     */
     fun isOnScreen(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, handle)
     }

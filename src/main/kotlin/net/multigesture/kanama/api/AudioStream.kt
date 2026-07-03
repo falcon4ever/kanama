@@ -9,26 +9,63 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: AudioStream
  */
 open class AudioStream(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Returns the length of the audio stream in seconds. If this stream is an `AudioStreamRandomizer`,
+     * returns the length of the last played stream. If this stream has an indefinite length (such as
+     * for `AudioStreamGenerator` and `AudioStreamMicrophone`), returns `0.0`.
+     *
+     * Generated from Godot docs: AudioStream.get_length
+     */
     fun getLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
+    /**
+     * Returns `true` if this audio stream only supports one channel (monophony), or `false` if the
+     * audio stream supports two or more channels (polyphony).
+     *
+     * Generated from Godot docs: AudioStream.is_monophonic
+     */
     fun isMonophonic(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMonophonicBind, handle)
     }
 
+    /**
+     * Returns a newly created `AudioStreamPlayback` intended to play this audio stream. Useful for
+     * when you want to extend `_instantiate_playback` but call `instantiate_playback` from an
+     * internally held AudioStream subresource. An example of this can be found in the source code for
+     * `AudioStreamRandomPitch::instantiate_playback`.
+     *
+     * Generated from Godot docs: AudioStream.instantiate_playback
+     */
     fun instantiatePlayback(): AudioStreamPlayback? {
         return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, handle))
     }
 
+    /**
+     * Returns if the current `AudioStream` can be used as a sample. Only static streams can be
+     * sampled.
+     *
+     * Generated from Godot docs: AudioStream.can_be_sampled
+     */
     fun canBeSampled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(canBeSampledBind, handle)
     }
 
+    /**
+     * Generates an `AudioSample` based on the current stream.
+     *
+     * Generated from Godot docs: AudioStream.generate_sample
+     */
     fun generateSample(): AudioSample? {
         return AudioSample.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, handle))
     }
 
+    /**
+     * Returns `true` if the stream is a collection of other streams, `false` otherwise.
+     *
+     * Generated from Godot docs: AudioStream.is_meta_stream
+     */
     fun isMetaStream(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, handle)
     }

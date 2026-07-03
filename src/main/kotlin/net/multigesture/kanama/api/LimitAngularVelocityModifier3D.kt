@@ -28,62 +28,140 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
         @JvmName("setChainCountProperty")
         set(value) = setChainCount(value)
 
+    /**
+     * Sets the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_root_bone_name
+     */
     fun setRootBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_root_bone_name
+     */
     fun getRootBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the root bone index of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_root_bone
+     */
     fun setRootBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the root bone index of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_root_bone
+     */
     fun getRootBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
     }
 
+    /**
+     * Sets the end bone name of the bone chain. Note: End bone must be the root bone or a child of the
+     * root bone.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_end_bone_name
+     */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
     }
 
+    /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_end_bone_name
+     */
     fun getEndBoneName(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
+    /**
+     * Sets the end bone index of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_end_bone
+     */
     fun setEndBone(index: Int, bone: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
     }
 
+    /**
+     * Returns the end bone index of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_end_bone
+     */
     fun getEndBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
     }
 
+    /**
+     * The number of chains.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_chain_count
+     */
     fun setChainCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setChainCountBind, handle, count)
     }
 
+    /**
+     * The number of chains.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_chain_count
+     */
     fun getChainCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getChainCountBind, handle)
     }
 
+    /**
+     * Clear all chains.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.clear_chains
+     */
     fun clearChains() {
         ObjectCalls.ptrcallNoArgs(clearChainsBind, handle)
     }
 
+    /**
+     * The maximum angular velocity per second.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_max_angular_velocity
+     */
     fun setMaxAngularVelocity(angularVelocity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMaxAngularVelocityBind, handle, angularVelocity)
     }
 
+    /**
+     * The maximum angular velocity per second.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_max_angular_velocity
+     */
     fun getMaxAngularVelocity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxAngularVelocityBind, handle)
     }
 
+    /**
+     * If `true`, the modifier processes bones not included in the bone list. If `false`, the bones
+     * processed by the modifier are equal to the bone list.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.set_exclude
+     */
     fun setExclude(exclude: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setExcludeBind, handle, exclude)
     }
 
+    /**
+     * If `true`, the modifier processes bones not included in the bone list. If `false`, the bones
+     * processed by the modifier are equal to the bone list.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.is_exclude
+     */
     fun isExclude(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isExcludeBind, handle)
     }

@@ -31,6 +31,13 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, handle, src)
     }
 
+    /**
+     * Get the current IV state for this context (IV gets updated when calling `update`). You normally
+     * don't need this function. Note: This function only makes sense when the context is started with
+     * `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
+     *
+     * Generated from Godot docs: AESContext.get_iv_state
+     */
     fun getIvState(): ByteArray {
         return ObjectCalls.ptrcallNoArgsRetByteArray(getIvStateBind, handle)
     }

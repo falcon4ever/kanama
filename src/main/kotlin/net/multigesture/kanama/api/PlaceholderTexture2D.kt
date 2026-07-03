@@ -10,6 +10,11 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: PlaceholderTexture2D
  */
 class PlaceholderTexture2D(handle: MemorySegment) : Texture2D(handle) {
+    /**
+     * The texture's size (in pixels).
+     *
+     * Generated from Godot docs: PlaceholderTexture2D.set_size
+     */
     fun setSize(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }

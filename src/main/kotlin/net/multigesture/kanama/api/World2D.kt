@@ -27,18 +27,41 @@ class World2D(handle: MemorySegment) : Resource(handle) {
         @JvmName("directSpaceStateProperty")
         get() = getDirectSpaceState()
 
+    /**
+     * The `RID` of this world's canvas resource. Used by the `RenderingServer` for 2D drawing.
+     *
+     * Generated from Godot docs: World2D.get_canvas
+     */
     fun getCanvas(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
     }
 
+    /**
+     * The `RID` of this world's navigation map. Used by the `NavigationServer2D`.
+     *
+     * Generated from Godot docs: World2D.get_navigation_map
+     */
     fun getNavigationMap(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
+    /**
+     * The `RID` of this world's physics space resource. Used by the `PhysicsServer2D` for 2D physics,
+     * treating it as both a space and an area.
+     *
+     * Generated from Godot docs: World2D.get_space
+     */
     fun getSpace(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
     }
 
+    /**
+     * Direct access to the world's physics 2D space state. Used for querying current and potential
+     * collisions. When using multi-threaded physics, access is limited to `Node._physics_process` in
+     * the main thread.
+     *
+     * Generated from Godot docs: World2D.get_direct_space_state
+     */
     fun getDirectSpaceState(): PhysicsDirectSpaceState2D? {
         return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
     }

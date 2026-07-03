@@ -16,10 +16,20 @@ class GPUParticlesCollisionSphere3D(handle: MemorySegment) : GPUParticlesCollisi
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
+    /**
+     * The collision sphere's radius in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSphere3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The collision sphere's radius in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSphere3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }

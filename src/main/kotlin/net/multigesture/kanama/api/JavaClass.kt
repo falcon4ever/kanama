@@ -9,18 +9,39 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: JavaClass
  */
 class JavaClass(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the Java class name.
+     *
+     * Generated from Godot docs: JavaClass.get_java_class_name
+     */
     fun getJavaClassName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getJavaClassNameBind, handle)
     }
 
+    /**
+     * Returns the object's Java methods and their signatures as an `Array` of dictionaries, in the
+     * same format as `Object.get_method_list`.
+     *
+     * Generated from Godot docs: JavaClass.get_java_method_list
+     */
     fun getJavaMethodList(): List<Map<String, Any?>> {
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getJavaMethodListBind, handle)
     }
 
+    /**
+     * Returns a `JavaClass` representing the Java parent class of this class.
+     *
+     * Generated from Godot docs: JavaClass.get_java_parent_class
+     */
     fun getJavaParentClass(): JavaClass? {
         return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaParentClassBind, handle))
     }
 
+    /**
+     * Returns `true` if the given `method` name exists in the object's Java methods.
+     *
+     * Generated from Godot docs: JavaClass.has_java_method
+     */
     fun hasJavaMethod(method: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
     }

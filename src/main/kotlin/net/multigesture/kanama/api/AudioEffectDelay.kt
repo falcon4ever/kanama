@@ -89,106 +89,246 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setFeedbackLowpassProperty")
         set(value) = setFeedbackLowpass(value)
 
+    /**
+     * The volume ratio of the original audio. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_dry
+     */
     fun setDry(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
+    /**
+     * The volume ratio of the original audio. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_dry
+     */
     fun getDry(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 
+    /**
+     * If `true`, the first tap will be enabled.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap1_active
+     */
     fun setTap1Active(amount: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTap1ActiveBind, handle, amount)
     }
 
+    /**
+     * If `true`, the first tap will be enabled.
+     *
+     * Generated from Godot docs: AudioEffectDelay.is_tap1_active
+     */
     fun isTap1Active(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTap1ActiveBind, handle)
     }
 
+    /**
+     * First tap delay time in milliseconds, compared to the original audio. Value can range from 0 to
+     * 1500.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap1_delay_ms
+     */
     fun setTap1DelayMs(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTap1DelayMsBind, handle, amount)
     }
 
+    /**
+     * First tap delay time in milliseconds, compared to the original audio. Value can range from 0 to
+     * 1500.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_tap1_delay_ms
+     */
     fun getTap1DelayMs(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1DelayMsBind, handle)
     }
 
+    /**
+     * Gain for the first tap, in dB. Value can range from -60 to 0.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap1_level_db
+     */
     fun setTap1LevelDb(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTap1LevelDbBind, handle, amount)
     }
 
+    /**
+     * Gain for the first tap, in dB. Value can range from -60 to 0.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_tap1_level_db
+     */
     fun getTap1LevelDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1LevelDbBind, handle)
     }
 
+    /**
+     * Pan position for the first tap. Negative values pan the sound to the left, positive pan to the
+     * right. Value can range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap1_pan
+     */
     fun setTap1Pan(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTap1PanBind, handle, amount)
     }
 
+    /**
+     * Pan position for the first tap. Negative values pan the sound to the left, positive pan to the
+     * right. Value can range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_tap1_pan
+     */
     fun getTap1Pan(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1PanBind, handle)
     }
 
+    /**
+     * If `true`, the second tap will be enabled.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap2_active
+     */
     fun setTap2Active(amount: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTap2ActiveBind, handle, amount)
     }
 
+    /**
+     * If `true`, the second tap will be enabled.
+     *
+     * Generated from Godot docs: AudioEffectDelay.is_tap2_active
+     */
     fun isTap2Active(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTap2ActiveBind, handle)
     }
 
+    /**
+     * Second tap delay time in milliseconds, compared to the original audio. Value can range from 0 to
+     * 1500.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap2_delay_ms
+     */
     fun setTap2DelayMs(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTap2DelayMsBind, handle, amount)
     }
 
+    /**
+     * Second tap delay time in milliseconds, compared to the original audio. Value can range from 0 to
+     * 1500.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_tap2_delay_ms
+     */
     fun getTap2DelayMs(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2DelayMsBind, handle)
     }
 
+    /**
+     * Gain for the second tap, in dB. Value can range from -60 to 0.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap2_level_db
+     */
     fun setTap2LevelDb(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTap2LevelDbBind, handle, amount)
     }
 
+    /**
+     * Gain for the second tap, in dB. Value can range from -60 to 0.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_tap2_level_db
+     */
     fun getTap2LevelDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2LevelDbBind, handle)
     }
 
+    /**
+     * Pan position for the second tap. Negative values pan the sound to the left, positive pan to the
+     * right. Value can range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_tap2_pan
+     */
     fun setTap2Pan(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTap2PanBind, handle, amount)
     }
 
+    /**
+     * Pan position for the second tap. Negative values pan the sound to the left, positive pan to the
+     * right. Value can range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_tap2_pan
+     */
     fun getTap2Pan(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2PanBind, handle)
     }
 
+    /**
+     * If `true`, feedback is enabled, repeating taps after they are played.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_feedback_active
+     */
     fun setFeedbackActive(amount: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFeedbackActiveBind, handle, amount)
     }
 
+    /**
+     * If `true`, feedback is enabled, repeating taps after they are played.
+     *
+     * Generated from Godot docs: AudioEffectDelay.is_feedback_active
+     */
     fun isFeedbackActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFeedbackActiveBind, handle)
     }
 
+    /**
+     * Feedback delay time in milliseconds. Value can range from 0 to 1500.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_feedback_delay_ms
+     */
     fun setFeedbackDelayMs(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackDelayMsBind, handle, amount)
     }
 
+    /**
+     * Feedback delay time in milliseconds. Value can range from 0 to 1500.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_feedback_delay_ms
+     */
     fun getFeedbackDelayMs(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackDelayMsBind, handle)
     }
 
+    /**
+     * Gain for feedback, in dB. Value can range from -60 to 0.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_feedback_level_db
+     */
     fun setFeedbackLevelDb(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackLevelDbBind, handle, amount)
     }
 
+    /**
+     * Gain for feedback, in dB. Value can range from -60 to 0.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_feedback_level_db
+     */
     fun getFeedbackLevelDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLevelDbBind, handle)
     }
 
+    /**
+     * Low-pass filter for feedback, in Hz. Frequencies above this value are filtered out. Value can
+     * range from 1 to 16000.
+     *
+     * Generated from Godot docs: AudioEffectDelay.set_feedback_lowpass
+     */
     fun setFeedbackLowpass(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackLowpassBind, handle, amount)
     }
 
+    /**
+     * Low-pass filter for feedback, in Hz. Frequencies above this value are filtered out. Value can
+     * range from 1 to 16000.
+     *
+     * Generated from Godot docs: AudioEffectDelay.get_feedback_lowpass
+     */
     fun getFeedbackLowpass(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLowpassBind, handle)
     }

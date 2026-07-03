@@ -210,134 +210,331 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setColorInitialRampProperty")
         set(value) = setColorInitialRamp(value)
 
+    /**
+     * If `true`, particles are being emitted. `emitting` can be used to start and stop particles from
+     * emitting. However, if `one_shot` is `true` setting `emitting` to `true` will not restart the
+     * emission cycle until after all active particles finish processing. You can use the `finished`
+     * signal to be notified once all active particles finish processing.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emitting
+     */
     fun setEmitting(emitting: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEmittingBind, handle, emitting)
     }
 
+    /**
+     * Number of particles emitted in one emission cycle.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_amount
+     */
     fun setAmount(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setAmountBind, handle, amount)
     }
 
+    /**
+     * Amount of time each particle will exist.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_lifetime
+     */
     fun setLifetime(secs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, handle, secs)
     }
 
+    /**
+     * If `true`, only one emission cycle occurs. If set `true` during a cycle, emission will stop at
+     * the cycle's end.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_one_shot
+     */
     fun setOneShot(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, enable)
     }
 
+    /**
+     * Particle system starts as if it had already run for this many seconds.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_pre_process_time
+     */
     fun setPreProcessTime(secs: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, handle, secs)
     }
 
+    /**
+     * How rapidly particles in an emission cycle are emitted. If greater than `0`, there will be a gap
+     * in emissions before the next cycle begins.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_explosiveness_ratio
+     */
     fun setExplosivenessRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, handle, ratio)
     }
 
+    /**
+     * Emission lifetime randomness ratio.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_randomness_ratio
+     */
     fun setRandomnessRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, handle, ratio)
     }
 
+    /**
+     * Particle lifetime randomness ratio.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_lifetime_randomness
+     */
     fun setLifetimeRandomness(random: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, handle, random)
     }
 
+    /**
+     * If `true`, particles use the parent node's coordinate space (known as local coordinates). This
+     * will cause particles to move and rotate along the `CPUParticles2D` node (and its parents) when
+     * it is moved or rotated. If `false`, particles use global coordinates; they will not move or
+     * rotate along the `CPUParticles2D` node (and its parents) when it is moved or rotated.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_use_local_coordinates
+     */
     fun setUseLocalCoordinates(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, handle, enable)
     }
 
+    /**
+     * The particle system's frame rate is fixed to a value. For example, changing the value to 2 will
+     * make the particles render at 2 frames per second. Note this does not slow down the simulation of
+     * the particle system itself.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_fixed_fps
+     */
     fun setFixedFps(fps: Int) {
         ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, handle, fps)
     }
 
+    /**
+     * If `true`, results in fractional delta calculation which has a smoother particles display
+     * effect.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_fractional_delta
+     */
     fun setFractionalDelta(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, handle, enable)
     }
 
+    /**
+     * Particle system's running speed scaling ratio. A value of `0` can be used to pause the
+     * particles.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_speed_scale
+     */
     fun setSpeedScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
     }
 
+    /**
+     * Requests the particles to process for extra process time during a single frame. `process_time`
+     * defines the time that the particles will process while emitting is on. `process_time_residual`
+     * defines the time that particles will process with emitting turned off for the simulation. When
+     * combined with `speed_scale` set to `0.0`, this is useful to be able to seek a particle system
+     * timeline.
+     *
+     * Generated from Godot docs: CPUParticles2D.request_particles_process
+     */
     fun requestParticlesProcess(processTime: Double, processTimeResidual: Double = 0.0) {
         ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, handle, processTime, processTimeResidual)
     }
 
+    /**
+     * If `true`, particles are being emitted. `emitting` can be used to start and stop particles from
+     * emitting. However, if `one_shot` is `true` setting `emitting` to `true` will not restart the
+     * emission cycle until after all active particles finish processing. You can use the `finished`
+     * signal to be notified once all active particles finish processing.
+     *
+     * Generated from Godot docs: CPUParticles2D.is_emitting
+     */
     fun isEmitting(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, handle)
     }
 
+    /**
+     * Number of particles emitted in one emission cycle.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_amount
+     */
     fun getAmount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, handle)
     }
 
+    /**
+     * Amount of time each particle will exist.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_lifetime
+     */
     fun getLifetime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, handle)
     }
 
+    /**
+     * If `true`, only one emission cycle occurs. If set `true` during a cycle, emission will stop at
+     * the cycle's end.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_one_shot
+     */
     fun getOneShot(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
     }
 
+    /**
+     * Particle system starts as if it had already run for this many seconds.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_pre_process_time
+     */
     fun getPreProcessTime(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, handle)
     }
 
+    /**
+     * How rapidly particles in an emission cycle are emitted. If greater than `0`, there will be a gap
+     * in emissions before the next cycle begins.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_explosiveness_ratio
+     */
     fun getExplosivenessRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, handle)
     }
 
+    /**
+     * Emission lifetime randomness ratio.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_randomness_ratio
+     */
     fun getRandomnessRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, handle)
     }
 
+    /**
+     * Particle lifetime randomness ratio.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_lifetime_randomness
+     */
     fun getLifetimeRandomness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, handle)
     }
 
+    /**
+     * If `true`, particles use the parent node's coordinate space (known as local coordinates). This
+     * will cause particles to move and rotate along the `CPUParticles2D` node (and its parents) when
+     * it is moved or rotated. If `false`, particles use global coordinates; they will not move or
+     * rotate along the `CPUParticles2D` node (and its parents) when it is moved or rotated.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_use_local_coordinates
+     */
     fun getUseLocalCoordinates(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, handle)
     }
 
+    /**
+     * The particle system's frame rate is fixed to a value. For example, changing the value to 2 will
+     * make the particles render at 2 frames per second. Note this does not slow down the simulation of
+     * the particle system itself.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_fixed_fps
+     */
     fun getFixedFps(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, handle)
     }
 
+    /**
+     * If `true`, results in fractional delta calculation which has a smoother particles display
+     * effect.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_fractional_delta
+     */
     fun getFractionalDelta(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, handle)
     }
 
+    /**
+     * Particle system's running speed scaling ratio. A value of `0` can be used to pause the
+     * particles.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_speed_scale
+     */
     fun getSpeedScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
+    /**
+     * If `true`, particles will use the same seed for every simulation using the seed defined in
+     * `seed`. This is useful for situations where the visual outcome should be consistent across
+     * replays, for example when using Movie Maker mode.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_use_fixed_seed
+     */
     fun setUseFixedSeed(useFixedSeed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, handle, useFixedSeed)
     }
 
+    /**
+     * If `true`, particles will use the same seed for every simulation using the seed defined in
+     * `seed`. This is useful for situations where the visual outcome should be consistent across
+     * replays, for example when using Movie Maker mode.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_use_fixed_seed
+     */
     fun getUseFixedSeed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, handle)
     }
 
+    /**
+     * Sets the random seed used by the particle system. Only effective if `use_fixed_seed` is `true`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_seed
+     */
     fun setSeed(seed: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, handle, seed)
     }
 
+    /**
+     * Sets the random seed used by the particle system. Only effective if `use_fixed_seed` is `true`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_seed
+     */
     fun getSeed(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, handle)
     }
 
+    /**
+     * Particle draw order.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_draw_order
+     */
     fun setDrawOrder(order: Long) {
         ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, handle, order)
     }
 
+    /**
+     * Particle draw order.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_draw_order
+     */
     fun getDrawOrder(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, handle)
     }
 
+    /**
+     * Particle texture. If `null`, particles will be squares.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_texture
+     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Particle texture. If `null`, particles will be squares.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_texture
+     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
@@ -352,174 +549,404 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         ObjectCalls.ptrcallWithBoolArg(restartBind, handle, keepSeed)
     }
 
+    /**
+     * Unit vector specifying the particles' emission direction.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_direction
+     */
     fun setDirection(direction: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setDirectionBind, handle, direction)
     }
 
+    /**
+     * Unit vector specifying the particles' emission direction.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_direction
+     */
     fun getDirection(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getDirectionBind, handle)
     }
 
+    /**
+     * Each particle's initial direction range from `+spread` to `-spread` degrees.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_spread
+     */
     fun setSpread(spread: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, spread)
     }
 
+    /**
+     * Each particle's initial direction range from `+spread` to `-spread` degrees.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_spread
+     */
     fun getSpread(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
     }
 
+    /**
+     * Minimum equivalent of `tangential_accel_max`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_param_min
+     */
     fun setParamMin(param: Long, value: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, handle, param, value)
     }
 
+    /**
+     * Minimum equivalent of `tangential_accel_max`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_param_min
+     */
     fun getParamMin(param: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, handle, param)
     }
 
+    /**
+     * Maximum tangential acceleration applied to each particle. Tangential acceleration is
+     * perpendicular to the particle's velocity giving the particles a swirling motion.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_param_max
+     */
     fun setParamMax(param: Long, value: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, handle, param, value)
     }
 
+    /**
+     * Maximum tangential acceleration applied to each particle. Tangential acceleration is
+     * perpendicular to the particle's velocity giving the particles a swirling motion.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_param_max
+     */
     fun getParamMax(param: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, handle, param)
     }
 
+    /**
+     * Each particle's tangential acceleration will vary along this `Curve`. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_param_curve
+     */
     fun setParamCurve(param: Long, curve: Curve?) {
         ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, handle, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Each particle's tangential acceleration will vary along this `Curve`. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_param_curve
+     */
     fun getParamCurve(param: Long): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, handle, param))
     }
 
+    /**
+     * Each particle's initial color. If `texture` is defined, it will be multiplied by this color.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_color
+     */
     fun setColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
+    /**
+     * Each particle's initial color. If `texture` is defined, it will be multiplied by this color.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_color
+     */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
+    /**
+     * Each particle's color will vary along this `Gradient` over its lifetime (multiplied with
+     * `color`).
+     *
+     * Generated from Godot docs: CPUParticles2D.set_color_ramp
+     */
     fun setColorRamp(ramp: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Each particle's color will vary along this `Gradient` over its lifetime (multiplied with
+     * `color`).
+     *
+     * Generated from Godot docs: CPUParticles2D.get_color_ramp
+     */
     fun getColorRamp(): Gradient? {
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
     }
 
+    /**
+     * Each particle's initial color will vary along this `Gradient` (multiplied with `color`).
+     *
+     * Generated from Godot docs: CPUParticles2D.set_color_initial_ramp
+     */
     fun setColorInitialRamp(ramp: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Each particle's initial color will vary along this `Gradient` (multiplied with `color`).
+     *
+     * Generated from Godot docs: CPUParticles2D.get_color_initial_ramp
+     */
     fun getColorInitialRamp(): Gradient? {
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, handle))
     }
 
+    /**
+     * Align Y axis of particle with the direction of its velocity.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_particle_flag
+     */
     fun setParticleFlag(particleFlag: Long, enable: Boolean) {
         ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, handle, particleFlag, enable)
     }
 
+    /**
+     * Align Y axis of particle with the direction of its velocity.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_particle_flag
+     */
     fun getParticleFlag(particleFlag: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, handle, particleFlag)
     }
 
+    /**
+     * Particles will be emitted inside this region.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_shape
+     */
     fun setEmissionShape(shape: Long) {
         ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, handle, shape)
     }
 
+    /**
+     * Particles will be emitted inside this region.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_shape
+     */
     fun getEmissionShape(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, handle)
     }
 
+    /**
+     * The sphere's radius if `emission_shape` is set to `EMISSION_SHAPE_SPHERE`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_sphere_radius
+     */
     fun setEmissionSphereRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, handle, radius)
     }
 
+    /**
+     * The sphere's radius if `emission_shape` is set to `EMISSION_SHAPE_SPHERE`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_sphere_radius
+     */
     fun getEmissionSphereRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, handle)
     }
 
+    /**
+     * The rectangle's extents if `emission_shape` is set to `EMISSION_SHAPE_RECTANGLE`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_rect_extents
+     */
     fun setEmissionRectExtents(extents: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setEmissionRectExtentsBind, handle, extents)
     }
 
+    /**
+     * The rectangle's extents if `emission_shape` is set to `EMISSION_SHAPE_RECTANGLE`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_rect_extents
+     */
     fun getEmissionRectExtents(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getEmissionRectExtentsBind, handle)
     }
 
+    /**
+     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
+     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_points
+     */
     fun setEmissionPoints(array: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionPointsBind, handle, array)
     }
 
+    /**
+     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
+     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_points
+     */
     fun getEmissionPoints(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionPointsBind, handle)
     }
 
+    /**
+     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_normals
+     */
     fun setEmissionNormals(array: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionNormalsBind, handle, array)
     }
 
+    /**
+     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_normals
+     */
     fun getEmissionNormals(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionNormalsBind, handle)
     }
 
+    /**
+     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
+     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_colors
+     */
     fun setEmissionColors(array: List<Color>) {
         ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, handle, array)
     }
 
+    /**
+     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
+     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_colors
+     */
     fun getEmissionColors(): List<Color> {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getEmissionColorsBind, handle)
     }
 
+    /**
+     * The ring's inner radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_ring_inner_radius
+     */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, handle, innerRadius)
     }
 
+    /**
+     * The ring's inner radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_ring_inner_radius
+     */
     fun getEmissionRingInnerRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, handle)
     }
 
+    /**
+     * The ring's outer radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_ring_radius
+     */
     fun setEmissionRingRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, handle, radius)
     }
 
+    /**
+     * The ring's outer radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_emission_ring_radius
+     */
     fun getEmissionRingRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, handle)
     }
 
+    /**
+     * Gravity applied to every particle.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_gravity
+     */
     fun getGravity(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, handle)
     }
 
+    /**
+     * Gravity applied to every particle.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_gravity
+     */
     fun setGravity(accelVec: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setGravityBind, handle, accelVec)
     }
 
+    /**
+     * If `true`, the scale curve will be split into x and y components. See `scale_curve_x` and
+     * `scale_curve_y`.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_split_scale
+     */
     fun getSplitScale(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getSplitScaleBind, handle)
     }
 
+    /**
+     * If `true`, the scale curve will be split into x and y components. See `scale_curve_x` and
+     * `scale_curve_y`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_split_scale
+     */
     fun setSplitScale(splitScale: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSplitScaleBind, handle, splitScale)
     }
 
+    /**
+     * Each particle's horizontal scale will vary along this `Curve`. Should be a unit `Curve`.
+     * `split_scale` must be enabled.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_scale_curve_x
+     */
     fun getScaleCurveX(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, handle))
     }
 
+    /**
+     * Each particle's horizontal scale will vary along this `Curve`. Should be a unit `Curve`.
+     * `split_scale` must be enabled.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_scale_curve_x
+     */
     fun setScaleCurveX(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Each particle's vertical scale will vary along this `Curve`. Should be a unit `Curve`.
+     * `split_scale` must be enabled.
+     *
+     * Generated from Godot docs: CPUParticles2D.get_scale_curve_y
+     */
     fun getScaleCurveY(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, handle))
     }
 
+    /**
+     * Each particle's vertical scale will vary along this `Curve`. Should be a unit `Curve`.
+     * `split_scale` must be enabled.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_scale_curve_y
+     */
     fun setScaleCurveY(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Sets this node's properties to match a given `GPUParticles2D` node with an assigned
+     * `ParticleProcessMaterial`.
+     *
+     * Generated from Godot docs: CPUParticles2D.convert_from_particles
+     */
     fun convertFromParticles(particles: Node) {
         ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, handle, listOf(particles.handle))
     }

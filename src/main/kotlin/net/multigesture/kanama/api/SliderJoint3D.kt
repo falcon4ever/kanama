@@ -10,10 +10,20 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: SliderJoint3D
  */
 class SliderJoint3D(handle: MemorySegment) : Joint3D(handle) {
+    /**
+     * A factor applied to the movement across axes orthogonal to the slider.
+     *
+     * Generated from Godot docs: SliderJoint3D.set_param
+     */
     fun setParam(param: Long, value: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
     }
 
+    /**
+     * A factor applied to the movement across axes orthogonal to the slider.
+     *
+     * Generated from Godot docs: SliderJoint3D.get_param
+     */
     fun getParam(param: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
     }

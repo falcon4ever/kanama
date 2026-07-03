@@ -28,26 +28,58 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setIntersectionShaderProperty")
         set(value) = setIntersectionShader(value)
 
+    /**
+     * Closest-hit shader for this hit group. Executed for the closest intersection. Can be `null`.
+     *
+     * Generated from Godot docs: RDHitGroup.set_closest_hit_shader
+     */
     fun setClosestHitShader(pMember: RDPipelineShader?) {
         ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Closest-hit shader for this hit group. Executed for the closest intersection. Can be `null`.
+     *
+     * Generated from Godot docs: RDHitGroup.get_closest_hit_shader
+     */
     fun getClosestHitShader(): RDPipelineShader? {
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, handle))
     }
 
+    /**
+     * Any-hit shader for this hit group. Executed for each potential intersection. Can be `null`.
+     *
+     * Generated from Godot docs: RDHitGroup.set_any_hit_shader
+     */
     fun setAnyHitShader(pMember: RDPipelineShader?) {
         ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Any-hit shader for this hit group. Executed for each potential intersection. Can be `null`.
+     *
+     * Generated from Godot docs: RDHitGroup.get_any_hit_shader
+     */
     fun getAnyHitShader(): RDPipelineShader? {
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, handle))
     }
 
+    /**
+     * Intersection shader for this hit group. Required for non-triangle geometry. Must be `null` when
+     * using for triangle geometry.
+     *
+     * Generated from Godot docs: RDHitGroup.set_intersection_shader
+     */
     fun setIntersectionShader(pMember: RDPipelineShader?) {
         ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Intersection shader for this hit group. Required for non-triangle geometry. Must be `null` when
+     * using for triangle geometry.
+     *
+     * Generated from Godot docs: RDHitGroup.get_intersection_shader
+     */
     fun getIntersectionShader(): RDPipelineShader? {
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, handle))
     }

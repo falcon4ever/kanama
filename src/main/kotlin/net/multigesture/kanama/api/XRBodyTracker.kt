@@ -23,34 +23,74 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
         @JvmName("setBodyFlagsProperty")
         set(value) = setBodyFlags(value)
 
+    /**
+     * If `true`, the body tracking data is valid.
+     *
+     * Generated from Godot docs: XRBodyTracker.set_has_tracking_data
+     */
     fun setHasTrackingData(hasData: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
     }
 
+    /**
+     * If `true`, the body tracking data is valid.
+     *
+     * Generated from Godot docs: XRBodyTracker.get_has_tracking_data
+     */
     fun getHasTrackingData(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
+    /**
+     * The type of body tracking data captured.
+     *
+     * Generated from Godot docs: XRBodyTracker.set_body_flags
+     */
     fun setBodyFlags(flags: Long) {
         ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, handle, flags)
     }
 
+    /**
+     * The type of body tracking data captured.
+     *
+     * Generated from Godot docs: XRBodyTracker.get_body_flags
+     */
     fun getBodyFlags(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, handle)
     }
 
+    /**
+     * Sets flags about the validity of the tracking data for the given body joint.
+     *
+     * Generated from Godot docs: XRBodyTracker.set_joint_flags
+     */
     fun setJointFlags(joint: Long, flags: Long) {
         ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, handle, joint, flags)
     }
 
+    /**
+     * Returns flags about the validity of the tracking data for the given body joint.
+     *
+     * Generated from Godot docs: XRBodyTracker.get_joint_flags
+     */
     fun getJointFlags(joint: Long): Long {
         return ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, handle, joint)
     }
 
+    /**
+     * Sets the transform for the given body joint.
+     *
+     * Generated from Godot docs: XRBodyTracker.set_joint_transform
+     */
     fun setJointTransform(joint: Long, transform: Transform3D) {
         ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, handle, joint, transform)
     }
 
+    /**
+     * Returns the transform for the given body joint.
+     *
+     * Generated from Godot docs: XRBodyTracker.get_joint_transform
+     */
     fun getJointTransform(joint: Long): Transform3D {
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, handle, joint)
     }

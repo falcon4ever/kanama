@@ -101,130 +101,320 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
         @JvmName("setOversamplingProperty")
         set(value) = setOversampling(value)
 
+    /**
+     * Font anti-aliasing mode.
+     *
+     * Generated from Godot docs: SystemFont.set_antialiasing
+     */
     fun setAntialiasing(antialiasing: Long) {
         ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
     }
 
+    /**
+     * Font anti-aliasing mode.
+     *
+     * Generated from Godot docs: SystemFont.get_antialiasing
+     */
     fun getAntialiasing(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
     }
 
+    /**
+     * If set to `true`, embedded font bitmap loading is disabled (bitmap-only and color fonts ignore
+     * this property).
+     *
+     * Generated from Godot docs: SystemFont.set_disable_embedded_bitmaps
+     */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
     }
 
+    /**
+     * If set to `true`, embedded font bitmap loading is disabled (bitmap-only and color fonts ignore
+     * this property).
+     *
+     * Generated from Godot docs: SystemFont.get_disable_embedded_bitmaps
+     */
     fun getDisableEmbeddedBitmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
     }
 
+    /**
+     * If set to `true`, generate mipmaps for the font textures.
+     *
+     * Generated from Godot docs: SystemFont.set_generate_mipmaps
+     */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
     }
 
+    /**
+     * If set to `true`, generate mipmaps for the font textures.
+     *
+     * Generated from Godot docs: SystemFont.get_generate_mipmaps
+     */
     fun getGenerateMipmaps(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
     }
 
+    /**
+     * If set to `true`, system fonts can be automatically used as fallbacks.
+     *
+     * Generated from Godot docs: SystemFont.set_allow_system_fallback
+     */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
     }
 
+    /**
+     * If set to `true`, system fonts can be automatically used as fallbacks.
+     *
+     * Generated from Godot docs: SystemFont.is_allow_system_fallback
+     */
     fun isAllowSystemFallback(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
     }
 
+    /**
+     * If set to `true`, auto-hinting is supported and preferred over font built-in hinting.
+     *
+     * Generated from Godot docs: SystemFont.set_force_autohinter
+     */
     fun setForceAutohinter(forceAutohinter: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
     }
 
+    /**
+     * If set to `true`, auto-hinting is supported and preferred over font built-in hinting.
+     *
+     * Generated from Godot docs: SystemFont.is_force_autohinter
+     */
     fun isForceAutohinter(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
     }
 
+    /**
+     * If set to `true`, color modulation is applied when drawing colored glyphs, otherwise it's
+     * applied to the monochrome glyphs only.
+     *
+     * Generated from Godot docs: SystemFont.set_modulate_color_glyphs
+     */
     fun setModulateColorGlyphs(modulate: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
     }
 
+    /**
+     * If set to `true`, color modulation is applied when drawing colored glyphs, otherwise it's
+     * applied to the monochrome glyphs only.
+     *
+     * Generated from Godot docs: SystemFont.is_modulate_color_glyphs
+     */
     fun isModulateColorGlyphs(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
     }
 
+    /**
+     * Font hinting mode.
+     *
+     * Generated from Godot docs: SystemFont.set_hinting
+     */
     fun setHinting(hinting: Long) {
         ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
     }
 
+    /**
+     * Font hinting mode.
+     *
+     * Generated from Godot docs: SystemFont.get_hinting
+     */
     fun getHinting(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
     }
 
+    /**
+     * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
+     * kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use
+     * `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font size.
+     *
+     * Generated from Godot docs: SystemFont.set_subpixel_positioning
+     */
     fun setSubpixelPositioning(subpixelPositioning: Long) {
         ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
     }
 
+    /**
+     * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
+     * kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use
+     * `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font size.
+     *
+     * Generated from Godot docs: SystemFont.get_subpixel_positioning
+     */
     fun getSubpixelPositioning(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
     }
 
+    /**
+     * If set to `true`, when aligning glyphs to the pixel boundaries rounding remainders are
+     * accumulated to ensure more uniform glyph distribution. This setting has no effect if subpixel
+     * positioning is enabled.
+     *
+     * Generated from Godot docs: SystemFont.set_keep_rounding_remainders
+     */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
     }
 
+    /**
+     * If set to `true`, when aligning glyphs to the pixel boundaries rounding remainders are
+     * accumulated to ensure more uniform glyph distribution. This setting has no effect if subpixel
+     * positioning is enabled.
+     *
+     * Generated from Godot docs: SystemFont.get_keep_rounding_remainders
+     */
     fun getKeepRoundingRemainders(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
     }
 
+    /**
+     * If set to `true`, glyphs of all sizes are rendered using single multichannel signed distance
+     * field generated from the dynamic font vector data.
+     *
+     * Generated from Godot docs: SystemFont.set_multichannel_signed_distance_field
+     */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
     }
 
+    /**
+     * If set to `true`, glyphs of all sizes are rendered using single multichannel signed distance
+     * field generated from the dynamic font vector data.
+     *
+     * Generated from Godot docs: SystemFont.is_multichannel_signed_distance_field
+     */
     fun isMultichannelSignedDistanceField(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
     }
 
+    /**
+     * The width of the range around the shape between the minimum and maximum representable signed
+     * distance. If using font outlines, `msdf_pixel_range` must be set to at least twice the size of
+     * the largest font outline. The default `msdf_pixel_range` value of `16` allows outline sizes up
+     * to `8` to look correct.
+     *
+     * Generated from Godot docs: SystemFont.set_msdf_pixel_range
+     */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
     }
 
+    /**
+     * The width of the range around the shape between the minimum and maximum representable signed
+     * distance. If using font outlines, `msdf_pixel_range` must be set to at least twice the size of
+     * the largest font outline. The default `msdf_pixel_range` value of `16` allows outline sizes up
+     * to `8` to look correct.
+     *
+     * Generated from Godot docs: SystemFont.get_msdf_pixel_range
+     */
     fun getMsdfPixelRange(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
     }
 
+    /**
+     * Source font size used to generate MSDF textures. Higher values allow for more precision, but are
+     * slower to render and require more memory. Only increase this value if you notice a visible lack
+     * of precision in glyph rendering.
+     *
+     * Generated from Godot docs: SystemFont.set_msdf_size
+     */
     fun setMsdfSize(msdfSize: Int) {
         ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
     }
 
+    /**
+     * Source font size used to generate MSDF textures. Higher values allow for more precision, but are
+     * slower to render and require more memory. Only increase this value if you notice a visible lack
+     * of precision in glyph rendering.
+     *
+     * Generated from Godot docs: SystemFont.get_msdf_size
+     */
     fun getMsdfSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
     }
 
+    /**
+     * If set to a positive value, overrides the oversampling factor of the viewport this font is used
+     * in. See `Viewport.oversampling`. This value doesn't override the `oversampling` parameter of
+     * `draw_*` methods.
+     *
+     * Generated from Godot docs: SystemFont.set_oversampling
+     */
     fun setOversampling(oversampling: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
     }
 
+    /**
+     * If set to a positive value, overrides the oversampling factor of the viewport this font is used
+     * in. See `Viewport.oversampling`. This value doesn't override the `oversampling` parameter of
+     * `draw_*` methods.
+     *
+     * Generated from Godot docs: SystemFont.get_oversampling
+     */
     fun getOversampling(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
     }
 
+    /**
+     * Array of font family names to search, first matching font found is used.
+     *
+     * Generated from Godot docs: SystemFont.get_font_names
+     */
     fun getFontNames(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontNamesBind, handle)
     }
 
+    /**
+     * Array of font family names to search, first matching font found is used.
+     *
+     * Generated from Godot docs: SystemFont.set_font_names
+     */
     fun setFontNames(names: List<String>) {
         ObjectCalls.ptrcallWithPackedStringListArg(setFontNamesBind, handle, names)
     }
 
+    /**
+     * If set to `true`, italic or oblique font is preferred.
+     *
+     * Generated from Godot docs: SystemFont.get_font_italic
+     */
     fun getFontItalic(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getFontItalicBind, handle)
     }
 
+    /**
+     * If set to `true`, italic or oblique font is preferred.
+     *
+     * Generated from Godot docs: SystemFont.set_font_italic
+     */
     fun setFontItalic(italic: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFontItalicBind, handle, italic)
     }
 
+    /**
+     * Preferred weight (boldness) of the font. A value in the `100...999` range, normal font weight is
+     * `400`, bold font weight is `700`.
+     *
+     * Generated from Godot docs: SystemFont.set_font_weight
+     */
     fun setFontWeight(weight: Int) {
         ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
     }
 
+    /**
+     * Preferred font stretch amount, compared to a normal width. A percentage value between `50%` and
+     * `200%`.
+     *
+     * Generated from Godot docs: SystemFont.set_font_stretch
+     */
     fun setFontStretch(stretch: Int) {
         ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
     }

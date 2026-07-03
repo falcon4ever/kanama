@@ -23,18 +23,38 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setSpecializationConstantsProperty")
         set(value) = setSpecializationConstants(value)
 
+    /**
+     * Shader resource. The required stage is selected by the pipeline.
+     *
+     * Generated from Godot docs: RDPipelineShader.set_shader
+     */
     fun setShader(pMember: RID) {
         ObjectCalls.ptrcallWithRIDArg(setShaderBind, handle, pMember)
     }
 
+    /**
+     * Shader resource. The required stage is selected by the pipeline.
+     *
+     * Generated from Godot docs: RDPipelineShader.get_shader
+     */
     fun getShader(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, handle)
     }
 
+    /**
+     * Specialization constants applied to the selected shader stage at pipeline creation time.
+     *
+     * Generated from Godot docs: RDPipelineShader.set_specialization_constants
+     */
     fun setSpecializationConstants(specializationConstants: List<RDPipelineSpecializationConstant>) {
         ObjectCalls.ptrcallWithObjectListArg(setSpecializationConstantsBind, handle, specializationConstants)
     }
 
+    /**
+     * Specialization constants applied to the selected shader stage at pipeline creation time.
+     *
+     * Generated from Godot docs: RDPipelineShader.get_specialization_constants
+     */
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, handle, RDPipelineSpecializationConstant::fromHandle)
     }

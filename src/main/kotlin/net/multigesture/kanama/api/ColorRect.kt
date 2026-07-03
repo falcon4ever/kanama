@@ -17,10 +17,20 @@ class ColorRect(handle: MemorySegment) : Control(handle) {
         @JvmName("setColorProperty")
         set(value) = setColor(value)
 
+    /**
+     * The fill color of the rectangle.
+     *
+     * Generated from Godot docs: ColorRect.set_color
+     */
     fun setColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
+    /**
+     * The fill color of the rectangle.
+     *
+     * Generated from Godot docs: ColorRect.get_color
+     */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }

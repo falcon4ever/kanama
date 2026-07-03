@@ -9,6 +9,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: AudioStreamPlaybackResampled
  */
 open class AudioStreamPlaybackResampled(handle: MemorySegment) : AudioStreamPlayback(handle) {
+    /**
+     * Called when an `AudioStream` is played. Clears the cubic interpolation history and starts mixing
+     * by calling `_mix_resampled`.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackResampled.begin_resample
+     */
     fun beginResample() {
         ObjectCalls.ptrcallNoArgs(beginResampleBind, handle)
     }

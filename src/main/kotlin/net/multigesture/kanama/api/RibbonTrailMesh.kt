@@ -46,50 +46,118 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setCurveProperty")
         set(value) = setCurve(value)
 
+    /**
+     * The baseline size of the ribbon. The size of a particular section segment is obtained by
+     * multiplying this size by the value of the `curve` at the given distance.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.set_size
+     */
     fun setSize(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSizeBind, handle, size)
     }
 
+    /**
+     * The baseline size of the ribbon. The size of a particular section segment is obtained by
+     * multiplying this size by the value of the `curve` at the given distance.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.get_size
+     */
     fun getSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, handle)
     }
 
+    /**
+     * The total number of sections on the ribbon.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.set_sections
+     */
     fun setSections(sections: Int) {
         ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
     }
 
+    /**
+     * The total number of sections on the ribbon.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.get_sections
+     */
     fun getSections(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
     }
 
+    /**
+     * The length of a section of the ribbon.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.set_section_length
+     */
     fun setSectionLength(sectionLength: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
     }
 
+    /**
+     * The length of a section of the ribbon.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.get_section_length
+     */
     fun getSectionLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
     }
 
+    /**
+     * The number of segments in a section. The `curve` is sampled on each segment to determine its
+     * size. Higher values result in a more detailed ribbon at the cost of performance.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.set_section_segments
+     */
     fun setSectionSegments(sectionSegments: Int) {
         ObjectCalls.ptrcallWithIntArg(setSectionSegmentsBind, handle, sectionSegments)
     }
 
+    /**
+     * The number of segments in a section. The `curve` is sampled on each segment to determine its
+     * size. Higher values result in a more detailed ribbon at the cost of performance.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.get_section_segments
+     */
     fun getSectionSegments(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionSegmentsBind, handle)
     }
 
+    /**
+     * Determines the size of the ribbon along its length. The size of a particular section segment is
+     * obtained by multiplying the baseline `size` by the value of this curve at the given distance.
+     * For values smaller than `0`, the faces will be inverted. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.set_curve
+     */
     fun setCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Determines the size of the ribbon along its length. The size of a particular section segment is
+     * obtained by multiplying the baseline `size` by the value of this curve at the given distance.
+     * For values smaller than `0`, the faces will be inverted. Should be a unit `Curve`.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.get_curve
+     */
     fun getCurve(): Curve? {
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 
+    /**
+     * Determines the shape of the ribbon.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.set_shape
+     */
     fun setShape(shape: Long) {
         ObjectCalls.ptrcallWithLongArg(setShapeBind, handle, shape)
     }
 
+    /**
+     * Determines the shape of the ribbon.
+     *
+     * Generated from Godot docs: RibbonTrailMesh.get_shape
+     */
     fun getShape(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, handle)
     }

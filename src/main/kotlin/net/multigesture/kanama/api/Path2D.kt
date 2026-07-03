@@ -16,10 +16,20 @@ class Path2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setCurveProperty")
         set(value) = setCurve(value)
 
+    /**
+     * A `Curve2D` describing the path.
+     *
+     * Generated from Godot docs: Path2D.set_curve
+     */
     fun setCurve(curve: Curve2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * A `Curve2D` describing the path.
+     *
+     * Generated from Godot docs: Path2D.get_curve
+     */
     fun getCurve(): Curve2D? {
         return Curve2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }

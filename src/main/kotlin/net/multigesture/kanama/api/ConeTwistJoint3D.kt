@@ -10,10 +10,22 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ConeTwistJoint3D
  */
 class ConeTwistJoint3D(handle: MemorySegment) : Joint3D(handle) {
+    /**
+     * Twist is the rotation around the twist axis, this value defined how far the joint can twist.
+     * Twist is locked if below 0.05.
+     *
+     * Generated from Godot docs: ConeTwistJoint3D.set_param
+     */
     fun setParam(param: Long, value: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
     }
 
+    /**
+     * Twist is the rotation around the twist axis, this value defined how far the joint can twist.
+     * Twist is locked if below 0.05.
+     *
+     * Generated from Godot docs: ConeTwistJoint3D.get_param
+     */
     fun getParam(param: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
     }

@@ -9,82 +9,188 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ConvertTransformModifier3D
  */
 class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
+    /**
+     * Sets the operation of the remapping destination transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_apply_transform_mode
+     */
     fun setApplyTransformMode(index: Int, transformMode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setApplyTransformModeBind, handle, index, transformMode)
     }
 
+    /**
+     * Returns the operation of the remapping destination transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_apply_transform_mode
+     */
     fun getApplyTransformMode(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getApplyTransformModeBind, handle, index)
     }
 
+    /**
+     * Sets the axis of the remapping destination transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_apply_axis
+     */
     fun setApplyAxis(index: Int, axis: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setApplyAxisBind, handle, index, axis)
     }
 
+    /**
+     * Returns the axis of the remapping destination transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_apply_axis
+     */
     fun getApplyAxis(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getApplyAxisBind, handle, index)
     }
 
+    /**
+     * Sets the minimum value of the remapping destination range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_apply_range_min
+     */
     fun setApplyRangeMin(index: Int, rangeMin: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMinBind, handle, index, rangeMin)
     }
 
+    /**
+     * Returns the minimum value of the remapping destination range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_apply_range_min
+     */
     fun getApplyRangeMin(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMinBind, handle, index)
     }
 
+    /**
+     * Sets the maximum value of the remapping destination range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_apply_range_max
+     */
     fun setApplyRangeMax(index: Int, rangeMax: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMaxBind, handle, index, rangeMax)
     }
 
+    /**
+     * Returns the maximum value of the remapping destination range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_apply_range_max
+     */
     fun getApplyRangeMax(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMaxBind, handle, index)
     }
 
+    /**
+     * Sets the operation of the remapping source transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_reference_transform_mode
+     */
     fun setReferenceTransformMode(index: Int, transformMode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTransformModeBind, handle, index, transformMode)
     }
 
+    /**
+     * Returns the operation of the remapping source transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_reference_transform_mode
+     */
     fun getReferenceTransformMode(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTransformModeBind, handle, index)
     }
 
+    /**
+     * Sets the axis of the remapping source transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_reference_axis
+     */
     fun setReferenceAxis(index: Int, axis: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceAxisBind, handle, index, axis)
     }
 
+    /**
+     * Returns the axis of the remapping source transform.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_reference_axis
+     */
     fun getReferenceAxis(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceAxisBind, handle, index)
     }
 
+    /**
+     * Sets the minimum value of the remapping source range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_reference_range_min
+     */
     fun setReferenceRangeMin(index: Int, rangeMin: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMinBind, handle, index, rangeMin)
     }
 
+    /**
+     * Returns the minimum value of the remapping source range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_reference_range_min
+     */
     fun getReferenceRangeMin(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMinBind, handle, index)
     }
 
+    /**
+     * Sets the maximum value of the remapping source range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_reference_range_max
+     */
     fun setReferenceRangeMax(index: Int, rangeMax: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMaxBind, handle, index, rangeMax)
     }
 
+    /**
+     * Returns the maximum value of the remapping source range.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.get_reference_range_max
+     */
     fun getReferenceRangeMax(index: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMaxBind, handle, index)
     }
 
+    /**
+     * Sets relative option in the setting at `index` to `enabled`. If sets `enabled` to `true`, the
+     * extracted and applying transform is relative to the rest. If sets `enabled` to `false`, the
+     * extracted transform is absolute.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_relative
+     */
     fun setRelative(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if the relative option is enabled in the setting at `index`.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.is_relative
+     */
     fun isRelative(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, handle, index)
     }
 
+    /**
+     * Sets additive option in the setting at `index` to `enabled`. This mainly affects the process of
+     * applying transform to the `BoneConstraint3D.set_apply_bone`. If sets `enabled` to `true`, the
+     * processed transform is added to the pose of the current apply bone. If sets `enabled` to
+     * `false`, the pose of the current apply bone is replaced with the processed transform. However,
+     * if set `set_relative` to `true`, the transform is relative to rest.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_additive
+     */
     fun setAdditive(index: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, handle, index, enabled)
     }
 
+    /**
+     * Returns `true` if the additive option is enabled in the setting at `index`.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.is_additive
+     */
     fun isAdditive(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, handle, index)
     }

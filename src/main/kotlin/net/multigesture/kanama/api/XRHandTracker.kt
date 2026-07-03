@@ -24,58 +24,128 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
         @JvmName("setHandTrackingSourceProperty")
         set(value) = setHandTrackingSource(value)
 
+    /**
+     * If `true`, the hand tracking data is valid.
+     *
+     * Generated from Godot docs: XRHandTracker.set_has_tracking_data
+     */
     fun setHasTrackingData(hasData: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
     }
 
+    /**
+     * If `true`, the hand tracking data is valid.
+     *
+     * Generated from Godot docs: XRHandTracker.get_has_tracking_data
+     */
     fun getHasTrackingData(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
+    /**
+     * The source of the hand tracking data.
+     *
+     * Generated from Godot docs: XRHandTracker.set_hand_tracking_source
+     */
     fun setHandTrackingSource(source: Long) {
         ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, handle, source)
     }
 
+    /**
+     * The source of the hand tracking data.
+     *
+     * Generated from Godot docs: XRHandTracker.get_hand_tracking_source
+     */
     fun getHandTrackingSource(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, handle)
     }
 
+    /**
+     * Sets flags about the validity of the tracking data for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.set_hand_joint_flags
+     */
     fun setHandJointFlags(joint: Long, flags: Long) {
         ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, handle, joint, flags)
     }
 
+    /**
+     * Returns flags about the validity of the tracking data for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.get_hand_joint_flags
+     */
     fun getHandJointFlags(joint: Long): Long {
         return ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, handle, joint)
     }
 
+    /**
+     * Sets the transform for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.set_hand_joint_transform
+     */
     fun setHandJointTransform(joint: Long, transform: Transform3D) {
         ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, handle, joint, transform)
     }
 
+    /**
+     * Returns the transform for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.get_hand_joint_transform
+     */
     fun getHandJointTransform(joint: Long): Transform3D {
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, handle, joint)
     }
 
+    /**
+     * Sets the radius of the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.set_hand_joint_radius
+     */
     fun setHandJointRadius(joint: Long, radius: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, handle, joint, radius)
     }
 
+    /**
+     * Returns the radius of the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.get_hand_joint_radius
+     */
     fun getHandJointRadius(joint: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, handle, joint)
     }
 
+    /**
+     * Sets the linear velocity for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.set_hand_joint_linear_velocity
+     */
     fun setHandJointLinearVelocity(joint: Long, linearVelocity: Vector3) {
         ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, handle, joint, linearVelocity)
     }
 
+    /**
+     * Returns the linear velocity for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.get_hand_joint_linear_velocity
+     */
     fun getHandJointLinearVelocity(joint: Long): Vector3 {
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, handle, joint)
     }
 
+    /**
+     * Sets the angular velocity for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.set_hand_joint_angular_velocity
+     */
     fun setHandJointAngularVelocity(joint: Long, angularVelocity: Vector3) {
         ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, handle, joint, angularVelocity)
     }
 
+    /**
+     * Returns the angular velocity for the given hand joint.
+     *
+     * Generated from Godot docs: XRHandTracker.get_hand_joint_angular_velocity
+     */
     fun getHandJointAngularVelocity(joint: Long): Vector3 {
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, handle, joint)
     }

@@ -17,10 +17,20 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setPointsProperty")
         set(value) = setPoints(value)
 
+    /**
+     * The list of 3D points forming the convex polygon shape.
+     *
+     * Generated from Godot docs: ConvexPolygonShape3D.set_points
+     */
     fun setPoints(points: List<Vector3>) {
         ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, handle, points)
     }
 
+    /**
+     * The list of 3D points forming the convex polygon shape.
+     *
+     * Generated from Godot docs: ConvexPolygonShape3D.get_points
+     */
     fun getPoints(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPointsBind, handle)
     }

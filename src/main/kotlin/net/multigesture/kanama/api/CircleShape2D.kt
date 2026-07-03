@@ -16,10 +16,20 @@ class CircleShape2D(handle: MemorySegment) : Shape2D(handle) {
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
+    /**
+     * The circle's radius.
+     *
+     * Generated from Godot docs: CircleShape2D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The circle's radius.
+     *
+     * Generated from Godot docs: CircleShape2D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }

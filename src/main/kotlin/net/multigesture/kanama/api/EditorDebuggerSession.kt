@@ -9,34 +9,78 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorDebuggerSession
  */
 class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Sends the given `message` to the attached remote instance, optionally passing additionally
+     * `data`. See `EngineDebugger` for how to retrieve those messages.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.send_message
+     */
     fun sendMessage(message: String, data: List<Any?> = emptyList()) {
         ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, handle, message, data)
     }
 
+    /**
+     * Toggle the given `profiler` on the attached remote instance, optionally passing additionally
+     * `data`. See `EngineProfiler` for more details.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.toggle_profiler
+     */
     fun toggleProfiler(profiler: String, enable: Boolean, data: List<Any?> = emptyList()) {
         ObjectCalls.ptrcallWithStringBoolArrayArgs(toggleProfilerBind, handle, profiler, enable, data)
     }
 
+    /**
+     * Returns `true` if the attached remote instance is currently in the debug loop.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.is_breaked
+     */
     fun isBreaked(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isBreakedBind, handle)
     }
 
+    /**
+     * Returns `true` if the attached remote instance can be debugged.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.is_debuggable
+     */
     fun isDebuggable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDebuggableBind, handle)
     }
 
+    /**
+     * Returns `true` if the debug session is currently attached to a remote instance.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.is_active
+     */
     fun isActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
+    /**
+     * Adds the given `control` to the debug session UI in the debugger bottom panel. The `control`'s
+     * node name will be used as the tab title.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.add_session_tab
+     */
     fun addSessionTab(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(addSessionTabBind, handle, listOf(control.handle))
     }
 
+    /**
+     * Removes the given `control` from the debug session UI in the debugger bottom panel.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.remove_session_tab
+     */
     fun removeSessionTab(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(removeSessionTabBind, handle, listOf(control.handle))
     }
 
+    /**
+     * Enables or disables a specific breakpoint based on `enabled`, updating the Editor Breakpoint
+     * Panel accordingly.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.set_breakpoint
+     */
     fun setBreakpoint(path: String, line: Int, enabled: Boolean) {
         ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, handle, path, line, enabled)
     }

@@ -48,50 +48,126 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
         @JvmName("setCollideWithAreasProperty")
         set(value) = setCollideWithAreas(value)
 
+    /**
+     * The position being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.set_position
+     */
     fun setPosition(position: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
+    /**
+     * The position being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.get_position
+     */
     fun getPosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
+    /**
+     * If different from `0`, restricts the query to a specific canvas layer specified by its instance
+     * ID. See `Object.get_instance_id`. If `0`, restricts the query to the Viewport's default canvas
+     * layer.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.set_canvas_instance_id
+     */
     fun setCanvasInstanceId(canvasInstanceId: Long) {
         ObjectCalls.ptrcallWithLongArg(setCanvasInstanceIdBind, handle, canvasInstanceId)
     }
 
+    /**
+     * If different from `0`, restricts the query to a specific canvas layer specified by its instance
+     * ID. See `Object.get_instance_id`. If `0`, restricts the query to the Viewport's default canvas
+     * layer.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.get_canvas_instance_id
+     */
     fun getCanvasInstanceId(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCanvasInstanceIdBind, handle)
     }
 
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.set_collision_mask
+     */
     fun setCollisionMask(collisionMask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.get_collision_mask
+     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject2D.get_rid`
+     * to get the `RID` associated with a `CollisionObject2D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.set_exclude
+     */
     fun setExclude(exclude: List<RID>) {
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject2D.get_rid`
+     * to get the `RID` associated with a `CollisionObject2D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.get_exclude
+     */
     fun getExclude(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
+    /**
+     * If `true`, the query will take `PhysicsBody2D`s into account.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.set_collide_with_bodies
+     */
     fun setCollideWithBodies(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will take `PhysicsBody2D`s into account.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.is_collide_with_bodies_enabled
+     */
     fun isCollideWithBodiesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the query will take `Area2D`s into account.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.set_collide_with_areas
+     */
     fun setCollideWithAreas(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will take `Area2D`s into account.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters2D.is_collide_with_areas_enabled
+     */
     fun isCollideWithAreasEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }

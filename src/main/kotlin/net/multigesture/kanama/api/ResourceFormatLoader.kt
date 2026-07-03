@@ -3,7 +3,11 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
-/** Reference-counted resource loader extension object. Generated from Godot docs: ResourceFormatLoader */
+/**
+ * Loads a specific resource type from a file.
+ *
+ * Generated from Godot docs: ResourceFormatLoader
+ */
 class ResourceFormatLoader(handle: MemorySegment) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 

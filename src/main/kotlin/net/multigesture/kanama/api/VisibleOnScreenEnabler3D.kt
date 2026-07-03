@@ -23,18 +23,46 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
         @JvmName("setEnableNodePathProperty")
         set(value) = setEnableNodePath(value)
 
+    /**
+     * Determines how the target node is enabled. Corresponds to `Node.ProcessMode`. When the node is
+     * disabled, it always uses `Node.PROCESS_MODE_DISABLED`.
+     *
+     * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_mode
+     */
     fun setEnableMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setEnableModeBind, handle, mode)
     }
 
+    /**
+     * Determines how the target node is enabled. Corresponds to `Node.ProcessMode`. When the node is
+     * disabled, it always uses `Node.PROCESS_MODE_DISABLED`.
+     *
+     * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_mode
+     */
     fun getEnableMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, handle)
     }
 
+    /**
+     * The path to the target node, relative to the `VisibleOnScreenEnabler3D`. The target node is
+     * cached; it's only assigned when setting this property (if the `VisibleOnScreenEnabler3D` is
+     * inside the scene tree) and every time the `VisibleOnScreenEnabler3D` enters the scene tree. If
+     * the path is empty, no node will be affected. If the path is invalid, an error is also generated.
+     *
+     * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_node_path
+     */
     fun setEnableNodePath(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setEnableNodePathBind, handle, path)
     }
 
+    /**
+     * The path to the target node, relative to the `VisibleOnScreenEnabler3D`. The target node is
+     * cached; it's only assigned when setting this property (if the `VisibleOnScreenEnabler3D` is
+     * inside the scene tree) and every time the `VisibleOnScreenEnabler3D` enters the scene tree. If
+     * the path is empty, no node will be affected. If the path is invalid, an error is also generated.
+     *
+     * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_node_path
+     */
     fun getEnableNodePath(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, handle)
     }

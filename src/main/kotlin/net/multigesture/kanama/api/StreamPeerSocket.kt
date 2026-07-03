@@ -18,10 +18,20 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
+    /**
+     * Returns the status of the connection.
+     *
+     * Generated from Godot docs: StreamPeerSocket.get_status
+     */
     fun getStatus(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
+    /**
+     * Disconnects from host.
+     *
+     * Generated from Godot docs: StreamPeerSocket.disconnect_from_host
+     */
     fun disconnectFromHost() {
         ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, handle)
     }

@@ -42,42 +42,98 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setPathLengthProperty")
         set(value) = setPathLength(value)
 
+    /**
+     * The resulting path array from the navigation query. All path array positions are in global
+     * coordinates. Without customized query parameters this is the same path as returned by
+     * `NavigationServer3D.map_get_path`.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.set_path
+     */
     fun setPath(path: List<Vector3>) {
         ObjectCalls.ptrcallWithPackedVector3ListArg(setPathBind, handle, path)
     }
 
+    /**
+     * The resulting path array from the navigation query. All path array positions are in global
+     * coordinates. Without customized query parameters this is the same path as returned by
+     * `NavigationServer3D.map_get_path`.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.get_path
+     */
     fun getPath(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPathBind, handle)
     }
 
+    /**
+     * The type of navigation primitive (region or link) that each point of the path goes through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.set_path_types
+     */
     fun setPathTypes(pathTypes: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(setPathTypesBind, handle, pathTypes)
     }
 
+    /**
+     * The type of navigation primitive (region or link) that each point of the path goes through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.get_path_types
+     */
     fun getPathTypes(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
     }
 
+    /**
+     * The `RID`s of the regions and links that each point of the path goes through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.set_path_rids
+     */
     fun setPathRids(pathRids: List<RID>) {
         ObjectCalls.ptrcallWithRIDListArg(setPathRidsBind, handle, pathRids)
     }
 
+    /**
+     * The `RID`s of the regions and links that each point of the path goes through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.get_path_rids
+     */
     fun getPathRids(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getPathRidsBind, handle)
     }
 
+    /**
+     * The `ObjectID`s of the `Object`s which manage the regions and links each point of the path goes
+     * through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.set_path_owner_ids
+     */
     fun setPathOwnerIds(pathOwnerIds: List<Long>) {
         ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, handle, pathOwnerIds)
     }
 
+    /**
+     * The `ObjectID`s of the `Object`s which manage the regions and links each point of the path goes
+     * through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.get_path_owner_ids
+     */
     fun getPathOwnerIds(): List<Long> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, handle)
     }
 
+    /**
+     * Returns the length of the path.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.set_path_length
+     */
     fun setPathLength(length: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, handle, length)
     }
 
+    /**
+     * Returns the length of the path.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.get_path_length
+     */
     fun getPathLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, handle)
     }

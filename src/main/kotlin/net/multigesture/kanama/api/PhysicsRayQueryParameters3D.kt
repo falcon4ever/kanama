@@ -60,66 +60,162 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setHitBackFacesProperty")
         set(value) = setHitBackFaces(value)
 
+    /**
+     * The starting point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_from
+     */
     fun setFrom(from: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setFromBind, handle, from)
     }
 
+    /**
+     * The starting point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_from
+     */
     fun getFrom(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, handle)
     }
 
+    /**
+     * The ending point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_to
+     */
     fun setTo(to: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setToBind, handle, to)
     }
 
+    /**
+     * The ending point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_to
+     */
     fun getTo(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, handle)
     }
 
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collision_mask
+     */
     fun setCollisionMask(collisionMask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_collision_mask
+     */
     fun getCollisionMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject3D.get_rid`
+     * to get the `RID` associated with a `CollisionObject3D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_exclude
+     */
     fun setExclude(exclude: List<RID>) {
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject3D.get_rid`
+     * to get the `RID` associated with a `CollisionObject3D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_exclude
+     */
     fun getExclude(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
+    /**
+     * If `true`, the query will take `PhysicsBody3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collide_with_bodies
+     */
     fun setCollideWithBodies(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will take `PhysicsBody3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_collide_with_bodies_enabled
+     */
     fun isCollideWithBodiesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the query will take `Area3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collide_with_areas
+     */
     fun setCollideWithAreas(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will take `Area3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_collide_with_areas_enabled
+     */
     fun isCollideWithAreasEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the query will detect a hit when starting inside shapes. In this case the collision
+     * normal will be `Vector3(0, 0, 0)`. Does not affect concave polygon shapes or heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_hit_from_inside
+     */
     fun setHitFromInside(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will detect a hit when starting inside shapes. In this case the collision
+     * normal will be `Vector3(0, 0, 0)`. Does not affect concave polygon shapes or heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_hit_from_inside_enabled
+     */
     fun isHitFromInsideEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the query will hit back faces with concave polygon shapes with back face enabled or
+     * heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_hit_back_faces
+     */
     fun setHitBackFaces(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, handle, enable)
     }
 
+    /**
+     * If `true`, the query will hit back faces with concave polygon shapes with back face enabled or
+     * heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_hit_back_faces_enabled
+     */
     fun isHitBackFacesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, handle)
     }

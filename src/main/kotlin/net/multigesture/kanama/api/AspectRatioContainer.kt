@@ -34,34 +34,76 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setAlignmentVerticalProperty")
         set(value) = setAlignmentVertical(value)
 
+    /**
+     * The aspect ratio to enforce on child controls. This is the width divided by the height. The
+     * ratio depends on the `stretch_mode`.
+     *
+     * Generated from Godot docs: AspectRatioContainer.set_ratio
+     */
     fun setRatio(ratio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRatioBind, handle, ratio)
     }
 
+    /**
+     * The aspect ratio to enforce on child controls. This is the width divided by the height. The
+     * ratio depends on the `stretch_mode`.
+     *
+     * Generated from Godot docs: AspectRatioContainer.get_ratio
+     */
     fun getRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, handle)
     }
 
+    /**
+     * The stretch mode used to align child controls.
+     *
+     * Generated from Godot docs: AspectRatioContainer.set_stretch_mode
+     */
     fun setStretchMode(stretchMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setStretchModeBind, handle, stretchMode)
     }
 
+    /**
+     * The stretch mode used to align child controls.
+     *
+     * Generated from Godot docs: AspectRatioContainer.get_stretch_mode
+     */
     fun getStretchMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, handle)
     }
 
+    /**
+     * Specifies the horizontal relative position of child controls.
+     *
+     * Generated from Godot docs: AspectRatioContainer.set_alignment_horizontal
+     */
     fun setAlignmentHorizontal(alignmentHorizontal: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlignmentHorizontalBind, handle, alignmentHorizontal)
     }
 
+    /**
+     * Specifies the horizontal relative position of child controls.
+     *
+     * Generated from Godot docs: AspectRatioContainer.get_alignment_horizontal
+     */
     fun getAlignmentHorizontal(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentHorizontalBind, handle)
     }
 
+    /**
+     * Specifies the vertical relative position of child controls.
+     *
+     * Generated from Godot docs: AspectRatioContainer.set_alignment_vertical
+     */
     fun setAlignmentVertical(alignmentVertical: Long) {
         ObjectCalls.ptrcallWithLongArg(setAlignmentVerticalBind, handle, alignmentVertical)
     }
 
+    /**
+     * Specifies the vertical relative position of child controls.
+     *
+     * Generated from Godot docs: AspectRatioContainer.get_alignment_vertical
+     */
     fun getAlignmentVertical(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, handle)
     }

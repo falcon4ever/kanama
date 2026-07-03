@@ -82,10 +82,20 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
         @JvmName("setBusProperty")
         set(value) = setBus(value)
 
+    /**
+     * The assigned video stream. See description for supported formats.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_stream
+     */
     fun setStream(stream: VideoStream?) {
         ObjectCalls.ptrcallWithObjectArgs(setStreamBind, handle, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The assigned video stream. See description for supported formats.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_stream
+     */
     fun getStream(): VideoStream? {
         return VideoStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle))
     }
@@ -110,106 +120,243 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
+    /**
+     * Returns `true` if the video is playing. Note: The video is still considered playing if paused
+     * during playback.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.is_playing
+     */
     fun isPlaying(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
 
+    /**
+     * If `true`, the video is paused.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_paused
+     */
     fun setPaused(paused: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPausedBind, handle, paused)
     }
 
+    /**
+     * If `true`, the video is paused.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.is_paused
+     */
     fun isPaused(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, handle)
     }
 
+    /**
+     * If `true`, the video restarts when it reaches its end.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_loop
+     */
     fun setLoop(loop: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
     }
 
+    /**
+     * If `true`, the video restarts when it reaches its end.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.has_loop
+     */
     fun hasLoop(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
     }
 
+    /**
+     * Audio volume as a linear value.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_volume
+     */
     fun setVolume(volume: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVolumeBind, handle, volume)
     }
 
+    /**
+     * Audio volume as a linear value.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_volume
+     */
     fun getVolume(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeBind, handle)
     }
 
+    /**
+     * Audio volume in dB.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_volume_db
+     */
     fun setVolumeDb(db: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, db)
     }
 
+    /**
+     * Audio volume in dB.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_volume_db
+     */
     fun getVolumeDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
     }
 
+    /**
+     * The stream's current speed scale. `1.0` is the normal speed, while `2.0` is double speed and
+     * `0.5` is half speed. A speed scale of `0.0` pauses the video, similar to setting `paused` to
+     * `true`.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_speed_scale
+     */
     fun setSpeedScale(speedScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speedScale)
     }
 
+    /**
+     * The stream's current speed scale. `1.0` is the normal speed, while `2.0` is double speed and
+     * `0.5` is half speed. A speed scale of `0.0` pauses the video, similar to setting `paused` to
+     * `true`.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_speed_scale
+     */
     fun getSpeedScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
+    /**
+     * The embedded audio track to play.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_audio_track
+     */
     fun setAudioTrack(track: Int) {
         ObjectCalls.ptrcallWithIntArg(setAudioTrackBind, handle, track)
     }
 
+    /**
+     * The embedded audio track to play.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_audio_track
+     */
     fun getAudioTrack(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAudioTrackBind, handle)
     }
 
+    /**
+     * Returns the video stream's name, or `"<No Stream>"` if no video stream is assigned.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_stream_name
+     */
     fun getStreamName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getStreamNameBind, handle)
     }
 
+    /**
+     * The length of the current stream, in seconds.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_stream_length
+     */
     fun getStreamLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStreamLengthBind, handle)
     }
 
+    /**
+     * The current position of the stream, in seconds.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_stream_position
+     */
     fun setStreamPosition(position: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setStreamPositionBind, handle, position)
     }
 
+    /**
+     * The current position of the stream, in seconds.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_stream_position
+     */
     fun getStreamPosition(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStreamPositionBind, handle)
     }
 
+    /**
+     * If `true`, playback starts when the scene loads.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_autoplay
+     */
     fun setAutoplay(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, handle, enabled)
     }
 
+    /**
+     * If `true`, playback starts when the scene loads.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.has_autoplay
+     */
     fun hasAutoplay(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutoplayBind, handle)
     }
 
+    /**
+     * If `true`, the video scales to the control size. Otherwise, the control minimum size will be
+     * automatically adjusted to match the video stream's dimensions.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_expand
+     */
     fun setExpand(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setExpandBind, handle, enable)
     }
 
+    /**
+     * If `true`, the video scales to the control size. Otherwise, the control minimum size will be
+     * automatically adjusted to match the video stream's dimensions.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.has_expand
+     */
     fun hasExpand(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasExpandBind, handle)
     }
 
+    /**
+     * Amount of time in milliseconds to store in buffer while playing.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_buffering_msec
+     */
     fun setBufferingMsec(msec: Int) {
         ObjectCalls.ptrcallWithIntArg(setBufferingMsecBind, handle, msec)
     }
 
+    /**
+     * Amount of time in milliseconds to store in buffer while playing.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_buffering_msec
+     */
     fun getBufferingMsec(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferingMsecBind, handle)
     }
 
+    /**
+     * Audio bus to use for sound playback.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.set_bus
+     */
     fun setBus(bus: String) {
         ObjectCalls.ptrcallWithStringNameArg(setBusBind, handle, bus)
     }
 
+    /**
+     * Audio bus to use for sound playback.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_bus
+     */
     fun getBus(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, handle)
     }
 
+    /**
+     * Returns the current frame as a `Texture2D`.
+     *
+     * Generated from Godot docs: VideoStreamPlayer.get_video_texture
+     */
     fun getVideoTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, handle))
     }

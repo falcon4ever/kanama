@@ -25,6 +25,12 @@ data class AABB(
     val size: Vector3,
 ) {
     /** Godot-style fuzzy compare: true if position and size are approximately equal. */
+    /**
+     * Returns `true` if this bounding box and `aabb` are approximately equal, by calling
+     * `Vector3.is_equal_approx` on the `position` and the `size`.
+     *
+     * Generated from Godot docs: AABB.is_equal_approx
+     */
     fun isEqualApprox(other: AABB): Boolean =
         position.isEqualApprox(other.position) && size.isEqualApprox(other.size)
 

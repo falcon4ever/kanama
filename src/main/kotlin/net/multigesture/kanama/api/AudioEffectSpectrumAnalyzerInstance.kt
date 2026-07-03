@@ -10,6 +10,13 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance
  */
 class AudioEffectSpectrumAnalyzerInstance(handle: MemorySegment) : AudioEffectInstance(handle) {
+    /**
+     * Returns the magnitude of the frequencies from `from_hz` to `to_hz` in linear energy as a
+     * Vector2. The `x` component of the return value represents the left stereo channel, and `y`
+     * represents the right channel. `mode` determines how the frequency range will be processed.
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance.get_magnitude_for_frequency_range
+     */
     fun getMagnitudeForFrequencyRange(fromHz: Double, toHz: Double, mode: Long = 1L): Vector2 {
         return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, handle, fromHz, toHz, mode)
     }

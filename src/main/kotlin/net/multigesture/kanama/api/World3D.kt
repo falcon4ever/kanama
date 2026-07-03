@@ -46,42 +46,94 @@ class World3D(handle: MemorySegment) : Resource(handle) {
         @JvmName("directSpaceStateProperty")
         get() = getDirectSpaceState()
 
+    /**
+     * The World3D's physics space.
+     *
+     * Generated from Godot docs: World3D.get_space
+     */
     fun getSpace(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
     }
 
+    /**
+     * The `RID` of this world's navigation map. Used by the `NavigationServer3D`.
+     *
+     * Generated from Godot docs: World3D.get_navigation_map
+     */
     fun getNavigationMap(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
+    /**
+     * The World3D's visual scenario.
+     *
+     * Generated from Godot docs: World3D.get_scenario
+     */
     fun getScenario(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getScenarioBind, handle)
     }
 
+    /**
+     * The World3D's `Environment`.
+     *
+     * Generated from Godot docs: World3D.set_environment
+     */
     fun setEnvironment(env: Environment?) {
         ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The World3D's `Environment`.
+     *
+     * Generated from Godot docs: World3D.get_environment
+     */
     fun getEnvironment(): Environment? {
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
     }
 
+    /**
+     * The World3D's fallback environment will be used if `environment` fails or is missing.
+     *
+     * Generated from Godot docs: World3D.set_fallback_environment
+     */
     fun setFallbackEnvironment(env: Environment?) {
         ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The World3D's fallback environment will be used if `environment` fails or is missing.
+     *
+     * Generated from Godot docs: World3D.get_fallback_environment
+     */
     fun getFallbackEnvironment(): Environment? {
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, handle))
     }
 
+    /**
+     * The default `CameraAttributes` resource to use if none set on the `Camera3D`.
+     *
+     * Generated from Godot docs: World3D.set_camera_attributes
+     */
     fun setCameraAttributes(attributes: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(attributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The default `CameraAttributes` resource to use if none set on the `Camera3D`.
+     *
+     * Generated from Godot docs: World3D.get_camera_attributes
+     */
     fun getCameraAttributes(): CameraAttributes? {
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
     }
 
+    /**
+     * Direct access to the world's physics 3D space state. Used for querying current and potential
+     * collisions. When using multi-threaded physics, access is limited to `Node._physics_process` in
+     * the main thread.
+     *
+     * Generated from Godot docs: World3D.get_direct_space_state
+     */
     fun getDirectSpaceState(): PhysicsDirectSpaceState3D? {
         return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
     }

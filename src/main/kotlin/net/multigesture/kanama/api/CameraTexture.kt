@@ -28,26 +28,58 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setCameraIsActiveProperty")
         set(value) = setCameraActive(value)
 
+    /**
+     * The ID of the `CameraFeed` for which we want to display the image.
+     *
+     * Generated from Godot docs: CameraTexture.set_camera_feed_id
+     */
     fun setCameraFeedId(feedId: Int) {
         ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, feedId)
     }
 
+    /**
+     * The ID of the `CameraFeed` for which we want to display the image.
+     *
+     * Generated from Godot docs: CameraTexture.get_camera_feed_id
+     */
     fun getCameraFeedId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
+    /**
+     * Which image within the `CameraFeed` we want access to, important if the camera image is split in
+     * a Y and CbCr component.
+     *
+     * Generated from Godot docs: CameraTexture.set_which_feed
+     */
     fun setWhichFeed(whichFeed: Long) {
         ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, handle, whichFeed)
     }
 
+    /**
+     * Which image within the `CameraFeed` we want access to, important if the camera image is split in
+     * a Y and CbCr component.
+     *
+     * Generated from Godot docs: CameraTexture.get_which_feed
+     */
     fun getWhichFeed(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, handle)
     }
 
+    /**
+     * Convenience property that gives access to the active property of the `CameraFeed`.
+     *
+     * Generated from Godot docs: CameraTexture.set_camera_active
+     */
     fun setCameraActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCameraActiveBind, handle, active)
     }
 
+    /**
+     * Convenience property that gives access to the active property of the `CameraFeed`.
+     *
+     * Generated from Godot docs: CameraTexture.get_camera_active
+     */
     fun getCameraActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getCameraActiveBind, handle)
     }

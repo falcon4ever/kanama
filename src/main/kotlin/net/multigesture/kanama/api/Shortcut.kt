@@ -16,22 +16,50 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
         @JvmName("setEventsProperty")
         set(value) = setEvents(value)
 
+    /**
+     * The shortcut's `InputEvent` array. Generally the `InputEvent` used is an `InputEventKey`, though
+     * it can be any `InputEvent`, including an `InputEventAction`.
+     *
+     * Generated from Godot docs: Shortcut.set_events
+     */
     fun setEvents(events: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setEventsBind, handle, events)
     }
 
+    /**
+     * The shortcut's `InputEvent` array. Generally the `InputEvent` used is an `InputEventKey`, though
+     * it can be any `InputEvent`, including an `InputEventAction`.
+     *
+     * Generated from Godot docs: Shortcut.get_events
+     */
     fun getEvents(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getEventsBind, handle)
     }
 
+    /**
+     * Returns whether `events` contains an `InputEvent` which is valid.
+     *
+     * Generated from Godot docs: Shortcut.has_valid_event
+     */
     fun hasValidEvent(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasValidEventBind, handle)
     }
 
+    /**
+     * Returns whether any `InputEvent` in `events` equals `event`. This uses `InputEvent.is_match` to
+     * compare events.
+     *
+     * Generated from Godot docs: Shortcut.matches_event
+     */
     fun matchesEvent(event: InputEvent?): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the shortcut's first valid `InputEvent` as a `String`.
+     *
+     * Generated from Godot docs: Shortcut.get_as_text
+     */
     fun getAsText(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getAsTextBind, handle)
     }

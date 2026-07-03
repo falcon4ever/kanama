@@ -12,10 +12,22 @@ class AnimationNodeExtension(handle: MemorySegment) : AnimationNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
+        /**
+         * Returns `true` if the animation for the given `node_info` is looping.
+         *
+         * Generated from Godot docs: AnimationNodeExtension.is_looping
+         */
         fun isLooping(nodeInfo: List<Float>): Boolean {
             return ObjectCalls.ptrcallWithPackedFloat32ListArgRetBool(isLoopingBind, MemorySegment.NULL, nodeInfo)
         }
 
+        /**
+         * Returns the animation's remaining time for the given node info. For looping animations, it will
+         * only return the remaining time if `break_loop` is `true`, a large integer value will be returned
+         * otherwise.
+         *
+         * Generated from Godot docs: AnimationNodeExtension.get_remaining_time
+         */
         fun getRemainingTime(nodeInfo: List<Float>, breakLoop: Boolean): Double {
             return ObjectCalls.ptrcallWithPackedFloat32ListAndBoolArgRetDouble(getRemainingTimeBind, MemorySegment.NULL, nodeInfo, breakLoop)
         }

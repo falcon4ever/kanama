@@ -28,26 +28,60 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setOccluderLightMaskProperty")
         set(value) = setOccluderLightMask(value)
 
+    /**
+     * The `OccluderPolygon2D` used to compute the shadow.
+     *
+     * Generated from Godot docs: LightOccluder2D.set_occluder_polygon
+     */
     fun setOccluderPolygon(polygon: OccluderPolygon2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setOccluderPolygonBind, handle, listOf(polygon?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `OccluderPolygon2D` used to compute the shadow.
+     *
+     * Generated from Godot docs: LightOccluder2D.get_occluder_polygon
+     */
     fun getOccluderPolygon(): OccluderPolygon2D? {
         return OccluderPolygon2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderPolygonBind, handle))
     }
 
+    /**
+     * The LightOccluder2D's occluder light mask. The LightOccluder2D will cast shadows only from
+     * Light2D(s) that have the same light mask(s).
+     *
+     * Generated from Godot docs: LightOccluder2D.set_occluder_light_mask
+     */
     fun setOccluderLightMask(mask: Int) {
         ObjectCalls.ptrcallWithIntArg(setOccluderLightMaskBind, handle, mask)
     }
 
+    /**
+     * The LightOccluder2D's occluder light mask. The LightOccluder2D will cast shadows only from
+     * Light2D(s) that have the same light mask(s).
+     *
+     * Generated from Godot docs: LightOccluder2D.get_occluder_light_mask
+     */
     fun getOccluderLightMask(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOccluderLightMaskBind, handle)
     }
 
+    /**
+     * If enabled, the occluder will be part of a real-time generated signed distance field that can be
+     * used in custom shaders.
+     *
+     * Generated from Godot docs: LightOccluder2D.set_as_sdf_collision
+     */
     fun setAsSdfCollision(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAsSdfCollisionBind, handle, enable)
     }
 
+    /**
+     * If enabled, the occluder will be part of a real-time generated signed distance field that can be
+     * used in custom shaders.
+     *
+     * Generated from Godot docs: LightOccluder2D.is_set_as_sdf_collision
+     */
     fun isSetAsSdfCollision(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSetAsSdfCollisionBind, handle)
     }

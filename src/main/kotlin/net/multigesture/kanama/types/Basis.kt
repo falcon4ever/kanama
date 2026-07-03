@@ -52,6 +52,12 @@ data class Basis(
     private constructor(from: Basis, ignored: Unit) : this(from.x, from.y, from.z)
 
     /** Godot-style fuzzy compare: true if every axis is approximately equal. */
+    /**
+     * Returns `true` if this basis and `b` are approximately equal, by calling
+     * `@GlobalScope.is_equal_approx` on all vector components.
+     *
+     * Generated from Godot docs: Basis.is_equal_approx
+     */
     fun isEqualApprox(other: Basis): Boolean =
         x.isEqualApprox(other.x) && y.isEqualApprox(other.y) && z.isEqualApprox(other.z)
 

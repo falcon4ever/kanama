@@ -9,22 +9,56 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: AudioStreamPlaybackPolyphonic
  */
 class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback(handle) {
+    /**
+     * Play an `AudioStream` at a given offset, volume, pitch scale, playback type, and bus. Playback
+     * starts immediately. The return value is a unique integer ID that is associated to this playback
+     * stream and which can be used to control it. This ID becomes invalid when the stream ends (if it
+     * does not loop), when the `AudioStreamPlaybackPolyphonic` is stopped, or when `stop_stream` is
+     * called. This function returns `INVALID_ID` if the amount of streams currently playing equals
+     * `AudioStreamPolyphonic.polyphony`. If you need a higher amount of maximum polyphony, raise this
+     * value.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackPolyphonic.play_stream
+     */
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: Long = 0L, bus: String = "Master"): Long {
         return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, fromOffset, volumeDb, pitchScale, playbackType, bus)
     }
 
+    /**
+     * Change the stream volume (in db). The `stream` argument is an integer ID returned by
+     * `play_stream`.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackPolyphonic.set_stream_volume
+     */
     fun setStreamVolume(stream: Long, volumeDb: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamVolumeBind, handle, stream, volumeDb)
     }
 
+    /**
+     * Change the stream pitch scale. The `stream` argument is an integer ID returned by `play_stream`.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackPolyphonic.set_stream_pitch_scale
+     */
     fun setStreamPitchScale(stream: Long, pitchScale: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamPitchScaleBind, handle, stream, pitchScale)
     }
 
+    /**
+     * Returns `true` if the stream associated with the given integer ID is still playing. Check
+     * `play_stream` for information on when this ID becomes invalid.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackPolyphonic.is_stream_playing
+     */
     fun isStreamPlaying(stream: Long): Boolean {
         return ObjectCalls.ptrcallWithLongArgRetBool(isStreamPlayingBind, handle, stream)
     }
 
+    /**
+     * Stop a stream. The `stream` argument is an integer ID returned by `play_stream`, which becomes
+     * invalid after calling this function.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackPolyphonic.stop_stream
+     */
     fun stopStream(stream: Long) {
         ObjectCalls.ptrcallWithLongArg(stopStreamBind, handle, stream)
     }

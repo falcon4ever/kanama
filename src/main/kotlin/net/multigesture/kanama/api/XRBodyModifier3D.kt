@@ -28,26 +28,58 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         @JvmName("setBoneUpdateProperty")
         set(value) = setBoneUpdate(value)
 
+    /**
+     * The name of the `XRBodyTracker` registered with `XRServer` to obtain the body tracking data
+     * from.
+     *
+     * Generated from Godot docs: XRBodyModifier3D.set_body_tracker
+     */
     fun setBodyTracker(trackerName: String) {
         ObjectCalls.ptrcallWithStringNameArg(setBodyTrackerBind, handle, trackerName)
     }
 
+    /**
+     * The name of the `XRBodyTracker` registered with `XRServer` to obtain the body tracking data
+     * from.
+     *
+     * Generated from Godot docs: XRBodyModifier3D.get_body_tracker
+     */
     fun getBodyTracker(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getBodyTrackerBind, handle)
     }
 
+    /**
+     * Specifies the body parts to update.
+     *
+     * Generated from Godot docs: XRBodyModifier3D.set_body_update
+     */
     fun setBodyUpdate(bodyUpdate: Long) {
         ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, handle, bodyUpdate)
     }
 
+    /**
+     * Specifies the body parts to update.
+     *
+     * Generated from Godot docs: XRBodyModifier3D.get_body_update
+     */
     fun getBodyUpdate(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, handle)
     }
 
+    /**
+     * Specifies the type of updates to perform on the bones.
+     *
+     * Generated from Godot docs: XRBodyModifier3D.set_bone_update
+     */
     fun setBoneUpdate(boneUpdate: Long) {
         ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, handle, boneUpdate)
     }
 
+    /**
+     * Specifies the type of updates to perform on the bones.
+     *
+     * Generated from Godot docs: XRBodyModifier3D.get_bone_update
+     */
     fun getBoneUpdate(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, handle)
     }

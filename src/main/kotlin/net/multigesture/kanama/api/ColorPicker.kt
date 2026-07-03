@@ -83,122 +83,284 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
         @JvmName("setPresetsVisibleProperty")
         set(value) = setPresetsVisible(value)
 
+    /**
+     * The currently selected color.
+     *
+     * Generated from Godot docs: ColorPicker.set_pick_color
+     */
     fun setPickColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setPickColorBind, handle, color)
     }
 
+    /**
+     * The currently selected color.
+     *
+     * Generated from Godot docs: ColorPicker.get_pick_color
+     */
     fun getPickColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, handle)
     }
 
+    /**
+     * If `true`, the color will apply only after the user releases the mouse button, otherwise it will
+     * apply immediately even in mouse motion event (which can cause performance issues).
+     *
+     * Generated from Godot docs: ColorPicker.set_deferred_mode
+     */
     fun setDeferredMode(mode: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDeferredModeBind, handle, mode)
     }
 
+    /**
+     * If `true`, the color will apply only after the user releases the mouse button, otherwise it will
+     * apply immediately even in mouse motion event (which can cause performance issues).
+     *
+     * Generated from Godot docs: ColorPicker.is_deferred_mode
+     */
     fun isDeferredMode(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeferredModeBind, handle)
     }
 
+    /**
+     * The currently selected color mode.
+     *
+     * Generated from Godot docs: ColorPicker.set_color_mode
+     */
     fun setColorMode(colorMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setColorModeBind, handle, colorMode)
     }
 
+    /**
+     * The currently selected color mode.
+     *
+     * Generated from Godot docs: ColorPicker.get_color_mode
+     */
     fun getColorMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getColorModeBind, handle)
     }
 
+    /**
+     * If `true`, shows an alpha channel slider (opacity).
+     *
+     * Generated from Godot docs: ColorPicker.set_edit_alpha
+     */
     fun setEditAlpha(show: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, handle, show)
     }
 
+    /**
+     * If `true`, shows an alpha channel slider (opacity).
+     *
+     * Generated from Godot docs: ColorPicker.is_editing_alpha
+     */
     fun isEditingAlpha(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, handle)
     }
 
+    /**
+     * If `true`, shows an intensity slider. The intensity is applied as follows: convert the color to
+     * linear encoding, multiply it by `2 ** intensity`, and then convert it back to nonlinear sRGB
+     * encoding.
+     *
+     * Generated from Godot docs: ColorPicker.set_edit_intensity
+     */
     fun setEditIntensity(show: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, handle, show)
     }
 
+    /**
+     * If `true`, shows an intensity slider. The intensity is applied as follows: convert the color to
+     * linear encoding, multiply it by `2 ** intensity`, and then convert it back to nonlinear sRGB
+     * encoding.
+     *
+     * Generated from Godot docs: ColorPicker.is_editing_intensity
+     */
     fun isEditingIntensity(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, handle)
     }
 
+    /**
+     * If `true`, it's possible to add presets under Swatches. If `false`, the button to add presets is
+     * disabled.
+     *
+     * Generated from Godot docs: ColorPicker.set_can_add_swatches
+     */
     fun setCanAddSwatches(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCanAddSwatchesBind, handle, enabled)
     }
 
+    /**
+     * If `true`, it's possible to add presets under Swatches. If `false`, the button to add presets is
+     * disabled.
+     *
+     * Generated from Godot docs: ColorPicker.are_swatches_enabled
+     */
     fun areSwatchesEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areSwatchesEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the Swatches and Recent Colors presets are visible.
+     *
+     * Generated from Godot docs: ColorPicker.set_presets_visible
+     */
     fun setPresetsVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPresetsVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the Swatches and Recent Colors presets are visible.
+     *
+     * Generated from Godot docs: ColorPicker.are_presets_visible
+     */
     fun arePresetsVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(arePresetsVisibleBind, handle)
     }
 
+    /**
+     * If `true`, the color mode buttons are visible.
+     *
+     * Generated from Godot docs: ColorPicker.set_modes_visible
+     */
     fun setModesVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setModesVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the color mode buttons are visible.
+     *
+     * Generated from Godot docs: ColorPicker.are_modes_visible
+     */
     fun areModesVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areModesVisibleBind, handle)
     }
 
+    /**
+     * If `true`, the color sampler and color preview are visible.
+     *
+     * Generated from Godot docs: ColorPicker.set_sampler_visible
+     */
     fun setSamplerVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSamplerVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the color sampler and color preview are visible.
+     *
+     * Generated from Godot docs: ColorPicker.is_sampler_visible
+     */
     fun isSamplerVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSamplerVisibleBind, handle)
     }
 
+    /**
+     * If `true`, the color sliders are visible.
+     *
+     * Generated from Godot docs: ColorPicker.set_sliders_visible
+     */
     fun setSlidersVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSlidersVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the color sliders are visible.
+     *
+     * Generated from Godot docs: ColorPicker.are_sliders_visible
+     */
     fun areSlidersVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(areSlidersVisibleBind, handle)
     }
 
+    /**
+     * If `true`, the hex color code input field is visible.
+     *
+     * Generated from Godot docs: ColorPicker.set_hex_visible
+     */
     fun setHexVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHexVisibleBind, handle, visible)
     }
 
+    /**
+     * If `true`, the hex color code input field is visible.
+     *
+     * Generated from Godot docs: ColorPicker.is_hex_visible
+     */
     fun isHexVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHexVisibleBind, handle)
     }
 
+    /**
+     * Adds the given color to a list of color presets. The presets are displayed in the color picker
+     * and the user will be able to select them. Note: The presets list is only for this color picker.
+     *
+     * Generated from Godot docs: ColorPicker.add_preset
+     */
     fun addPreset(color: Color) {
         ObjectCalls.ptrcallWithColorArg(addPresetBind, handle, color)
     }
 
+    /**
+     * Removes the given color from the list of color presets of this color picker.
+     *
+     * Generated from Godot docs: ColorPicker.erase_preset
+     */
     fun erasePreset(color: Color) {
         ObjectCalls.ptrcallWithColorArg(erasePresetBind, handle, color)
     }
 
+    /**
+     * Returns the list of colors in the presets of the color picker.
+     *
+     * Generated from Godot docs: ColorPicker.get_presets
+     */
     fun getPresets(): List<Color> {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPresetsBind, handle)
     }
 
+    /**
+     * Adds the given color to a list of color recent presets so that it can be picked later. Recent
+     * presets are the colors that were picked recently, a new preset is automatically created and
+     * added to recent presets when you pick a new color. Note: The recent presets list is only for
+     * this color picker.
+     *
+     * Generated from Godot docs: ColorPicker.add_recent_preset
+     */
     fun addRecentPreset(color: Color) {
         ObjectCalls.ptrcallWithColorArg(addRecentPresetBind, handle, color)
     }
 
+    /**
+     * Removes the given color from the list of color recent presets of this color picker.
+     *
+     * Generated from Godot docs: ColorPicker.erase_recent_preset
+     */
     fun eraseRecentPreset(color: Color) {
         ObjectCalls.ptrcallWithColorArg(eraseRecentPresetBind, handle, color)
     }
 
+    /**
+     * Returns the list of colors in the recent presets of the color picker.
+     *
+     * Generated from Godot docs: ColorPicker.get_recent_presets
+     */
     fun getRecentPresets(): List<Color> {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getRecentPresetsBind, handle)
     }
 
+    /**
+     * The shape of the color space view.
+     *
+     * Generated from Godot docs: ColorPicker.set_picker_shape
+     */
     fun setPickerShape(shape: Long) {
         ObjectCalls.ptrcallWithLongArg(setPickerShapeBind, handle, shape)
     }
 
+    /**
+     * The shape of the color space view.
+     *
+     * Generated from Godot docs: ColorPicker.get_picker_shape
+     */
     fun getPickerShape(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, handle)
     }

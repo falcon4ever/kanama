@@ -136,170 +136,398 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setBackOpReferenceProperty")
         set(value) = setBackOpReference(value)
 
+    /**
+     * If `true`, enables depth testing which allows objects to be automatically occluded by other
+     * objects based on their depth. This also allows objects to be partially occluded by other
+     * objects. If `false`, objects will appear in the order they were drawn (like in Godot's 2D
+     * renderer).
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_depth_test
+     */
     fun setEnableDepthTest(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthTestBind, handle, pMember)
     }
 
+    /**
+     * If `true`, enables depth testing which allows objects to be automatically occluded by other
+     * objects based on their depth. This also allows objects to be partially occluded by other
+     * objects. If `false`, objects will appear in the order they were drawn (like in Godot's 2D
+     * renderer).
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_depth_test
+     */
     fun getEnableDepthTest(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthTestBind, handle)
     }
 
+    /**
+     * If `true`, writes to the depth buffer whenever the depth test returns `true`. Only works when
+     * enable_depth_test is also `true`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_depth_write
+     */
     fun setEnableDepthWrite(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthWriteBind, handle, pMember)
     }
 
+    /**
+     * If `true`, writes to the depth buffer whenever the depth test returns `true`. Only works when
+     * enable_depth_test is also `true`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_depth_write
+     */
     fun getEnableDepthWrite(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthWriteBind, handle)
     }
 
+    /**
+     * The method used for comparing the previous and current depth values.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_compare_operator
+     */
     fun setDepthCompareOperator(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, handle, pMember)
     }
 
+    /**
+     * The method used for comparing the previous and current depth values.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_compare_operator
+     */
     fun getDepthCompareOperator(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, handle)
     }
 
+    /**
+     * If `true`, each depth value will be tested to see if it is between `depth_range_min` and
+     * `depth_range_max`. If it is outside of these values, it is discarded.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_depth_range
+     */
     fun setEnableDepthRange(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthRangeBind, handle, pMember)
     }
 
+    /**
+     * If `true`, each depth value will be tested to see if it is between `depth_range_min` and
+     * `depth_range_max`. If it is outside of these values, it is discarded.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_depth_range
+     */
     fun getEnableDepthRange(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthRangeBind, handle)
     }
 
+    /**
+     * The minimum depth that returns `true` for `enable_depth_range`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_range_min
+     */
     fun setDepthRangeMin(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMinBind, handle, pMember)
     }
 
+    /**
+     * The minimum depth that returns `true` for `enable_depth_range`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_range_min
+     */
     fun getDepthRangeMin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMinBind, handle)
     }
 
+    /**
+     * The maximum depth that returns `true` for `enable_depth_range`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_range_max
+     */
     fun setDepthRangeMax(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMaxBind, handle, pMember)
     }
 
+    /**
+     * The maximum depth that returns `true` for `enable_depth_range`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_range_max
+     */
     fun getDepthRangeMax(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMaxBind, handle)
     }
 
+    /**
+     * If `true`, enables stencil testing. There are separate stencil buffers for front-facing
+     * triangles and back-facing triangles. See properties that begin with "front_op" and properties
+     * with "back_op" for each.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_stencil
+     */
     fun setEnableStencil(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableStencilBind, handle, pMember)
     }
 
+    /**
+     * If `true`, enables stencil testing. There are separate stencil buffers for front-facing
+     * triangles and back-facing triangles. See properties that begin with "front_op" and properties
+     * with "back_op" for each.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_stencil
+     */
     fun getEnableStencil(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableStencilBind, handle)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for front pixels that fail the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_fail
+     */
     fun setFrontOpFail(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, handle, pMember)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for front pixels that fail the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_fail
+     */
     fun getFrontOpFail(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, handle)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for front pixels that pass the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_pass
+     */
     fun setFrontOpPass(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, handle, pMember)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for front pixels that pass the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_pass
+     */
     fun getFrontOpPass(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, handle)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for front pixels that pass the stencil test but
+     * fail the depth test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_depth_fail
+     */
     fun setFrontOpDepthFail(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, handle, pMember)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for front pixels that pass the stencil test but
+     * fail the depth test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_depth_fail
+     */
     fun getFrontOpDepthFail(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, handle)
     }
 
+    /**
+     * The method used for comparing the previous front stencil value and `front_op_reference`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_compare
+     */
     fun setFrontOpCompare(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, handle, pMember)
     }
 
+    /**
+     * The method used for comparing the previous front stencil value and `front_op_reference`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_compare
+     */
     fun getFrontOpCompare(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, handle)
     }
 
+    /**
+     * Selects which bits from the front stencil value will be compared.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_compare_mask
+     */
     fun setFrontOpCompareMask(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpCompareMaskBind, handle, pMember)
     }
 
+    /**
+     * Selects which bits from the front stencil value will be compared.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_compare_mask
+     */
     fun getFrontOpCompareMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpCompareMaskBind, handle)
     }
 
+    /**
+     * Selects which bits from the front stencil value will be changed.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_write_mask
+     */
     fun setFrontOpWriteMask(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpWriteMaskBind, handle, pMember)
     }
 
+    /**
+     * Selects which bits from the front stencil value will be changed.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_write_mask
+     */
     fun getFrontOpWriteMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpWriteMaskBind, handle)
     }
 
+    /**
+     * The value the previous front stencil value will be compared to.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_reference
+     */
     fun setFrontOpReference(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpReferenceBind, handle, pMember)
     }
 
+    /**
+     * The value the previous front stencil value will be compared to.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_reference
+     */
     fun getFrontOpReference(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpReferenceBind, handle)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for back pixels that fail the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_fail
+     */
     fun setBackOpFail(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, handle, pMember)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for back pixels that fail the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_fail
+     */
     fun getBackOpFail(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, handle)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for back pixels that pass the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_pass
+     */
     fun setBackOpPass(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, handle, pMember)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for back pixels that pass the stencil test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_pass
+     */
     fun getBackOpPass(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, handle)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for back pixels that pass the stencil test but
+     * fail the depth test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_depth_fail
+     */
     fun setBackOpDepthFail(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, handle, pMember)
     }
 
+    /**
+     * The operation to perform on the stencil buffer for back pixels that pass the stencil test but
+     * fail the depth test.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_depth_fail
+     */
     fun getBackOpDepthFail(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, handle)
     }
 
+    /**
+     * The method used for comparing the previous back stencil value and `back_op_reference`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_compare
+     */
     fun setBackOpCompare(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, handle, pMember)
     }
 
+    /**
+     * The method used for comparing the previous back stencil value and `back_op_reference`.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_compare
+     */
     fun getBackOpCompare(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, handle)
     }
 
+    /**
+     * Selects which bits from the back stencil value will be compared.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_compare_mask
+     */
     fun setBackOpCompareMask(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpCompareMaskBind, handle, pMember)
     }
 
+    /**
+     * Selects which bits from the back stencil value will be compared.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_compare_mask
+     */
     fun getBackOpCompareMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpCompareMaskBind, handle)
     }
 
+    /**
+     * Selects which bits from the back stencil value will be changed.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_write_mask
+     */
     fun setBackOpWriteMask(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpWriteMaskBind, handle, pMember)
     }
 
+    /**
+     * Selects which bits from the back stencil value will be changed.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_write_mask
+     */
     fun getBackOpWriteMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpWriteMaskBind, handle)
     }
 
+    /**
+     * The value the previous back stencil value will be compared to.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_reference
+     */
     fun setBackOpReference(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpReferenceBind, handle, pMember)
     }
 
+    /**
+     * The value the previous back stencil value will be compared to.
+     *
+     * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_reference
+     */
     fun getBackOpReference(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpReferenceBind, handle)
     }

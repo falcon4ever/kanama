@@ -16,10 +16,22 @@ open class ScrollBar(handle: MemorySegment) : Range(handle) {
         @JvmName("setCustomStepProperty")
         set(value) = setCustomStep(value)
 
+    /**
+     * Overrides the step used when clicking increment and decrement buttons or when using arrow keys
+     * when the `ScrollBar` is focused.
+     *
+     * Generated from Godot docs: ScrollBar.set_custom_step
+     */
     fun setCustomStep(step: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCustomStepBind, handle, step)
     }
 
+    /**
+     * Overrides the step used when clicking increment and decrement buttons or when using arrow keys
+     * when the `ScrollBar` is focused.
+     *
+     * Generated from Godot docs: ScrollBar.get_custom_step
+     */
     fun getCustomStep(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomStepBind, handle)
     }

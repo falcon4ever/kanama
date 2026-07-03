@@ -59,66 +59,160 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setWetProperty")
         set(value) = setWet(value)
 
+    /**
+     * Time between the original audio and the early reflections of the reverb signal, in milliseconds.
+     * Value can range from 20 to 500.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_predelay_msec
+     */
     fun setPredelayMsec(msec: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPredelayMsecBind, handle, msec)
     }
 
+    /**
+     * Time between the original audio and the early reflections of the reverb signal, in milliseconds.
+     * Value can range from 20 to 500.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_predelay_msec
+     */
     fun getPredelayMsec(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayMsecBind, handle)
     }
 
+    /**
+     * Gain of early reflection copies. At higher values, early reflection copies are louder and ring
+     * out for longer. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_predelay_feedback
+     */
     fun setPredelayFeedback(feedback: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPredelayFeedbackBind, handle, feedback)
     }
 
+    /**
+     * Gain of early reflection copies. At higher values, early reflection copies are louder and ring
+     * out for longer. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_predelay_feedback
+     */
     fun getPredelayFeedback(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayFeedbackBind, handle)
     }
 
+    /**
+     * Dimensions of simulated room. Bigger means more echoes. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_room_size
+     */
     fun setRoomSize(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRoomSizeBind, handle, size)
     }
 
+    /**
+     * Dimensions of simulated room. Bigger means more echoes. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_room_size
+     */
     fun getRoomSize(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRoomSizeBind, handle)
     }
 
+    /**
+     * Defines how reflective the imaginary room's walls are. The more reflective, the more high
+     * frequency content the reverb has. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_damping
+     */
     fun setDamping(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, amount)
     }
 
+    /**
+     * Defines how reflective the imaginary room's walls are. The more reflective, the more high
+     * frequency content the reverb has. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_damping
+     */
     fun getDamping(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
     }
 
+    /**
+     * Widens or narrows the stereo image of the reverb tail. At 1, it fully widens. Value can range
+     * from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_spread
+     */
     fun setSpread(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, amount)
     }
 
+    /**
+     * Widens or narrows the stereo image of the reverb tail. At 1, it fully widens. Value can range
+     * from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_spread
+     */
     fun getSpread(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
     }
 
+    /**
+     * The volume ratio of the original audio. At 0, only the modified audio is outputted. Value can
+     * range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_dry
+     */
     fun setDry(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
+    /**
+     * The volume ratio of the original audio. At 0, only the modified audio is outputted. Value can
+     * range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_dry
+     */
     fun getDry(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 
+    /**
+     * The volume ratio of the modified audio. At 0, only the original audio is outputted. Value can
+     * range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_wet
+     */
     fun setWet(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setWetBind, handle, amount)
     }
 
+    /**
+     * The volume ratio of the modified audio. At 0, only the original audio is outputted. Value can
+     * range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_wet
+     */
     fun getWet(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, handle)
     }
 
+    /**
+     * High-pass filter allows frequencies higher than a certain cutoff threshold and attenuates
+     * frequencies lower than the cutoff threshold. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.set_hpf
+     */
     fun setHpf(amount: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHpfBind, handle, amount)
     }
 
+    /**
+     * High-pass filter allows frequencies higher than a certain cutoff threshold and attenuates
+     * frequencies lower than the cutoff threshold. Value can range from 0 to 1.
+     *
+     * Generated from Godot docs: AudioEffectReverb.get_hpf
+     */
     fun getHpf(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHpfBind, handle)
     }

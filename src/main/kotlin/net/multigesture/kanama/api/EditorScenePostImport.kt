@@ -9,6 +9,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorScenePostImport
  */
 class EditorScenePostImport(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the source file path which got imported (e.g. `res://scene.dae`).
+     *
+     * Generated from Godot docs: EditorScenePostImport.get_source_file
+     */
     fun getSourceFile(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSourceFileBind, handle)
     }

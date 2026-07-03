@@ -24,46 +24,114 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
         @JvmName("setPointCountProperty")
         set(value) = setPointCount(value)
 
+    /**
+     * The number of points describing the curve.
+     *
+     * Generated from Godot docs: Curve2D.get_point_count
+     */
     fun getPointCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
+    /**
+     * The number of points describing the curve.
+     *
+     * Generated from Godot docs: Curve2D.set_point_count
+     */
     fun setPointCount(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
+    /**
+     * Adds a point with the specified `position` relative to the curve's own position, with control
+     * points `in` and `out`. Appends the new point at the end of the point list. If `index` is given,
+     * the new point is inserted before the existing point identified by index `index`. Every existing
+     * point starting from `index` is shifted further down the list of points. The index must be
+     * greater than or equal to `0` and must not exceed the number of existing points in the line. See
+     * `point_count`.
+     *
+     * Generated from Godot docs: Curve2D.add_point
+     */
     fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0f, 0f), out: Vector2 = Vector2(0f, 0f), index: Int = -1) {
         ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, handle, position, inValue, out, index)
     }
 
+    /**
+     * Sets the position for the vertex `idx`. If the index is out of bounds, the function sends an
+     * error to the console.
+     *
+     * Generated from Godot docs: Curve2D.set_point_position
+     */
     fun setPointPosition(idx: Int, position: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, handle, idx, position)
     }
 
+    /**
+     * Returns the position of the vertex `idx`. If the index is out of bounds, the function sends an
+     * error to the console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.get_point_position
+     */
     fun getPointPosition(idx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, idx)
     }
 
+    /**
+     * Sets the position of the control point leading to the vertex `idx`. If the index is out of
+     * bounds, the function sends an error to the console. The position is relative to the vertex.
+     *
+     * Generated from Godot docs: Curve2D.set_point_in
+     */
     fun setPointIn(idx: Int, position: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointInBind, handle, idx, position)
     }
 
+    /**
+     * Returns the position of the control point leading to the vertex `idx`. The returned position is
+     * relative to the vertex `idx`. If the index is out of bounds, the function sends an error to the
+     * console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.get_point_in
+     */
     fun getPointIn(idx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointInBind, handle, idx)
     }
 
+    /**
+     * Sets the position of the control point leading out of the vertex `idx`. If the index is out of
+     * bounds, the function sends an error to the console. The position is relative to the vertex.
+     *
+     * Generated from Godot docs: Curve2D.set_point_out
+     */
     fun setPointOut(idx: Int, position: Vector2) {
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointOutBind, handle, idx, position)
     }
 
+    /**
+     * Returns the position of the control point leading out of the vertex `idx`. The returned position
+     * is relative to the vertex `idx`. If the index is out of bounds, the function sends an error to
+     * the console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.get_point_out
+     */
     fun getPointOut(idx: Int): Vector2 {
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointOutBind, handle, idx)
     }
 
+    /**
+     * Deletes the point `idx` from the curve. Sends an error to the console if `idx` is out of bounds.
+     *
+     * Generated from Godot docs: Curve2D.remove_point
+     */
     fun removePoint(idx: Int) {
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, idx)
     }
 
+    /**
+     * Removes all points from the curve.
+     *
+     * Generated from Godot docs: Curve2D.clear_points
+     */
     fun clearPoints() {
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
@@ -91,34 +159,90 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithDoubleArgRetVector2(samplefBind, handle, fofs)
     }
 
+    /**
+     * The distance in pixels between two adjacent cached points. Changing it forces the cache to be
+     * recomputed the next time the `get_baked_points` or `get_baked_length` function is called. The
+     * smaller the distance, the more points in the cache and the more memory it will consume, so use
+     * with care.
+     *
+     * Generated from Godot docs: Curve2D.set_bake_interval
+     */
     fun setBakeInterval(distance: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, handle, distance)
     }
 
+    /**
+     * The distance in pixels between two adjacent cached points. Changing it forces the cache to be
+     * recomputed the next time the `get_baked_points` or `get_baked_length` function is called. The
+     * smaller the distance, the more points in the cache and the more memory it will consume, so use
+     * with care.
+     *
+     * Generated from Godot docs: Curve2D.get_bake_interval
+     */
     fun getBakeInterval(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, handle)
     }
 
+    /**
+     * Returns the total length of the curve, based on the cached points. Given enough density (see
+     * `bake_interval`), it should be approximate enough.
+     *
+     * Generated from Godot docs: Curve2D.get_baked_length
+     */
     fun getBakedLength(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, handle)
     }
 
+    /**
+     * Returns a point within the curve at position `offset`, where `offset` is measured as a pixel
+     * distance along the curve. To do that, it finds the two cached points where the `offset` lies
+     * between, then interpolates the values. This interpolation is cubic if `cubic` is set to `true`,
+     * or linear if set to `false`. Cubic interpolation tends to follow the curves better, but linear
+     * is faster (and often, precise enough).
+     *
+     * Generated from Godot docs: Curve2D.sample_baked
+     */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector2 {
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(sampleBakedBind, handle, offset, cubic)
     }
 
+    /**
+     * Similar to `sample_baked`, but returns `Transform2D` that includes a rotation along the curve,
+     * with `Transform2D.origin` as the point position and the `Transform2D.x` vector pointing in the
+     * direction of the path at that point. Returns an empty transform if the length of the curve is
+     * `0`.
+     *
+     * Generated from Godot docs: Curve2D.sample_baked_with_rotation
+     */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false): Transform2D {
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(sampleBakedWithRotationBind, handle, offset, cubic)
     }
 
+    /**
+     * Returns the cache of points as a `PackedVector2Array`.
+     *
+     * Generated from Godot docs: Curve2D.get_baked_points
+     */
     fun getBakedPoints(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getBakedPointsBind, handle)
     }
 
+    /**
+     * Returns the closest point on baked segments (in curve's local space) to `to_point`. `to_point`
+     * must be in this curve's local space.
+     *
+     * Generated from Godot docs: Curve2D.get_closest_point
+     */
     fun getClosestPoint(toPoint: Vector2): Vector2 {
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, toPoint)
     }
 
+    /**
+     * Returns the closest offset to `to_point`. This offset is meant to be used in `sample_baked`.
+     * `to_point` must be in this curve's local space.
+     *
+     * Generated from Godot docs: Curve2D.get_closest_offset
+     */
     fun getClosestOffset(toPoint: Vector2): Double {
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getClosestOffsetBind, handle, toPoint)
     }
@@ -139,6 +263,15 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(tessellateBind, handle, maxStages, toleranceDegrees)
     }
 
+    /**
+     * Returns a list of points along the curve, with almost uniform density. `max_stages` controls how
+     * many subdivisions a curve segment may face before it is considered approximate enough. Each
+     * subdivision splits the segment in half, so the default 5 stages may mean up to 32 subdivisions
+     * per curve segment. Increase with care! `tolerance_length` controls the maximal distance between
+     * two neighboring points, before the segment has to be subdivided.
+     *
+     * Generated from Godot docs: Curve2D.tessellate_even_length
+     */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 20.0): List<Vector2> {
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(tessellateEvenLengthBind, handle, maxStages, toleranceLength)
     }

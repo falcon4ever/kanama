@@ -9,26 +9,58 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ResourcePreloader
  */
 class ResourcePreloader(handle: MemorySegment) : Node(handle) {
+    /**
+     * Adds a resource to the preloader with the given `name`. If a resource with the given `name`
+     * already exists, the new resource will be renamed to "`name` N" where N is an incrementing number
+     * starting from 2.
+     *
+     * Generated from Godot docs: ResourcePreloader.add_resource
+     */
     fun addResource(name: String, resource: Resource?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(addResourceBind, handle, name, resource?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Removes the resource associated to `name` from the preloader.
+     *
+     * Generated from Godot docs: ResourcePreloader.remove_resource
+     */
     fun removeResource(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(removeResourceBind, handle, name)
     }
 
+    /**
+     * Renames a resource inside the preloader from `name` to `newname`.
+     *
+     * Generated from Godot docs: ResourcePreloader.rename_resource
+     */
     fun renameResource(name: String, newname: String) {
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameResourceBind, handle, name, newname)
     }
 
+    /**
+     * Returns `true` if the preloader contains a resource associated to `name`.
+     *
+     * Generated from Godot docs: ResourcePreloader.has_resource
+     */
     fun hasResource(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasResourceBind, handle, name)
     }
 
+    /**
+     * Returns the resource associated to `name`.
+     *
+     * Generated from Godot docs: ResourcePreloader.get_resource
+     */
     fun getResource(name: String): Resource? {
         return Resource.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getResourceBind, handle, name))
     }
 
+    /**
+     * Returns the list of resources inside the preloader.
+     *
+     * Generated from Godot docs: ResourcePreloader.get_resource_list
+     */
     fun getResourceList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResourceListBind, handle)
     }

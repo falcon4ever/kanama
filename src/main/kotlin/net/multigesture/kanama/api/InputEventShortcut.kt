@@ -16,10 +16,22 @@ class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
         @JvmName("setShortcutProperty")
         set(value) = setShortcut(value)
 
+    /**
+     * The `Shortcut` represented by this event. Its `Shortcut.matches_event` method will always return
+     * `true` for this event.
+     *
+     * Generated from Godot docs: InputEventShortcut.set_shortcut
+     */
     fun setShortcut(shortcut: Shortcut?) {
         ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Shortcut` represented by this event. Its `Shortcut.matches_event` method will always return
+     * `true` for this event.
+     *
+     * Generated from Godot docs: InputEventShortcut.get_shortcut
+     */
     fun getShortcut(): Shortcut? {
         return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, handle))
     }

@@ -23,18 +23,38 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
         @JvmName("setBProperty")
         set(value) = setB(value)
 
+    /**
+     * The segment's first point position.
+     *
+     * Generated from Godot docs: SegmentShape2D.set_a
+     */
     fun setA(a: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setABind, handle, a)
     }
 
+    /**
+     * The segment's first point position.
+     *
+     * Generated from Godot docs: SegmentShape2D.get_a
+     */
     fun getA(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getABind, handle)
     }
 
+    /**
+     * The segment's second point position.
+     *
+     * Generated from Godot docs: SegmentShape2D.set_b
+     */
     fun setB(b: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setBBind, handle, b)
     }
 
+    /**
+     * The segment's second point position.
+     *
+     * Generated from Godot docs: SegmentShape2D.get_b
+     */
     fun getB(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getBBind, handle)
     }

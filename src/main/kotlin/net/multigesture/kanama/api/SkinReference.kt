@@ -10,10 +10,23 @@ import net.multigesture.kanama.types.RID
  * Generated from Godot docs: SkinReference
  */
 class SkinReference(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the `RID` owned by this SkinReference, as returned by `RenderingServer.skeleton_create`.
+     *
+     * Generated from Godot docs: SkinReference.get_skeleton
+     */
     fun getSkeleton(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, handle)
     }
 
+    /**
+     * Returns the `Skin` connected to this SkinReference. In the case of `MeshInstance3D` with no
+     * `MeshInstance3D.skin` assigned, this will reference an internal default `Skin` owned by that
+     * `MeshInstance3D`. Note that a single `Skin` may have more than one `SkinReference` in the case
+     * that it is shared by meshes across multiple `Skeleton3D` nodes.
+     *
+     * Generated from Godot docs: SkinReference.get_skin
+     */
     fun getSkin(): Skin? {
         return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
     }

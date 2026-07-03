@@ -23,6 +23,11 @@ open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(hand
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
+    /**
+     * The path the texture should be loaded from.
+     *
+     * Generated from Godot docs: CompressedTextureLayered.get_load_path
+     */
     fun getLoadPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }

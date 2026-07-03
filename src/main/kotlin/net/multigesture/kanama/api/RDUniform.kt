@@ -23,30 +23,66 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setBindingProperty")
         set(value) = setBinding(value)
 
+    /**
+     * The uniform's data type.
+     *
+     * Generated from Godot docs: RDUniform.set_uniform_type
+     */
     fun setUniformType(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, handle, pMember)
     }
 
+    /**
+     * The uniform's data type.
+     *
+     * Generated from Godot docs: RDUniform.get_uniform_type
+     */
     fun getUniformType(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, handle)
     }
 
+    /**
+     * The uniform's binding.
+     *
+     * Generated from Godot docs: RDUniform.set_binding
+     */
     fun setBinding(pMember: Int) {
         ObjectCalls.ptrcallWithIntArg(setBindingBind, handle, pMember)
     }
 
+    /**
+     * The uniform's binding.
+     *
+     * Generated from Godot docs: RDUniform.get_binding
+     */
     fun getBinding(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBindingBind, handle)
     }
 
+    /**
+     * Binds the given id to the uniform. The data associated with the id is then used when the uniform
+     * is passed to a shader.
+     *
+     * Generated from Godot docs: RDUniform.add_id
+     */
     fun addId(id: RID) {
         ObjectCalls.ptrcallWithRIDArg(addIdBind, handle, id)
     }
 
+    /**
+     * Unbinds all ids currently bound to the uniform.
+     *
+     * Generated from Godot docs: RDUniform.clear_ids
+     */
     fun clearIds() {
         ObjectCalls.ptrcallNoArgs(clearIdsBind, handle)
     }
 
+    /**
+     * Returns an array of all ids currently bound to the uniform.
+     *
+     * Generated from Godot docs: RDUniform.get_ids
+     */
     fun getIds(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getIdsBind, handle)
     }

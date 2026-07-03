@@ -40,42 +40,96 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setDepthAttachmentProperty")
         set(value) = setDepthAttachment(value)
 
+    /**
+     * Color attachments in order starting from 0. If this attachment is not used by the shader, pass
+     * ATTACHMENT_UNUSED to skip.
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_color_attachments
+     */
     fun setColorAttachments(pMember: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(setColorAttachmentsBind, handle, pMember)
     }
 
+    /**
+     * Color attachments in order starting from 0. If this attachment is not used by the shader, pass
+     * ATTACHMENT_UNUSED to skip.
+     *
+     * Generated from Godot docs: RDFramebufferPass.get_color_attachments
+     */
     fun getColorAttachments(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getColorAttachmentsBind, handle)
     }
 
+    /**
+     * Used for multipass framebuffers (more than one render pass). Converts an attachment to an input.
+     * Make sure to also supply it properly in the `RDUniform` for the uniform set.
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_input_attachments
+     */
     fun setInputAttachments(pMember: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(setInputAttachmentsBind, handle, pMember)
     }
 
+    /**
+     * Used for multipass framebuffers (more than one render pass). Converts an attachment to an input.
+     * Make sure to also supply it properly in the `RDUniform` for the uniform set.
+     *
+     * Generated from Godot docs: RDFramebufferPass.get_input_attachments
+     */
     fun getInputAttachments(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getInputAttachmentsBind, handle)
     }
 
+    /**
+     * If the color attachments are multisampled, non-multisampled resolve attachments can be provided.
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_resolve_attachments
+     */
     fun setResolveAttachments(pMember: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(setResolveAttachmentsBind, handle, pMember)
     }
 
+    /**
+     * If the color attachments are multisampled, non-multisampled resolve attachments can be provided.
+     *
+     * Generated from Godot docs: RDFramebufferPass.get_resolve_attachments
+     */
     fun getResolveAttachments(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, handle)
     }
 
+    /**
+     * Attachments to preserve in this pass (otherwise they are erased).
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_preserve_attachments
+     */
     fun setPreserveAttachments(pMember: List<Int>) {
         ObjectCalls.ptrcallWithPackedInt32ListArg(setPreserveAttachmentsBind, handle, pMember)
     }
 
+    /**
+     * Attachments to preserve in this pass (otherwise they are erased).
+     *
+     * Generated from Godot docs: RDFramebufferPass.get_preserve_attachments
+     */
     fun getPreserveAttachments(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPreserveAttachmentsBind, handle)
     }
 
+    /**
+     * Depth attachment. ATTACHMENT_UNUSED should be used if no depth buffer is required for this pass.
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_depth_attachment
+     */
     fun setDepthAttachment(pMember: Int) {
         ObjectCalls.ptrcallWithIntArg(setDepthAttachmentBind, handle, pMember)
     }
 
+    /**
+     * Depth attachment. ATTACHMENT_UNUSED should be used if no depth buffer is required for this pass.
+     *
+     * Generated from Godot docs: RDFramebufferPass.get_depth_attachment
+     */
     fun getDepthAttachment(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDepthAttachmentBind, handle)
     }

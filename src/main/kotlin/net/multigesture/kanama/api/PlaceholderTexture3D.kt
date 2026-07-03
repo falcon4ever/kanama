@@ -17,10 +17,20 @@ class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The texture's size (in pixels).
+     *
+     * Generated from Godot docs: PlaceholderTexture3D.set_size
+     */
     fun setSize(size: Vector3i) {
         ObjectCalls.ptrcallWithVector3iArg(setSizeBind, handle, size)
     }
 
+    /**
+     * The texture's size (in pixels).
+     *
+     * Generated from Godot docs: PlaceholderTexture3D.get_size
+     */
     fun getSize(): Vector3i {
         return ObjectCalls.ptrcallNoArgsRetVector3i(getSizeBind, handle)
     }

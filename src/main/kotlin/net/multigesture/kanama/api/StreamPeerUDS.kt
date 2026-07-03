@@ -20,10 +20,20 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(bindBind, handle, path)
     }
 
+    /**
+     * Connects to the specified UNIX Domain Socket path. Returns `OK` on success.
+     *
+     * Generated from Godot docs: StreamPeerUDS.connect_to_host
+     */
     fun connectToHost(path: String): Long {
         return ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, handle, path)
     }
 
+    /**
+     * Returns the socket path of this peer.
+     *
+     * Generated from Godot docs: StreamPeerUDS.get_connected_path
+     */
     fun getConnectedPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedPathBind, handle)
     }

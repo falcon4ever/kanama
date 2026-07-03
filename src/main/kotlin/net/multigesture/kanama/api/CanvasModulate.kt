@@ -17,10 +17,20 @@ class CanvasModulate(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setColorProperty")
         set(value) = setColor(value)
 
+    /**
+     * The tint color to apply.
+     *
+     * Generated from Godot docs: CanvasModulate.set_color
+     */
     fun setColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
+    /**
+     * The tint color to apply.
+     *
+     * Generated from Godot docs: CanvasModulate.get_color
+     */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }

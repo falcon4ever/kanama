@@ -13,31 +13,67 @@ object Marshalls {
         ObjectCalls.getSingleton("Marshalls")
     }
 
+    /**
+     * Returns a Base64-encoded string of the `Variant` `variant`. If `full_objects` is `true`,
+     * encoding objects is allowed (and can potentially include code). Internally, this uses the same
+     * encoding mechanism as the `@GlobalScope.var_to_bytes` method.
+     *
+     * Generated from Godot docs: Marshalls.variant_to_base64
+     */
     @JvmStatic
     fun variantToBase64(variant: Any?, fullObjects: Boolean = false): String {
         return ObjectCalls.ptrcallWithVariantAndBoolArgRetString(variantToBase64Bind, singleton, variant, fullObjects)
     }
 
+    /**
+     * Returns a decoded `Variant` corresponding to the Base64-encoded string `base64_str`. If
+     * `allow_objects` is `true`, decoding objects is allowed. Internally, this uses the same decoding
+     * mechanism as the `@GlobalScope.bytes_to_var` method. Warning: Deserialized objects can contain
+     * code which gets executed. Do not use this option if the serialized object comes from untrusted
+     * sources to avoid potential security threats such as remote code execution.
+     *
+     * Generated from Godot docs: Marshalls.base64_to_variant
+     */
     @JvmStatic
     fun base64ToVariant(base64Str: String, allowObjects: Boolean = false): Any? {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(base64ToVariantBind, singleton, base64Str, allowObjects)
     }
 
+    /**
+     * Returns a Base64-encoded string of a given `PackedByteArray`.
+     *
+     * Generated from Godot docs: Marshalls.raw_to_base64
+     */
     @JvmStatic
     fun rawToBase64(array: ByteArray): String {
         return ObjectCalls.ptrcallWithByteArrayArgRetString(rawToBase64Bind, singleton, array)
     }
 
+    /**
+     * Returns a decoded `PackedByteArray` corresponding to the Base64-encoded string `base64_str`.
+     *
+     * Generated from Godot docs: Marshalls.base64_to_raw
+     */
     @JvmStatic
     fun base64ToRaw(base64Str: String): ByteArray {
         return ObjectCalls.ptrcallWithStringArgRetByteArray(base64ToRawBind, singleton, base64Str)
     }
 
+    /**
+     * Returns a Base64-encoded string of the UTF-8 string `utf8_str`.
+     *
+     * Generated from Godot docs: Marshalls.utf8_to_base64
+     */
     @JvmStatic
     fun utf8ToBase64(utf8Str: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(utf8ToBase64Bind, singleton, utf8Str)
     }
 
+    /**
+     * Returns a decoded string corresponding to the Base64-encoded string `base64_str`.
+     *
+     * Generated from Godot docs: Marshalls.base64_to_utf8
+     */
     @JvmStatic
     fun base64ToUtf8(base64Str: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(base64ToUtf8Bind, singleton, base64Str)

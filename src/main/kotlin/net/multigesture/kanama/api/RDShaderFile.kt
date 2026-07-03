@@ -17,22 +17,51 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
         @JvmName("setBaseErrorProperty")
         set(value) = setBaseError(value)
 
+    /**
+     * Sets the SPIR-V `bytecode` that will be compiled for the specified `version`.
+     *
+     * Generated from Godot docs: RDShaderFile.set_bytecode
+     */
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
         ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, handle, bytecode?.requireOpenHandle() ?: MemorySegment.NULL, version)
     }
 
+    /**
+     * Returns the SPIR-V intermediate representation for the specified shader `version`.
+     *
+     * Generated from Godot docs: RDShaderFile.get_spirv
+     */
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
         return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, handle, version))
     }
 
+    /**
+     * Returns the list of compiled versions for this shader.
+     *
+     * Generated from Godot docs: RDShaderFile.get_version_list
+     */
     fun getVersionList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getVersionListBind, handle)
     }
 
+    /**
+     * The base compilation error message, which indicates errors not related to a specific shader
+     * stage if non-empty. If empty, shader compilation is not necessarily successful (check
+     * `RDShaderSPIRV`'s error message members).
+     *
+     * Generated from Godot docs: RDShaderFile.set_base_error
+     */
     fun setBaseError(error: String) {
         ObjectCalls.ptrcallWithStringArg(setBaseErrorBind, handle, error)
     }
 
+    /**
+     * The base compilation error message, which indicates errors not related to a specific shader
+     * stage if non-empty. If empty, shader compilation is not necessarily successful (check
+     * `RDShaderSPIRV`'s error message members).
+     *
+     * Generated from Godot docs: RDShaderFile.get_base_error
+     */
     fun getBaseError(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getBaseErrorBind, handle)
     }

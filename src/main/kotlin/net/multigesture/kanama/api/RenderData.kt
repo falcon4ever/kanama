@@ -10,18 +10,40 @@ import net.multigesture.kanama.types.RID
  * Generated from Godot docs: RenderData
  */
 open class RenderData(handle: MemorySegment) : GodotObject(handle) {
+    /**
+     * Returns the `RenderSceneBuffers` object managing the scene buffers for rendering this viewport.
+     *
+     * Generated from Godot docs: RenderData.get_render_scene_buffers
+     */
     fun getRenderSceneBuffers(): RenderSceneBuffers? {
         return RenderSceneBuffers.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneBuffersBind, handle))
     }
 
+    /**
+     * Returns the `RenderSceneData` object managing this frames scene data.
+     *
+     * Generated from Godot docs: RenderData.get_render_scene_data
+     */
     fun getRenderSceneData(): RenderSceneData? {
         return RenderSceneData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneDataBind, handle))
     }
 
+    /**
+     * Returns the `RID` of the environment object in the `RenderingServer` being used to render this
+     * viewport.
+     *
+     * Generated from Godot docs: RenderData.get_environment
+     */
     fun getEnvironment(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getEnvironmentBind, handle)
     }
 
+    /**
+     * Returns the `RID` of the camera attributes object in the `RenderingServer` being used to render
+     * this viewport.
+     *
+     * Generated from Godot docs: RenderData.get_camera_attributes
+     */
     fun getCameraAttributes(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getCameraAttributesBind, handle)
     }

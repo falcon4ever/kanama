@@ -28,26 +28,56 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setEnergyMultiplierProperty")
         set(value) = setEnergyMultiplier(value)
 
+    /**
+     * `Texture2D` to be applied to the `PanoramaSkyMaterial`.
+     *
+     * Generated from Godot docs: PanoramaSkyMaterial.set_panorama
+     */
     fun setPanorama(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * `Texture2D` to be applied to the `PanoramaSkyMaterial`.
+     *
+     * Generated from Godot docs: PanoramaSkyMaterial.get_panorama
+     */
     fun getPanorama(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, handle))
     }
 
+    /**
+     * A boolean value to determine if the background texture should be filtered or not.
+     *
+     * Generated from Godot docs: PanoramaSkyMaterial.set_filtering_enabled
+     */
     fun setFilteringEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFilteringEnabledBind, handle, enabled)
     }
 
+    /**
+     * A boolean value to determine if the background texture should be filtered or not.
+     *
+     * Generated from Godot docs: PanoramaSkyMaterial.is_filtering_enabled
+     */
     fun isFilteringEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFilteringEnabledBind, handle)
     }
 
+    /**
+     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
+     *
+     * Generated from Godot docs: PanoramaSkyMaterial.set_energy_multiplier
+     */
     fun setEnergyMultiplier(multiplier: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
+    /**
+     * The sky's overall brightness multiplier. Higher values result in a brighter sky.
+     *
+     * Generated from Godot docs: PanoramaSkyMaterial.get_energy_multiplier
+     */
     fun getEnergyMultiplier(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }

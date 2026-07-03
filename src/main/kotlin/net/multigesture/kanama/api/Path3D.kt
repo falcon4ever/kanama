@@ -23,18 +23,40 @@ class Path3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setDebugCustomColorProperty")
         set(value) = setDebugCustomColor(value)
 
+    /**
+     * A `Curve3D` describing the path.
+     *
+     * Generated from Godot docs: Path3D.set_curve
+     */
     fun setCurve(curve: Curve3D?) {
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * A `Curve3D` describing the path.
+     *
+     * Generated from Godot docs: Path3D.get_curve
+     */
     fun getCurve(): Curve3D? {
         return Curve3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 
+    /**
+     * The custom color used to draw the path in the editor. If set to `Color.BLACK` (as by default),
+     * the color set in `ProjectSettings.debug/shapes/paths/geometry_color` is used.
+     *
+     * Generated from Godot docs: Path3D.set_debug_custom_color
+     */
     fun setDebugCustomColor(debugCustomColor: Color) {
         ObjectCalls.ptrcallWithColorArg(setDebugCustomColorBind, handle, debugCustomColor)
     }
 
+    /**
+     * The custom color used to draw the path in the editor. If set to `Color.BLACK` (as by default),
+     * the color set in `ProjectSettings.debug/shapes/paths/geometry_color` is used.
+     *
+     * Generated from Godot docs: Path3D.get_debug_custom_color
+     */
     fun getDebugCustomColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getDebugCustomColorBind, handle)
     }

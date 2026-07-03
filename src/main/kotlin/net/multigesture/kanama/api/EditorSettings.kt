@@ -9,14 +9,31 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorSettings
  */
 class EditorSettings(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Returns `true` if the setting specified by `name` exists, `false` otherwise.
+     *
+     * Generated from Godot docs: EditorSettings.has_setting
+     */
     fun hasSetting(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasSettingBind, handle, name)
     }
 
+    /**
+     * Sets the `value` of the setting specified by `name`. This is equivalent to using `Object.set` on
+     * the EditorSettings instance.
+     *
+     * Generated from Godot docs: EditorSettings.set_setting
+     */
     fun setSetting(name: String, value: Any?) {
         ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, handle, name, value)
     }
 
+    /**
+     * Returns the value of the setting specified by `name`. This is equivalent to using `Object.get`
+     * on the EditorSettings instance.
+     *
+     * Generated from Godot docs: EditorSettings.get_setting
+     */
     fun getSetting(name: String): Any? {
         return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getSettingBind, handle, name)
     }
@@ -30,74 +47,187 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithStringArg(eraseBind, handle, property)
     }
 
+    /**
+     * Sets the initial value of the setting specified by `name` to `value`. This is used to provide a
+     * value for the Revert button in the Editor Settings. If `update_current` is `true`, the setting
+     * is reset to `value` as well.
+     *
+     * Generated from Godot docs: EditorSettings.set_initial_value
+     */
     fun setInitialValue(name: String, value: Any?, updateCurrent: Boolean) {
         ObjectCalls.ptrcallWithStringNameVariantBoolArgs(setInitialValueBind, handle, name, value, updateCurrent)
     }
 
+    /**
+     * Adds a custom property info to a property. The dictionary must contain: - `name`: `String` (the
+     * name of the property) - `type`: `int` (see `Variant.Type`) - optionally `hint`: `int` (see
+     * `PropertyHint`) and `hint_string`: `String`
+     *
+     * Generated from Godot docs: EditorSettings.add_property_info
+     */
     fun addPropertyInfo(info: Map<String, Any?>) {
         ObjectCalls.ptrcallWithDictionaryArg(addPropertyInfoBind, handle, info)
     }
 
+    /**
+     * Sets project-specific metadata with the `section`, `key` and `data` specified. This metadata is
+     * stored outside the project folder and therefore won't be checked into version control. See also
+     * `get_project_metadata`.
+     *
+     * Generated from Godot docs: EditorSettings.set_project_metadata
+     */
     fun setProjectMetadata(section: String, key: String, data: Any?) {
         ObjectCalls.ptrcallWithTwoStringAndVariantArg(setProjectMetadataBind, handle, section, key, data)
     }
 
+    /**
+     * Returns project-specific metadata for the `section` and `key` specified. If the metadata doesn't
+     * exist, `default` will be returned instead. See also `set_project_metadata`.
+     *
+     * Generated from Godot docs: EditorSettings.get_project_metadata
+     */
     fun getProjectMetadata(section: String, key: String, default: Any? = null): Any? {
         return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getProjectMetadataBind, handle, section, key, default)
     }
 
+    /**
+     * Sets the list of favorite files and directories for this project.
+     *
+     * Generated from Godot docs: EditorSettings.set_favorites
+     */
     fun setFavorites(dirs: List<String>) {
         ObjectCalls.ptrcallWithPackedStringListArg(setFavoritesBind, handle, dirs)
     }
 
+    /**
+     * Returns the list of favorite files and directories for this project.
+     *
+     * Generated from Godot docs: EditorSettings.get_favorites
+     */
     fun getFavorites(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoritesBind, handle)
     }
 
+    /**
+     * Sets the list of recently visited folders in the file dialog for this project.
+     *
+     * Generated from Godot docs: EditorSettings.set_recent_dirs
+     */
     fun setRecentDirs(dirs: List<String>) {
         ObjectCalls.ptrcallWithPackedStringListArg(setRecentDirsBind, handle, dirs)
     }
 
+    /**
+     * Returns the list of recently visited folders in the file dialog for this project.
+     *
+     * Generated from Godot docs: EditorSettings.get_recent_dirs
+     */
     fun getRecentDirs(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentDirsBind, handle)
     }
 
+    /**
+     * Overrides the built-in editor action `name` with the input actions defined in `actions_list`.
+     *
+     * Generated from Godot docs: EditorSettings.set_builtin_action_override
+     */
     fun setBuiltinActionOverride(name: String, actionsList: List<InputEvent>) {
         ObjectCalls.ptrcallWithStringAndObjectListArgs(setBuiltinActionOverrideBind, handle, name, actionsList)
     }
 
+    /**
+     * Adds a `shortcut` whose path is specified by `path`. The `path` determines how the shortcut is
+     * organized and displayed in the editor's shortcut settings. The path format affects the display
+     * as follows: - `"name"` (no slash): Creates a category named `name` with the shortcut displayed
+     * as `name`. - `"category/name"` (single slash): Displays as `name` in the `category` section. -
+     * `"category/name/extra"` (multiple slashes): Extra path components are ignored, so this behaves
+     * the same as `"category/name"`. Note: Shortcuts are only saved to the editor settings if they
+     * differ from their original/default state. This means empty shortcuts that were originally empty
+     * will not persist between editor sessions and must be re-added. If a shortcut with the same
+     * `path` already exists, this method will update it with the new `shortcut` instead of creating a
+     * duplicate.
+     *
+     * Generated from Godot docs: EditorSettings.add_shortcut
+     */
     fun addShortcut(path: String, shortcut: Shortcut?) {
         ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, handle, path, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Removes the shortcut specified by `path`.
+     *
+     * Generated from Godot docs: EditorSettings.remove_shortcut
+     */
     fun removeShortcut(path: String) {
         ObjectCalls.ptrcallWithStringArg(removeShortcutBind, handle, path)
     }
 
+    /**
+     * Returns `true` if the shortcut specified by `path` matches the event specified by `event`,
+     * `false` otherwise.
+     *
+     * Generated from Godot docs: EditorSettings.is_shortcut
+     */
     fun isShortcut(path: String, event: InputEvent?): Boolean {
         return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, handle, path, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns `true` if the shortcut specified by `path` exists, `false` otherwise.
+     *
+     * Generated from Godot docs: EditorSettings.has_shortcut
+     */
     fun hasShortcut(path: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasShortcutBind, handle, path)
     }
 
+    /**
+     * Returns the shortcut specified by `path`. Tries to find a built-in action if no shortcut with
+     * the provided path is found in the shortcut list. If found, adds it to the list and returns it,
+     * otherwise returns `null`.
+     *
+     * Generated from Godot docs: EditorSettings.get_shortcut
+     */
     fun getShortcut(path: String): Shortcut? {
         return Shortcut.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, handle, path))
     }
 
+    /**
+     * Returns the list of stored shortcut paths.
+     *
+     * Generated from Godot docs: EditorSettings.get_shortcut_list
+     */
     fun getShortcutList(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getShortcutListBind, handle)
     }
 
+    /**
+     * Checks if any settings with the prefix `setting_prefix` exist in the set of changed settings.
+     * See also `get_changed_settings`.
+     *
+     * Generated from Godot docs: EditorSettings.check_changed_settings_in_group
+     */
     fun checkChangedSettingsInGroup(settingPrefix: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(checkChangedSettingsInGroupBind, handle, settingPrefix)
     }
 
+    /**
+     * Gets an array of the settings which have been changed since the last save. Note that internally
+     * `changed_settings` is cleared after a successful save, so generally the most appropriate place
+     * to use this method is when processing `NOTIFICATION_EDITOR_SETTINGS_CHANGED`.
+     *
+     * Generated from Godot docs: EditorSettings.get_changed_settings
+     */
     fun getChangedSettings(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getChangedSettingsBind, handle)
     }
 
+    /**
+     * Marks the passed editor setting as being changed, see `get_changed_settings`. Only settings
+     * which exist (see `has_setting`) will be accepted.
+     *
+     * Generated from Godot docs: EditorSettings.mark_setting_changed
+     */
     fun markSettingChanged(setting: String) {
         ObjectCalls.ptrcallWithStringArg(markSettingChangedBind, handle, setting)
     }

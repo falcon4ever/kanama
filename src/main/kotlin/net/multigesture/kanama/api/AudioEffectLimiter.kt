@@ -34,34 +34,78 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setSoftClipRatioProperty")
         set(value) = setSoftClipRatio(value)
 
+    /**
+     * The waveform's maximum allowed value, in dB. Value can range from -20 to -0.1.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.set_ceiling_db
+     */
     fun setCeilingDb(ceiling: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
     }
 
+    /**
+     * The waveform's maximum allowed value, in dB. Value can range from -20 to -0.1.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.get_ceiling_db
+     */
     fun getCeilingDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
     }
 
+    /**
+     * The volume threshold level from which the limiter begins to be active, in dB. Value can range
+     * from -30 to 0.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.set_threshold_db
+     */
     fun setThresholdDb(threshold: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setThresholdDbBind, handle, threshold)
     }
 
+    /**
+     * The volume threshold level from which the limiter begins to be active, in dB. Value can range
+     * from -30 to 0.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.get_threshold_db
+     */
     fun getThresholdDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdDbBind, handle)
     }
 
+    /**
+     * Modifies the volume of the limited waves, in dB. Value can range from 0 to 6.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.set_soft_clip_db
+     */
     fun setSoftClipDb(softClip: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSoftClipDbBind, handle, softClip)
     }
 
+    /**
+     * Modifies the volume of the limited waves, in dB. Value can range from 0 to 6.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.get_soft_clip_db
+     */
     fun getSoftClipDb(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipDbBind, handle)
     }
 
+    /**
+     * This property has no effect on the audio. Use `AudioEffectHardLimiter` instead, as this Limiter
+     * effect is deprecated.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.set_soft_clip_ratio
+     */
     fun setSoftClipRatio(softClip: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSoftClipRatioBind, handle, softClip)
     }
 
+    /**
+     * This property has no effect on the audio. Use `AudioEffectHardLimiter` instead, as this Limiter
+     * effect is deprecated.
+     *
+     * Generated from Godot docs: AudioEffectLimiter.get_soft_clip_ratio
+     */
     fun getSoftClipRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipRatioBind, handle)
     }

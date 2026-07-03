@@ -13,61 +13,128 @@ object EngineDebugger {
         ObjectCalls.getSingleton("EngineDebugger")
     }
 
+    /**
+     * Returns `true` if the debugger is active otherwise `false`.
+     *
+     * Generated from Godot docs: EngineDebugger.is_active
+     */
     @JvmStatic
     fun isActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, singleton)
     }
 
+    /**
+     * Registers a profiler with the given `name`. See `EngineProfiler` for more information.
+     *
+     * Generated from Godot docs: EngineDebugger.register_profiler
+     */
     @JvmStatic
     fun registerProfiler(name: String, profiler: EngineProfiler?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(registerProfilerBind, singleton, name, profiler?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Unregisters a profiler with given `name`.
+     *
+     * Generated from Godot docs: EngineDebugger.unregister_profiler
+     */
     @JvmStatic
     fun unregisterProfiler(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(unregisterProfilerBind, singleton, name)
     }
 
+    /**
+     * Returns `true` if a profiler with the given name is present and active otherwise `false`.
+     *
+     * Generated from Godot docs: EngineDebugger.is_profiling
+     */
     @JvmStatic
     fun isProfiling(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isProfilingBind, singleton, name)
     }
 
+    /**
+     * Returns `true` if a profiler with the given name is present otherwise `false`.
+     *
+     * Generated from Godot docs: EngineDebugger.has_profiler
+     */
     @JvmStatic
     fun hasProfiler(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasProfilerBind, singleton, name)
     }
 
+    /**
+     * Calls the `add` callable of the profiler with given `name` and `data`.
+     *
+     * Generated from Godot docs: EngineDebugger.profiler_add_frame_data
+     */
     @JvmStatic
     fun profilerAddFrameData(name: String, data: List<Any?>) {
         ObjectCalls.ptrcallWithStringNameArrayArgs(profilerAddFrameDataBind, singleton, name, data)
     }
 
+    /**
+     * Calls the `toggle` callable of the profiler with given `name` and `arguments`. Enables/Disables
+     * the same profiler depending on `enable` argument.
+     *
+     * Generated from Godot docs: EngineDebugger.profiler_enable
+     */
     @JvmStatic
     fun profilerEnable(name: String, enable: Boolean, arguments: List<Any?> = emptyList()) {
         ObjectCalls.ptrcallWithStringNameBoolArrayArgs(profilerEnableBind, singleton, name, enable, arguments)
     }
 
+    /**
+     * Registers a message capture with given `name`. If `name` is "my_message" then messages starting
+     * with "my_message:" will be called with the given callable. The callable must accept a message
+     * string and a data array as argument. The callable should return `true` if the message is
+     * recognized. Note: The callable will receive the message with the prefix stripped, unlike
+     * `EditorDebuggerPlugin._capture`. See the `EditorDebuggerPlugin` description for an example.
+     *
+     * Generated from Godot docs: EngineDebugger.register_message_capture
+     */
     @JvmStatic
     fun registerMessageCapture(name: String, callable: GodotCallable) {
         ObjectCalls.ptrcallWithStringNameAndCallableArgs(registerMessageCaptureBind, singleton, name, callable.target.handle, callable.method)
     }
 
+    /**
+     * Unregisters the message capture with given `name`.
+     *
+     * Generated from Godot docs: EngineDebugger.unregister_message_capture
+     */
     @JvmStatic
     fun unregisterMessageCapture(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(unregisterMessageCaptureBind, singleton, name)
     }
 
+    /**
+     * Returns `true` if a capture with the given name is present otherwise `false`.
+     *
+     * Generated from Godot docs: EngineDebugger.has_capture
+     */
     @JvmStatic
     fun hasCapture(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasCaptureBind, singleton, name)
     }
 
+    /**
+     * Forces a processing loop of debugger events. The purpose of this method is just processing
+     * events every now and then when the script might get too busy, so that bugs like infinite loops
+     * can be caught.
+     *
+     * Generated from Godot docs: EngineDebugger.line_poll
+     */
     @JvmStatic
     fun linePoll() {
         ObjectCalls.ptrcallNoArgs(linePollBind, singleton)
     }
 
+    /**
+     * Sends a message with given `message` and `data` array.
+     *
+     * Generated from Godot docs: EngineDebugger.send_message
+     */
     @JvmStatic
     fun sendMessage(message: String, data: List<Any?>) {
         ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, singleton, message, data)
@@ -84,51 +151,102 @@ object EngineDebugger {
         ObjectCalls.ptrcallWithTwoBoolArgs(debugBind, singleton, canContinue, isErrorBreakpoint)
     }
 
+    /**
+     * Starts a debug break in script execution, optionally specifying whether the program can continue
+     * based on `can_continue` and whether the break was due to a breakpoint.
+     *
+     * Generated from Godot docs: EngineDebugger.script_debug
+     */
     @JvmStatic
     fun scriptDebug(language: ScriptLanguage, canContinue: Boolean = true, isErrorBreakpoint: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(scriptDebugBind, singleton, language.handle, canContinue, isErrorBreakpoint)
     }
 
+    /**
+     * Sets the current debugging lines that remain.
+     *
+     * Generated from Godot docs: EngineDebugger.set_lines_left
+     */
     @JvmStatic
     fun setLinesLeft(lines: Int) {
         ObjectCalls.ptrcallWithIntArg(setLinesLeftBind, singleton, lines)
     }
 
+    /**
+     * Returns the number of lines that remain.
+     *
+     * Generated from Godot docs: EngineDebugger.get_lines_left
+     */
     @JvmStatic
     fun getLinesLeft(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLinesLeftBind, singleton)
     }
 
+    /**
+     * Sets the current debugging depth.
+     *
+     * Generated from Godot docs: EngineDebugger.set_depth
+     */
     @JvmStatic
     fun setDepth(depth: Int) {
         ObjectCalls.ptrcallWithIntArg(setDepthBind, singleton, depth)
     }
 
+    /**
+     * Returns the current debug depth.
+     *
+     * Generated from Godot docs: EngineDebugger.get_depth
+     */
     @JvmStatic
     fun getDepth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, singleton)
     }
 
+    /**
+     * Returns `true` if the given `source` and `line` represent an existing breakpoint.
+     *
+     * Generated from Godot docs: EngineDebugger.is_breakpoint
+     */
     @JvmStatic
     fun isBreakpoint(line: Int, source: String): Boolean {
         return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(isBreakpointBind, singleton, line, source)
     }
 
+    /**
+     * Returns `true` if the debugger is skipping breakpoints otherwise `false`.
+     *
+     * Generated from Godot docs: EngineDebugger.is_skipping_breakpoints
+     */
     @JvmStatic
     fun isSkippingBreakpoints(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSkippingBreakpointsBind, singleton)
     }
 
+    /**
+     * Inserts a new breakpoint with the given `source` and `line`.
+     *
+     * Generated from Godot docs: EngineDebugger.insert_breakpoint
+     */
     @JvmStatic
     fun insertBreakpoint(line: Int, source: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(insertBreakpointBind, singleton, line, source)
     }
 
+    /**
+     * Removes a breakpoint with the given `source` and `line`.
+     *
+     * Generated from Godot docs: EngineDebugger.remove_breakpoint
+     */
     @JvmStatic
     fun removeBreakpoint(line: Int, source: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(removeBreakpointBind, singleton, line, source)
     }
 
+    /**
+     * Clears all breakpoints.
+     *
+     * Generated from Godot docs: EngineDebugger.clear_breakpoints
+     */
     @JvmStatic
     fun clearBreakpoints() {
         ObjectCalls.ptrcallNoArgs(clearBreakpointsBind, singleton)

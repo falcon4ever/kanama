@@ -48,74 +48,174 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
         @JvmName("setDrawCenterProperty")
         set(value) = setDrawCenter(value)
 
+    /**
+     * The texture to use when drawing this style box.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_texture
+     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The texture to use when drawing this style box.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_texture
+     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
+    /**
+     * Increases the top margin of the 3×3 texture box. A higher value means more of the source texture
+     * is considered to be part of the top border of the 3×3 box. This is also the value used as
+     * fallback for `StyleBox.content_margin_top` if it is negative.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_texture_margin
+     */
     fun setTextureMargin(margin: Long, size: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, handle, margin, size)
     }
 
+    /**
+     * Sets the margin to `size` pixels for all sides.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_texture_margin_all
+     */
     fun setTextureMarginAll(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTextureMarginAllBind, handle, size)
     }
 
+    /**
+     * Increases the top margin of the 3×3 texture box. A higher value means more of the source texture
+     * is considered to be part of the top border of the 3×3 box. This is also the value used as
+     * fallback for `StyleBox.content_margin_top` if it is negative.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_texture_margin
+     */
     fun getTextureMargin(margin: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, handle, margin)
     }
 
+    /**
+     * Expands the top margin of this style box when drawing, causing it to be drawn larger than
+     * requested.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_expand_margin
+     */
     fun setExpandMargin(margin: Long, size: Double) {
         ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
     }
 
+    /**
+     * Sets the expand margin to `size` pixels for all sides.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_expand_margin_all
+     */
     fun setExpandMarginAll(size: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
     }
 
+    /**
+     * Expands the top margin of this style box when drawing, causing it to be drawn larger than
+     * requested.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_expand_margin
+     */
     fun getExpandMargin(margin: Long): Double {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
     }
 
+    /**
+     * The region to use from the `texture`. This is equivalent to first wrapping the `texture` in an
+     * `AtlasTexture` with the same region. If empty (`Rect2(0, 0, 0, 0)`), the whole `texture` is
+     * used.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_region_rect
+     */
     fun setRegionRect(region: Rect2) {
         ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, region)
     }
 
+    /**
+     * The region to use from the `texture`. This is equivalent to first wrapping the `texture` in an
+     * `AtlasTexture` with the same region. If empty (`Rect2(0, 0, 0, 0)`), the whole `texture` is
+     * used.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_region_rect
+     */
     fun getRegionRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
     }
 
+    /**
+     * If `true`, the nine-patch texture's center tile will be drawn.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_draw_center
+     */
     fun setDrawCenter(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, enable)
     }
 
+    /**
+     * If `true`, the nine-patch texture's center tile will be drawn.
+     *
+     * Generated from Godot docs: StyleBoxTexture.is_draw_center_enabled
+     */
     fun isDrawCenterEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
     }
 
+    /**
+     * Modulates the color of the texture when this style box is drawn.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_modulate
+     */
     fun setModulate(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, color)
     }
 
+    /**
+     * Modulates the color of the texture when this style box is drawn.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_modulate
+     */
     fun getModulate(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
     }
 
+    /**
+     * Controls how the stylebox's texture will be stretched or tiled horizontally.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_h_axis_stretch_mode
+     */
     fun setHAxisStretchMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, handle, mode)
     }
 
+    /**
+     * Controls how the stylebox's texture will be stretched or tiled horizontally.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_h_axis_stretch_mode
+     */
     fun getHAxisStretchMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, handle)
     }
 
+    /**
+     * Controls how the stylebox's texture will be stretched or tiled vertically.
+     *
+     * Generated from Godot docs: StyleBoxTexture.set_v_axis_stretch_mode
+     */
     fun setVAxisStretchMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, handle, mode)
     }
 
+    /**
+     * Controls how the stylebox's texture will be stretched or tiled vertically.
+     *
+     * Generated from Godot docs: StyleBoxTexture.get_v_axis_stretch_mode
+     */
     fun getVAxisStretchMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, handle)
     }

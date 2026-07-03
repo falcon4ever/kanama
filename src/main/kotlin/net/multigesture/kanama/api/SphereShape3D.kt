@@ -16,10 +16,20 @@ class SphereShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setRadiusProperty")
         set(value) = setRadius(value)
 
+    /**
+     * The sphere's radius. The shape's diameter is double the radius.
+     *
+     * Generated from Godot docs: SphereShape3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The sphere's radius. The shape's diameter is double the radius.
+     *
+     * Generated from Godot docs: SphereShape3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }

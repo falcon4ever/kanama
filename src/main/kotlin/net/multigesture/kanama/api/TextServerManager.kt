@@ -13,41 +13,82 @@ object TextServerManager {
         ObjectCalls.getSingleton("TextServerManager")
     }
 
+    /**
+     * Registers a `TextServer` interface.
+     *
+     * Generated from Godot docs: TextServerManager.add_interface
+     */
     @JvmStatic
     fun addInterface(interfaceValue: TextServer?) {
         ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the number of interfaces currently registered.
+     *
+     * Generated from Godot docs: TextServerManager.get_interface_count
+     */
     @JvmStatic
     fun getInterfaceCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getInterfaceCountBind, singleton)
     }
 
+    /**
+     * Removes an interface. All fonts and shaped text caches should be freed before removing an
+     * interface.
+     *
+     * Generated from Godot docs: TextServerManager.remove_interface
+     */
     @JvmStatic
     fun removeInterface(interfaceValue: TextServer?) {
         ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the interface registered at a given index.
+     *
+     * Generated from Godot docs: TextServerManager.get_interface
+     */
     @JvmStatic
     fun getInterface(idx: Int): TextServer? {
         return TextServer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
     }
 
+    /**
+     * Returns a list of available interfaces, with the index and name of each interface.
+     *
+     * Generated from Godot docs: TextServerManager.get_interfaces
+     */
     @JvmStatic
     fun getInterfaces(): List<Map<String, Any?>> {
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getInterfacesBind, singleton)
     }
 
+    /**
+     * Finds an interface by its `name`.
+     *
+     * Generated from Godot docs: TextServerManager.find_interface
+     */
     @JvmStatic
     fun findInterface(name: String): TextServer? {
         return TextServer.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
     }
 
+    /**
+     * Sets the primary `TextServer` interface.
+     *
+     * Generated from Godot docs: TextServerManager.set_primary_interface
+     */
     @JvmStatic
     fun setPrimaryInterface(index: TextServer?) {
         ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(index?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Returns the primary `TextServer` interface currently in use.
+     *
+     * Generated from Godot docs: TextServerManager.get_primary_interface
+     */
     @JvmStatic
     fun getPrimaryInterface(): TextServer? {
         return TextServer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))

@@ -27,70 +27,160 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("formatsProperty")
         get() = getFormats()
 
+    /**
+     * Returns the unique ID for this feed.
+     *
+     * Generated from Godot docs: CameraFeed.get_id
+     */
     fun getId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, handle)
     }
 
+    /**
+     * If `true`, the feed is active.
+     *
+     * Generated from Godot docs: CameraFeed.is_active
+     */
     fun isActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
+    /**
+     * If `true`, the feed is active.
+     *
+     * Generated from Godot docs: CameraFeed.set_active
+     */
     fun setActive(active: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
     }
 
+    /**
+     * Returns the camera's name.
+     *
+     * Generated from Godot docs: CameraFeed.get_name
+     */
     fun getName(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
     }
 
+    /**
+     * Sets the camera's name.
+     *
+     * Generated from Godot docs: CameraFeed.set_name
+     */
     fun setName(name: String) {
         ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
     }
 
+    /**
+     * Returns the position of camera on the device.
+     *
+     * Generated from Godot docs: CameraFeed.get_position
+     */
     fun getPosition(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, handle)
     }
 
+    /**
+     * Sets the position of this camera.
+     *
+     * Generated from Godot docs: CameraFeed.set_position
+     */
     fun setPosition(position: Long) {
         ObjectCalls.ptrcallWithLongArg(setPositionBind, handle, position)
     }
 
+    /**
+     * The transform applied to the camera's image.
+     *
+     * Generated from Godot docs: CameraFeed.get_transform
+     */
     fun getTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
+    /**
+     * The transform applied to the camera's image.
+     *
+     * Generated from Godot docs: CameraFeed.set_transform
+     */
     fun setTransform(transform: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
+    /**
+     * Sets RGB image for this feed.
+     *
+     * Generated from Godot docs: CameraFeed.set_rgb_image
+     */
     fun setRgbImage(rgbImage: Image?) {
         ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, handle, listOf(rgbImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Sets YCbCr image for this feed.
+     *
+     * Generated from Godot docs: CameraFeed.set_ycbcr_image
+     */
     fun setYcbcrImage(ycbcrImage: Image?) {
         ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, handle, listOf(ycbcrImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * Sets Y and CbCr images for this feed.
+     *
+     * Generated from Godot docs: CameraFeed.set_ycbcr_images
+     */
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, handle, yImage?.requireOpenHandle() ?: MemorySegment.NULL, cbcrImage?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Sets the feed as external feed provided by another library.
+     *
+     * Generated from Godot docs: CameraFeed.set_external
+     */
     fun setExternal(width: Int, height: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setExternalBind, handle, width, height)
     }
 
+    /**
+     * Returns the texture backend ID (usable by some external libraries that need a handle to a
+     * texture to write data).
+     *
+     * Generated from Godot docs: CameraFeed.get_texture_tex_id
+     */
     fun getTextureTexId(feedImageType: Long): Long {
         return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, handle, feedImageType)
     }
 
+    /**
+     * Returns feed image data type.
+     *
+     * Generated from Godot docs: CameraFeed.get_datatype
+     */
     fun getDatatype(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, handle)
     }
 
+    /**
+     * Formats supported by the feed. Each entry is a `Dictionary` describing format parameters.
+     *
+     * Generated from Godot docs: CameraFeed.get_formats
+     */
     fun getFormats(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, handle)
     }
 
+    /**
+     * Sets the feed format parameters for the given `index` in the `formats` array. Returns `true` on
+     * success. By default, the YUYV encoded stream is transformed to `FEED_RGB`. The YUYV encoded
+     * stream output format can be changed by setting `parameters`'s `output` entry to one of the
+     * following: - `"separate"` will result in `FEED_YCBCR_SEP`; - `"grayscale"` will result in
+     * desaturated `FEED_RGB`; - `"copy"` will result in `FEED_YCBCR`.
+     *
+     * Generated from Godot docs: CameraFeed.set_format
+     */
     fun setFormat(index: Int, parameters: Map<String, Any?>): Boolean {
         return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, handle, index, parameters)
     }

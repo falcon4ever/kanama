@@ -48,54 +48,125 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
         @JvmName("setTintColorProperty")
         set(value) = setTintColor(value)
 
+    /**
+     * Title of the frame.
+     *
+     * Generated from Godot docs: GraphFrame.set_title
+     */
     fun setTitle(title: String) {
         ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
     }
 
+    /**
+     * Title of the frame.
+     *
+     * Generated from Godot docs: GraphFrame.get_title
+     */
     fun getTitle(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
     }
 
+    /**
+     * Returns the `HBoxContainer` used for the title bar, only containing a `Label` for displaying the
+     * title by default. This can be used to add custom controls to the title bar such as option or
+     * close buttons.
+     *
+     * Generated from Godot docs: GraphFrame.get_titlebar_hbox
+     */
     fun getTitlebarHbox(): HBoxContainer? {
         return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, handle))
     }
 
+    /**
+     * If `true`, the frame's rect will be adjusted automatically to enclose all attached
+     * `GraphElement`s.
+     *
+     * Generated from Godot docs: GraphFrame.set_autoshrink_enabled
+     */
     fun setAutoshrinkEnabled(shrink: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, handle, shrink)
     }
 
+    /**
+     * If `true`, the frame's rect will be adjusted automatically to enclose all attached
+     * `GraphElement`s.
+     *
+     * Generated from Godot docs: GraphFrame.is_autoshrink_enabled
+     */
     fun isAutoshrinkEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, handle)
     }
 
+    /**
+     * The margin around the attached nodes that is used to calculate the size of the frame when
+     * `autoshrink_enabled` is `true`.
+     *
+     * Generated from Godot docs: GraphFrame.set_autoshrink_margin
+     */
     fun setAutoshrinkMargin(autoshrinkMargin: Int) {
         ObjectCalls.ptrcallWithIntArg(setAutoshrinkMarginBind, handle, autoshrinkMargin)
     }
 
+    /**
+     * The margin around the attached nodes that is used to calculate the size of the frame when
+     * `autoshrink_enabled` is `true`.
+     *
+     * Generated from Godot docs: GraphFrame.get_autoshrink_margin
+     */
     fun getAutoshrinkMargin(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getAutoshrinkMarginBind, handle)
     }
 
+    /**
+     * The margin inside the frame that can be used to drag the frame.
+     *
+     * Generated from Godot docs: GraphFrame.set_drag_margin
+     */
     fun setDragMargin(dragMargin: Int) {
         ObjectCalls.ptrcallWithIntArg(setDragMarginBind, handle, dragMargin)
     }
 
+    /**
+     * The margin inside the frame that can be used to drag the frame.
+     *
+     * Generated from Godot docs: GraphFrame.get_drag_margin
+     */
     fun getDragMargin(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDragMarginBind, handle)
     }
 
+    /**
+     * If `true`, the tint color will be used to tint the frame.
+     *
+     * Generated from Godot docs: GraphFrame.set_tint_color_enabled
+     */
     fun setTintColorEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, handle, enable)
     }
 
+    /**
+     * If `true`, the tint color will be used to tint the frame.
+     *
+     * Generated from Godot docs: GraphFrame.is_tint_color_enabled
+     */
     fun isTintColorEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, handle)
     }
 
+    /**
+     * The color of the frame when `tint_color_enabled` is `true`.
+     *
+     * Generated from Godot docs: GraphFrame.set_tint_color
+     */
     fun setTintColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setTintColorBind, handle, color)
     }
 
+    /**
+     * The color of the frame when `tint_color_enabled` is `true`.
+     *
+     * Generated from Godot docs: GraphFrame.get_tint_color
+     */
     fun getTintColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, handle)
     }

@@ -10,10 +10,20 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Occluder3D
  */
 open class Occluder3D(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Returns the occluder shape's vertex positions.
+     *
+     * Generated from Godot docs: Occluder3D.get_vertices
+     */
     fun getVertices(): List<Vector3> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
     }
 
+    /**
+     * Returns the occluder shape's vertex indices.
+     *
+     * Generated from Godot docs: Occluder3D.get_indices
+     */
     fun getIndices(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }

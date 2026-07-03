@@ -21,22 +21,52 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, handle, port, host)
     }
 
+    /**
+     * Connects to the specified `host:port` pair. A hostname will be resolved if valid. Returns `OK`
+     * on success.
+     *
+     * Generated from Godot docs: StreamPeerTCP.connect_to_host
+     */
     fun connectToHost(host: String, port: Int): Long {
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
     }
 
+    /**
+     * Returns the IP of this peer.
+     *
+     * Generated from Godot docs: StreamPeerTCP.get_connected_host
+     */
     fun getConnectedHost(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, handle)
     }
 
+    /**
+     * Returns the port of this peer.
+     *
+     * Generated from Godot docs: StreamPeerTCP.get_connected_port
+     */
     fun getConnectedPort(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, handle)
     }
 
+    /**
+     * Returns the local port to which this peer is bound.
+     *
+     * Generated from Godot docs: StreamPeerTCP.get_local_port
+     */
     fun getLocalPort(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
+    /**
+     * If `enabled` is `true`, packets will be sent immediately. If `enabled` is `false` (the default),
+     * packet transfers will be delayed and combined using Nagle's algorithm
+     * (https://en.wikipedia.org/wiki/Nagle%27s_algorithm). Note: It's recommended to leave this
+     * disabled for applications that send large packets or need to transfer a lot of data, as enabling
+     * this can decrease the total available bandwidth.
+     *
+     * Generated from Godot docs: StreamPeerTCP.set_no_delay
+     */
     fun setNoDelay(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, handle, enabled)
     }

@@ -35,34 +35,74 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setAttachmentsProperty")
         set(value) = setAttachments(value)
 
+    /**
+     * If `true`, performs the logic operation defined in `logic_op`.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.set_enable_logic_op
+     */
     fun setEnableLogicOp(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableLogicOpBind, handle, pMember)
     }
 
+    /**
+     * If `true`, performs the logic operation defined in `logic_op`.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.get_enable_logic_op
+     */
     fun getEnableLogicOp(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableLogicOpBind, handle)
     }
 
+    /**
+     * The logic operation to perform for blending. Only effective if `enable_logic_op` is `true`.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.set_logic_op
+     */
     fun setLogicOp(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setLogicOpBind, handle, pMember)
     }
 
+    /**
+     * The logic operation to perform for blending. Only effective if `enable_logic_op` is `true`.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.get_logic_op
+     */
     fun getLogicOp(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, handle)
     }
 
+    /**
+     * The constant color to blend with. See also `RenderingDevice.draw_list_set_blend_constants`.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.set_blend_constant
+     */
     fun setBlendConstant(pMember: Color) {
         ObjectCalls.ptrcallWithColorArg(setBlendConstantBind, handle, pMember)
     }
 
+    /**
+     * The constant color to blend with. See also `RenderingDevice.draw_list_set_blend_constants`.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.get_blend_constant
+     */
     fun getBlendConstant(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getBlendConstantBind, handle)
     }
 
+    /**
+     * The attachments that are blended together.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.set_attachments
+     */
     fun setAttachments(attachments: List<RDPipelineColorBlendStateAttachment>) {
         ObjectCalls.ptrcallWithObjectListArg(setAttachmentsBind, handle, attachments)
     }
 
+    /**
+     * The attachments that are blended together.
+     *
+     * Generated from Godot docs: RDPipelineColorBlendState.get_attachments
+     */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, handle, RDPipelineColorBlendStateAttachment::fromHandle)
     }

@@ -65,18 +65,48 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
         @JvmName("setFollowViewportScaleProperty")
         set(value) = setFollowViewportScale(value)
 
+    /**
+     * Layer index for draw order. Lower values are drawn behind higher values. Note: If multiple
+     * CanvasLayers have the same layer index, `CanvasItem` children of one CanvasLayer are drawn
+     * behind the `CanvasItem` children of the other CanvasLayer. Which CanvasLayer is drawn in front
+     * is non-deterministic. Note: The layer index should be between `RenderingServer.CANVAS_LAYER_MIN`
+     * and `RenderingServer.CANVAS_LAYER_MAX` (inclusive). Any other value will wrap around.
+     *
+     * Generated from Godot docs: CanvasLayer.set_layer
+     */
     fun setLayer(layer: Int) {
         ObjectCalls.ptrcallWithIntArg(setLayerBind, handle, layer)
     }
 
+    /**
+     * Layer index for draw order. Lower values are drawn behind higher values. Note: If multiple
+     * CanvasLayers have the same layer index, `CanvasItem` children of one CanvasLayer are drawn
+     * behind the `CanvasItem` children of the other CanvasLayer. Which CanvasLayer is drawn in front
+     * is non-deterministic. Note: The layer index should be between `RenderingServer.CANVAS_LAYER_MIN`
+     * and `RenderingServer.CANVAS_LAYER_MAX` (inclusive). Any other value will wrap around.
+     *
+     * Generated from Godot docs: CanvasLayer.get_layer
+     */
     fun getLayer(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLayerBind, handle)
     }
 
+    /**
+     * If `false`, any `CanvasItem` under this `CanvasLayer` will be hidden. Unlike
+     * `CanvasItem.visible`, visibility of a `CanvasLayer` isn't propagated to underlying layers.
+     *
+     * Generated from Godot docs: CanvasLayer.set_visible
+     */
     fun setVisible(visible: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
     }
 
+    /**
+     * If `false`, any `CanvasItem` under this `CanvasLayer` will be hidden. Unlike
+     * `CanvasItem.visible`, visibility of a `CanvasLayer` isn't propagated to underlying layers.
+     *
+     * Generated from Godot docs: CanvasLayer.is_visible
+     */
     fun isVisible(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
     }
@@ -101,66 +131,155 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallNoArgs(hideBind, handle)
     }
 
+    /**
+     * The layer's transform.
+     *
+     * Generated from Godot docs: CanvasLayer.set_transform
+     */
     fun setTransform(transform: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
+    /**
+     * The layer's transform.
+     *
+     * Generated from Godot docs: CanvasLayer.get_transform
+     */
     fun getTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
+    /**
+     * Returns the transform from the `CanvasLayer`s coordinate system to the `Viewport`s coordinate
+     * system.
+     *
+     * Generated from Godot docs: CanvasLayer.get_final_transform
+     */
     fun getFinalTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, handle)
     }
 
+    /**
+     * The layer's base offset.
+     *
+     * Generated from Godot docs: CanvasLayer.set_offset
+     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
+    /**
+     * The layer's base offset.
+     *
+     * Generated from Godot docs: CanvasLayer.get_offset
+     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
+    /**
+     * The layer's rotation in radians.
+     *
+     * Generated from Godot docs: CanvasLayer.set_rotation
+     */
     fun setRotation(radians: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRotationBind, handle, radians)
     }
 
+    /**
+     * The layer's rotation in radians.
+     *
+     * Generated from Godot docs: CanvasLayer.get_rotation
+     */
     fun getRotation(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, handle)
     }
 
+    /**
+     * The layer's scale.
+     *
+     * Generated from Godot docs: CanvasLayer.set_scale
+     */
     fun setScale(scale: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setScaleBind, handle, scale)
     }
 
+    /**
+     * The layer's scale.
+     *
+     * Generated from Godot docs: CanvasLayer.get_scale
+     */
     fun getScale(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, handle)
     }
 
+    /**
+     * If enabled, the `CanvasLayer` maintains its position in world space. If disabled, the
+     * `CanvasLayer` stays in a fixed position on the screen. Together with `follow_viewport_scale`,
+     * this can be used for a pseudo-3D effect.
+     *
+     * Generated from Godot docs: CanvasLayer.set_follow_viewport
+     */
     fun setFollowViewport(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setFollowViewportBind, handle, enable)
     }
 
+    /**
+     * If enabled, the `CanvasLayer` maintains its position in world space. If disabled, the
+     * `CanvasLayer` stays in a fixed position on the screen. Together with `follow_viewport_scale`,
+     * this can be used for a pseudo-3D effect.
+     *
+     * Generated from Godot docs: CanvasLayer.is_following_viewport
+     */
     fun isFollowingViewport(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isFollowingViewportBind, handle)
     }
 
+    /**
+     * Scales the layer when using `follow_viewport_enabled`. Layers moving into the foreground should
+     * have increasing scales, while layers moving into the background should have decreasing scales.
+     *
+     * Generated from Godot docs: CanvasLayer.set_follow_viewport_scale
+     */
     fun setFollowViewportScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFollowViewportScaleBind, handle, scale)
     }
 
+    /**
+     * Scales the layer when using `follow_viewport_enabled`. Layers moving into the foreground should
+     * have increasing scales, while layers moving into the background should have decreasing scales.
+     *
+     * Generated from Godot docs: CanvasLayer.get_follow_viewport_scale
+     */
     fun getFollowViewportScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFollowViewportScaleBind, handle)
     }
 
+    /**
+     * The custom `Viewport` node assigned to the `CanvasLayer`. If `null`, uses the default viewport
+     * instead.
+     *
+     * Generated from Godot docs: CanvasLayer.set_custom_viewport
+     */
     fun setCustomViewport(viewport: Node) {
         ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, handle, listOf(viewport.handle))
     }
 
+    /**
+     * The custom `Viewport` node assigned to the `CanvasLayer`. If `null`, uses the default viewport
+     * instead.
+     *
+     * Generated from Godot docs: CanvasLayer.get_custom_viewport
+     */
     fun getCustomViewport(): Node? {
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, handle))
     }
 
+    /**
+     * Returns the RID of the canvas used by this layer.
+     *
+     * Generated from Godot docs: CanvasLayer.get_canvas
+     */
     fun getCanvas(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
     }

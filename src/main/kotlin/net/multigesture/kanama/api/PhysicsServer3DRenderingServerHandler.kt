@@ -12,14 +12,29 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: PhysicsServer3DRenderingServerHandler
  */
 class PhysicsServer3DRenderingServerHandler(handle: MemorySegment) : GodotObject(handle) {
+    /**
+     * Sets the position for the `SoftBody3D` vertex at the index specified by `vertex_id`.
+     *
+     * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_vertex
+     */
     fun setVertex(vertexId: Int, vertex: Vector3) {
         ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, handle, vertexId, vertex)
     }
 
+    /**
+     * Sets the normal for the `SoftBody3D` vertex at the index specified by `vertex_id`.
+     *
+     * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_normal
+     */
     fun setNormal(vertexId: Int, normal: Vector3) {
         ObjectCalls.ptrcallWithIntAndVector3Arg(setNormalBind, handle, vertexId, normal)
     }
 
+    /**
+     * Sets the bounding box for the `SoftBody3D`.
+     *
+     * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_aabb
+     */
     fun setAabb(aabb: AABB) {
         ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
     }

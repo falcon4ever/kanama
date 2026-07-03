@@ -40,50 +40,115 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
         @JvmName("setMetaPressedProperty")
         set(value) = setMetaPressed(value)
 
+    /**
+     * Automatically use Meta (Cmd) on macOS and Ctrl on other platforms. If `true`, `ctrl_pressed` and
+     * `meta_pressed` cannot be set.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.set_command_or_control_autoremap
+     */
     fun setCommandOrControlAutoremap(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCommandOrControlAutoremapBind, handle, enable)
     }
 
+    /**
+     * Automatically use Meta (Cmd) on macOS and Ctrl on other platforms. If `true`, `ctrl_pressed` and
+     * `meta_pressed` cannot be set.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.is_command_or_control_autoremap
+     */
     fun isCommandOrControlAutoremap(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlAutoremapBind, handle)
     }
 
+    /**
+     * On macOS, returns `true` if Meta (Cmd) is pressed. On other platforms, returns `true` if Ctrl is
+     * pressed.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.is_command_or_control_pressed
+     */
     fun isCommandOrControlPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlPressedBind, handle)
     }
 
+    /**
+     * State of the Alt modifier.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.set_alt_pressed
+     */
     fun setAltPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAltPressedBind, handle, pressed)
     }
 
+    /**
+     * State of the Alt modifier.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.is_alt_pressed
+     */
     fun isAltPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAltPressedBind, handle)
     }
 
+    /**
+     * State of the Shift modifier.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.set_shift_pressed
+     */
     fun setShiftPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setShiftPressedBind, handle, pressed)
     }
 
+    /**
+     * State of the Shift modifier.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.is_shift_pressed
+     */
     fun isShiftPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isShiftPressedBind, handle)
     }
 
+    /**
+     * State of the Ctrl modifier.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.set_ctrl_pressed
+     */
     fun setCtrlPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCtrlPressedBind, handle, pressed)
     }
 
+    /**
+     * State of the Ctrl modifier.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.is_ctrl_pressed
+     */
     fun isCtrlPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCtrlPressedBind, handle)
     }
 
+    /**
+     * State of the Meta modifier. On Windows and Linux, this represents the Windows key (sometimes
+     * called "meta" or "super" on Linux). On macOS, this represents the Command key.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.set_meta_pressed
+     */
     fun setMetaPressed(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMetaPressedBind, handle, pressed)
     }
 
+    /**
+     * State of the Meta modifier. On Windows and Linux, this represents the Windows key (sometimes
+     * called "meta" or "super" on Linux). On macOS, this represents the Command key.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.is_meta_pressed
+     */
     fun isMetaPressed(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaPressedBind, handle)
     }
 
+    /**
+     * Returns the keycode combination of modifier keys.
+     *
+     * Generated from Godot docs: InputEventWithModifiers.get_modifiers_mask
+     */
     fun getModifiersMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, handle)
     }

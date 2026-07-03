@@ -20,22 +20,47 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
         ObjectCalls.ptrcallWithObjectArgs(editBind, handle, listOf(objectValue.handle))
     }
 
+    /**
+     * Gets the path of the currently selected property.
+     *
+     * Generated from Godot docs: EditorInspector.get_selected_path
+     */
     fun getSelectedPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getSelectedPathBind, handle)
     }
 
+    /**
+     * Returns the object currently selected in this inspector.
+     *
+     * Generated from Godot docs: EditorInspector.get_edited_object
+     */
     fun getEditedObject(): GodotObject? {
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, handle))
     }
 
+    /**
+     * Collapses all foldable sections.
+     *
+     * Generated from Godot docs: EditorInspector.collapse_all_folding
+     */
     fun collapseAllFolding() {
         ObjectCalls.ptrcallNoArgs(collapseAllFoldingBind, handle)
     }
 
+    /**
+     * Expands all foldable sections.
+     *
+     * Generated from Godot docs: EditorInspector.expand_all_folding
+     */
     fun expandAllFolding() {
         ObjectCalls.ptrcallNoArgs(expandAllFoldingBind, handle)
     }
 
+    /**
+     * Expands only the foldable sections that contain a revertable (i.e. non-default) property.
+     *
+     * Generated from Godot docs: EditorInspector.expand_revertable
+     */
     fun expandRevertable() {
         ObjectCalls.ptrcallNoArgs(expandRevertableBind, handle)
     }
@@ -53,10 +78,23 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
     }
 
     companion object {
+        /**
+         * Creates a property editor that can be used by plugin UI to edit the specified property of an
+         * `object`.
+         *
+         * Generated from Godot docs: EditorInspector.instantiate_property_editor
+         */
         fun instantiatePropertyEditor(objectValue: GodotObject, type: Long, path: String, hint: Long, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
             return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, MemorySegment.NULL, objectValue.handle, type, path, hint, hintText, usage, wide))
         }
 
+        /**
+         * Creates an inspector with the same configuration as the one used in the editor's Inspector dock.
+         * When passing a `LineEdit` into `filter_line_edit`, the inspector will filter its properties
+         * based on `LineEdit.text` whenever `LineEdit.text_changed` is emitted.
+         *
+         * Generated from Godot docs: EditorInspector.create_default_inspector
+         */
         fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
             return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, MemorySegment.NULL, filterLineEdit.handle))
         }

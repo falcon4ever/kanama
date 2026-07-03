@@ -55,58 +55,146 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
         @JvmName("setRecoveryAsCollisionProperty")
         set(value) = setRecoveryAsCollisionEnabled(value)
 
+    /**
+     * Transform in global space where the motion should start. Usually set to
+     * `Node2D.global_transform` for the current body's transform.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.get_from
+     */
     fun getFrom(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getFromBind, handle)
     }
 
+    /**
+     * Transform in global space where the motion should start. Usually set to
+     * `Node2D.global_transform` for the current body's transform.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_from
+     */
     fun setFrom(from: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setFromBind, handle, from)
     }
 
+    /**
+     * Motion vector to define the length and direction of the motion to test.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.get_motion
+     */
     fun getMotion(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, handle)
     }
 
+    /**
+     * Motion vector to define the length and direction of the motion to test.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_motion
+     */
     fun setMotion(motion: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setMotionBind, handle, motion)
     }
 
+    /**
+     * Increases the size of the shapes involved in the collision detection.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.get_margin
+     */
     fun getMargin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
+    /**
+     * Increases the size of the shapes involved in the collision detection.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_margin
+     */
     fun setMargin(margin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
+    /**
+     * If set to `true`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are used to detect
+     * collisions and can stop the motion. Can be useful when snapping to the ground. If set to
+     * `false`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are only used for separation when
+     * overlapping with other bodies. That's the main use for separation ray shapes.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.is_collide_separation_ray_enabled
+     */
     fun isCollideSeparationRayEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
     }
 
+    /**
+     * If set to `true`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are used to detect
+     * collisions and can stop the motion. Can be useful when snapping to the ground. If set to
+     * `false`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are only used for separation when
+     * overlapping with other bodies. That's the main use for separation ray shapes.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_collide_separation_ray_enabled
+     */
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
     }
 
+    /**
+     * Optional array of body `RID` to exclude from collision. Use `CollisionObject2D.get_rid` to get
+     * the `RID` associated with a `CollisionObject2D`-derived node.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.get_exclude_bodies
+     */
     fun getExcludeBodies(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, handle)
     }
 
+    /**
+     * Optional array of body `RID` to exclude from collision. Use `CollisionObject2D.get_rid` to get
+     * the `RID` associated with a `CollisionObject2D`-derived node.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_exclude_bodies
+     */
     fun setExcludeBodies(excludeList: List<RID>) {
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, handle, excludeList)
     }
 
+    /**
+     * Optional array of object unique instance ID to exclude from collision. See
+     * `Object.get_instance_id`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.get_exclude_objects
+     */
     fun getExcludeObjects(): List<Long> {
         return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
     }
 
+    /**
+     * Optional array of object unique instance ID to exclude from collision. See
+     * `Object.get_instance_id`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_exclude_objects
+     */
     fun setExcludeObjects(excludeList: List<Long>) {
         ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, handle, excludeList)
     }
 
+    /**
+     * If set to `true`, any depenetration from the recovery phase is reported as a collision; this is
+     * used e.g. by `CharacterBody2D` for improving floor detection during floor snapping. If set to
+     * `false`, only collisions resulting from the motion are reported, which is generally the desired
+     * behavior.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.is_recovery_as_collision_enabled
+     */
     fun isRecoveryAsCollisionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
     }
 
+    /**
+     * If set to `true`, any depenetration from the recovery phase is reported as a collision; this is
+     * used e.g. by `CharacterBody2D` for improving floor detection during floor snapping. If set to
+     * `false`, only collisions resulting from the motion are reported, which is generally the desired
+     * behavior.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.set_recovery_as_collision_enabled
+     */
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
     }

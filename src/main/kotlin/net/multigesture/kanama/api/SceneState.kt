@@ -10,94 +10,221 @@ import net.multigesture.kanama.types.NodePath
  * Generated from Godot docs: SceneState
  */
 class SceneState(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the resource path to the represented `PackedScene`.
+     *
+     * Generated from Godot docs: SceneState.get_path
+     */
     fun getPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
     }
 
+    /**
+     * Returns the `SceneState` of the scene that this scene inherits from, or `null` if it doesn't
+     * inherit from any scene.
+     *
+     * Generated from Godot docs: SceneState.get_base_scene_state
+     */
     fun getBaseSceneState(): SceneState? {
         return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseSceneStateBind, handle))
     }
 
+    /**
+     * Returns the number of nodes in the scene. The `idx` argument used to query node data in other
+     * `get_node_*` methods in the interval `[0, get_node_count() - 1]`.
+     *
+     * Generated from Godot docs: SceneState.get_node_count
+     */
     fun getNodeCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, handle)
     }
 
+    /**
+     * Returns the type of the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_type
+     */
     fun getNodeType(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeTypeBind, handle, idx)
     }
 
+    /**
+     * Returns the name of the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_name
+     */
     fun getNodeName(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeNameBind, handle, idx)
     }
 
+    /**
+     * Returns the path to the node at `idx`. If `for_parent` is `true`, returns the path of the `idx`
+     * node's parent instead.
+     *
+     * Generated from Godot docs: SceneState.get_node_path
+     */
     fun getNodePath(idx: Int, forParent: Boolean = false): NodePath {
         return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(getNodePathBind, handle, idx, forParent)
     }
 
+    /**
+     * Returns the path to the owner of the node at `idx`, relative to the root node.
+     *
+     * Generated from Godot docs: SceneState.get_node_owner_path
+     */
     fun getNodeOwnerPath(idx: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getNodeOwnerPathBind, handle, idx)
     }
 
+    /**
+     * Returns `true` if the node at `idx` is an `InstancePlaceholder`.
+     *
+     * Generated from Godot docs: SceneState.is_node_instance_placeholder
+     */
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, handle, idx)
     }
 
+    /**
+     * Returns the path to the represented scene file if the node at `idx` is an `InstancePlaceholder`.
+     *
+     * Generated from Godot docs: SceneState.get_node_instance_placeholder
+     */
     fun getNodeInstancePlaceholder(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getNodeInstancePlaceholderBind, handle, idx)
     }
 
+    /**
+     * Returns a `PackedScene` for the node at `idx` (i.e. the whole branch starting at this node, with
+     * its child nodes and resources), or `null` if the node is not an instance.
+     *
+     * Generated from Godot docs: SceneState.get_node_instance
+     */
     fun getNodeInstance(idx: Int): PackedScene? {
         return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, handle, idx))
     }
 
+    /**
+     * Returns the list of group names associated with the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_groups
+     */
     fun getNodeGroups(idx: Int): List<String> {
         return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, handle, idx)
     }
 
+    /**
+     * Returns the node's index, which is its position relative to its siblings. This is only relevant
+     * and saved in scenes for cases where new nodes are added to an instantiated or inherited scene
+     * among siblings from the base scene. Despite the name, this index is not related to the `idx`
+     * argument used here and in other methods.
+     *
+     * Generated from Godot docs: SceneState.get_node_index
+     */
     fun getNodeIndex(idx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getNodeIndexBind, handle, idx)
     }
 
+    /**
+     * Returns the number of exported or overridden properties for the node at `idx`. The `prop_idx`
+     * argument used to query node property data in other `get_node_property_*` methods in the interval
+     * `[0, get_node_property_count() - 1]`.
+     *
+     * Generated from Godot docs: SceneState.get_node_property_count
+     */
     fun getNodePropertyCount(idx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getNodePropertyCountBind, handle, idx)
     }
 
+    /**
+     * Returns the name of the property at `prop_idx` for the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_property_name
+     */
     fun getNodePropertyName(idx: Int, propIdx: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(getNodePropertyNameBind, handle, idx, propIdx)
     }
 
+    /**
+     * Returns the value of the property at `prop_idx` for the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_property_value
+     */
     fun getNodePropertyValue(idx: Int, propIdx: Int): Any? {
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, handle, idx, propIdx)
     }
 
+    /**
+     * Returns the number of signal connections in the scene. The `idx` argument used to query
+     * connection metadata in other `get_connection_*` methods in the interval `[0,
+     * get_connection_count() - 1]`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_count
+     */
     fun getConnectionCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, handle)
     }
 
+    /**
+     * Returns the path to the node that owns the signal at `idx`, relative to the root node.
+     *
+     * Generated from Godot docs: SceneState.get_connection_source
+     */
     fun getConnectionSource(idx: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionSourceBind, handle, idx)
     }
 
+    /**
+     * Returns the name of the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_signal
+     */
     fun getConnectionSignal(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionSignalBind, handle, idx)
     }
 
+    /**
+     * Returns the path to the node that owns the method connected to the signal at `idx`, relative to
+     * the root node.
+     *
+     * Generated from Godot docs: SceneState.get_connection_target
+     */
     fun getConnectionTarget(idx: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionTargetBind, handle, idx)
     }
 
+    /**
+     * Returns the method connected to the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_method
+     */
     fun getConnectionMethod(idx: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionMethodBind, handle, idx)
     }
 
+    /**
+     * Returns the connection flags for the signal at `idx`. See `Object.ConnectFlags` constants.
+     *
+     * Generated from Godot docs: SceneState.get_connection_flags
+     */
     fun getConnectionFlags(idx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionFlagsBind, handle, idx)
     }
 
+    /**
+     * Returns the list of bound parameters for the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_binds
+     */
     fun getConnectionBinds(idx: Int): List<Any?> {
         return ObjectCalls.ptrcallWithIntArgRetArray(getConnectionBindsBind, handle, idx)
     }
 
+    /**
+     * Returns the number of unbound parameters for the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_unbinds
+     */
     fun getConnectionUnbinds(idx: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, handle, idx)
     }

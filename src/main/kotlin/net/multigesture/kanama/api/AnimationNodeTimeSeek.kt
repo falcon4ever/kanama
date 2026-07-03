@@ -16,10 +16,22 @@ class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
         @JvmName("setExplicitElapseProperty")
         set(value) = setExplicitElapse(value)
 
+    /**
+     * If `true`, some processes are executed to handle keys between seeks, such as calculating root
+     * motion and finding the nearest discrete key.
+     *
+     * Generated from Godot docs: AnimationNodeTimeSeek.set_explicit_elapse
+     */
     fun setExplicitElapse(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setExplicitElapseBind, handle, enable)
     }
 
+    /**
+     * If `true`, some processes are executed to handle keys between seeks, such as calculating root
+     * motion and finding the nearest discrete key.
+     *
+     * Generated from Godot docs: AnimationNodeTimeSeek.is_explicit_elapse
+     */
     fun isExplicitElapse(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isExplicitElapseBind, handle)
     }

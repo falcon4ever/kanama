@@ -40,42 +40,96 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setSwizzleAProperty")
         set(value) = setSwizzleA(value)
 
+    /**
+     * Optional override for the data format to return sampled values in. The corresponding
+     * `RDTextureFormat` must have had this added as a shareable format. The default value of
+     * `RenderingDevice.DATA_FORMAT_MAX` does not override the format.
+     *
+     * Generated from Godot docs: RDTextureView.set_format_override
+     */
     fun setFormatOverride(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, handle, pMember)
     }
 
+    /**
+     * Optional override for the data format to return sampled values in. The corresponding
+     * `RDTextureFormat` must have had this added as a shareable format. The default value of
+     * `RenderingDevice.DATA_FORMAT_MAX` does not override the format.
+     *
+     * Generated from Godot docs: RDTextureView.get_format_override
+     */
     fun getFormatOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, handle)
     }
 
+    /**
+     * The channel to sample when sampling the red color channel.
+     *
+     * Generated from Godot docs: RDTextureView.set_swizzle_r
+     */
     fun setSwizzleR(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, handle, pMember)
     }
 
+    /**
+     * The channel to sample when sampling the red color channel.
+     *
+     * Generated from Godot docs: RDTextureView.get_swizzle_r
+     */
     fun getSwizzleR(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, handle)
     }
 
+    /**
+     * The channel to sample when sampling the green color channel.
+     *
+     * Generated from Godot docs: RDTextureView.set_swizzle_g
+     */
     fun setSwizzleG(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, handle, pMember)
     }
 
+    /**
+     * The channel to sample when sampling the green color channel.
+     *
+     * Generated from Godot docs: RDTextureView.get_swizzle_g
+     */
     fun getSwizzleG(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, handle)
     }
 
+    /**
+     * The channel to sample when sampling the blue color channel.
+     *
+     * Generated from Godot docs: RDTextureView.set_swizzle_b
+     */
     fun setSwizzleB(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, handle, pMember)
     }
 
+    /**
+     * The channel to sample when sampling the blue color channel.
+     *
+     * Generated from Godot docs: RDTextureView.get_swizzle_b
+     */
     fun getSwizzleB(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, handle)
     }
 
+    /**
+     * The channel to sample when sampling the alpha channel.
+     *
+     * Generated from Godot docs: RDTextureView.set_swizzle_a
+     */
     fun setSwizzleA(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setSwizzleABind, handle, pMember)
     }
 
+    /**
+     * The channel to sample when sampling the alpha channel.
+     *
+     * Generated from Godot docs: RDTextureView.get_swizzle_a
+     */
     fun getSwizzleA(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, handle)
     }

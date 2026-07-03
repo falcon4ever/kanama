@@ -67,54 +67,133 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setDiagonalModeProperty")
         set(value) = setDiagonalMode(value)
 
+    /**
+     * The region of grid cells available for pathfinding. If changed, `update` needs to be called
+     * before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_region
+     */
     fun setRegion(region: Rect2i) {
         ObjectCalls.ptrcallWithRect2iArg(setRegionBind, handle, region)
     }
 
+    /**
+     * The region of grid cells available for pathfinding. If changed, `update` needs to be called
+     * before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_region
+     */
     fun getRegion(): Rect2i {
         return ObjectCalls.ptrcallNoArgsRetRect2i(getRegionBind, handle)
     }
 
+    /**
+     * The size of the grid (number of cells of size `cell_size` on each axis). If changed, `update`
+     * needs to be called before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_size
+     */
     fun setSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
+    /**
+     * The size of the grid (number of cells of size `cell_size` on each axis). If changed, `update`
+     * needs to be called before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_size
+     */
     fun getSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
+    /**
+     * The offset of the grid which will be applied to calculate the resulting point position returned
+     * by `get_point_path`. If changed, `update` needs to be called before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_offset
+     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
+    /**
+     * The offset of the grid which will be applied to calculate the resulting point position returned
+     * by `get_point_path`. If changed, `update` needs to be called before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_offset
+     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
+    /**
+     * The size of the point cell which will be applied to calculate the resulting point position
+     * returned by `get_point_path`. If changed, `update` needs to be called before finding the next
+     * path.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_cell_size
+     */
     fun setCellSize(cellSize: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setCellSizeBind, handle, cellSize)
     }
 
+    /**
+     * The size of the point cell which will be applied to calculate the resulting point position
+     * returned by `get_point_path`. If changed, `update` needs to be called before finding the next
+     * path.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_cell_size
+     */
     fun getCellSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getCellSizeBind, handle)
     }
 
+    /**
+     * The cell shape. Affects how the positions are placed in the grid. If changed, `update` needs to
+     * be called before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_cell_shape
+     */
     fun setCellShape(cellShape: Long) {
         ObjectCalls.ptrcallWithLongArg(setCellShapeBind, handle, cellShape)
     }
 
+    /**
+     * The cell shape. Affects how the positions are placed in the grid. If changed, `update` needs to
+     * be called before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_cell_shape
+     */
     fun getCellShape(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, handle)
     }
 
+    /**
+     * Returns `true` if the `x` and `y` is a valid grid coordinate (id), i.e. if it is inside
+     * `region`. Equivalent to `region.has_point(Vector2i(x, y))`.
+     *
+     * Generated from Godot docs: AStarGrid2D.is_in_bounds
+     */
     fun isInBounds(x: Int, y: Int): Boolean {
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isInBoundsBind, handle, x, y)
     }
 
+    /**
+     * Returns `true` if the `id` vector is a valid grid coordinate, i.e. if it is inside `region`.
+     * Equivalent to `region.has_point(id)`.
+     *
+     * Generated from Godot docs: AStarGrid2D.is_in_boundsv
+     */
     fun isInBoundsv(id: Vector2i): Boolean {
         return ObjectCalls.ptrcallWithVector2iArgRetBool(isInBoundsvBind, handle, id)
     }
 
+    /**
+     * Indicates that the grid parameters were changed and `update` needs to be called.
+     *
+     * Generated from Godot docs: AStarGrid2D.is_dirty
+     */
     fun isDirty(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDirtyBind, handle)
     }
@@ -131,58 +210,145 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(updateBind, handle)
     }
 
+    /**
+     * Enables or disables jumping to skip up the intermediate points and speeds up the searching
+     * algorithm. Note: Currently, toggling it on disables the consideration of weight scaling in
+     * pathfinding.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_jumping_enabled
+     */
     fun setJumpingEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setJumpingEnabledBind, handle, enabled)
     }
 
+    /**
+     * Enables or disables jumping to skip up the intermediate points and speeds up the searching
+     * algorithm. Note: Currently, toggling it on disables the consideration of weight scaling in
+     * pathfinding.
+     *
+     * Generated from Godot docs: AStarGrid2D.is_jumping_enabled
+     */
     fun isJumpingEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isJumpingEnabledBind, handle)
     }
 
+    /**
+     * A specific `DiagonalMode` mode which will force the path to avoid or accept the specified
+     * diagonals.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_diagonal_mode
+     */
     fun setDiagonalMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, handle, mode)
     }
 
+    /**
+     * A specific `DiagonalMode` mode which will force the path to avoid or accept the specified
+     * diagonals.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_diagonal_mode
+     */
     fun getDiagonalMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, handle)
     }
 
+    /**
+     * The default `Heuristic` which will be used to calculate the cost between two points if
+     * `_compute_cost` was not overridden.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_default_compute_heuristic
+     */
     fun setDefaultComputeHeuristic(heuristic: Long) {
         ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, handle, heuristic)
     }
 
+    /**
+     * The default `Heuristic` which will be used to calculate the cost between two points if
+     * `_compute_cost` was not overridden.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_default_compute_heuristic
+     */
     fun getDefaultComputeHeuristic(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, handle)
     }
 
+    /**
+     * The default `Heuristic` which will be used to calculate the cost between the point and the end
+     * point if `_estimate_cost` was not overridden.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_default_estimate_heuristic
+     */
     fun setDefaultEstimateHeuristic(heuristic: Long) {
         ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, handle, heuristic)
     }
 
+    /**
+     * The default `Heuristic` which will be used to calculate the cost between the point and the end
+     * point if `_estimate_cost` was not overridden.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_default_estimate_heuristic
+     */
     fun getDefaultEstimateHeuristic(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, handle)
     }
 
+    /**
+     * Disables or enables the specified point for pathfinding. Useful for making an obstacle. By
+     * default, all points are enabled. Note: Calling `update` is not needed after the call of this
+     * function.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_point_solid
+     */
     fun setPointSolid(id: Vector2i, solid: Boolean = true) {
         ObjectCalls.ptrcallWithVector2iAndBoolArg(setPointSolidBind, handle, id, solid)
     }
 
+    /**
+     * Returns `true` if a point is disabled for pathfinding. By default, all points are enabled.
+     *
+     * Generated from Godot docs: AStarGrid2D.is_point_solid
+     */
     fun isPointSolid(id: Vector2i): Boolean {
         return ObjectCalls.ptrcallWithVector2iArgRetBool(isPointSolidBind, handle, id)
     }
 
+    /**
+     * Sets the `weight_scale` for the point with the given `id`. The `weight_scale` is multiplied by
+     * the result of `_compute_cost` when determining the overall cost of traveling across a segment
+     * from a neighboring point to this point. Note: Calling `update` is not needed after the call of
+     * this function.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_point_weight_scale
+     */
     fun setPointWeightScale(id: Vector2i, weightScale: Double) {
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
     }
 
+    /**
+     * Returns the weight scale of the point associated with the given `id`.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_point_weight_scale
+     */
     fun getPointWeightScale(id: Vector2i): Double {
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getPointWeightScaleBind, handle, id)
     }
 
+    /**
+     * Fills the given `region` on the grid with the specified value for the solid flag. Note: Calling
+     * `update` is not needed after the call of this function.
+     *
+     * Generated from Godot docs: AStarGrid2D.fill_solid_region
+     */
     fun fillSolidRegion(region: Rect2i, solid: Boolean = true) {
         ObjectCalls.ptrcallWithRect2iAndBoolArg(fillSolidRegionBind, handle, region, solid)
     }
 
+    /**
+     * Fills the given `region` on the grid with the specified value for the weight scale. Note:
+     * Calling `update` is not needed after the call of this function.
+     *
+     * Generated from Godot docs: AStarGrid2D.fill_weight_scale_region
+     */
     fun fillWeightScaleRegion(region: Rect2i, weightScale: Double) {
         ObjectCalls.ptrcallWithRect2iAndDoubleArg(fillWeightScaleRegionBind, handle, region, weightScale)
     }
@@ -196,18 +362,53 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    /**
+     * Returns the position of the point associated with the given `id`.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_point_position
+     */
     fun getPointPosition(id: Vector2i): Vector2 {
         return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, handle, id)
     }
 
+    /**
+     * Returns an array of dictionaries with point data (`id`: `Vector2i`, `position`: `Vector2`,
+     * `solid`: `bool`, `weight_scale`: `float`) within a `region`.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_point_data_in_region
+     */
     fun getPointDataInRegion(region: Rect2i): List<Map<String, Any?>> {
         return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(getPointDataInRegionBind, handle, region)
     }
 
+    /**
+     * Returns an array with the points that are in the path found by `AStarGrid2D` between the given
+     * points. The array is ordered from the starting point to the ending point of the path. If
+     * `from_id` point is disabled, returns an empty array (even if `from_id == to_id`). If `from_id`
+     * point is not disabled, there is no valid path to the target, and `allow_partial_path` is `true`,
+     * returns a path to the point closest to the target that can be reached. Note: This method is not
+     * thread-safe; it can only be used from a single `Thread` at a given time. Consider using `Mutex`
+     * to ensure exclusive access to one thread to avoid race conditions. Additionally, when
+     * `allow_partial_path` is `true` and `to_id` is solid the search may take an unusually long time
+     * to finish.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_point_path
+     */
     fun getPointPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2> {
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(getPointPathBind, handle, fromId, toId, allowPartialPath)
     }
 
+    /**
+     * Returns an array with the IDs of the points that form the path found by AStar2D between the
+     * given points. The array is ordered from the starting point to the ending point of the path. If
+     * `from_id` point is disabled, returns an empty array (even if `from_id == to_id`). If `from_id`
+     * point is not disabled, there is no valid path to the target, and `allow_partial_path` is `true`,
+     * returns a path to the point closest to the target that can be reached. Note: When
+     * `allow_partial_path` is `true` and `to_id` is solid the search may take an unusually long time
+     * to finish.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_id_path
+     */
     fun getIdPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2i> {
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, handle, fromId, toId, allowPartialPath)
     }

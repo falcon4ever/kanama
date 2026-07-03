@@ -28,26 +28,68 @@ class CapsuleShape3D(handle: MemorySegment) : Shape3D(handle) {
         @JvmName("setMidHeightProperty")
         set(value) = setMidHeight(value)
 
+    /**
+     * The capsule's radius. Note: The `radius` of a capsule cannot be greater than half of its
+     * `height`. Otherwise, the capsule becomes a sphere. If the `radius` is greater than half of the
+     * `height`, the properties adjust to a valid value.
+     *
+     * Generated from Godot docs: CapsuleShape3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
+    /**
+     * The capsule's radius. Note: The `radius` of a capsule cannot be greater than half of its
+     * `height`. Otherwise, the capsule becomes a sphere. If the `radius` is greater than half of the
+     * `height`, the properties adjust to a valid value.
+     *
+     * Generated from Godot docs: CapsuleShape3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
+    /**
+     * The capsule's full height, including the hemispheres. Note: The `height` of a capsule must be at
+     * least twice its `radius`. Otherwise, the capsule becomes a sphere. If the `height` is less than
+     * twice the `radius`, the properties adjust to a valid value.
+     *
+     * Generated from Godot docs: CapsuleShape3D.set_height
+     */
     fun setHeight(height: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
+    /**
+     * The capsule's full height, including the hemispheres. Note: The `height` of a capsule must be at
+     * least twice its `radius`. Otherwise, the capsule becomes a sphere. If the `height` is less than
+     * twice the `radius`, the properties adjust to a valid value.
+     *
+     * Generated from Godot docs: CapsuleShape3D.get_height
+     */
     fun getHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
+    /**
+     * The capsule's height, excluding the hemispheres. This is the height of the central cylindrical
+     * part in the middle of the capsule, and is the distance between the centers of the two
+     * hemispheres. This is a wrapper for `height`.
+     *
+     * Generated from Godot docs: CapsuleShape3D.set_mid_height
+     */
     fun setMidHeight(midHeight: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, handle, midHeight)
     }
 
+    /**
+     * The capsule's height, excluding the hemispheres. This is the height of the central cylindrical
+     * part in the middle of the capsule, and is the distance between the centers of the two
+     * hemispheres. This is a wrapper for `height`.
+     *
+     * Generated from Godot docs: CapsuleShape3D.get_mid_height
+     */
     fun getMidHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, handle)
     }

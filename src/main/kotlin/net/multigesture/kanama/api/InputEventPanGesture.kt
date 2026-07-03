@@ -17,10 +17,20 @@ class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
         @JvmName("setDeltaProperty")
         set(value) = setDelta(value)
 
+    /**
+     * Panning amount since last pan event.
+     *
+     * Generated from Godot docs: InputEventPanGesture.set_delta
+     */
     fun setDelta(delta: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setDeltaBind, handle, delta)
     }
 
+    /**
+     * Panning amount since last pan event.
+     *
+     * Generated from Godot docs: InputEventPanGesture.get_delta
+     */
     fun getDelta(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getDeltaBind, handle)
     }

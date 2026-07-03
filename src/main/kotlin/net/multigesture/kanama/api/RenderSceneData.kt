@@ -13,26 +13,61 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: RenderSceneData
  */
 open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
+    /**
+     * Returns the camera transform used to render this frame. Note: If more than one view is rendered,
+     * this will return a centered transform.
+     *
+     * Generated from Godot docs: RenderSceneData.get_cam_transform
+     */
     fun getCamTransform(): Transform3D {
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getCamTransformBind, handle)
     }
 
+    /**
+     * Returns the camera projection used to render this frame. Note: If more than one view is
+     * rendered, this will return a combined projection.
+     *
+     * Generated from Godot docs: RenderSceneData.get_cam_projection
+     */
     fun getCamProjection(): Projection {
         return ObjectCalls.ptrcallNoArgsRetProjection(getCamProjectionBind, handle)
     }
 
+    /**
+     * Returns the number of views being rendered.
+     *
+     * Generated from Godot docs: RenderSceneData.get_view_count
+     */
     fun getViewCount(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
+    /**
+     * Returns the eye offset per view used to render this frame. This is the offset between our camera
+     * transform and the eye transform.
+     *
+     * Generated from Godot docs: RenderSceneData.get_view_eye_offset
+     */
     fun getViewEyeOffset(view: Long): Vector3 {
         return ObjectCalls.ptrcallWithUInt32ArgRetVector3(getViewEyeOffsetBind, handle, view)
     }
 
+    /**
+     * Returns the view projection per view used to render this frame. Note: If a single view is
+     * rendered, this returns the camera projection. If more than one view is rendered, this will
+     * return a projection for the given view including the eye offset.
+     *
+     * Generated from Godot docs: RenderSceneData.get_view_projection
+     */
     fun getViewProjection(view: Long): Projection {
         return ObjectCalls.ptrcallWithUInt32ArgRetProjection(getViewProjectionBind, handle, view)
     }
 
+    /**
+     * Return the `RID` of the uniform buffer containing the scene data as a UBO.
+     *
+     * Generated from Godot docs: RenderSceneData.get_uniform_buffer
+     */
     fun getUniformBuffer(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getUniformBufferBind, handle)
     }

@@ -103,154 +103,366 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setInternalVertexCountProperty")
         set(value) = setInternalVertexCount(value)
 
+    /**
+     * The polygon's list of vertices. The final point will be connected to the first.
+     *
+     * Generated from Godot docs: Polygon2D.set_polygon
+     */
     fun setPolygon(polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
+    /**
+     * The polygon's list of vertices. The final point will be connected to the first.
+     *
+     * Generated from Godot docs: Polygon2D.get_polygon
+     */
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 
+    /**
+     * Texture coordinates for each vertex of the polygon. There should be one UV value per polygon
+     * vertex. If there are fewer, undefined vertices will use `Vector2(0, 0)`.
+     *
+     * Generated from Godot docs: Polygon2D.set_uv
+     */
     fun setUv(uv: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setUvBind, handle, uv)
     }
 
+    /**
+     * Texture coordinates for each vertex of the polygon. There should be one UV value per polygon
+     * vertex. If there are fewer, undefined vertices will use `Vector2(0, 0)`.
+     *
+     * Generated from Godot docs: Polygon2D.get_uv
+     */
     fun getUv(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getUvBind, handle)
     }
 
+    /**
+     * The polygon's fill color. If `texture` is set, it will be multiplied by this color. It will also
+     * be the default color for vertices not set in `vertex_colors`.
+     *
+     * Generated from Godot docs: Polygon2D.set_color
+     */
     fun setColor(color: Color) {
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
+    /**
+     * The polygon's fill color. If `texture` is set, it will be multiplied by this color. It will also
+     * be the default color for vertices not set in `vertex_colors`.
+     *
+     * Generated from Godot docs: Polygon2D.get_color
+     */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
+    /**
+     * The list of polygons, in case more than one is being represented. Every individual polygon is
+     * stored as a `PackedInt32Array` where each `int` is an index to a point in `polygon`. If empty,
+     * this property will be ignored, and the resulting single polygon will be composed of all points
+     * in `polygon`, using the order they are stored in.
+     *
+     * Generated from Godot docs: Polygon2D.set_polygons
+     */
     fun setPolygons(polygons: List<Any?>) {
         ObjectCalls.ptrcallWithArrayArg(setPolygonsBind, handle, polygons)
     }
 
+    /**
+     * The list of polygons, in case more than one is being represented. Every individual polygon is
+     * stored as a `PackedInt32Array` where each `int` is an index to a point in `polygon`. If empty,
+     * this property will be ignored, and the resulting single polygon will be composed of all points
+     * in `polygon`, using the order they are stored in.
+     *
+     * Generated from Godot docs: Polygon2D.get_polygons
+     */
     fun getPolygons(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getPolygonsBind, handle)
     }
 
+    /**
+     * Color for each vertex. Colors are interpolated between vertices, resulting in smooth gradients.
+     * There should be one per polygon vertex. If there are fewer, undefined vertices will use `color`.
+     *
+     * Generated from Godot docs: Polygon2D.set_vertex_colors
+     */
     fun setVertexColors(vertexColors: List<Color>) {
         ObjectCalls.ptrcallWithPackedColorListArg(setVertexColorsBind, handle, vertexColors)
     }
 
+    /**
+     * Color for each vertex. Colors are interpolated between vertices, resulting in smooth gradients.
+     * There should be one per polygon vertex. If there are fewer, undefined vertices will use `color`.
+     *
+     * Generated from Godot docs: Polygon2D.get_vertex_colors
+     */
     fun getVertexColors(): List<Color> {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getVertexColorsBind, handle)
     }
 
+    /**
+     * The polygon's fill texture. Use `uv` to set texture coordinates.
+     *
+     * Generated from Godot docs: Polygon2D.set_texture
+     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The polygon's fill texture. Use `uv` to set texture coordinates.
+     *
+     * Generated from Godot docs: Polygon2D.get_texture
+     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
+    /**
+     * Amount to offset the polygon's `texture`. If set to `Vector2(0, 0)`, the texture's origin (its
+     * top-left corner) will be placed at the polygon's position.
+     *
+     * Generated from Godot docs: Polygon2D.set_texture_offset
+     */
     fun setTextureOffset(textureOffset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, handle, textureOffset)
     }
 
+    /**
+     * Amount to offset the polygon's `texture`. If set to `Vector2(0, 0)`, the texture's origin (its
+     * top-left corner) will be placed at the polygon's position.
+     *
+     * Generated from Godot docs: Polygon2D.get_texture_offset
+     */
     fun getTextureOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, handle)
     }
 
+    /**
+     * The texture's rotation in radians.
+     *
+     * Generated from Godot docs: Polygon2D.set_texture_rotation
+     */
     fun setTextureRotation(textureRotation: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTextureRotationBind, handle, textureRotation)
     }
 
+    /**
+     * The texture's rotation in radians.
+     *
+     * Generated from Godot docs: Polygon2D.get_texture_rotation
+     */
     fun getTextureRotation(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTextureRotationBind, handle)
     }
 
+    /**
+     * Amount to multiply the `uv` coordinates when using `texture`. Larger values make the texture
+     * smaller, and vice versa.
+     *
+     * Generated from Godot docs: Polygon2D.set_texture_scale
+     */
     fun setTextureScale(textureScale: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setTextureScaleBind, handle, textureScale)
     }
 
+    /**
+     * Amount to multiply the `uv` coordinates when using `texture`. Larger values make the texture
+     * smaller, and vice versa.
+     *
+     * Generated from Godot docs: Polygon2D.get_texture_scale
+     */
     fun getTextureScale(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getTextureScaleBind, handle)
     }
 
+    /**
+     * If `true`, the polygon will be inverted, containing the area outside the defined points and
+     * extending to the `invert_border`.
+     *
+     * Generated from Godot docs: Polygon2D.set_invert_enabled
+     */
     fun setInvertEnabled(invert: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setInvertEnabledBind, handle, invert)
     }
 
+    /**
+     * If `true`, the polygon will be inverted, containing the area outside the defined points and
+     * extending to the `invert_border`.
+     *
+     * Generated from Godot docs: Polygon2D.get_invert_enabled
+     */
     fun getInvertEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getInvertEnabledBind, handle)
     }
 
+    /**
+     * If `true`, polygon edges will be anti-aliased.
+     *
+     * Generated from Godot docs: Polygon2D.set_antialiased
+     */
     fun setAntialiased(antialiased: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAntialiasedBind, handle, antialiased)
     }
 
+    /**
+     * If `true`, polygon edges will be anti-aliased.
+     *
+     * Generated from Godot docs: Polygon2D.get_antialiased
+     */
     fun getAntialiased(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, handle)
     }
 
+    /**
+     * Added padding applied to the bounding box when `invert_enabled` is set to `true`. Setting this
+     * value too small may result in a "Bad Polygon" error.
+     *
+     * Generated from Godot docs: Polygon2D.set_invert_border
+     */
     fun setInvertBorder(invertBorder: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setInvertBorderBind, handle, invertBorder)
     }
 
+    /**
+     * Added padding applied to the bounding box when `invert_enabled` is set to `true`. Setting this
+     * value too small may result in a "Bad Polygon" error.
+     *
+     * Generated from Godot docs: Polygon2D.get_invert_border
+     */
     fun getInvertBorder(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInvertBorderBind, handle)
     }
 
+    /**
+     * The offset applied to each vertex.
+     *
+     * Generated from Godot docs: Polygon2D.set_offset
+     */
     fun setOffset(offset: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
+    /**
+     * The offset applied to each vertex.
+     *
+     * Generated from Godot docs: Polygon2D.get_offset
+     */
     fun getOffset(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
+    /**
+     * Adds a bone with the specified `path` and `weights`.
+     *
+     * Generated from Godot docs: Polygon2D.add_bone
+     */
     fun addBone(path: NodePath, weights: List<Float>) {
         ObjectCalls.ptrcallWithNodePathAndPackedFloat32ListArgs(addBoneBind, handle, path, weights)
     }
 
+    /**
+     * Returns the number of bones in this `Polygon2D`.
+     *
+     * Generated from Godot docs: Polygon2D.get_bone_count
+     */
     fun getBoneCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, handle)
     }
 
+    /**
+     * Returns the path to the node associated with the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.get_bone_path
+     */
     fun getBonePath(index: Int): NodePath {
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getBonePathBind, handle, index)
     }
 
+    /**
+     * Returns the weight values of the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.get_bone_weights
+     */
     fun getBoneWeights(index: Int): List<Float> {
         return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getBoneWeightsBind, handle, index)
     }
 
+    /**
+     * Removes the specified bone from this `Polygon2D`.
+     *
+     * Generated from Godot docs: Polygon2D.erase_bone
+     */
     fun eraseBone(index: Int) {
         ObjectCalls.ptrcallWithIntArg(eraseBoneBind, handle, index)
     }
 
+    /**
+     * Removes all bones from this `Polygon2D`.
+     *
+     * Generated from Godot docs: Polygon2D.clear_bones
+     */
     fun clearBones() {
         ObjectCalls.ptrcallNoArgs(clearBonesBind, handle)
     }
 
+    /**
+     * Sets the path to the node associated with the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.set_bone_path
+     */
     fun setBonePath(index: Int, path: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setBonePathBind, handle, index, path)
     }
 
+    /**
+     * Sets the weight values for the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.set_bone_weights
+     */
     fun setBoneWeights(index: Int, weights: List<Float>) {
         ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setBoneWeightsBind, handle, index, weights)
     }
 
+    /**
+     * Path to a `Skeleton2D` node used for skeleton-based deformations of this polygon. If empty or
+     * invalid, skeletal deformations will not be used.
+     *
+     * Generated from Godot docs: Polygon2D.set_skeleton
+     */
     fun setSkeleton(skeleton: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(setSkeletonBind, handle, skeleton)
     }
 
+    /**
+     * Path to a `Skeleton2D` node used for skeleton-based deformations of this polygon. If empty or
+     * invalid, skeletal deformations will not be used.
+     *
+     * Generated from Godot docs: Polygon2D.get_skeleton
+     */
     fun getSkeleton(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonBind, handle)
     }
 
+    /**
+     * Number of internal vertices, used for UV mapping.
+     *
+     * Generated from Godot docs: Polygon2D.set_internal_vertex_count
+     */
     fun setInternalVertexCount(internalVertexCount: Int) {
         ObjectCalls.ptrcallWithIntArg(setInternalVertexCountBind, handle, internalVertexCount)
     }
 
+    /**
+     * Number of internal vertices, used for UV mapping.
+     *
+     * Generated from Godot docs: Polygon2D.get_internal_vertex_count
+     */
     fun getInternalVertexCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getInternalVertexCountBind, handle)
     }

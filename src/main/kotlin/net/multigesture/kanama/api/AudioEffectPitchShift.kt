@@ -29,26 +29,68 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
         @JvmName("setFftSizeProperty")
         set(value) = setFftSize(value)
 
+    /**
+     * The pitch scale to use. `1.0` is the default pitch and plays sounds unaffected. `pitch_scale`
+     * can range from 0 (infinitely low pitch, inaudible) to 16 (16 times higher than the initial
+     * pitch).
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.set_pitch_scale
+     */
     fun setPitchScale(rate: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, rate)
     }
 
+    /**
+     * The pitch scale to use. `1.0` is the default pitch and plays sounds unaffected. `pitch_scale`
+     * can range from 0 (infinitely low pitch, inaudible) to 16 (16 times higher than the initial
+     * pitch).
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.get_pitch_scale
+     */
     fun getPitchScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
     }
 
+    /**
+     * The oversampling factor to use. Higher values result in better quality, but are more demanding
+     * on the CPU and may cause audio cracking if the CPU can't keep up.
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.set_oversampling
+     */
     fun setOversampling(amount: Int) {
         ObjectCalls.ptrcallWithIntArg(setOversamplingBind, handle, amount)
     }
 
+    /**
+     * The oversampling factor to use. Higher values result in better quality, but are more demanding
+     * on the CPU and may cause audio cracking if the CPU can't keep up.
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.get_oversampling
+     */
     fun getOversampling(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, handle)
     }
 
+    /**
+     * The size of the Fast Fourier transform (https://en.wikipedia.org/wiki/Fast_Fourier_transform)
+     * buffer. Higher values smooth out the effect over time, but have greater latency. The effects of
+     * this higher latency are especially noticeable on audio signals that have sudden amplitude
+     * changes.
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.set_fft_size
+     */
     fun setFftSize(size: Long) {
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
+    /**
+     * The size of the Fast Fourier transform (https://en.wikipedia.org/wiki/Fast_Fourier_transform)
+     * buffer. Higher values smooth out the effect over time, but have greater latency. The effects of
+     * this higher latency are especially noticeable on audio signals that have sudden amplitude
+     * changes.
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.get_fft_size
+     */
     fun getFftSize(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }

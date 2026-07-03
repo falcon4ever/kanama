@@ -38,11 +38,22 @@ object Time {
         return ObjectCalls.ptrcallWithLongArgRetDictionary(getDateTimeDictFromUnixTimeBind, singleton, unixTime)
     }
 
+    /**
+     * Converts the given Unix timestamp to a dictionary of keys: `year`, `month`, `day`, and
+     * `weekday`.
+     *
+     * Generated from Godot docs: Time.get_date_dict_from_unix_time
+     */
     @JvmStatic
     fun getDateDictFromUnixTime(unixTime: Long): Map<String, Any?> {
         return ObjectCalls.ptrcallWithLongArgRetDictionary(getDateDictFromUnixTimeBind, singleton, unixTime)
     }
 
+    /**
+     * Converts the given time to a dictionary of keys: `hour`, `minute`, and `second`.
+     *
+     * Generated from Godot docs: Time.get_time_dict_from_unix_time
+     */
     @JvmStatic
     fun getTimeDictFromUnixTime(unixTime: Long): Map<String, Any?> {
         return ObjectCalls.ptrcallWithLongArgRetDictionary(getTimeDictFromUnixTimeBind, singleton, unixTime)
@@ -53,11 +64,21 @@ object Time {
         return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getDateTimeStringFromUnixTimeBind, singleton, unixTime, useSpace)
     }
 
+    /**
+     * Converts the given Unix timestamp to an ISO 8601 date string (YYYY-MM-DD).
+     *
+     * Generated from Godot docs: Time.get_date_string_from_unix_time
+     */
     @JvmStatic
     fun getDateStringFromUnixTime(unixTime: Long): String {
         return ObjectCalls.ptrcallWithLongArgRetString(getDateStringFromUnixTimeBind, singleton, unixTime)
     }
 
+    /**
+     * Converts the given Unix timestamp to an ISO 8601 time string (HH:MM:SS).
+     *
+     * Generated from Godot docs: Time.get_time_string_from_unix_time
+     */
     @JvmStatic
     fun getTimeStringFromUnixTime(unixTime: Long): String {
         return ObjectCalls.ptrcallWithLongArgRetString(getTimeStringFromUnixTimeBind, singleton, unixTime)
@@ -83,6 +104,12 @@ object Time {
         return ObjectCalls.ptrcallWithStringArgRetLong(getUnixTimeFromDateTimeStringBind, singleton, value)
     }
 
+    /**
+     * Converts the given timezone offset in minutes to a timezone offset string. For example, -480
+     * returns "-08:00", 345 returns "+05:45", and 0 returns "+00:00".
+     *
+     * Generated from Godot docs: Time.get_offset_string_from_offset_minutes
+     */
     @JvmStatic
     fun getOffsetStringFromOffsetMinutes(minutes: Long): String {
         return ObjectCalls.ptrcallWithLongArgRetString(getOffsetStringFromOffsetMinutesBind, singleton, minutes)
@@ -93,11 +120,23 @@ object Time {
         return ObjectCalls.ptrcallWithBoolArgRetDictionary(getDateTimeDictFromSystemBind, singleton, utc)
     }
 
+    /**
+     * Returns the current date as a dictionary of keys: `year`, `month`, `day`, and `weekday`. The
+     * returned values are in the system's local time when `utc` is `false`, otherwise they are in UTC.
+     *
+     * Generated from Godot docs: Time.get_date_dict_from_system
+     */
     @JvmStatic
     fun getDateDictFromSystem(utc: Boolean = false): Map<String, Any?> {
         return ObjectCalls.ptrcallWithBoolArgRetDictionary(getDateDictFromSystemBind, singleton, utc)
     }
 
+    /**
+     * Returns the current time as a dictionary of keys: `hour`, `minute`, and `second`. The returned
+     * values are in the system's local time when `utc` is `false`, otherwise they are in UTC.
+     *
+     * Generated from Godot docs: Time.get_time_dict_from_system
+     */
     @JvmStatic
     fun getTimeDictFromSystem(utc: Boolean = false): Map<String, Any?> {
         return ObjectCalls.ptrcallWithBoolArgRetDictionary(getTimeDictFromSystemBind, singleton, utc)
@@ -108,31 +147,71 @@ object Time {
         return ObjectCalls.ptrcallWithTwoBoolArgsRetString(getDateTimeStringFromSystemBind, singleton, utc, useSpace)
     }
 
+    /**
+     * Returns the current date as an ISO 8601 date string (YYYY-MM-DD). The returned values are in the
+     * system's local time when `utc` is `false`, otherwise they are in UTC.
+     *
+     * Generated from Godot docs: Time.get_date_string_from_system
+     */
     @JvmStatic
     fun getDateStringFromSystem(utc: Boolean = false): String {
         return ObjectCalls.ptrcallWithBoolArgRetString(getDateStringFromSystemBind, singleton, utc)
     }
 
+    /**
+     * Returns the current time as an ISO 8601 time string (HH:MM:SS). The returned values are in the
+     * system's local time when `utc` is `false`, otherwise they are in UTC.
+     *
+     * Generated from Godot docs: Time.get_time_string_from_system
+     */
     @JvmStatic
     fun getTimeStringFromSystem(utc: Boolean = false): String {
         return ObjectCalls.ptrcallWithBoolArgRetString(getTimeStringFromSystemBind, singleton, utc)
     }
 
+    /**
+     * Returns the current time zone as a dictionary of keys: `bias` and `name`. - `bias` is the offset
+     * from UTC in minutes, since not all time zones are multiples of an hour from UTC. - `name` is the
+     * localized name of the time zone, according to the OS locale settings of the current user.
+     *
+     * Generated from Godot docs: Time.get_time_zone_from_system
+     */
     @JvmStatic
     fun getTimeZoneFromSystem(): Map<String, Any?> {
         return ObjectCalls.ptrcallNoArgsRetDictionary(getTimeZoneFromSystemBind, singleton)
     }
 
+    /**
+     * Returns the current Unix timestamp in seconds based on the system time in UTC. This method is
+     * implemented by the operating system and always returns the time in UTC. The Unix timestamp is
+     * the number of seconds passed since 1970-01-01 at 00:00:00, the Unix epoch
+     * (https://en.wikipedia.org/wiki/Unix_time). Note: Unlike other methods that use integer
+     * timestamps, this method returns the timestamp as a `float` for sub-second precision.
+     *
+     * Generated from Godot docs: Time.get_unix_time_from_system
+     */
     @JvmStatic
     fun getUnixTimeFromSystem(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getUnixTimeFromSystemBind, singleton)
     }
 
+    /**
+     * Returns the amount of time passed in milliseconds since the engine started. Will always be
+     * positive or 0 and uses a 64-bit value (it will wrap after roughly 500 million years).
+     *
+     * Generated from Godot docs: Time.get_ticks_msec
+     */
     @JvmStatic
     fun getTicksMsec(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTicksMsecBind, singleton)
     }
 
+    /**
+     * Returns the amount of time passed in microseconds since the engine started. Will always be
+     * positive or 0 and uses a 64-bit value (it will wrap after roughly half a million years).
+     *
+     * Generated from Godot docs: Time.get_ticks_usec
+     */
     @JvmStatic
     fun getTicksUsec(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTicksUsecBind, singleton)

@@ -16,10 +16,20 @@ class CenterContainer(handle: MemorySegment) : Container(handle) {
         @JvmName("setUseTopLeftProperty")
         set(value) = setUseTopLeft(value)
 
+    /**
+     * If `true`, centers children relative to the `CenterContainer`'s top left corner.
+     *
+     * Generated from Godot docs: CenterContainer.set_use_top_left
+     */
     fun setUseTopLeft(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseTopLeftBind, handle, enable)
     }
 
+    /**
+     * If `true`, centers children relative to the `CenterContainer`'s top left corner.
+     *
+     * Generated from Godot docs: CenterContainer.is_using_top_left
+     */
     fun isUsingTopLeft(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingTopLeftBind, handle)
     }

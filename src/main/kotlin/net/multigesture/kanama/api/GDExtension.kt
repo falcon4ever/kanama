@@ -9,10 +9,21 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: GDExtension
  */
 class GDExtension(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Returns `true` if this extension's library has been opened.
+     *
+     * Generated from Godot docs: GDExtension.is_library_open
+     */
     fun isLibraryOpen(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, handle)
     }
 
+    /**
+     * Returns the lowest level required for this extension to be properly initialized (see the
+     * `InitializationLevel` enum).
+     *
+     * Generated from Godot docs: GDExtension.get_minimum_library_initialization_level
+     */
     fun getMinimumLibraryInitializationLevel(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, handle)
     }

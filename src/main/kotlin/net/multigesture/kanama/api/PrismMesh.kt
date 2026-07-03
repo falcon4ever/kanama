@@ -41,42 +41,94 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         @JvmName("setSubdivideDepthProperty")
         set(value) = setSubdivideDepth(value)
 
+    /**
+     * Displacement of the upper edge along the X axis. 0.0 positions edge straight above the
+     * bottom-left edge.
+     *
+     * Generated from Godot docs: PrismMesh.set_left_to_right
+     */
     fun setLeftToRight(leftToRight: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLeftToRightBind, handle, leftToRight)
     }
 
+    /**
+     * Displacement of the upper edge along the X axis. 0.0 positions edge straight above the
+     * bottom-left edge.
+     *
+     * Generated from Godot docs: PrismMesh.get_left_to_right
+     */
     fun getLeftToRight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLeftToRightBind, handle)
     }
 
+    /**
+     * Size of the prism.
+     *
+     * Generated from Godot docs: PrismMesh.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
+    /**
+     * Size of the prism.
+     *
+     * Generated from Godot docs: PrismMesh.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
+    /**
+     * Number of added edge loops along the X axis.
+     *
+     * Generated from Godot docs: PrismMesh.set_subdivide_width
+     */
     fun setSubdivideWidth(segments: Int) {
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, segments)
     }
 
+    /**
+     * Number of added edge loops along the X axis.
+     *
+     * Generated from Godot docs: PrismMesh.get_subdivide_width
+     */
     fun getSubdivideWidth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
+    /**
+     * Number of added edge loops along the Y axis.
+     *
+     * Generated from Godot docs: PrismMesh.set_subdivide_height
+     */
     fun setSubdivideHeight(segments: Int) {
         ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, segments)
     }
 
+    /**
+     * Number of added edge loops along the Y axis.
+     *
+     * Generated from Godot docs: PrismMesh.get_subdivide_height
+     */
     fun getSubdivideHeight(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle)
     }
 
+    /**
+     * Number of added edge loops along the Z axis.
+     *
+     * Generated from Godot docs: PrismMesh.set_subdivide_depth
+     */
     fun setSubdivideDepth(segments: Int) {
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, segments)
     }
 
+    /**
+     * Number of added edge loops along the Z axis.
+     *
+     * Generated from Godot docs: PrismMesh.get_subdivide_depth
+     */
     fun getSubdivideDepth(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }

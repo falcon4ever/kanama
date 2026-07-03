@@ -22,18 +22,40 @@ class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    /**
+     * The `MultiMesh` that will be drawn by the `MultiMeshInstance2D`.
+     *
+     * Generated from Godot docs: MultiMeshInstance2D.set_multimesh
+     */
     fun setMultimesh(multimesh: MultiMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, handle, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `MultiMesh` that will be drawn by the `MultiMeshInstance2D`.
+     *
+     * Generated from Godot docs: MultiMeshInstance2D.get_multimesh
+     */
     fun getMultimesh(): MultiMesh? {
         return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, handle))
     }
 
+    /**
+     * The `Texture2D` that will be used if using the default `CanvasItemMaterial`. Can be accessed as
+     * `TEXTURE` in CanvasItem shader.
+     *
+     * Generated from Godot docs: MultiMeshInstance2D.set_texture
+     */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
+    /**
+     * The `Texture2D` that will be used if using the default `CanvasItemMaterial`. Can be accessed as
+     * `TEXTURE` in CanvasItem shader.
+     *
+     * Generated from Godot docs: MultiMeshInstance2D.get_texture
+     */
     fun getTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }

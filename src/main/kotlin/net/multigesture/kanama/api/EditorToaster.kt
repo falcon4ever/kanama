@@ -9,6 +9,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: EditorToaster
  */
 class EditorToaster(handle: MemorySegment) : HBoxContainer(handle) {
+    /**
+     * Pushes a toast notification to the editor for display.
+     *
+     * Generated from Godot docs: EditorToaster.push_toast
+     */
     fun pushToast(message: String, severity: Long = 0L, tooltip: String = "") {
         ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, handle, message, severity, tooltip)
     }

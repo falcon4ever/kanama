@@ -23,6 +23,11 @@ class CompressedTexture3D(handle: MemorySegment) : Texture3D(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
+    /**
+     * The `CompressedTexture3D`'s file path to a `.ctex3d` file.
+     *
+     * Generated from Godot docs: CompressedTexture3D.get_load_path
+     */
     fun getLoadPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }

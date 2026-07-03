@@ -23,10 +23,20 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
     }
 
+    /**
+     * Returns the local port this server is listening to.
+     *
+     * Generated from Godot docs: TCPServer.get_local_port
+     */
     fun getLocalPort(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
+    /**
+     * If a connection is available, returns a StreamPeerTCP with the connection.
+     *
+     * Generated from Godot docs: TCPServer.take_connection
+     */
     fun takeConnection(): StreamPeerTCP? {
         return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }

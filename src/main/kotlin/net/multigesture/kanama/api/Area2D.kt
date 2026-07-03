@@ -101,146 +101,372 @@ class Area2D(handle: MemorySegment) : CollisionObject2D(handle) {
         @JvmName("setAudioBusNameProperty")
         set(value) = setAudioBusName(value)
 
+    /**
+     * Override mode for gravity calculations within this area.
+     *
+     * Generated from Godot docs: Area2D.set_gravity_space_override_mode
+     */
     fun setGravitySpaceOverrideMode(spaceOverrideMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, handle, spaceOverrideMode)
     }
 
+    /**
+     * Override mode for gravity calculations within this area.
+     *
+     * Generated from Godot docs: Area2D.get_gravity_space_override_mode
+     */
     fun getGravitySpaceOverrideMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, handle)
     }
 
+    /**
+     * If `true`, gravity is calculated from a point (set via `gravity_point_center`). See also
+     * `gravity_space_override`.
+     *
+     * Generated from Godot docs: Area2D.set_gravity_is_point
+     */
     fun setGravityIsPoint(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setGravityIsPointBind, handle, enable)
     }
 
+    /**
+     * If `true`, gravity is calculated from a point (set via `gravity_point_center`). See also
+     * `gravity_space_override`.
+     *
+     * Generated from Godot docs: Area2D.is_gravity_a_point
+     */
     fun isGravityAPoint(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isGravityAPointBind, handle)
     }
 
+    /**
+     * The distance at which the gravity strength is equal to `gravity`. For example, on a planet 100
+     * pixels in radius with a surface gravity of 4.0 px/s², set the `gravity` to 4.0 and the unit
+     * distance to 100.0. The gravity will have falloff according to the inverse square law, so in the
+     * example, at 200 pixels from the center the gravity will be 1.0 px/s² (twice the distance, 1/4th
+     * the gravity), at 50 pixels it will be 16.0 px/s² (half the distance, 4x the gravity), and so on.
+     * The above is true only when the unit distance is a positive number. When this is set to 0.0, the
+     * gravity will be constant regardless of distance.
+     *
+     * Generated from Godot docs: Area2D.set_gravity_point_unit_distance
+     */
     fun setGravityPointUnitDistance(distanceScale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGravityPointUnitDistanceBind, handle, distanceScale)
     }
 
+    /**
+     * The distance at which the gravity strength is equal to `gravity`. For example, on a planet 100
+     * pixels in radius with a surface gravity of 4.0 px/s², set the `gravity` to 4.0 and the unit
+     * distance to 100.0. The gravity will have falloff according to the inverse square law, so in the
+     * example, at 200 pixels from the center the gravity will be 1.0 px/s² (twice the distance, 1/4th
+     * the gravity), at 50 pixels it will be 16.0 px/s² (half the distance, 4x the gravity), and so on.
+     * The above is true only when the unit distance is a positive number. When this is set to 0.0, the
+     * gravity will be constant regardless of distance.
+     *
+     * Generated from Godot docs: Area2D.get_gravity_point_unit_distance
+     */
     fun getGravityPointUnitDistance(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGravityPointUnitDistanceBind, handle)
     }
 
+    /**
+     * If gravity is a point (see `gravity_point`), this will be the point of attraction.
+     *
+     * Generated from Godot docs: Area2D.set_gravity_point_center
+     */
     fun setGravityPointCenter(center: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setGravityPointCenterBind, handle, center)
     }
 
+    /**
+     * If gravity is a point (see `gravity_point`), this will be the point of attraction.
+     *
+     * Generated from Godot docs: Area2D.get_gravity_point_center
+     */
     fun getGravityPointCenter(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getGravityPointCenterBind, handle)
     }
 
+    /**
+     * The area's gravity vector (not normalized).
+     *
+     * Generated from Godot docs: Area2D.set_gravity_direction
+     */
     fun setGravityDirection(direction: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setGravityDirectionBind, handle, direction)
     }
 
+    /**
+     * The area's gravity vector (not normalized).
+     *
+     * Generated from Godot docs: Area2D.get_gravity_direction
+     */
     fun getGravityDirection(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getGravityDirectionBind, handle)
     }
 
+    /**
+     * The area's gravity intensity (in pixels per second squared). This value multiplies the gravity
+     * direction. This is useful to alter the force of gravity without altering its direction.
+     *
+     * Generated from Godot docs: Area2D.set_gravity
+     */
     fun setGravity(gravity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setGravityBind, handle, gravity)
     }
 
+    /**
+     * The area's gravity intensity (in pixels per second squared). This value multiplies the gravity
+     * direction. This is useful to alter the force of gravity without altering its direction.
+     *
+     * Generated from Godot docs: Area2D.get_gravity
+     */
     fun getGravity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getGravityBind, handle)
     }
 
+    /**
+     * Override mode for linear damping calculations within this area.
+     *
+     * Generated from Godot docs: Area2D.set_linear_damp_space_override_mode
+     */
     fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, handle, spaceOverrideMode)
     }
 
+    /**
+     * Override mode for linear damping calculations within this area.
+     *
+     * Generated from Godot docs: Area2D.get_linear_damp_space_override_mode
+     */
     fun getLinearDampSpaceOverrideMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, handle)
     }
 
+    /**
+     * Override mode for angular damping calculations within this area.
+     *
+     * Generated from Godot docs: Area2D.set_angular_damp_space_override_mode
+     */
     fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, handle, spaceOverrideMode)
     }
 
+    /**
+     * Override mode for angular damping calculations within this area.
+     *
+     * Generated from Godot docs: Area2D.get_angular_damp_space_override_mode
+     */
     fun getAngularDampSpaceOverrideMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, handle)
     }
 
+    /**
+     * The rate at which objects stop moving in this area. Represents the linear velocity lost per
+     * second. See `ProjectSettings.physics/2d/default_linear_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area2D.set_linear_damp
+     */
     fun setLinearDamp(linearDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
     }
 
+    /**
+     * The rate at which objects stop moving in this area. Represents the linear velocity lost per
+     * second. See `ProjectSettings.physics/2d/default_linear_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area2D.get_linear_damp
+     */
     fun getLinearDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
     }
 
+    /**
+     * The rate at which objects stop spinning in this area. Represents the angular velocity lost per
+     * second. See `ProjectSettings.physics/2d/default_angular_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area2D.set_angular_damp
+     */
     fun setAngularDamp(angularDamp: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
     }
 
+    /**
+     * The rate at which objects stop spinning in this area. Represents the angular velocity lost per
+     * second. See `ProjectSettings.physics/2d/default_angular_damp` for more details about damping.
+     *
+     * Generated from Godot docs: Area2D.get_angular_damp
+     */
     fun getAngularDamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
     }
 
+    /**
+     * The area's priority. Higher priority areas are processed first. The `World2D`'s physics is
+     * always processed last, after all areas.
+     *
+     * Generated from Godot docs: Area2D.set_priority
+     */
     fun setPriority(priority: Int) {
         ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
     }
 
+    /**
+     * The area's priority. Higher priority areas are processed first. The `World2D`'s physics is
+     * always processed last, after all areas.
+     *
+     * Generated from Godot docs: Area2D.get_priority
+     */
     fun getPriority(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
     }
 
+    /**
+     * If `true`, the area detects bodies or areas entering and exiting it.
+     *
+     * Generated from Godot docs: Area2D.set_monitoring
+     */
     fun setMonitoring(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMonitoringBind, handle, enable)
     }
 
+    /**
+     * If `true`, the area detects bodies or areas entering and exiting it.
+     *
+     * Generated from Godot docs: Area2D.is_monitoring
+     */
     fun isMonitoring(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringBind, handle)
     }
 
+    /**
+     * If `true`, other monitoring areas can detect this area.
+     *
+     * Generated from Godot docs: Area2D.set_monitorable
+     */
     fun setMonitorable(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMonitorableBind, handle, enable)
     }
 
+    /**
+     * If `true`, other monitoring areas can detect this area.
+     *
+     * Generated from Godot docs: Area2D.is_monitorable
+     */
     fun isMonitorable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMonitorableBind, handle)
     }
 
+    /**
+     * Returns a list of intersecting `PhysicsBody2D`s and `TileMap`s. The overlapping body's
+     * `CollisionObject2D.collision_layer` must be part of this area's
+     * `CollisionObject2D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) this list is modified once during the physics step, not
+     * immediately after objects are moved. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area2D.get_overlapping_bodies
+     */
     fun getOverlappingBodies(): List<Node2D> {
         return ObjectCalls.ptrcallNoArgsRetTypedNode2DList(getOverlappingBodiesBind, handle)
     }
 
+    /**
+     * Returns a list of intersecting `Area2D`s. The overlapping area's
+     * `CollisionObject2D.collision_layer` must be part of this area's
+     * `CollisionObject2D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) this list is modified once during the physics step, not
+     * immediately after objects are moved. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area2D.get_overlapping_areas
+     */
     fun getOverlappingAreas(): List<Area2D> {
         return ObjectCalls.ptrcallNoArgsRetTypedArea2DList(getOverlappingAreasBind, handle)
     }
 
+    /**
+     * Returns `true` if intersecting any `PhysicsBody2D`s or `TileMap`s, otherwise returns `false`.
+     * The overlapping body's `CollisionObject2D.collision_layer` must be part of this area's
+     * `CollisionObject2D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) the list of overlapping bodies is modified once during the
+     * physics step, not immediately after objects are moved. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area2D.has_overlapping_bodies
+     */
     fun hasOverlappingBodies(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingBodiesBind, handle)
     }
 
+    /**
+     * Returns `true` if intersecting any `Area2D`s, otherwise returns `false`. The overlapping area's
+     * `CollisionObject2D.collision_layer` must be part of this area's
+     * `CollisionObject2D.collision_mask` in order to be detected. For performance reasons (collisions
+     * are all processed at the same time) the list of overlapping areas is modified once during the
+     * physics step, not immediately after objects are moved. Consider using signals instead.
+     *
+     * Generated from Godot docs: Area2D.has_overlapping_areas
+     */
     fun hasOverlappingAreas(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingAreasBind, handle)
     }
 
+    /**
+     * Returns `true` if the given physics body intersects or overlaps this `Area2D`, `false`
+     * otherwise. Note: The result of this test is not immediate after moving objects. For performance,
+     * list of overlaps is updated once per frame and before the physics step. Consider using signals
+     * instead. The `body` argument can either be a `PhysicsBody2D` or a `TileMap` instance. While
+     * TileMaps are not physics bodies themselves, they register their tiles with collision shapes as a
+     * virtual physics body.
+     *
+     * Generated from Godot docs: Area2D.overlaps_body
+     */
     fun overlapsBody(body: Node): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsBodyBind, handle, body.handle)
     }
 
+    /**
+     * Returns `true` if the given `Area2D` intersects or overlaps this `Area2D`, `false` otherwise.
+     * Note: The result of this test is not immediate after moving objects. For performance, the list
+     * of overlaps is updated once per frame and before the physics step. Consider using signals
+     * instead.
+     *
+     * Generated from Godot docs: Area2D.overlaps_area
+     */
     fun overlapsArea(area: Node): Boolean {
         return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsAreaBind, handle, area.handle)
     }
 
+    /**
+     * The name of the area's audio bus.
+     *
+     * Generated from Godot docs: Area2D.set_audio_bus_name
+     */
     fun setAudioBusName(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(setAudioBusNameBind, handle, name)
     }
 
+    /**
+     * The name of the area's audio bus.
+     *
+     * Generated from Godot docs: Area2D.get_audio_bus_name
+     */
     fun getAudioBusName(): String {
         return ObjectCalls.ptrcallNoArgsRetStringName(getAudioBusNameBind, handle)
     }
 
+    /**
+     * If `true`, the area's audio bus overrides the default audio bus.
+     *
+     * Generated from Godot docs: Area2D.set_audio_bus_override
+     */
     fun setAudioBusOverride(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAudioBusOverrideBind, handle, enable)
     }
 
+    /**
+     * If `true`, the area's audio bus overrides the default audio bus.
+     *
+     * Generated from Godot docs: Area2D.is_overriding_audio_bus
+     */
     fun isOverridingAudioBus(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOverridingAudioBusBind, handle)
     }

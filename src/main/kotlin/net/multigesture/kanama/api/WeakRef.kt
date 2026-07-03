@@ -9,6 +9,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: WeakRef
  */
 class WeakRef(handle: MemorySegment) : RefCounted(handle) {
+    /**
+     * Returns the `Object` this weakref is referring to. Returns `null` if that object no longer
+     * exists.
+     *
+     * Generated from Godot docs: WeakRef.get_ref
+     */
     fun getRef(): Any? {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRefBind, handle)
     }

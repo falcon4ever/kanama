@@ -76,90 +76,216 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setPatchControlPointsProperty")
         set(value) = setPatchControlPoints(value)
 
+    /**
+     * If `true`, clamps depth values according to the minimum and maximum depth of the associated
+     * viewport.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_enable_depth_clamp
+     */
     fun setEnableDepthClamp(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, handle, pMember)
     }
 
+    /**
+     * If `true`, clamps depth values according to the minimum and maximum depth of the associated
+     * viewport.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_enable_depth_clamp
+     */
     fun getEnableDepthClamp(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, handle)
     }
 
+    /**
+     * If `true`, primitives are discarded immediately before the rasterization stage.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_discard_primitives
+     */
     fun setDiscardPrimitives(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, handle, pMember)
     }
 
+    /**
+     * If `true`, primitives are discarded immediately before the rasterization stage.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_discard_primitives
+     */
     fun getDiscardPrimitives(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, handle)
     }
 
+    /**
+     * If `true`, performs wireframe rendering for triangles instead of flat or textured rendering.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_wireframe
+     */
     fun setWireframe(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setWireframeBind, handle, pMember)
     }
 
+    /**
+     * If `true`, performs wireframe rendering for triangles instead of flat or textured rendering.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_wireframe
+     */
     fun getWireframe(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, handle)
     }
 
+    /**
+     * The cull mode to use when drawing polygons, which determines whether front faces or backfaces
+     * are hidden.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_cull_mode
+     */
     fun setCullMode(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, pMember)
     }
 
+    /**
+     * The cull mode to use when drawing polygons, which determines whether front faces or backfaces
+     * are hidden.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_cull_mode
+     */
     fun getCullMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
+    /**
+     * The winding order to use to determine which face of a triangle is considered its front face.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_front_face
+     */
     fun setFrontFace(pMember: Long) {
         ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, handle, pMember)
     }
 
+    /**
+     * The winding order to use to determine which face of a triangle is considered its front face.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_front_face
+     */
     fun getFrontFace(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, handle)
     }
 
+    /**
+     * If `true`, each generated depth value will by offset by some amount. The specific amount is
+     * generated per polygon based on the values of `depth_bias_slope_factor` and
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_enabled
+     */
     fun setDepthBiasEnabled(pMember: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, handle, pMember)
     }
 
+    /**
+     * If `true`, each generated depth value will by offset by some amount. The specific amount is
+     * generated per polygon based on the values of `depth_bias_slope_factor` and
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_enabled
+     */
     fun getDepthBiasEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, handle)
     }
 
+    /**
+     * A constant offset added to each depth value. Applied after `depth_bias_slope_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_constant_factor
+     */
     fun setDepthBiasConstantFactor(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, handle, pMember)
     }
 
+    /**
+     * A constant offset added to each depth value. Applied after `depth_bias_slope_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_constant_factor
+     */
     fun getDepthBiasConstantFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, handle)
     }
 
+    /**
+     * A limit for how much each depth value can be offset. If negative, it serves as a minimum value,
+     * but if positive, it serves as a maximum value.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_clamp
+     */
     fun setDepthBiasClamp(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, handle, pMember)
     }
 
+    /**
+     * A limit for how much each depth value can be offset. If negative, it serves as a minimum value,
+     * but if positive, it serves as a maximum value.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_clamp
+     */
     fun getDepthBiasClamp(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, handle)
     }
 
+    /**
+     * A constant scale applied to the slope of each polygons' depth. Applied before
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_slope_factor
+     */
     fun setDepthBiasSlopeFactor(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, handle, pMember)
     }
 
+    /**
+     * A constant scale applied to the slope of each polygons' depth. Applied before
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_slope_factor
+     */
     fun getDepthBiasSlopeFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, handle)
     }
 
+    /**
+     * The line width to use when drawing lines (in pixels). Thick lines may not be supported on all
+     * hardware.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_line_width
+     */
     fun setLineWidth(pMember: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, handle, pMember)
     }
 
+    /**
+     * The line width to use when drawing lines (in pixels). Thick lines may not be supported on all
+     * hardware.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_line_width
+     */
     fun getLineWidth(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
     }
 
+    /**
+     * The number of control points to use when drawing a patch with tessellation enabled. Higher
+     * values result in higher quality at the cost of performance.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_patch_control_points
+     */
     fun setPatchControlPoints(pMember: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, handle, pMember)
     }
 
+    /**
+     * The number of control points to use when drawing a patch with tessellation enabled. Higher
+     * values result in higher quality at the cost of performance.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_patch_control_points
+     */
     fun getPatchControlPoints(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, handle)
     }

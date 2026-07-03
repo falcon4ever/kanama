@@ -47,50 +47,124 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setOneWayCollisionDirectionProperty")
         set(value) = setOneWayCollisionDirection(value)
 
+    /**
+     * The polygon's list of vertices. Each point will be connected to the next, and the final point
+     * will be connected to the first. Note: The returned vertices are in the local coordinate space of
+     * the given `CollisionPolygon2D`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_polygon
+     */
     fun setPolygon(polygon: List<Vector2>) {
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
+    /**
+     * The polygon's list of vertices. Each point will be connected to the next, and the final point
+     * will be connected to the first. Note: The returned vertices are in the local coordinate space of
+     * the given `CollisionPolygon2D`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.get_polygon
+     */
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 
+    /**
+     * Collision build mode.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_build_mode
+     */
     fun setBuildMode(buildMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setBuildModeBind, handle, buildMode)
     }
 
+    /**
+     * Collision build mode.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.get_build_mode
+     */
     fun getBuildMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getBuildModeBind, handle)
     }
 
+    /**
+     * If `true`, no collisions will be detected. This property should be changed with
+     * `Object.set_deferred`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_disabled
+     */
     fun setDisabled(disabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
     }
 
+    /**
+     * If `true`, no collisions will be detected. This property should be changed with
+     * `Object.set_deferred`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.is_disabled
+     */
     fun isDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
     }
 
+    /**
+     * If `true`, only edges that face up, relative to `CollisionPolygon2D`'s rotation, will collide
+     * with other objects. Note: This property has no effect if this `CollisionPolygon2D` is a child of
+     * an `Area2D` node. Note: The one way collision direction can be configured by setting
+     * `one_way_collision_direction`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision
+     */
     fun setOneWayCollision(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setOneWayCollisionBind, handle, enabled)
     }
 
+    /**
+     * If `true`, only edges that face up, relative to `CollisionPolygon2D`'s rotation, will collide
+     * with other objects. Note: This property has no effect if this `CollisionPolygon2D` is a child of
+     * an `Area2D` node. Note: The one way collision direction can be configured by setting
+     * `one_way_collision_direction`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.is_one_way_collision_enabled
+     */
     fun isOneWayCollisionEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOneWayCollisionEnabledBind, handle)
     }
 
+    /**
+     * The margin used for one-way collision (in pixels). Higher values will make the shape thicker,
+     * and work better for colliders that enter the polygon at a high velocity.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision_margin
+     */
     fun setOneWayCollisionMargin(margin: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setOneWayCollisionMarginBind, handle, margin)
     }
 
+    /**
+     * The margin used for one-way collision (in pixels). Higher values will make the shape thicker,
+     * and work better for colliders that enter the polygon at a high velocity.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.get_one_way_collision_margin
+     */
     fun getOneWayCollisionMargin(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOneWayCollisionMarginBind, handle)
     }
 
+    /**
+     * The direction used for one-way collision.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision_direction
+     */
     fun setOneWayCollisionDirection(direction: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(setOneWayCollisionDirectionBind, handle, direction)
     }
 
+    /**
+     * The direction used for one-way collision.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.get_one_way_collision_direction
+     */
     fun getOneWayCollisionDirection(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, handle)
     }

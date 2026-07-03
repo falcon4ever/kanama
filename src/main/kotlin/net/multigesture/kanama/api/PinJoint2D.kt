@@ -47,50 +47,112 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
         @JvmName("setMotorTargetVelocityProperty")
         set(value) = setMotorTargetVelocity(value)
 
+    /**
+     * The higher this value, the more the bond to the pinned partner can flex.
+     *
+     * Generated from Godot docs: PinJoint2D.set_softness
+     */
     fun setSoftness(softness: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setSoftnessBind, handle, softness)
     }
 
+    /**
+     * The higher this value, the more the bond to the pinned partner can flex.
+     *
+     * Generated from Godot docs: PinJoint2D.get_softness
+     */
     fun getSoftness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftnessBind, handle)
     }
 
+    /**
+     * The minimum rotation. Only active if `angular_limit_enabled` is `true`.
+     *
+     * Generated from Godot docs: PinJoint2D.set_angular_limit_lower
+     */
     fun setAngularLimitLower(angularLimitLower: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularLimitLowerBind, handle, angularLimitLower)
     }
 
+    /**
+     * The minimum rotation. Only active if `angular_limit_enabled` is `true`.
+     *
+     * Generated from Godot docs: PinJoint2D.get_angular_limit_lower
+     */
     fun getAngularLimitLower(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitLowerBind, handle)
     }
 
+    /**
+     * The maximum rotation. Only active if `angular_limit_enabled` is `true`.
+     *
+     * Generated from Godot docs: PinJoint2D.set_angular_limit_upper
+     */
     fun setAngularLimitUpper(angularLimitUpper: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setAngularLimitUpperBind, handle, angularLimitUpper)
     }
 
+    /**
+     * The maximum rotation. Only active if `angular_limit_enabled` is `true`.
+     *
+     * Generated from Godot docs: PinJoint2D.get_angular_limit_upper
+     */
     fun getAngularLimitUpper(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitUpperBind, handle)
     }
 
+    /**
+     * Target speed for the motor. In radians per second.
+     *
+     * Generated from Godot docs: PinJoint2D.set_motor_target_velocity
+     */
     fun setMotorTargetVelocity(motorTargetVelocity: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMotorTargetVelocityBind, handle, motorTargetVelocity)
     }
 
+    /**
+     * Target speed for the motor. In radians per second.
+     *
+     * Generated from Godot docs: PinJoint2D.get_motor_target_velocity
+     */
     fun getMotorTargetVelocity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMotorTargetVelocityBind, handle)
     }
 
+    /**
+     * When activated, a motor turns the pin.
+     *
+     * Generated from Godot docs: PinJoint2D.set_motor_enabled
+     */
     fun setMotorEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setMotorEnabledBind, handle, enabled)
     }
 
+    /**
+     * When activated, a motor turns the pin.
+     *
+     * Generated from Godot docs: PinJoint2D.is_motor_enabled
+     */
     fun isMotorEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isMotorEnabledBind, handle)
     }
 
+    /**
+     * If `true`, the pin maximum and minimum rotation, defined by `angular_limit_lower` and
+     * `angular_limit_upper` are applied.
+     *
+     * Generated from Godot docs: PinJoint2D.set_angular_limit_enabled
+     */
     fun setAngularLimitEnabled(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAngularLimitEnabledBind, handle, enabled)
     }
 
+    /**
+     * If `true`, the pin maximum and minimum rotation, defined by `angular_limit_lower` and
+     * `angular_limit_upper` are applied.
+     *
+     * Generated from Godot docs: PinJoint2D.is_angular_limit_enabled
+     */
     fun isAngularLimitEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAngularLimitEnabledBind, handle)
     }

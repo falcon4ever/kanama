@@ -42,362 +42,870 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
         @JvmName("setUvClippingProperty")
         set(value) = setUvClipping(value)
 
+    /**
+     * Returns a new unused source ID. This generated ID is the same that a call to `add_source` would
+     * return.
+     *
+     * Generated from Godot docs: TileSet.get_next_source_id
+     */
     fun getNextSourceId(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getNextSourceIdBind, handle)
     }
 
+    /**
+     * Adds a `TileSetSource` to the TileSet. If `atlas_source_id_override` is not -1, also set its
+     * source ID. Otherwise, a unique identifier is automatically generated. The function returns the
+     * added source ID or -1 if the source could not be added. Warning: A source cannot belong to two
+     * TileSets at the same time. If the added source was attached to another `TileSet`, it will be
+     * removed from that one.
+     *
+     * Generated from Godot docs: TileSet.add_source
+     */
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, handle, source?.requireOpenHandle() ?: MemorySegment.NULL, atlasSourceIdOverride)
     }
 
+    /**
+     * Removes the source with the given source ID.
+     *
+     * Generated from Godot docs: TileSet.remove_source
+     */
     fun removeSource(sourceId: Int) {
         ObjectCalls.ptrcallWithIntArg(removeSourceBind, handle, sourceId)
     }
 
+    /**
+     * Changes a source's ID.
+     *
+     * Generated from Godot docs: TileSet.set_source_id
+     */
     fun setSourceId(sourceId: Int, newSourceId: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setSourceIdBind, handle, sourceId, newSourceId)
     }
 
+    /**
+     * Returns the number of `TileSetSource` in this TileSet.
+     *
+     * Generated from Godot docs: TileSet.get_source_count
+     */
     fun getSourceCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getSourceCountBind, handle)
     }
 
+    /**
+     * Returns the source ID for source with index `index`.
+     *
+     * Generated from Godot docs: TileSet.get_source_id
+     */
     fun getSourceId(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSourceIdBind, handle, index)
     }
 
+    /**
+     * Returns if this TileSet has a source for the given source ID.
+     *
+     * Generated from Godot docs: TileSet.has_source
+     */
     fun hasSource(sourceId: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceBind, handle, sourceId)
     }
 
+    /**
+     * Returns the `TileSetSource` with ID `source_id`.
+     *
+     * Generated from Godot docs: TileSet.get_source
+     */
     fun getSource(sourceId: Int): TileSetSource? {
         return TileSetSource.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, handle, sourceId))
     }
 
+    /**
+     * The tile shape.
+     *
+     * Generated from Godot docs: TileSet.set_tile_shape
+     */
     fun setTileShape(shape: Long) {
         ObjectCalls.ptrcallWithLongArg(setTileShapeBind, handle, shape)
     }
 
+    /**
+     * The tile shape.
+     *
+     * Generated from Godot docs: TileSet.get_tile_shape
+     */
     fun getTileShape(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, handle)
     }
 
+    /**
+     * For all half-offset shapes (Isometric, Hexagonal and Half-Offset square), changes the way tiles
+     * are indexed in the `TileMapLayer` grid.
+     *
+     * Generated from Godot docs: TileSet.set_tile_layout
+     */
     fun setTileLayout(layout: Long) {
         ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, handle, layout)
     }
 
+    /**
+     * For all half-offset shapes (Isometric, Hexagonal and Half-Offset square), changes the way tiles
+     * are indexed in the `TileMapLayer` grid.
+     *
+     * Generated from Godot docs: TileSet.get_tile_layout
+     */
     fun getTileLayout(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, handle)
     }
 
+    /**
+     * For all half-offset shapes (Isometric, Hexagonal and Half-Offset square), determines the offset
+     * axis.
+     *
+     * Generated from Godot docs: TileSet.set_tile_offset_axis
+     */
     fun setTileOffsetAxis(alignment: Long) {
         ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, handle, alignment)
     }
 
+    /**
+     * For all half-offset shapes (Isometric, Hexagonal and Half-Offset square), determines the offset
+     * axis.
+     *
+     * Generated from Godot docs: TileSet.get_tile_offset_axis
+     */
     fun getTileOffsetAxis(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, handle)
     }
 
+    /**
+     * The tile size, in pixels. For all tile shapes, this size corresponds to the encompassing
+     * rectangle of the tile shape. This is thus the minimal cell size required in an atlas.
+     *
+     * Generated from Godot docs: TileSet.set_tile_size
+     */
     fun setTileSize(size: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(setTileSizeBind, handle, size)
     }
 
+    /**
+     * The tile size, in pixels. For all tile shapes, this size corresponds to the encompassing
+     * rectangle of the tile shape. This is thus the minimal cell size required in an atlas.
+     *
+     * Generated from Godot docs: TileSet.get_tile_size
+     */
     fun getTileSize(): Vector2i {
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTileSizeBind, handle)
     }
 
+    /**
+     * Enables/Disable uv clipping when rendering the tiles.
+     *
+     * Generated from Godot docs: TileSet.set_uv_clipping
+     */
     fun setUvClipping(uvClipping: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUvClippingBind, handle, uvClipping)
     }
 
+    /**
+     * Enables/Disable uv clipping when rendering the tiles.
+     *
+     * Generated from Godot docs: TileSet.is_uv_clipping
+     */
     fun isUvClipping(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUvClippingBind, handle)
     }
 
+    /**
+     * Returns the occlusion layers count.
+     *
+     * Generated from Godot docs: TileSet.get_occlusion_layers_count
+     */
     fun getOcclusionLayersCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOcclusionLayersCountBind, handle)
     }
 
+    /**
+     * Adds an occlusion layer to the TileSet at the given position `to_position` in the array. If
+     * `to_position` is -1, adds it at the end of the array. Occlusion layers allow assigning occlusion
+     * polygons to atlas tiles.
+     *
+     * Generated from Godot docs: TileSet.add_occlusion_layer
+     */
     fun addOcclusionLayer(toPosition: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(addOcclusionLayerBind, handle, toPosition)
     }
 
+    /**
+     * Moves the occlusion layer at index `layer_index` to the given position `to_position` in the
+     * array. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.move_occlusion_layer
+     */
     fun moveOcclusionLayer(layerIndex: Int, toPosition: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(moveOcclusionLayerBind, handle, layerIndex, toPosition)
     }
 
+    /**
+     * Removes the occlusion layer at index `layer_index`. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.remove_occlusion_layer
+     */
     fun removeOcclusionLayer(layerIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(removeOcclusionLayerBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the occlusion layer (as in the rendering server) for occluders in the given TileSet
+     * occlusion layer.
+     *
+     * Generated from Godot docs: TileSet.set_occlusion_layer_light_mask
+     */
     fun setOcclusionLayerLightMask(layerIndex: Int, lightMask: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setOcclusionLayerLightMaskBind, handle, layerIndex, lightMask)
     }
 
+    /**
+     * Returns the light mask of the occlusion layer.
+     *
+     * Generated from Godot docs: TileSet.get_occlusion_layer_light_mask
+     */
     fun getOcclusionLayerLightMask(layerIndex: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getOcclusionLayerLightMaskBind, handle, layerIndex)
     }
 
+    /**
+     * Enables or disables SDF collision for occluders in the given TileSet occlusion layer.
+     *
+     * Generated from Godot docs: TileSet.set_occlusion_layer_sdf_collision
+     */
     fun setOcclusionLayerSdfCollision(layerIndex: Int, sdfCollision: Boolean) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setOcclusionLayerSdfCollisionBind, handle, layerIndex, sdfCollision)
     }
 
+    /**
+     * Returns if the occluders from this layer use `sdf_collision`.
+     *
+     * Generated from Godot docs: TileSet.get_occlusion_layer_sdf_collision
+     */
     fun getOcclusionLayerSdfCollision(layerIndex: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(getOcclusionLayerSdfCollisionBind, handle, layerIndex)
     }
 
+    /**
+     * Returns the physics layers count.
+     *
+     * Generated from Godot docs: TileSet.get_physics_layers_count
+     */
     fun getPhysicsLayersCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsLayersCountBind, handle)
     }
 
+    /**
+     * Adds a physics layer to the TileSet at the given position `to_position` in the array. If
+     * `to_position` is -1, adds it at the end of the array. Physics layers allow assigning collision
+     * polygons to atlas tiles.
+     *
+     * Generated from Godot docs: TileSet.add_physics_layer
+     */
     fun addPhysicsLayer(toPosition: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(addPhysicsLayerBind, handle, toPosition)
     }
 
+    /**
+     * Moves the physics layer at index `layer_index` to the given position `to_position` in the array.
+     * Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.move_physics_layer
+     */
     fun movePhysicsLayer(layerIndex: Int, toPosition: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(movePhysicsLayerBind, handle, layerIndex, toPosition)
     }
 
+    /**
+     * Removes the physics layer at index `layer_index`. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.remove_physics_layer
+     */
     fun removePhysicsLayer(layerIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(removePhysicsLayerBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the collision layer (as in the physics server) for bodies in the given TileSet physics
+     * layer.
+     *
+     * Generated from Godot docs: TileSet.set_physics_layer_collision_layer
+     */
     fun setPhysicsLayerCollisionLayer(layerIndex: Int, layer: Long) {
         ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionLayerBind, handle, layerIndex, layer)
     }
 
+    /**
+     * Returns the collision layer (as in the physics server) bodies on the given TileSet's physics
+     * layer are in.
+     *
+     * Generated from Godot docs: TileSet.get_physics_layer_collision_layer
+     */
     fun getPhysicsLayerCollisionLayer(layerIndex: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionLayerBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the collision mask for bodies in the given TileSet physics layer.
+     *
+     * Generated from Godot docs: TileSet.set_physics_layer_collision_mask
+     */
     fun setPhysicsLayerCollisionMask(layerIndex: Int, mask: Long) {
         ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionMaskBind, handle, layerIndex, mask)
     }
 
+    /**
+     * Returns the collision mask of bodies on the given TileSet's physics layer.
+     *
+     * Generated from Godot docs: TileSet.get_physics_layer_collision_mask
+     */
     fun getPhysicsLayerCollisionMask(layerIndex: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionMaskBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the collision priority for bodies in the given TileSet physics layer.
+     *
+     * Generated from Godot docs: TileSet.set_physics_layer_collision_priority
+     */
     fun setPhysicsLayerCollisionPriority(layerIndex: Int, priority: Double) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPhysicsLayerCollisionPriorityBind, handle, layerIndex, priority)
     }
 
+    /**
+     * Returns the collision priority of bodies on the given TileSet's physics layer.
+     *
+     * Generated from Godot docs: TileSet.get_physics_layer_collision_priority
+     */
     fun getPhysicsLayerCollisionPriority(layerIndex: Int): Double {
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPhysicsLayerCollisionPriorityBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the physics material for bodies in the given TileSet physics layer.
+     *
+     * Generated from Godot docs: TileSet.set_physics_layer_physics_material
+     */
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, handle, layerIndex, physicsMaterial?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Returns the physics material of bodies on the given TileSet's physics layer.
+     *
+     * Generated from Godot docs: TileSet.get_physics_layer_physics_material
+     */
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
         return PhysicsMaterial.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, handle, layerIndex))
     }
 
+    /**
+     * Returns the terrain sets count.
+     *
+     * Generated from Godot docs: TileSet.get_terrain_sets_count
+     */
     fun getTerrainSetsCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetsCountBind, handle)
     }
 
+    /**
+     * Adds a new terrain set at the given position `to_position` in the array. If `to_position` is -1,
+     * adds it at the end of the array.
+     *
+     * Generated from Godot docs: TileSet.add_terrain_set
+     */
     fun addTerrainSet(toPosition: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(addTerrainSetBind, handle, toPosition)
     }
 
+    /**
+     * Moves the terrain set at index `terrain_set` to the given position `to_position` in the array.
+     * Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.move_terrain_set
+     */
     fun moveTerrainSet(terrainSet: Int, toPosition: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(moveTerrainSetBind, handle, terrainSet, toPosition)
     }
 
+    /**
+     * Removes the terrain set at index `terrain_set`. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.remove_terrain_set
+     */
     fun removeTerrainSet(terrainSet: Int) {
         ObjectCalls.ptrcallWithIntArg(removeTerrainSetBind, handle, terrainSet)
     }
 
+    /**
+     * Sets a terrain mode. Each mode determines which bits of a tile shape is used to match the
+     * neighboring tiles' terrains.
+     *
+     * Generated from Godot docs: TileSet.set_terrain_set_mode
+     */
     fun setTerrainSetMode(terrainSet: Int, mode: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, handle, terrainSet, mode)
     }
 
+    /**
+     * Returns a terrain set mode.
+     *
+     * Generated from Godot docs: TileSet.get_terrain_set_mode
+     */
     fun getTerrainSetMode(terrainSet: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, handle, terrainSet)
     }
 
+    /**
+     * Returns the number of terrains in the given terrain set.
+     *
+     * Generated from Godot docs: TileSet.get_terrains_count
+     */
     fun getTerrainsCount(terrainSet: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getTerrainsCountBind, handle, terrainSet)
     }
 
+    /**
+     * Adds a new terrain to the given terrain set `terrain_set` at the given position `to_position` in
+     * the array. If `to_position` is -1, adds it at the end of the array.
+     *
+     * Generated from Godot docs: TileSet.add_terrain
+     */
     fun addTerrain(terrainSet: Int, toPosition: Int = -1) {
         ObjectCalls.ptrcallWithTwoIntArgs(addTerrainBind, handle, terrainSet, toPosition)
     }
 
+    /**
+     * Moves the terrain at index `terrain_index` for terrain set `terrain_set` to the given position
+     * `to_position` in the array. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.move_terrain
+     */
     fun moveTerrain(terrainSet: Int, terrainIndex: Int, toPosition: Int) {
         ObjectCalls.ptrcallWithThreeIntArgs(moveTerrainBind, handle, terrainSet, terrainIndex, toPosition)
     }
 
+    /**
+     * Removes the terrain at index `terrain_index` in the given terrain set `terrain_set`. Also
+     * updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.remove_terrain
+     */
     fun removeTerrain(terrainSet: Int, terrainIndex: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(removeTerrainBind, handle, terrainSet, terrainIndex)
     }
 
+    /**
+     * Clears all terrain properties for the given terrain set.
+     *
+     * Generated from Godot docs: TileSet.clear_terrains
+     */
     fun clearTerrains(terrainSet: Int) {
         ObjectCalls.ptrcallWithIntArg(clearTerrainsBind, handle, terrainSet)
     }
 
+    /**
+     * Sets a terrain's name.
+     *
+     * Generated from Godot docs: TileSet.set_terrain_name
+     */
     fun setTerrainName(terrainSet: Int, terrainIndex: Int, name: String) {
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(setTerrainNameBind, handle, terrainSet, terrainIndex, name)
     }
 
+    /**
+     * Returns a terrain's name.
+     *
+     * Generated from Godot docs: TileSet.get_terrain_name
+     */
     fun getTerrainName(terrainSet: Int, terrainIndex: Int): String {
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, handle, terrainSet, terrainIndex)
     }
 
+    /**
+     * Sets a terrain's color. This color is used for identifying the different terrains in the TileSet
+     * editor.
+     *
+     * Generated from Godot docs: TileSet.set_terrain_color
+     */
     fun setTerrainColor(terrainSet: Int, terrainIndex: Int, color: Color) {
         ObjectCalls.ptrcallWithTwoIntAndColorArg(setTerrainColorBind, handle, terrainSet, terrainIndex, color)
     }
 
+    /**
+     * Returns a terrain's color.
+     *
+     * Generated from Godot docs: TileSet.get_terrain_color
+     */
     fun getTerrainColor(terrainSet: Int, terrainIndex: Int): Color {
         return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getTerrainColorBind, handle, terrainSet, terrainIndex)
     }
 
+    /**
+     * Returns the navigation layers count.
+     *
+     * Generated from Godot docs: TileSet.get_navigation_layers_count
+     */
     fun getNavigationLayersCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getNavigationLayersCountBind, handle)
     }
 
+    /**
+     * Adds a navigation layer to the TileSet at the given position `to_position` in the array. If
+     * `to_position` is -1, adds it at the end of the array. Navigation layers allow assigning a
+     * navigable area to atlas tiles.
+     *
+     * Generated from Godot docs: TileSet.add_navigation_layer
+     */
     fun addNavigationLayer(toPosition: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(addNavigationLayerBind, handle, toPosition)
     }
 
+    /**
+     * Moves the navigation layer at index `layer_index` to the given position `to_position` in the
+     * array. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.move_navigation_layer
+     */
     fun moveNavigationLayer(layerIndex: Int, toPosition: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(moveNavigationLayerBind, handle, layerIndex, toPosition)
     }
 
+    /**
+     * Removes the navigation layer at index `layer_index`. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.remove_navigation_layer
+     */
     fun removeNavigationLayer(layerIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(removeNavigationLayerBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the navigation layers (as in the navigation server) for navigation regions in the given
+     * TileSet navigation layer.
+     *
+     * Generated from Godot docs: TileSet.set_navigation_layer_layers
+     */
     fun setNavigationLayerLayers(layerIndex: Int, layers: Long) {
         ObjectCalls.ptrcallWithIntAndUInt32Args(setNavigationLayerLayersBind, handle, layerIndex, layers)
     }
 
+    /**
+     * Returns the navigation layers (as in the Navigation server) of the given TileSet navigation
+     * layer.
+     *
+     * Generated from Godot docs: TileSet.get_navigation_layer_layers
+     */
     fun getNavigationLayerLayers(layerIndex: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getNavigationLayerLayersBind, handle, layerIndex)
     }
 
+    /**
+     * Based on `value`, enables or disables the specified navigation layer of the TileSet navigation
+     * data layer identified by the given `layer_index`, given a navigation_layers `layer_number`
+     * between 1 and 32.
+     *
+     * Generated from Godot docs: TileSet.set_navigation_layer_layer_value
+     */
     fun setNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int, value: Boolean) {
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setNavigationLayerLayerValueBind, handle, layerIndex, layerNumber, value)
     }
 
+    /**
+     * Returns whether or not the specified navigation layer of the TileSet navigation data layer
+     * identified by the given `layer_index` is enabled, given a navigation_layers `layer_number`
+     * between 1 and 32.
+     *
+     * Generated from Godot docs: TileSet.get_navigation_layer_layer_value
+     */
     fun getNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int): Boolean {
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getNavigationLayerLayerValueBind, handle, layerIndex, layerNumber)
     }
 
+    /**
+     * Returns the custom data layers count.
+     *
+     * Generated from Godot docs: TileSet.get_custom_data_layers_count
+     */
     fun getCustomDataLayersCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getCustomDataLayersCountBind, handle)
     }
 
+    /**
+     * Adds a custom data layer to the TileSet at the given position `to_position` in the array. If
+     * `to_position` is -1, adds it at the end of the array. Custom data layers allow assigning custom
+     * properties to atlas tiles.
+     *
+     * Generated from Godot docs: TileSet.add_custom_data_layer
+     */
     fun addCustomDataLayer(toPosition: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(addCustomDataLayerBind, handle, toPosition)
     }
 
+    /**
+     * Moves the custom data layer at index `layer_index` to the given position `to_position` in the
+     * array. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.move_custom_data_layer
+     */
     fun moveCustomDataLayer(layerIndex: Int, toPosition: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(moveCustomDataLayerBind, handle, layerIndex, toPosition)
     }
 
+    /**
+     * Removes the custom data layer at index `layer_index`. Also updates the atlas tiles accordingly.
+     *
+     * Generated from Godot docs: TileSet.remove_custom_data_layer
+     */
     fun removeCustomDataLayer(layerIndex: Int) {
         ObjectCalls.ptrcallWithIntArg(removeCustomDataLayerBind, handle, layerIndex)
     }
 
+    /**
+     * Returns the index of the custom data layer identified by the given name.
+     *
+     * Generated from Godot docs: TileSet.get_custom_data_layer_by_name
+     */
     fun getCustomDataLayerByName(layerName: String): Int {
         return ObjectCalls.ptrcallWithStringArgRetInt(getCustomDataLayerByNameBind, handle, layerName)
     }
 
+    /**
+     * Sets the name of the custom data layer identified by the given index. Names are identifiers of
+     * the layer therefore if the name is already taken it will fail and raise an error.
+     *
+     * Generated from Godot docs: TileSet.set_custom_data_layer_name
+     */
     fun setCustomDataLayerName(layerIndex: Int, layerName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setCustomDataLayerNameBind, handle, layerIndex, layerName)
     }
 
+    /**
+     * Returns if there is a custom data layer named `layer_name`.
+     *
+     * Generated from Godot docs: TileSet.has_custom_data_layer_by_name
+     */
     fun hasCustomDataLayerByName(layerName: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, handle, layerName)
     }
 
+    /**
+     * Returns the name of the custom data layer identified by the given index.
+     *
+     * Generated from Godot docs: TileSet.get_custom_data_layer_name
+     */
     fun getCustomDataLayerName(layerIndex: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, handle, layerIndex)
     }
 
+    /**
+     * Sets the type of the custom data layer identified by the given index.
+     *
+     * Generated from Godot docs: TileSet.set_custom_data_layer_type
+     */
     fun setCustomDataLayerType(layerIndex: Int, layerType: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, handle, layerIndex, layerType)
     }
 
+    /**
+     * Returns the type of the custom data layer identified by the given index.
+     *
+     * Generated from Godot docs: TileSet.get_custom_data_layer_type
+     */
     fun getCustomDataLayerType(layerIndex: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, handle, layerIndex)
     }
 
+    /**
+     * Creates a source-level proxy for the given source ID. A proxy will map set of tile identifiers
+     * to another set of identifiers. Both the atlas coordinates ID and the alternative tile ID are
+     * kept the same when using source-level proxies. Proxied tiles can be automatically replaced in
+     * TileMapLayer nodes using the editor.
+     *
+     * Generated from Godot docs: TileSet.set_source_level_tile_proxy
+     */
     fun setSourceLevelTileProxy(sourceFrom: Int, sourceTo: Int) {
         ObjectCalls.ptrcallWithTwoIntArgs(setSourceLevelTileProxyBind, handle, sourceFrom, sourceTo)
     }
 
+    /**
+     * Returns the source-level proxy for the given source identifier. If the TileSet has no proxy for
+     * the given identifier, returns -1.
+     *
+     * Generated from Godot docs: TileSet.get_source_level_tile_proxy
+     */
     fun getSourceLevelTileProxy(sourceFrom: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
+    /**
+     * Returns if there is a source-level proxy for the given source ID.
+     *
+     * Generated from Godot docs: TileSet.has_source_level_tile_proxy
+     */
     fun hasSourceLevelTileProxy(sourceFrom: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
+    /**
+     * Removes a source-level tile proxy.
+     *
+     * Generated from Godot docs: TileSet.remove_source_level_tile_proxy
+     */
     fun removeSourceLevelTileProxy(sourceFrom: Int) {
         ObjectCalls.ptrcallWithIntArg(removeSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
+    /**
+     * Creates a coordinates-level proxy for the given identifiers. A proxy will map set of tile
+     * identifiers to another set of identifiers. The alternative tile ID is kept the same when using
+     * coordinates-level proxies. Proxied tiles can be automatically replaced in TileMapLayer nodes
+     * using the editor.
+     *
+     * Generated from Godot docs: TileSet.set_coords_level_tile_proxy
+     */
     fun setCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, sourceTo: Int, coordsTo: Vector2i) {
         ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(setCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom, sourceTo, coordsTo)
     }
 
+    /**
+     * Returns the coordinate-level proxy for the given identifiers. The returned array contains the
+     * two target identifiers of the proxy (source ID and atlas coordinates ID). If the TileSet has no
+     * proxy for the given identifiers, returns an empty Array.
+     *
+     * Generated from Godot docs: TileSet.get_coords_level_tile_proxy
+     */
     fun getCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): List<Any?> {
         return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(getCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
+    /**
+     * Returns if there is a coodinates-level proxy for the given identifiers.
+     *
+     * Generated from Godot docs: TileSet.has_coords_level_tile_proxy
+     */
     fun hasCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): Boolean {
         return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(hasCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
+    /**
+     * Removes a coordinates-level proxy for the given identifiers.
+     *
+     * Generated from Godot docs: TileSet.remove_coords_level_tile_proxy
+     */
     fun removeCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i) {
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
+    /**
+     * Create an alternative-level proxy for the given identifiers. A proxy will map set of tile
+     * identifiers to another set of identifiers. Proxied tiles can be automatically replaced in
+     * TileMapLayer nodes using the editor.
+     *
+     * Generated from Godot docs: TileSet.set_alternative_level_tile_proxy
+     */
     fun setAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int, sourceTo: Int, coordsTo: Vector2i, alternativeTo: Int) {
         ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(setAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
     }
 
+    /**
+     * Returns the alternative-level proxy for the given identifiers. The returned array contains the
+     * three proxie's target identifiers (source ID, atlas coords ID and alternative tile ID). If the
+     * TileSet has no proxy for the given identifiers, returns an empty Array.
+     *
+     * Generated from Godot docs: TileSet.get_alternative_level_tile_proxy
+     */
     fun getAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(getAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
+    /**
+     * Returns if there is an alternative-level proxy for the given identifiers.
+     *
+     * Generated from Godot docs: TileSet.has_alternative_level_tile_proxy
+     */
     fun hasAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): Boolean {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(hasAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
+    /**
+     * Removes an alternative-level proxy for the given identifiers.
+     *
+     * Generated from Godot docs: TileSet.remove_alternative_level_tile_proxy
+     */
     fun removeAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int) {
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
+    /**
+     * According to the configured proxies, maps the provided identifiers to a new set of identifiers.
+     * The source ID, atlas coordinates ID and alternative tile ID are returned as a 3 elements Array.
+     * This function first look for matching alternative-level proxies, then coordinates-level proxies,
+     * then source-level proxies. If no proxy corresponding to provided identifiers are found, returns
+     * the same values the ones used as arguments.
+     *
+     * Generated from Godot docs: TileSet.map_tile_proxy
+     */
     fun mapTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(mapTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
+    /**
+     * Clears tile proxies pointing to invalid tiles.
+     *
+     * Generated from Godot docs: TileSet.cleanup_invalid_tile_proxies
+     */
     fun cleanupInvalidTileProxies() {
         ObjectCalls.ptrcallNoArgs(cleanupInvalidTileProxiesBind, handle)
     }
 
+    /**
+     * Clears all tile proxies.
+     *
+     * Generated from Godot docs: TileSet.clear_tile_proxies
+     */
     fun clearTileProxies() {
         ObjectCalls.ptrcallNoArgs(clearTileProxiesBind, handle)
     }
 
+    /**
+     * Adds a `TileMapPattern` to be stored in the TileSet resource. If provided, insert it at the
+     * given `index`.
+     *
+     * Generated from Godot docs: TileSet.add_pattern
+     */
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, handle, pattern?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
+    /**
+     * Returns the `TileMapPattern` at the given `index`.
+     *
+     * Generated from Godot docs: TileSet.get_pattern
+     */
     fun getPattern(index: Int = -1): TileMapPattern? {
         return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, handle, index))
     }
 
+    /**
+     * Remove the `TileMapPattern` at the given index.
+     *
+     * Generated from Godot docs: TileSet.remove_pattern
+     */
     fun removePattern(index: Int) {
         ObjectCalls.ptrcallWithIntArg(removePatternBind, handle, index)
     }
 
+    /**
+     * Returns the number of `TileMapPattern` this tile set handles.
+     *
+     * Generated from Godot docs: TileSet.get_patterns_count
+     */
     fun getPatternsCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, handle)
     }

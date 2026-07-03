@@ -13,6 +13,12 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(waitBlockingBind, handle)
     }
 
+    /**
+     * Like `wait`, but won't block, so if the value is zero, fails immediately and returns `false`. If
+     * non-zero, it returns `true` to report success.
+     *
+     * Generated from Godot docs: Semaphore.try_wait
+     */
     fun tryWait(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, handle)
     }
