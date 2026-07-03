@@ -6,6 +6,15 @@ Deep implementation notes live in [ios-backend-architecture.md](../reference/ios
 demo status lives in [ios-demo-port-tracker.md](./ios-demo-port-tracker.md); generated hand-written-site
 accounting lives in [ios-backend-handwritten.md](../reference/ios-backend-handwritten.md).
 
+> **Scope note (2026-07).** This is the **iOS sub-track**, not Kanama's whole strategy. The "fold back
+> into the broader wrapper-generator roadmap" described above has now happened: iOS reached demo parity
+> and tasks 21/22 unified all three platforms behind the full drift-gate (`check_full_drift_gate`,
+> committed == fresh regen) and resumed broad API coverage, so wrapper work lands once across desktop,
+> Android, and iOS. The **project-level** roadmap and current phase live in the task index
+> (`kanama-tasks/README.md`); Kanama is now in the release endgame (tasks 13 → 12 → 15 → 18). Treat the
+> iOS-specific gates below as largely complete and this document as reference for the iOS backend, not
+> the source of truth for overall direction.
+
 ## Current Position
 
 **Status refreshed 2026-06-25:** iOS is experimental but now covers the Android-enabled public demo set
