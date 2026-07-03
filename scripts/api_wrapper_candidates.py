@@ -191,6 +191,11 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
         "List<Any?>",
         "emptyList()",
     ),
+    (("Dictionary",), "Dictionary"): CallShape(
+        "ptrcallWithDictionaryArgRetDictionary",
+        "Map<String, Any?>",
+        "emptyMap()",
+    ),
     (("Object",), "void"): CallShape("ptrcallWithObjectArgs", "Unit"),
     (("Object",), "bool"): CallShape("ptrcallWithObjectArgRetBool", "Boolean", "false"),
     (("Object",), "int64"): CallShape("ptrcallWithObjectArgRetLong", "Long", "0L"),

@@ -12,9 +12,9 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 | --- | ---: | --- |
 | API classes | 1036 |  |
 | Classes with generated output | 844 | `██████████░░` 81.5% |
-| Classes with complete method generation | 752 | `█████████░░░` 72.6% |
-| Methods generated | 15319/16822 (91.1%) | `███████████░` 91.1% |
-| Methods skipped | 1503 |  |
+| Classes with complete method generation | 753 | `█████████░░░` 72.7% |
+| Methods generated | 15321/16822 (91.1%) | `███████████░` 91.1% |
+| Methods skipped | 1501 |  |
 | Properties generated | 3657/4162 (87.9%) | `███████████░` 87.9% |
 | Signals generated | 503/503 (100.0%) | `████████████` 100.0% |
 
@@ -26,7 +26,7 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1032 / 1036 `████████████` 99.6%
-- Methods: 15271 / 15385 `████████████` 99.3% (callable methods; engine virtuals excluded — see below)
+- Methods: 15273 / 15385 `████████████` 99.3% (callable methods; engine virtuals excluded — see below)
 
 ## Virtual Methods
 
@@ -36,7 +36,7 @@ Rows marked `inherited only` are promoted wrappers whose Godot class declares no
 
 | Area | Classes | Class Coverage | Methods | Method Coverage |
 | --- | ---: | --- | ---: | --- |
-| Core | 224/226 | `████████████` 99.1% | 2875/2970 | `████████████` 96.8% |
+| Core | 224/226 | `████████████` 99.1% | 2877/2970 | `████████████` 96.9% |
 | Scene | 26/26 | `████████████` 100.0% | 923/923 | `████████████` 100.0% |
 | Resources | 305/306 | `████████████` 99.7% | 2883/2891 | `████████████` 99.7% |
 | Input | 20/20 | `████████████` 100.0% | 238/238 | `████████████` 100.0% |
@@ -352,7 +352,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `GDExtensionManager` | Core | 7/7 | `████████` 100.0% |
 | `GDScript` | Resources | 1/1 | `████████` 100.0% |
 | `GDScriptSyntaxHighlighter` | Resources | 0/0 | inherited only |
-| `GDScriptTextDocument` | Core | 19/21 | `███████░` 90.5% |
+| `GDScriptTextDocument` | Core | 21/21 | `████████` 100.0% |
 | `GDScriptWorkspace` | Core | 8/8 | `████████` 100.0% |
 | `GLTFAccessor` | Resources | 32/32 | `████████` 100.0% |
 | `GLTFAnimation` | Resources | 6/6 | `████████` 100.0% |

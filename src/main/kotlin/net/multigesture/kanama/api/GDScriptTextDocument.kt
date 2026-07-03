@@ -43,6 +43,14 @@ class GDScriptTextDocument(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(completionBind, handle, params)
     }
 
+    fun resolve(params: Map<String, Any?>): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithDictionaryArgRetDictionary(resolveBind, handle, params)
+    }
+
+    fun rename(params: Map<String, Any?>): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithDictionaryArgRetDictionary(renameBind, handle, params)
+    }
+
     fun prepareRename(params: Map<String, Any?>): Any? {
         return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(prepareRenameBind, handle, params)
     }
@@ -134,6 +142,16 @@ class GDScriptTextDocument(handle: MemorySegment) : RefCounted(handle) {
         private const val COMPLETION_HASH = 3877611628L
         private val completionBind by lazy {
             ObjectCalls.getMethodBind("GDScriptTextDocument", "completion", COMPLETION_HASH)
+        }
+
+        private const val RESOLVE_HASH = 1333564645L
+        private val resolveBind by lazy {
+            ObjectCalls.getMethodBind("GDScriptTextDocument", "resolve", RESOLVE_HASH)
+        }
+
+        private const val RENAME_HASH = 1333564645L
+        private val renameBind by lazy {
+            ObjectCalls.getMethodBind("GDScriptTextDocument", "rename", RENAME_HASH)
         }
 
         private const val PREPARERENAME_HASH = 3762224011L

@@ -129,6 +129,46 @@ generator capability. Treat low-coverage areas such as variant/dictionary
 helper shapes, typed arrays, and multiplayer/editor methods as API design work:
 add helper policy and audits before promoting wider wrappers.
 
+### Long-tail triage (task 22)
+
+Once the class surface is broadly promoted, the remaining skips are a long tail
+of **data-type / shape** gaps, not missing classes. A full triage of the
+non-virtual skips and the skipped properties found:
+
+- **Non-virtual method skips (~64 after the Dictionary→Dictionary family):** the
+  large majority are *intentional*, not gaps —
+  - **~49 root `Object` methods** (`call`/`get`/`set`/`connect`/`emit_signal`/…)
+    are deliberately routed through the hand-shaped `GodotObject` policy, not
+    regenerated per subclass. These are the escape hatches; keep them on
+    `GodotObject`.
+  - **2 `RefCounted` lifetime methods** (`reference`/`init_ref`) are
+    ownership-sensitive and hand-shaped.
+  - The rest are **wide / exotic ABI shapes** — RenderingDevice raytracing
+    (`blas_create`, `tlas_build`, `raytracing_pipeline_create`),
+    `TypedObjectArray` blit combos, `Signal`→Object, wide RID signatures. Each is
+    a large per-shape audit (JVM actual + iOS C-shim + width self-test); defer
+    with the report entry as the reason until a workflow needs it.
+  - The one clean low-ABI slice was **`Dictionary`→`Dictionary`** (`resolve`,
+    `rename` on `GDScriptTextDocument`), landed via the
+    `ptrcallWithDictionaryArgRetDictionary` helper. It reuses the existing
+    Dictionary-arg init + Dictionary-return read paths, so it is desktop+Android
+    only and cleanly iOS-skipped (`Dictionary` is not in `IOS_ARG_KINDS` /
+    `IOS_RET_KOTLIN` — no C-shim work, no device gate).
+- **~505 skipped properties are NOT a marshalling gap.** Triaged:
+  - **~415 are indexed / parameterized accessors** whose getter takes an
+    argument (e.g. `get_list_stream(i)`, `get_param(param)`). Godot lists them as
+    `foo/0`, `foo/1`, … pseudo-properties; they are not Kotlin `val`/`var`s by
+    design, and the underlying getter/setter **methods are already generated and
+    callable**. Not a gap.
+  - **~90 have no simple own getter method** — the getter is inherited (the
+    property surfaces on the parent wrapper and the getter method is inherited),
+    an engine virtual `_get_*` (task 13 territory), or an indexed inherited
+    getter. None are unlocked by a new marshalling shape.
+
+  Net: **no skipped property is a "quick win behind a shape."** Property coverage
+  advances only when its *getter method* becomes generatable (a new no-arg return
+  shape) or via ergonomic hand-shaping, never by widening property emission.
+
 ## KDoc Maintenance
 
 Public Godot-backed wrappers and builtin value types carry generated KDoc

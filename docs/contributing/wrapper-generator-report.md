@@ -16,9 +16,9 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | --- | ---: |
 | API classes | 1036 |
 | Classes with generated output | 844 |
-| Classes with complete method generation | 752 |
-| Methods generated | 15319/16822 (91.1%) |
-| Methods skipped | 1503 |
+| Classes with complete method generation | 753 |
+| Methods generated | 15321/16822 (91.1%) |
+| Methods skipped | 1501 |
 | Properties generated | 3657/4162 (87.9%) |
 | Signals generated | 503/503 (100.0%) |
 
@@ -30,8 +30,8 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | Other | 49 |
 | Array / typed array | 8 |
 | Missing helper shape | 4 |
-| Dictionary | 3 |
 | Blocked object wrapper | 2 |
+| Dictionary | 1 |
 
 ## Missing Helper Shapes
 
@@ -39,7 +39,6 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 
 | Shape | Count |
 | --- | ---: |
-| `args=('Dictionary',) return=Dictionary` | 2 |
 | `args=('RID', 'TypedObjectArray::OpenXRSpatialComponentData', 'Object', 'Object') return=void` | 2 |
 | `args=('Rect2i', 'Object', 'Color', 'int32', 'Object') return=void` | 1 |
 | `args=('Rect2i', 'TypedObjectArray::Texture2D', 'TypedObjectArray::DrawableTexture2D', 'Color', 'int32', 'Object') return=void` | 1 |
@@ -59,7 +58,6 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | --- | ---: |
 | `internal/virtual callback methods are not emitted as public wrappers` | 1437 |
 | `root Object methods are exposed through the hand-shaped GodotObject policy` | 49 |
-| `unsupported helper shape args=('Dictionary',) return=Dictionary` | 2 |
 | `unsupported helper shape args=('RID', 'TypedObjectArray::OpenXRSpatialComponentData', 'Object', 'Object') return=void` | 2 |
 | `ownership-sensitive RefCounted lifetime method is hand-shaped` | 2 |
 | `unsupported helper shape args=('Rect2i', 'Object', 'Color', 'int32', 'Object') return=void` | 1 |
@@ -163,7 +161,6 @@ These classes have every method covered by the conservative generator. Promotion
 | BaseButton | 23/25 (92.0%) | 10/10 | 4/4 | 2 |
 | CollisionObject3D | 32/35 (91.4%) | 6/6 | 3/3 | 3 |
 | Node | 121/133 (91.0%) | 14/14 | 11/11 | 12 |
-| GDScriptTextDocument | 19/21 (90.5%) | 0/0 | 0/0 | 2 |
 | EditorDock | 27/30 (90.0%) | 12/12 | 2/2 | 3 |
 | AStar2D | 25/28 (89.3%) | 1/1 | 0/0 | 3 |
 | AStar3D | 25/28 (89.3%) | 1/1 | 0/0 | 3 |

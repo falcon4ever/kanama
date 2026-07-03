@@ -20841,6 +20841,30 @@ object ObjectCalls {
     }
 
     /**
+     * Calls [methodBind] with one Dictionary arg and decodes a Dictionary return as scalar key/value pairs.
+     */
+    fun ptrcallWithDictionaryArgRetDictionary(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        values: Map<String, Any?>,
+    ): Map<String, Any?> {
+        Arena.ofConfined().use { arena ->
+            val dict = arena.allocate(8L, 8L)
+            val ret = arena.allocate(8L, 8L)
+            try {
+                BuiltinTypes.initDictionary(dict, values)
+                val arr = arena.allocate(ADDRESS, 1)
+                arr.setAtIndex(ADDRESS, 0, dict)
+                objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+                return BuiltinTypes.readDictionaryScalars(ret)
+            } finally {
+                BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
+                BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
+            }
+        }
+    }
+
+    /**
      * Calls [methodBind] with (int32, Dictionary) and no return value.
      */
     fun ptrcallWithIntAndDictionaryArg(
