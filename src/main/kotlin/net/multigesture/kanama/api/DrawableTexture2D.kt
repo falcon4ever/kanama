@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Rect2i
 
 /**
  * A 2D texture that supports drawing to itself via Blit calls.
@@ -47,6 +48,18 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
     }
 
     /**
+     * Draws to given `rect` on this texture by copying from the given `source`. A `modulate` color can
+     * be passed in for the shader to use, but defaults to White. The `mipmap` value can specify a draw
+     * to a lower mipmap level. The `material` parameter can take a ShaderMaterial with a TextureBlit
+     * Shader for custom drawing behavior.
+     *
+     * Generated from Godot docs: DrawableTexture2D.blit_rect
+     */
+    fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material?) {
+        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, handle, rect, source?.requireOpenHandle() ?: MemorySegment.NULL, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    /**
      * Re-calculates the mipmaps for this texture on demand.
      *
      * Generated from Godot docs: DrawableTexture2D.generate_mipmaps
@@ -86,6 +99,11 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
         private const val SETUP_HASH = 674365339L
         private val setupBind by lazy {
             ObjectCalls.getMethodBind("DrawableTexture2D", "setup", SETUP_HASH)
+        }
+
+        private const val BLIT_RECT_HASH = 319217173L
+        private val blitRectBind by lazy {
+            ObjectCalls.getMethodBind("DrawableTexture2D", "blit_rect", BLIT_RECT_HASH)
         }
 
         private const val GENERATE_MIPMAPS_HASH = 3218959716L

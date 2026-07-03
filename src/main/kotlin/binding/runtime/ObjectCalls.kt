@@ -14907,6 +14907,43 @@ object ObjectCalls {
         }
     }
 
+    fun ptrcallWithRect2iObjectColorIntObjectArgs(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        rectValue: Rect2i,
+        firstObject: MemorySegment,
+        color: Color,
+        intValue: Int,
+        secondObject: MemorySegment,
+    ) {
+        Arena.ofConfined().use { arena ->
+            val rect = arena.allocate(16L, 4L)
+            rect.set(JAVA_INT, 0, rectValue.position.x)
+            rect.set(JAVA_INT, 4, rectValue.position.y)
+            rect.set(JAVA_INT, 8, rectValue.size.x)
+            rect.set(JAVA_INT, 12, rectValue.size.y)
+            val firstCell = arena.allocate(ADDRESS)
+            firstCell.set(ADDRESS, 0, firstObject)
+            val colorCell = arena.allocate(16L, 4L)
+            // Color components use fixed 32-bit storage, unlike scalar float method args.
+            colorCell.set(JAVA_FLOAT, 0, color.r)
+            colorCell.set(JAVA_FLOAT, 4, color.g)
+            colorCell.set(JAVA_FLOAT, 8, color.b)
+            colorCell.set(JAVA_FLOAT, 12, color.a)
+            val intCell = arena.allocate(JAVA_INT)
+            intCell.set(JAVA_INT, 0, intValue)
+            val secondCell = arena.allocate(ADDRESS)
+            secondCell.set(ADDRESS, 0, secondObject)
+            val args = arena.allocate(ADDRESS, 5)
+            args.setAtIndex(ADDRESS, 0, rect)
+            args.setAtIndex(ADDRESS, 1, firstCell)
+            args.setAtIndex(ADDRESS, 2, colorCell)
+            args.setAtIndex(ADDRESS, 3, intCell)
+            args.setAtIndex(ADDRESS, 4, secondCell)
+            objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        }
+    }
+
     fun ptrcallWithRect2iAndBoolArg(
         methodBind: MemorySegment,
         instance: MemorySegment,

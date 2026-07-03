@@ -17,8 +17,8 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | API classes | 1036 |
 | Classes with generated output | 844 |
 | Classes with complete method generation | 753 |
-| Methods generated | 15321/16822 (91.1%) |
-| Methods skipped | 1501 |
+| Methods generated | 15322/16822 (91.1%) |
+| Methods skipped | 1500 |
 | Properties generated | 3657/4162 (87.9%) |
 | Signals generated | 503/503 (100.0%) |
 
@@ -29,7 +29,7 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | Virtual/internal | 1437 |
 | Other | 49 |
 | Array / typed array | 8 |
-| Missing helper shape | 4 |
+| Missing helper shape | 3 |
 | Blocked object wrapper | 2 |
 | Dictionary | 1 |
 
@@ -40,7 +40,6 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | Shape | Count |
 | --- | ---: |
 | `args=('RID', 'TypedObjectArray::OpenXRSpatialComponentData', 'Object', 'Object') return=void` | 2 |
-| `args=('Rect2i', 'Object', 'Color', 'int32', 'Object') return=void` | 1 |
 | `args=('Rect2i', 'TypedObjectArray::Texture2D', 'TypedObjectArray::DrawableTexture2D', 'Color', 'int32', 'Object') return=void` | 1 |
 | `args=('Object', 'bool', 'String', 'bitfield', 'bool') return=enum` | 1 |
 | `args=('Dictionary', 'int32', 'float', 'Transform2D', 'int32', 'int32', 'int32', 'int32', 'float', 'int64', 'PackedColorArray') return=RID` | 1 |
@@ -60,7 +59,6 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | `root Object methods are exposed through the hand-shaped GodotObject policy` | 49 |
 | `unsupported helper shape args=('RID', 'TypedObjectArray::OpenXRSpatialComponentData', 'Object', 'Object') return=void` | 2 |
 | `ownership-sensitive RefCounted lifetime method is hand-shaped` | 2 |
-| `unsupported helper shape args=('Rect2i', 'Object', 'Color', 'int32', 'Object') return=void` | 1 |
 | `unsupported helper shape args=('Rect2i', 'TypedObjectArray::Texture2D', 'TypedObjectArray::DrawableTexture2D', 'Color', 'int32', 'Object') return=void` | 1 |
 | `unsupported helper shape args=('Object', 'bool', 'String', 'bitfield', 'bool') return=enum` | 1 |
 | `unsupported helper shape args=('Dictionary', 'int32', 'float', 'Transform2D', 'int32', 'int32', 'int32', 'int32', 'float', 'int64', 'PackedColorArray') return=RID` | 1 |
@@ -166,6 +164,7 @@ These classes have every method covered by the conservative generator. Promotion
 | AStar3D | 25/28 (89.3%) | 1/1 | 0/0 | 3 |
 | CollisionObject2D | 36/41 (87.8%) | 5/5 | 5/5 | 5 |
 | Translation | 12/14 (85.7%) | 2/3 | 0/0 | 2 |
+| DrawableTexture2D | 6/7 (85.7%) | 0/0 | 0/0 | 1 |
 | SubViewportContainer | 6/7 (85.7%) | 3/3 | 0/0 | 1 |
 | Resource | 22/26 (84.6%) | 4/4 | 2/2 | 4 |
 | OpenXRSpatialAnchorCapability | 11/13 (84.6%) | 0/0 | 0/0 | 2 |

@@ -13,8 +13,8 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 | API classes | 1036 |  |
 | Classes with generated output | 844 | `██████████░░` 81.5% |
 | Classes with complete method generation | 753 | `█████████░░░` 72.7% |
-| Methods generated | 15321/16822 (91.1%) | `███████████░` 91.1% |
-| Methods skipped | 1501 |  |
+| Methods generated | 15322/16822 (91.1%) | `███████████░` 91.1% |
+| Methods skipped | 1500 |  |
 | Properties generated | 3657/4162 (87.9%) | `███████████░` 87.9% |
 | Signals generated | 503/503 (100.0%) | `████████████` 100.0% |
 
@@ -26,7 +26,7 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1032 / 1036 `████████████` 99.6%
-- Methods: 15273 / 15385 `████████████` 99.3% (callable methods; engine virtuals excluded — see below)
+- Methods: 15274 / 15385 `████████████` 99.3% (callable methods; engine virtuals excluded — see below)
 
 ## Virtual Methods
 
@@ -41,7 +41,7 @@ Rows marked `inherited only` are promoted wrappers whose Godot class declares no
 | Resources | 305/306 | `████████████` 99.7% | 2883/2891 | `████████████` 99.7% |
 | Input | 20/20 | `████████████` 100.0% | 238/238 | `████████████` 100.0% |
 | UI | 69/69 | `████████████` 100.0% | 1742/1741 | `████████████` 100.1% |
-| 2D | 112/112 | `████████████` 100.0% | 2028/2030 | `████████████` 99.9% |
+| 2D | 112/112 | `████████████` 100.0% | 2029/2030 | `████████████` 100.0% |
 | 3D | 170/171 | `████████████` 99.4% | 2994/3000 | `████████████` 99.8% |
 | Physics | 6/6 | `████████████` 100.0% | 55/55 | `████████████` 100.0% |
 | Rendering | 24/24 | `████████████` 100.0% | 790/794 | `████████████` 99.5% |
@@ -267,7 +267,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `DirectionalLight2D` | 2D | 2/2 | `████████` 100.0% |
 | `DirectionalLight3D` | 3D | 6/6 | `████████` 100.0% |
 | `DisplayServer` | Core | 287/287 | `████████` 100.0% |
-| `DrawableTexture2D` | 2D | 5/7 | `██████░░` 71.4% |
+| `DrawableTexture2D` | 2D | 6/7 | `███████░` 85.7% |
 | `ENetConnection` | Core | 18/18 | `████████` 100.0% |
 | `ENetMultiplayerPeer` | Multiplayer | 7/7 | `████████` 100.0% |
 | `ENetPacketPeer` | Core | 16/16 | `████████` 100.0% |

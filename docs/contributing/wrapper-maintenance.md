@@ -135,7 +135,7 @@ Once the class surface is broadly promoted, the remaining skips are a long tail
 of **data-type / shape** gaps, not missing classes. A full triage of the
 non-virtual skips and the skipped properties found:
 
-- **Non-virtual method skips (~64 after the Dictionary→Dictionary family):** the
+- **Non-virtual method skips (~63 after the two low-ABI families below):** the
   large majority are *intentional*, not gaps —
   - **~49 root `Object` methods** (`call`/`get`/`set`/`connect`/`emit_signal`/…)
     are deliberately routed through the hand-shaped `GodotObject` policy, not
@@ -143,17 +143,40 @@ non-virtual skips and the skipped properties found:
     `GodotObject`.
   - **2 `RefCounted` lifetime methods** (`reference`/`init_ref`) are
     ownership-sensitive and hand-shaped.
-  - The rest are **wide / exotic ABI shapes** — RenderingDevice raytracing
-    (`blas_create`, `tlas_build`, `raytracing_pipeline_create`),
-    `TypedObjectArray` blit combos, `Signal`→Object, wide RID signatures. Each is
-    a large per-shape audit (JVM actual + iOS C-shim + width self-test); defer
-    with the report entry as the reason until a workflow needs it.
-  - The one clean low-ABI slice was **`Dictionary`→`Dictionary`** (`resolve`,
-    `rename` on `GDScriptTextDocument`), landed via the
-    `ptrcallWithDictionaryArgRetDictionary` helper. It reuses the existing
-    Dictionary-arg init + Dictionary-return read paths, so it is desktop+Android
-    only and cleanly iOS-skipped (`Dictionary` is not in `IOS_ARG_KINDS` /
-    `IOS_RET_KOTLIN` — no C-shim work, no device gate).
+  - **Two clean low-ABI slices landed** — new call shapes that recombine
+    *already-audited* primitives and whose signature contains a type not in
+    `IOS_ARG_KINDS` / `IOS_RET_KOTLIN`, so they generate on desktop+Android and
+    are **cleanly iOS-skipped** (no C-shim helper, no self-test row, no device
+    gate — the same guardrail Dictionary uses):
+    - **`Dictionary`→`Dictionary`** (`GDScriptTextDocument.resolve`/`.rename`) via
+      `ptrcallWithDictionaryArgRetDictionary` — reuses the Dictionary-arg init +
+      Dictionary-return read paths. `Dictionary` is not an iOS arg/return kind.
+    - **`(Rect2i, Object, Color, int32, Object)`→`void`**
+      (`DrawableTexture2D.blit_rect`) via `ptrcallWithRect2iObjectColorIntObjectArgs`
+      — reuses the Rect2i/Object/Color/int cells. `Rect2i` is not an iOS arg kind.
+  - **The remaining ~12 are deferred with reason** (each still carries its
+    `unsupported helper shape …` entry in the generator report). They are *not*
+    quick wins — each needs either new marshalling primitives audited on the iOS
+    C-shim + a width-sensitive self-test row + a device gate, or lands on a
+    deliberately hand-shaped class:
+    - **New container-element marshalling** (no existing policy): RenderingDevice
+      raytracing — `blas_create` / `tlas_build` / `raytracing_pipeline_create`
+      (`TypedObjectArray::RD*`); `ImporterMesh.merge_importer_meshes`
+      (`TypedObjectArray::ImporterMesh` + `TypedTransform3DArray`);
+      `DrawableTexture2D.blit_rect_multi` + `RenderingServer.texture_drawable_blit_rect`
+      (`TypedObjectArray::Texture2D/DrawableTexture2D` + `TypedRIDArray` + `Rect2i`);
+      OpenXR `do_entity_update` (`TypedObjectArray::OpenXRSpatialComponentData`).
+    - **New scalar/Variant marshalling**: `Tween.tween_await` (`Signal` arg — no
+      Signal marshalling); `Font.find_variation` (11-arg `Dictionary`+wide → RID,
+      iOS-skips on `Dictionary` but desktop shape is very wide/rare).
+    - **On hand-shaped classes** (in `DESKTOP_HANDSHAPED`, so a shape addition
+      would not auto-adopt): `EditorExportPlatform.export_project`,
+      `OpenXRSpatialAnchorCapability.create_new_anchor`, `Tween.tween_await`,
+      `Font.find_variation`.
+
+    These belong with the exacting, device-sensitive per-shape work (adjacent to
+    task 13's spirit), not a broad-coverage pass — promote one only when a real
+    workflow needs it, with its iOS C-shim helper + self-test row + device gate.
 - **~505 skipped properties are NOT a marshalling gap.** Triaged:
   - **~415 are indexed / parameterized accessors** whose getter takes an
     argument (e.g. `get_list_stream(i)`, `get_param(param)`). Godot lists them as

@@ -2592,6 +2592,10 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
         "emptyList()",
     ),
     (("Rect2i", "Color"), "void"): CallShape("ptrcallWithRect2iAndColorArg", "Unit"),
+    (("Rect2i", "Object", "Color", "int32", "Object"), "void"): CallShape(
+        "ptrcallWithRect2iObjectColorIntObjectArgs",
+        "Unit",
+    ),
     (("Rect2i", "bool"), "void"): CallShape("ptrcallWithRect2iAndBoolArg", "Unit"),
     (("Rect2i", "float"), "void"): CallShape("ptrcallWithRect2iAndDoubleArg", "Unit"),
     (("Rect2i", "float"), "TypedPackedVector2Array"): CallShape(
