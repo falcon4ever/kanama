@@ -28,4 +28,10 @@ class VirtualOverrideProbe(godotObject: MemorySegment) : KanamaScript<Control>(g
     // (init/destroy-after-read) on desktop and the callVReturning String encode on iOS.
     @OverrideVirtual
     fun _get_tooltip(at: Vector2): String = "tip@${at.x.toInt()},${at.y.toInt()}"
+
+    // task 13 — non-POD (PackedStringArray) virtual return: List<String> -> PackedStringArray via
+    // BuiltinTypes.initPackedStringArray on desktop; the iOS encode ships a length-prefixed blob the
+    // C shim rebuilds. `_get_configuration_warnings` is a Node virtual (Control inherits Node).
+    @OverrideVirtual
+    fun _get_configuration_warnings(): List<String> = listOf("kanama-warn-a", "kanama-warn-b")
 }

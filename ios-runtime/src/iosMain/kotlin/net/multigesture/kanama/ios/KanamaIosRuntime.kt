@@ -730,6 +730,11 @@ private const val IOS_PT_COLOR = 11
 private const val IOS_PT_OBJECT = 13
 private const val IOS_PT_STRING = 16
 private const val IOS_PT_NODE_PATH = 17
+// Return-only (task 13): retBuf holds a pointer to a length-prefixed blob
+// [int32 count]([int32 byteLen][byteLen utf8])* — the same layout the C read-back emits. The C
+// side (kanama_ios_pt_return_to_variant) rebuilds a Godot PackedStringArray from it. Value 28 must
+// match KANAMA_IOS_PT_PACKED_STRING_ARRAY appended at the end of the C PT enum.
+private const val IOS_PT_PACKED_STRING_ARRAY = 28
 
 // Decodes one PT-tagged inbound call arg (see kanama_ios_script_instance_call). OBJECT yields the
 // raw int64 handle; the generated callV branch wraps it in the declared GodotObject subtype.
@@ -855,6 +860,15 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
             retBuf.reinterpret<CPointerVar<ByteVar>>()[0] = ptr
             retTag[0] = IOS_PT_STRING
         }
+        // Non-POD (task 13): a List<String> return is a PackedStringArray. Ship a length-prefixed
+        // blob via a reused scratch and let the C side rebuild the Godot PackedStringArray. Only
+        // String elements reach here (the processor validates the return type as PackedStringArray).
+        is List<*> -> {
+            @Suppress("UNCHECKED_CAST")
+            val ptr = IosReturnPackedStringArrayScratch.encode(value as List<String>)
+            retBuf.reinterpret<CPointerVar<ByteVar>>()[0] = ptr
+            retTag[0] = IOS_PT_PACKED_STRING_ARRAY
+        }
         else -> retTag[0] = IOS_PT_VOID
     }
 }
@@ -899,6 +913,80 @@ private object IosReturnStringScratch {
 @OptIn(ExperimentalForeignApi::class)
 internal fun kanamaIosVirtualStringReturnSelfTest(value: String): String =
     IosReturnStringScratch.selfTestRoundTrip(value)
+
+// Persistent scratch for PackedStringArray (List<String>) virtual/method returns (task 13). Encodes
+// the list into the length-prefixed blob [int32 count]([int32 byteLen][byteLen utf8])* — the same
+// layout the C read-back produces — into a reused buffer (grown as needed), and hands the C return
+// path a pointer to it. Int32 fields are written little-endian byte-by-byte because the per-element
+// length prefixes land at unaligned offsets (variable-length strings); the C side reads them with
+// memcpy, so both agree on this arm64 (little-endian) target.
+@OptIn(ExperimentalForeignApi::class)
+private object IosReturnPackedStringArrayScratch {
+    private var buf: CPointer<ByteVar>? = null
+    private var capacity: Int = 0
+
+    private fun ensure(needed: Int): CPointer<ByteVar> {
+        val existing = buf
+        return if (existing == null || capacity < needed) {
+            if (existing != null) nativeHeap.free(existing)
+            val fresh = nativeHeap.allocArray<ByteVar>(needed)
+            buf = fresh
+            capacity = needed
+            fresh
+        } else {
+            existing
+        }
+    }
+
+    private fun putInt32LE(b: CPointer<ByteVar>, off: Int, v: Int) {
+        b[off] = (v and 0xFF).toByte()
+        b[off + 1] = ((v ushr 8) and 0xFF).toByte()
+        b[off + 2] = ((v ushr 16) and 0xFF).toByte()
+        b[off + 3] = ((v ushr 24) and 0xFF).toByte()
+    }
+
+    fun encode(values: List<String>): CPointer<ByteVar> {
+        val encoded = values.map { it.encodeToByteArray() }
+        var needed = 4 // count header
+        for (e in encoded) needed += 4 + e.size
+        if (needed < 4) needed = 4
+        val b = ensure(needed)
+        putInt32LE(b, 0, values.size)
+        var off = 4
+        for (e in encoded) {
+            putInt32LE(b, off, e.size)
+            off += 4
+            for (i in e.indices) b[off + i] = e[i]
+            off += e.size
+        }
+        return b
+    }
+
+    // Width self-test hook (task 13): encode [values] and parse the blob back through the same
+    // pointer the C side reads, so the OBJECTCALLS SELFTEST can assert element boundaries survive
+    // (including a >16B element and an empty list).
+    fun selfTestRoundTrip(values: List<String>): List<String> {
+        val b = encode(values)
+        fun int32LE(off: Int): Int =
+            (b[off].toInt() and 0xFF) or ((b[off + 1].toInt() and 0xFF) shl 8) or
+                ((b[off + 2].toInt() and 0xFF) shl 16) or ((b[off + 3].toInt() and 0xFF) shl 24)
+        val count = int32LE(0)
+        val out = ArrayList<String>(count)
+        var off = 4
+        repeat(count) {
+            val len = int32LE(off); off += 4
+            val bytes = ByteArray(len) { i -> b[off + i] }
+            off += len
+            out.add(bytes.decodeToString())
+        }
+        return out
+    }
+}
+
+/** OBJECTCALLS-SELFTEST hook for the PackedStringArray virtual-return encoder (task 13). */
+@OptIn(ExperimentalForeignApi::class)
+internal fun kanamaIosVirtualPackedStringArrayReturnSelfTest(values: List<String>): List<String> =
+    IosReturnPackedStringArrayScratch.selfTestRoundTrip(values)
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")

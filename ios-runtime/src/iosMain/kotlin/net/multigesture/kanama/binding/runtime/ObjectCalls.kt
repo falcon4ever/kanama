@@ -1255,6 +1255,16 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     check("virtual-string-ret-encode(empty)",
         net.multigesture.kanama.ios.kanamaIosVirtualStringReturnSelfTest("") == "")
 
+    // Virtual PackedStringArray-RETURN encode (task 13). A List<String>-returning @OverrideVirtual
+    // ships a length-prefixed blob the C shim rebuilds into a Godot PackedStringArray. Assert the
+    // Kotlin encoder half preserves element boundaries — including a >16B element and the empty
+    // list; the C half (build + destroy-after-read) is the "virtual-packed-string-ret" C row.
+    val vPsa = listOf("kanama-config-warning-alpha-0123456789", "beta", "")
+    check("virtual-packed-string-ret-encode(mixed)",
+        net.multigesture.kanama.ios.kanamaIosVirtualPackedStringArrayReturnSelfTest(vPsa) == vPsa)
+    check("virtual-packed-string-ret-encode(empty-list)",
+        net.multigesture.kanama.ios.kanamaIosVirtualPackedStringArrayReturnSelfTest(emptyList()) == emptyList<String>())
+
     // StringName-return (Node.get_name): set a known name (StringName arg) then read it
     // back through ptrcallNoArgsRetStringName — exercises the StringName->String ctor
     // hop end to end. Deterministic; node name has no validation.

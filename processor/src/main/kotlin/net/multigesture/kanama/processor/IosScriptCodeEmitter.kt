@@ -41,6 +41,7 @@ private val iosReturnTypes = setOf(
     TypeMapping.BOOL, TypeMapping.INT, TypeMapping.FLOAT,
     TypeMapping.VECTOR2, TypeMapping.VECTOR2I,
     TypeMapping.STRING,
+    TypeMapping.PACKED_STRING_ARRAY,
 )
 
 internal data class IosMethod(
@@ -524,7 +525,7 @@ internal class IosScriptCodeEmitter(
         else -> {
             warn("[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
                 "$returnType not yet marshalled on iOS (supported: Bool/Int/Float/Vector2/" +
-                "Vector2i/String) — silent no-op")
+                "Vector2i/String/PackedStringArray) — silent no-op")
             null
         }
     }
@@ -630,6 +631,7 @@ internal class IosScriptCodeEmitter(
         TypeMapping.NODE_PATH -> 22
         TypeMapping.OBJECT -> 24
         TypeMapping.ARRAY -> 28
+        TypeMapping.PACKED_STRING_ARRAY -> 34
     }
 
     // ---------- string helpers (reproduce the build.gradle.kts versions exactly) ----------

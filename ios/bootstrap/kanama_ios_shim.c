@@ -558,6 +558,12 @@ enum {
     // the dispatch builds an object+method Callable (constructor index 2) into a cell, passes it to
     // ptrcall, and destroys the cell after the call. Object+method form only (Phase 1.4 Callable-args).
     KANAMA_IOS_PT_CALLABLE,
+    // RETURN-only (task 13, non-POD virtual returns): the PT return scratch holds a pointer to a
+    // length-prefixed blob [int32 count]([int32 byte_len][byte_len utf8])* (the same layout the
+    // packed-string read-back emits). kanama_ios_pt_return_to_variant rebuilds the Godot
+    // PackedStringArray and destroys the temporary. Appended last so no prior tag is renumbered;
+    // value (28) must match IOS_PT_PACKED_STRING_ARRAY in KanamaIosRuntime.kt.
+    KANAMA_IOS_PT_PACKED_STRING_ARRAY,
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -4085,14 +4091,57 @@ static void kanama_ios_pt_arg_to_variant(
     }
 }
 
+// Build a Godot PackedStringArray (task 13 return path) into out_cell (a >=16-byte opaque
+// PackedStringArray storage) from the length-prefixed blob [int32 count]([int32 byte_len][byte_len
+// utf8])* the Kotlin encoder produced. The caller destroys out_cell after wrapping it in a Variant.
+static void kanama_ios_build_packed_string_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell) {
+    if (g_packed_string_array_constructor != NULL) {
+        g_packed_string_array_constructor(out_cell, NULL);
+    }
+    if (blob == NULL || g_packed_string_array_push_back == NULL) {
+        return;
+    }
+    const uint8_t *p = blob;
+    int32_t count = 0;
+    memcpy(&count, p, sizeof(int32_t));
+    p += sizeof(int32_t);
+    for (int32_t i = 0; i < count; i++) {
+        int32_t len = 0;
+        memcpy(&len, p, sizeof(int32_t));
+        p += sizeof(int32_t);
+        if (len < 0) {
+            len = 0;
+        }
+        // kanama_ios_init_string needs a NUL-terminated C string; copy the element out and terminate.
+        char stackbuf[256];
+        char *tmp = ((size_t)len + 1 <= sizeof(stackbuf)) ? stackbuf : (char *)malloc((size_t)len + 1);
+        if (tmp == NULL) {
+            p += len;
+            continue;
+        }
+        memcpy(tmp, p, (size_t)len);
+        tmp[len] = '\0';
+        p += len;
+        uint64_t string_storage = 0;
+        kanama_ios_init_string(&string_storage, tmp);
+        const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&string_storage };
+        uint8_t bool_ret = 0;
+        g_packed_string_array_push_back(out_cell, args, &bool_ret, 1);
+        kanama_ios_destroy_string(&string_storage);
+        if (tmp != stackbuf) {
+            free(tmp);
+        }
+    }
+}
+
 // Build the engine return Variant for a value-returning virtual/method from the PT-tagged return
 // scratch (task 13 — non-POD virtual returns). POD/fixed-width kinds (Bool/Int/Float/Vector2/
 // Vector2i/…) delegate to kanama_ios_pt_arg_to_variant, where ret_buf holds the value bytes inline.
-// Variable-length kinds (STRING) can exceed the fixed ret_buf, so the Kotlin encoder instead writes
-// a `char *` pointer into ret_buf; we build the Godot String from it, copy it into the return
-// Variant, then destroy the temporary. Destroy-after-read: the engine owns `out_variant` and takes
-// its own reference on construction, so the local String cell must be released here (same ownership
-// as the inbound String arg cells).
+// Variable-length kinds (STRING, PACKED_STRING_ARRAY) can exceed the fixed ret_buf, so the Kotlin
+// encoder instead writes a pointer into ret_buf (a `char *` for STRING, a blob pointer for the
+// packed array); we build the Godot value from it, copy it into the return Variant, then destroy the
+// temporary. Destroy-after-read: the engine owns `out_variant` and takes its own reference on
+// construction, so the local cell must be released here (same ownership as the inbound String args).
 static void kanama_ios_pt_return_to_variant(int32_t tag, const void *ret_buf, uint8_t out_variant[24]) {
     if (tag == KANAMA_IOS_PT_STRING) {
         const char *s = (ret_buf != NULL) ? *(const char *const *)ret_buf : NULL;
@@ -4101,6 +4150,22 @@ static void kanama_ios_pt_return_to_variant(int32_t tag, const void *ret_buf, ui
         kanama_ios_init_string(&cell, (s != NULL) ? s : "");
         g_variant_from_string(out_variant, &cell);
         kanama_ios_destroy_string(&cell);
+        return;
+    }
+    if (tag == KANAMA_IOS_PT_PACKED_STRING_ARRAY) {
+        const uint8_t *blob = (ret_buf != NULL) ? *(const uint8_t *const *)ret_buf : NULL;
+        memset(out_variant, 0, 24);
+        KANAMA_IOS_PACKED_ARRAY_STORAGE(psa);
+        kanama_ios_build_packed_string_array_from_blob(blob, psa);
+        if (g_variant_from_packed_string_array != NULL) {
+            g_variant_from_packed_string_array(out_variant, psa);
+        } else {
+            g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
+        }
+        kanama_ios_cache_packed_string_methods();
+        if (g_packed_string_array_destructor != NULL) {
+            g_packed_string_array_destructor(psa);
+        }
         return;
     }
     // POD return kinds carry no backing cell (cell_kind stays 0 — nothing to free).
@@ -7140,6 +7205,60 @@ static void kanama_ios_ptrcall_selftest(void) {
         KANAMA_IOS_ST_CHECK("virtual-string-ret roundtrip(>32B)",
             utf8 != NULL && strcmp(utf8, long_str) == 0);
         free(utf8);
+        if (g_variant_destroy != NULL) {
+            g_variant_destroy((GDExtensionVariantPtr)ret_variant);
+        }
+    }
+
+    // Virtual PackedStringArray-RETURN marshalling (task 13). A value-returning virtual (e.g.
+    // Node._get_configuration_warnings) whose Kotlin result is a List<String> hands it back as a
+    // length-prefixed blob; kanama_ios_pt_return_to_variant rebuilds the Godot PackedStringArray.
+    // Build a 2-element blob (one element >16 bytes to exercise the grow/heap branch), rebuild it,
+    // then read the Variant back element-by-element and compare.
+    {
+        const char *e0 = "kanama-config-warning-alpha-0123456789";  // >16B
+        const char *e1 = "beta";
+        int32_t l0 = (int32_t)strlen(e0);
+        int32_t l1 = (int32_t)strlen(e1);
+        uint8_t blob[256];
+        int off = 0;
+        int32_t count = 2;
+        memcpy(blob + off, &count, 4); off += 4;
+        memcpy(blob + off, &l0, 4);    off += 4;
+        memcpy(blob + off, e0, (size_t)l0); off += l0;
+        memcpy(blob + off, &l1, 4);    off += 4;
+        memcpy(blob + off, e1, (size_t)l1); off += l1;
+
+        uint8_t rb[32];
+        memset(rb, 0, sizeof(rb));
+        *(const uint8_t **)rb = blob;
+        uint8_t ret_variant[24];
+        memset(ret_variant, 0, sizeof(ret_variant));
+        kanama_ios_pt_return_to_variant(KANAMA_IOS_PT_PACKED_STRING_ARRAY, rb, ret_variant);
+
+        int ok = 0;
+        kanama_ios_cache_packed_string_methods();
+        if (g_variant_to_packed_string_array != NULL && g_packed_string_array_size_method != NULL &&
+            g_packed_string_array_operator_index_const != NULL && g_string_to_utf8_chars != NULL) {
+            KANAMA_IOS_PACKED_ARRAY_STORAGE(psa);
+            g_variant_to_packed_string_array(psa, (GDExtensionVariantPtr)ret_variant);
+            int64_t n = 0;
+            g_packed_string_array_size_method(psa, NULL, &n, 0);
+            if (n == 2) {
+                char b0[128];
+                char b1[128];
+                GDExtensionStringPtr s0 = g_packed_string_array_operator_index_const(psa, 0);
+                GDExtensionStringPtr s1 = g_packed_string_array_operator_index_const(psa, 1);
+                int64_t n0 = (s0 != NULL) ? g_string_to_utf8_chars((GDExtensionConstStringPtr)s0, b0, sizeof(b0)) : -1;
+                int64_t n1 = (s1 != NULL) ? g_string_to_utf8_chars((GDExtensionConstStringPtr)s1, b1, sizeof(b1)) : -1;
+                ok = (n0 == l0 && strncmp(b0, e0, (size_t)l0) == 0 &&
+                      n1 == l1 && strncmp(b1, e1, (size_t)l1) == 0);
+            }
+            if (g_packed_string_array_destructor != NULL) {
+                g_packed_string_array_destructor(psa);
+            }
+        }
+        KANAMA_IOS_ST_CHECK("virtual-packed-string-ret roundtrip([>16B, short])", ok);
         if (g_variant_destroy != NULL) {
             g_variant_destroy((GDExtensionVariantPtr)ret_variant);
         }
