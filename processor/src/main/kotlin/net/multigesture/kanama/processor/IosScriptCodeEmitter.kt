@@ -42,6 +42,9 @@ private val iosReturnTypes = setOf(
     TypeMapping.VECTOR2, TypeMapping.VECTOR2I,
     TypeMapping.STRING,
     TypeMapping.PACKED_STRING_ARRAY,
+    // Variant returns reuse the per-runtime-type encodeIosReturn dispatch (audited inner types;
+    // an unaudited inner value serializes as nil — a valid Variant). task 13.
+    TypeMapping.VARIANT,
 )
 
 internal data class IosMethod(
@@ -525,7 +528,7 @@ internal class IosScriptCodeEmitter(
         else -> {
             warn("[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
                 "$returnType not yet marshalled on iOS (supported: Bool/Int/Float/Vector2/" +
-                "Vector2i/String/PackedStringArray) — silent no-op")
+                "Vector2i/String/PackedStringArray/Variant) — silent no-op")
             null
         }
     }
@@ -632,6 +635,7 @@ internal class IosScriptCodeEmitter(
         TypeMapping.OBJECT -> 24
         TypeMapping.ARRAY -> 28
         TypeMapping.PACKED_STRING_ARRAY -> 34
+        TypeMapping.VARIANT -> 0 // NIL — a Variant/"any" property advertises no fixed type
     }
 
     // ---------- string helpers (reproduce the build.gradle.kts versions exactly) ----------

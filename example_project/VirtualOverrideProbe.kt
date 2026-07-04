@@ -34,4 +34,10 @@ class VirtualOverrideProbe(godotObject: MemorySegment) : KanamaScript<Control>(g
     // C shim rebuilds. `_get_configuration_warnings` is a Node virtual (Control inherits Node).
     @OverrideVirtual
     fun _get_configuration_warnings(): List<String> = listOf("kanama-warn-a", "kanama-warn-b")
+
+    // task 13 — non-POD (Variant) virtual return: Any? boxed via initVariantFromAny on desktop; on
+    // iOS the per-runtime-type encodeIosReturn dispatch handles the concrete value (here a String).
+    // `_get_drag_data` is a Control virtual returning Variant (drag-and-drop payload).
+    @OverrideVirtual
+    fun _get_drag_data(at: Vector2): Any? = if (at.x < 0f) null else "drag:${at.x.toInt()}"
 }

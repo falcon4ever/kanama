@@ -829,6 +829,8 @@ class KanamaProcessor(
                     ?.declaration?.qualifiedName?.asString()
                 return if (elementFq == "kotlin.String") TypeMapping.PACKED_STRING_ARRAY else null
             }
+            // `Any`/`Any?` return -> Variant (the flexible catch-all; e.g. Control._get_drag_data).
+            if (fq == "kotlin.Any") return TypeMapping.VARIANT
             return fqToTypeMapping(fq)
         }
 
@@ -1377,8 +1379,9 @@ private fun normalizeScriptPropertyDefaultLiteral(initializer: String, type: Typ
         TypeMapping.STRING -> initializer.takeIf { stringLiteral.matches(it) }
         TypeMapping.OBJECT -> initializer.takeIf { it == "null" }
         TypeMapping.ARRAY -> initializer.takeIf { it == "emptyList()" || it == "listOf()" }?.let { "emptyList()" }
-        // Return-only virtual shape (task 13); not a @ScriptProperty default literal.
+        // Return-only virtual shapes (task 13); not @ScriptProperty default literals.
         TypeMapping.PACKED_STRING_ARRAY -> null
+        TypeMapping.VARIANT -> null
         TypeMapping.NODE_PATH -> nodePathLiteral.matchEntire(initializer)
             ?.groupValues
             ?.get(1)
@@ -1510,6 +1513,11 @@ internal enum class TypeMapping(
     // helpers below fall through to the ARRAY-style safe defaults; the real marshalling is the
     // dedicated PACKED_STRING_ARRAY case in variantWriteRetExpr (desktop) and the iOS encode path.
     PACKED_STRING_ARRAY("PACKED_STRING_ARRAY", "JAVA_LONG", 8, "emptyList<String>()", "List<String>"),
+    // task 13 — non-POD virtual return: a Variant, mapped to Kotlin `Any?`. Variant-only, boxed on
+    // desktop via BuiltinTypes.initVariantFromAny (broad inner-type set) and on iOS via the existing
+    // per-runtime-type encodeIosReturn dispatch (audited inner types; unaudited -> nil). variantTypeEnum
+    // NIL is the method-info return type for a Variant ("any").
+    VARIANT("NIL", "JAVA_LONG", 8, "null", "Any?"),
     ;
 
     /** Expression to read a Kotlin value from a scratch MemorySegment named [s]. */
@@ -2862,6 +2870,8 @@ internal class ScriptCodeEmitter(
         // PackedStringArray is a virtual RETURN shape (task 13), never validated as an arg, but the
         // when must be exhaustive — read as List<String> for completeness.
         TypeMapping.PACKED_STRING_ARRAY -> "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? List<String> ?: emptyList() }"
+        // Variant is a virtual RETURN shape (task 13); the raw decoded Any? is the natural read.
+        TypeMapping.VARIANT -> "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) }"
     }
 
     private fun variantReadPropertyExpr(property: ScriptPropertyModel, variantPtr: String, localName: String): String =
@@ -2935,6 +2945,9 @@ internal class ScriptCodeEmitter(
         // task 13 — non-POD virtual return: build a Godot PackedStringArray from the List<String>,
         // write it into the engine return Variant, then destroy the temporary (destroy-after-read).
         TypeMapping.PACKED_STRING_ARRAY -> "Arena.ofConfined().use { a -> val s = BuiltinTypes.allocatePackedArray(a); BuiltinTypes.initPackedStringArray(s, $valueExpr); VariantConverters.variantFromType(VariantType.PACKED_STRING_ARRAY).invoke(ret, s); BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, s) }"
+        // task 13 — Variant virtual return: box the Any? result (null -> nil) via the broad
+        // initVariantFromAny path, which owns and releases any temporary builtin it constructs.
+        TypeMapping.VARIANT -> "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
     }
 
     private fun variantWritePropertyRetExpr(property: ScriptPropertyModel, valueExpr: String): String =

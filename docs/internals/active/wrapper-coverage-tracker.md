@@ -12,7 +12,7 @@ commands outside this public repo.
 | iOS audited type set | Done for demo/runtime use | POD/value types, strings, NodePath/StringName, typed arrays, Variant scalar returns, typed object arrays, Projection/Vector4/Plane, and generic Array cases were wired with matrix/ObjectCalls coverage. |
 | iOS script model | Done | iOS consumes the shared KSP model; the regex parser was deleted. |
 | iOS stubs/sugar | Done | 0 STUB / 0 SUGAR; remaining HANDWRITTEN entries are platform/runtime glue. |
-| Virtual methods | Done for audited return set incl. String + PackedStringArray | `@OverrideVirtual` works across desktop/Android/iOS; iOS value returns cover the audited POD set plus String and PackedStringArray (task 13). Other Packed* arrays and Variant virtual returns remain deferred (not yet in the audited return type set). |
+| Virtual methods | Done for audited return set incl. String + PackedStringArray + Variant | `@OverrideVirtual` works across desktop/Android/iOS; iOS value returns cover the audited POD set plus String, PackedStringArray, and Variant (Any?, over the audited inner-type set) (task 13). Other Packed* arrays and Dictionary virtual returns remain deferred. |
 | iOS demo breadth | Done for Android-enabled public demos | See [ios-demo-port-tracker.md](./ios-demo-port-tracker.md). |
 | Stable mobile support | Not done | See [ios-backend-roadmap.md](./ios-backend-roadmap.md). |
 
@@ -69,8 +69,9 @@ commands outside this public repo.
 | 5.3 iOS void and audited value-returning virtuals | done |
 | 5.3c iOS String (first non-POD) virtual return | done (task 13) — variable-length destroy-after-read via `kanama_ios_pt_return_to_variant`; device self-test rows green |
 | 5.3d iOS PackedStringArray virtual return | done (task 13) — `List<String>` marshalled as a length-prefixed blob rebuilt into a Godot PackedStringArray (`kanama_ios_build_packed_string_array_from_blob`), destroy-after-read; device self-test rows green |
+| 5.3e Variant (Any?) virtual return | done (task 13) — desktop boxes via `initVariantFromAny`; iOS reuses the per-runtime-type `encodeIosReturn` dispatch (audited inner types; unaudited -> nil). No new C code. Device self-test rows green (routing) |
 | 5.4 Coverage accounting | done |
-| 5.5 Other Packed*/Variant virtual returns | deferred — each needs new `TypeMapping` entries + JVM/iOS marshalling; land as their own audited shape families |
+| 5.5 Other Packed*/Dictionary virtual returns | deferred — each needs new `TypeMapping` entries + JVM/iOS marshalling; land as their own audited shape families |
 
 ## Remaining Work
 

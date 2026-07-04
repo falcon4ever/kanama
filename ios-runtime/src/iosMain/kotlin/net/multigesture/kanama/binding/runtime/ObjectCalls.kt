@@ -1265,6 +1265,21 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     check("virtual-packed-string-ret-encode(empty-list)",
         net.multigesture.kanama.ios.kanamaIosVirtualPackedStringArrayReturnSelfTest(emptyList()) == emptyList<String>())
 
+    // Virtual Variant-RETURN routing (task 13). A Variant-returning @OverrideVirtual (e.g.
+    // Control._get_drag_data) returns Any?; encodeIosReturn dispatches on the runtime type to the
+    // right PT tag, and the C side builds the concrete Variant. Assert the routing for the audited
+    // inner types (PT tags: VOID=0, BOOL=1, INT64=3, STRING=16, PACKED_STRING_ARRAY=28).
+    check("virtual-variant-ret(null->nil)",
+        net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(null) == 0)
+    check("virtual-variant-ret(String->STRING)",
+        net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest("drag:7") == 16)
+    check("virtual-variant-ret(Long->INT64)",
+        net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(42L) == 3)
+    check("virtual-variant-ret(Bool->BOOL)",
+        net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(true) == 1)
+    check("virtual-variant-ret(List<String>->PACKED_STRING_ARRAY)",
+        net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(listOf("a", "bb")) == 28)
+
     // StringName-return (Node.get_name): set a known name (StringName arg) then read it
     // back through ptrcallNoArgsRetStringName — exercises the StringName->String ctor
     // hop end to end. Deterministic; node name has no validation.

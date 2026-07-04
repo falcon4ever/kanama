@@ -161,9 +161,11 @@ def render_markdown(
             "signature table (`scripts/generate_virtual_signature_table.py`, all virtuals) and dispatches "
             "it on both targets. They are reported here separately so they neither dilute callable-method "
             "coverage nor count as wrapper gaps. Practical marshalling bounds (task 13): desktop/Android "
-            "cover the audited scalar/POD Variant shapes plus String and PackedStringArray returns; iOS "
-            "value-returns cover Bool/Int/Float/Vector2/Vector2i/String/PackedStringArray. Other Packed* "
-            "arrays and Variant virtual returns are deferred (not yet in the audited return type set).",
+            "cover the audited scalar/POD Variant shapes plus String, PackedStringArray, and Variant "
+            "(Any?) returns; iOS value-returns cover Bool/Int/Float/Vector2/Vector2i/String/"
+            "PackedStringArray, and Variant returns over that audited inner-type set (unaudited inner "
+            "types serialize as nil on iOS). Other Packed* arrays and Dictionary virtual returns are "
+            "deferred (not yet in the audited return type set).",
             "",
             "## Promoted Source By Area",
             "",

@@ -9,14 +9,18 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.FloatVar
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.LongVar
+import kotlinx.cinterop.alloc
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.free
 import kotlinx.cinterop.get
+import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.nativeHeap
+import kotlinx.cinterop.ptr
 import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.toKString
+import kotlinx.cinterop.value
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
@@ -987,6 +991,19 @@ private object IosReturnPackedStringArrayScratch {
 @OptIn(ExperimentalForeignApi::class)
 internal fun kanamaIosVirtualPackedStringArrayReturnSelfTest(values: List<String>): List<String> =
     IosReturnPackedStringArrayScratch.selfTestRoundTrip(values)
+
+// OBJECTCALLS-SELFTEST hook for Variant virtual returns (task 13). A Variant-returning virtual hands
+// back an Any?; encodeIosReturn dispatches on its runtime type to the matching PT tag (the C side
+// then builds the concrete Variant). Returns the PT tag chosen for [value] so the self-test can
+// assert the routing (e.g. String -> STRING(16), Long -> INT64(3), null -> VOID(0) = nil Variant).
+@OptIn(ExperimentalForeignApi::class)
+internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
+    val tag = alloc<IntVar>()
+    val buf = allocArray<ByteVar>(32)
+    tag.value = IOS_PT_VOID
+    encodeIosReturn(value, tag.ptr, buf)
+    tag.value
+}
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")
