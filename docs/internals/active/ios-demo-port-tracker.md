@@ -20,7 +20,31 @@ experimental: this is demo parity, not desktop-level support.
 | Starter-Kit-FPS | Playable | F1/F2 complete. `List<Weapon>` delivery, AnimatedSprite3D generation, Tween glue, and SceneTree tween creation fixed. |
 | godot-4-3d-third-person-controller | Playable | Attack crash, Mobile/Vulkan visuals, and `List<String>` animation-loop delivery fixed. |
 | Starter-Kit-City-Builder | Desktop-only by design | Desktop-focused controls (GridMap/custom-list); not a mobile target and not reassessed for mobile. |
-| tps-demo-kanama | RPC unblocked; iOS wrappers and mobile UI deferred | `@Rpc` config delivery is wired on the shared desktop/Android path and the iOS C-shim path. Full iOS launch still needs the task 08 wrapper gaps; mobile *playability* is tracked separately in `kanama-tasks/19-tps-mobile-virtual-joysticks.md`. |
+| tps-demo-kanama | iOS not feasible yet (concrete gaps below); mobile UI deferred | `@Rpc` config delivery is wired on the shared desktop/Android path and the iOS C-shim path. iOS launch remains blocked — see the concrete gap list below. Mobile *playability* (touch controls) is tracked separately in `kanama-tasks/19-tps-mobile-virtual-joysticks.md` (Android-first). |
+
+### tps-demo-kanama iOS gap list (measured 2026-07-04)
+
+`:ios-runtime:compileKotlinIosArm64 -PkanamaIosProjectScriptsDir=.../tps-demo-kanama/kotlin-src`
+fails; the blockers are two distinct classes of work (NOT closed by tasks 08/09/13, which
+audited the 9-demo matrix above — TPS pulls in a much larger, un-audited surface):
+
+- **Un-audited iOS wrapper classes** (no wrapper emitted for iOS → whole class unresolved):
+  `CPUParticles3D`, `DisplayServer`, `ShaderMaterial`, `MultiplayerSynchronizer`,
+  `SceneMultiplayer`, `AnimationTree`, `ConfigFile`, `LightmapGI`, `OmniLight3D`, `SpotLight3D`,
+  `BoneAttachment3D`, `FastNoiseLite`. Each is a device-gated per-shape iOS audit (task-08 style).
+- **Method-level iOS shape gaps** on otherwise-emitted classes: `SceneTree.createTimer`,
+  `AnimationTree.getRootMotionRotation/Position`, `ResourceLoader.loadThreaded*`
+  (+ `THREAD_LOAD_*` enums), `intersectRay`, `setMultiplayerAuthority`, `setShaderParameter`,
+  `callDeferred`, `propagateCall`.
+- **Non-Native-portable demo code** (compiles on JVM desktop/Android, not Kotlin/Native):
+  `Level.kt`/`Settings.kt` use `java.io.File` / `.readText()` / raw `print()` / `ConfigFile`
+  disk save+load. These need Native-safe replacements in the demo itself, independent of wrapper
+  coverage.
+
+Net: bringing TPS to iOS is a sizeable iOS-coverage initiative (~13 classes + a dozen methods)
+plus demo Native-portability work — its own task if TPS-on-iOS becomes a release goal, not a
+by-product of the audited-long-tail work. Feed this into the task-15 release-support decision
+(iOS "known limitations": heavy 3D + mobile-multiplayer demos are not an iOS support claim).
 
 ## Build / Deploy Pointers
 
