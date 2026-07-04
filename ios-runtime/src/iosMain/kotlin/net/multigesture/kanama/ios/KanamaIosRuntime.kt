@@ -9,7 +9,10 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.FloatVar
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.LongVar
+import kotlinx.cinterop.allocArray
+import kotlinx.cinterop.free
 import kotlinx.cinterop.get
+import kotlinx.cinterop.nativeHeap
 import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
@@ -844,9 +847,58 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
             val n = retBuf.reinterpret<IntVar>()
             n[0] = value.x; n[1] = value.y; retTag[0] = IOS_PT_VECTOR2I
         }
+        // Non-POD (task 13): a String return can exceed the fixed retBuf, so we hand back a
+        // pointer to a persistent scratch buffer; the C side (kanama_ios_pt_return_to_variant)
+        // builds the Godot String from it and destroys the temporary after copying.
+        is String -> {
+            val ptr = IosReturnStringScratch.encode(value)
+            retBuf.reinterpret<CPointerVar<ByteVar>>()[0] = ptr
+            retTag[0] = IOS_PT_STRING
+        }
         else -> retTag[0] = IOS_PT_VOID
     }
 }
+
+// Persistent scratch for String virtual/method returns (task 13). The C return path reads a
+// `char *` out of the fixed 32-byte return buffer because a String payload can exceed it. The
+// buffer is reused across calls (grown as needed) rather than per-call allocated: script-instance
+// dispatch is synchronous on the main thread and C copies the bytes into a Godot String
+// immediately, before the next encode can overwrite them — a nested engine call fully completes its
+// own read before the outer encode runs. Mirrors the roadmap's "reuse PtrcallScratch-style
+// thread-locals, not per-call arenas".
+@OptIn(ExperimentalForeignApi::class)
+private object IosReturnStringScratch {
+    private var buf: CPointer<ByteVar>? = null
+    private var capacity: Int = 0
+
+    fun encode(value: String): CPointer<ByteVar> {
+        val bytes = value.encodeToByteArray()
+        val needed = bytes.size + 1
+        val existing = buf
+        val b: CPointer<ByteVar> = if (existing == null || capacity < needed) {
+            if (existing != null) nativeHeap.free(existing)
+            val fresh = nativeHeap.allocArray<ByteVar>(needed)
+            buf = fresh
+            capacity = needed
+            fresh
+        } else {
+            existing
+        }
+        for (i in bytes.indices) b[i] = bytes[i]
+        b[bytes.size] = 0
+        return b
+    }
+
+    // Kotlin-side width self-test hook (task 13): encode [value] and read it back through the same
+    // pointer the C side would, returning the decoded string so the OBJECTCALLS SELFTEST can assert
+    // a long (>32-byte) String survives the fixed-scratch return path uncorrupted.
+    fun selfTestRoundTrip(value: String): String = encode(value).toKString()
+}
+
+/** OBJECTCALLS-SELFTEST hook for the String virtual-return encoder (task 13). See scratch above. */
+@OptIn(ExperimentalForeignApi::class)
+internal fun kanamaIosVirtualStringReturnSelfTest(value: String): String =
+    IosReturnStringScratch.selfTestRoundTrip(value)
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_free")

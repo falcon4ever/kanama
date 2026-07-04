@@ -12,7 +12,7 @@ commands outside this public repo.
 | iOS audited type set | Done for demo/runtime use | POD/value types, strings, NodePath/StringName, typed arrays, Variant scalar returns, typed object arrays, Projection/Vector4/Plane, and generic Array cases were wired with matrix/ObjectCalls coverage. |
 | iOS script model | Done | iOS consumes the shared KSP model; the regex parser was deleted. |
 | iOS stubs/sugar | Done | 0 STUB / 0 SUGAR; remaining HANDWRITTEN entries are platform/runtime glue. |
-| Virtual methods | Done for current audited return set | `@OverrideVirtual` works across desktop/Android/iOS; iOS value returns cover the audited POD set. |
+| Virtual methods | Done for audited return set incl. String | `@OverrideVirtual` works across desktop/Android/iOS; iOS value returns cover the audited POD set plus String (task 13). Packed*/Variant virtual returns remain deferred (not yet in the audited return type set). |
 | iOS demo breadth | Done for Android-enabled public demos | See [ios-demo-port-tracker.md](./ios-demo-port-tracker.md). |
 | Stable mobile support | Not done | See [ios-backend-roadmap.md](./ios-backend-roadmap.md). |
 
@@ -67,7 +67,9 @@ commands outside this public repo.
 | 5.1 Design and signature table | done |
 | 5.2 JVM implementation | done |
 | 5.3 iOS void and audited value-returning virtuals | done |
+| 5.3c iOS String (first non-POD) virtual return | done (task 13) — variable-length destroy-after-read via `kanama_ios_pt_return_to_variant`; device self-test rows green |
 | 5.4 Coverage accounting | done |
+| 5.5 Packed*/Variant virtual returns | deferred — need new `TypeMapping` entries + JVM/iOS marshalling; land as their own audited shape families |
 
 ## Remaining Work
 

@@ -1243,6 +1243,18 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Object", "get_class", 201670096L), n2cls)
     check("string-ret(get_class==Node2D)", cls == "Node2D")
 
+    // Virtual String-RETURN encode width (task 13 — non-POD virtual returns). A value-returning
+    // @OverrideVirtual whose Kotlin result is a String hands it back through a pointer in the fixed
+    // return scratch (kanama_ios_runtime_script_instance_call_v -> encodeIosReturn). A long (>32B)
+    // string must NOT truncate to the 32-byte buffer. This asserts the Kotlin encoder half; the C
+    // half (build the Godot Variant + destroy-after-read) is the "virtual-string-ret roundtrip"
+    // row in kanama_ios_ptrcall_selftest.
+    val vRetLong = "kanama-virtual-string-return-selftest-0123456789-abcdefghijklmnopqrstuvwxyz"
+    check("virtual-string-ret-encode(long>32B)",
+        net.multigesture.kanama.ios.kanamaIosVirtualStringReturnSelfTest(vRetLong) == vRetLong)
+    check("virtual-string-ret-encode(empty)",
+        net.multigesture.kanama.ios.kanamaIosVirtualStringReturnSelfTest("") == "")
+
     // StringName-return (Node.get_name): set a known name (StringName arg) then read it
     // back through ptrcallNoArgsRetStringName — exercises the StringName->String ctor
     // hop end to end. Deterministic; node name has no validation.

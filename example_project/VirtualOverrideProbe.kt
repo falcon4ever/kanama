@@ -10,9 +10,10 @@ import java.lang.foreign.MemorySegment
 /**
  * Phase 5.2 probe: exercises `@OverrideVirtual` for arbitrary, value-returning
  * engine virtuals beyond the fixed lifecycle set. Attaches to `Control` and
- * overrides two of its virtuals — one returning a `Vector2`, one taking a
- * `Vector2` and returning a `Bool` — so the generated registrar must validate
- * the signatures against the engine table and emit return marshalling for both.
+ * overrides several of its virtuals — a `Vector2` return, a `Vector2`-in/`Bool`
+ * return, and (task 13) a `Vector2`-in/`String` return — so the generated
+ * registrar must validate each signature against the engine table and emit the
+ * matching return marshalling, including the non-POD `String` path.
  */
 @ScriptClass(attachTo = "Control")
 class VirtualOverrideProbe(godotObject: MemorySegment) : KanamaScript<Control>(godotObject, ::Control) {
@@ -22,4 +23,9 @@ class VirtualOverrideProbe(godotObject: MemorySegment) : KanamaScript<Control>(g
 
     @OverrideVirtual
     fun _has_point(at: Vector2): Boolean = at.x >= 0.0f && at.y >= 0.0f
+
+    // task 13 — non-POD (String) virtual return: exercises variantWriteRetExpr's STRING path
+    // (init/destroy-after-read) on desktop and the callVReturning String encode on iOS.
+    @OverrideVirtual
+    fun _get_tooltip(at: Vector2): String = "tip@${at.x.toInt()},${at.y.toInt()}"
 }

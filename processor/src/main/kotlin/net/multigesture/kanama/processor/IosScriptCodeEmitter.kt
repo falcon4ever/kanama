@@ -34,10 +34,13 @@ private val lifecycleIosVirtuals = setOf(
     "_input", "_unhandled_input", "_shortcut_input", "_unhandled_key_input",
 )
 
-/** Return types the iOS callVReturning encode + C pt_arg_to_variant can marshal (Phase 5.3b). */
+// Return types the iOS callVReturning encode + C kanama_ios_pt_return_to_variant can marshal.
+// POD/value returns (Bool/Int/Float/Vector2/Vector2i) landed in Phase 5.3b; STRING is the first
+// non-POD (variable-length, destroy-after-read) virtual return, task 13.
 private val iosReturnTypes = setOf(
     TypeMapping.BOOL, TypeMapping.INT, TypeMapping.FLOAT,
     TypeMapping.VECTOR2, TypeMapping.VECTOR2I,
+    TypeMapping.STRING,
 )
 
 internal data class IosMethod(
@@ -520,8 +523,8 @@ internal class IosScriptCodeEmitter(
             IosMethod(virtualName, kotlinMethodName, args, returnType)
         else -> {
             warn("[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
-                "$returnType not yet marshalled on iOS (Phase 5.3b supports Bool/Int/Float/" +
-                "Vector2/Vector2i) — silent no-op")
+                "$returnType not yet marshalled on iOS (supported: Bool/Int/Float/Vector2/" +
+                "Vector2i/String) — silent no-op")
             null
         }
     }

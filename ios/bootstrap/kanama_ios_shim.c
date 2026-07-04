@@ -4085,6 +4085,32 @@ static void kanama_ios_pt_arg_to_variant(
     }
 }
 
+// Build the engine return Variant for a value-returning virtual/method from the PT-tagged return
+// scratch (task 13 — non-POD virtual returns). POD/fixed-width kinds (Bool/Int/Float/Vector2/
+// Vector2i/…) delegate to kanama_ios_pt_arg_to_variant, where ret_buf holds the value bytes inline.
+// Variable-length kinds (STRING) can exceed the fixed ret_buf, so the Kotlin encoder instead writes
+// a `char *` pointer into ret_buf; we build the Godot String from it, copy it into the return
+// Variant, then destroy the temporary. Destroy-after-read: the engine owns `out_variant` and takes
+// its own reference on construction, so the local String cell must be released here (same ownership
+// as the inbound String arg cells).
+static void kanama_ios_pt_return_to_variant(int32_t tag, const void *ret_buf, uint8_t out_variant[24]) {
+    if (tag == KANAMA_IOS_PT_STRING) {
+        const char *s = (ret_buf != NULL) ? *(const char *const *)ret_buf : NULL;
+        uint64_t cell = 0;
+        memset(out_variant, 0, 24);
+        kanama_ios_init_string(&cell, (s != NULL) ? s : "");
+        g_variant_from_string(out_variant, &cell);
+        kanama_ios_destroy_string(&cell);
+        return;
+    }
+    // POD return kinds carry no backing cell (cell_kind stays 0 — nothing to free).
+    uint64_t cell = 0;
+    int cell_kind = 0;
+    kanama_ios_pt_arg_to_variant(tag, ret_buf, out_variant, &cell, &cell_kind);
+    (void)cell;
+    (void)cell_kind;
+}
+
 // Generic Variant Object.call dispatch. Boxes each PT-tagged arg into a Variant,
 // invokes method_bind via object_method_bind_call (the Variant path, for varargs /
 // dynamic dispatch the ptrcall path can't express — Object::call, set_deferred,
@@ -6078,11 +6104,10 @@ static void kanama_ios_script_instance_call(
             instance->runtime_handle, method_index, tags, ptrs, argc, &ret_tag, ret_buf);
 
         if (ret != NULL && ret_tag != KANAMA_IOS_PT_VOID) {
-            uint64_t ret_cell = 0;
-            int ret_cell_kind = 0;
-            kanama_ios_pt_arg_to_variant(ret_tag, ret_buf, (uint8_t *)ret, &ret_cell, &ret_cell_kind);
-            // Supported 5.3b return kinds (Bool/Int/Float/Vector2/Vector2i) are POD — no backing
-            // cell to destroy (ret_cell_kind stays 0). String-family returns are not yet emitted.
+            // Bool/Int/Float/Vector2/Vector2i are POD (bytes inline in ret_buf); String is
+            // variable-length (ret_buf holds a char* pointer, freed via destroy-after-read inside
+            // the helper). See kanama_ios_pt_return_to_variant.
+            kanama_ios_pt_return_to_variant(ret_tag, ret_buf, (uint8_t *)ret);
         }
 
         for (int32_t i = 0; i < argc; i++) {
@@ -7086,6 +7111,38 @@ static void kanama_ios_ptrcall_selftest(void) {
             node2d_str, class_buf, (int64_t)sizeof(class_buf));
         KANAMA_IOS_ST_CHECK("string-ret get_class==Node2D",
             class_len == 6 && strncmp(class_buf, "Node2D", 6) == 0);
+    }
+
+    // Virtual String-RETURN marshalling (task 13 — non-POD virtual returns). A value-returning
+    // virtual (e.g. Object._to_string) whose Kotlin result is a String hands it back to the engine
+    // via kanama_ios_pt_return_to_variant: the PT return scratch holds a char* pointer (NOT inline
+    // bytes), the helper builds a Godot String Variant and destroys the temporary. Width-sensitive:
+    // the probe string is >32 bytes so a regression that truncated to the fixed ret_buf, or treated
+    // the buffer as inline chars, fails here. Read the Variant back to utf8 and compare.
+    {
+        const char *long_str =
+            "kanama-virtual-string-return-selftest-0123456789-abcdefghijklmnopqrstuvwxyz";
+        uint8_t rb[32];
+        memset(rb, 0, sizeof(rb));
+        *(const char **)rb = long_str;
+        uint8_t ret_variant[24];
+        memset(ret_variant, 0, sizeof(ret_variant));
+        kanama_ios_pt_return_to_variant(KANAMA_IOS_PT_STRING, rb, ret_variant);
+        uint64_t raw_str = 0;
+        char *utf8 = NULL;
+        if (g_variant_to_string != NULL) {
+            g_variant_to_string(&raw_str, (GDExtensionVariantPtr)ret_variant);
+            utf8 = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
+            if (g_string_destructor != NULL) {
+                g_string_destructor((GDExtensionStringPtr)&raw_str);
+            }
+        }
+        KANAMA_IOS_ST_CHECK("virtual-string-ret roundtrip(>32B)",
+            utf8 != NULL && strcmp(utf8, long_str) == 0);
+        free(utf8);
+        if (g_variant_destroy != NULL) {
+            g_variant_destroy((GDExtensionVariantPtr)ret_variant);
+        }
     }
 
     // StringName-return: Node.set_name("KanamaSN") -> get_name(). Exercises the
