@@ -143,7 +143,7 @@ hand-shaped methods; coverage page reads ≥99% with virtuals counted.
 
 | Task | Model | Source |
 |---|---|---|
-| Extend `PtrcallScratch` thread-local pattern across generated wrappers (replace ~1,478 per-call `Arena.ofConfined()`) | **sonnet** (generator change), **opus** review | Architecture review F3 |
+| Extend `PtrcallScratch` thread-local pattern across generated wrappers (~1,478 per-call `Arena.ofConfined()`) — **deferred, profile-driven** (task 12 reassessment): `ObjectCalls.kt` is hand-written not generated, the hot per-frame getters already moved to the scratch in F3, and the remainder is ~4 safe conversions + ~1,473 aliasing-sensitive arg-helpers for unmeasured benefit. See F3 "Reassessed 2026-07". | **defer** | Architecture review F3 |
 | Single source of truth for the Godot version pin (Gradle property → CI, iOS template path, docs) | **sonnet** | Architecture review F4 |
 | R8-minified APK smoke gate (validate `consumer-rules.pro`) | **done 2026-06-26** | Architecture review F2; passed on Pixel 7 with Kanama's PanamaPort fork |
 | Value-type `==` faithfulness to GDScript/C# (see below) | **sonnet** (generator change), **opus** review | 2026-06-15 session |

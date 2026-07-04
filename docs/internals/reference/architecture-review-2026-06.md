@@ -139,6 +139,34 @@ destroy-after-read is required. Confined arena create/close is cheap
 individually, but it is measurable overhead on per-frame call chains
 (transform getters/setters, input polling).
 
+**Reassessed 2026-07 (task 12) — recommend deferring until profile-driven.**
+Two premises above no longer hold after the convergence work:
+
+- **`ObjectCalls.kt` is hand-written, not generated.** Post-convergence the
+  single generator (`scripts/generate_api_wrapper.py`) emits only the *iOS*
+  `ObjectCallsGenerated.kt`; the desktop `ObjectCalls.kt` is the hand-written
+  reference template. So there is no "change the generator + regenerate" path —
+  any change is a direct hand-transform of the 40k-line file.
+- **The hot subset is already done.** The F3 first pass moved exactly the
+  per-frame no-arg fixed-size *return* getters (Vector2/3/3i/2i, Quaternion,
+  Basis, Transform3D, Rect2, Color, Array/Object list rets) onto the thread-local
+  `PtrcallScratch`. Those are the transform/vector polling calls that dominate a
+  per-frame chain.
+
+Remaining scope of the 1,506 confined-arena helpers: only **~4** are safe
+fixed-size no-arg return conversions still outstanding (Rect2i/AABB/Plane/
+Transform2D); **~29** no-arg returns are *variable-size* and must keep arenas
+(String, `Packed*List`, Array, Dictionary, Callable, typed lists — destroy-after-
+read); the other **~1,473 take arguments** and would need a scratch matrix keyed
+by (type × arg-position) plus per-N args-pointer arrays — an aliasing-sensitive,
+memory-corruption-prone refactor for modest, unmeasured, per-frame benefit.
+
+Conclusion: the highest-value/lowest-risk slice shipped in F3. The remainder is
+premature optimization without a profiled bottleneck — defer until a real
+workload measures a per-frame arena cost worth the risk, then convert only the
+specific hot helpers that show up, with dedicated non-aliasing cells + a
+Bunnymark/A-B measurement.
+
 ### F4 — Maintenance follow-up (fixed): scattered Godot version pins
 
 The Godot 4.7-rc2 pin appears independently in the iOS export template
