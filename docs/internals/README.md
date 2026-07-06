@@ -11,6 +11,7 @@ outside this repo; this directory is the public strategic log.
 | [ios-backend-roadmap.md](./active/ios-backend-roadmap.md) | **Start here for iOS strategy.** Stable-iOS gates, mobile parity with Android, and the post-parity generator/runtime roadmap. |
 | [ios-demo-port-tracker.md](./active/ios-demo-port-tracker.md) | Public-safe status of each iOS demo port, validation pointers, generator gotchas, and demo-relevant fixed bugs. |
 | [wrapper-coverage-tracker.md](./active/wrapper-coverage-tracker.md) | Condensed current state for wrapper coverage and remaining generator work. |
+| [release-support-decision.md](./release-support-decision.md) | Support-tier recommendation (desktop supported; iOS+Android experimental, device-validated) + required release-gate matrix. Awaiting human sign-off before the wording lands in public docs. |
 
 ## Reference — evergreen, read to understand the system
 | File | What it is |

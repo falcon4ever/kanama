@@ -71,6 +71,7 @@ nav:
           - iOS Backend Roadmap: internals/active/ios-backend-roadmap.md
           - iOS Demo Port Tracker: internals/active/ios-demo-port-tracker.md
           - Wrapper Coverage Tracker: internals/active/wrapper-coverage-tracker.md
+          - Release Support Decision: internals/release-support-decision.md
       - Reference:
           - iOS Backend Architecture: internals/reference/ios-backend-architecture.md
           - iOS Backend Hand-written Registry: internals/reference/ios-backend-handwritten.md
