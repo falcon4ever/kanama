@@ -80,6 +80,14 @@ object ObjectCalls {
         getMethodBind("Object", "notification", 4023243586L)
     }
 
+    private val isClassBindForRetain by lazy {
+        getMethodBind("Object", "is_class", 3927539163L)
+    }
+
+    private val refCountedReferenceBind by lazy {
+        getMethodBind("RefCounted", "reference", 2240911060L)
+    }
+
     private class PtrcallScratch {
         private val arena = Arena.ofAuto()
         val args1: MemorySegment = arena.allocate(ADDRESS, 1)
@@ -2619,6 +2627,28 @@ object ObjectCalls {
     ): Any? {
         Arena.ofConfined().use { arena ->
             return readVariantReturn(methodBind, instance, MemorySegment.NULL, arena)
+        }
+    }
+
+    fun ptrcallWithStringNameArgRetVariantScalarRetained(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        name: String,
+    ): Any? {
+        Arena.ofConfined().use { arena ->
+            val arr = arena.allocate(ADDRESS, 1)
+            arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
+            val ret = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
+            try {
+                objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+                val value = BuiltinTypes.readVariantScalar(ret, arena)
+                if (value is GodotObject && ptrcallWithStringArgRetBool(isClassBindForRetain, value.handle, "RefCounted")) {
+                    ptrcallNoArgsRetBool(refCountedReferenceBind, value.handle)
+                }
+                return value
+            } finally {
+                BuiltinTypes.destroyVariant(ret)
+            }
         }
     }
 

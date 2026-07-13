@@ -39,7 +39,7 @@ object ClassDB {
     }
 
     fun instantiate(classValue: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(instantiateBind, singleton, classValue)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalarRetained(instantiateBind, singleton, classValue)
     }
 
     fun classGetApiType(classValue: String): Long {

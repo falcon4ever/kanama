@@ -1190,6 +1190,28 @@ object ObjectCalls {
     fun ptrcallNoArgsRetVariantScalar(methodBind: MemorySegment, instance: MemorySegment): Any? =
         callWithVariantArgs(methodBind, instance, emptyList())
 
+    fun ptrcallWithStringNameArgRetVariantScalarRetained(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        name: String,
+    ): Any? {
+        Arena.ofConfined().use { arena ->
+            val arr = arena.allocate(ADDRESS, 1)
+            arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
+            val ret = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
+            try {
+                objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+                val value = BuiltinTypes.readVariantScalar(ret, arena)
+                if (value is GodotObject && ptrcallWithStringArgRetBool(isClassBindForRetain, value.handle, "RefCounted")) {
+                    ptrcallNoArgsRetBool(refCountedReferenceBind, value.handle)
+                }
+                return value
+            } finally {
+                BuiltinTypes.destroyVariant(ret)
+            }
+        }
+    }
+
     fun ptrcallWithStringNameArgRetVariantScalar(
         methodBind: MemorySegment,
         instance: MemorySegment,
@@ -1244,6 +1266,13 @@ object ObjectCalls {
         boolArg: Boolean,
     ): NodePath =
         NodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)) as? String ?: "")
+
+    private val isClassBindForRetain by lazy {
+        getMethodBind("Object", "is_class", 3927539163L)
+    }
+    private val refCountedReferenceBind by lazy {
+        getMethodBind("RefCounted", "reference", 2240911060L)
+    }
 }
 
 // Debug-gated self-test (called from the C scene-init self-test): validates the full
