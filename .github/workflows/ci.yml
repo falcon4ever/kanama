@@ -93,3 +93,92 @@ jobs:
 
       - name: Build docs (strict)
         run: mkdocs build --strict
+
+  # --- Mobile build lanes: build-only, no emulator / simulator / device ---
+  # The GDExtension header is platform-independent; dump it once here and share
+  # it (matches package.yml). The iOS C shim needs it to compile; the Android
+  # Kotlin build gets it as harmless insurance.
+  gdextension-header:
+    name: gdextension-header
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Dump GDExtension header
+        shell: bash
+        run: |
+          tmp_dir="$(mktemp -d)"
+          godot_zip="$tmp_dir/godot.zip"
+          godot_bin="$tmp_dir/Godot_v${GODOT_VERSION}_linux.x86_64"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$tmp_dir"
+          ( cd "$tmp_dir" && "$godot_bin" --headless --log-file "$tmp_dir/gd.log" --dump-gdextension-interface )
+          mkdir -p gdextension
+          cp "$tmp_dir/gdextension_interface.h" gdextension/gdextension_interface.h
+
+      - name: Upload GDExtension header
+        uses: actions/upload-artifact@v6
+        with:
+          name: kanama-gdextension-interface
+          path: gdextension/gdextension_interface.h
+          if-no-files-found: error
+
+  android:
+    name: android (aar build)
+    needs: gdextension-header
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Download GDExtension header
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-gdextension-interface
+          path: gdextension
+
+      - name: Build Android runtime AAR
+        shell: bash
+        # assembleDebug catches Android build breakage against the PanamaPort
+        # fork (ANDROID_HOME is preset on the runner). R8 minification runs at
+        # APK-export time, which is a heavier, separate follow-on.
+        run: ./gradlew assembleAndroidPluginAar
+
+  ios:
+    name: ios (xcframework build)
+    needs: gdextension-header
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Download GDExtension header
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-gdextension-interface
+          path: gdextension
+
+      - name: Build iOS device xcframework
+        shell: bash
+        # Static device .xcframework (debug + release) — no code signing needed.
+        # First run downloads the Kotlin/Native toolchain (slow; cached after).
+        run: ./gradlew assembleIosDeviceKanamaXcframework
