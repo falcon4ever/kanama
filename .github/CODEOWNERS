@@ -1,0 +1,31 @@
+# CODEOWNERS — auto-requests @falcon4ever on PRs touching ABI-sensitive and
+# infrastructure paths. Pair with a branch-protection rule on `main` that
+# requires review from Code Owners, so these paths cannot merge without a
+# maintainer audit — enforcing the "do not widen ABI-sensitive types" rule in
+# AGENTS.md mechanically instead of by vigilance.
+#
+# Later matches win; the broad default stays first. While @falcon4ever is the
+# sole owner, `*` already routes every PR here — the specific entries below
+# document the danger zones and keep maintainer review required on them even
+# after other collaborators are added.
+
+# Default owner for everything.
+*                                                       @falcon4ever
+
+# --- FFM / Panama ABI + memory-ownership surface (marshalling, retain/release) ---
+/src/main/kotlin/binding/                               @falcon4ever
+/src/main/kotlin/net/multigesture/kanama/api/RefCounted.kt  @falcon4ever
+
+# --- KSP processor: type resolution, code emitters, serialized script model ---
+/processor/                                             @falcon4ever
+
+# --- Generators, audits, and the CI gate scripts (the source of truth) ---
+/scripts/                                               @falcon4ever
+
+# --- GDExtension ABI header + build/version single-source pins ---
+/gdextension/                                           @falcon4ever
+/build.gradle.kts                                       @falcon4ever
+/gradle.properties                                      @falcon4ever
+
+# --- Repo automation and the guardrails themselves ---
+/.github/                                               @falcon4ever

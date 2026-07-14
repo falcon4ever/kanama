@@ -1,0 +1,95 @@
+name: ci
+
+# Pull-request merge gate. Runs the same local_ci.sh gate a maintainer runs by
+# hand, so a contributor's "smoke passes" claim is never load-bearing — CI decides.
+#
+# Free on GitHub-hosted standard runners for public repos. Fork PRs run with a
+# read-only token and no secret access (pull_request, not pull_request_target);
+# keep the repo setting "Require approval for first-time contributors" enabled so
+# an outside PR's first run needs a maintainer click.
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin, F4).
+  GODOT_VERSION: 4.7-stable
+
+jobs:
+  gate:
+    name: local-ci (linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Install CLI dependencies
+        shell: bash
+        run: |
+          # local_ci.sh and the smoke scripts shell out to ripgrep (`rg`), which
+          # is not preinstalled on ubuntu-24.04 runners.
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ripgrep
+
+      - name: Cache Godot binary
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+
+      - name: Run local CI gate
+        shell: bash
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          # --skip-docs: mkdocs strict runs in the dedicated `docs` job below.
+          # The native bootstrap build (CMake + gcc, preinstalled on ubuntu) is
+          # kept in for parity; add --skip-bootstrap for faster PR turnaround.
+          scripts/local_ci.sh --skip-docs "$godot_bin"
+
+  docs:
+    name: docs (mkdocs strict)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install docs dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Build docs (strict)
+        run: mkdocs build --strict

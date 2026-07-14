@@ -102,6 +102,13 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
 - Keep Gradle coordinates, docs snippets, badges, changelog headings, package
   workflow variables, and companion demo defaults synchronized with the active
   release pass.
+- Some invariants are pinned in more than one file; changing one and not the
+  others is silent drift. Changing the example script's exported-property set
+  means updating the count in **both** `scripts/runtime_smoke.sh`
+  (`properties size = N`) and `scripts/local_ci.sh` (`propertyCount = N`).
+  Adding a field to the serialized script model (`ScriptModelJson`) means bumping
+  `SCRIPT_MODEL_SCHEMA_VERSION`. Before finishing, grep the repo for the old
+  value of any pinned constant you touched.
 - Do not widen ABI-sensitive types to make wrappers generate. Add exact helper
   shapes and audits first.
 - Prefer generated wrappers and focused policy fixes over ad hoc hand wrappers.
@@ -233,6 +240,12 @@ mkdocs build --strict
 ./gradlew jar
 ./scripts/local_ci.sh /absolute/path/to/godot-4.7-stable
 ```
+
+`local_ci.sh` is the definition of done for processor, runtime, and
+script-model changes: it runs the static registrar/count/generated-code checks
+that the in-editor runtime smoke does not exercise, so a passing runtime smoke
+alone is not sufficient. It also compiles the generated code for every exported
+property shape, so run it after widening any accepted `@ScriptProperty` type.
 
 Before a release tag, prefer an isolated clone gate:
 
