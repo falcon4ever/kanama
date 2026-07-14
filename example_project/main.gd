@@ -64,6 +64,8 @@ func _ready() -> void:
 		_kanama_enum_export_smoke(properties)
 		_kanama_enum_list_export_smoke(properties)
 		_kanama_accessor_containment_smoke()
+		_kanama_mutable_list_export_smoke(properties)
+		_kanama_dictionary_export_smoke(properties)
 		var replace_smoke_scene = $ScriptNode.replace_smoke_scene()
 		print("[kanama:gd] kt script replace_smoke_scene = ", replace_smoke_scene)
 		if not replace_smoke_scene:
@@ -185,6 +187,111 @@ func _kanama_accessor_containment_smoke() -> void:
 		" get_recovered=", get_recovered)
 	if not (tscn_rejected and baseline and set_rejected and set_recovered and get_contained and get_recovered):
 		push_error("Kanama script-property accessor containment failed")
+
+# MutableList export (preserves mutability in the setter). Must register as an ARRAY
+# property with PROPERTY_HINT_TYPE_STRING and the element type hint, and round-trip
+# through set/get without losing the mutable type.
+func _kanama_mutable_list_export_smoke(properties: Array) -> void:
+	var mutable_type := false
+	var mutable_hint := false
+	var mutable_hint_string := false
+	for property in properties:
+		if property.get("name", "") == "smoke_mutable_textures":
+			mutable_type = int(property.get("type", -1)) == TYPE_ARRAY
+			mutable_hint = int(property.get("hint", -1)) == PROPERTY_HINT_TYPE_STRING
+			mutable_hint_string = str(property.get("hint_string", "")) == "%d/%d:Texture2D" % [TYPE_OBJECT, PROPERTY_HINT_RESOURCE_TYPE]
+	var texture = PlaceholderTexture2D.new()
+	$ScriptNode.smoke_mutable_textures = [texture]
+	var roundtrip = $ScriptNode.smoke_mutable_textures == [texture]
+	$ScriptNode.smoke_mutable_textures = []
+	print("[kanama:gd] kt script mutable list export type=", mutable_type,
+		" hint=", mutable_hint,
+		" hint_string=", mutable_hint_string,
+		" roundtrip=", roundtrip)
+	if not (mutable_type and mutable_hint and mutable_hint_string and roundtrip):
+		push_error("Kanama mutable-list export metadata or round-trip failed")
+
+# issue #40 — typed Map exports (Dictionary). Each must register as a TYPE_DICTIONARY
+# property with PROPERTY_HINT_DICTIONARY_TYPE and a "<key>;<value>" hint_string, and
+# round-trip through set/get: a String->int scalar map, the reporter's int->custom-resource
+# map (non-String key + resource value), a Vector2i->int map (value-type key), a
+# Vector2i->custom-resource map (value-type key + resource value), and a MutableMap
+# (preserving mutability in the setter).
+func _kanama_dictionary_export_smoke(properties: Array) -> void:
+	var scalar_type := false
+	var scalar_hint := false
+	var scalar_hint_string := false
+	var region_type := false
+	var region_hint_string := false
+	var vector_key_hint_string := false
+	var vector_resource_type := false
+	var vector_resource_hint_string := false
+	var mutable_type := false
+	var mutable_hint := false
+	var mutable_hint_string := false
+	for property in properties:
+		if property.get("name", "") == "smoke_scalar_map":
+			scalar_type = int(property.get("type", -1)) == TYPE_DICTIONARY
+			scalar_hint = int(property.get("hint", -1)) == PROPERTY_HINT_DICTIONARY_TYPE
+			scalar_hint_string = str(property.get("hint_string", "")) == "%d:;%d:" % [TYPE_STRING, TYPE_INT]
+		if property.get("name", "") == "smoke_region_map":
+			region_type = int(property.get("type", -1)) == TYPE_DICTIONARY
+			region_hint_string = str(property.get("hint_string", "")) == "%d:;%d/%d:SmokeResource" % [TYPE_INT, TYPE_OBJECT, PROPERTY_HINT_RESOURCE_TYPE]
+		if property.get("name", "") == "smoke_vector_key_map":
+			vector_key_hint_string = str(property.get("hint_string", "")) == "%d:;%d:" % [TYPE_VECTOR2I, TYPE_INT]
+		if property.get("name", "") == "smoke_vector_resource_map":
+			vector_resource_type = int(property.get("type", -1)) == TYPE_DICTIONARY
+			vector_resource_hint_string = str(property.get("hint_string", "")) == "%d:;%d/%d:SmokeResource" % [TYPE_VECTOR2I, TYPE_OBJECT, PROPERTY_HINT_RESOURCE_TYPE]
+		if property.get("name", "") == "smoke_mutable_map":
+			mutable_type = int(property.get("type", -1)) == TYPE_DICTIONARY
+			mutable_hint = int(property.get("hint", -1)) == PROPERTY_HINT_DICTIONARY_TYPE
+			mutable_hint_string = str(property.get("hint_string", "")) == "%d:;%d:" % [TYPE_STRING, TYPE_INT]
+	$ScriptNode.smoke_scalar_map = {"a": 1, "b": 2}
+	var scalar_roundtrip = $ScriptNode.smoke_scalar_map == {"a": 1, "b": 2}
+	$ScriptNode.smoke_enum_map = {"boss": 2, "mob": 0}
+	var enum_roundtrip = $ScriptNode.smoke_enum_map == {"boss": 2, "mob": 0}
+	var region_resource = ClassDB.instantiate("Resource")
+	region_resource.set_script(load("res://SmokeResource.kt"))
+	region_resource.payload = "region"
+	$ScriptNode.smoke_region_map = {7: region_resource}
+	var region_map = $ScriptNode.smoke_region_map
+	var region_roundtrip = region_map.has(7) and region_map[7] != null and region_map[7].payload == "region"
+	$ScriptNode.smoke_vector_key_map = {Vector2i(1, 2): 5, Vector2i(3, 4): 6}
+	var vector_key_map = $ScriptNode.smoke_vector_key_map
+	var vector_key_roundtrip = vector_key_map == {Vector2i(1, 2): 5, Vector2i(3, 4): 6}
+	var vector_resource = ClassDB.instantiate("Resource")
+	vector_resource.set_script(load("res://SmokeResource.kt"))
+	vector_resource.payload = "vector_resource"
+	$ScriptNode.smoke_vector_resource_map = {Vector2i(5, 6): vector_resource}
+	var vector_resource_map = $ScriptNode.smoke_vector_resource_map
+	var vector_resource_roundtrip = vector_resource_map.has(Vector2i(5, 6)) and vector_resource_map[Vector2i(5, 6)] != null and vector_resource_map[Vector2i(5, 6)].payload == "vector_resource"
+	$ScriptNode.smoke_mutable_map = {"x": 10, "y": 20}
+	var mutable_roundtrip = $ScriptNode.smoke_mutable_map == {"x": 10, "y": 20}
+	$ScriptNode.smoke_scalar_map = {}
+	$ScriptNode.smoke_enum_map = {}
+	$ScriptNode.smoke_region_map = {}
+	$ScriptNode.smoke_vector_key_map = {}
+	$ScriptNode.smoke_vector_resource_map = {}
+	$ScriptNode.smoke_mutable_map = {}
+	print("[kanama:gd] kt script dictionary export scalar_type=", scalar_type,
+		" scalar_hint=", scalar_hint,
+		" scalar_hint_string=", scalar_hint_string,
+		" scalar_roundtrip=", scalar_roundtrip,
+		" enum_roundtrip=", enum_roundtrip,
+		" region_type=", region_type,
+		" region_hint_string=", region_hint_string,
+		" region_roundtrip=", region_roundtrip,
+		" vector_key_hint_string=", vector_key_hint_string,
+		" vector_key_roundtrip=", vector_key_roundtrip,
+		" vector_resource_type=", vector_resource_type,
+		" vector_resource_hint_string=", vector_resource_hint_string,
+		" vector_resource_roundtrip=", vector_resource_roundtrip,
+		" mutable_type=", mutable_type,
+		" mutable_hint=", mutable_hint,
+		" mutable_hint_string=", mutable_hint_string,
+		" mutable_roundtrip=", mutable_roundtrip)
+	if not (scalar_type and scalar_hint and scalar_hint_string and scalar_roundtrip and enum_roundtrip and region_type and region_hint_string and region_roundtrip and vector_key_hint_string and vector_key_roundtrip and vector_resource_type and vector_resource_hint_string and vector_resource_roundtrip and mutable_type and mutable_hint and mutable_hint_string and mutable_roundtrip):
+		push_error("Kanama dictionary export metadata or round-trip failed")
 
 # task 29 — virtual-return families. Calling an @OverrideVirtual method by name on a
 # script-attached host routes through the script instance dispatch (the same path the

@@ -107,7 +107,9 @@ Current Kanama collection support is intentionally narrow:
   as `Area3D.getOverlappingBodies()` and `Area3D.getOverlappingAreas()`.
 - Scalar `Dictionary` values are exposed as `Map<String, Any?>` where the
   wrapper knows the dictionary shape, such as `ProjectSettings` and selected
-  singleton metadata calls.
+  singleton metadata calls. Exported `@ScriptProperty` maps additionally
+  register as typed `Dictionary` slots — see
+  [Exporting Dictionaries](properties-resources.md#exporting-dictionaries).
 - `Vector2` and `Vector3` include Kotlin-side arithmetic and common gameplay
   math helpers such as `length`, `normalized`, `dot`, `lerp`, distance, and
   length limiting; `Vector3` also includes `cross` and `rotated`.

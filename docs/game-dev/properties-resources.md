@@ -124,6 +124,37 @@ reordering trade-off as the scalar form. Defaults must be empty
 inspector. Enum-list delivery uses the same conversion and clamping semantics
 on desktop, Android, and iOS.
 
+## Exporting Dictionaries
+
+`Map<K, V>` exports as a typed Godot `Dictionary` (registered with
+`PROPERTY_HINT_DICTIONARY_TYPE`), so the inspector shows the matching key/value
+type pickers:
+
+```kotlin
+@ScriptProperty
+var mapRegions: Map<Long, UnitMetadata> = mapOf()
+```
+
+Supported **key** types are `String`, `Long` / `Int`, `Double` / `Float`,
+`Boolean`, Godot value types (`Vector2`, `Vector2i`, `Vector3`, `Vector3i`,
+`Color`), and `enum class`.
+Supported **value** types match the typed-array element set plus scalars:
+scalars (`Long`, `Int`, `Double`, `Float`, `Boolean`), `String`, Godot value
+types (`Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Color`), engine
+resource/node wrappers, custom `@ScriptClass` scripts (resource or node), and
+`enum class`. Resource-typed values are ownership-managed (retained while the
+script holds them, released on cleanup), exactly like `List<Resource>`. Enum
+keys and values store as ordinals with the same reorder/clamp trade-off as the
+scalar and list enum exports.
+
+Defaults must be empty (`emptyMap()` / `mapOf()`); populate initial entries in
+the scene or inspector. A plain `Map<String, Any?>` also works as an untyped
+Dictionary export.
+
+Dictionary exports are supported on `@ScriptClass` scripts (`@ScriptProperty` /
+`@Export`); `@RegisterProperty` on `@RegisterClass` classes does not accept
+`Map` (or `List`) types.
+
 ## Inspector Buttons
 
 Use `@ToolButton` on a zero-argument function in a `@Tool @ScriptClass` to

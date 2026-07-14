@@ -659,6 +659,34 @@ internal class IosScriptCodeEmitter(
     private fun IosProperty.mutableSuffix(): String = if (isMutable) ".toMutableList()" else ""
 
     private fun ScriptPropertyModel.toIosProperty(className: String): IosProperty {
+        // Typed `Map<K, V>` exports (issue #40) need the key/value ordinal, wrapper, and resource
+        // retention conversions the iOS set-property path doesn't have yet: keep the Kotlin default,
+        // the same deferral boundary as the value types the generic path below warns on. Full iOS
+        // dictionary-property marshalling is a mobile follow-up. hint/hintString/usage are still
+        // advertised so the inspector renders the same DICTIONARY control as the desktop registrar.
+        if (type == TypeMapping.DICTIONARY) {
+            warn(
+                "[kanama-ios] $className.$kotlinName (Map) — no iOS @ScriptProperty dictionary path yet, " +
+                    "will keep its Kotlin default",
+            )
+            return IosProperty(
+                godotName = godotName,
+                kotlinName = kotlinName,
+                isObjectType = false,
+                godotClassName = "",
+                isList = false,
+                listElementClassName = "",
+                isNullable = nullable,
+                valueTypeClassName = "",
+                godotVariantType = 27, // DICTIONARY
+                hint = hint,
+                hintString = hintString,
+                usage = usage,
+                customScriptFqName = "",
+                arrayElementCustomScriptFqName = "",
+                listElementIsString = false,
+            )
+        }
         val isList = type == TypeMapping.ARRAY
         val isObject = objectWrapperFqName != null
         // A user @ScriptClass-typed OBJECT property (e.g. `target: Vehicle?` exported via node_paths):

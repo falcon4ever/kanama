@@ -1591,6 +1591,175 @@ object BuiltinTypes {
     }
 
     /**
+     * Read a Dictionary [src] into a Kotlin map preserving the decoded scalar key (String, Long, …)
+     * — the typed-Map analogue of [readDictionaryScalars], which drops non-String keys (issue #40).
+     * Values are decoded with [variantToScalar]; object values decode to null here (use the
+     * object-value readers below for typed wrapper/resource-script values).
+     */
+    private fun readDictionaryAnyScalars(src: MemorySegment): LinkedHashMap<Any?, Any?> =
+        readDictionaryEntries(src) { valueVariant, arena -> variantToScalar(valueVariant, arena) }
+
+    /**
+     * Object-valued Dictionary read: decode scalar keys, wrap each value's Object handle via
+     * [wrapper]; 0-handle (nil) values are dropped. Mirrors [readArrayObjects] for arrays.
+     */
+    private fun <V : Any> readDictionaryObjectValues(
+        src: MemorySegment,
+        wrapper: (MemorySegment) -> V?,
+    ): LinkedHashMap<Any?, V> {
+        val map = readDictionaryEntries(src) { valueVariant, arena ->
+            val objectScratch = arena.allocate(ADDRESS)
+            VariantConverters.variantToType(VariantType.OBJECT).invoke(objectScratch, valueVariant)
+            val handle = objectScratch.get(ADDRESS, 0)
+            if (handle.address() != 0L) wrapper(handle) else null
+        }
+        @Suppress("UNCHECKED_CAST")
+        return map as LinkedHashMap<Any?, V>
+    }
+
+    /**
+     * Shared typed-dictionary iterator: walk the Dictionary keys, decode each scalar key with
+     * [variantToScalar], decode each value with [decodeValue], and drop entries whose value decodes
+     * to null. Lifetime handling mirrors [readDictionaryScalars].
+     */
+    private fun <V> readDictionaryEntries(
+        src: MemorySegment,
+        decodeValue: (MemorySegment, Arena) -> V?,
+    ): LinkedHashMap<Any?, V> {
+        val keysHash = 4144163970L
+        val arraySizeHash = 3173160232L
+        val arrayGetHash = 708700221L
+        val dictionaryGetHash = 2205440559L
+        Arena.ofConfined().use { arena ->
+            val keys = arena.allocate(8L, 8L)
+            call(
+                type = VariantType.DICTIONARY,
+                method = "keys",
+                hash = keysHash,
+                base = src,
+                args = emptyList(),
+                rReturn = keys,
+            )
+            try {
+                val sizeRet = arena.allocate(JAVA_LONG)
+                call(
+                    type = VariantType.ARRAY,
+                    method = "size",
+                    hash = arraySizeHash,
+                    base = keys,
+                    args = emptyList(),
+                    rReturn = sizeRet,
+                )
+                val size = sizeRet.get(JAVA_LONG, 0).toInt()
+                if (size <= 0) return LinkedHashMap()
+
+                val result = LinkedHashMap<Any?, V>(size)
+                val indexArg = arena.allocate(JAVA_LONG)
+                for (i in 0 until size) {
+                    indexArg.set(JAVA_LONG, 0, i.toLong())
+                    val keyVariant = arena.allocate(24L, 8L)
+                    call(
+                        type = VariantType.ARRAY,
+                        method = "get",
+                        hash = arrayGetHash,
+                        base = keys,
+                        args = listOf(indexArg),
+                        rReturn = keyVariant,
+                    )
+                    try {
+                        val key = variantToScalar(keyVariant, arena) ?: continue
+                        val defaultVariant = arena.allocate(24L, 8L)
+                        val valueVariant = arena.allocate(24L, 8L)
+                        initNilVariant(defaultVariant)
+                        try {
+                            call(
+                                type = VariantType.DICTIONARY,
+                                method = "get",
+                                hash = dictionaryGetHash,
+                                base = src,
+                                args = listOf(keyVariant, defaultVariant),
+                                rReturn = valueVariant,
+                            )
+                            val value = decodeValue(valueVariant, arena)
+                            if (value != null) result[key] = value
+                        } finally {
+                            variantDestroy.invoke(valueVariant)
+                            variantDestroy.invoke(defaultVariant)
+                        }
+                    } finally {
+                        variantDestroy.invoke(keyVariant)
+                    }
+                }
+                return result
+            } finally {
+                destroyTyped(VariantType.ARRAY, keys)
+            }
+        }
+    }
+
+    /**
+     * Decode a Dictionary-carrying Variant into a Kotlin map with scalar keys preserved (issue #40).
+     * Objects decode to null; use [readVariantDictionaryObjectValues] and its retained variants for
+     * typed wrapper/resource-script values.
+     */
+    fun readVariantDictionaryAny(variant: MemorySegment, arena: Arena): Map<Any?, Any?> {
+        val scratch = arena.allocate(8L, 8L)
+        VariantConverters.variantToType(VariantType.DICTIONARY).invoke(scratch, variant)
+        try {
+            return readDictionaryAnyScalars(scratch)
+        } finally {
+            destroyTyped(VariantType.DICTIONARY, scratch)
+        }
+    }
+
+    /** Object-valued typed Dictionary read (non-retained) — the dictionary analogue of [readVariantObjectArray]. */
+    fun <V : Any> readVariantDictionaryObjectValues(
+        variant: MemorySegment,
+        arena: Arena,
+        wrapper: (MemorySegment) -> V?,
+    ): Map<Any?, V> {
+        val scratch = arena.allocate(8L, 8L)
+        VariantConverters.variantToType(VariantType.DICTIONARY).invoke(scratch, variant)
+        try {
+            return readDictionaryObjectValues(scratch, wrapper)
+        } finally {
+            destroyTyped(VariantType.DICTIONARY, scratch)
+        }
+    }
+
+    /** Object-valued typed Dictionary read that retains Resource values — analogue of [readVariantObjectArrayRetained]. */
+    fun <V : Any> readVariantDictionaryObjectValuesRetained(
+        variant: MemorySegment,
+        arena: Arena,
+        wrapper: (MemorySegment) -> V?,
+    ): Map<Any?, V> =
+        readVariantDictionaryObjectValues(variant, arena, wrapper).also { map ->
+            map.values.forEach { value ->
+                if (value is Resource) {
+                    value.retainForKotlinWrapper()
+                }
+            }
+        }
+
+    /** Object-valued typed Dictionary read that reference-binds each value handle — analogue of [readVariantObjectArrayRetainedHandles]. */
+    fun <V : Any> readVariantDictionaryObjectValuesRetainedHandles(
+        variant: MemorySegment,
+        arena: Arena,
+        wrapper: (MemorySegment) -> V?,
+    ): Map<Any?, V> {
+        val scratch = arena.allocate(8L, 8L)
+        VariantConverters.variantToType(VariantType.DICTIONARY).invoke(scratch, variant)
+        try {
+            return readDictionaryObjectValues(scratch) { handle ->
+                ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
+                wrapper(handle)
+            }
+        } finally {
+            destroyTyped(VariantType.DICTIONARY, scratch)
+        }
+    }
+
+    /**
      * Initialize [dest] as Dictionary and fill selected scalar metadata keys.
      *
      * Supported keys are String. Supported values are the strict
@@ -1617,11 +1786,54 @@ object BuiltinTypes {
         }
     }
 
+    /**
+     * Like [initDictionary] but accepts any [initVariantFromAny]-supported key — the write side of
+     * typed `Map<K, V>` exports (issue #40), where keys may be Long/Int/enum-ordinal, not just String.
+     */
+    fun initDictionaryAny(dest: MemorySegment, entries: Map<*, *>) {
+        construct(VariantType.DICTIONARY, dest, constructorIndex = 0)
+        if (entries.isEmpty()) return
+
+        val set = ptrKeyedSetter(VariantType.DICTIONARY)
+        Arena.ofConfined().use { arena ->
+            entries.forEach { (key, value) ->
+                val keyVar = arena.allocate(24L, 8L)
+                val valueVar = arena.allocate(24L, 8L)
+                initVariantFromAny(keyVar, key, arena)
+                initVariantFromAny(valueVar, value, arena)
+                try {
+                    set.invoke(dest, keyVar, valueVar)
+                } finally {
+                    variantDestroy.invoke(keyVar)
+                    variantDestroy.invoke(valueVar)
+                }
+            }
+        }
+    }
+
     /** Initialize [dest] as a Variant containing a Dictionary value. */
     fun initVariantDictionary(dest: MemorySegment, entries: Map<String, Any?>) {
         Arena.ofConfined().use { arena ->
             val dictionary = arena.allocate(8L, 8L)
             initDictionary(dictionary, entries)
+            try {
+                VariantConverters.variantFromType(VariantType.DICTIONARY).invoke(dest, dictionary)
+            } finally {
+                destroyTyped(VariantType.DICTIONARY, dictionary)
+            }
+        }
+    }
+
+    /**
+     * Like [initVariantDictionary] but accepts any [initVariantFromAny]-supported key — the write
+     * side of typed `Map<K, V>` exports (issue #40), paired with the any-key reader
+     * [readVariantDictionaryAny]. Kept separate from the generic [initVariantFromAny] Map path so
+     * generic Dictionary reads and writes stay String-key-only and symmetrical.
+     */
+    fun initVariantDictionaryAny(dest: MemorySegment, entries: Map<*, *>) {
+        Arena.ofConfined().use { arena ->
+            val dictionary = arena.allocate(8L, 8L)
+            initDictionaryAny(dictionary, entries)
             try {
                 VariantConverters.variantFromType(VariantType.DICTIONARY).invoke(dest, dictionary)
             } finally {
@@ -2236,6 +2448,10 @@ object BuiltinTypes {
     }
 
     private fun variantFromDictionaryInto(value: Map<*, *>, variantOut: MemorySegment, arena: Arena) {
+        // Generic Map -> Variant is String-key-only, symmetric with the generic reader
+        // [readDictionaryScalars] (which drops non-String keys). Typed `Map<K, V>` exports
+        // with non-String keys use the dedicated [initVariantDictionaryAny] write path
+        // instead, paired with the any-key reader [readVariantDictionaryAny] (issue #40).
         val entries = value.entries.associate { (key, entryValue) ->
             val stringKey = key as? String
                 ?: error("Unsupported Dictionary key type: ${key?.let { it::class.qualifiedName } ?: "null"}")

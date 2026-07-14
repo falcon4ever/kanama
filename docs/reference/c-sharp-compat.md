@@ -60,6 +60,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Object/resource handles | PARTIAL | Typed wrappers and closeable `Resource`/`RefCounted` handles are available; ownership-sensitive returns still require explicit policy. |
 | Packed strings and bytes | SUPPORTED | `PackedStringArray` maps to `List<String>` in supported APIs; `PackedByteArray` maps to `ByteArray` in file helpers. |
 | Typed exported arrays | PARTIAL | `List<String>`, `List<Texture2D>`, custom-enum arrays (`List<MyEnum>`), and same-project global resource-script arrays are supported. Broader typed arrays remain policy work. |
+| Typed exported dictionaries | PARTIAL | `Map<K, V>` exports as a typed `Dictionary` (`PROPERTY_HINT_DICTIONARY_TYPE`): `String`, `Long`, `Int`, `Double`, `Float`, `Boolean`, enum, and Godot value-type keys (`Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Color`); with scalar/value-type/resource/node-wrapper/custom-script/enum values. See [Exporting Dictionaries](../game-dev/properties-resources.md#exporting-dictionaries). |
 | General Array/Dictionary/Variant APIs | PARTIAL | Selected dictionary/list shapes exist. Fully general heterogeneous containers are still a deliberate policy bucket. |
 | Callable | PARTIAL | Signal connections, lambda callbacks, and tween callable helpers exist for bounded shapes. General public Callable ownership remains intentionally constrained. |
 

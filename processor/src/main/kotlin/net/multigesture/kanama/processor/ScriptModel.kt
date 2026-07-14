@@ -181,6 +181,35 @@ internal data class ScriptPropertyModel(
     val arrayElementEnumFqName: String? = null,
     /** Ordered entry names of the element enum. Empty unless [arrayElementEnumFqName] is set. */
     val arrayElementEnumEntries: List<String> = emptyList(),
+    /**
+     * Typed `Map<K, V>` export (issue #40). The Variant slot is `DICTIONARY` registered with
+     * `PROPERTY_HINT_DICTIONARY_TYPE` and a `"<keyEncoding>;<valueEncoding>"` hint string. These
+     * [mapKey*]/[mapValue*] fields are the dictionary analogue of the [arrayElement*] fields and
+     * are non-null only when the property is a typed Map. A plain `Map<String, Any?>` export stays
+     * untyped (no map fields, hint 0) and rides the generic DICTIONARY read/write path.
+     *
+     * [mapKeyKotlinType] is the resolved Kotlin key type fq (`kotlin.String`, `kotlin.Long`,
+     * `kotlin.Int`, or an enum class fq); its non-nullness is the "typed Map" discriminator.
+     */
+    val mapKeyKotlinType: String? = null,
+    /** Ordered entry names when the key is an enum class; empty otherwise. */
+    val mapKeyEnumEntries: List<String> = emptyList(),
+    /** Set when the value is a scalar/String/value-type; the resolved Kotlin value type fq. */
+    val mapValueKotlinType: String? = null,
+    /** Set when the value is an engine object/resource wrapper (e.g. `Texture2D`). */
+    val mapValueWrapperFqName: String? = null,
+    /** Set when the value is a custom `@ScriptClass` script instance. */
+    val mapValueCustomScriptFqName: String? = null,
+    /** True when [mapValueCustomScriptFqName] attaches to `Resource` (ownership-managed read). */
+    val mapValueCustomScriptIsResource: Boolean = false,
+    /** Set when the value is an enum class; stored as ordinals (clamp-on-read like list enums). */
+    val mapValueEnumFqName: String? = null,
+    /** Ordered entry names when the value is an enum class; empty otherwise. */
+    val mapValueEnumEntries: List<String> = emptyList(),
+    /** True when the original property is `MutableMap` instead of immutable `Map`. */
+    val isMutableMap: Boolean = false,
+    /** True when the original property is `MutableList` instead of immutable `List`. */
+    val isMutableList: Boolean = false,
 )
 
 internal data class ScriptPropertyGroupModel(
@@ -205,6 +234,16 @@ internal data class ScriptPropertyTypeModel(
     val enumEntries: List<String> = emptyList(),
     val arrayElementEnumFqName: String? = null,
     val arrayElementEnumEntries: List<String> = emptyList(),
+    val mapKeyKotlinType: String? = null,
+    val mapKeyEnumEntries: List<String> = emptyList(),
+    val mapValueKotlinType: String? = null,
+    val mapValueWrapperFqName: String? = null,
+    val mapValueCustomScriptFqName: String? = null,
+    val mapValueCustomScriptIsResource: Boolean = false,
+    val mapValueEnumFqName: String? = null,
+    val mapValueEnumEntries: List<String> = emptyList(),
+    val isMutableMap: Boolean = false,
+    val isMutableList: Boolean = false,
 )
 
 internal data class ScriptClassTypeInfo(

@@ -102,6 +102,15 @@ check "kt script enum list export type=true hint=true hint_string=true tscn=true
 # rejected (previous value survives), a failed get yields null, and the property recovers.
 # Removing the containment makes Godot exit 134 before printing this line at all.
 check "kt script accessor containment tscn_rejected=true baseline=true set_rejected=true set_recovered=true get_contained=true get_recovered=true"
+# MutableList export (preserves mutability in the setter): ARRAY + PROPERTY_HINT_TYPE_STRING,
+# set/get round-trip for a mutable typed list.
+check "kt script mutable list export type=true hint=true hint_string=true roundtrip=true"
+# issue #40 — typed Map exports: DICTIONARY + PROPERTY_HINT_DICTIONARY_TYPE with a
+# "<key>;<value>" hint string, set/get round-trip for a scalar map, an enum-valued map,
+# a long-keyed custom-resource map (Map<Long, SmokeResource>), a value-type-keyed
+# scalar map (Map<Vector2i, Long>), a value-type-keyed resource map
+# (Map<Vector2i, SmokeResource>), and a MutableMap (MutableMap<String, Long>).
+check "kt script dictionary export scalar_type=true scalar_hint=true scalar_hint_string=true scalar_roundtrip=true enum_roundtrip=true region_type=true region_hint_string=true region_roundtrip=true vector_key_hint_string=true vector_key_roundtrip=true vector_resource_type=true vector_resource_hint_string=true vector_resource_roundtrip=true mutable_type=true mutable_hint=true mutable_hint_string=true mutable_roundtrip=true"
 check "Mathf lerp=2\\.5 clamp=10 wrap=1 approx=true round=3 lerpf=2\\.5 clampf=10\\.0 sinf=0\\.0 sqrtf=3\\.0"
 check "Generated name constants ok=true"
 check "ProjectSettings string_list=alpha\\|beta"
@@ -218,7 +227,7 @@ check "DisplayServer passive clipboard=(true|false) image=(true|false) clipboard
 check "DisplayServer tts speaking=(true|false) paused=(true|false) voices=[0-9]+ vk_height=[0-9]+ active_popup=-?[0-9]+ window_instance=-?[0-9]+ window_screen=-?[0-9]+ can_draw=(true|false) focused=(true|false) maximize_allowed=(true|false) max_dbl=(true|false) min_dbl=(true|false)"
 check "DisplayServer accessibility screen_reader=-?[0-9]+ contrast=-?[0-9]+ reduce_animation=-?[0-9]+ reduce_transparency=-?[0-9]+ window_max=-?[0-9]+,-?[0-9]+ window_min=-?[0-9]+,-?[0-9]+ window_pos=-?[0-9]+,-?[0-9]+ window_pos_decorated=-?[0-9]+,-?[0-9]+ window_size=-?[0-9]+,-?[0-9]+ window_size_decorated=-?[0-9]+,-?[0-9]+"
 check "kt script methods size = 10"
-check "kt script properties size = 17"
+check "kt script properties size = 24"
 check "kt script signals size = 1"
 check "kt script replace_smoke_scene = true"
 check "kt script rpc config ok = true"

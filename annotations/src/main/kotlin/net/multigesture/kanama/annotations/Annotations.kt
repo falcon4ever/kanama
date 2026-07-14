@@ -137,6 +137,9 @@ object PropertyHint {
     /** Node type hint. Matches Godot's `PROPERTY_HINT_NODE_TYPE`. */
     const val NODE_TYPE = 34
 
+    /** Typed-dictionary hint string (`"<key>;<value>"`). Matches Godot's `PROPERTY_HINT_DICTIONARY_TYPE`. */
+    const val DICTIONARY_TYPE = 38
+
     /** Inspector tool button hint. Matches Godot's `PROPERTY_HINT_TOOL_BUTTON`. */
     const val TOOL_BUTTON = 39
 }

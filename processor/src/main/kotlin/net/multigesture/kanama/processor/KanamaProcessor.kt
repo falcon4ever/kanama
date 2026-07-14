@@ -677,6 +677,16 @@ class KanamaProcessor(
                 scriptType.enumEntries,
                 scriptType.arrayElementEnumFqName,
                 scriptType.arrayElementEnumEntries,
+                scriptType.mapKeyKotlinType,
+                scriptType.mapKeyEnumEntries,
+                scriptType.mapValueKotlinType,
+                scriptType.mapValueWrapperFqName,
+                scriptType.mapValueCustomScriptFqName,
+                scriptType.mapValueCustomScriptIsResource,
+                scriptType.mapValueEnumFqName,
+                scriptType.mapValueEnumEntries,
+                scriptType.isMutableMap,
+                scriptType.isMutableList,
             )
         }
 
@@ -1078,6 +1088,7 @@ class KanamaProcessor(
             }
 
             if (fq == "kotlin.collections.List" || fq == "kotlin.collections.MutableList") {
+                val isMutable = fq == "kotlin.collections.MutableList"
                 val elementDecl = type.arguments.firstOrNull()?.type?.resolve()?.declaration
                 val elementFq = elementDecl?.qualifiedName?.asString()
                 if (elementFq == "kotlin.String") {
@@ -1086,6 +1097,7 @@ class KanamaProcessor(
                         hint = PROPERTY_HINT_TYPE_STRING,
                         hintString = "4:",
                         arrayElementString = true,
+                        isMutableList = isMutable,
                     )
                 }
                 val elementWrapper = elementFq?.takeIf { it in SUPPORTED_OBJECT_WRAPPERS }
@@ -1100,6 +1112,7 @@ class KanamaProcessor(
                         hint = PROPERTY_HINT_TYPE_STRING,
                         hintString = elementHint,
                         arrayElementWrapperFqName = elementWrapper,
+                        isMutableList = isMutable,
                     )
                 }
                 val customElement = elementFq?.let { scriptClassTypes[it] }?.takeIf { it.isExportableGlobal }
@@ -1110,6 +1123,7 @@ class KanamaProcessor(
                         hintString = "24/${customElement.propertyHint}:${customElement.simpleName}",
                         arrayElementCustomScriptFqName = customElement.fqName,
                         arrayElementCustomScriptIsResource = customElement.isExportableResource,
+                        isMutableList = isMutable,
                     )
                 }
                 // task 38 (issue #40): List<enum class> — a typed int Array whose elements
@@ -1134,18 +1148,177 @@ class KanamaProcessor(
                         hintString = "2/$PROPERTY_HINT_ENUM:" + entries.joinToString(","),
                         arrayElementEnumFqName = elementFq,
                         arrayElementEnumEntries = entries,
+                        isMutableList = isMutable,
                     )
                 }
+            }
+
+            // Typed `Map<K, V>` export (issue #40): a DICTIONARY Variant slot registered with
+            // PROPERTY_HINT_DICTIONARY_TYPE and a "<keyEncoding>;<valueEncoding>" hint string, the
+            // two-sided analogue of the List<T> typed-array branch above. Keys are the scalar set
+            // (String/Long/Int/enum); values reach List<T> element parity plus scalars/value types.
+            if (fq == "kotlin.collections.Map" || fq == "kotlin.collections.MutableMap") {
+                val isMutable = fq == "kotlin.collections.MutableMap"
+                val keyType = type.arguments.getOrNull(0)?.type?.resolve()
+                val valueType = type.arguments.getOrNull(1)?.type?.resolve()
+                val keyFq = keyType?.declaration?.qualifiedName?.asString()
+                val valueFq = valueType?.declaration?.qualifiedName?.asString()
+                // Plain `Map<String, Any?>` stays untyped (hint 0) and rides the generic
+                // DICTIONARY read/write path (String keys only — the audited runtime policy).
+                if (keyFq == "kotlin.String" && (valueFq == "kotlin.Any" || valueType == null)) {
+                    return ScriptPropertyTypeModel(TypeMapping.DICTIONARY, isMutableMap = isMutable)
+                }
+                if (valueFq == "kotlin.Any" || valueType == null) {
+                    throw IllegalArgumentException(
+                        "$className.$propertyName: an untyped Map value (Any?) is only supported with String keys; " +
+                            "give the value a concrete type for a '$keyFq'-keyed Map",
+                    )
+                }
+                val key = resolveMapKey(keyType, keyFq, className, propertyName)
+                val value = resolveMapValue(valueType, valueFq, className, propertyName, scriptClassTypes)
+                return ScriptPropertyTypeModel(
+                    type = TypeMapping.DICTIONARY,
+                    hint = PROPERTY_HINT_DICTIONARY_TYPE,
+                    hintString = "${key.hintFragment};${value.hintFragment}",
+                    mapKeyKotlinType = key.kotlinType,
+                    mapKeyEnumEntries = key.enumEntries,
+                    mapValueKotlinType = value.kotlinType,
+                    mapValueWrapperFqName = value.wrapperFqName,
+                    mapValueCustomScriptFqName = value.customScriptFqName,
+                    mapValueCustomScriptIsResource = value.customScriptIsResource,
+                    mapValueEnumFqName = value.enumFqName,
+                    mapValueEnumEntries = value.enumEntries,
+                    isMutableMap = isMutable,
+                )
             }
 
             return fqToTypeMapping(fq)?.let { ScriptPropertyTypeModel(it) }
                 ?: throw IllegalArgumentException("$className.$propertyName: unsupported ScriptProperty type '$fq'")
         }
 
+        /** Godot `Variant::Type` ids for the scalar/value types usable as typed-Map keys and values. */
+        private fun scalarVariantEncoding(fq: String?): Pair<Int, String>? = when (fq) {
+            "kotlin.Long" -> 2 to "Long"
+            "kotlin.Int" -> 2 to "Int"
+            "kotlin.Double" -> 3 to "Double"
+            "kotlin.Float" -> 3 to "Float"
+            "kotlin.Boolean" -> 1 to "Boolean"
+            "kotlin.String" -> 4 to "String"
+            "net.multigesture.kanama.types.Vector2" -> 5 to "net.multigesture.kanama.types.Vector2"
+            "net.multigesture.kanama.types.Vector2i" -> 6 to "net.multigesture.kanama.types.Vector2i"
+            "net.multigesture.kanama.types.Vector3" -> 9 to "net.multigesture.kanama.types.Vector3"
+            "net.multigesture.kanama.types.Vector3i" -> 10 to "net.multigesture.kanama.types.Vector3i"
+            "net.multigesture.kanama.types.Color" -> 20 to "net.multigesture.kanama.types.Color"
+            else -> null
+        }
+
+        private data class MapKeyResolution(
+            val hintFragment: String,
+            val kotlinType: String,
+            val enumEntries: List<String> = emptyList(),
+        )
+
+        private data class MapValueResolution(
+            val hintFragment: String,
+            val kotlinType: String? = null,
+            val wrapperFqName: String? = null,
+            val customScriptFqName: String? = null,
+            val customScriptIsResource: Boolean = false,
+            val enumFqName: String? = null,
+            val enumEntries: List<String> = emptyList(),
+        )
+
+        /** Keys are scalar-only: String, Long/Int, or an enum class (stored as its ordinal). */
+        private fun resolveMapKey(
+            keyType: KSType?,
+            keyFq: String?,
+            className: String,
+            propertyName: String,
+        ): MapKeyResolution {
+            val keyDecl = keyType?.declaration
+            val keyEnum = (keyDecl as? KSClassDeclaration)?.takeIf { it.classKind == ClassKind.ENUM_CLASS }
+            if (keyEnum != null && keyFq != null) {
+                val entries = enumEntryNames(keyEnum, className, propertyName, keyFq)
+                return MapKeyResolution("2/$PROPERTY_HINT_ENUM:" + entries.joinToString(","), keyFq, entries)
+            }
+            val scalar = scalarVariantEncoding(keyFq)
+            if (scalar != null) {
+                return MapKeyResolution("${scalar.first}:", scalar.second)
+            }
+            throw IllegalArgumentException(
+                "$className.$propertyName: unsupported Map key type '$keyFq' (supported: String, Long, " +
+                    "Int, Double, Float, Boolean, Vector2/Vector2i/Vector3/Vector3i, Color, or an enum class)",
+            )
+        }
+
+        /** Values reach List<T> element parity (String/wrapper/custom-script/enum) plus scalars/value types. */
+        private fun resolveMapValue(
+            valueType: KSType,
+            valueFq: String?,
+            className: String,
+            propertyName: String,
+            scriptClassTypes: Map<String, ScriptClassTypeInfo>,
+        ): MapValueResolution {
+            val scalar = scalarVariantEncoding(valueFq)
+            if (scalar != null) {
+                return MapValueResolution(hintFragment = "${scalar.first}:", kotlinType = scalar.second)
+            }
+            val valueDecl = valueType.declaration
+            val wrapper = valueFq?.takeIf { it in SUPPORTED_OBJECT_WRAPPERS }
+            if (wrapper != null) {
+                val fragment = if (wrapper in SUPPORTED_RESOURCE_WRAPPERS) {
+                    "24/${PROPERTY_HINT_RESOURCE_TYPE}:${godotClassName(wrapper)}"
+                } else {
+                    "24/${PROPERTY_HINT_NODE_TYPE}:${godotClassName(wrapper)}"
+                }
+                return MapValueResolution(hintFragment = fragment, wrapperFqName = wrapper)
+            }
+            val customScript = valueFq?.let { scriptClassTypes[it] }?.takeIf { it.isExportableGlobal }
+            if (customScript != null) {
+                return MapValueResolution(
+                    hintFragment = "24/${customScript.propertyHint}:${customScript.simpleName}",
+                    customScriptFqName = customScript.fqName,
+                    customScriptIsResource = customScript.isExportableResource,
+                )
+            }
+            val valueEnum = (valueDecl as? KSClassDeclaration)?.takeIf { it.classKind == ClassKind.ENUM_CLASS }
+            if (valueEnum != null && valueFq != null) {
+                val entries = enumEntryNames(valueEnum, className, propertyName, valueFq)
+                return MapValueResolution(
+                    hintFragment = "2/$PROPERTY_HINT_ENUM:" + entries.joinToString(","),
+                    enumFqName = valueFq,
+                    enumEntries = entries,
+                )
+            }
+            throw IllegalArgumentException(
+                "$className.$propertyName: unsupported Map value type '$valueFq'",
+            )
+        }
+
+        private fun enumEntryNames(
+            enumDecl: KSClassDeclaration,
+            className: String,
+            propertyName: String,
+            fq: String,
+        ): List<String> {
+            val entries = enumDecl.declarations
+                .filterIsInstance<KSClassDeclaration>()
+                .filter { it.classKind == ClassKind.ENUM_ENTRY }
+                .map { it.simpleName.asString() }
+                .toList()
+            if (entries.isEmpty()) {
+                throw IllegalArgumentException(
+                    "$className.$propertyName: enum class '$fq' has no entries to export",
+                )
+            }
+            return entries
+        }
+
         private const val PROPERTY_HINT_ENUM = 2
         private const val PROPERTY_HINT_RESOURCE_TYPE = 17
         private const val PROPERTY_HINT_TYPE_STRING = 23
         private const val PROPERTY_HINT_NODE_TYPE = 34
+        private const val PROPERTY_HINT_DICTIONARY_TYPE = 38
 
         private val SUPPORTED_RESOURCE_WRAPPERS = setOf(
             "net.multigesture.kanama.api.PackedScene",
@@ -1596,13 +1769,16 @@ private fun normalizeScriptPropertyDefaultLiteral(initializer: String, type: Typ
         TypeMapping.STRING -> initializer.takeIf { stringLiteral.matches(it) }
         TypeMapping.OBJECT -> initializer.takeIf { it == "null" }
         TypeMapping.ARRAY -> initializer.takeIf { it == "emptyList()" || it == "listOf()" }?.let { "emptyList()" }
+        // Typed `Map<K, V>` export (issue #40): only the empty default is surfaced; populate
+        // initial entries in the inspector, the same policy as ARRAY above.
+        TypeMapping.DICTIONARY -> initializer.takeIf { it == "emptyMap()" || it == "mapOf()" }?.let { "emptyMap()" }
         // Return-only virtual shapes (task 13/29); not @ScriptProperty default literals.
         TypeMapping.PACKED_STRING_ARRAY -> null
         TypeMapping.VARIANT -> null
         TypeMapping.PACKED_BYTE_ARRAY, TypeMapping.PACKED_INT32_ARRAY, TypeMapping.PACKED_INT64_ARRAY,
         TypeMapping.PACKED_FLOAT32_ARRAY, TypeMapping.PACKED_FLOAT64_ARRAY,
         TypeMapping.PACKED_VECTOR2_ARRAY, TypeMapping.PACKED_VECTOR3_ARRAY, TypeMapping.PACKED_COLOR_ARRAY,
-        TypeMapping.DICTIONARY, TypeMapping.RID, TypeMapping.RECT2, TypeMapping.AABB,
+        TypeMapping.RID, TypeMapping.RECT2, TypeMapping.AABB,
         TypeMapping.TRANSFORM2D, TypeMapping.TRANSFORM3D, TypeMapping.PROJECTION -> null
         TypeMapping.NODE_PATH -> nodePathLiteral.matchEntire(initializer)
             ?.groupValues
@@ -3030,6 +3206,7 @@ internal class ScriptCodeEmitter(
         sb.appendLine("                value.close()")
         sb.appendLine("            }")
         sb.appendLine("            is Iterable<*> -> value.forEachIndexed { index, item -> closeKanamaOwned(\"\$name[\$index]\", item) }")
+        sb.appendLine("            is Map<*, *> -> value.values.forEachIndexed { index, item -> closeKanamaOwned(\"\$name[\$index]\", item) }")
         sb.appendLine("        }")
         sb.appendLine("    }")
         sb.appendLine()
@@ -3061,6 +3238,15 @@ internal class ScriptCodeEmitter(
             property.arrayElementCustomScriptFqName != null -> {
                 if (property.arrayElementCustomScriptIsResource) {
                     "$valueExpr.forEach { BuiltinTypes.releaseRefCounted(it.godotObject) }"
+                } else {
+                    "Unit"
+                }
+            }
+            // Typed Map with custom resource-script values: release each retained value on free,
+            // mirroring the array custom-script-resource case above.
+            property.mapValueCustomScriptFqName != null -> {
+                if (property.mapValueCustomScriptIsResource) {
+                    "$valueExpr.values.forEach { BuiltinTypes.releaseRefCounted(it.godotObject) }"
                 } else {
                     "Unit"
                 }
@@ -3154,7 +3340,18 @@ internal class ScriptCodeEmitter(
         TypeMapping.PROJECTION -> "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Projection ?: net.multigesture.kanama.types.Projection.IDENTITY }"
     }
 
-    private fun variantReadPropertyExpr(property: ScriptPropertyModel, variantPtr: String, localName: String): String =
+    private fun variantReadPropertyExpr(property: ScriptPropertyModel, variantPtr: String, localName: String): String {
+        // The decode helpers return immutable List/Map; convert to a mutable copy when the property
+        // was declared MutableList/MutableMap so the generated `val` matches the field's Kotlin type.
+        val mutableSuffix = when {
+            property.isMutableList -> ".toMutableList()"
+            property.isMutableMap -> ".toMutableMap()"
+            else -> ""
+        }
+        return variantReadPropertyBaseExpr(property, variantPtr, localName) + mutableSuffix
+    }
+
+    private fun variantReadPropertyBaseExpr(property: ScriptPropertyModel, variantPtr: String, localName: String): String =
         when {
             property.objectWrapperFqName != null -> {
                 val wrapperExpr = if (property.objectWrapperFqName in RESOURCE_WRAPPER_FROM_HANDLE) {
@@ -3186,8 +3383,77 @@ internal class ScriptCodeEmitter(
                 val fq = property.arrayElementEnumFqName
                 "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantLongList($variantPtr, a).map { i -> $fq.entries[i.toInt().coerceIn(0, $fq.entries.lastIndex)] } }"
             }
+            property.mapKeyKotlinType != null -> mapReadPropertyExpr(property, variantPtr, localName)
             else -> variantReadExpr(property.type, variantPtr, localName)
         }
+
+    /** Read expression for a typed `Map<K, V>` property (issue #40). */
+    private fun mapReadPropertyExpr(property: ScriptPropertyModel, variantPtr: String, localName: String): String {
+        val keyExpr = mapKeyReadTransform(property, "it.key")
+        return when {
+            // Engine object/resource wrapper values: retained read (fromHandle), like typed arrays.
+            property.mapValueWrapperFqName != null -> {
+                val wrapper = property.mapValueWrapperFqName
+                val wrapperLambda = if (wrapper in RESOURCE_WRAPPER_FROM_HANDLE) {
+                    "$wrapper::fromHandle"
+                } else {
+                    "{ handle -> $wrapper(handle) }"
+                }
+                val reader = if (wrapper in RESOURCE_WRAPPER_FROM_HANDLE) {
+                    "readVariantDictionaryObjectValuesRetained"
+                } else {
+                    "readVariantDictionaryObjectValues"
+                }
+                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.$reader($variantPtr, a, $wrapperLambda).mapKeys { $keyExpr } }"
+            }
+            // Custom @ScriptClass instances: resolve the live Kotlin script, retaining resource scripts.
+            property.mapValueCustomScriptFqName != null -> {
+                val fq = property.mapValueCustomScriptFqName
+                val resolver = "{ handle -> ScriptBridge.kotlinObjectForOwner(handle) as? $fq ?: $fq(handle) }"
+                val reader = if (property.mapValueCustomScriptIsResource) {
+                    "readVariantDictionaryObjectValuesRetainedHandles"
+                } else {
+                    "readVariantDictionaryObjectValues"
+                }
+                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.$reader($variantPtr, a, $resolver).mapKeys { $keyExpr } }"
+            }
+            // Scalar / String / value-type / enum values ride the generic scalar decode.
+            else -> {
+                val valueExpr = mapValueReadTransform(property, "it.value")
+                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantDictionaryAny($variantPtr, a).entries.associate { $keyExpr to $valueExpr } }"
+            }
+        }
+    }
+
+    /** Transform a raw decoded key ([varExpr]) into the Kotlin key type. */
+    private fun mapKeyReadTransform(property: ScriptPropertyModel, varExpr: String): String {
+        val fq = property.mapKeyKotlinType
+        if (property.mapKeyEnumEntries.isNotEmpty() && fq != null) {
+            return enumOrdinalReadCast(fq, varExpr)
+        }
+        return scalarReadCast(fq, varExpr)
+    }
+
+    /** Transform a raw decoded scalar/enum value ([varExpr]) into the Kotlin value type. */
+    private fun mapValueReadTransform(property: ScriptPropertyModel, varExpr: String): String {
+        property.mapValueEnumFqName?.let { fq -> return enumOrdinalReadCast(fq, varExpr) }
+        return scalarReadCast(property.mapValueKotlinType, varExpr)
+    }
+
+    /** Cast a raw decoded Variant scalar/value-type ([varExpr]) to its Kotlin type, narrowing numbers. */
+    private fun scalarReadCast(kotlinType: String?, varExpr: String): String = when (kotlinType) {
+        "String" -> "$varExpr as String"
+        "Long" -> "($varExpr as Number).toLong()"
+        "Int" -> "($varExpr as Number).toInt()"
+        "Double" -> "($varExpr as Number).toDouble()"
+        "Float" -> "($varExpr as Number).toFloat()"
+        "Boolean" -> "$varExpr as Boolean"
+        else -> "$varExpr as $kotlinType"
+    }
+
+    /** Clamp a stored ordinal ([varExpr]) into a valid enum entry, matching the scalar/list enum policy. */
+    private fun enumOrdinalReadCast(enumFq: String, varExpr: String): String =
+        "$enumFq.entries[($varExpr as Number).toInt().coerceIn(0, $enumFq.entries.lastIndex)]"
 
     private fun variantReadArgExpr(arg: ArgModel, variantPtr: String, localName: String): String =
         if (arg.objectWrapperFqName != null) {
@@ -3274,8 +3540,33 @@ internal class ScriptCodeEmitter(
                 "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
             property.arrayElementEnumFqName != null ->
                 "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr.map { it.ordinal.toLong() }, a) }"
+            property.mapKeyKotlinType != null -> mapWritePropertyRetExpr(property, valueExpr)
             else -> variantWriteRetExpr(property.type, valueExpr)
         }
+
+    /**
+     * Write expression for a typed `Map<K, V>` property. Enum keys/values marshal as their ordinal
+     * (Long) and custom-script values as their owner handle; everything else (scalars, value types,
+     * engine wrappers) is handled by [BuiltinTypes.initVariantDictionaryAny] — the typed-Map any-key
+     * writer, kept separate from the generic (String-key-only) [BuiltinTypes.initVariantFromAny] Map
+     * path so generic Dictionary reads and writes stay symmetrical (issue #40).
+     */
+    private fun mapWritePropertyRetExpr(property: ScriptPropertyModel, valueExpr: String): String {
+        val keyNeedsConv = property.mapKeyEnumEntries.isNotEmpty()
+        val valueNeedsConv = property.mapValueEnumFqName != null || property.mapValueCustomScriptFqName != null
+        val source = if (keyNeedsConv || valueNeedsConv) {
+            val keyConv = if (keyNeedsConv) "k.ordinal.toLong()" else "k"
+            val valueConv = when {
+                property.mapValueEnumFqName != null -> "v.ordinal.toLong()"
+                property.mapValueCustomScriptFqName != null -> "net.multigesture.kanama.api.GodotObject(v.godotObject)"
+                else -> "v"
+            }
+            "$valueExpr.entries.associate { (k, v) -> $keyConv to $valueConv }"
+        } else {
+            valueExpr
+        }
+        return "BuiltinTypes.initVariantDictionaryAny(ret, $source)"
+    }
 
     private fun variantWriteToolButtonRetExpr(button: ToolButtonModel): String =
         "Arena.ofConfined().use { a -> val callable = BuiltinTypes.allocateCallable(a); BuiltinTypes.initCallable(callable, godotObject, \"${kotlinStringLiteral(button.method.godotName)}\"); VariantConverters.variantFromType(VariantType.CALLABLE).invoke(ret, callable); BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable) }"
@@ -3297,26 +3588,53 @@ internal class ScriptCodeEmitter(
     private fun scriptPropertyKotlinType(property: ScriptPropertyModel): String =
         when {
             property.objectWrapperFqName != null -> "${property.objectWrapperFqName}?"
-            property.arrayElementWrapperFqName != null -> "List<${property.arrayElementWrapperFqName}>"
+            property.arrayElementWrapperFqName != null -> {
+                val listType = if (property.isMutableList) "MutableList" else "List"
+                "$listType<${property.arrayElementWrapperFqName}>"
+            }
             property.customScriptFqName != null -> "${property.customScriptFqName}?"
-            property.arrayElementCustomScriptFqName != null -> "List<${property.arrayElementCustomScriptFqName}>"
-            property.arrayElementString -> "List<String>"
-            property.arrayElementEnumFqName != null -> "List<${property.arrayElementEnumFqName}>"
+            property.arrayElementCustomScriptFqName != null -> {
+                val listType = if (property.isMutableList) "MutableList" else "List"
+                "$listType<${property.arrayElementCustomScriptFqName}>"
+            }
+            property.arrayElementString -> {
+                val listType = if (property.isMutableList) "MutableList" else "List"
+                "$listType<String>"
+            }
+            property.arrayElementEnumFqName != null -> {
+                val listType = if (property.isMutableList) "MutableList" else "List"
+                "$listType<${property.arrayElementEnumFqName}>"
+            }
+            property.mapKeyKotlinType != null -> {
+                val mapType = if (property.isMutableMap) "MutableMap" else "Map"
+                "$mapType<${property.mapKeyKotlinType}, ${mapValueKotlinType(property)}>"
+            }
             property.enumFqName != null -> property.enumFqName
             else -> property.narrow?.kotlinType ?: property.type.kotlinType
         }
 
-    private fun scriptPropertyZeroLiteral(property: ScriptPropertyModel): String =
-        when {
+    /** Emitted Kotlin value type for a typed `Map<K, V>` property. */
+    private fun mapValueKotlinType(property: ScriptPropertyModel): String =
+        property.mapValueWrapperFqName
+            ?: property.mapValueCustomScriptFqName
+            ?: property.mapValueEnumFqName
+            ?: property.mapValueKotlinType
+            ?: "Any?"
+
+    private fun scriptPropertyZeroLiteral(property: ScriptPropertyModel): String {
+        val emptyList = if (property.isMutableList) "mutableListOf()" else "emptyList()"
+        return when {
             property.objectWrapperFqName != null -> "null"
-            property.arrayElementWrapperFqName != null -> "emptyList()"
+            property.arrayElementWrapperFqName != null -> emptyList
             property.customScriptFqName != null -> "null"
-            property.arrayElementCustomScriptFqName != null -> "emptyList()"
-            property.arrayElementString -> "emptyList()"
-            property.arrayElementEnumFqName != null -> "emptyList()"
+            property.arrayElementCustomScriptFqName != null -> emptyList
+            property.arrayElementString -> emptyList
+            property.arrayElementEnumFqName != null -> emptyList
+            property.mapKeyKotlinType != null -> if (property.isMutableMap) "mutableMapOf()" else "emptyMap()"
             property.enumFqName != null -> "${property.enumFqName}.entries.first()"
             else -> property.narrow?.zeroLiteral ?: property.type.kotlinLiteralZero
         }
+    }
 
     companion object {
         private val RESOURCE_WRAPPER_FROM_HANDLE = RESOURCE_WRAPPERS_WITH_FROM_HANDLE
