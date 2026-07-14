@@ -84,6 +84,18 @@ open class RefCounted internal constructor(
             ObjectCalls.getMethodBind("RefCounted", "reference", REFERENCE_HASH)
         }
 
+        /**
+         * Takes one owning reference on [handle] (RefCounted.reference), keeping the
+         * object alive independently of any transient `Ref<>` the engine may create
+         * (e.g. inside `ResourceSaver.save`). Mirrors the owned-return convention used
+         * for freshly instantiated RefCounted values. Returns true when this was the
+         * first reference (refcount went 0 -> 1).
+         */
+        internal fun retainHandle(handle: MemorySegment): Boolean {
+            if (handle.address() == 0L) return false
+            return ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
+        }
+
         internal fun releaseHandle(handle: MemorySegment) {
             if (handle.address() != 0L) {
                 if (ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) {

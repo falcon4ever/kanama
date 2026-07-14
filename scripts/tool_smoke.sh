@@ -72,5 +72,12 @@ check_absent "NonToolHelloKanama\\._ready fired"
 check_absent "Orphan StringName"
 check_absent "unclaimed string names"
 check_absent "Cannot ptrcall nil constructor"
+# issue #38 — newScriptInstance() must build a REAL script-backed resource even in
+# the editor (a non-@Tool resource class would otherwise instantiate as a placeholder
+# and the reified cast would fail). Assert creation + save succeed here; the on-disk
+# script-reference round-trip is asserted in runtime_smoke where the global class list
+# is reliably populated.
+check "ResourceForgeSmoke live=true save_error=0"
+check_absent "ResourceForgeSmoke create_failed"
 
 echo "[tool_smoke] PASS"

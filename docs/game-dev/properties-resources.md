@@ -326,10 +326,36 @@ class WeaponForge(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 `Resource.fromHandle` is a non-owning view over the same engine object; do
 not `close()` it — the script instance still uses that handle.
 
-The instance you save must be engine-created: loaded from a `.tres`, assigned
-through an inspector slot, or instantiated by the editor. Calling a script
-class constructor yourself — `Weapon(someOtherObject.godotObject)` — does not
-create a new `Weapon` resource; it only wraps an existing handle in a Kotlin
-view, and passing another object's handle (a node's, for example) produces a
-view of the wrong object. Programmatic creation of new script-backed
-resources from Kotlin is not supported yet.
+Calling a script class constructor yourself —
+`Weapon(someOtherObject.godotObject)` — does **not** create a new `Weapon`
+resource; it only wraps an existing handle in a Kotlin view, and passing another
+object's handle (a node's, for example) produces a view of the wrong object.
+
+## Creating Custom Resources from Kotlin
+
+To mint a brand-new resource from code (the equivalent of GDScript's
+`Weapon.new()` or C#'s `new Weapon()`), use `newScriptInstance<T>()`:
+
+```kotlin
+val weapon = newScriptInstance<Weapon>()
+weapon.damage = 25
+weapon.displayName = "Excalibur"
+ResourceSaver.save(Resource.fromHandle(weapon.godotObject), "res://excalibur.tres")
+```
+
+It constructs a fresh engine `Resource`, attaches the Kanama script, and returns
+the live Kotlin instance. It works at runtime and from `@Tool` editor code (a real
+instance is built even though the resource class itself is not `@Tool`).
+
+Requirements: `T` must be a `@ScriptClass(attachTo = "Resource")` class, and it
+must be `@GlobalClass` with a matching file name (`Weapon.kt`) so its `res://`
+path is discoverable for saving — the same constraint the global class list
+already imposes.
+
+Ownership mirrors GDScript `.new()`: the returned resource comes back with one
+owning reference, so it survives the `ResourceSaver.save` call above (which wraps
+it in a transient `Ref<>` internally). Lifetime is manual — assign it to an
+exported `Resource` slot or save it to keep it; an instance that is created and
+never stored persists until process shutdown. As above, pass
+`Resource.fromHandle(weapon.godotObject)` (a non-owning view) to
+`Resource`-typed APIs such as `ResourceSaver.save`; do not `close()` it.

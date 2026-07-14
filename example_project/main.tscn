@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://InstancedMesh.tscn" id="3"]
 [ext_resource type="Script" path="res://NonToolScript.kt" id="4"]
 [ext_resource type="Script" path="res://ProcessDisableSmoke.kt" id="5"]
+[ext_resource type="Script" path="res://ResourceForgeSmoke.kt" id="6"]
 
 [node name="Node" type="Node" unique_id=1909033900]
 script = ExtResource("1")
@@ -94,3 +95,6 @@ script = ExtResource("4")
 script = ExtResource("5")
 
 [node name="NonToolHelloKanama" type="NonToolHelloKanama" parent="." unique_id=512983746]
+
+[node name="ResourceForgeSmokeNode" type="Node" parent="." unique_id=771122334]
+script = ExtResource("6")

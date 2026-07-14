@@ -88,6 +88,22 @@ class KanamaScript(
         private val templatesByName = LinkedHashMap<String, KanamaScriptTemplate>()
         private val globalNameToTemplate = LinkedHashMap<String, KanamaScriptTemplate>()
 
+        // Depth counter set while [instantiateResourceScript] drives Object.set_script.
+        // Godot runs _instance_create synchronously on the calling thread, so a
+        // thread-local reliably scopes the whole attach. When > 0, callInstanceCreate
+        // builds the real instance even in the editor for a non-@Tool script, so that
+        // programmatic creation returns a live Kotlin object rather than a placeholder.
+        private val programmaticCreate = ThreadLocal.withInitial { 0 }
+
+        private inline fun <R> withProgrammaticCreate(body: () -> R): R {
+            programmaticCreate.set(programmaticCreate.get() + 1)
+            try {
+                return body()
+            } finally {
+                programmaticCreate.set(programmaticCreate.get() - 1)
+            }
+        }
+
         data class KanamaScriptTemplate(
             val instanceBaseType: String,
             val isTool: Boolean,
@@ -570,6 +586,91 @@ class KanamaScript(
             val className = parseClassName(source) ?: return false
             return bindScriptToTemplate(script, className)
         }
+
+        /**
+         * Programmatically creates a brand-new script-backed resource from Kotlin.
+         *
+         * Backs the public [net.multigesture.kanama.api.newScriptInstance] helper.
+         * Constructs a fresh engine `Resource`, attaches the Kanama script registered
+         * for [fqName]/[simpleName], and returns the live Kotlin object. The resource
+         * is left with one owning reference (GDScript `.new()` parity) so it survives a
+         * later `ResourceSaver.save` which wraps it in a transient `Ref<>`.
+         *
+         * Currently restricted to `@ScriptClass(attachTo = "Resource")` classes.
+         */
+        fun instantiateResourceScript(fqName: String?, simpleName: String?): Any {
+            val requested = fqName ?: simpleName ?: "<unknown>"
+            val template = resolveTemplate(fqName, simpleName)
+                ?: error(
+                    "newScriptInstance: '$requested' is not a registered @ScriptClass. " +
+                        "Annotate it with @ScriptClass(attachTo = \"Resource\") and name the file <ClassName>.kt."
+                )
+            require(template.instanceBaseType == "Resource") {
+                "newScriptInstance: '${template.kotlinClassName}' attaches to '${template.instanceBaseType}', " +
+                    "but programmatic creation currently supports only @ScriptClass(attachTo = \"Resource\")."
+            }
+            val script = resolveScriptResource(template)
+                ?: error(
+                    "newScriptInstance: could not resolve the script resource for '${template.kotlinClassName}'. " +
+                        "Mark it @GlobalClass and name the file after the class so its res:// path is discoverable."
+                )
+            val baseHandle = ObjectCalls.constructObject("Resource")
+            withProgrammaticCreate {
+                net.multigesture.kanama.api.GodotObject(baseHandle).setScript(script)
+            }
+            // Own the fresh resource so it is not freed when a later save drops its
+            // transient Ref<> (mirrors the task-43 owned-return convention).
+            net.multigesture.kanama.api.RefCounted.retainHandle(baseHandle)
+            return ScriptBridge.kotlinObjectForOwner(baseHandle)
+                ?: error(
+                    "newScriptInstance: no script instance was created for '${template.kotlinClassName}'. " +
+                        "The script may have failed to attach."
+                )
+        }
+
+        private fun resolveTemplate(fqName: String?, simpleName: String?): KanamaScriptTemplate? =
+            synchronized(templatesByName) {
+                fqName?.let { templatesByName[it] } ?: simpleName?.let { templatesByName[it] }
+            }
+
+        /**
+         * Resolves the `Script` resource to attach for [template]. Prefers loading the
+         * on-disk `res://<Class>.kt` (via its global-class registry path) so the saved
+         * resource references the script as an `ExtResource` and reloads correctly;
+         * falls back to the registration-time script object when no path is known.
+         */
+        private fun resolveScriptResource(
+            template: KanamaScriptTemplate,
+        ): net.multigesture.kanama.api.Resource? {
+            if (template.globalName.isNotEmpty()) {
+                globalClassPath(template.globalName)?.let { path ->
+                    net.multigesture.kanama.api.ResourceLoader.load(path)?.let { return it }
+                }
+            }
+            return registeredScriptObjectFor(template)
+                ?.let { net.multigesture.kanama.api.Resource.fromHandle(it) }
+        }
+
+        // Match the global-class entry by its res:// path rather than the "class" key:
+        // dictionary StringName values (the "class"/"base" fields) currently decode to
+        // null, while the "path" String decodes cleanly. A @GlobalClass script's file is
+        // required to be named after the class (<GlobalName>.kt), so the path suffix is a
+        // reliable, unique key.
+        private fun globalClassPath(globalName: String): String? {
+            val rootPath = "res://$globalName.kt"
+            val fileSuffix = "/$globalName.kt"
+            return net.multigesture.kanama.api.ProjectSettings.getGlobalClassList()
+                .mapNotNull { it["path"] as? String }
+                .firstOrNull { it == rootPath || it.endsWith(fileSuffix) }
+        }
+
+        private fun registeredScriptObjectFor(template: KanamaScriptTemplate): MemorySegment? =
+            synchronized(scriptCatalog) {
+                scriptCatalog.values.firstOrNull { meta ->
+                    meta.kotlinClassName == template.kotlinClassName ||
+                        (template.globalName.isNotEmpty() && meta.globalName == template.globalName)
+                }?.let { MemorySegment.ofAddress(it.objectAddress) }
+            }
 
         fun clearScriptTemplates() {
             synchronized(templatesByName) {
@@ -1108,7 +1209,8 @@ class KanamaScript(
             // would otherwise need.
             val script = ObjectRegistry.get(instance.address()) as? KanamaScript
             val skipForEditor = script != null && !script.isTool &&
-                net.multigesture.kanama.api.Engine.isEditorHint()
+                net.multigesture.kanama.api.Engine.isEditorHint() &&
+                programmaticCreate.get() == 0
             callCreateInternal(instance, args, rRet, allowPlaceholder = skipForEditor)
         }
 
