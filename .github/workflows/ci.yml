@@ -95,11 +95,47 @@ jobs:
         run: mkdocs build --strict
 
   # --- Mobile build lanes: build-only, no emulator / simulator / device ---
+  # Gated on `changes.mobile` so PRs that can't affect a mobile build (docs,
+  # unrelated scripts, example project) skip these jobs entirely. Job-level `if`
+  # skips report a "skipped" conclusion, which satisfies required status checks —
+  # so these stay safe to require in branch protection later.
+  changes:
+    name: detect changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      mobile: ${{ steps.filter.outputs.mobile }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect mobile-relevant changes
+        id: filter
+        shell: bash
+        run: |
+          # Non-PR events (push to main) always build the mobile lanes.
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "mobile=true" >> "$GITHUB_OUTPUT"
+            echo "non-PR event -> building mobile lanes"
+            exit 0
+          fi
+          changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}'...HEAD)"
+          echo "changed files:"; echo "$changed"
+          if printf '%s\n' "$changed" | grep -qE '^(src/|processor/|annotations/|ios-runtime/|android/|gradle/|build\.gradle\.kts|settings\.gradle\.kts|gradle\.properties|\.github/workflows/ci\.yml)'; then
+            echo "mobile=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "mobile=false" >> "$GITHUB_OUTPUT"
+          fi
+
   # The GDExtension header is platform-independent; dump it once here and share
   # it (matches package.yml). The iOS C shim needs it to compile; the Android
   # Kotlin build gets it as harmless insurance.
   gdextension-header:
     name: gdextension-header
+    needs: changes
+    if: needs.changes.outputs.mobile == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -128,7 +164,8 @@ jobs:
 
   android:
     name: android (aar build)
-    needs: gdextension-header
+    needs: [changes, gdextension-header]
+    if: needs.changes.outputs.mobile == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -157,7 +194,8 @@ jobs:
 
   ios:
     name: ios (xcframework build)
-    needs: gdextension-header
+    needs: [changes, gdextension-header]
+    if: needs.changes.outputs.mobile == 'true'
     runs-on: macos-15
     timeout-minutes: 60
     steps:
@@ -171,6 +209,16 @@ jobs:
           java-version: "25"
           cache: gradle
 
+      - name: Cache Kotlin/Native toolchain
+        uses: actions/cache@v4
+        with:
+          # The konan LLVM/sysroot/libffi deps re-download each run otherwise;
+          # keyed on the gradle build files so a Kotlin version bump busts it.
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/**', '**/*.gradle.kts', 'gradle.properties') }}
+          restore-keys: |
+            konan-${{ runner.os }}-
+
       - name: Download GDExtension header
         uses: actions/download-artifact@v7
         with:
@@ -179,6 +227,12 @@ jobs:
 
       - name: Build iOS device xcframework
         shell: bash
-        # Static device .xcframework (debug + release) — no code signing needed.
-        # First run downloads the Kotlin/Native toolchain (slow; cached after).
-        run: ./gradlew assembleIosDeviceKanamaXcframework
+        # PRs build the debug device xcframework only (~half the compile, which
+        # is the dominant cost); the release xcframework is validated on push to
+        # main. Static libs, so no code signing is needed either way.
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            ./gradlew createIosDeviceDebugXcframework
+          else
+            ./gradlew assembleIosDeviceKanamaXcframework
+          fi
