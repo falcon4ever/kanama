@@ -247,6 +247,14 @@ that the in-editor runtime smoke does not exercise, so a passing runtime smoke
 alone is not sufficient. It also compiles the generated code for every exported
 property shape, so run it after widening any accepted `@ScriptProperty` type.
 
+CI coverage is **build-time + desktop runtime only**. The PR gate compiles every
+platform (desktop, the Android runtime AAR, the iOS device xcframework) and runs
+the desktop/Linux runtime smokes — which also exercise the runtime Android shares
+via PanamaPort. It does **not** run on-device: the Android R8-minified runtime
+gate (the task-42 PanamaPort-under-R8 class) and the iOS device runtime are
+deliberate **local device gates**. A green PR means it builds everywhere and the
+desktop runtime behaves — not that it is device-safe on mobile.
+
 Before a release tag, prefer an isolated clone gate:
 
 ```sh
