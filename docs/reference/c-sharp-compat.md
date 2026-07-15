@@ -71,7 +71,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Godot signal connections | SUPPORTED | Use `object.signal(Name.Signals.foo).connect(...)` and generated method-name constants. |
 | Lambda signal callbacks | PARTIAL | Zero to three emitted arguments are supported through generated dispatcher methods used by Kanama's signal connection helpers. |
 | Runtime custom resources | SUPPORTED | Create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. |
-| Inspector exports | PARTIAL | Scalars, strings, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported. Enums, flags, and broader resource arrays are intentionally conservative. |
+| Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS. Flags and broader resource arrays remain intentionally conservative. |
 | Coroutines | SUPPORTED | `KanamaScope`, Godot main-thread dispatch, `awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |
 
 ## Intentional Differences From C#

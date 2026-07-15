@@ -114,6 +114,7 @@ object ObjectCalls {
     // BUILD-tagged Packed*Array arg tags (the dispatch builds the array from a descriptor).
     private const val PT_PACKED_VECTOR2_ARRAY = 23
     private const val PT_PACKED_COLOR_ARRAY = 24
+    private const val PT_ARRAY = 30
     private const val PT_PACKED_BYTE_ARRAY = 31
 
     // Godot Variant type tags (returned by kanama_ios_godot_object_call, for decoding
@@ -1177,6 +1178,45 @@ object ObjectCalls {
     // raw component bytes via out_str) — or null (nil / un-decoded return, e.g. Dictionary/
     // Array/Transform). String returns over 1 KiB are truncated (the value is captured
     // once — the call is not re-issued).
+    // Build the tagged-entry blob consumed by the C shim's PT_ARRAY boxer. Object.set uses this
+    // path for List<Enum> values after callers map the enum entries to integer ordinals. Keep this
+    // deliberately narrow: other List element families need their own audited Variant encoding.
+    private fun MemScope.encodeIntegerArrayArg(values: List<*>): CPointer<ByteVar> {
+        val entries = values.map { value ->
+            when (value) {
+                null -> Pair(PT_VOID, null)
+                is Int -> Pair(PT_INT64, value.toLong())
+                is Long -> Pair(PT_INT64, value)
+                else -> error(
+                    "encodeVariantArgs: unsupported List element type " +
+                        (value::class.simpleName ?: "<anonymous>"),
+                )
+            }
+        }
+        val byteCount = 4 + entries.sumOf { (_, value) -> 8 + if (value == null) 0 else 8 }
+        val blob = allocArray<ByteVar>(byteCount)
+        var offset = 0
+        fun putInt32(value: Int) {
+            for (byteIndex in 0 until 4) {
+                blob[offset + byteIndex] = ((value ushr (byteIndex * 8)) and 0xFF).toByte()
+            }
+            offset += 4
+        }
+        fun putInt64(value: Long) {
+            for (byteIndex in 0 until 8) {
+                blob[offset + byteIndex] = ((value ushr (byteIndex * 8)) and 0xFF).toByte()
+            }
+            offset += 8
+        }
+        putInt32(entries.size)
+        for ((tag, value) in entries) {
+            putInt32(tag)
+            putInt32(if (value == null) 0 else 8)
+            if (value != null) putInt64(value)
+        }
+        return blob
+    }
+
     // Lay out a List<Any?> into parallel PT-tag + payload-pointer arrays inside the given MemScope.
     // Shared by the Variant Object.call dispatch and the bound-Callable connect/disconnect path.
     private fun MemScope.encodeVariantArgs(
@@ -1234,7 +1274,14 @@ object ObjectCalls {
                     val c = alloc<LongVar>(); c.value = a.address()
                     tags[i] = PT_OBJECT; ptrs[i] = c.ptr.reinterpret<CPointed>()
                 }
-                else -> error("encodeVariantArgs: unsupported arg type ${a::class.simpleName}")
+                is List<*> -> {
+                    tags[i] = PT_ARRAY
+                    ptrs[i] = encodeIntegerArrayArg(a).reinterpret<CPointed>()
+                }
+                else -> error(
+                    "encodeVariantArgs: unsupported arg type " +
+                        (a::class.simpleName ?: "<anonymous>"),
+                )
             }
         }
         return Triple(tags, ptrs, n)

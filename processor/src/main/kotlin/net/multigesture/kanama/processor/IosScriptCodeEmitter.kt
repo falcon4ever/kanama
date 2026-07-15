@@ -85,6 +85,11 @@ internal data class IosProperty(
     // Godot Variant::Type, so the iOS script instance can advertise this property to the engine
     // (get_property_list) — required for scene-stored @ScriptProperty values to be delivered.
     val godotVariantType: Int = 0,
+    // PropertyInfo metadata advertised by the iOS ScriptInstance. Enum and enum-list exports
+    // depend on these matching the desktop registrar so the inspector renders the same controls.
+    val hint: Int = 0,
+    val hintString: String = "",
+    val usage: Int = 6,
     // FQ name of a user @ScriptClass type for an OBJECT property (e.g. a `node_paths`-exported
     // reference like `target: Vehicle?`). Delivered as the owner handle and resolved to the live
     // Kotlin script instance via iosScriptInstanceForOwner. Empty for non-custom-script properties.
@@ -98,6 +103,17 @@ internal data class IosProperty(
     // PackedStringArray, the C dispatch extracts each element, the runtime hands a
     // List<String> to the generated bridge). See `setPropertyStringArray`.
     val listElementIsString: Boolean = false,
+    // Expression that converts the raw 64-bit scalar slot named `value` into the declared
+    // Kotlin field type. This is the iOS mirror of the JVM emitter's wide-slot conversion:
+    // Float/Int narrow from Godot's 64-bit slots and enum ordinals clamp before lookup.
+    val scalarSetExpression: String = "",
+    // Expression that converts the declared Kotlin field back to an engine Variant value.
+    // [KanamaIosRuntime] encodes the returned value through the same PT return path used by
+    // value-returning methods, so Object.get reads live script-instance state.
+    val scalarGetExpression: String = "",
+    // FQ enum element type for List<Enum> properties. The C/runtime path delivers the Array's
+    // integer cells separately from object arrays; the generated bridge maps ordinals to entries.
+    val arrayElementEnumFqName: String = "",
 )
 
 internal data class IosSignal(
@@ -167,7 +183,7 @@ internal class IosScriptCodeEmitter(
             builder.appendLine("            properties = listOf(")
             script.properties.forEach { property ->
                 builder.appendLine(
-                    "                KanamaIosScriptProperty(${kotlinString(property.godotName)}, ${property.godotVariantType}),",
+                    "                KanamaIosScriptProperty(${kotlinString(property.godotName)}, ${property.godotVariantType}, ${property.hint}, ${kotlinString(property.hintString)}, ${property.usage}),",
                 )
             }
             builder.appendLine("            ),")
@@ -221,6 +237,23 @@ internal class IosScriptCodeEmitter(
             }
             builder.appendLine("        else -> false")
             builder.appendLine("    }")
+            val readableProperties = script.properties.filter {
+                it.scalarGetExpression.isNotEmpty() || it.arrayElementEnumFqName.isNotEmpty()
+            }
+            if (readableProperties.isNotEmpty()) {
+                builder.appendLine()
+                builder.appendLine("    override fun getProperty(propertyIndex: Int): Any? = when (propertyIndex) {")
+                script.properties.forEachIndexed { index, property ->
+                    when {
+                        property.arrayElementEnumFqName.isNotEmpty() ->
+                            builder.appendLine("        $index -> script.${property.kotlinName}.map { it.ordinal.toLong() }")
+                        property.scalarGetExpression.isNotEmpty() ->
+                            builder.appendLine("        $index -> ${property.scalarGetExpression}")
+                    }
+                }
+                builder.appendLine("        else -> net.multigesture.kanama.ios.KanamaIosNoProperty")
+                builder.appendLine("    }")
+            }
             builder.appendLine()
             // Phase 5.3b: value-returning methods/virtuals dispatch here; the result is encoded
             // PT-tagged for the engine return slot by the @CName export.
@@ -251,14 +284,8 @@ internal class IosScriptCodeEmitter(
                     // node_paths-exported reference to another @ScriptClass: the engine delivers the
                     // target node's owner handle; resolve it to the live Kotlin script instance.
                     builder.appendLine("        $index -> { script.${property.kotlinName} = if (value != 0L) net.multigesture.kanama.ios.iosScriptInstanceForOwner(value) as? ${property.customScriptFqName} else null; true }")
-                } else if (!property.isObjectType && !property.isList && property.godotClassName.isNotEmpty() && property.godotClassName != "String") {
-                    val rhs = when (property.godotClassName) {
-                        "Double", "Float" -> "Double.fromBits(value)"
-                        "Boolean" -> "value != 0L"
-                        "Int" -> "value.toInt()"
-                        else -> "value"
-                    }
-                    builder.appendLine("        $index -> { script.${property.kotlinName} = $rhs; true }")
+                } else if (property.scalarSetExpression.isNotEmpty()) {
+                    builder.appendLine("        $index -> { script.${property.kotlinName} = ${property.scalarSetExpression}; true }")
                 }
             }
             builder.appendLine("        else -> false")
@@ -292,6 +319,19 @@ internal class IosScriptCodeEmitter(
                         property.isList && property.listElementClassName.isNotEmpty() -> {
                             builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { owner: Long -> net.multigesture.kanama.api.${property.listElementClassName}(java.lang.foreign.MemorySegment.ofAddress(owner)) }; true }")
                         }
+                    }
+                }
+                builder.appendLine("        else -> false")
+                builder.appendLine("    }")
+            }
+            val enumListProperties = script.properties.filter { it.arrayElementEnumFqName.isNotEmpty() }
+            if (enumListProperties.isNotEmpty()) {
+                builder.appendLine()
+                builder.appendLine("    override fun setPropertyIntArray(propertyIndex: Int, values: LongArray): Boolean = when (propertyIndex) {")
+                script.properties.forEachIndexed { index, property ->
+                    if (property.arrayElementEnumFqName.isNotEmpty()) {
+                        val fq = property.arrayElementEnumFqName
+                        builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { i -> $fq.entries[i.toInt().coerceIn(0, $fq.entries.lastIndex)] }; true }")
                     }
                 }
                 builder.appendLine("        else -> false")
@@ -345,17 +385,14 @@ internal class IosScriptCodeEmitter(
         if (property.isObjectType && property.godotClassName.isNotEmpty()) return true
         if (property.customScriptFqName.isNotEmpty()) return true
         if (!property.isObjectType && !property.isList && property.godotClassName == "String") return true
-        if (!property.isObjectType && !property.isList && property.godotClassName.isNotEmpty() &&
-            property.godotClassName != "String"
-        ) {
-            return true
-        }
+        if (property.scalarSetExpression.isNotEmpty()) return true
         if (property.isList && property.listElementIsString) return true
         if (property.isList && (property.listElementClassName.isNotEmpty() ||
                 property.arrayElementCustomScriptFqName.isNotEmpty())
         ) {
             return true
         }
+        if (property.arrayElementEnumFqName.isNotEmpty()) return true
         if (property.valueTypeClassName.isNotEmpty()) return true
         return false
     }
@@ -602,29 +639,6 @@ internal class IosScriptCodeEmitter(
     }
 
     private fun ScriptPropertyModel.toIosProperty(className: String): IosProperty {
-        // Enum-element lists (task 38) need the ordinal <-> entry conversion the iOS
-        // set-property path doesn't have yet: keep the Kotlin default, same boundary
-        // as the scalar enum exports below (no list delivery case is emitted).
-        if (arrayElementEnumFqName != null) {
-            warn(
-                "[kanama-ios] $className.$kotlinName (List<${arrayElementEnumFqName.substringAfterLast('.')}>) — " +
-                    "no iOS @ScriptProperty enum-list path yet, will keep its Kotlin default",
-            )
-            return IosProperty(
-                godotName = godotName,
-                kotlinName = kotlinName,
-                isObjectType = false,
-                godotClassName = "",
-                isList = false,
-                listElementClassName = "",
-                isNullable = nullable,
-                valueTypeClassName = "",
-                godotVariantType = 28, // ARRAY
-                customScriptFqName = "",
-                arrayElementCustomScriptFqName = "",
-                listElementIsString = false,
-            )
-        }
         val isList = type == TypeMapping.ARRAY
         val isObject = objectWrapperFqName != null
         // A user @ScriptClass-typed OBJECT property (e.g. `target: Vehicle?` exported via node_paths):
@@ -636,20 +650,9 @@ internal class IosScriptCodeEmitter(
             isObject -> objectWrapperFqName.substringAfterLast('.')
             isList -> ""
             customScript.isNotEmpty() -> ""
-            // Enum exports (task 32) ride the INT slot with an ordinal <-> entry
-            // conversion the iOS set-property path doesn't have yet: keep the
-            // Kotlin default, same boundary as the narrow scalars below.
-            enumFqName != null -> {
-                warn("[kanama-ios] $className.$kotlinName (enum ${enumFqName.substringAfterLast('.')}) — no iOS @ScriptProperty enum path yet, will keep its Kotlin default")
-                ""
-            }
-            // Narrow Kotlin scalars (Float/Int) need a conversion the iOS
-            // set-property path doesn't have yet: keep the Kotlin default,
-            // same boundary as the unsupported value types below.
-            narrow != null -> {
-                warn("[kanama-ios] $className.$kotlinName (${narrow.kotlinType}) — no iOS @ScriptProperty narrowing path yet, will keep its Kotlin default")
-                ""
-            }
+            enumFqName != null -> "Long"
+            narrow == NarrowScalar.FLOAT32 -> "Double"
+            narrow == NarrowScalar.INT32 -> "Long"
             else -> when (type) {
                 TypeMapping.INT -> "Long"
                 TypeMapping.FLOAT -> "Double"
@@ -670,6 +673,23 @@ internal class IosScriptCodeEmitter(
                 }
             }
         }
+        val scalarSetExpression = when {
+            isObject || isList || customScript.isNotEmpty() -> ""
+            enumFqName != null ->
+                "$enumFqName.entries[value.toInt().coerceIn(0, $enumFqName.entries.lastIndex)]"
+            narrow == NarrowScalar.FLOAT32 -> "Double.fromBits(value).toFloat()"
+            narrow == NarrowScalar.INT32 -> "value.toInt()"
+            type == TypeMapping.INT -> "value"
+            type == TypeMapping.FLOAT -> "Double.fromBits(value)"
+            type == TypeMapping.BOOL -> "value != 0L"
+            else -> ""
+        }
+        val scalarGetExpression = when {
+            isObject || isList || customScript.isNotEmpty() -> ""
+            enumFqName != null -> "script.$kotlinName.ordinal.toLong()"
+            scalarSetExpression.isNotEmpty() -> "script.$kotlinName"
+            else -> ""
+        }
         val godotVariantType = when {
             isObject -> 24 // OBJECT
             isList && arrayElementString -> 34 // PACKED_STRING_ARRAY (List<String>)
@@ -686,9 +706,15 @@ internal class IosScriptCodeEmitter(
             isNullable = nullable,
             valueTypeClassName = valueTypeClassName,
             godotVariantType = godotVariantType,
+            hint = hint,
+            hintString = hintString,
+            usage = usage,
             customScriptFqName = customScript,
             arrayElementCustomScriptFqName = if (isList) arrayElementCustomScriptFqName.orEmpty() else "",
             listElementIsString = isList && arrayElementString,
+            scalarSetExpression = scalarSetExpression,
+            scalarGetExpression = scalarGetExpression,
+            arrayElementEnumFqName = if (isList) arrayElementEnumFqName.orEmpty() else "",
         )
     }
 

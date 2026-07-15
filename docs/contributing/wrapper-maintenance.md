@@ -317,19 +317,18 @@ full-range bytes); the iOS families have Kotlin encode round-trips plus C
 build/box round-trips in the on-device self-test matrix (the
 `virtual-packed-*-ret` / `virtual-dictionary-ret` / `virtual-array-ret` rows).
 
-**iOS `@ScriptProperty` conversion deferrals (by design, warn-skipped
-fail-loud):** properties whose Kotlin field needs a conversion around the
-Variant slot are desktop/Android-only for now. That is the narrow scalars
+**iOS `@ScriptProperty` conversion parity:** narrow scalars
 (`kotlin.Float`/`kotlin.Int` widened to the 64-bit FLOAT/INT slots), Kotlin
-`enum class` exports (task 32 — INT slot carrying the ordinal, registered with
-`PROPERTY_HINT_ENUM`), and enum-list exports (task 38 — typed int Array of
-ordinals with a per-element enum hint). The model carries everything iOS needs
-(`enumFqName`/`enumEntries` and `arrayElementEnumFqName`/
-`arrayElementEnumEntries` are in the serialized script model, schema v4);
-what's missing is a set-property conversion hook in the iOS emitter, so
-`IosScriptCodeEmitter.toIosProperty` warns and keeps the Kotlin default. All
-three conversions belong to the same ios-runtime property-path follow-up
-slice.
+`enum class` exports (INT slot carrying the ordinal), and enum-list exports
+(typed int Array of ordinals) use the same conversions on iOS as on
+desktop/Android. The iOS emitter narrows numeric slots, clamps scalar enum
+ordinals, and maps/clamps enum-list elements. Integer arrays have a dedicated
+C/runtime delivery entrypoint rather than sharing object-array cells, so stale
+or malformed integers cannot be misread as object handles. Scene-loaded values
+and later engine-originated `Object.set` updates both take this path. The iOS
+descriptor now preserves each property's hint, hint string, and usage, while
+the ScriptInstance getter maps the Kotlin values back to widened scalars or
+ordinal arrays for engine reads.
 
 ## KDoc Maintenance
 

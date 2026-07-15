@@ -59,8 +59,8 @@ removing enum entries silently remaps values already saved in scenes — append
 new entries at the end, the same trade-off C# has with implicit enum values.
 
 Enum exports are supported on `@ScriptClass` scripts (`@ScriptProperty` /
-`@Export`); `@RegisterProperty` on `@RegisterClass` classes does not accept
-enum types yet.
+`@Export`) on desktop, Android, and iOS; `@RegisterProperty` on
+`@RegisterClass` classes does not accept enum types yet.
 
 Lists of enums export too, as a typed int array whose elements render the
 same dropdown (C# `Difficulty[]` parity):
@@ -73,7 +73,8 @@ var unlockedModes: List<Difficulty> = emptyList()
 Elements are stored as ordinals with the same clamp-on-stale-value and
 reordering trade-off as the scalar form. Defaults must be empty
 (`emptyList()` / `listOf()`); populate initial values in the scene or
-inspector.
+inspector. Enum-list delivery uses the same conversion and clamping semantics
+on desktop, Android, and iOS.
 
 ## Inspector Buttons
 

@@ -9,6 +9,15 @@ versioning once public releases begin.
 
 ### Added
 
+- iOS `@Export` / `@ScriptProperty` conversion parity: Kotlin `Int`/`Float`
+  fields now narrow correctly from Godot's 64-bit Variant slots, scalar enum
+  ordinals clamp and resolve to entries, and `List<Enum>` arrays map each
+  ordinal with the same clamp/null-fill semantics as desktop/Android. A
+  dedicated integer-array bridge keeps enum ordinals separate from object
+  handles. iOS property metadata now preserves enum hints and live
+  ScriptInstance getters widen values back to engine slots; scene-loaded
+  values plus later `Object.set` / `Object.get` updates are covered by the iOS
+  project-script probe.
 - **iOS and Android promoted from Experimental to Supported (4.7 stable)**: the
   §7 mobile promotion bar (device-matrix breadth, renderer coverage, release-grade
   packaging, heavy-demo) is fully green on both platforms. Android is
@@ -85,9 +94,8 @@ versioning once public releases begin.
   are stored as entry ordinals, `.tscn`-stored ints deserialize back into the
   enum slot, and out-of-range stored values clamp to a valid entry instead of
   crashing. Enum-entry initializers (`var mode = MyEnum.NORMAL`) are preserved
-  as inspector defaults. `@ScriptClass` scripts on desktop/Android; the iOS
-  property delivery is a documented deferral (warn-skips, keeps the Kotlin
-  default).
+  as inspector defaults. `@ScriptClass` scripts work across desktop, Android,
+  and iOS.
 - `@Export` / `@ScriptProperty` now also works on **lists of Kotlin enums**
   (`List<MyEnum>` / `MutableList<MyEnum>`,
   [#40](https://github.com/falcon4ever/kanama/issues/40)). Matching C# enum-array
@@ -95,9 +103,9 @@ versioning once public releases begin.
   `PROPERTY_HINT_ENUM` with the entry names (the inspector renders an array of
   dropdowns); elements are stored as ordinals, `.tscn`-stored arrays deserialize
   back into the list, and out-of-range stored elements clamp to a valid entry.
-  Same scope as scalar enum exports: `@ScriptClass` scripts on desktop/Android,
-  iOS property delivery warn-skips and keeps the Kotlin default. `Map<K, V>`
-  exports remain out of scope (non-String Dictionary keys are a policy gate).
+  Same scope as scalar enum exports: `@ScriptClass` scripts work across desktop,
+  Android, and iOS. `Map<K, V>` exports remain out of scope (non-String
+  Dictionary keys are a policy gate).
 - `@OverrideVirtual` now supports **every Variant-expressible return type** in
   the Godot 4.7 virtual surface (170 additional virtuals). New Kotlin return
   types: all fixed-element packed arrays (`ByteArray`, `IntArray`, `LongArray`,

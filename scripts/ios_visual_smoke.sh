@@ -81,6 +81,9 @@ Options:
   --godot-project-baseline DIR Copy and export an existing Godot project without
                                installing Kanama. Injects only an FPS overlay.
   --work-dir DIR               Smoke workspace. Defaults to a new /tmp dir.
+  --build-only                 Build the app artifact but do not install or
+                               launch it. Physical builds use a generic iOS
+                               destination, so the device may be disconnected.
   --keep-running               Leave the launched simulator app running.
                                Physical-device runs are always left running.
   --help, -h                   Show this help.
@@ -103,6 +106,7 @@ allow_provisioning_updates=0
 godot_simulator_lib="${KANAMA_IOS_GODOT_SIMULATOR_LIB:-}"
 work_dir=""
 keep_running=0
+build_only=0
 kanama_probe=0
 kanama_script_probe=0
 kanama_user_script_probe=0
@@ -257,6 +261,10 @@ while [[ $# -gt 0 ]]; do
       work_dir="${2:-}"
       shift 2
       ;;
+    --build-only)
+      build_only=1
+      shift
+      ;;
     --keep-running)
       keep_running=1
       shift
@@ -341,7 +349,7 @@ if [[ -n "$godot_project_baseline_dir" && ! -f "$godot_project_baseline_dir/proj
   exit 2
 fi
 
-if [[ "$physical_device" -eq 1 && -z "$device_udid" ]]; then
+if [[ "$physical_device" -eq 1 && -z "$device_udid" && "$build_only" -eq 0 ]]; then
   echo "[ios_visual_smoke] pass --device with a physical iOS device identifier or UDID" >&2
   echo "[ios_visual_smoke] available devices:" >&2
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl list devices >&2 || true
@@ -361,7 +369,9 @@ if [[ "$physical_device" -eq 0 && -z "$device_udid" ]]; then
   )"
 fi
 if [[ -z "$device_udid" ]]; then
-  if [[ "$physical_device" -eq 1 ]]; then
+  if [[ "$physical_device" -eq 1 && "$build_only" -eq 1 ]]; then
+    device_udid="build-only"
+  elif [[ "$physical_device" -eq 1 ]]; then
     echo "[ios_visual_smoke] no physical iOS device set; pass --device or set KANAMA_IOS_DEVICE" >&2
   else
     echo "[ios_visual_smoke] no booted iOS simulator found; boot one, pass --device, or use --physical-device" >&2
@@ -421,7 +431,11 @@ ensure_project_setting() {
 echo "[ios_visual_smoke] repo: $ROOT_DIR"
 echo "[ios_visual_smoke] work dir: $work_dir"
 if [[ "$physical_device" -eq 1 ]]; then
-  echo "[ios_visual_smoke] physical device: $device_udid"
+  if [[ "$build_only" -eq 1 ]]; then
+    echo "[ios_visual_smoke] physical build only (no device required)"
+  else
+    echo "[ios_visual_smoke] physical device: $device_udid"
+  fi
   if [[ -z "$development_team" ]]; then
     echo "[ios_visual_smoke] warning: no development team set; physical-device signing may fail" >&2
   fi
@@ -555,10 +569,9 @@ elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   scene_header='[gd_scene load_steps=2 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kotlin-src/IosSmokeScript.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
-  # Value-type @ScriptProperty (Phase 3.2 step 5 / 2.6) end-to-end check: the scene stores a
-  # NodePath into the script's `view` property, so Godot drives the set-property value path at
-  # instantiation; _ready logs what arrived.
-  status_extra_props='view = NodePath("../Background")'
+  # @ScriptProperty end-to-end checks: the scene stores a NodePath plus task-39 narrow-scalar,
+  # enum, and enum-list values so Godot drives every conversion path at instantiation.
+  status_extra_props=$'view = NodePath("../Background")\nnarrow_float = 1.25\nnarrow_int = 2147483647\nsmoke_mode = 2\nsmoke_modes = [2, 99, null]'
   mkdir -p "$project_dir/kotlin-src"
   cat >"$project_dir/kotlin-src/IosSmokeScript.kt" <<'EOF'
 package net.multigesture.kanama.iossmoke
@@ -583,10 +596,24 @@ import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
 
+enum class IosSmokeMode { EASY, NORMAL, HARD }
+
 @ScriptClass(attachTo = "Label")
 class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObject, ::Label) {
     @ScriptProperty
     var view: NodePath = NodePath.EMPTY
+
+    @ScriptProperty
+    var narrowFloat: Float = -1.0f
+
+    @ScriptProperty
+    var narrowInt: Int = -1
+
+    @ScriptProperty
+    var smokeMode: IosSmokeMode = IosSmokeMode.EASY
+
+    @ScriptProperty
+    var smokeModes: List<IosSmokeMode> = emptyList()
 
     private var processedFrames = 0
     private var sawUnhandledInput = false
@@ -622,8 +649,58 @@ class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObje
 
     @OnReady
     fun ready() {
-        self.text = "Kanama iOS project script ready"
         println("[kanama][ios][kn] project script value-type property view=${view.path}")
+        val initialPropertyConversions =
+            narrowFloat == 1.25f &&
+                narrowInt == Int.MAX_VALUE &&
+                smokeMode == IosSmokeMode.HARD &&
+                smokeModes == listOf(IosSmokeMode.HARD, IosSmokeMode.HARD, IosSmokeMode.EASY)
+        println(
+            "[kanama][ios][kn] task39 property initial " +
+                "float=${narrowFloat == 1.25f} int=${narrowInt == Int.MAX_VALUE} " +
+                "enum=${smokeMode == IosSmokeMode.HARD} " +
+                "enumList=${smokeModes == listOf(IosSmokeMode.HARD, IosSmokeMode.HARD, IosSmokeMode.EASY)}",
+        )
+        // Drive the same setters through Object.set after instantiation, then read every property
+        // through Object.get so the engine calls the ScriptInstance getter. The generic iOS
+        // Object.call decoder currently exposes scalar returns but not generic Array returns; the
+        // enum-list get still exercises the getter and C Array reconstruction before decoding null.
+        self.set("narrow_float", 2.5)
+        self.set("narrow_int", 7L)
+        self.set("smoke_mode", 0L)
+        // Null elements are covered by the scene-delivery fixture above. Object.set's generic
+        // Variant argument encoder intentionally rejects null, so use an explicit zero ordinal for
+        // the live round trip while retaining the negative-ordinal clamp check.
+        self.set("smoke_modes", listOf(1L, -4L, 0L))
+        val engineFloat = self.get("narrow_float")
+        val engineInt = self.get("narrow_int")
+        val engineEnum = self.get("smoke_mode")
+        self.get("smoke_modes")
+        val engineScalarReadsOk =
+            engineFloat == 2.5 && engineInt == 7L && engineEnum == 0L
+        val roundTripPropertyConversions =
+            narrowFloat == 2.5f &&
+                narrowInt == 7 &&
+                smokeMode == IosSmokeMode.EASY &&
+                smokeModes == listOf(IosSmokeMode.NORMAL, IosSmokeMode.EASY, IosSmokeMode.EASY)
+        println(
+            "[kanama][ios][kn] task39 property roundtrip " +
+                "float=${narrowFloat == 2.5f} int=${narrowInt == 7} " +
+                "enum=${smokeMode == IosSmokeMode.EASY} " +
+                "enumList=${smokeModes == listOf(IosSmokeMode.NORMAL, IosSmokeMode.EASY, IosSmokeMode.EASY)}",
+        )
+        println(
+            "[kanama][ios][kn] task39 property engine get " +
+                "float=${engineFloat == 2.5} int=${engineInt == 7L} enum=${engineEnum == 0L} " +
+                "enumListRequested=true",
+        )
+        val propertyConversionsOk =
+            initialPropertyConversions && roundTripPropertyConversions && engineScalarReadsOk
+        self.text = if (propertyConversionsOk) {
+            "Kanama iOS task 39 PASS"
+        } else {
+            "Kanama iOS task 39 FAIL"
+        }
         // Phase 5.3b proof: call the virtual on self through the engine's Variant call path. Godot
         // routes it to this script instance's _get_minimum_size override (Label's C++ get_minimum_size
         // would otherwise shadow it), exercising callVReturning + the C return-Variant construction.
@@ -2243,12 +2320,16 @@ if [[ "$physical_device" -eq 0 ]]; then
 fi
 
 if [[ "$physical_device" -eq 1 ]]; then
+  physical_destination="id=$device_udid"
+  if [[ "$build_only" -eq 1 ]]; then
+    physical_destination="generic/platform=iOS"
+  fi
   xcodebuild_args=(
     -project "$export_dir/$app_name.xcodeproj"
     -scheme "$app_name"
     -configuration Debug
     -sdk iphoneos
-    -destination "id=$device_udid"
+    -destination "$physical_destination"
     -derivedDataPath "$derived_dir"
     CODE_SIGNING_ALLOWED=YES
     CODE_SIGN_STYLE=Automatic
@@ -2262,6 +2343,11 @@ if [[ "$physical_device" -eq 1 ]]; then
   DEVELOPER_DIR="$xcode_developer_dir" xcodebuild "${xcodebuild_args[@]}" build
 
   app_path="$derived_dir/Build/Products/Debug-iphoneos/$app_name.app"
+  if [[ "$build_only" -eq 1 ]]; then
+    echo "[ios_visual_smoke] build-only app: $app_path"
+    echo "[ios_visual_smoke] PASS"
+    exit 0
+  fi
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl device install app \
     --device "$device_udid" \
     "$app_path"
@@ -2285,6 +2371,11 @@ else
     build
 
   app_path="$derived_dir/Build/Products/Debug-iphonesimulator/$app_name.app"
+  if [[ "$build_only" -eq 1 ]]; then
+    echo "[ios_visual_smoke] build-only app: $app_path"
+    echo "[ios_visual_smoke] PASS"
+    exit 0
+  fi
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl install "$device_udid" "$app_path"
 
   if [[ -n "$godot_project_baseline_dir" ]]; then
@@ -2373,6 +2464,14 @@ if [[ "$physical_device" -eq 0 && "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] project script value-type NodePath property delivered"
   else
     echo "[ios_visual_smoke] project script value-type NodePath property missing" >&2
+    exit 1
+  fi
+  if rg -q 'task39 property initial float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
+    && rg -q 'task39 property roundtrip float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
+    && rg -q 'task39 property engine get float=true int=true enum=true enumListRequested=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] task 39 narrow/enum property conversions delivered and round-tripped"
+  else
+    echo "[ios_visual_smoke] task 39 property conversion probe failed" >&2
     exit 1
   fi
   # Phase 3.3: an arg-bearing virtual dispatched through the generic callV path.

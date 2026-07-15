@@ -48,6 +48,20 @@ extern int32_t kanama_ios_runtime_script_resource_property_type(
     int64_t script_handle,
     int32_t property_index
 );
+extern int32_t kanama_ios_runtime_script_resource_property_hint(
+    int64_t script_handle,
+    int32_t property_index
+);
+extern void kanama_ios_runtime_script_resource_property_hint_string(
+    int64_t script_handle,
+    int32_t property_index,
+    char *buffer,
+    int32_t buffer_size
+);
+extern int32_t kanama_ios_runtime_script_resource_property_usage(
+    int64_t script_handle,
+    int32_t property_index
+);
 extern int32_t kanama_ios_runtime_script_resource_signal_count(int64_t script_handle);
 extern void kanama_ios_runtime_script_resource_signal_name(
     int64_t script_handle,
@@ -101,10 +115,24 @@ extern int32_t kanama_ios_runtime_script_instance_set_property(
     int32_t property_index,
     int64_t value
 );
+extern int32_t kanama_ios_runtime_script_instance_get_property(
+    int64_t instance_handle,
+    int32_t property_index,
+    int32_t *ret_tag,
+    void *ret_buf
+);
 extern int32_t kanama_ios_runtime_script_instance_set_property_array(
     int64_t instance_handle,
     int32_t property_index,
     const int64_t *objects,
+    int32_t count
+);
+// Integer Array property delivery (currently List<Enum> ordinals). This is separate from the
+// object-array entrypoint so an integer in malformed scene data can never become an object handle.
+extern int32_t kanama_ios_runtime_script_instance_set_property_int_array(
+    int64_t instance_handle,
+    int32_t property_index,
+    const int64_t *values,
     int32_t count
 );
 extern int32_t kanama_ios_runtime_script_instance_set_property_string(
@@ -200,6 +228,9 @@ typedef struct {
     int32_t script_method_count;
     uint64_t *script_property_names;
     int32_t *script_property_types;
+    int32_t *script_property_hints;
+    uint64_t *script_property_hint_strings;
+    int32_t *script_property_usages;
     int32_t script_property_count;
     uint64_t *script_signal_names;
     char **script_signal_name_texts;
@@ -1280,17 +1311,31 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
     if (property_count > 0) {
         instance->script_property_names = calloc((size_t)property_count, sizeof(uint64_t));
         instance->script_property_types = calloc((size_t)property_count, sizeof(int32_t));
-        if (instance->script_property_names == NULL || instance->script_property_types == NULL) {
+        instance->script_property_hints = calloc((size_t)property_count, sizeof(int32_t));
+        instance->script_property_hint_strings = calloc((size_t)property_count, sizeof(uint64_t));
+        instance->script_property_usages = calloc((size_t)property_count, sizeof(int32_t));
+        if (instance->script_property_names == NULL || instance->script_property_types == NULL ||
+            instance->script_property_hints == NULL ||
+            instance->script_property_hint_strings == NULL ||
+            instance->script_property_usages == NULL) {
             free(instance->script_property_names);
             free(instance->script_property_types);
+            free(instance->script_property_hints);
+            free(instance->script_property_hint_strings);
+            free(instance->script_property_usages);
             instance->script_property_names = NULL;
             instance->script_property_types = NULL;
+            instance->script_property_hints = NULL;
+            instance->script_property_hint_strings = NULL;
+            instance->script_property_usages = NULL;
             return;
         }
         instance->script_property_count = property_count;
         for (int32_t i = 0; i < property_count; i++) {
             char property_name[128];
             property_name[0] = '\0';
+            char property_hint_string[512];
+            property_hint_string[0] = '\0';
             kanama_ios_runtime_script_resource_property_name(
                 instance->script_handle,
                 i,
@@ -1299,6 +1344,17 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
             );
             instance->script_property_types[i] = kanama_ios_runtime_script_resource_property_type(
                 instance->script_handle, i);
+            instance->script_property_hints[i] = kanama_ios_runtime_script_resource_property_hint(
+                instance->script_handle, i);
+            kanama_ios_runtime_script_resource_property_hint_string(
+                instance->script_handle,
+                i,
+                property_hint_string,
+                (int32_t)sizeof(property_hint_string)
+            );
+            instance->script_property_usages[i] = kanama_ios_runtime_script_resource_property_usage(
+                instance->script_handle, i);
+            kanama_ios_init_string(&instance->script_property_hint_strings[i], property_hint_string);
             if (property_name[0] == '\0') {
                 continue;
             }
@@ -1390,6 +1446,14 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
         free(instance->script_property_names);
     }
     free(instance->script_property_types);
+    free(instance->script_property_hints);
+    if (instance->script_property_hint_strings != NULL) {
+        for (int32_t i = 0; i < instance->script_property_count; i++) {
+            kanama_ios_destroy_string(&instance->script_property_hint_strings[i]);
+        }
+        free(instance->script_property_hint_strings);
+    }
+    free(instance->script_property_usages);
     if (instance->script_signal_names != NULL) {
         for (int32_t i = 0; i < instance->script_signal_count; i++) {
             kanama_ios_destroy_string_name(&instance->script_signal_names[i]);
@@ -1414,6 +1478,9 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
     instance->script_path = NULL;
     instance->script_property_names = NULL;
     instance->script_property_types = NULL;
+    instance->script_property_hints = NULL;
+    instance->script_property_hint_strings = NULL;
+    instance->script_property_usages = NULL;
     instance->script_property_count = 0;
     instance->script_signal_names = NULL;
     instance->script_signal_name_texts = NULL;
@@ -4745,9 +4812,13 @@ int64_t kanama_ios_godot_object_connect(
     return (call_ok && connect_error == 0) ? 0 : -1;
 }
 
-// Box one PT-tagged arg into a Variant (out_variant[24]). For string-family tags the
-// intermediate String/StringName/NodePath builtin is constructed into *out_cell and its
-// PT tag recorded in *out_cell_kind so the caller can destroy it after the call (0 = none).
+static void kanama_ios_cache_return_family_converters(void);
+static void kanama_ios_build_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
+
+// Box one PT-tagged arg into a Variant (out_variant[24]). For string-family and Array tags the
+// intermediate builtin is constructed into *out_cell and its PT tag recorded in *out_cell_kind
+// so the caller can destroy it after the call (0 = none). Array callers provide two uint64_t cells
+// to preserve the maximum audited opaque storage width.
 // Shared by the Object.call dispatch and the bound-Callable connect path.
 static void kanama_ios_pt_arg_to_variant(
     int32_t tag,
@@ -4824,6 +4895,16 @@ static void kanama_ios_pt_arg_to_variant(
             break;
         case KANAMA_IOS_PT_COLOR:
             g_variant_from_color(out_variant, (void *)p);
+            break;
+        case KANAMA_IOS_PT_ARRAY:
+            kanama_ios_cache_return_family_converters();
+            kanama_ios_build_array_from_blob((const uint8_t *)p, (GDExtensionTypePtr)out_cell);
+            if (g_variant_from_array != NULL) {
+                g_variant_from_array(out_variant, (GDExtensionTypePtr)out_cell);
+                *out_cell_kind = KANAMA_IOS_PT_ARRAY;
+            } else {
+                g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
+            }
             break;
         default:
             fprintf(stderr,
@@ -5277,16 +5358,16 @@ int32_t kanama_ios_godot_object_call(
     }
 
     uint8_t variants[KANAMA_IOS_PTRCALL_MAX_ARGS][24];
-    // String-family builtin storage: cells[i] holds the constructed String/StringName/
-    // NodePath; cell_kind[i] is its PT tag (0 = none) so the matching destructor runs.
-    uint64_t cells[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    // String-family/Array builtin storage; two words preserve the audited maximum width.
+    // cell_kind[i] is its PT tag (0 = none) so the matching destructor runs.
+    uint64_t cells[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
     int cell_kind[KANAMA_IOS_PTRCALL_MAX_ARGS];
     GDExtensionConstVariantPtr args[KANAMA_IOS_PTRCALL_MAX_ARGS];
 
     for (int32_t i = 0; i < arg_count; i++) {
         int32_t tag = (arg_tags != NULL) ? arg_tags[i] : KANAMA_IOS_PT_VOID;
         const void *p = (arg_ptrs != NULL) ? arg_ptrs[i] : NULL;
-        kanama_ios_pt_arg_to_variant(tag, p, variants[i], &cells[i], &cell_kind[i]);
+        kanama_ios_pt_arg_to_variant(tag, p, variants[i], cells[i], &cell_kind[i]);
         args[i] = (GDExtensionConstVariantPtr)variants[i];
     }
 
@@ -5434,9 +5515,12 @@ int32_t kanama_ios_godot_object_call(
     for (int32_t i = 0; i < arg_count; i++) {
         g_variant_destroy(variants[i]);
         switch (cell_kind[i]) {
-            case KANAMA_IOS_PT_STRING:      kanama_ios_destroy_string(&cells[i]); break;
-            case KANAMA_IOS_PT_STRING_NAME: kanama_ios_destroy_string_name(&cells[i]); break;
-            case KANAMA_IOS_PT_NODE_PATH:   kanama_ios_destroy_node_path(&cells[i]); break;
+            case KANAMA_IOS_PT_STRING:      kanama_ios_destroy_string(cells[i]); break;
+            case KANAMA_IOS_PT_STRING_NAME: kanama_ios_destroy_string_name(cells[i]); break;
+            case KANAMA_IOS_PT_NODE_PATH:   kanama_ios_destroy_node_path(cells[i]); break;
+            case KANAMA_IOS_PT_ARRAY:
+                if (g_array_destructor != NULL) g_array_destructor(cells[i]);
+                break;
             default: break;
         }
     }
@@ -5653,12 +5737,12 @@ static int kanama_ios_build_bound_callable(
     uint64_t bound_array = 0;
     g_array_constructor((GDExtensionUninitializedTypePtr)&bound_array, NULL);
     uint8_t arg_variants[KANAMA_IOS_PTRCALL_MAX_ARGS][24];
-    uint64_t arg_cells[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    uint64_t arg_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
     int arg_cell_kind[KANAMA_IOS_PTRCALL_MAX_ARGS];
     for (int32_t i = 0; i < arg_count; i++) {
         int32_t tag = (arg_tags != NULL) ? arg_tags[i] : KANAMA_IOS_PT_VOID;
         const void *p = (arg_ptrs != NULL) ? arg_ptrs[i] : NULL;
-        kanama_ios_pt_arg_to_variant(tag, p, arg_variants[i], &arg_cells[i], &arg_cell_kind[i]);
+        kanama_ios_pt_arg_to_variant(tag, p, arg_variants[i], arg_cells[i], &arg_cell_kind[i]);
         const GDExtensionConstTypePtr push_args[1] = { (GDExtensionConstTypePtr)arg_variants[i] };
         g_array_push_back((GDExtensionTypePtr)&bound_array, push_args, NULL, 1);
     }
@@ -5672,9 +5756,12 @@ static int kanama_ios_build_bound_callable(
     for (int32_t i = 0; i < arg_count; i++) {
         g_variant_destroy(arg_variants[i]);
         switch (arg_cell_kind[i]) {
-            case KANAMA_IOS_PT_STRING:      kanama_ios_destroy_string(&arg_cells[i]); break;
-            case KANAMA_IOS_PT_STRING_NAME: kanama_ios_destroy_string_name(&arg_cells[i]); break;
-            case KANAMA_IOS_PT_NODE_PATH:   kanama_ios_destroy_node_path(&arg_cells[i]); break;
+            case KANAMA_IOS_PT_STRING:      kanama_ios_destroy_string(arg_cells[i]); break;
+            case KANAMA_IOS_PT_STRING_NAME: kanama_ios_destroy_string_name(arg_cells[i]); break;
+            case KANAMA_IOS_PT_NODE_PATH:   kanama_ios_destroy_node_path(arg_cells[i]); break;
+            case KANAMA_IOS_PT_ARRAY:
+                if (g_array_destructor != NULL) g_array_destructor(arg_cells[i]);
+                break;
             default: break;
         }
     }
@@ -6885,11 +6972,15 @@ static const GDExtensionPropertyInfo *kanama_ios_script_instance_get_property_li
         list[i].type = (GDExtensionVariantType)instance->script->script_property_types[i];
         list[i].name = (GDExtensionStringNamePtr)&instance->script->script_property_names[i];
         list[i].class_name = (GDExtensionStringNamePtr)&g_kanama_ios_empty_string_storage;
-        list[i].hint = 0;
-        list[i].hint_string = (GDExtensionStringPtr)&g_kanama_ios_empty_string_storage;
-        // PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR — so scene-stored @ScriptProperty
-        // values are applied to the instance (and the inspector shows them).
-        list[i].usage = 6;
+        list[i].hint = instance->script->script_property_hints != NULL
+            ? (uint32_t)instance->script->script_property_hints[i]
+            : 0;
+        list[i].hint_string = instance->script->script_property_hint_strings != NULL
+            ? (GDExtensionStringPtr)&instance->script->script_property_hint_strings[i]
+            : (GDExtensionStringPtr)&g_kanama_ios_empty_string_storage;
+        list[i].usage = instance->script->script_property_usages != NULL
+            ? (uint32_t)instance->script->script_property_usages[i]
+            : 6;
     }
     if (count != NULL) {
         *count = (uint32_t)n;
@@ -6904,8 +6995,8 @@ static void kanama_ios_script_instance_free_property_list(
 ) {
     (void)data;
     (void)count;
-    // The per-entry name StringNames are owned by the instance; class_name/hint_string are the
-    // shared empty storage. Only the array itself was allocated here.
+    // Per-entry names and hint strings are owned by the script metadata; class_name uses shared
+    // empty storage. Only the PropertyInfo array itself was allocated for this callback.
     free((void *)list);
 }
 
@@ -6914,12 +7005,15 @@ static GDExtensionVariantType kanama_ios_script_instance_get_property_type(
     GDExtensionConstStringNamePtr name,
     GDExtensionBool *is_valid
 ) {
-    (void)data;
-    (void)name;
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    int32_t index = kanama_ios_script_property_index(
+        instance != NULL ? instance->script : NULL, name);
     if (is_valid != NULL) {
-        *is_valid = 0;
+        *is_valid = index >= 0 ? 1 : 0;
     }
-    return KANAMA_IOS_VARIANT_TYPE_NIL;
+    return index >= 0 && instance->script->script_property_types != NULL
+        ? (GDExtensionVariantType)instance->script->script_property_types[index]
+        : KANAMA_IOS_VARIANT_TYPE_NIL;
 }
 
 static GDExtensionObjectPtr kanama_ios_script_instance_get_owner(GDExtensionScriptInstanceDataPtr data) {
@@ -7704,12 +7798,24 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         int64_t size = 0;
         g_array_size_method(raw_array, NULL, &size, 0);
         if (size <= 0) {
-            int32_t ok = kanama_ios_runtime_script_instance_set_property_array(
+            // Empty arrays carry no runtime element type. Ask the integer bridge first; it returns
+            // false for object-list properties, in which case the existing object bridge handles it.
+            int32_t ok = kanama_ios_runtime_script_instance_set_property_int_array(
                 instance->runtime_handle, property_index, NULL, 0);
+            if (!ok) {
+                ok = kanama_ios_runtime_script_instance_set_property_array(
+                    instance->runtime_handle, property_index, NULL, 0);
+            }
             return (GDExtensionBool)ok;
         }
         int64_t *objects = (int64_t *)calloc((size_t)size, sizeof(int64_t));
-        if (objects == NULL) { return 0; }
+        int64_t *integers = (int64_t *)calloc((size_t)size, sizeof(int64_t));
+        if (objects == NULL || integers == NULL) {
+            free(objects);
+            free(integers);
+            return 0;
+        }
+        int integer_compatible = 1;
         for (int64_t i = 0; i < size; i++) {
             uint8_t ret_variant[24] = {0};
             const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&i };
@@ -7722,14 +7828,28 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
                 g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
                 objects[i] = (int64_t)(intptr_t)obj_ptr;
                 kanama_ios_ref_retain(instance, obj_ptr);
+                integer_compatible = 0;
+            } else if (elem_type == KANAMA_IOS_VARIANT_TYPE_INT) {
+                integers[i] = kanama_ios_variant_to_int64(
+                    (GDExtensionConstVariantPtr)ret_variant);
+            } else if (elem_type != KANAMA_IOS_VARIANT_TYPE_NIL) {
+                integer_compatible = 0;
             }
             if (g_variant_destroy != NULL) {
                 g_variant_destroy((GDExtensionVariantPtr)ret_variant);
             }
         }
-        int32_t ok = kanama_ios_runtime_script_instance_set_property_array(
-            instance->runtime_handle, property_index, objects, (int32_t)size);
+        int32_t ok = 0;
+        if (integer_compatible) {
+            ok = kanama_ios_runtime_script_instance_set_property_int_array(
+                instance->runtime_handle, property_index, integers, (int32_t)size);
+        }
+        if (!ok) {
+            ok = kanama_ios_runtime_script_instance_set_property_array(
+                instance->runtime_handle, property_index, objects, (int32_t)size);
+        }
         free(objects);
+        free(integers);
         return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NODE_PATH
                && g_variant_to_node_path != NULL
@@ -7834,9 +7954,37 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
     return (GDExtensionBool)ok;
 }
 
+static GDExtensionBool kanama_ios_script_instance_get_property(
+    GDExtensionScriptInstanceDataPtr data,
+    GDExtensionConstStringNamePtr name,
+    GDExtensionVariantPtr ret
+) {
+    if (ret != NULL) {
+        kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)ret);
+    }
+    if (data == NULL || name == NULL || ret == NULL) {
+        return 0;
+    }
+    KanamaIosScriptInstance *instance = (KanamaIosScriptInstance *)data;
+    int32_t property_index = kanama_ios_script_property_index(instance->script, name);
+    if (property_index < 0) {
+        return 0;
+    }
+    int32_t ret_tag = KANAMA_IOS_PT_VOID;
+    uint8_t ret_buf[32];
+    memset(ret_buf, 0, sizeof(ret_buf));
+    int32_t ok = kanama_ios_runtime_script_instance_get_property(
+        instance->runtime_handle, property_index, &ret_tag, ret_buf);
+    if (!ok || ret_tag == KANAMA_IOS_PT_VOID) {
+        return 0;
+    }
+    kanama_ios_pt_return_to_variant(ret_tag, ret_buf, (uint8_t *)ret);
+    return 1;
+}
+
 static GDExtensionScriptInstanceInfo3 g_script_instance_info = {
     kanama_ios_script_instance_set_property,
-    (GDExtensionScriptInstanceGet)kanama_ios_script_instance_false_3,
+    kanama_ios_script_instance_get_property,
     kanama_ios_script_instance_get_property_list,
     kanama_ios_script_instance_free_property_list,
     NULL,
@@ -7858,7 +8006,7 @@ static GDExtensionScriptInstanceInfo3 g_script_instance_info = {
     kanama_ios_script_instance_get_script,
     kanama_ios_script_instance_is_placeholder,
     kanama_ios_script_instance_set_property,
-    (GDExtensionScriptInstanceGet)kanama_ios_script_instance_false_3,
+    kanama_ios_script_instance_get_property,
     kanama_ios_script_instance_get_language,
     kanama_ios_script_instance_free,
 };

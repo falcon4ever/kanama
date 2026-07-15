@@ -48,6 +48,9 @@ internal data class KanamaIosScriptProperty(
     // engine (get_property_list) — required for scene-stored values to be applied. Default 0
     // (NIL) keeps older generated registrars compiling.
     val variantType: Int = 0,
+    val hint: Int = 0,
+    val hintString: String = "",
+    val usage: Int = 6,
 )
 
 internal data class KanamaIosScriptSignal(
@@ -76,6 +79,9 @@ internal data class KanamaIosScriptDescriptor(
  *  value-returning one handled by this bridge (so the void [KanamaIosScriptBridge.callV] path runs). */
 object KanamaIosNoReturn
 
+/** Sentinel for a property index the generated bridge does not expose through ScriptInstance.get. */
+object KanamaIosNoProperty
+
 internal interface KanamaIosScriptBridge {
     // Generic per-signature inbound dispatch (Phase 3.3): [args] are the already-decoded Kotlin
     // values (one per method param, in order); the generated branch casts/wraps each to its
@@ -92,10 +98,19 @@ internal interface KanamaIosScriptBridge {
     fun setProperty(propertyIndex: Int, value: Long): Boolean =
         false
 
+    fun getProperty(propertyIndex: Int): Any? =
+        KanamaIosNoProperty
+
     fun setPropertyString(propertyIndex: Int, value: String): Boolean =
         false
 
     fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean =
+        false
+
+    // Integer Array @ScriptProperty delivery. Kept separate from object arrays so malformed
+    // scene data can never turn an integer cell into a bogus object handle. The generated
+    // List<Enum> bridge converts these ordinals to enum entries with desktop-identical clamping.
+    fun setPropertyIntArray(propertyIndex: Int, values: LongArray): Boolean =
         false
 
     // `List<String>` (Godot PackedStringArray) @ScriptProperty delivery. The C side extracts the
@@ -239,6 +254,15 @@ internal object KanamaIosRuntime {
     fun scriptResourcePropertyType(handle: Long, propertyIndex: Int): Int =
         scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.variantType ?: 0
 
+    fun scriptResourcePropertyHint(handle: Long, propertyIndex: Int): Int =
+        scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.hint ?: 0
+
+    fun scriptResourcePropertyHintString(handle: Long, propertyIndex: Int): String =
+        scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.hintString.orEmpty()
+
+    fun scriptResourcePropertyUsage(handle: Long, propertyIndex: Int): Int =
+        scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.usage ?: 6
+
     fun scriptResourceSignalCount(handle: Long): Int =
         scriptResources[handle]?.descriptor?.signals?.size ?: 0
 
@@ -359,6 +383,19 @@ internal object KanamaIosRuntime {
         return ok
     }
 
+    fun getScriptInstanceProperty(handle: Long, propertyIndex: Int): Any? {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("property get skipped for missing script instance handle=$handle")
+            return KanamaIosNoProperty
+        }
+        val value = instance.bridge.getProperty(propertyIndex)
+        if (value !== KanamaIosNoProperty) {
+            log("property get handle=$handle index=$propertyIndex path=${instance.resource.path}")
+        }
+        return value
+    }
+
     fun setScriptInstancePropertyString(handle: Long, propertyIndex: Int, value: String): Boolean {
         val instance = scriptInstances[handle]
         if (instance == null) {
@@ -381,6 +418,19 @@ internal object KanamaIosRuntime {
         val ok = instance.bridge.setPropertyObjectArray(propertyIndex, values)
         if (ok) {
             log("property array set handle=$handle index=$propertyIndex count=${values.size} path=${instance.resource.path}")
+        }
+        return ok
+    }
+
+    fun setScriptInstancePropertyIntArray(handle: Long, propertyIndex: Int, values: LongArray): Boolean {
+        val instance = scriptInstances[handle]
+        if (instance == null) {
+            log("property int-array set skipped for missing script instance handle=$handle")
+            return false
+        }
+        val ok = instance.bridge.setPropertyIntArray(propertyIndex, values)
+        if (ok) {
+            log("property int-array set handle=$handle index=$propertyIndex count=${values.size} path=${instance.resource.path}")
         }
         return ok
     }
@@ -608,6 +658,27 @@ fun kanamaIosRuntimeScriptResourcePropertyType(scriptHandle: Long, propertyIndex
     KanamaIosRuntime.scriptResourcePropertyType(scriptHandle, propertyIndex)
 
 @OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_hint")
+fun kanamaIosRuntimeScriptResourcePropertyHint(scriptHandle: Long, propertyIndex: Int): Int =
+    KanamaIosRuntime.scriptResourcePropertyHint(scriptHandle, propertyIndex)
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_hint_string")
+fun kanamaIosRuntimeScriptResourcePropertyHintString(
+    scriptHandle: Long,
+    propertyIndex: Int,
+    buffer: CPointer<ByteVar>?,
+    bufferSize: Int,
+) {
+    writeCString(KanamaIosRuntime.scriptResourcePropertyHintString(scriptHandle, propertyIndex), buffer, bufferSize)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_usage")
+fun kanamaIosRuntimeScriptResourcePropertyUsage(scriptHandle: Long, propertyIndex: Int): Int =
+    KanamaIosRuntime.scriptResourcePropertyUsage(scriptHandle, propertyIndex)
+
+@OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_resource_signal_count")
 fun kanamaIosRuntimeScriptResourceSignalCount(scriptHandle: Long): Int =
     KanamaIosRuntime.scriptResourceSignalCount(scriptHandle)
@@ -680,6 +751,21 @@ fun kanamaIosRuntimeScriptInstanceSetProperty(
     if (KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)) 1 else 0
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_get_property")
+fun kanamaIosRuntimeScriptInstanceGetProperty(
+    instanceHandle: Long,
+    propertyIndex: Int,
+    retTag: CPointer<IntVar>?,
+    retBuf: CPointer<ByteVar>?,
+): Int {
+    retTag?.set(0, IOS_PT_VOID)
+    val value = KanamaIosRuntime.getScriptInstanceProperty(instanceHandle, propertyIndex)
+    if (value === KanamaIosNoProperty) return 0
+    encodeIosReturn(value, retTag, retBuf)
+    return if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+}
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_set_property_string")
 fun kanamaIosRuntimeScriptInstanceSetPropertyString(
     instanceHandle: Long,
@@ -704,6 +790,22 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyArray(
         LongArray(count) { i -> objects[i] }
     }
     return if (KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values)) 1 else 0
+}
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_int_array")
+fun kanamaIosRuntimeScriptInstanceSetPropertyIntArray(
+    instanceHandle: Long,
+    propertyIndex: Int,
+    values: CPointer<LongVar>?,
+    count: Int,
+): Int {
+    val ordinals = if (values == null || count <= 0) {
+        LongArray(0)
+    } else {
+        LongArray(count) { i -> values[i] }
+    }
+    return if (KanamaIosRuntime.setScriptInstancePropertyIntArray(instanceHandle, propertyIndex, ordinals)) 1 else 0
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
