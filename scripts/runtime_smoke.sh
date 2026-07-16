@@ -133,6 +133,11 @@ check "InstancedMesh raw_class=MeshInstance3D is_class_match=true typed_lookup=t
 # under Engine.is_editor_hint()).
 check "NonToolScript\\._ready fired"
 check "NonToolScript\\._process fired"
+# Disabling processing in @OnReady must survive later ScriptInstance lifecycle
+# notifications. Re-enabling here makes authority-gated multiplayer inputs run on
+# every peer and lets one device control multiple players.
+check "ProcessDisableSmoke ready processing=false"
+check_absent "ProcessDisableSmoke unexpected process"
 # Non-tool @RegisterClass must run in game mode too — runtime gating only
 # applies to editor instances.
 check "NonToolHelloKanama\\._ready fired"

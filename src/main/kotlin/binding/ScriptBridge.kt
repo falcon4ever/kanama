@@ -235,9 +235,6 @@ object ScriptBridge {
     private const val PROPERTY_USAGE_GROUP = 64
     private const val PROPERTY_USAGE_CATEGORY = 128
     private const val PROPERTY_USAGE_SUBGROUP = 256
-    private const val NOTIFICATION_ENTER_TREE = 10
-    private const val NOTIFICATION_READY = 13
-
     private val physicsProcessNameValue by lazy { GodotStrings.stringNameStorage("_physics_process") }
     private val processNameValue by lazy { GodotStrings.stringNameStorage("_process") }
     private val processDeltaScratch = ThreadLocal.withInitial {
@@ -554,10 +551,10 @@ object ScriptBridge {
     // --- Notification ---
 
     @JvmStatic
-    fun siNotification(data: MemorySegment, what: Int, reversed: Byte) {
-        if (what == NOTIFICATION_ENTER_TREE || what == NOTIFICATION_READY) {
-            si(data)?.let(::configureLifecycleProcessing)
-        }
+    fun siNotification(_data: MemorySegment, _what: Int, _reversed: Byte) {
+        // Processing is enabled once when the script instance is created. Re-enabling it from
+        // ENTER_TREE or READY notifications would override a script's setProcess(false) or
+        // setPhysicsProcess(false), including authority-gated multiplayer input scripts.
     }
 
     // --- Method arg count ---
