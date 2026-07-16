@@ -113,6 +113,12 @@ if [[ -z "$kanama_version" ]]; then
 fi
 ensure_gdextension_header "${godot_bins[0]}"
 
+# JVM unit tests across all modules (runtime :test + KSP processor :processor:test). These were not
+# previously gated — the iOS @ScriptProperty get/set parity contract (task 46) lives here, along with
+# the existing type tests.
+echo "[local_ci] JVM unit tests"
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test
+
 echo "[local_ci] public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
   README.md docs CONTRIBUTING.md templates example_project; then
