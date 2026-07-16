@@ -35,6 +35,54 @@ Simple source-literal defaults are preserved in generated script registrars:
 numeric, boolean, string, enum entry, `NodePath("...")`, and
 `Math.toRadians(<number>)` initializers show up as inspector defaults.
 
+## Export Hints
+
+Inspector hints are set with a `PropertyHint` constant plus a hint string.
+This is the same shape Godot C# uses — Kanama's
+`@Export(hint = PropertyHint.RANGE, hintString = "0,100,1")` is the direct
+equivalent of C#'s `[Export(PropertyHint.Range, "0,100,1")]`. Prefer the
+`PropertyHint` constants over raw `PROPERTY_HINT_*` integers.
+
+If you are porting from GDScript, its dedicated `@export_*` annotations map to
+the hint form as follows:
+
+| GDScript | Kanama |
+|---|---|
+| `@export_range(0, 100, 1)` | `@Export(hint = PropertyHint.RANGE, hintString = "0,100,1")` |
+| `@export_range(0, 100, 1, "or_greater")` | `@Export(hint = PropertyHint.RANGE, hintString = "0,100,1,or_greater")` |
+| `@export_file("*.png", "*.jpg")` | `@Export(hint = PropertyHint.FILE, hintString = "*.png,*.jpg")` |
+| `@export_dir` | `@Export(hint = PropertyHint.DIR)` |
+| `@export_global_file("*.txt")` | `@Export(hint = PropertyHint.GLOBAL_FILE, hintString = "*.txt")` |
+| `@export_global_dir` | `@Export(hint = PropertyHint.GLOBAL_DIR)` |
+| `@export_multiline` | `@Export(hint = PropertyHint.MULTILINE_TEXT)` |
+| `@export_placeholder("name")` | `@Export(hint = PropertyHint.PLACEHOLDER_TEXT, hintString = "name")` |
+| `@export_color_no_alpha` | `@Export(hint = PropertyHint.COLOR_NO_ALPHA)` |
+| `@export_exp_easing` | `@Export(hint = PropertyHint.EXP_EASING)` |
+| `@export_flags("Fire", "Water", "Earth")` | `@Export(hint = PropertyHint.FLAGS, hintString = "Fire,Water,Earth")` on an `Int` |
+
+```kotlin
+@ScriptClass(attachTo = "Node")
+class Tuning(godotObject: MemorySegment) :
+    KanamaScript<Node>(godotObject, ::Node) {
+    @Export(hint = PropertyHint.RANGE, hintString = "0,100,1,or_greater")
+    var health: Long = 100
+
+    @Export(hint = PropertyHint.FILE, hintString = "*.png,*.jpg")
+    var icon: String = ""
+
+    @Export(hint = PropertyHint.MULTILINE_TEXT)
+    var description: String = ""
+}
+```
+
+The `RANGE` hint string accepts Godot's suffix flags after `min,max[,step]`:
+`or_greater`, `or_less`, `exp`, `hide_slider`, `radians_as_degrees`,
+`degrees`, and `suffix:<unit>`. The hint-string grammar is Godot's own, so a
+malformed string is accepted as-is and simply renders no special editor — the
+hint form is an escape hatch, not a validated builder. Enum-typed properties
+do not need a hint: a Kotlin `enum class` exports as a dropdown automatically
+(see below).
+
 ## Exporting Enums
 
 Kotlin `enum class` properties export directly and render as an inspector
