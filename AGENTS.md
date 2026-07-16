@@ -11,10 +11,15 @@ release shape.
 - Godot baseline: Godot `4.7 stable` (re-pin only on stable releases; bumps
   follow `docs/contributing/godot-upgrade.md`).
 - Desktop runtime/build JDK: JDK `25+`.
-- Mobile is experimental, device-validated: Android passed the Pixel 7 debug
-  matrix, R8-minified release APK, and Vulkan/Mobile renderer smoke; iOS passed
-  the full ten-step device gate on iPhone 12 and iPhone 15 Pro. Promotion to
-  Supported is gated on the release-support decision (§7 mobile promotion bar) in the internal task repo.
+- Mobile is Supported (4.7 stable), promoted from Experimental 2026-07-14 once
+  the §7 mobile promotion bar went green. Android is device-validated across
+  four models (Pixel 7, Moto g 5G 2023, Galaxy S10+, Pixel 3 XL): debug
+  validated to Android 9, but **release builds require Android 13+**. iOS is
+  device-validated on iPhone 12 and iPhone 15 Pro. Carried caveats: packaged
+  mobile addons are runtime-only (compiling project scripts needs the Kanama
+  checkout), the Android release path depends on the JitPack PanamaPort fork,
+  and there is no mobile hot reload. See
+  `docs/reference/version-support.md` for the full claims and validation dates.
 - Release artifacts use two shapes: desktop kits for new projects and store
   add-ons for existing projects. See `docs/exporting/desktop.md`.
 
@@ -222,10 +227,11 @@ Run local CI and demo smoke checks before changing support claims.
 
 ### Android Work
 
-Keep Android wording experimental unless the matching APK/emulator or device
-smoke path has passed. Use the Gradle AAR workflow documented in
-`docs/exporting/android.md`; do not infer Android support from desktop package
-success.
+Android is Supported (4.7 stable), but never widen a support claim past what
+the matching APK/emulator or device smoke path has actually validated — the
+release floor (Android 13+) and the runtime-only addon caveat both still hold.
+Use the Gradle AAR workflow documented in `docs/exporting/android.md`; do not
+infer Android support from desktop package success.
 
 ## Validation
 
