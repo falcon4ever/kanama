@@ -545,6 +545,9 @@ script_resource_line=""
 main_script_line=""
 status_script_line=""
 status_extra_props=""
+# Extra [ext_resource]/[node] blocks appended to the generated scene (task 46b/47 probes).
+probe_extra_resources=""
+probe_extra_nodes=""
 # Phase 3.4: for the user-script probe, make the scene Controls pass touches through (IGNORE)
 # so a screen tap reaches the Viewport's unhandled-input path and fires _unhandled_input on the
 # script. Default-STOP Controls would absorb the touch as GUI input before it becomes "unhandled".
@@ -566,7 +569,7 @@ elif [[ "$kanama_script_probe" -eq 1 ]]; then
 EOF
 elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   status_text="Waiting for Kanama iOS project script"
-  scene_header='[gd_scene load_steps=2 format=3]'
+  scene_header='[gd_scene load_steps=4 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kotlin-src/IosSmokeScript.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
   # @ScriptProperty end-to-end checks: the scene stores a NodePath plus task-39 narrow-scalar,
@@ -814,6 +817,78 @@ class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObje
     }
 }
 EOF
+  cat >"$project_dir/kotlin-src/ProcessDisableProbe.kt" <<'EOF'
+package net.multigesture.kanama.iossmoke
+
+import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.annotations.OnProcess
+import net.multigesture.kanama.annotations.OnReady
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Node
+
+// Task 46b — iOS twin of the JVM ProcessDisableSmoke. Disabling processing in _ready must survive the
+// script-instance ENTER_TREE/READY notifications. If a notification re-enables it (the iOS host
+// lifecycle bug), _process fires and the smoke prints "unexpected process".
+@ScriptClass(attachTo = "Node")
+class ProcessDisableProbe(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+    @OnReady
+    fun ready() {
+        self.setProcess(false)
+        println("[kanama][ios][kn] ProcessDisableProbe ready processing=${self.isProcessing()}")
+    }
+
+    @OnProcess
+    fun process(delta: Double) {
+        println("[kanama][ios][kn] ProcessDisableProbe unexpected process delta_nonneg=${delta >= 0.0}")
+    }
+}
+EOF
+  cat >"$project_dir/kotlin-src/ReplicationProbe.kt" <<'EOF'
+package net.multigesture.kanama.iossmoke
+
+import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.annotations.OnReady
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.MultiplayerSynchronizer
+import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector3
+
+// Task 47 — replication-shaped @ScriptProperty read. A MultiplayerSynchronizer is the real consumer of
+// engine property reads: on the authority peer it serializes by calling Object.get(...) on each
+// replicated property. Set the values, then read them back through the engine getter — the exact path
+// that returned nil for value types before the getProperty fix (client couldn't move/shoot).
+@ScriptClass(attachTo = "MultiplayerSynchronizer")
+class ReplicationProbe(godotObject: MemorySegment) :
+    KanamaScript<MultiplayerSynchronizer>(godotObject, ::MultiplayerSynchronizer) {
+    @ScriptProperty
+    var motion: Vector2 = Vector2.ZERO
+
+    @ScriptProperty(name = "shoot_target")
+    var shootTarget: Vector3 = Vector3.ZERO
+
+    @ScriptProperty
+    var shooting = false
+
+    @OnReady
+    fun ready() {
+        motion = Vector2(3.0, 4.0)
+        shootTarget = Vector3(5.0, 6.0, 7.0)
+        shooting = true
+        val m = self.get("motion")
+        val st = self.get("shoot_target")
+        val sh = self.get("shooting")
+        println(
+            "[kanama][ios][kn] ReplicationProbe engine get " +
+                "motion=${m == Vector2(3.0, 4.0)} shoot_target=${st == Vector3(5.0, 6.0, 7.0)} shooting=${sh == true}",
+        )
+    }
+}
+EOF
+  probe_extra_resources=$'[ext_resource type="Script" path="res://kotlin-src/ProcessDisableProbe.kt" id="2_pdp"]\n[ext_resource type="Script" path="res://kotlin-src/ReplicationProbe.kt" id="3_rep"]'
+  probe_extra_nodes=$'[node name="ProcessDisableProbe" type="Node" parent="."]\nscript = ExtResource("2_pdp")\n\n[node name="ReplicationProbe" type="MultiplayerSynchronizer" parent="."]\nscript = ExtResource("3_rep")'
 elif [[ "$godot_fps_probe" -eq 1 ]]; then
   status_text="Running pure Godot iOS FPS smoke"
   launch_sleep=12
@@ -2051,6 +2126,7 @@ if [[ "$custom_scene_written" -eq 0 ]]; then
 $scene_header
 
 $script_resource_line
+$probe_extra_resources
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -2094,6 +2170,8 @@ vertical_alignment = 1
 $probe_mouse_ignore_line
 $status_script_line
 $status_extra_props
+
+$probe_extra_nodes
 EOF
 fi
 fi
@@ -2534,6 +2612,24 @@ if [[ "$physical_device" -eq 0 && "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] project script arg-bearing callV dispatch confirmed"
   else
     echo "[ios_visual_smoke] project script arg-bearing callV dispatch missing" >&2
+    exit 1
+  fi
+  # Task 46b — iOS ProcessDisableSmoke twin: a script that disables processing in _ready must NOT have
+  # _process fire afterward (the iOS lifecycle notification must not re-enable it — the host-drives-all
+  # bug). Mirrors the JVM runtime_smoke ProcessDisableSmoke check + check_absent.
+  if rg -q 'ProcessDisableProbe ready processing=false' "$stderr_log" "$stdout_log" \
+    && ! rg -q 'ProcessDisableProbe unexpected process' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] lifecycle: setProcess(false) in _ready survived notifications (no _process)"
+  else
+    echo "[ios_visual_smoke] lifecycle probe failed: _process re-enabled after _ready disabled it" >&2
+    exit 1
+  fi
+  # Task 47 — replication-shaped @ScriptProperty read: a MultiplayerSynchronizer reads its replicated
+  # Vector2/Vector3/bool properties back through the engine getter (the authority-peer serialize path).
+  if rg -q 'ReplicationProbe engine get motion=true shoot_target=true shooting=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] replication: MultiplayerSynchronizer @ScriptProperty read-back round-tripped"
+  else
+    echo "[ios_visual_smoke] replication probe failed: value-type @ScriptProperty read back wrong via engine" >&2
     exit 1
   fi
 fi
