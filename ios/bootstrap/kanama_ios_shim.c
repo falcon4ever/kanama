@@ -7610,7 +7610,12 @@ static void kanama_ios_script_instance_notification(
     GDExtensionBool reversed
 ) {
     (void)reversed;
-    if (what == KANAMA_IOS_NOTIFICATION_ENTER_TREE || what == KANAMA_IOS_NOTIFICATION_READY) {
+    // Configure processing ONCE, on ENTER_TREE (which fires before the script's _ready). Re-running
+    // it on READY would override a script's setProcess(false)/setProcessInput(false) made in _ready
+    // or _enter_tree — including authority-gated multiplayer input synchronizers, which then run on
+    // every peer and let an iOS host drive other players' inputs. iOS mirror of the JVM
+    // ScriptBridge.siNotification fix.
+    if (what == KANAMA_IOS_NOTIFICATION_ENTER_TREE) {
         KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
         kanama_ios_script_instance_configure_lifecycle_processing(instance);
     }
