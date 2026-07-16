@@ -251,6 +251,7 @@ static int g_kanama_ios_audio_session_configured = 0;
 static GDExtensionInterfaceGetProcAddress g_get_proc_address = NULL;
 static GDExtensionClassLibraryPtr g_library = NULL;
 static GDExtensionInterfaceCallableCustomCreate2 g_callable_custom_create2 = NULL;
+static GDExtensionInterfaceObjectGetInstanceId g_object_get_instance_id = NULL;
 
 static GDExtensionInterfaceStringNameNewWithUtf8Chars g_string_name_new = NULL;
 static GDExtensionInterfaceStringNewWithUtf8Chars g_string_new = NULL;
@@ -872,6 +873,10 @@ static int kanama_ios_resolve_godot_api(void) {
     // Optional: lambda/bound signal callbacks need this. Not added to the required
     // resolution check below so older runtimes still load; connect_callable NULL-checks it.
     g_callable_custom_create2 = (GDExtensionInterfaceCallableCustomCreate2)kanama_ios_lookup("callable_custom_create2");
+    // Needed so lambda/bound signal Callables report their receiver's ObjectID; Godot uses it to
+    // auto-disconnect the connection when that object is freed. Without it (object_id=0) a freed
+    // receiver's signal fires into a stale Callable -> use-after-free (iOS host-disconnect crash).
+    g_object_get_instance_id = (GDExtensionInterfaceObjectGetInstanceId)kanama_ios_lookup("object_get_instance_id");
     g_variant_new_nil = (GDExtensionInterfaceVariantNewNil)kanama_ios_lookup("variant_new_nil");
     g_global_get_singleton = (GDExtensionInterfaceGlobalGetSingleton)kanama_ios_lookup(
         "global_get_singleton"
@@ -7185,6 +7190,7 @@ static void kanama_ios_callable_free(void *callable_userdata) {
 int64_t kanama_ios_godot_object_connect_callable(
     int64_t object,
     const char *signal_name,
+    int64_t target_object,
     int64_t callback_id,
     int64_t flags
 ) {
@@ -7202,7 +7208,12 @@ int64_t kanama_ios_godot_object_connect_callable(
     memset(&info, 0, sizeof(info));
     info.callable_userdata = (void *)(intptr_t)callback_id;
     info.token = g_library;
-    info.object_id = 0;
+    // Bind the Callable to its receiver's ObjectID so Godot auto-disconnects the connection when the
+    // receiver is freed (e.g. a Menu freed on scene change). object_id does NOT affect Callable hash
+    // or equality (Godot uses call_func+userdata), so the explicit-disconnect path still matches.
+    info.object_id = (target_object != 0 && g_object_get_instance_id != NULL)
+        ? g_object_get_instance_id((GDExtensionConstObjectPtr)(intptr_t)target_object)
+        : 0;
     info.call_func = kanama_ios_callable_trampoline;
     info.free_func = kanama_ios_callable_free;
     uint8_t callable_value[24];

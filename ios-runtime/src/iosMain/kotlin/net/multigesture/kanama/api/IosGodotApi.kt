@@ -342,7 +342,10 @@ class GodotSignal internal constructor(
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         val callbackId = IosCallableRegistry.register(callback)
-        val result = IosGodot.objectConnectCallable(owner.handle.address(), name, callbackId, flags)
+        // Pass the receiver (target) so the Callable is bound to its ObjectID and Godot auto-disconnects
+        // it when the receiver is freed. Previously target was ignored, leaving an object-less Callable
+        // that survived the receiver's free and fired into freed memory on later emissions.
+        val result = IosGodot.objectConnectCallable(owner.handle.address(), name, target.handle.address(), callbackId, flags)
         if (result != 0L) {
             // connect failed; Godot freed the callable (which released the entry),
             // but release defensively in case it never reached the trampoline path.
@@ -1169,8 +1172,8 @@ internal object IosGodot {
     fun objectDisconnect(sourceObject: Long, signalName: String, targetObject: Long, method: String): Int =
         kanama_ios_godot_object_disconnect(sourceObject, signalName, targetObject, method)
 
-    fun objectConnectCallable(sourceObject: Long, signalName: String, callbackId: Long, flags: Long): Long =
-        kanama_ios_godot_object_connect_callable(sourceObject, signalName, callbackId, flags)
+    fun objectConnectCallable(sourceObject: Long, signalName: String, targetObject: Long, callbackId: Long, flags: Long): Long =
+        kanama_ios_godot_object_connect_callable(sourceObject, signalName, targetObject, callbackId, flags)
 
     fun objectDisconnectCallable(sourceObject: Long, signalName: String, callbackId: Long): Int =
         kanama_ios_godot_object_disconnect_callable(sourceObject, signalName, callbackId)

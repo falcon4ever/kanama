@@ -1919,7 +1919,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     val lamEmitter = ObjectCalls.constructObject("Node")
     ObjectCalls.callWithVariantArgs(
         ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L), lamEmitter, listOf("kanamaLambda"))
-    IosGodot.objectConnectCallable(lamEmitter.address(), "kanamaLambda", lamId, 0L)
+    IosGodot.objectConnectCallable(lamEmitter.address(), "kanamaLambda", lamEmitter.address(), lamId, 0L)
     ObjectCalls.callWithVariantArgs(
         ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L), lamEmitter, listOf("kanamaLambda"))
     val lamFiredOnce = lamFires
@@ -1934,7 +1934,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     val lamIntId = IosCallableRegistry.register { args -> lamIntArg = args.firstOrNull() }
     ObjectCalls.callWithVariantArgs(
         ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L), lamEmitter, listOf("kanamaLambdaInt"))
-    IosGodot.objectConnectCallable(lamEmitter.address(), "kanamaLambdaInt", lamIntId, 0L)
+    IosGodot.objectConnectCallable(lamEmitter.address(), "kanamaLambdaInt", lamEmitter.address(), lamIntId, 0L)
     ObjectCalls.callWithVariantArgs(
         ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
         lamEmitter,
@@ -1942,6 +1942,22 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
     check("lambda-callable(int argument delivered)", lamIntArg == 4_294_967_001L)
     IosGodot.objectDisconnectCallable(lamEmitter.address(), "kanamaLambdaInt", lamIntId)
+
+    // Auto-disconnect on receiver free: a lambda Callable connected with a receiver must be
+    // disconnected by Godot when that receiver is freed, so a later emission neither fires it nor
+    // touches freed memory. Regression for the iOS host-disconnect crash — the Callable was created
+    // with object_id=0, so Godot could not associate it with its receiver and never disconnected it;
+    // when the freed receiver's script later ran on emit it was a use-after-free (__cxa_pure_virtual).
+    var lamFreeFires = 0
+    val lamFreeReceiver = ObjectCalls.constructObject("Node")
+    val lamFreeId = IosCallableRegistry.register { lamFreeFires++ }
+    ObjectCalls.callWithVariantArgs(
+        ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L), lamEmitter, listOf("kanamaLambdaFree"))
+    IosGodot.objectConnectCallable(lamEmitter.address(), "kanamaLambdaFree", lamFreeReceiver.address(), lamFreeId, 0L)
+    ObjectCalls.destroyObject(lamFreeReceiver) // free the receiver; Godot must auto-disconnect the bound Callable
+    ObjectCalls.callWithVariantArgs(
+        ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L), lamEmitter, listOf("kanamaLambdaFree"))
+    check("lambda-callable(auto-disconnect on receiver free)", lamFreeFires == 0)
 
     // Typed Array[StringName] return (Phase 2.7g). add_to_group("kgrp") then get_groups() == ["kgrp"]
     // — exercises ptrcallNoArgsRetStringNameList (Array size/get + StringName->utf8 blob). Plain Node.

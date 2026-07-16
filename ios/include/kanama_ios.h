@@ -466,6 +466,7 @@ int64_t kanama_ios_godot_object_connect(
 int64_t kanama_ios_godot_object_connect_callable(
     int64_t object,
     const char *signal_name,
+    int64_t target_object,
     int64_t callback_id,
     int64_t flags
 );
