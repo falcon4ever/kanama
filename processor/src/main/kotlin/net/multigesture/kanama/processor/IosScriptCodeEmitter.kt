@@ -143,6 +143,10 @@ internal data class IosScript(
 internal class IosScriptCodeEmitter(
     inputs: List<IosScriptInput>,
     private val warn: (String) -> Unit = {},
+    // Fails the KSP round (build error). Used for defects that must not ship, e.g. a data-type
+    // @ScriptProperty the engine can set but not read back — the exact get/set asymmetry that shipped
+    // write-only value types in the iOS backend and broke multiplayer replication on device.
+    private val error: (String) -> Unit = {},
 ) {
     // Sort by resourcePath to match the old task's `.sortedBy { it.resourcePath }`.
     private val scripts: List<IosScript> =
@@ -711,12 +715,15 @@ internal class IosScriptCodeEmitter(
         // handle across peers is meaningless and the inspector edits them via the node picker, not
         // get(). With Vector2/Vector3/String/NodePath and List<String> now readable this stays silent
         // in a healthy codebase and only trips if a new data type is added set-only (or one regresses).
+        // This is a hard build ERROR, not a warning: a warning is exactly what let the original
+        // write-only asymmetry ship unnoticed. A new settable data type must gain a getProperty path
+        // (or be explicitly excluded here) before it can compile.
         val engineReadableData = scalarGetExpression.isNotEmpty() || (isList && arrayElementString)
         val engineSettableDataType = valueTypeClassName.isNotEmpty() ||
             (!isObject && !isList && godotClassName == "String") ||
             (isList && arrayElementString)
         if (engineSettableDataType && !engineReadableData) {
-            warn(
+            error(
                 "[kanama-ios] $className.$kotlinName ($type) — data @ScriptProperty is write-only on " +
                     "iOS: settable from scene data / Object.set, but the engine reads it back as nil " +
                     "(no getProperty path). MultiplayerSynchronizer replication and the inspector cannot " +
