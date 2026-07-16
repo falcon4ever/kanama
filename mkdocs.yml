@@ -51,8 +51,8 @@ nav:
       - Kotlin Style: game-dev/style-guide.md
   - Exporting:
       - Desktop and Packaging: exporting/desktop.md
-      - Android Experimental: exporting/android.md
-      - iOS Experimental: exporting/ios.md
+      - Android: exporting/android.md
+      - iOS: exporting/ios.md
   - Reference:
       - Version Support: reference/version-support.md
       - C# Comparison: reference/c-sharp-compat.md

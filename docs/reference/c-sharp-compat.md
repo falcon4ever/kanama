@@ -26,7 +26,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Register new Godot classes | SUPPORTED | `@RegisterClass` registers permanent ClassDB types. |
 | Lifecycle callbacks | SUPPORTED | `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`, `@OnEnterTree`, `@OnExitTree`. |
 | Tool scripts | SUPPORTED | `@Tool` works for both `@ScriptClass` and `@RegisterClass`. |
-| Global classes | PARTIAL | `@GlobalClass`/`@ClassName` work for typed inspector-facing classes; broader editor UI validation is still ongoing. |
+| Global classes | SUPPORTED | `@GlobalClass`/`@ClassName` register in the editor's global class list: the class appears in the Create New Resource dialog and its `.tres` instances match typed export slots (GUI-validated, [#39](https://github.com/falcon4ever/kanama/issues/39)). One constraint: the file must be named after the class. |
 | Hot reload | PARTIAL | Build + scene reload is the reliable workflow; in-place live-node replacement still has edge cases. |
 
 ## Editor And Build Workflow
@@ -81,7 +81,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Kotlin script object is separate from the Godot node | Keeps JVM script lifetime, Godot object lifetime, hot reload, and editor placeholders explicit. Use `KanamaScript<T>.self` for the attached node/resource. |
 | Lower-camel Kotlin API only | Matches Kotlin style and avoids maintaining duplicate C#-style aliases. |
 | Explicit install paths | Desktop kits cover new packaged projects, store addons cover existing packaged projects, and source checkouts remain the development path for unreleased Kanama changes. |
-| Desktop-first runtime | Kanama embeds a normal JVM in a desktop Godot process. Android (Supported on 4.7 stable) runs through ART and PanamaPort; web export is not planned. |
+| Desktop-first runtime | Kanama embeds a normal JVM in a desktop Godot process. Android and iOS are both Supported on 4.7 stable (Android through ART and PanamaPort; iOS through a Kotlin/Native `.xcframework`, no on-device JVM); web export is not planned. |
 
 ## Coverage References
 
