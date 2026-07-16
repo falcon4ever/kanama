@@ -123,7 +123,10 @@ jobs:
           fi
           changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}'...HEAD)"
           echo "changed files:"; echo "$changed"
-          if printf '%s\n' "$changed" | grep -qE '^(src/|processor/|annotations/|ios-runtime/|android/|gradle/|build\.gradle\.kts|settings\.gradle\.kts|gradle\.properties|\.github/workflows/ci\.yml)'; then
+          # `ios/` (the C shim + headers) and `gdextension/` (the bundled interface header the shim
+          # includes) must trigger the mobile lanes — a change to `ios/bootstrap/kanama_ios_shim.c`
+          # otherwise skipped the iOS xcframework build (only `ios-runtime/` was matched).
+          if printf '%s\n' "$changed" | grep -qE '^(src/|processor/|annotations/|ios/|ios-runtime/|gdextension/|android/|gradle/|build\.gradle\.kts|settings\.gradle\.kts|gradle\.properties|\.github/workflows/ci\.yml)'; then
             echo "mobile=true" >> "$GITHUB_OUTPUT"
           else
             echo "mobile=false" >> "$GITHUB_OUTPUT"
