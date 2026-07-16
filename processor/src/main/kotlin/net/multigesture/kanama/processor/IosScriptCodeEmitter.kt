@@ -238,7 +238,8 @@ internal class IosScriptCodeEmitter(
             builder.appendLine("        else -> false")
             builder.appendLine("    }")
             val readableProperties = script.properties.filter {
-                it.scalarGetExpression.isNotEmpty() || it.arrayElementEnumFqName.isNotEmpty()
+                it.scalarGetExpression.isNotEmpty() || it.arrayElementEnumFqName.isNotEmpty() ||
+                    it.listElementIsString
             }
             if (readableProperties.isNotEmpty()) {
                 builder.appendLine()
@@ -247,6 +248,10 @@ internal class IosScriptCodeEmitter(
                     when {
                         property.arrayElementEnumFqName.isNotEmpty() ->
                             builder.appendLine("        $index -> script.${property.kotlinName}.map { it.ordinal.toLong() }")
+                        // List<String>: encodeIosReturn ships it as a PackedStringArray; without this
+                        // branch a String-list @ScriptProperty is read back as nil (write-only).
+                        property.listElementIsString ->
+                            builder.appendLine("        $index -> script.${property.kotlinName}")
                         property.scalarGetExpression.isNotEmpty() ->
                             builder.appendLine("        $index -> ${property.scalarGetExpression}")
                     }
@@ -688,7 +693,35 @@ internal class IosScriptCodeEmitter(
             isObject || isList || customScript.isNotEmpty() -> ""
             enumFqName != null -> "script.$kotlinName.ordinal.toLong()"
             scalarSetExpression.isNotEmpty() -> "script.$kotlinName"
+            // Types that write through a dedicated set path (Vector2/Vector3/NodePath via
+            // setPropertyValue, String via setPropertyString) have an empty scalarSetExpression — but
+            // they are still *readable*: encodeIosReturn and the C pt_return_to_variant path handle
+            // all of them. Without a getProperty branch the engine reads them back as nil, which
+            // silently breaks MultiplayerSynchronizer replication of value-type @ScriptProperty (e.g.
+            // a Vector2 `motion` or Vector3 `shoot_target`) on the authority peer — the value never
+            // leaves the sending device. (String/NodePath have the identical defect; folded in here.)
+            type == TypeMapping.VECTOR2 || type == TypeMapping.VECTOR3 ||
+                type == TypeMapping.NODE_PATH || type == TypeMapping.STRING -> "script.$kotlinName"
             else -> ""
+        }
+        // Get/set parity guard: a *data* @ScriptProperty the engine can set but not read back is
+        // write-only on iOS — the engine gets nil, silently breaking MultiplayerSynchronizer
+        // replication and inspector reads (exactly how the Vector2 `motion` / Vector3 `shoot_target`
+        // bug hid). Object and custom-script refs are intentionally excluded: replicating an object
+        // handle across peers is meaningless and the inspector edits them via the node picker, not
+        // get(). With Vector2/Vector3/String/NodePath and List<String> now readable this stays silent
+        // in a healthy codebase and only trips if a new data type is added set-only (or one regresses).
+        val engineReadableData = scalarGetExpression.isNotEmpty() || (isList && arrayElementString)
+        val engineSettableDataType = valueTypeClassName.isNotEmpty() ||
+            (!isObject && !isList && godotClassName == "String") ||
+            (isList && arrayElementString)
+        if (engineSettableDataType && !engineReadableData) {
+            warn(
+                "[kanama-ios] $className.$kotlinName ($type) — data @ScriptProperty is write-only on " +
+                    "iOS: settable from scene data / Object.set, but the engine reads it back as nil " +
+                    "(no getProperty path). MultiplayerSynchronizer replication and the inspector cannot " +
+                    "get() this property. Add an encodeIosReturn case + a getProperty branch to fix.",
+            )
         }
         val godotVariantType = when {
             isObject -> 24 // OBJECT

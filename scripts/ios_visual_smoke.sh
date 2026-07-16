@@ -595,6 +595,7 @@ import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector3
 
 enum class IosSmokeMode { EASY, NORMAL, HARD }
 
@@ -614,6 +615,26 @@ class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObje
 
     @ScriptProperty
     var smokeModes: List<IosSmokeMode> = emptyList()
+
+    // Value-type @ScriptProperty read-back coverage. These are set through the engine and read
+    // back through Object.get() below, which forces the engine to call the ScriptInstance getter —
+    // the exact path MultiplayerSynchronizer uses on the authority peer. Before the getProperty
+    // value-type fix these were write-only (read back as nil), silently breaking replication of a
+    // Vector2 `motion` / Vector3 `shoot_target`.
+    @ScriptProperty
+    var probeMotion: Vector2 = Vector2.ZERO
+
+    @ScriptProperty
+    var probeShootTarget: Vector3 = Vector3.ZERO
+
+    @ScriptProperty
+    var probeName: String = ""
+
+    @ScriptProperty
+    var probeView: NodePath = NodePath.EMPTY
+
+    @ScriptProperty
+    var probeTags: List<String> = emptyList()
 
     private var processedFrames = 0
     private var sawUnhandledInput = false
@@ -693,6 +714,31 @@ class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObje
             "[kanama][ios][kn] task39 property engine get " +
                 "float=${engineFloat == 2.5} int=${engineInt == 7L} enum=${engineEnum == 0L} " +
                 "enumListRequested=true",
+        )
+        // Data @ScriptProperty get parity: assign the Kotlin fields directly, then read each back
+        // through Object.get so the engine calls the ScriptInstance getter — the path
+        // MultiplayerSynchronizer uses on the authority peer. Whole-number vector components are exact
+        // in float32, so the round trip is bit-exact. Before the getProperty data-type fixes these
+        // read back as nil. Object.get decodes Vector2/Vector3/String/NodePath on iOS; the List<String>
+        // read exercises the getProperty + PackedStringArray encode path (Object.get can't decode a
+        // packed array back, so it is not asserted here — the emitter parity guard + the cross-backend
+        // parity check cover List<String> regressions).
+        probeMotion = Vector2(3.0, 4.0)
+        probeShootTarget = Vector3(5.0, 6.0, 7.0)
+        probeName = "kanama"
+        probeView = NodePath("../Background")
+        probeTags = listOf("alpha", "beta")
+        val engineMotion = self.get("probe_motion")
+        val engineShootTarget = self.get("probe_shoot_target")
+        val engineName = self.get("probe_name")
+        val engineView = self.get("probe_view")
+        self.get("probe_tags") // exercises the List<String> getProperty + PackedStringArray encode path
+        println(
+            "[kanama][ios][kn] datatype property engine get " +
+                "vector2=${engineMotion == Vector2(3.0, 4.0)} " +
+                "vector3=${engineShootTarget == Vector3(5.0, 6.0, 7.0)} " +
+                "string=${engineName == "kanama"} " +
+                "nodepath=${(engineView as? String) == "../Background"}",
         )
         val propertyConversionsOk =
             initialPropertyConversions && roundTripPropertyConversions && engineScalarReadsOk
@@ -2472,6 +2518,15 @@ if [[ "$physical_device" -eq 0 && "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] task 39 narrow/enum property conversions delivered and round-tripped"
   else
     echo "[ios_visual_smoke] task 39 property conversion probe failed" >&2
+    exit 1
+  fi
+  # Data @ScriptProperty get parity: Vector2/Vector3/String/NodePath read back through the engine
+  # getter (the path MultiplayerSynchronizer uses on the authority peer). Regression for the
+  # write-only data-type getProperty bug that broke iOS multiplayer movement/shooting.
+  if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath) round-tripped"
+  else
+    echo "[ios_visual_smoke] data @ScriptProperty get parity probe failed" >&2
     exit 1
   fi
   # Phase 3.3: an arg-bearing virtual dispatched through the generic callV path.

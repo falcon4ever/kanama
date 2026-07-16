@@ -5240,6 +5240,18 @@ static void kanama_ios_pt_return_to_variant(int32_t tag, const void *ret_buf, ui
         kanama_ios_destroy_string(&cell);
         return;
     }
+    // NodePath returns ship a char* pointer in ret_buf (the string can exceed the fixed buffer),
+    // exactly like PT_STRING above. The generic pt_arg_to_variant path can't handle this: it treats
+    // its `p` as the string bytes directly (the arg convention), so NODE_PATH must dereference here.
+    if (tag == KANAMA_IOS_PT_NODE_PATH) {
+        const char *s = (ret_buf != NULL) ? *(const char *const *)ret_buf : NULL;
+        uint64_t cell = 0;
+        memset(out_variant, 0, 24);
+        kanama_ios_init_node_path(&cell, (s != NULL) ? s : "");
+        g_variant_from_node_path(out_variant, &cell);
+        kanama_ios_destroy_node_path(&cell);
+        return;
+    }
     if (tag == KANAMA_IOS_PT_PACKED_STRING_ARRAY) {
         const uint8_t *blob = (ret_buf != NULL) ? *(const uint8_t *const *)ret_buf : NULL;
         memset(out_variant, 0, 24);

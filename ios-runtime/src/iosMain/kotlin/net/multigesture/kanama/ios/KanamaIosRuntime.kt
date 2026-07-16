@@ -995,6 +995,13 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
             retBuf.reinterpret<CPointerVar<ByteVar>>()[0] = ptr
             retTag[0] = IOS_PT_STRING
         }
+        // NodePath ships its path string like a String; the C pt_return_to_variant NODE_PATH case
+        // builds a Godot NodePath from it. Makes NodePath @ScriptProperty readable (get parity).
+        is NodePath -> {
+            val ptr = IosReturnStringScratch.encode(value.path)
+            retBuf.reinterpret<CPointerVar<ByteVar>>()[0] = ptr
+            retTag[0] = IOS_PT_NODE_PATH
+        }
         // task 29 — fixed-element packed-array returns: ship a {count, data} desc + flat element
         // buffer via a reused scratch; the C side rebuilds the matching Packed*Array from it.
         is ByteArray -> {
