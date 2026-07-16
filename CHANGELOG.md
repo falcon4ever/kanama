@@ -9,6 +9,29 @@ versioning once public releases begin.
 
 ### Added
 
+- Fixed iOS lambda signal callbacks dropping non-object scalar arguments.
+  Emitted `bool`, `int`, and `float` Variants now reach Kotlin with their
+  original values, matching desktop and Android; this fixes integer peer IDs
+  from multiplayer signals such as `peer_connected` arriving as `null`.
+- Fixed script lifecycle notifications re-enabling `_process` and
+  `_physics_process` after user code disabled them in `_ready` or
+  `_enter_tree`. Authority-gated multiplayer input scripts now remain disabled
+  on non-authoritative peers instead of letting one device drive multiple
+  players.
+- Fixed iOS value-type `@ScriptProperty` fields being write-only. `Vector2`,
+  `Vector3`, `String`, `NodePath`, and `List<String>` are now readable by the
+  engine (`Object.get`), matching desktop/Android — the iOS bridge previously
+  emitted a reader only for properties with a scalar setter, so these types
+  were settable from scene data but read back as `nil`. That silently broke
+  `MultiplayerSynchronizer` replication of value-type properties on the
+  authority peer (e.g. a `Vector2` movement vector never reaching the host, so
+  a client could not move or shoot). A codegen parity guard now flags any
+  future set-only data property.
+- Fixed iOS lambda/bound signal `Callable`s not being auto-disconnected when
+  their receiver is freed. The receiver's `ObjectID` is now recorded so Godot
+  disconnects the connection on free, instead of later firing the signal into a
+  freed object — a use-after-free crash on the client when a multiplayer host
+  ended the game.
 - iOS `@Export` / `@ScriptProperty` conversion parity: Kotlin `Int`/`Float`
   fields now narrow correctly from Godot's 64-bit Variant slots, scalar enum
   ordinals clamp and resolve to entries, and `List<Enum>` arrays map each
