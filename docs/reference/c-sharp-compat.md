@@ -49,7 +49,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Core singletons and utilities | SUPPORTED | `GD`, `Mathf`, `Input`, `OS`, `Engine`, `Time`, `ProjectSettings`, `DisplayServer`, and related helpers are available. |
 | 2D/3D gameplay APIs | PARTIAL | Broad promoted coverage exists, and real demo ports exercise common movement, physics, animation, particles, UI, audio, files, scenes, resources, and tween use cases. Use the coverage reports for exact wrapper availability. |
 | Dynamic fallback | PARTIAL | `GodotObject.call(...)`, `signal(...)`, and typed object wrappers cover mixed GDScript/Kanama edges. Prefer typed wrappers when available. |
-| Networking/multiplayer parity | PARTIAL | Some wrappers are promoted, but Kanama does not yet claim C#-style multiplayer workflow parity. |
+| Networking/multiplayer parity | SUPPORTED | The core multiplayer workflow — `ENetMultiplayerPeer` host/join, `@Rpc` calls, and `MultiplayerSynchronizer` `@ScriptProperty` replication — is validated end-to-end in the TPS demo across desktop, Android, and iOS, with each platform in the host role (clients see each other move/shoot over LAN and control only their own player). Less-common multiplayer APIs follow the general wrapper-coverage path. |
 
 ## Data And Marshalling
 
