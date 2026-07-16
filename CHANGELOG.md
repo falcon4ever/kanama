@@ -9,6 +9,11 @@ versioning once public releases begin.
 
 ### Added
 
+- iOS `@ScriptProperty` codegen now **fails the build** (was a warning) when a *data* property is
+  settable by the engine but not readable (a write-only get/set asymmetry). This is the exact class
+  that silently shipped write-only value types and broke multiplayer replication; a new settable data
+  type must gain a `getProperty`/`encodeIosReturn` path before it can compile. Object/custom-script
+  refs remain intentionally exempt.
 - Fixed iOS lambda signal callbacks dropping non-object scalar arguments.
   Emitted `bool`, `int`, and `float` Variants now reach Kotlin with their
   original values, matching desktop and Android; this fixes integer peer IDs

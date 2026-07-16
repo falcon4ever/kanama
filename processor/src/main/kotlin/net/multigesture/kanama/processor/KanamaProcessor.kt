@@ -840,7 +840,11 @@ class KanamaProcessor(
         // via -Pkanama…=false → the KSP option below. Default stays resource until the gate passes.
         val asResource = env.options["kanamaIosRegistryAsResource"]?.toBoolean() ?: true
         val extension = if (asResource) "kt.txt" else "kt"
-        val emitter = IosScriptCodeEmitter(iosScripts) { env.logger.warn("[kanama:ksp] $it") }
+        val emitter = IosScriptCodeEmitter(
+            iosScripts,
+            warn = { env.logger.warn("[kanama:ksp] $it") },
+            error = { env.logger.error("[kanama:ksp] $it") },
+        )
         val deps = Dependencies(aggregating = true, *scriptAggregatorSources.toTypedArray())
 
         fun write(packageName: String, fileName: String, content: String) {
