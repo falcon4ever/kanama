@@ -1928,6 +1928,21 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L), lamEmitter, listOf("kanamaLambda"))
     check("lambda-callable(connect fires once, disconnect stops it)", lamFiredOnce == 1 && lamFires == 1)
 
+    // Lambda Callable scalar-argument delivery. MultiplayerAPI.peer_connected emits the peer id
+    // as a Variant int; use a self-contained user signal to exercise that same C trampoline path.
+    var lamIntArg: Any? = null
+    val lamIntId = IosCallableRegistry.register { args -> lamIntArg = args.firstOrNull() }
+    ObjectCalls.callWithVariantArgs(
+        ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L), lamEmitter, listOf("kanamaLambdaInt"))
+    IosGodot.objectConnectCallable(lamEmitter.address(), "kanamaLambdaInt", lamIntId, 0L)
+    ObjectCalls.callWithVariantArgs(
+        ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
+        lamEmitter,
+        listOf("kanamaLambdaInt", 4_294_967_001L),
+    )
+    check("lambda-callable(int argument delivered)", lamIntArg == 4_294_967_001L)
+    IosGodot.objectDisconnectCallable(lamEmitter.address(), "kanamaLambdaInt", lamIntId)
+
     // Typed Array[StringName] return (Phase 2.7g). add_to_group("kgrp") then get_groups() == ["kgrp"]
     // — exercises ptrcallNoArgsRetStringNameList (Array size/get + StringName->utf8 blob). Plain Node.
     val grpNode = ObjectCalls.constructObject("Node")
