@@ -871,6 +871,32 @@ class HelloScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 					"closed_rc=$closedRc usable=$usable node_class=$nodeClass node_plain=$nodePlain"
 			)
 		}
+		// ClassDB.class_call_static ownership probe: class_call_static is a varargs Object.call
+		// that, like instantiate, can return a freshly minted RefCounted whose ONLY reference
+		// lives in the return Variant. The owned decode must retain it into the owning RefCounted
+		// wrapper (close() releases; created_rc must be exactly the wrapper's 1) — the borrowed
+		// decode would free it on return (use-after-free). A non-object static return
+		// (Thread.is_main_thread -> bool) must pass through the owned path untouched.
+		run {
+			val created = ClassDB.classCallStatic("RegEx", "create_from_string", "a.c")
+			val ownedWrapper = created as? RefCounted
+			val createdClass = ownedWrapper?.getClassName().orEmpty()
+			val createdRc = ownedWrapper?.getReferenceCount() ?: -1L
+			val usable = ownedWrapper?.isClass("RegEx") ?: false
+			selfNode.setMeta("kanama_probe_regex", ownedWrapper)
+			val heldRc = ownedWrapper?.getReferenceCount() ?: -1L
+			ownedWrapper?.close()
+			val metaHeld = selfNode.getMeta("kanama_probe_regex") as? GodotObject
+			val closedRc = (metaHeld?.call("get_reference_count") as? Number)?.toLong() ?: -1L
+			selfNode.removeMeta("kanama_probe_regex")
+			val scalarRet = ClassDB.classCallStatic("Thread", "is_main_thread")
+			val scalarMainThread = scalarRet as? Boolean ?: false
+			System.err.println(
+				"[kanama:kt] ClassDB class_call_static ownership class=$createdClass " +
+					"owned_wrapper=${ownedWrapper != null} created_rc=$createdRc held_rc=$heldRc " +
+					"closed_rc=$closedRc usable=$usable scalar_main_thread=$scalarMainThread"
+			)
+		}
 		val tweenAwaitTweener = tween?.tweenAwait(selfNode.signal("renamed"))?.setTimeout(30.0)
 		val tweenValidBefore = tween?.isValid() ?: false
 		val processedTweensBeforeKill = SceneTree.getProcessedTweens().size

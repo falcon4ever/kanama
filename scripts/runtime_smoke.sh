@@ -178,6 +178,13 @@ check "Tweener ownership method_delay_delta=0 method_trans_delta=0 method_chaine
 # close() drops the wrapper's ref back to 1) and leave Node results borrowed/plain.
 check "ClassDB instantiate ownership class=Gradient owned_wrapper=true created_rc=1 held_rc=2 closed_rc=1 usable=true node_class=Node node_plain=true"
 check_absent "Leaked instance: Gradient"
+# ClassDB.class_call_static ownership: the varargs Object.call path shares instantiate's
+# return-ownership hazard — a fresh RefCounted static factory return arrives with its
+# ONLY reference in the return Variant, so the owned decode must retain it into an owning
+# RefCounted wrapper (created_rc=1 exactly; setMeta refs independently to 2; close() drops
+# back to 1) while a non-object static return (Thread.is_main_thread) passes through untouched.
+check "ClassDB class_call_static ownership class=RegEx owned_wrapper=true created_rc=1 held_rc=2 closed_rc=1 usable=true scalar_main_thread=true"
+check_absent "Leaked instance: RegEx"
 check_absent "Leaked instance: AwaitTweener"
 check_absent "Leaked instance: MethodTweener"
 check_absent "Leaked instance: PropertyTweener"
