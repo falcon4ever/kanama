@@ -59,7 +59,7 @@ object ClassDB {
     }
 
     fun classCallStatic(classValue: String, method: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(classCallStaticBind, singleton, listOf(classValue, method, *extraArgs))
+        return ObjectCalls.callWithVariantArgsOwned(classCallStaticBind, singleton, listOf(classValue, method, *extraArgs))
     }
 
     fun classHasIntegerConstant(classValue: String, name: String): Boolean {

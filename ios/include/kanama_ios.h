@@ -492,6 +492,15 @@ int32_t kanama_ios_godot_object_disconnect_callable(
  * *out_double, String UTF-8 into out_str (no terminator; *out_str_len gets the full
  * byte length, pass out_str=NULL/out_str_size=0 to measure). Returns the decoded
  * Variant type tag (KANAMA_IOS_VARIANT_TYPE_*), or -1 if the call did not dispatch.
+ *
+ * out_is_refcounted selects the return-ownership mode for an Object return, mirroring
+ * kanama_ios_classdb_instantiate_owned. Pass NULL for the borrowed default (the handle
+ * dies with the return Variant — correct for calls that return an already-owned object).
+ * Pass a non-NULL pointer for calls that may mint a fresh RefCounted whose only reference
+ * lives in the return Variant (e.g. ClassDB.class_call_static): the RefCounted result is
+ * retained before the Variant destroy and *out_is_refcounted is set to 1 so the caller
+ * owns that +1 (release via RefCounted close()/unreference). Non-RefCounted returns stay
+ * borrowed and leave the flag 0.
  */
 int32_t kanama_ios_godot_object_call(
     int64_t method_bind,
@@ -503,7 +512,8 @@ int32_t kanama_ios_godot_object_call(
     double *out_double,
     char *out_str,
     int64_t out_str_size,
-    int64_t *out_str_len
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
 );
 
 /*

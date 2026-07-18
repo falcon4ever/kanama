@@ -5357,11 +5357,13 @@ int32_t kanama_ios_godot_object_call(
     double *out_double,
     char *out_str,
     int64_t out_str_size,
-    int64_t *out_str_len
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
 ) {
     if (out_int != NULL) *out_int = 0;
     if (out_double != NULL) *out_double = 0.0;
     if (out_str_len != NULL) *out_str_len = 0;
+    if (out_is_refcounted != NULL) *out_is_refcounted = 0;
     if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
         return -1;
     }
@@ -5478,6 +5480,30 @@ int32_t kanama_ios_godot_object_call(
             case KANAMA_IOS_VARIANT_TYPE_OBJECT: {
                 GDExtensionObjectPtr obj = NULL;
                 g_variant_to_object(&obj, ret_variant);
+                // Owned decode (out_is_refcounted != NULL): the return Variant may hold the
+                // sole reference to a freshly minted object (e.g. ClassDB.class_call_static
+                // returning a new Resource). The g_variant_destroy below would then free a
+                // RefCounted before Kotlin sees it (use-after-free). Retain it here and report
+                // the retain so the Kotlin side hands ownership to a RefCounted wrapper —
+                // mirrors kanama_ios_classdb_instantiate_owned (task-31 return-ownership).
+                // Borrowed callers pass NULL and are unaffected.
+                if (obj != NULL && out_is_refcounted != NULL &&
+                    kanama_ios_godot_object_is_class((int64_t)(intptr_t)obj, "RefCounted")) {
+                    GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
+                        &g_ref_counted_reference_bind,
+                        "RefCounted",
+                        "reference",
+                        KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+                    if (reference_bind != NULL) {
+                        GDExtensionBool referenced = 0;
+                        g_object_method_bind_ptrcall(reference_bind, obj, NULL, &referenced);
+                        *out_is_refcounted = 1;
+                    } else {
+                        // No retain possible: the Variant destroy below frees the instance, so
+                        // surface null instead of a dangling handle.
+                        obj = NULL;
+                    }
+                }
                 if (out_int != NULL) *out_int = (int64_t)(intptr_t)obj;
                 break;
             }
@@ -9565,7 +9591,7 @@ static void kanama_ios_ptrcall_selftest(void) {
         memset(buf, 0, sizeof(buf));
         int64_t slen = 0;
         int32_t rt = kanama_ios_godot_object_call(call_bind, node3d, ct, ca, 1,
-            NULL, NULL, buf, (int64_t)sizeof(buf), &slen);
+            NULL, NULL, buf, (int64_t)sizeof(buf), &slen, NULL);
         KANAMA_IOS_ST_CHECK("variant-call get_class==Node3D",
             rt == KANAMA_IOS_VARIANT_TYPE_STRING && slen == 6 && strncmp(buf, "Node3D", 6) == 0);
     }
@@ -9578,11 +9604,11 @@ static void kanama_ios_ptrcall_selftest(void) {
         int64_t meta_val = 4242;
         const void *sa[3] = { "set_meta", "kanama_call", &meta_val };
         int32_t st[3] = { KANAMA_IOS_PT_STRING, KANAMA_IOS_PT_STRING, KANAMA_IOS_PT_INT64 };
-        kanama_ios_godot_object_call(call_bind, node3d, st, sa, 3, NULL, NULL, NULL, 0, NULL);
+        kanama_ios_godot_object_call(call_bind, node3d, st, sa, 3, NULL, NULL, NULL, 0, NULL, NULL);
         const void *ga[2] = { "get_meta", "kanama_call" };
         int32_t gt[2] = { KANAMA_IOS_PT_STRING, KANAMA_IOS_PT_STRING };
         int64_t got = 0;
-        int32_t rt = kanama_ios_godot_object_call(call_bind, node3d, gt, ga, 2, &got, NULL, NULL, 0, NULL);
+        int32_t rt = kanama_ios_godot_object_call(call_bind, node3d, gt, ga, 2, &got, NULL, NULL, 0, NULL, NULL);
         KANAMA_IOS_ST_CHECK("variant-call set_meta/get_meta int round-trip",
             rt == KANAMA_IOS_VARIANT_TYPE_INT && got == 4242);
     }

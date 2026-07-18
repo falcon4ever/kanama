@@ -1317,10 +1317,25 @@ object ObjectCalls {
                 sourceObject.address(), signalName, targetObject.address(), method, tags, ptrs, n)
         }
 
+    /**
+     * Generic Variant `Object.call` dispatch.
+     *
+     * [owned] selects the return decode for calls that mint a fresh object whose sole
+     * reference lives in the return Variant (e.g. ClassDB.class_call_static returning a
+     * freshly constructed Resource). With the borrowed default the C side extracts the
+     * handle and destroys the Variant, freeing a RefCounted before Kotlin sees it. When
+     * [owned] is true the C side retains a RefCounted result before that destroy and reports
+     * it, so it comes back as the owning [RefCounted] wrapper (close() releases — task-31
+     * return-ownership); non-RefCounted objects stay borrowed. Owned callers should use the
+     * named [callWithVariantArgsOwned] wrapper so the generator can select it as a dispatch
+     * helper via `METHOD_CALL_SHAPE_OVERRIDES`, mirroring
+     * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate.
+     */
     fun callWithVariantArgs(
         methodBind: MemorySegment,
         instance: MemorySegment,
         args: List<Any?>,
+        owned: Boolean = false,
     ): Any? =
         memScoped {
             val (tags, ptrs, n) = encodeVariantArgs(args)
@@ -1329,6 +1344,9 @@ object ObjectCalls {
             val strBufSize = 1024L
             val outStr = allocArray<ByteVar>(strBufSize)
             val outStrLen = alloc<LongVar>()
+            // Non-null out_is_refcounted turns on the owned retain path in the C shim; NULL
+            // keeps the borrowed default, so only allocate/pass it when the caller asks.
+            val outIsRefCounted = if (owned) alloc<IntVar>().also { it.value = 0 } else null
             val retType = kanama_ios_godot_object_call(
                 methodBind.address(),
                 instance.address(),
@@ -1340,6 +1358,7 @@ object ObjectCalls {
                 outStr,
                 strBufSize,
                 outStrLen.ptr,
+                outIsRefCounted?.ptr,
             )
             when (retType) {
                 VT_BOOL -> outInt.value != 0L
@@ -1351,7 +1370,12 @@ object ObjectCalls {
                     val len = minOf(outStrLen.value, strBufSize).toInt().coerceAtLeast(0)
                     outStr.readBytes(len).decodeToString()
                 }
-                VT_OBJECT -> if (outInt.value != 0L) MemorySegment.ofAddress(outInt.value) else null
+                VT_OBJECT -> if (outInt.value != 0L) {
+                    val handle = MemorySegment.ofAddress(outInt.value)
+                    if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle) else handle
+                } else {
+                    null
+                }
                 // Small fixed-size returns arrive as raw component bytes in out_str (see
                 // kanama_ios_godot_object_call); zero length = the C side could not decode.
                 VT_VECTOR2 -> if (outStrLen.value >= 8L) {
@@ -1378,6 +1402,18 @@ object ObjectCalls {
                 else -> null
             }
         }
+
+    /**
+     * [callWithVariantArgs] with the owned return decode, for varargs `Object.call`s that mint
+     * a fresh object whose sole reference lives in the return Variant (ClassDB.class_call_static
+     * static factories). A named helper so the generator can route to it through
+     * `METHOD_CALL_SHAPE_OVERRIDES`, mirroring [ptrcallWithStringNameArgRetVariantScalarOwned].
+     */
+    fun callWithVariantArgsOwned(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        args: List<Any?>,
+    ): Any? = callWithVariantArgs(methodBind, instance, args, owned = true)
 
     // Variant (scalar) returns route through the same device-proven Object-call decode as
     // callWithVariantArgs (kanama_ios_godot_object_call: bool/int/float/String/Object scalars;
