@@ -32,6 +32,20 @@ versioning once public releases begin.
   non-zero exit with no error message. Also fixes a genuinely silent exit: the
   Kanama version probe ran before any error trap was installed.
 
+### Fixed
+
+- `ClassDB.class_call_static` no longer frees RefCounted instances before
+  returning them: like `ClassDB.instantiate` ([#42](https://github.com/falcon4ever/kanama/pull/42)),
+  a static factory can hand the fresh instance's **only** reference back inside
+  the return Variant, and the borrowed dynamic decode destroyed that Variant
+  after extracting the pointer — a use-after-free for every RefCounted result
+  (e.g. `RegEx.create_from_string`, `Image.create`). RefCounted results are now
+  retained before the Variant is destroyed and come back as the owning
+  `RefCounted` wrapper (`close()` releases; assigning into a node/scene refs
+  independently, matching C# semantics). Non-RefCounted and non-object results
+  are unchanged. Desktop, Android, and iOS (the retain happens inside the shared
+  `kanama_ios_godot_object_call` shim, before it destroys the return Variant).
+
 ## 0.3.0 - 2026-07-16
 
 This release closes Kanama's mobile + convergence phase. The headline is

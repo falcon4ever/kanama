@@ -94,25 +94,38 @@ and the collapse emission are locked by `check_ios_policies`, and the on-device
 self-test matrix carries a `refcounted-ret-owns-plus1` refcount probe
 (duplicate() → refcount 1 → close()).
 
-One **dynamic** path shares this ownership problem: `ClassDB.instantiate`
-returns a Variant that holds the fresh instance's *only* reference, so the
-borrowed Variant-scalar decode would hand back a handle that dies with the
-Variant (use-after-free for RefCounted classes — GitHub PR #42; this is also
-the canonical construction path for third-party GDExtension classes). It is
-the one generated method routed through an owned decode
-(`METHOD_CALL_SHAPE_OVERRIDES` in `generate_api_wrapper.py` →
-`ptrcallWithStringNameArgRetVariantScalarOwned`): RefCounted results are
-retained **before** the return Variant is destroyed and come back as the
-owning `RefCounted` wrapper (`close()` releases; on iOS the retain happens
-inside the dedicated C entry `kanama_ios_classdb_instantiate_owned`, since the
-generic object-call C path destroys the Variant before Kotlin sees the
-handle). Non-RefCounted results stay borrowed. Do **not** blanket-retain in
-`variantToScalar` itself — every other dynamic object read (property gets,
-`call()` returns) is a borrow, and a retain there leaks one reference per
-read. Other fresh-sole-reference dynamic calls (`obj.call("duplicate")`)
-remain unfixed by design for now; adopt the same override if one bites.
-Validated by the `ClassDB instantiate ownership` probe in
-`scripts/runtime_smoke.sh`.
+Two **dynamic** paths share this ownership problem: `ClassDB.instantiate` and
+`ClassDB.class_call_static` both return a Variant that holds the fresh
+instance's *only* reference, so the borrowed Variant-scalar decode would hand
+back a handle that dies with the Variant (use-after-free for RefCounted classes
+— GitHub PR #42; `instantiate` is also the canonical construction path for
+third-party GDExtension classes, and a static factory such as
+`RegEx.create_from_string` or `Image.create` has the same sole-reference
+return). Both route through the same mechanism — a `METHOD_CALL_SHAPE_OVERRIDES`
+entry in `generate_api_wrapper.py` that names the owned dispatch helper the
+generated wrapper calls — and differ only in that helper:
+
+- `ClassDB.instantiate` is a generated ptrcall →
+  `ptrcallWithStringNameArgRetVariantScalarOwned`.
+- `ClassDB.class_call_static` is a varargs `Object.call`, so its override names
+  the vararg helper `callWithVariantArgsOwned`, which delegates to
+  `callWithVariantArgs(owned = true)` (`render_vararg_method` reads the override
+  to pick the helper, defaulting to `callWithVariantArgs`).
+
+In both cases RefCounted results are retained **before** the return Variant is
+destroyed and come back as the owning `RefCounted` wrapper (`close()` releases).
+On iOS the retain must happen inside the C shim, before it destroys the return
+Variant: `instantiate` uses the dedicated entry
+`kanama_ios_classdb_instantiate_owned`, while `class_call_static` uses the
+shared `kanama_ios_godot_object_call` with its `out_is_refcounted` out-param
+(non-NULL turns on the retain). Non-RefCounted and non-object results stay
+borrowed. Do **not** blanket-retain in `variantToScalar` itself — every other
+dynamic object read (property gets, ordinary `call()` returns) is a borrow, and
+a retain there leaks one reference per read. Other fresh-sole-reference dynamic
+calls (`obj.call("duplicate")`) remain unfixed by design for now; add a
+`METHOD_CALL_SHAPE_OVERRIDES` entry naming an owned helper if one bites.
+Validated by the `ClassDB instantiate ownership` and `ClassDB class_call_static
+ownership` probes in `scripts/runtime_smoke.sh`.
 
 Engine-wide `MethodName`, `PropertyName`, and `SignalName` constants are
 generated from `extension_api.json` separately from the class wrapper drafts:
