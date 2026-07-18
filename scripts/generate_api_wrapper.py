@@ -379,15 +379,24 @@ DEFAULT_VALUE_OVERRIDES = {
     ("Time", "get_datetime_string_from_datetime_dict", "use_space"): "false",
 }
 
-# Per-(class, method) CallShape overrides applied before the generic shape lookup — for the
-# rare method whose (args, return) shape is right but whose default helper has the wrong
-# ownership semantics. Task 43: ClassDB.instantiate mints a fresh object whose SOLE reference
-# lives in the return Variant; the plain VariantScalar helper decodes a borrowed GodotObject
-# and then destroys the Variant, freeing a RefCounted instance before the caller sees it
-# (use-after-free, GitHub PR #42). The owned helper retains RefCounted results before the
-# Variant destroy and returns the owning RefCounted wrapper (task-31 return-ownership).
+# Per-(class, method) CallShape overrides — for the rare method whose default helper has the
+# wrong ownership semantics. The `.function` names the helper the generated wrapper calls; for
+# a ptrcall method it replaces the shape-derived helper, and for a vararg method
+# `render_vararg_method` uses it in place of the default `callWithVariantArgs`.
+#
+# Both entries fix the same hazard: a call that mints a fresh object whose SOLE reference lives
+# in the return Variant, where the borrowed decode extracts the handle and then destroys the
+# Variant — freeing a RefCounted before the caller sees it (use-after-free, GitHub PR #42). The
+# owned helpers retain RefCounted results before the Variant destroy and return the owning
+# RefCounted wrapper (task-31 return-ownership):
+#   - ClassDB.instantiate (ptrcall) -> ptrcallWithStringNameArgRetVariantScalarOwned
+#   - ClassDB.class_call_static (vararg static factory, e.g. RegEx.create_from_string /
+#     Image.create) -> callWithVariantArgsOwned, which delegates to
+#     callWithVariantArgs(owned = true). On iOS that retain happens inside the shared
+#     kanama_ios_godot_object_call shim via its out_is_refcounted out-param.
 METHOD_CALL_SHAPE_OVERRIDES = {
     ("ClassDB", "instantiate"): CallShape("ptrcallWithStringNameArgRetVariantScalarOwned", "Any?", "null"),
+    ("ClassDB", "class_call_static"): CallShape("callWithVariantArgsOwned", "Any?", "null"),
 }
 
 # Final Kotlin default expressions injected by (class, method, arg), bypassing
@@ -1887,7 +1896,11 @@ def render_vararg_method(
     else:
         call_args = "listOf(*extraArgs)"
     receiver = "singleton" if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
-    call = f"ObjectCalls.callWithVariantArgs({bind_name}, {receiver}, {call_args})"
+    # A METHOD_CALL_SHAPE_OVERRIDES entry names an alternate dispatch helper (e.g.
+    # callWithVariantArgsOwned for the owned return decode); default is callWithVariantArgs.
+    override = METHOD_CALL_SHAPE_OVERRIDES.get((class_name, method.name))
+    helper = override.function if override is not None else "callWithVariantArgs"
+    call = f"ObjectCalls.{helper}({bind_name}, {receiver}, {call_args})"
     return_kind = method.logical_return_kind(object_types)
     if return_kind == "void":
         lines = []

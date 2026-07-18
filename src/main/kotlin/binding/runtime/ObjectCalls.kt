@@ -354,10 +354,23 @@ object ObjectCalls {
      * Calls a vararg Object MethodBind with scalar Variant arguments and decodes
      * the scalar Variant return value.
      */
+    /**
+     * Generic Variant `Object.call` dispatch.
+     *
+     * [owned] selects the return decode for calls that mint a fresh object whose sole
+     * reference lives in the return Variant. With the default borrowed decode the handle
+     * would die when this function destroys the return Variant in its `finally`. Pass
+     * `owned = true` to retain RefCounted results before that destroy and hand back the
+     * owning [net.multigesture.kanama.api.RefCounted] wrapper. Owned callers should use the
+     * named [callWithVariantArgsOwned] wrapper so the generator can select it as a dispatch
+     * helper via `METHOD_CALL_SHAPE_OVERRIDES` (the vararg analogue of
+     * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate).
+     */
     fun callWithVariantArgs(
         methodBind: MemorySegment,
         instance: MemorySegment,
         args: List<Any?>,
+        owned: Boolean = false,
     ): Any? {
         Arena.ofConfined().use { arena ->
             val variantBuffer = if (args.isEmpty()) {
@@ -400,7 +413,11 @@ object ObjectCalls {
                     "Object.call failed: error_type=$errorType argument=$argument expected=$expected"
                 }
 
-                return BuiltinTypes.readVariantScalar(retVariant, arena)
+                return if (owned) {
+                    BuiltinTypes.readVariantScalarOwned(retVariant, arena)
+                } else {
+                    BuiltinTypes.readVariantScalar(retVariant, arena)
+                }
             } finally {
                 for (i in 0 until initialized) {
                     BuiltinTypes.destroyVariant(
@@ -413,6 +430,18 @@ object ObjectCalls {
             }
         }
     }
+
+    /**
+     * [callWithVariantArgs] with the owned return decode, for varargs `Object.call`s that mint
+     * a fresh object whose sole reference lives in the return Variant (ClassDB.class_call_static
+     * static factories). A named helper so the generator can route to it through
+     * `METHOD_CALL_SHAPE_OVERRIDES`, mirroring [ptrcallWithStringNameArgRetVariantScalarOwned].
+     */
+    fun callWithVariantArgsOwned(
+        methodBind: MemorySegment,
+        instance: MemorySegment,
+        args: List<Any?>,
+    ): Any? = callWithVariantArgs(methodBind, instance, args, owned = true)
 
     /**
      * Calls [methodBind] via ptrcall and reads an int32 return value.

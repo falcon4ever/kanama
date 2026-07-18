@@ -239,7 +239,7 @@ object ClassDB {
      */
     @JvmStatic
     fun classCallStatic(classValue: String, method: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(classCallStaticBind, singleton, listOf(classValue, method, *extraArgs))
+        return ObjectCalls.callWithVariantArgsOwned(classCallStaticBind, singleton, listOf(classValue, method, *extraArgs))
     }
 
     /**
