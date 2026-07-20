@@ -45,23 +45,31 @@ KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --path "$PROJECT_
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 
+# Report a failed assertion. The log tail is verbose Godot output, so the reason is
+# restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
+# end of the output and reads as a silent non-zero exit.
+smoke_fail() {
+  local kind="$1" pattern="$2"
+  echo "[runtime_smoke] $kind: $pattern" >&2
+  echo "[runtime_smoke] log tail:" >&2
+  tail -n 120 "$LOG_FILE" >&2
+  echo >&2
+  echo "[runtime_smoke] FAIL -- $kind: $pattern" >&2
+  echo "[runtime_smoke] full log: $LOG_FILE" >&2
+  exit 1
+}
+
 check() {
   local pattern="$1"
   if ! grep -Eq -- "$pattern" "$LOG_FILE"; then
-    echo "[runtime_smoke] missing pattern: $pattern"
-    echo "[runtime_smoke] log tail:"
-    tail -n 120 "$LOG_FILE"
-    exit 1
+    smoke_fail "missing pattern" "$pattern"
   fi
 }
 
 check_absent() {
   local pattern="$1"
   if grep -Eq -- "$pattern" "$LOG_FILE"; then
-    echo "[runtime_smoke] unexpected pattern: $pattern"
-    echo "[runtime_smoke] log tail:"
-    tail -n 120 "$LOG_FILE"
-    exit 1
+    smoke_fail "unexpected pattern" "$pattern"
   fi
 }
 

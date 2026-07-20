@@ -46,6 +46,18 @@ set_marker() {
   perl -0pi -e "s/HelloScript\\(file\\)\\._ready(?:\\[[^\\]]*\\])?/HelloScript(file)._ready[$marker]/g" "$SCRIPT_FILE"
 }
 
+# See runtime_smoke.sh: the reason is restated after the log tail so it is the last thing
+# printed, rather than being buried under ~160 lines of Godot verbose output.
+smoke_fail() {
+  local kind="$1" pattern="$2"
+  echo "[hot_reload_in_process_smoke] $kind: $pattern" >&2
+  tail -n 160 "$LOG_FILE" 2>/dev/null >&2 || true
+  echo >&2
+  echo "[hot_reload_in_process_smoke] FAIL -- $kind: $pattern" >&2
+  echo "[hot_reload_in_process_smoke] full log: $LOG_FILE" >&2
+  exit 1
+}
+
 wait_for_pattern() {
   local pattern="$1"
   local timeout_seconds="$2"
@@ -56,14 +68,10 @@ wait_for_pattern() {
       return 0
     fi
     if [[ -n "$GODOT_PID" ]] && ! kill -0 "$GODOT_PID" 2>/dev/null; then
-      echo "[hot_reload_in_process_smoke] Godot exited before pattern: $pattern"
-      tail -n 160 "$LOG_FILE" 2>/dev/null || true
-      exit 1
+      smoke_fail "Godot exited before pattern" "$pattern"
     fi
     if (( "$(date +%s)" - start > timeout_seconds )); then
-      echo "[hot_reload_in_process_smoke] timeout waiting for pattern: $pattern"
-      tail -n 160 "$LOG_FILE" 2>/dev/null || true
-      exit 1
+      smoke_fail "timeout waiting for pattern" "$pattern"
     fi
     sleep 0.2
   done
@@ -72,9 +80,7 @@ wait_for_pattern() {
 check_absent() {
   local pattern="$1"
   if grep -Eq -- "$pattern" "$LOG_FILE"; then
-    echo "[hot_reload_in_process_smoke] unexpected pattern: $pattern"
-    tail -n 160 "$LOG_FILE"
-    exit 1
+    smoke_fail "unexpected pattern" "$pattern"
   fi
 }
 

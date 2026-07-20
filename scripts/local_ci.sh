@@ -1,17 +1,57 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# `-E` so the ERR trap below is inherited by functions, subshells and command
+# substitutions. Without it a failure inside `( ... )` exits non-zero with no banner,
+# which is the exact "non-zero exit, no visible error" report this trap exists to fix.
+set -Eeuo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-HOST_UNAME="$(uname -s)"
 bootstrap_build_dir=""
-kanama_version="$(sed -nE 's/^version = "([^"]+)"/\1/p' "$ROOT_DIR/build.gradle.kts" | head -n 1)"
+current_stage=""
 
 cleanup() {
   if [[ -n "$bootstrap_build_dir" && -d "$bootstrap_build_dir" ]]; then
     rm -rf "$bootstrap_build_dir"
   fi
 }
+
+# Failure banner. Stages print their own diagnostics, but a failing smoke dumps ~120 lines
+# of Godot verbose log afterwards, which buries the one line that says what broke. This
+# always fires last, so the reason for the failure is the final thing on screen.
+ci_failed() {
+  local exit_code="$1" line="$2" command="$3"
+  # `-E` propagates ERR into subshells and command substitutions, so a failure inside one
+  # would report twice. Only the top-level shell reports; it still fires, because set -e
+  # surfaces the subshell's non-zero status here anyway, and its banner is the informative
+  # one (the subshell reports the inner fragment, e.g. just `head -n 1`).
+  if (( BASH_SUBSHELL != 0 )); then
+    return
+  fi
+  echo >&2
+  echo "========================================================================" >&2
+  echo "[local_ci] FAILED (exit $exit_code)" >&2
+  echo "  stage:   ${current_stage:-<startup>}" >&2
+  echo "  command: $command" >&2
+  echo "  at:      scripts/local_ci.sh:$line" >&2
+  echo >&2
+  echo "  This run did NOT pass. Scroll up for the stage output above -- if the" >&2
+  echo "  failing stage was a smoke, its diagnostic is repeated at the end of its" >&2
+  echo "  own log dump." >&2
+  echo "========================================================================" >&2
+}
+
+# Installed before any real work, including the version probe below: a failure there used to
+# exit 1 with nothing on screen, which is the same defect this banner exists to fix.
+trap 'ci_failed "$?" "$LINENO" "$BASH_COMMAND"' ERR
 trap cleanup EXIT
+
+# Announce a stage and record it, so the failure banner can name what was running.
+stage() {
+  current_stage="$1"
+  echo "[local_ci] $1"
+}
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+HOST_UNAME="$(uname -s)"
+kanama_version="$(sed -nE 's/^version = "([^"]+)"/\1/p' "$ROOT_DIR/build.gradle.kts" | head -n 1)"
 
 ensure_gdextension_header() {
   local godot_bin="$1"
@@ -116,29 +156,29 @@ ensure_gdextension_header "${godot_bins[0]}"
 # JVM unit tests across all modules (runtime :test + KSP processor :processor:test). These were not
 # previously gated — the iOS @ScriptProperty get/set parity contract (task 46) lives here, along with
 # the existing type tests.
-echo "[local_ci] JVM unit tests"
+stage "JVM unit tests"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" test
 
-echo "[local_ci] public docs local-path guard"
+stage "public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
   README.md docs CONTRIBUTING.md templates example_project; then
   echo "[local_ci] tracked public docs/templates must not contain local machine paths or personal checkout names" >&2
   exit 1
 fi
 
-echo "[local_ci] validate Godot API constants"
+stage "validate Godot API constants"
 python3 "$ROOT_DIR/scripts/validate_godot_api.py"
 
-echo "[local_ci] API wrapper coverage report"
+stage "API wrapper coverage report"
 python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py"
 
-echo "[local_ci] API wrapper coverage docs check"
+stage "API wrapper coverage docs check"
 python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/contributing/api-coverage.md" --check
 
-echo "[local_ci] API wrapper generator report docs check"
+stage "API wrapper generator report docs check"
 python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md" --check
 
-echo "[local_ci] wrapper KDoc staleness check (4.7-stable)"
+stage "wrapper KDoc staleness check (4.7-stable)"
 # Guarded: KDoc is synced from Godot's doc/classes (see docs/contributing/wrapper-maintenance.md
 # "Docs version pin"). Runners without a Godot source checkout skip this instead of failing.
 kdoc_docs="${GODOT_DOCS:-}"
@@ -153,68 +193,68 @@ else
   echo "[local_ci] skip: no Godot doc/classes checkout found (set GODOT_DOCS to enable)"
 fi
 
-echo "[local_ci] API shell wrapper generator coverage check"
+stage "API shell wrapper generator coverage check"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/generate_api_shell_wrappers.py" \
   --from-skip-report "$ROOT_DIR/build/wrapper-generator/skips.txt" --dry-run --fail-if-candidates
 
-echo "[local_ci] wrapper MethodBind signature audit"
+stage "wrapper MethodBind signature audit"
 python3 "$ROOT_DIR/scripts/audit_wrapper_signatures.py"
 
-echo "[local_ci] exact wrapper ABI policy audit"
+stage "exact wrapper ABI policy audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_wrapper_abi_policy.py" --strict
 
-echo "[local_ci] API wrapper inheritance audit"
+stage "API wrapper inheritance audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_api_wrapper_inheritance.py"
 
-echo "[local_ci] singleton RefCounted lifetime audit"
+stage "singleton RefCounted lifetime audit"
 python3 "$ROOT_DIR/scripts/audit_singleton_refcounted_policy.py"
 
-echo "[local_ci] conservative wrapper generator fixture"
+stage "conservative wrapper generator fixture"
 python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
 
-echo "[local_ci] iOS no-silent-stubs check"
+stage "iOS no-silent-stubs check"
 python3 "$ROOT_DIR/scripts/check_ios_no_silent_stubs.py"
 
-echo "[local_ci] Godot version pin consistency"
+stage "Godot version pin consistency"
 python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
 
-echo "[local_ci] vararg ptrcall audit"
+stage "vararg ptrcall audit"
 python3 "$ROOT_DIR/scripts/audit_vararg_ptrcalls.py"
 
-echo "[local_ci] type marshal coverage audit"
+stage "type marshal coverage audit"
 python3 "$ROOT_DIR/scripts/type_coverage_audit.py"
 
-echo "[local_ci] generator call-shape policy audit"
+stage "generator call-shape policy audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_generator_shape_policy.py"
 
-echo "[local_ci] generator object policy audit"
+stage "generator object policy audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_generator_object_policy.py"
 
-echo "[local_ci] scalar float ABI audit"
+stage "scalar float ABI audit"
 python3 "$ROOT_DIR/scripts/audit_scalar_float_abi.py"
 
-echo "[local_ci] ptrcall helper layout ABI audit"
+stage "ptrcall helper layout ABI audit"
 python3 "$ROOT_DIR/scripts/audit_ptrcall_helper_layouts.py"
 
-echo "[local_ci] builtin storage size ABI audit"
+stage "builtin storage size ABI audit"
 python3 "$ROOT_DIR/scripts/audit_builtin_storage_sizes.py"
 
-echo "[local_ci] Variant marshalling policy audit"
+stage "Variant marshalling policy audit"
 python3 "$ROOT_DIR/scripts/audit_variant_marshalling_policy.py"
 
-echo "[local_ci] GodotObject script-path audit"
+stage "GodotObject script-path audit"
 python3 "$ROOT_DIR/scripts/audit_godot_object_script_paths.py"
 
-echo "[local_ci] runtime node/RPC guardrail audit"
+stage "runtime node/RPC guardrail audit"
 python3 "$ROOT_DIR/scripts/audit_runtime_node_lookups.py" "$ROOT_DIR/example_project"
 
-echo "[local_ci] replicated script-property guardrail audit"
+stage "replicated script-property guardrail audit"
 python3 "$ROOT_DIR/scripts/audit_replicated_script_properties.py" "$ROOT_DIR/example_project"
 
-echo "[local_ci] value-type builtin parity audit"
+stage "value-type builtin parity audit"
 python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 
-echo "[local_ci] JDWP bootstrap/project-setting guard"
+stage "JDWP bootstrap/project-setting guard"
 if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] JDWP project setting is not wired through bootstrap and editor tools" >&2
   exit 1
@@ -248,10 +288,10 @@ if ! rg -Fq 'libjvm not found. Kanama desktop runtime requires a JDK 25+' "$ROOT
   exit 1
 fi
 
-echo "[local_ci] gradle sync"
+stage "gradle sync"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar
 
-echo "[local_ci] KSP script-property default literals"
+stage "KSP script-property default literals"
 find_project_script_registrar() {
   find "$ROOT_DIR/project-scripts/build" \
     -path "*/generated/ksp/main/kotlin/net/multigesture/kanama/generated/$1" \
@@ -383,7 +423,7 @@ if ! rg -q 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_scr
   exit 1
 fi
 
-echo "[local_ci] external addon install"
+stage "external addon install"
 install_check_dir="${TMPDIR:-/tmp}/kanama_local_ci_install"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar \
   "-PkanamaProjectDir=$install_check_dir" \
@@ -405,19 +445,19 @@ for artifact in kanama.jar kanama-scripts.jar kanama.gdextension "$native_artifa
 done
 if [[ "$HOST_UNAME" == "Linux" ]]; then
   linux_native="$install_check_dir/addons/kanama/$native_artifact"
-  echo "[local_ci] Linux native bootstrap preflight: file"
+  stage "Linux native bootstrap preflight: file"
   if ! file "$linux_native" | grep -Eq 'ELF .*shared object'; then
     echo "[local_ci] Linux native bootstrap is not an ELF shared object: $linux_native" >&2
     exit 1
   fi
-  echo "[local_ci] Linux native bootstrap preflight: ldd"
+  stage "Linux native bootstrap preflight: ldd"
   if ldd "$linux_native" | grep -Eq 'not found'; then
     echo "[local_ci] Linux native bootstrap has missing dynamic dependencies" >&2
     ldd "$linux_native" >&2 || true
     exit 1
   fi
   if command -v readelf >/dev/null 2>&1; then
-    echo "[local_ci] Linux native bootstrap preflight: readelf"
+    stage "Linux native bootstrap preflight: readelf"
     readelf -d "$linux_native" >/dev/null
     if readelf -d "$linux_native" | grep -Eq '/Users/|/home/'; then
       echo "[local_ci] Linux native bootstrap contains local absolute paths" >&2
@@ -433,10 +473,10 @@ if ! rg -q '^res://addons/kanama/kanama\.gdextension$' "$install_check_dir/.godo
   exit 1
 fi
 
-echo "[local_ci] publish to mavenLocal"
+stage "publish to mavenLocal"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" publishKanamaToMavenLocal
 
-echo "[local_ci] mavenLocal publication"
+stage "mavenLocal publication"
 maven_local="${KANAMA_MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}/net/multigesture/kanama"
 for artifact in \
   "kanama/$kanama_version/kanama-$kanama_version.jar" \
@@ -453,7 +493,7 @@ done
 
 if [[ $skip_bootstrap -eq 0 ]]; then
   if command -v cmake >/dev/null 2>&1; then
-    echo "[local_ci] bootstrap cmake build"
+    stage "bootstrap cmake build"
     bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX")"
     cmake -S "$ROOT_DIR/bootstrap" -B "$bootstrap_build_dir" -DCMAKE_BUILD_TYPE=Release
     cmake --build "$bootstrap_build_dir" --config Release
@@ -466,7 +506,7 @@ fi
 
 if [[ $skip_docs -eq 0 ]]; then
   if command -v mkdocs >/dev/null 2>&1; then
-    echo "[local_ci] mkdocs strict build"
+    stage "mkdocs strict build"
     (cd "$ROOT_DIR" && mkdocs build --strict)
   else
     echo "[local_ci] mkdocs not found; skipping docs build"
@@ -477,16 +517,16 @@ else
 fi
 
 for godot_bin in "${godot_bins[@]}"; do
-  echo "[local_ci] runtime smoke: $godot_bin"
+  stage "runtime smoke: $godot_bin"
   "$ROOT_DIR/scripts/runtime_smoke.sh" "$godot_bin"
 
-  echo "[local_ci] @Tool smoke: $godot_bin"
+  stage "@Tool smoke: $godot_bin"
   "$ROOT_DIR/scripts/tool_smoke.sh" "$godot_bin"
 
-  echo "[local_ci] hot reload smoke: $godot_bin"
+  stage "hot reload smoke: $godot_bin"
   "$ROOT_DIR/scripts/hot_reload_smoke.sh" "$godot_bin"
 
-  echo "[local_ci] in-process hot reload smoke: $godot_bin"
+  stage "in-process hot reload smoke: $godot_bin"
   "$ROOT_DIR/scripts/hot_reload_in_process_smoke.sh" "$godot_bin"
 done
 

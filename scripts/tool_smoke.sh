@@ -29,23 +29,30 @@ else
   "$GODOT_BIN" --headless --editor --quit --path "$PROJECT_DIR_FOR_GODOT" >"$LOG_FILE" 2>&1
 fi
 
+# See runtime_smoke.sh: the reason is restated after the log tail so it is the last thing
+# printed, rather than being buried under ~120 lines of Godot verbose output.
+smoke_fail() {
+  local kind="$1" pattern="$2"
+  echo "[tool_smoke] $kind: $pattern" >&2
+  echo "[tool_smoke] log tail:" >&2
+  tail -n 120 "$LOG_FILE" >&2
+  echo >&2
+  echo "[tool_smoke] FAIL -- $kind: $pattern" >&2
+  echo "[tool_smoke] full log: $LOG_FILE" >&2
+  exit 1
+}
+
 check() {
   local pattern="$1"
   if ! grep -Eq -- "$pattern" "$LOG_FILE"; then
-    echo "[tool_smoke] missing pattern: $pattern"
-    echo "[tool_smoke] log tail:"
-    tail -n 120 "$LOG_FILE"
-    exit 1
+    smoke_fail "missing pattern" "$pattern"
   fi
 }
 
 check_absent() {
   local pattern="$1"
   if grep -Eq -- "$pattern" "$LOG_FILE"; then
-    echo "[tool_smoke] unexpected pattern: $pattern"
-    echo "[tool_smoke] log tail:"
-    tail -n 120 "$LOG_FILE"
-    exit 1
+    smoke_fail "unexpected pattern" "$pattern"
   fi
 }
 

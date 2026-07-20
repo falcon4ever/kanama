@@ -7,6 +7,18 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed
+
+- `scripts/local_ci.sh` failures are now self-announcing. A failing stage prints a
+  banner naming the stage, the failing command, its exit code, and the source line —
+  always as the last output, so it cannot be buried. The smoke scripts
+  (`runtime_smoke`, `tool_smoke`, `hot_reload_smoke`,
+  `hot_reload_in_process_smoke`) additionally repeat the failed assertion *after*
+  their ~120-line Godot log dump, along with the full log path. Previously a failed
+  assertion printed its reason before the dump, leaving the run looking like a
+  non-zero exit with no error message. Also fixes a genuinely silent exit: the
+  Kanama version probe ran before any error trap was installed.
+
 ## 0.3.0 - 2026-07-16
 
 This release closes Kanama's mobile + convergence phase. The headline is

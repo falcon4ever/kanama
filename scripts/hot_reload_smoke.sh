@@ -38,13 +38,23 @@ set_marker() {
   perl -0pi -e "s/HelloScript\\(file\\)\\._ready(?:\\[[^\\]]*\\])?/HelloScript(file)._ready[$marker]/g" "$SCRIPT_FILE"
 }
 
+# See runtime_smoke.sh: the reason is restated after the log tail so it is the last thing
+# printed, rather than being buried under ~120 lines of Godot verbose output.
+smoke_fail() {
+  local kind="$1" pattern="$2" log_file="$3"
+  echo "[hot_reload_smoke] $kind: $pattern" >&2
+  tail -n 120 "$log_file" >&2
+  echo >&2
+  echo "[hot_reload_smoke] FAIL -- $kind: $pattern" >&2
+  echo "[hot_reload_smoke] full log: $log_file" >&2
+  exit 1
+}
+
 check_marker() {
   local marker="$1"
   local log_file="$2"
   if ! grep -Eq -- "HelloScript\\(file\\)\\._ready\\[$marker\\]" "$log_file"; then
-    echo "[hot_reload_smoke] missing marker $marker"
-    tail -n 120 "$log_file"
-    exit 1
+    smoke_fail "missing marker" "$marker" "$log_file"
   fi
 }
 
@@ -52,9 +62,7 @@ check() {
   local pattern="$1"
   local log_file="$2"
   if ! grep -Eq -- "$pattern" "$log_file"; then
-    echo "[hot_reload_smoke] missing pattern: $pattern"
-    tail -n 120 "$log_file"
-    exit 1
+    smoke_fail "missing pattern" "$pattern" "$log_file"
   fi
 }
 
@@ -62,9 +70,7 @@ check_absent() {
   local pattern="$1"
   local log_file="$2"
   if grep -Eq -- "$pattern" "$log_file"; then
-    echo "[hot_reload_smoke] unexpected pattern: $pattern"
-    tail -n 120 "$log_file"
-    exit 1
+    smoke_fail "unexpected pattern" "$pattern" "$log_file"
   fi
 }
 
