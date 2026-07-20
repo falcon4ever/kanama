@@ -1596,8 +1596,11 @@ object BuiltinTypes {
      * Values are decoded with [variantToScalar]; object values decode to null here (use the
      * object-value readers below for typed wrapper/resource-script values).
      */
-    private fun readDictionaryAnyScalars(src: MemorySegment): LinkedHashMap<Any?, Any?> =
-        readDictionaryEntries(src) { valueVariant, arena -> variantToScalar(valueVariant, arena) }
+    private fun readDictionaryAnyScalars(
+        src: MemorySegment,
+        keepNullValues: Boolean = false,
+    ): LinkedHashMap<Any?, Any?> =
+        readDictionaryEntries(src, keepNullValues) { valueVariant, arena -> variantToScalar(valueVariant, arena) }
 
     /**
      * Object-valued Dictionary read: decode scalar keys, wrap each value's Object handle via
@@ -1624,8 +1627,9 @@ object BuiltinTypes {
      */
     private fun <V> readDictionaryEntries(
         src: MemorySegment,
+        keepNullValues: Boolean = false,
         decodeValue: (MemorySegment, Arena) -> V?,
-    ): LinkedHashMap<Any?, V> {
+    ): LinkedHashMap<Any?, V?> {
         val keysHash = 4144163970L
         val arraySizeHash = 3173160232L
         val arrayGetHash = 708700221L
@@ -1653,7 +1657,7 @@ object BuiltinTypes {
                 val size = sizeRet.get(JAVA_LONG, 0).toInt()
                 if (size <= 0) return LinkedHashMap()
 
-                val result = LinkedHashMap<Any?, V>(size)
+                val result = LinkedHashMap<Any?, V?>(size)
                 val indexArg = arena.allocate(JAVA_LONG)
                 for (i in 0 until size) {
                     indexArg.set(JAVA_LONG, 0, i.toLong())
@@ -1681,7 +1685,10 @@ object BuiltinTypes {
                                 rReturn = valueVariant,
                             )
                             val value = decodeValue(valueVariant, arena)
-                            if (value != null) result[key] = value
+                            // Drop nil values by default (typed-array parity). A nullable-value typed
+                            // Map opts into keeping them so the key survives with a null (C# parity);
+                            // the generated non-null decode still drops via `?: return@mapNotNull`.
+                            if (keepNullValues || value != null) result[key] = value
                         } finally {
                             variantDestroy.invoke(valueVariant)
                             variantDestroy.invoke(defaultVariant)
@@ -1702,11 +1709,15 @@ object BuiltinTypes {
      * Objects decode to null; use [readVariantDictionaryObjectValues] and its retained variants for
      * typed wrapper/resource-script values.
      */
-    fun readVariantDictionaryAny(variant: MemorySegment, arena: Arena): Map<Any?, Any?> {
+    fun readVariantDictionaryAny(
+        variant: MemorySegment,
+        arena: Arena,
+        keepNullValues: Boolean = false,
+    ): Map<Any?, Any?> {
         val scratch = arena.allocate(8L, 8L)
         VariantConverters.variantToType(VariantType.DICTIONARY).invoke(scratch, variant)
         try {
-            return readDictionaryAnyScalars(scratch)
+            return readDictionaryAnyScalars(scratch, keepNullValues)
         } finally {
             destroyTyped(VariantType.DICTIONARY, scratch)
         }

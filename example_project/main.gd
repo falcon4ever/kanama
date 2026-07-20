@@ -66,6 +66,8 @@ func _ready() -> void:
 		_kanama_accessor_containment_smoke()
 		_kanama_mutable_list_export_smoke(properties)
 		_kanama_dictionary_export_smoke(properties)
+		_kanama_dictionary_malformed_smoke()
+		_kanama_dictionary_nullable_value_smoke()
 		var replace_smoke_scene = $ScriptNode.replace_smoke_scene()
 		print("[kanama:gd] kt script replace_smoke_scene = ", replace_smoke_scene)
 		if not replace_smoke_scene:
@@ -218,6 +220,10 @@ func _kanama_mutable_list_export_smoke(properties: Array) -> void:
 # Vector2i->custom-resource map (value-type key + resource value), and a MutableMap
 # (preserving mutability in the setter).
 func _kanama_dictionary_export_smoke(properties: Array) -> void:
+	# Scene-deserialization of a typed Map: main.tscn stores smoke_scalar_map = {"seed": 42}, applied
+	# through siSet on scene load. Captured before any mutation below. This is the stale/scene-stored
+	# Dictionary path the malformed-input review flagged as untested.
+	var tscn_scalar_map: bool = $ScriptNode.smoke_scalar_map == {"seed": 42}
 	var scalar_type := false
 	var scalar_hint := false
 	var scalar_hint_string := false
@@ -274,6 +280,7 @@ func _kanama_dictionary_export_smoke(properties: Array) -> void:
 	$ScriptNode.smoke_vector_resource_map = {}
 	$ScriptNode.smoke_mutable_map = {}
 	print("[kanama:gd] kt script dictionary export scalar_type=", scalar_type,
+		" tscn_scalar_map=", tscn_scalar_map,
 		" scalar_hint=", scalar_hint,
 		" scalar_hint_string=", scalar_hint_string,
 		" scalar_roundtrip=", scalar_roundtrip,
@@ -290,8 +297,53 @@ func _kanama_dictionary_export_smoke(properties: Array) -> void:
 		" mutable_hint=", mutable_hint,
 		" mutable_hint_string=", mutable_hint_string,
 		" mutable_roundtrip=", mutable_roundtrip)
-	if not (scalar_type and scalar_hint and scalar_hint_string and scalar_roundtrip and enum_roundtrip and region_type and region_hint_string and region_roundtrip and vector_key_hint_string and vector_key_roundtrip and vector_resource_type and vector_resource_hint_string and vector_resource_roundtrip and mutable_type and mutable_hint and mutable_hint_string and mutable_roundtrip):
+	if not (scalar_type and tscn_scalar_map and scalar_hint and scalar_hint_string and scalar_roundtrip and enum_roundtrip and region_type and region_hint_string and region_roundtrip and vector_key_hint_string and vector_key_roundtrip and vector_resource_type and vector_resource_hint_string and vector_resource_roundtrip and mutable_type and mutable_hint and mutable_hint_string and mutable_roundtrip):
 		push_error("Kanama dictionary export metadata or round-trip failed")
+
+# issue #40 review / task 50 — malformed Dictionary input must NOT abort the process. Before the
+# fail-soft decode, a wrong-typed key ({1: 2} into a Map<String, Long>) or wrong-typed value
+# ({"bad": "not-a-number"}) threw ClassCastException out of an FFM upcall and killed Godot (exit
+# 134); a stale .tscn saved before the declared types changed hit the same path on scene load.
+# The decode now drops undecodable entries. Reaching this print at all is the core assertion —
+# an uncontained throw never gets here — and the property must hold a defined value afterwards.
+# Reverting the fail-soft decode (scalarReadCast* -> throwing `as`) reproduces the abort.
+func _kanama_dictionary_malformed_smoke() -> void:
+	# Wrong-typed keys: Long keys into a String-keyed map. Both keys fail to decode and drop.
+	$ScriptNode.smoke_scalar_map = {1: 2, 3: 4}
+	var wrong_key_empty = $ScriptNode.smoke_scalar_map == {}
+	# Wrong-typed value: a non-numeric value into a Long-valued map drops; the valid entry survives.
+	$ScriptNode.smoke_scalar_map = {"bad": "not-a-number", "ok": 5}
+	var wrong_value_dropped = $ScriptNode.smoke_scalar_map == {"ok": 5}
+	# Wrong-typed key on the value-type-key map (String key into a Vector2i-keyed map) drops too.
+	$ScriptNode.smoke_vector_key_map = {"nope": 1, Vector2i(9, 9): 8}
+	var wrong_vector_key_dropped = $ScriptNode.smoke_vector_key_map == {Vector2i(9, 9): 8}
+	$ScriptNode.smoke_scalar_map = {}
+	$ScriptNode.smoke_vector_key_map = {}
+	print("[kanama:gd] kt script dictionary malformed survived=true",
+		" wrong_key_empty=", wrong_key_empty,
+		" wrong_value_dropped=", wrong_value_dropped,
+		" wrong_vector_key_dropped=", wrong_vector_key_dropped)
+	if not (wrong_key_empty and wrong_value_dropped and wrong_vector_key_dropped):
+		push_error("Kanama dictionary malformed-input handling failed")
+
+# issue #40 review — nullable scalar Map value (Map<String, Long?>) mirrors C#'s nil-preserving
+# Dictionary: a null value keeps its key (unlike a non-null value map, which cannot hold null and
+# drops). Round-trips through the write path too (null -> nil Variant). A wrong-typed value also
+# becomes null rather than dropping, since the key can now hold it.
+func _kanama_dictionary_nullable_value_smoke() -> void:
+	$ScriptNode.smoke_nullable_scalar_map = {"a": null, "b": 2}
+	var got = $ScriptNode.smoke_nullable_scalar_map
+	# Key "a" survives with a null value (C# parity), "b" keeps 2.
+	var null_preserved = got.has("a") and got["a"] == null and got.get("b") == 2
+	# A wrong-typed value nulls (key preserved) rather than dropping.
+	$ScriptNode.smoke_nullable_scalar_map = {"c": "not-a-number"}
+	var wrong_value = $ScriptNode.smoke_nullable_scalar_map
+	var wrong_nulled = wrong_value.has("c") and wrong_value["c"] == null
+	$ScriptNode.smoke_nullable_scalar_map = {}
+	print("[kanama:gd] kt script dictionary nullable_value null_preserved=", null_preserved,
+		" wrong_nulled=", wrong_nulled)
+	if not (null_preserved and wrong_nulled):
+		push_error("Kanama dictionary nullable-value handling failed")
 
 # task 29 — virtual-return families. Calling an @OverrideVirtual method by name on a
 # script-attached host routes through the script instance dispatch (the same path the

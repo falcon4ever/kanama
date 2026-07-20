@@ -685,6 +685,7 @@ class KanamaProcessor(
                 scriptType.mapValueCustomScriptIsResource,
                 scriptType.mapValueEnumFqName,
                 scriptType.mapValueEnumEntries,
+                scriptType.mapValueNullable,
                 scriptType.isMutableMap,
                 scriptType.isMutableList,
             )
@@ -1176,6 +1177,22 @@ class KanamaProcessor(
                 }
                 val key = resolveMapKey(keyType, keyFq, className, propertyName)
                 val value = resolveMapValue(valueType, valueFq, className, propertyName, scriptClassTypes)
+                // Nullable object/resource/script map values (`Map<K, Texture2D?>`) are rejected
+                // rather than silently miscompiled: the object-valued Dictionary readers drop nil
+                // handles, so a null-preserving `Map<K, V?>` for objects would need a parallel
+                // reader path we don't yet have. Nullable *scalar/value/enum* values ARE supported
+                // (they preserve the key with null, matching C#). Declare the object value non-null;
+                // its nil entries drop, which is the type-consistent behaviour for a non-null slot.
+                if (valueType.isMarkedNullable &&
+                    (value.wrapperFqName != null || value.customScriptFqName != null)
+                ) {
+                    throw IllegalArgumentException(
+                        "$className.$propertyName: a nullable object/resource Map value ('$valueFq?') " +
+                            "is not supported. Declare it non-null ('Map<$keyFq, $valueFq>') — engine " +
+                            "object dictionaries drop nil values, so a cleared entry's key is dropped. " +
+                            "Nullable scalar/value-type/enum Map values are supported and preserve the key.",
+                    )
+                }
                 return ScriptPropertyTypeModel(
                     type = TypeMapping.DICTIONARY,
                     hint = PROPERTY_HINT_DICTIONARY_TYPE,
@@ -1188,6 +1205,9 @@ class KanamaProcessor(
                     mapValueCustomScriptIsResource = value.customScriptIsResource,
                     mapValueEnumFqName = value.enumFqName,
                     mapValueEnumEntries = value.enumEntries,
+                    // `Map<K, V?>`: mirror C#'s nil-preserving Dictionary — keep the key, decode a
+                    // nil/wrong-typed value to null. Non-null `V` cannot hold null, so it drops.
+                    mapValueNullable = valueType.isMarkedNullable,
                     isMutableMap = isMutable,
                 )
             }
@@ -3387,11 +3407,26 @@ internal class ScriptCodeEmitter(
             else -> variantReadExpr(property.type, variantPtr, localName)
         }
 
-    /** Read expression for a typed `Map<K, V>` property (issue #40). */
+    /**
+     * Read expression for a typed `Map<K, V>` property (issue #40).
+     *
+     * **Non-throwing by construction.** GDScript can hand the engine a Dictionary whose keys/values
+     * do not match the declared types — a wrong-typed literal (`{1: 2}` into `Map<String, Long>`) or
+     * a stale `.tscn` saved before the types changed. The decode must not `ClassCastException`: that
+     * escapes an FFM upcall and aborts the process (the very hole task 50's containment now catches,
+     * but containment is defence in depth — the read is fail-soft here *by construction*, like
+     * `variantReadExpr`'s `as?`/fallback and the typed-array/`readDictionaryScalars` drops). A key
+     * that can't be decoded skips the entry; a value that can't be decoded is nulled for a nullable
+     * `V?` (C#-parity: preserve the key) or drops the entry for a non-null `V` (Kotlin cannot hold
+     * the null). Nullable *object* values are rejected earlier in KSP, so only scalar/value/enum
+     * values reach the nullable-preserving branch.
+     */
     private fun mapReadPropertyExpr(property: ScriptPropertyModel, variantPtr: String, localName: String): String {
-        val keyExpr = mapKeyReadTransform(property, "it.key")
+        val keySafe = mapKeyReadTransformSafe(property, "entry.key")
         return when {
             // Engine object/resource wrapper values: retained read (fromHandle), like typed arrays.
+            // The reader drops nil (0-handle) values; keys are decoded fail-soft here. Value type is
+            // non-null (nullable object values rejected in KSP), so a dropped nil is C#-consistent.
             property.mapValueWrapperFqName != null -> {
                 val wrapper = property.mapValueWrapperFqName
                 val wrapperLambda = if (wrapper in RESOURCE_WRAPPER_FROM_HANDLE) {
@@ -3404,7 +3439,7 @@ internal class ScriptCodeEmitter(
                 } else {
                     "readVariantDictionaryObjectValues"
                 }
-                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.$reader($variantPtr, a, $wrapperLambda).mapKeys { $keyExpr } }"
+                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.$reader($variantPtr, a, $wrapperLambda).entries.mapNotNull { entry -> val k = $keySafe ?: return@mapNotNull null; k to entry.value }.toMap() }"
             }
             // Custom @ScriptClass instances: resolve the live Kotlin script, retaining resource scripts.
             property.mapValueCustomScriptFqName != null -> {
@@ -3415,45 +3450,64 @@ internal class ScriptCodeEmitter(
                 } else {
                     "readVariantDictionaryObjectValues"
                 }
-                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.$reader($variantPtr, a, $resolver).mapKeys { $keyExpr } }"
+                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.$reader($variantPtr, a, $resolver).entries.mapNotNull { entry -> val k = $keySafe ?: return@mapNotNull null; k to entry.value }.toMap() }"
             }
             // Scalar / String / value-type / enum values ride the generic scalar decode.
             else -> {
-                val valueExpr = mapValueReadTransform(property, "it.value")
-                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantDictionaryAny($variantPtr, a).entries.associate { $keyExpr to $valueExpr } }"
+                val valueSafe = mapValueReadTransformSafe(property, "entry.value")
+                val bind: String
+                val keepNulls: String
+                if (property.mapValueNullable) {
+                    // Map<K, V?>: preserve the key, decode a nil/wrong-typed value to null (C# parity).
+                    // keepNullValues=true so the reader itself does not drop the nil-valued entry.
+                    bind = "k to ($valueSafe)"
+                    keepNulls = ", keepNullValues = true"
+                } else {
+                    // Map<K, V>: Kotlin cannot hold null there, so drop a nil/wrong-typed value.
+                    bind = "val v = $valueSafe ?: return@mapNotNull null; k to v"
+                    keepNulls = ""
+                }
+                "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantDictionaryAny($variantPtr, a$keepNulls).entries.mapNotNull { entry -> val k = $keySafe ?: return@mapNotNull null; $bind }.toMap() }"
             }
         }
     }
 
-    /** Transform a raw decoded key ([varExpr]) into the Kotlin key type. */
-    private fun mapKeyReadTransform(property: ScriptPropertyModel, varExpr: String): String {
+    /** Fail-soft key transform: yields `K?`, null when the raw key can't be decoded (skips the entry). */
+    private fun mapKeyReadTransformSafe(property: ScriptPropertyModel, varExpr: String): String {
         val fq = property.mapKeyKotlinType
         if (property.mapKeyEnumEntries.isNotEmpty() && fq != null) {
-            return enumOrdinalReadCast(fq, varExpr)
+            return enumOrdinalReadCastSafe(fq, varExpr)
         }
-        return scalarReadCast(fq, varExpr)
+        return scalarReadCastSafe(fq, varExpr)
     }
 
-    /** Transform a raw decoded scalar/enum value ([varExpr]) into the Kotlin value type. */
-    private fun mapValueReadTransform(property: ScriptPropertyModel, varExpr: String): String {
-        property.mapValueEnumFqName?.let { fq -> return enumOrdinalReadCast(fq, varExpr) }
-        return scalarReadCast(property.mapValueKotlinType, varExpr)
+    /** Fail-soft value transform: yields `V?`, null when the raw scalar/enum value can't be decoded. */
+    private fun mapValueReadTransformSafe(property: ScriptPropertyModel, varExpr: String): String {
+        property.mapValueEnumFqName?.let { fq -> return enumOrdinalReadCastSafe(fq, varExpr) }
+        return scalarReadCastSafe(property.mapValueKotlinType, varExpr)
     }
 
-    /** Cast a raw decoded Variant scalar/value-type ([varExpr]) to its Kotlin type, narrowing numbers. */
-    private fun scalarReadCast(kotlinType: String?, varExpr: String): String = when (kotlinType) {
-        "String" -> "$varExpr as String"
-        "Long" -> "($varExpr as Number).toLong()"
-        "Int" -> "($varExpr as Number).toInt()"
-        "Double" -> "($varExpr as Number).toDouble()"
-        "Float" -> "($varExpr as Number).toFloat()"
-        "Boolean" -> "$varExpr as Boolean"
-        else -> "$varExpr as $kotlinType"
+    /**
+     * Fail-soft cast of a raw decoded Variant scalar/value-type ([varExpr]) to its Kotlin type,
+     * narrowing numbers. Yields a nullable expression: `null` on a type mismatch rather than a
+     * `ClassCastException` (see [mapReadPropertyExpr]).
+     */
+    private fun scalarReadCastSafe(kotlinType: String?, varExpr: String): String = when (kotlinType) {
+        "String" -> "($varExpr as? String)"
+        "Long" -> "(($varExpr as? Number)?.toLong())"
+        "Int" -> "(($varExpr as? Number)?.toInt())"
+        "Double" -> "(($varExpr as? Number)?.toDouble())"
+        "Float" -> "(($varExpr as? Number)?.toFloat())"
+        "Boolean" -> "($varExpr as? Boolean)"
+        else -> "($varExpr as? $kotlinType)"
     }
 
-    /** Clamp a stored ordinal ([varExpr]) into a valid enum entry, matching the scalar/list enum policy. */
-    private fun enumOrdinalReadCast(enumFq: String, varExpr: String): String =
-        "$enumFq.entries[($varExpr as Number).toInt().coerceIn(0, $enumFq.entries.lastIndex)]"
+    /**
+     * Fail-soft ordinal decode: clamps a valid stored ordinal into an enum entry (matching the
+     * scalar/list enum policy), but yields `null` for a non-numeric value instead of throwing.
+     */
+    private fun enumOrdinalReadCastSafe(enumFq: String, varExpr: String): String =
+        "(($varExpr as? Number)?.toInt()?.let { $enumFq.entries[it.coerceIn(0, $enumFq.entries.lastIndex)] })"
 
     private fun variantReadArgExpr(arg: ArgModel, variantPtr: String, localName: String): String =
         if (arg.objectWrapperFqName != null) {

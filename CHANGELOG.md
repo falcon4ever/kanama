@@ -70,8 +70,15 @@ pre-1.0 preview baseline.
   (scalars, `String`, `Vector*`/`Color`, engine resource/node wrappers, custom
   `@ScriptClass` scripts, and `enum class`). Resource-typed values are
   ownership-managed like `List<Resource>`; enum keys/values store as ordinals.
-  iOS defers dictionary-property marshalling (keeps the Kotlin default, warns at
-  build) as the enum-list exports do. See
+  Decoding is **fail-soft**: a wrong-typed key or value (a hand-edited entry, or
+  a stale `.tscn` saved before the types changed) is skipped instead of throwing
+  a `ClassCastException` out of the FFM upcall — which would abort the process.
+  Nil-value handling mirrors Godot C#'s engine-backed `Dictionary`: `Map<K, V?>`
+  keeps the key with a `null` value (round-tripping through the write path),
+  while non-null `Map<K, V>` drops the entry (Kotlin cannot hold null there).
+  Nullable object-value maps (`Map<K, Texture2D?>`) are rejected at build time
+  with a clear message. iOS defers dictionary-property marshalling (keeps the
+  Kotlin default, warns at build) as the enum-list exports do. See
   [Exporting Dictionaries](docs/game-dev/properties-resources.md#exporting-dictionaries).
 - iOS `@ScriptProperty` codegen now **fails the build** (was a warning) when a *data* property is
   settable by the engine but not readable (a write-only get/set asymmetry). This is the exact class

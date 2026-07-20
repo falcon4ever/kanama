@@ -155,6 +155,33 @@ Dictionary exports are supported on `@ScriptClass` scripts (`@ScriptProperty` /
 `@Export`); `@RegisterProperty` on `@RegisterClass` classes does not accept
 `Map` (or `List`) types.
 
+### Nil values and malformed entries
+
+Decoding a Dictionary from the engine is **fail-soft**: an entry whose key or
+value does not match the declared types (a hand-edited value, or a stale `.tscn`
+saved before the types changed) is skipped rather than throwing — a wrong-typed
+entry can never crash the script.
+
+What happens to a **nil value** depends on whether the value type is nullable,
+mirroring Godot C#'s engine-backed `Dictionary`:
+
+- `Map<K, V?>` (nullable value) — the key is **kept with a `null` value**, and a
+  wrong-typed value also decodes to `null`. This matches C#, whose Dictionary
+  value slots are always nullable references.
+- `Map<K, V>` (non-null value) — Kotlin cannot hold a `null` there, so a nil
+  entry is **dropped** (the same way typed arrays drop nil elements).
+
+Nullable *scalar / value-type / enum* values are supported. A nullable
+**object/resource** value (`Map<K, Texture2D?>`) is rejected at build time —
+declare it non-null; its nil entries drop.
+
+### iOS
+
+Typed-Dictionary property **delivery is deferred on iOS**: the codegen warn-skips
+`Map` properties on the Kotlin/Native backend, so they are not read/written on
+iOS yet (desktop and Android are fully supported). Shared game code still
+compiles for iOS — the property simply keeps its Kotlin default there.
+
 ## Inspector Buttons
 
 Use `@ToolButton` on a zero-argument function in a `@Tool @ScriptClass` to

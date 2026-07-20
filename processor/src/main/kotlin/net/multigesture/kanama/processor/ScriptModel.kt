@@ -206,6 +206,13 @@ internal data class ScriptPropertyModel(
     val mapValueEnumFqName: String? = null,
     /** Ordered entry names when the value is an enum class; empty otherwise. */
     val mapValueEnumEntries: List<String> = emptyList(),
+    /**
+     * True when the map value type is declared nullable (`Map<K, V?>`). Mirrors Godot C#, whose
+     * engine-backed `Godot.Collections.Dictionary` preserves a key whose value is nil. When true,
+     * a nil / wrong-typed value decodes to `null` and the key is preserved; when false, Kotlin's
+     * type system cannot hold a null there, so the entry is dropped (like the typed-array nil-drop).
+     */
+    val mapValueNullable: Boolean = false,
     /** True when the original property is `MutableMap` instead of immutable `Map`. */
     val isMutableMap: Boolean = false,
     /** True when the original property is `MutableList` instead of immutable `List`. */
@@ -242,6 +249,7 @@ internal data class ScriptPropertyTypeModel(
     val mapValueCustomScriptIsResource: Boolean = false,
     val mapValueEnumFqName: String? = null,
     val mapValueEnumEntries: List<String> = emptyList(),
+    val mapValueNullable: Boolean = false,
     val isMutableMap: Boolean = false,
     val isMutableList: Boolean = false,
 )

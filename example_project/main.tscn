@@ -81,6 +81,9 @@ script = ExtResource("2")
 label = "from_tscn"
 smoke_difficulty = 2
 smoke_joints = [2, 0]
+smoke_scalar_map = {
+"seed": 42
+}
 smoke_throwing_setter = 666
 target_path = NodePath("../SceneTarget3D")
 

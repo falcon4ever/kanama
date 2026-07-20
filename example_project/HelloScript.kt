@@ -203,6 +203,12 @@ class HelloScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 	@ScriptProperty
 	var smokeMutableMap: MutableMap<String, Long> = mutableMapOf()
 
+	// issue #40 review — nullable scalar value (Map<String, Long?>): mirrors C#'s nil-preserving
+	// Dictionary. A null (or wrong-typed) value keeps its key with a null value rather than dropping
+	// it. Non-null value maps above cannot hold null, so they drop — the type-forced difference.
+	@ScriptProperty
+	var smokeNullableScalarMap: Map<String, Long?> = emptyMap()
+
 	@ToolButton(text = "Reset Health", icon = "Reload")
 	fun resetHealth() {
 		health = 99
