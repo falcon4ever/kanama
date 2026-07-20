@@ -114,6 +114,12 @@ internal data class IosProperty(
     // FQ enum element type for List<Enum> properties. The C/runtime path delivers the Array's
     // integer cells separately from object arrays; the generated bridge maps ordinals to entries.
     val arrayElementEnumFqName: String = "",
+    // True when the property is declared `MutableList<T>` rather than `List<T>`. The list decode
+    // helpers all produce an immutable `List` (map/mapNotNull/the delivered String list), so a
+    // mutable property needs a `.toMutableList()` suffix or the generated assignment fails to
+    // compile on Kotlin/Native (`List<T>` is not assignable to `MutableList<T>`). Mirrors the
+    // desktop emitter's `.toMutableList()` on `p.isMutable`.
+    val isMutable: Boolean = false,
 )
 
 internal data class IosSignal(
@@ -322,11 +328,11 @@ internal class IosScriptCodeEmitter(
                         // delivered owner handle resolves to its live Kotlin script instance, mirroring
                         // the single-object node_paths case. Stray unresolved handles are dropped.
                         property.isList && property.arrayElementCustomScriptFqName.isNotEmpty() -> {
-                            builder.appendLine("        $index -> { script.${property.kotlinName} = values.toList().mapNotNull { owner -> net.multigesture.kanama.ios.iosScriptInstanceForOwner(owner) as? ${property.arrayElementCustomScriptFqName} }; true }")
+                            builder.appendLine("        $index -> { script.${property.kotlinName} = values.toList().mapNotNull { owner -> net.multigesture.kanama.ios.iosScriptInstanceForOwner(owner) as? ${property.arrayElementCustomScriptFqName} }${property.mutableSuffix()}; true }")
                         }
                         // Array of an engine wrapper type: wrap each handle directly.
                         property.isList && property.listElementClassName.isNotEmpty() -> {
-                            builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { owner: Long -> net.multigesture.kanama.api.${property.listElementClassName}(java.lang.foreign.MemorySegment.ofAddress(owner)) }; true }")
+                            builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { owner: Long -> net.multigesture.kanama.api.${property.listElementClassName}(java.lang.foreign.MemorySegment.ofAddress(owner)) }${property.mutableSuffix()}; true }")
                         }
                     }
                 }
@@ -340,7 +346,7 @@ internal class IosScriptCodeEmitter(
                 script.properties.forEachIndexed { index, property ->
                     if (property.arrayElementEnumFqName.isNotEmpty()) {
                         val fq = property.arrayElementEnumFqName
-                        builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { i -> $fq.entries[i.toInt().coerceIn(0, $fq.entries.lastIndex)] }; true }")
+                        builder.appendLine("        $index -> { script.${property.kotlinName} = values.map { i -> $fq.entries[i.toInt().coerceIn(0, $fq.entries.lastIndex)] }${property.mutableSuffix()}; true }")
                     }
                 }
                 builder.appendLine("        else -> false")
@@ -352,7 +358,7 @@ internal class IosScriptCodeEmitter(
                 builder.appendLine("    override fun setPropertyStringArray(propertyIndex: Int, values: List<String>): Boolean = when (propertyIndex) {")
                 script.properties.forEachIndexed { index, property ->
                     if (property.isList && property.listElementIsString) {
-                        builder.appendLine("        $index -> { script.${property.kotlinName} = values; true }")
+                        builder.appendLine("        $index -> { script.${property.kotlinName} = values${property.mutableSuffix()}; true }")
                     }
                 }
                 builder.appendLine("        else -> false")
@@ -647,6 +653,11 @@ internal class IosScriptCodeEmitter(
         return if (a.type in iosCallArgTypes) "$cell as ${a.type.kotlinType}" else null
     }
 
+    // List decode helpers (map/mapNotNull/the delivered String list) all yield an immutable
+    // `List`. A `MutableList<T>` property therefore needs this suffix, or the generated assignment
+    // fails to compile on Kotlin/Native. Mirrors the desktop emitter's `.toMutableList()`.
+    private fun IosProperty.mutableSuffix(): String = if (isMutable) ".toMutableList()" else ""
+
     private fun ScriptPropertyModel.toIosProperty(className: String): IosProperty {
         val isList = type == TypeMapping.ARRAY
         val isObject = objectWrapperFqName != null
@@ -755,6 +766,7 @@ internal class IosScriptCodeEmitter(
             scalarSetExpression = scalarSetExpression,
             scalarGetExpression = scalarGetExpression,
             arrayElementEnumFqName = if (isList) arrayElementEnumFqName.orEmpty() else "",
+            isMutable = isMutable,
         )
     }
 

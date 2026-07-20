@@ -7,6 +7,19 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed
+
+- iOS: a `MutableList<T>` `@ScriptProperty` no longer generates non-compiling
+  Kotlin/Native. The iOS registrar's list-property setters decode into an
+  immutable `List`, which is not assignable to a `MutableList` field
+  (`Assignment type mismatch: List<String> vs MutableList<String>`), so an iOS
+  build of any script with a mutable-list export failed to compile. The setters
+  now append `.toMutableList()` for mutable properties, mirroring the desktop
+  emitter — which had handled this all along, while the iOS emitter dropped the
+  mutability flag entirely. Covers the string-list, engine-wrapper-list,
+  `@ScriptClass`-element-list, and enum-list arms. Immutable `List<T>` is
+  unchanged.
+
 ### Changed
 
 - `scripts/local_ci.sh` failures are now self-announcing. A failing stage prints a

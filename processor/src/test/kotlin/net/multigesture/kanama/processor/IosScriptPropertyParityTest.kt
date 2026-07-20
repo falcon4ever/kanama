@@ -25,10 +25,10 @@ class IosScriptPropertyParityTest {
     private fun scalarProp(name: String, type: TypeMapping) =
         ScriptPropertyModel(kotlinName = name, godotName = name, type = type, isMutable = true)
 
-    private fun stringListProp(name: String) =
+    private fun stringListProp(name: String, mutable: Boolean = true) =
         ScriptPropertyModel(
             kotlinName = name, godotName = name, type = TypeMapping.ARRAY,
-            isMutable = true, arrayElementString = true,
+            isMutable = mutable, arrayElementString = true,
         )
 
     private fun objectProp(name: String) =
@@ -48,6 +48,16 @@ class IosScriptPropertyParityTest {
             }
         }
         fun readable(kotlinName: String) = getPropertyBlock.contains("script.$kotlinName")
+        // The generated set-side assignment for a list property (`script.<name> = <decode>…`).
+        // Returns the tail after the `=` up to the trailing `; true }` so mutability-suffix
+        // assertions don't depend on the exact decode expression.
+        fun setterRhs(kotlinName: String): String {
+            val marker = "script.$kotlinName = "
+            val at = source.indexOf(marker)
+            if (at < 0) return ""
+            val end = source.indexOf("; true }", at)
+            return source.substring(at + marker.length, if (end < 0) source.length else end)
+        }
     }
 
     private fun emit(vararg props: ScriptPropertyModel): Result {
@@ -112,5 +122,36 @@ class IosScriptPropertyParityTest {
         val r = emit(stringListProp("names"))
         assertEquals(emptyList(), r.errors)
         assertTrue(r.readable("names"), "List<String> @ScriptProperty must be engine-readable")
+    }
+
+    /**
+     * A `MutableList<T>` @ScriptProperty must decode with a `.toMutableList()` suffix: the list
+     * decode helpers all yield an immutable `List`, which is not assignable to a `MutableList`
+     * field on Kotlin/Native (compile-verified: `Assignment type mismatch: List<String> vs
+     * MutableList<String>`). Without the suffix the generated iOS registrar does not compile.
+     * The desktop emitter has done this for `p.isMutable` all along; the iOS emitter dropped
+     * `isMutable` entirely until this was threaded through. Reverting the suffix fails this test.
+     */
+    @Test
+    fun mutableListPropertyDecodesWithToMutableListSuffix() {
+        val r = emit(stringListProp("mutableTags", mutable = true))
+        assertEquals(emptyList(), r.errors)
+        assertTrue(
+            r.setterRhs("mutableTags").contains(".toMutableList()"),
+            "MutableList<String> @ScriptProperty must decode with .toMutableList() " +
+                "(actual: '${r.setterRhs("mutableTags")}')",
+        )
+    }
+
+    /** The mirror: an immutable `List<T>` must NOT gain the suffix (it would silently rewrap). */
+    @Test
+    fun immutableListPropertyHasNoToMutableListSuffix() {
+        val r = emit(stringListProp("readonlyTags", mutable = false))
+        assertEquals(emptyList(), r.errors)
+        assertFalse(
+            r.setterRhs("readonlyTags").contains(".toMutableList()"),
+            "immutable List<String> @ScriptProperty must not gain a .toMutableList() suffix " +
+                "(actual: '${r.setterRhs("readonlyTags")}')",
+        )
     }
 }
