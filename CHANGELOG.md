@@ -7,6 +7,19 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed
+
+- Desktop/Android `Resource` now extends `RefCounted`, restoring Godot's real
+  `Object > RefCounted > Resource` chain (which iOS already had). Previously
+  `Resource` was its own wrapper root that re-implemented the refcount lifetime
+  and hid `GodotObject`'s surface, so `setMeta`/`getMeta`/`connect`/
+  `callDeferred` were unreachable from every `Resource` subclass without an
+  `asObject()` hop. They are now callable directly. The duplicated refcount
+  policy is gone — `Resource` inherits one implementation from `RefCounted` —
+  and the inheritance audit enforces the parent rather than whitelisting
+  `Resource` as a root. `asObject()` is kept as a compatibility alias. No
+  intended behaviour change to resource lifetime; purely a surface gain.
+
 ### Fixed
 
 - iOS: a `MutableList<T>` `@ScriptProperty` no longer generates non-compiling

@@ -28,7 +28,7 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1036 / 1036 `████████████` 100.0%
-- Methods: 15373 / 15385 `████████████` 99.9% (callable methods; engine virtuals excluded — see below)
+- Methods: 15374 / 15385 `████████████` 99.9% (callable methods; engine virtuals excluded — see below)
 
 ### Per-Platform Class Sets
 
@@ -45,7 +45,7 @@ Every platform tree is held to `check_full_drift_gate` (committed == fresh regen
 
 | Area | Classes | Class Coverage | Methods | Method Coverage |
 | --- | ---: | --- | ---: | --- |
-| Core | 226/226 | `████████████` 100.0% | 2962/2970 | `████████████` 99.7% |
+| Core | 226/226 | `████████████` 100.0% | 2963/2970 | `████████████` 99.8% |
 | Scene | 26/26 | `████████████` 100.0% | 923/923 | `████████████` 100.0% |
 | Resources | 306/306 | `████████████` 100.0% | 2886/2891 | `████████████` 99.8% |
 | Input | 20/20 | `████████████` 100.0% | 238/238 | `████████████` 100.0% |
@@ -733,7 +733,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `RayCast2D` | 2D | 28/28 | `████████` 100.0% |
 | `RayCast3D` | 3D | 35/35 | `████████` 100.0% |
 | `RectangleShape2D` | 2D | 2/2 | `████████` 100.0% |
-| `RefCounted` | Core | 2/4 | `████░░░░` 50.0% |
+| `RefCounted` | Core | 3/4 | `██████░░` 75.0% |
 | `ReferenceRect` | UI | 6/6 | `████████` 100.0% |
 | `ReflectionProbe` | 3D | 30/30 | `████████` 100.0% |
 | `RegEx` | Core | 10/10 | `████████` 100.0% |

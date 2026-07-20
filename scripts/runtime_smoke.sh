@@ -102,6 +102,9 @@ check "kt script enum list export type=true hint=true hint_string=true tscn=true
 # rejected (previous value survives), a failed get yields null, and the property recovers.
 # Removing the containment makes Godot exit 134 before printing this line at all.
 check "kt script accessor containment tscn_rejected=true baseline=true set_rejected=true set_recovered=true get_contained=true get_recovered=true"
+# task 51 — Resource extends RefCounted, so setMeta/getMeta (GodotObject surface) work on a
+# Resource directly (no asObject() hop). set_get=51 proves the inherited meta round-trips.
+check "task51 resource meta set_get=51 has=true"
 # MutableList export (preserves mutability in the setter): ARRAY + PROPERTY_HINT_TYPE_STRING,
 # set/get round-trip for a mutable typed list.
 check "kt script mutable list export type=true hint=true hint_string=true roundtrip=true"

@@ -228,6 +228,18 @@ class HelloScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 			smokeScene = PackedScene.create()
 		}
 		GD.print("Hello from Kanama script")
+		// task 51 — Resource now extends RefCounted (Godot's real Object > RefCounted > Resource
+		// chain, as iOS already did), so GodotObject's surface (setMeta/getMeta/…) is reachable on
+		// any Resource. The former split root hid it — T-bond's chat report. Prove setMeta round-trips
+		// directly on a Resource (no asObject() hop) and that the refcount lifetime still closes clean.
+		run {
+			val res = Resource.create()
+			res.setMeta("kanama_t51", 51L)
+			val metaBack = (res.getMeta("kanama_t51") as? Number)?.toLong() ?: -1L
+			val hasMeta = res.hasMeta("kanama_t51")
+			res.close()
+			System.err.println("[kanama:kt] task51 resource meta set_get=$metaBack has=$hasMeta")
+		}
 		val mathLerp = Mathf.lerp(2.0, 4.0, 0.25)
 		val mathClamp = Mathf.clamp(12L, 0L, 10L)
 		val mathWrap = Mathf.wrap(11L, 0L, 10L)

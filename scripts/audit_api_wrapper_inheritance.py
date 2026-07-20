@@ -25,8 +25,12 @@ CLASS_RE = re.compile(
     re.MULTILINE | re.DOTALL,
 )
 
+# Root wrappers that legitimately extend a hand base rather than their Godot parent's wrapper.
+# `Resource` was removed (task 51): it now extends `RefCounted`, matching Godot's real
+# `Object > RefCounted > Resource` chain (as iOS already did), so the audit enforces that parent
+# instead of whitelisting it as a root.
 ROOT_WRAPPER_BASES = {"GodotObject", "AutoCloseable"}
-ROOT_CLASSES = {"Object", "RefCounted", "Resource"}
+ROOT_CLASSES = {"Object", "RefCounted"}
 
 
 def allowed_bases(class_name: str, api_classes: dict) -> set[str]:

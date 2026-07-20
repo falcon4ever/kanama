@@ -10,14 +10,8 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: Resource
  */
 open class Resource internal constructor(
-    internal val handle: MemorySegment,
-) : AutoCloseable {
-
-    protected var closed = false
-    private var wrapperReferenceReleased = false
-
-    val isNull: Boolean
-        get() = handle.address() == 0L
+    handle: MemorySegment,
+) : RefCounted(handle) {
 
     /**
      * The unique path to this resource. If it has been saved to disk, the value will be its filepath.
@@ -294,58 +288,16 @@ open class Resource internal constructor(
         return wrap(ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, handle, mode))
     }
 
-    fun getReferenceCount(): Long {
-        checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, handle).toLong()
-    }
-
-    fun isClass(className: String): Boolean {
-        checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isClassBind, handle, className)
-    }
-
     /**
      * Returns a non-owning Object wrapper for this resource.
+     *
+     * Retained for source compatibility: `Resource` now inherits `GodotObject`'s surface directly
+     * (`setMeta`/`connect`/`callDeferred`/…), so this is largely a convenience alias for callers
+     * that already hold one (e.g. `docs/contributing/demo-porting-rules.md`).
      */
     fun asObject(): GodotObject {
         checkOpen()
         return GodotObject(handle)
-    }
-
-    internal fun requireOpenHandle(): MemorySegment {
-        checkOpen()
-        return handle
-    }
-
-    internal fun retainForKotlinWrapper(): MemorySegment {
-        checkOpen()
-        ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
-        wrapperReferenceReleased = false
-        return handle
-    }
-
-    /**
-     * Releases this Kotlin wrapper's reference to the underlying Godot resource.
-     *
-     * This is a low-level lifetime operation. Do not use it as general gameplay
-     * cleanup for live Godot-owned resources such as meshes, materials,
-     * `PackedScene`s, textures, animations, audio streams, or any resource assigned
-     * into a node or scene.
-     */
-    @ManualGodotLifetimeApi
-    override open fun close() {
-        if (closed || wrapperReferenceReleased || isNull) return
-        wrapperReferenceReleased = true
-        val shouldDestroy = ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)
-        if (shouldDestroy) {
-            closed = true
-            ObjectCalls.destroyObject(handle)
-        }
-    }
-
-    protected fun checkOpen() {
-        check(!closed) { "Resource handle is closed" }
-        check(!isNull) { "Resource handle is null" }
     }
 
     object Signals {
@@ -382,10 +334,6 @@ open class Resource internal constructor(
         private const val NOARGS_VOID_HASH = 3218959716L
         private const val DUPLICATE_HASH = 482882304L
         private const val DUPLICATE_DEEP_HASH = 905779109L
-        private const val GET_REFERENCE_COUNT_HASH = 3905245786L
-        private const val IS_CLASS_HASH = 3927539163L
-        private const val UNREFERENCE_HASH = 2240911060L
-        private const val REFERENCE_HASH = 2240911060L
 
         private val getPathBind by lazy {
             ObjectCalls.getMethodBind("Resource", "get_path", GET_PATH_HASH)
@@ -469,22 +417,6 @@ open class Resource internal constructor(
 
         private val duplicateDeepBind by lazy {
             ObjectCalls.getMethodBind("Resource", "duplicate_deep", DUPLICATE_DEEP_HASH)
-        }
-
-        private val getReferenceCountBind by lazy {
-            ObjectCalls.getMethodBind("RefCounted", "get_reference_count", GET_REFERENCE_COUNT_HASH)
-        }
-
-        private val isClassBind by lazy {
-            ObjectCalls.getMethodBind("Object", "is_class", IS_CLASS_HASH)
-        }
-
-        private val unreferenceBind by lazy {
-            ObjectCalls.getMethodBind("RefCounted", "unreference", UNREFERENCE_HASH)
-        }
-
-        private val referenceBind by lazy {
-            ObjectCalls.getMethodBind("RefCounted", "reference", REFERENCE_HASH)
         }
 
         internal fun wrap(handle: MemorySegment): Resource? =

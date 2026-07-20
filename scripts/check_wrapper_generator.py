@@ -26,11 +26,16 @@ IOS_API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api
 # it here. Non-API files (GodotObject, GD, DirAccessHandle, ...) are auto-excluded (not in the API).
 DESKTOP_HANDSHAPED = frozenset({
     # hand-authored static facades / lifetime & handle policy the generator does not emit
-    "DirAccess", "FileAccess", "RefCounted", "Resource",
+    "DirAccess", "FileAccess", "RefCounted",
     # generated base + hand ergonomic helpers / aliases / custom defaults
     "AnimationPlayer", "Button", "LineEdit", "Light3D", "Range", "Slider", "Viewport",
     "Node", "Node3D", "TabBar",
-    # hand factory/downcast helpers (`create` / `from*` / `node`) not emitted by desktop generator
+    # hand factory/downcast helpers (`create` / `from*` / `node`) not emitted by desktop generator.
+    # `Resource` now extends `RefCounted` (task 51) — its refcount lifetime is inherited, not
+    # hand-written; it stays exempt only for its `create`/`fromObject`/`asObject` helpers, the same
+    # reason its factory-helper siblings below are here. (ROOT_CLASSES in the inheritance audit was
+    # retired for it, so the `: RefCounted` parent is now enforced there.)
+    "Resource",
     "ArrayMesh", "AudioStreamPlayer", "BaseMaterial3D", "BoxMesh", "BoxShape3D", "ButtonGroup",
     "Camera3D", "ConfigFile", "ENetMultiplayerPeer", "EditorExportPlatform", "Font",
     "InputEventKey", "InputEventMouseButton", "InputEventMouseMotion", "LightmapGI", "Material",
