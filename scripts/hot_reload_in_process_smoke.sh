@@ -51,7 +51,10 @@ set_marker() {
 smoke_fail() {
   local kind="$1" pattern="$2"
   echo "[hot_reload_in_process_smoke] $kind: $pattern" >&2
-  tail -n 160 "$LOG_FILE" 2>/dev/null >&2 || true
+  # Redirect order matters: `>&2` first duplicates the real stderr, then `2>/dev/null`
+  # silences tail's own errors when the log does not exist yet. Reversing them points
+  # stdout at /dev/null and silently drops the whole dump.
+  tail -n 160 "$LOG_FILE" >&2 2>/dev/null || true
   echo >&2
   echo "[hot_reload_in_process_smoke] FAIL -- $kind: $pattern" >&2
   echo "[hot_reload_in_process_smoke] full log: $LOG_FILE" >&2
