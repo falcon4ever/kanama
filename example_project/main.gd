@@ -340,9 +340,19 @@ func _kanama_dictionary_nullable_value_smoke() -> void:
 	var wrong_value = $ScriptNode.smoke_nullable_scalar_map
 	var wrong_nulled = wrong_value.has("c") and wrong_value["c"] == null
 	$ScriptNode.smoke_nullable_scalar_map = {}
+	# Object-valued map (Map<Long, SmokeResource>, non-null value): a nil value DROPS the key.
+	# Kotlin cannot hold null in a non-null SmokeResource field, and nullable object-map values
+	# (Map<K, Resource?>) are rejected at build, so drop is the intended C#-consistent contract
+	# — task 49 item 1 pins it here rather than leaving it incidental.
+	var region_res = ClassDB.instantiate("Resource")
+	region_res.set_script(load("res://SmokeResource.kt"))
+	$ScriptNode.smoke_region_map = {10: region_res, 20: null}
+	var region_got = $ScriptNode.smoke_region_map
+	var object_null_dropped = region_got.has(10) and not region_got.has(20)
+	$ScriptNode.smoke_region_map = {}
 	print("[kanama:gd] kt script dictionary nullable_value null_preserved=", null_preserved,
-		" wrong_nulled=", wrong_nulled)
-	if not (null_preserved and wrong_nulled):
+		" wrong_nulled=", wrong_nulled, " object_null_dropped=", object_null_dropped)
+	if not (null_preserved and wrong_nulled and object_null_dropped):
 		push_error("Kanama dictionary nullable-value handling failed")
 
 # task 29 — virtual-return families. Calling an @OverrideVirtual method by name on a
