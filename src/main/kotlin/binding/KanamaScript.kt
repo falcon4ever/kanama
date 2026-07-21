@@ -598,7 +598,10 @@ class KanamaScript(
          *
          * Currently restricted to `@ScriptClass(attachTo = "Resource")` classes.
          */
-        fun instantiateResourceScript(fqName: String?, simpleName: String?): Any {
+        fun instantiateResourceScript(
+            fqName: String?,
+            simpleName: String?,
+        ): Pair<Any, net.multigesture.kanama.api.Resource> {
             val requested = fqName ?: simpleName ?: "<unknown>"
             val template = resolveTemplate(fqName, simpleName)
                 ?: error(
@@ -609,23 +612,35 @@ class KanamaScript(
                 "newScriptInstance: '${template.kotlinClassName}' attaches to '${template.instanceBaseType}', " +
                     "but programmatic creation currently supports only @ScriptClass(attachTo = \"Resource\")."
             }
-            val script = resolveScriptResource(template)
+            val resolved = resolveScriptResource(template)
                 ?: error(
                     "newScriptInstance: could not resolve the script resource for '${template.kotlinClassName}'. " +
                         "Mark it @GlobalClass and name the file after the class so its res:// path is discoverable."
                 )
             val baseHandle = ObjectCalls.constructObject("Resource")
-            withProgrammaticCreate {
-                net.multigesture.kanama.api.GodotObject(baseHandle).setScript(script)
-            }
-            // Own the fresh resource so it is not freed when a later save drops its
-            // transient Ref<> (mirrors the task-43 owned-return convention).
+            // Own the fresh resource immediately (before attach) so the +1 is released on any error
+            // path, not just success — mirrors the task-43 owned-return convention. Balanced by the
+            // returned Resource's close() on the happy path, or releaseHandle in finally otherwise.
             net.multigesture.kanama.api.RefCounted.retainHandle(baseHandle)
-            return ScriptBridge.kotlinObjectForOwner(baseHandle)
-                ?: error(
-                    "newScriptInstance: no script instance was created for '${template.kotlinClassName}'. " +
-                        "The script may have failed to attach."
-                )
+            var success = false
+            try {
+                withProgrammaticCreate {
+                    net.multigesture.kanama.api.GodotObject(baseHandle).setScript(resolved.script)
+                }
+                val instance = ScriptBridge.kotlinObjectForOwner(baseHandle)
+                    ?: error(
+                        "newScriptInstance: no script instance was created for '${template.kotlinClassName}'. " +
+                            "The script may have failed to attach."
+                    )
+                success = true
+                return instance to net.multigesture.kanama.api.Resource.fromHandle(baseHandle)
+            } finally {
+                // The loaded script wrapper is our transient +1 — the base resource holds its own
+                // reference via setScript, so release ours (the borrowed fallback stays untouched).
+                if (resolved.owned) resolved.script.close()
+                // On failure, drop the owning +1 we took above so a bad construction never leaks.
+                if (!success) net.multigesture.kanama.api.RefCounted.releaseHandle(baseHandle)
+            }
         }
 
         private fun resolveTemplate(fqName: String?, simpleName: String?): KanamaScriptTemplate? =
@@ -639,16 +654,26 @@ class KanamaScript(
          * resource references the script as an `ExtResource` and reloads correctly;
          * falls back to the registration-time script object when no path is known.
          */
-        private fun resolveScriptResource(
-            template: KanamaScriptTemplate,
-        ): net.multigesture.kanama.api.Resource? {
+        /**
+         * A resolved script resource plus whether the caller owns it. The `ResourceLoader.load`
+         * path returns a `+1` owning wrapper that must be closed once attached; the registration
+         * fallback is a borrowed `fromHandle` view that must NOT be closed.
+         */
+        private class ResolvedScript(
+            val script: net.multigesture.kanama.api.Resource,
+            val owned: Boolean,
+        )
+
+        private fun resolveScriptResource(template: KanamaScriptTemplate): ResolvedScript? {
             if (template.globalName.isNotEmpty()) {
                 globalClassPath(template.globalName)?.let { path ->
-                    net.multigesture.kanama.api.ResourceLoader.load(path)?.let { return it }
+                    net.multigesture.kanama.api.ResourceLoader.load(path)?.let {
+                        return ResolvedScript(it, owned = true)
+                    }
                 }
             }
             return registeredScriptObjectFor(template)
-                ?.let { net.multigesture.kanama.api.Resource.fromHandle(it) }
+                ?.let { ResolvedScript(net.multigesture.kanama.api.Resource.fromHandle(it), owned = false) }
         }
 
         // Match the global-class entry by its res:// path rather than the "class" key:

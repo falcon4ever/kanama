@@ -7,6 +7,18 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added
+
+- Create script-backed custom resources from Kotlin with `newScriptInstance<T>()`
+  — the equivalent of GDScript's `MyResource.new()` (issue #38). `T` must be a
+  `@ScriptClass(attachTo = "Resource")` `@GlobalClass`. It returns an
+  `OwnedScriptResource<T>` holding the live `instance` and its owning `resource`;
+  `close()`/`use { }` releases the owning reference (the factory takes one, like
+  `.new()`, so the resource survives a `ResourceSaver.save`). Construction is
+  exception-safe (a failed attach never leaks the reference) and the loaded
+  script wrapper is released after attach. **Deferred on iOS** (compile-compatible
+  stub that throws at runtime) — supported on desktop and Android.
+
 ### Changed
 
 - Desktop/Android `Resource` now extends `RefCounted`, restoring Godot's real

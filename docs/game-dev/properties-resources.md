@@ -334,13 +334,15 @@ object's handle (a node's, for example) produces a view of the wrong object.
 ## Creating Custom Resources from Kotlin
 
 To mint a brand-new resource from code (the equivalent of GDScript's
-`Weapon.new()` or C#'s `new Weapon()`), use `newScriptInstance<T>()`:
+`Weapon.new()` or C#'s `new Weapon()`), use `newScriptInstance<T>()`. It returns
+an `OwnedScriptResource<T>` holding the live `instance` and its owning `resource`:
 
 ```kotlin
-val weapon = newScriptInstance<Weapon>()
-weapon.damage = 25
-weapon.displayName = "Excalibur"
-ResourceSaver.save(Resource.fromHandle(weapon.godotObject), "res://excalibur.tres")
+newScriptInstance<Weapon>().use { owned ->
+    owned.instance.damage = 25
+    owned.instance.displayName = "Excalibur"
+    ResourceSaver.save(owned.resource, "res://excalibur.tres")
+}
 ```
 
 It constructs a fresh engine `Resource`, attaches the Kanama script, and returns
@@ -354,8 +356,15 @@ already imposes.
 
 Ownership mirrors GDScript `.new()`: the returned resource comes back with one
 owning reference, so it survives the `ResourceSaver.save` call above (which wraps
-it in a transient `Ref<>` internally). Lifetime is manual — assign it to an
-exported `Resource` slot or save it to keep it; an instance that is created and
-never stored persists until process shutdown. As above, pass
-`Resource.fromHandle(weapon.godotObject)` (a non-owning view) to
-`Resource`-typed APIs such as `ResourceSaver.save`; do not `close()` it.
+it in a transient `Ref<>` internally). **Release that reference** with
+`owned.close()` — or `use { }` as above — once you are done, unless you have
+handed ownership on by assigning `owned.resource` into a node/scene or an
+exported `Resource` slot (then the engine keeps it alive). Pass `owned.resource`
+directly to `Resource`-typed APIs such as `ResourceSaver.save`; there is no
+`Resource.fromHandle` view to manage.
+
+**iOS**: `newScriptInstance` is **deferred on iOS** (Kotlin/Native) — the
+declaration exists so shared game code compiles, but calling it throws at
+runtime. Construct script-backed resources on desktop/Android, or guard the call
+by platform. Its sibling `kotlinScriptInstance<T>()` (resolving the Kotlin
+instance of an existing resource) is supported on all three backends.

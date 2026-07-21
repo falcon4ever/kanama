@@ -7,8 +7,9 @@ import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.ManualGodotLifetimeApi
 import net.multigesture.kanama.api.Node
-import net.multigesture.kanama.api.Resource
+import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.ResourceSaver
+import net.multigesture.kanama.api.kotlinScriptInstance
 import net.multigesture.kanama.api.newScriptInstance
 import java.lang.foreign.MemorySegment
 
@@ -24,32 +25,49 @@ class ResourceForgeSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotO
     @OptIn(ManualGodotLifetimeApi::class)
     fun ready() {
         val path = "user://forged_smoke.tres"
-        val created = try {
+        val owned = try {
             newScriptInstance<SmokeResource>()
         } catch (e: Throwable) {
             System.err.println("[kanama:kt] ResourceForgeSmoke create_failed=${e.message}")
             return
         }
-        created.payload = "forged"
-        created.customIntValue = 7
-        val live = created.payload == "forged" && created.customIntValue == 7L
+        // `use { }` releases the owning reference on the way out — the supported release path.
+        // No `Resource.fromHandle(...).close()` on a view the docs say is non-owning.
+        owned.use { handle ->
+            val res = handle.instance
+            res.payload = "forged"
+            res.customIntValue = 7
+            val live = res.payload == "forged" && res.customIntValue == 7L
 
-        // Owned like GDScript .new(): the created resource survives this save, which
-        // wraps it in a transient Ref<> internally.
-        val saveError = ResourceSaver.save(Resource.fromHandle(created.godotObject), path)
+            // Owned like GDScript .new(): survives this save (our +1 outlives the transient Ref<>
+            // the save wraps it in). `handle.resource` is the supported owning Resource.
+            val saveError = ResourceSaver.save(handle.resource, path)
 
-        // Read the .tres back from disk to prove the script reference and the property
-        // value serialized (leak-free: no reloaded engine object to manage).
-        val text = if (saveError == 0L) FileAccess.getFileAsString(path) else ""
-        val scriptRef = text.contains("SmokeResource.kt")
-        val payloadSaved = text.contains("forged")
+            // Text-level proof the script reference and payload serialized.
+            val text = if (saveError == 0L) FileAccess.getFileAsString(path) else ""
+            val scriptRef = text.contains("SmokeResource.kt")
+            val payloadSaved = text.contains("forged")
 
-        System.err.println(
-            "[kanama:kt] ResourceForgeSmoke live=$live save_error=$saveError " +
-                "script_ref=$scriptRef payload_saved=$payloadSaved",
-        )
+            // Real reload round-trip: load the .tres back (cache-ignore) and resolve the live Kanama
+            // instance — proving Godot can deserialize it into a working resource, not just that
+            // text was written. `Resource` is now a `GodotObject` (task 51), so `kotlinScriptInstance`
+            // resolves directly off the reloaded wrapper, which `use { }` then releases.
+            var reloadPayload = ""
+            var reloadInt = -1L
+            if (saveError == 0L) {
+                ResourceLoader.load(path, cacheMode = ResourceLoader.CACHE_MODE_IGNORE)?.use { reloaded ->
+                    reloaded.kotlinScriptInstance<SmokeResource>()?.let { r ->
+                        reloadPayload = r.payload
+                        reloadInt = r.customIntValue
+                    }
+                }
+            }
+            val reloadOk = reloadPayload == "forged" && reloadInt == 7L
 
-        // Manual lifetime: release the owning reference so the smoke process exits clean.
-        Resource.fromHandle(created.godotObject).close()
+            System.err.println(
+                "[kanama:kt] ResourceForgeSmoke live=$live save_error=$saveError " +
+                    "script_ref=$scriptRef payload_saved=$payloadSaved reload_ok=$reloadOk",
+            )
+        }
     }
 }
