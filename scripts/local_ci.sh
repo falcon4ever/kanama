@@ -291,6 +291,11 @@ fi
 stage "gradle sync"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar
 
+stage "ktfmt formatting check"
+# Formats hand-written Kotlin; generated api/ wrappers are excluded in build.gradle.kts.
+# Run ./gradlew ktfmtFormat to fix reported files.
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" ktfmtCheck
+
 stage "KSP script-property default literals"
 find_project_script_registrar() {
   find "$ROOT_DIR/project-scripts/build" \

@@ -73,6 +73,28 @@ For a consumer project:
   -PkanamaProjectScriptsDir=/path/to/a/godot/project
 ```
 
+## Formatting
+
+Hand-written Kotlin is formatted with [ktfmt](https://github.com/facebook/ktfmt)
+(googleStyle, 2-space indent), configured in the root `build.gradle.kts`. Format
+your changes before pushing:
+
+```sh
+./gradlew ktfmtFormat   # rewrite files in place
+./gradlew ktfmtCheck    # verify formatting without writing (what CI runs)
+```
+
+`local_ci.sh` runs `ktfmtCheck` as a gate stage, so an unformatted change fails
+CI. Two things are deliberately **not** formatted:
+
+- Generated Godot API wrappers under `**/net/multigesture/kanama/api/**` — they
+  are byte-compared against `scripts/generate_api_wrapper.py` by the drift gate,
+  so formatting them would break `check_wrapper_generator.py`.
+- `*.gradle.kts` build scripts — the ktfmt Gradle-DSL parser mishandles
+  `ios-runtime/build.gradle.kts`.
+
+The knobs live in the `ktfmt { ... }` block in `build.gradle.kts`.
+
 ## Wrapper Work
 
 1. Check `extension_api.json` for method names, hashes, argument metadata, and

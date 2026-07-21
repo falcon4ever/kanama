@@ -10,20 +10,20 @@ package java.io
  * If a real iOS file path is ever needed, back these with Foundation (`NSFileManager`/`NSString`).
  */
 class File(val pathname: String) {
-    val parentFile: File?
-        get() {
-            val trimmed = pathname.trimEnd('/')
-            val idx = trimmed.lastIndexOf('/')
-            return if (idx > 0) File(trimmed.substring(0, idx)) else null
-        }
-
-    fun exists(): Boolean = false
-
-    fun mkdirs(): Boolean = false
-
-    fun readText(): String = ""
-
-    fun writeText(text: String) {
-        // inert on iOS (see class note)
+  val parentFile: File?
+    get() {
+      val trimmed = pathname.trimEnd('/')
+      val idx = trimmed.lastIndexOf('/')
+      return if (idx > 0) File(trimmed.substring(0, idx)) else null
     }
+
+  fun exists(): Boolean = false
+
+  fun mkdirs(): Boolean = false
+
+  fun readText(): String = ""
+
+  fun writeText(text: String) {
+    // inert on iOS (see class note)
+  }
 }

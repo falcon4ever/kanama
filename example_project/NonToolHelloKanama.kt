@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.RegisterClass
-import java.lang.foreign.MemorySegment
 
 /**
  * Non-@Tool sister of [HelloKanama]. Locks in editor/runtime gating for
@@ -11,8 +11,8 @@ import java.lang.foreign.MemorySegment
 @RegisterClass(parentClassName = "Node")
 class NonToolHelloKanama(val godotObject: MemorySegment) {
 
-    @OnReady
-    fun ready() {
-        System.err.println("[kanama:kt] NonToolHelloKanama._ready fired")
-    }
+  @OnReady
+  fun ready() {
+    System.err.println("[kanama:kt] NonToolHelloKanama._ready fired")
+  }
 }

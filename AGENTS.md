@@ -242,9 +242,15 @@ publishing or rewriting history:
 python3 scripts/validate_godot_api.py --api extension_api.json
 python3 scripts/check_wrapper_generator.py
 mkdocs build --strict
+./gradlew ktfmtFormat            # format hand-written Kotlin (ktfmtCheck gates CI)
 ./gradlew jar
 ./scripts/local_ci.sh /absolute/path/to/godot-4.7-stable
 ```
+
+Hand-written Kotlin is formatted with ktfmt (googleStyle, 2-space) via the root
+`build.gradle.kts`; `local_ci.sh` runs `ktfmtCheck` as a stage. The generated
+`**/net/multigesture/kanama/api/**` wrappers and `*.gradle.kts` scripts are
+excluded — see the Formatting section in `CONTRIBUTING.md`.
 
 `local_ci.sh` is the definition of done for processor, runtime, and
 script-model changes: it runs the static registrar/count/generated-code checks
