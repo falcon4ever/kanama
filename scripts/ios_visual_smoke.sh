@@ -982,7 +982,11 @@ elif [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
   mkdir -p "$project_dir/kotlin-src" "$project_dir/images"
   cp "$bunnymark_demo_dir/images/godot_bunny.png" "$project_dir/images/godot_bunny.png"
   cp "$bunnymark_demo_dir/kotlin-src/BunnymarkV1SpritesKanama.kt" "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
-  perl -0pi -e 's/\A/package net.multigesture.kanama.iosbunnymark\n\n/' \
+  # Replace the demo's own leading `package …` (the demo source declares
+  # `package net.multigesture.kanama.demos.bunnymark`) with the iOS package the generated .tscn
+  # and iOS registration expect — do NOT prepend, or two package declarations become a syntax
+  # error. The optional group also handles a demo source that carries no package line.
+  perl -0pi -e 's/\A(\s*package[^\n]*\n)?/package net.multigesture.kanama.iosbunnymark\n\n/' \
     "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
   perl -0pi -e 's/(private var bunnyTexture: Texture2D\? = null\n)/$1    private var frame = 0\n/' \
     "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
