@@ -32,17 +32,24 @@
   const bridge = {
     api: null,
     applyCallback: null,
+    immediateCallback: null,
     benchmarkCallback: null,
     firstHandle: 0,
     freedHandle: 0,
     readyCount: 0,
     immediateResult: null,
+    immediateChildCountResult: null,
     reloadRequested: false,
     reloadStarted: false,
     benchmarksStarted: false,
     appliedCommands: 0,
     lastAppliedValue: 0,
     kotlinToGodotCalls: 0,
+    snapshotBatchLoads: 0,
+    immediateCalls: 0,
+    commandBufferGrowths: 0,
+    latestSnapshotX: 0,
+    latestSnapshotY: 0,
     kotlinToGodotMs: [],
     emptyFrameMs: [],
     batchedFrameMs: [],
@@ -111,6 +118,28 @@
     clearApplyCallback() {
       this.applyCallback = null;
     },
+    installImmediateCallback(callback) {
+      this.immediateCallback = callback;
+    },
+    clearImmediateCallback() {
+      this.immediateCallback = null;
+    },
+    refreshPositionSnapshot(handle, x, y) {
+      this.snapshotBatchLoads += 1;
+      this.latestSnapshotX = x;
+      this.latestSnapshotY = y;
+      return this.api.kanamaWebLoadPositionSnapshot(handle, x, y);
+    },
+    immediateChildCount(handle, includeInternal) {
+      if (!this.immediateCallback) throw new Error("Godot immediate callback is not installed");
+      this.immediateCalls += 1;
+      this.immediateChildCountResult = null;
+      this.immediateCallback(handle, includeInternal);
+      if (!Number.isInteger(this.immediateChildCountResult)) {
+        throw new Error("Godot immediate callback did not publish a child count");
+      }
+      return this.immediateChildCountResult;
+    },
     installBenchmarkCallback(callback) {
       this.benchmarkCallback = callback;
       this.maybeRunBenchmarks();
@@ -121,7 +150,7 @@
     flushCommands(words, count) {
       if (!this.applyCallback) throw new Error("Godot command callback is not installed");
       const started = performance.now();
-      const applied = this.applyCallback(words.subarray(0, count * 3), count);
+      const applied = this.applyCallback(words.subarray(0, count * 4), count);
       this.kotlinToGodotCalls += 1;
       this.kotlinToGodotMs.push(performance.now() - started);
       return applied;
@@ -143,6 +172,9 @@
     },
     recordImmediateResult(value) {
       this.immediateResult = value;
+    },
+    recordImmediateChildCount(value) {
+      this.immediateChildCountResult = value;
     },
     recordApplied(count, lastValue) {
       this.appliedCommands += count;
@@ -205,6 +237,31 @@
         individual.push(this.latestGdscriptBenchmark[1]);
       }
 
+      const contractBefore = {
+        appliedCommands: this.appliedCommands,
+        kotlinToGodotCalls: this.kotlinToGodotCalls,
+        snapshotBatchLoads: this.snapshotBatchLoads,
+        immediateCalls: this.immediateCalls,
+      };
+      this.refreshPositionSnapshot(
+        this.firstHandle,
+        this.latestSnapshotX,
+        this.latestSnapshotY,
+      );
+      const contractChildCount = this.api.kanamaWebBenchmarkBackendContract(
+        this.firstHandle,
+        OPERATIONS,
+      );
+      this.results.backendContract = {
+        queuedCommands: this.appliedCommands - contractBefore.appliedCommands,
+        queuedCrossings: this.kotlinToGodotCalls - contractBefore.kotlinToGodotCalls,
+        snapshotBatchLoads: this.snapshotBatchLoads - contractBefore.snapshotBatchLoads,
+        immediateCalls: this.immediateCalls - contractBefore.immediateCalls,
+        childCount: contractChildCount,
+        finalPositionX: this.lastAppliedValue,
+        commandBufferGrowths: this.commandBufferGrowths,
+      };
+
       this.results.benchmarks = {
         operationsPerTrial: OPERATIONS,
         warmupTrials: BENCHMARK_WARMUP_TRIALS,
@@ -242,6 +299,13 @@
         individualMeasurements: Number.isFinite(
           this.results.benchmarks.individualTransformRoundTrips?.p50Ms,
         ),
+        backendQueuedCommands: this.results.backendContract.queuedCommands === OPERATIONS,
+        backendQueuedCrossings: this.results.backendContract.queuedCrossings === 1,
+        backendSnapshotBatch: this.results.backendContract.snapshotBatchLoads === 1,
+        backendImmediateExplicit: this.results.backendContract.immediateCalls === 1,
+        backendImmediateValue: this.results.backendContract.childCount === 3,
+        backendReadYourWrite: this.results.backendContract.finalPositionX === OPERATIONS - 1,
+        backendNoBufferGrowth: this.results.backendContract.commandBufferGrowths === 0,
       };
       this.results.checks = checks;
       this.results.pass = Object.values(checks).every(Boolean);

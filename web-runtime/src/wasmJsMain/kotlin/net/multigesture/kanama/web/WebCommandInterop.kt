@@ -13,7 +13,7 @@ private external class WebInt32Array(length: Int) : JsAny {
   operator fun set(index: Int, value: Int)
 }
 
-/** Reused fixed-width command storage: `[opcode, object-handle, scalar-value]`. */
+/** Reused fixed-width command storage: `[opcode, object-handle, value-0, value-1]`. */
 internal class WebCommandBuffer(capacity: Int) {
   private val capacity = capacity
   private val words = WebInt32Array(capacity * WORDS_PER_COMMAND)
@@ -29,19 +29,34 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset] = OPCODE_SCALAR_MUTATION
     words[offset + 1] = objectHandle
     words[offset + 2] = value
+    words[offset + 3] = 0
+    size += 1
+  }
+
+  fun appendPositionMutation(objectHandle: Int, x: Float, y: Float) {
+    check(size < wordsCapacity()) { "Kanama Web command buffer capacity exceeded" }
+    val offset = size * WORDS_PER_COMMAND
+    words[offset] = OPCODE_POSITION_MUTATION
+    words[offset + 1] = objectHandle
+    words[offset + 2] = x.toBits()
+    words[offset + 3] = y.toBits()
     size += 1
   }
 
   fun flush(): Int {
     if (size == 0) return 0
-    return flushWebCommands(words, size)
+    val commandCount = size
+    val applied = flushWebCommands(words, commandCount)
+    size = 0
+    return applied
   }
 
   private fun wordsCapacity(): Int = capacity
 
   companion object {
-    const val OPCODE_SCALAR_MUTATION = 1
-    const val WORDS_PER_COMMAND = 3
+    const val OPCODE_SCALAR_MUTATION = 100
+    const val OPCODE_POSITION_MUTATION = 3
+    const val WORDS_PER_COMMAND = 4
     const val BENCHMARK_COMMAND_CAPACITY = 10_000
   }
 }

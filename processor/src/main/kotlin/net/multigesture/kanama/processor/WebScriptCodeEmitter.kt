@@ -218,6 +218,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_bridge")
     appendLine("var _kanama_handle: int = 0")
     appendLine("var _kanama_apply_callback")
+    appendLine("var _kanama_immediate_callback")
     appendLine()
     appendLine("func _ready() -> void:")
     appendLine("\tif not OS.has_feature(\"web\"):")
@@ -229,8 +230,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t_kanama_apply_callback = JavaScriptBridge.create_callback(_kanama_apply_commands)"
     )
+    appendLine(
+      "\t_kanama_immediate_callback = JavaScriptBridge.create_callback(_kanama_immediate_call)"
+    )
     appendLine("\t_kanama_bridge.installApplyCallback(_kanama_apply_callback)")
+    appendLine("\t_kanama_bridge.installImmediateCallback(_kanama_immediate_callback)")
     appendLine("\t_kanama_handle = int(_kanama_bridge.create(_KANAMA_SCRIPT_ID))")
+    appendLine("\tif self is Node2D:")
+    appendLine("\t\tvar target := self as Node2D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshPositionSnapshot(_kanama_handle, target.position.x, target.position.y)"
+    )
     model.properties.forEachIndexed { index, property ->
       if (property.type == TypeMapping.STRING) {
         appendLine(
@@ -264,7 +274,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_bridge.free(_kanama_handle)")
     appendLine("\t_kanama_handle = 0")
     appendLine("\t_kanama_bridge.clearApplyCallback()")
+    appendLine("\t_kanama_bridge.clearImmediateCallback()")
     appendLine("\t_kanama_apply_callback = null")
+    appendLine("\t_kanama_immediate_callback = null")
     appendLine("\t_kanama_bridge.recordFreed(freed_handle)")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
@@ -275,18 +287,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar applied := 0")
     appendLine("\tvar last_value := 0")
     appendLine("\tfor command_index in range(command_count):")
-    appendLine("\t\tvar offset := command_index * 12")
+    appendLine("\t\tvar offset := command_index * 16")
     appendLine("\t\tvar opcode := bytes.decode_s32(offset)")
     appendLine("\t\tvar object_handle := bytes.decode_s32(offset + 4)")
-    appendLine("\t\tif opcode == 1 and object_handle == _kanama_handle:")
+    appendLine("\t\tif opcode == 100 and object_handle == _kanama_handle:")
     appendLine("\t\t\tlast_value = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tset_meta(\"kanama_web_scalar\", last_value)")
     appendLine("\t\t\tif self is Node2D:")
     appendLine("\t\t\t\tvar target := self as Node2D")
     appendLine("\t\t\t\ttarget.position = Vector2(float(last_value % 640), target.position.y)")
     appendLine("\t\t\tapplied += 1")
+    appendLine("\t\telif opcode == 3 and object_handle == _kanama_handle and self is Node2D:")
+    appendLine("\t\t\tvar target := self as Node2D")
+    appendLine("\t\t\tvar position_x := bytes.decode_float(offset + 8)")
+    appendLine("\t\t\tvar position_y := bytes.decode_float(offset + 12)")
+    appendLine("\t\t\ttarget.position = Vector2(position_x, position_y)")
+    appendLine("\t\t\tlast_value = int(position_x)")
+    appendLine("\t\t\tapplied += 1")
     appendLine("\t_kanama_bridge.recordApplied(applied, last_value)")
     appendLine("\treturn applied")
+    appendLine()
+    appendLine("func _kanama_immediate_call(args: Array) -> int:")
+    appendLine("\tvar object_handle := int(args[0])")
+    appendLine("\tvar result := -1")
+    appendLine("\tif object_handle == _kanama_handle:")
+    appendLine("\t\tresult = get_child_count(bool(args[1]))")
+    appendLine("\t_kanama_bridge.recordImmediateChildCount(result)")
+    appendLine("\treturn result")
 
     model.methods.forEachIndexed { index, method ->
       if (

@@ -5,17 +5,24 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
+import net.multigesture.kanama.backend.GodotHandle
+import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.backend.Node2DBackendContractProbe
 import net.multigesture.kanama.web.generated.KanamaWebProjectRegistry
 
-private val instances = WebInstanceRegistry(KanamaWebProjectRegistry::create)
-private val commands = WebCommandBuffer(WebCommandBuffer.BENCHMARK_COMMAND_CAPACITY)
+internal val instances = WebInstanceRegistry(KanamaWebProjectRegistry::create)
+internal val commands = WebCommandBuffer(WebCommandBuffer.BENCHMARK_COMMAND_CAPACITY)
 private var frameSequence = 0
 
 @JsExport fun kanamaWebProtocolVersion(): Int = KanamaWebProjectRegistry.PROTOCOL_VERSION
 
 @JsExport fun kanamaWebRoundTrip(value: Int): Int = value
 
-@JsExport fun kanamaWebCreate(scriptId: Int): Int = instances.create(scriptId)
+@JsExport
+fun kanamaWebCreate(scriptId: Int): Int {
+  return instances.create(scriptId)
+}
 
 @JsExport fun kanamaWebIsLive(objectHandle: Int): Int = if (instances.isLive(objectHandle)) 1 else 0
 
@@ -62,7 +69,31 @@ fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
     .toInt()
 }
 
-@JsExport fun kanamaWebFree(objectId: Int): Int = if (instances.free(objectId)) 1 else 0
+@JsExport
+fun kanamaWebFree(objectId: Int): Int {
+  clearWebPositionSnapshot(objectId)
+  return if (instances.free(objectId)) 1 else 0
+}
+
+@JsExport
+fun kanamaWebLoadPositionSnapshot(objectId: Int, x: Double, y: Double): Int {
+  loadWebPositionSnapshot(objectId, x, y)
+  return 1
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebBenchmarkBackendContract(objectId: Int, operations: Int): Int {
+  require(operations in 1..WebCommandBuffer.BENCHMARK_COMMAND_CAPACITY)
+  val handle = GodotHandle.fromBackendToken(objectId.toLong())
+  val node = Node2DBackendContractProbe(handle)
+  val initial = node.position
+  repeat(operations) { check(node.position == initial) }
+  val finalPosition = GodotVector2((operations - 1).toFloat(), initial.y)
+  repeat(operations) { node.position = finalPosition }
+  check(node.position == finalPosition)
+  return node.getChildCount(false).toInt()
+}
 
 @JsExport
 fun kanamaWebBenchmarkPure(iterations: Int): Double {
@@ -86,5 +117,5 @@ fun kanamaWebBenchmarkBatch(objectId: Int, operations: Int): Double {
 }
 
 fun main() {
-  // Keep startup side-effect free. Godot's custom HTML loader owns initialization ordering.
+  installWebCommonGodotBackend()
 }

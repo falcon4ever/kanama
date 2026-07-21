@@ -26,6 +26,7 @@ kotlin {
             kotlin.srcDir(rootProject.file("annotations/src/main/kotlin"))
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation(project(":kanama-common-api"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
             }
         }
