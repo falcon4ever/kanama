@@ -192,7 +192,13 @@ def audit_builtin_types_specifics() -> list[str]:
         start = content.find(marker)
         if start == -1:
             continue
-        end = content.find("\n        VariantType.", start + len(marker))
+        # Bound the arm by the next `VariantType.<X> ->` arm, indent-agnostic: ktfmt
+        # reindents the `when` block, so a hardcoded leading-space count would miss the
+        # delimiter and let the window bleed into the following Packed*Array arms.
+        next_arm = re.compile(r"\n[ \t]*VariantType\.\w+[ \t]*->").search(
+            content, start + len(marker)
+        )
+        end = next_arm.start() if next_arm else -1
         body = content[start : end if end != -1 else start + 800]
         if "allocatePackedArray(arena)" in body:
             line = content.count("\n", 0, start) + 1
