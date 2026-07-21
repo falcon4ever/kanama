@@ -5,15 +5,19 @@ import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
 import net.multigesture.kanama.backend.GodotCallSite
+import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
 /** JVM/Panama implementation of the first neutral typed call-shape slice. */
 @OptIn(InternalKanamaBackendApi::class)
 internal object CommonGodotBackend : GodotBackendSpi {
+  private val resourceLoaderSingleton by lazy { ObjectCalls.getSingleton("ResourceLoader") }
+
   override fun requireLive(handle: GodotHandle) {
     require(handle.backendToken() != 0L) { "Godot object handle must not be NULL" }
   }
@@ -69,6 +73,40 @@ internal object CommonGodotBackend : GodotBackendSpi {
   ) {
     ObjectCalls.ptrcallNoArgs(segment(callSite), segment(receiver))
   }
+
+  override fun invokeTexture2DVector2ColorArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    texture: GodotHandle,
+    position: GodotVector2,
+    modulate: GodotColor,
+  ) {
+    ObjectCalls.ptrcallWithObjectVector2AndColorArgs(
+      segment(callSite),
+      segment(receiver),
+      segment(texture),
+      Vector2(position.x, position.y),
+      Color(modulate.r, modulate.g, modulate.b, modulate.a),
+    )
+  }
+
+  override fun invokeStringStringLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+    value: Long,
+  ): GodotHandle? =
+    ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(
+        segment(callSite),
+        resourceLoaderSingleton,
+        first,
+        second,
+        value,
+      )
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
 
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())

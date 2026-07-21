@@ -66,6 +66,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendReadyDispatcher()
     appendProcessDispatcher()
+    appendDrawDispatcher()
     appendStringPropertyGetter()
     appendStringPropertySetter()
     appendLongMethodDispatcher()
@@ -118,6 +119,29 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val body =
         if (process == null) "Unit"
         else "(script as ${input.model.simpleName}).${process.kotlinMethodName}(delta)"
+      appendLine("      ${index + 1} -> $body")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendDrawDispatcher() {
+    appendLine("  fun draw(scriptId: Int, script: KanamaWebScript) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { index, input ->
+      val virtual = input.model.virtuals.firstOrNull { it.virtualName == "_draw" }
+      val method =
+        input.model.methods.firstOrNull {
+          it.godotName == "_draw" && it.args.isEmpty() && it.returnType == null
+        }
+      val body =
+        when {
+          virtual != null -> "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}()"
+          method != null -> "(script as ${input.model.simpleName}).${method.kotlinName}()"
+          else -> "Unit"
+        }
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -219,6 +243,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_handle: int = 0")
     appendLine("var _kanama_apply_callback")
     appendLine("var _kanama_immediate_callback")
+    appendLine("var _kanama_resource_callback")
+    appendLine("var _kanama_object_handles: Dictionary = {}")
     appendLine()
     appendLine("func _ready() -> void:")
     appendLine("\tif not OS.has_feature(\"web\"):")
@@ -233,8 +259,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t_kanama_immediate_callback = JavaScriptBridge.create_callback(_kanama_immediate_call)"
     )
+    appendLine(
+      "\t_kanama_resource_callback = JavaScriptBridge.create_callback(_kanama_resource_load)"
+    )
     appendLine("\t_kanama_bridge.installApplyCallback(_kanama_apply_callback)")
     appendLine("\t_kanama_bridge.installImmediateCallback(_kanama_immediate_callback)")
+    appendLine("\t_kanama_bridge.installResourceCallback(_kanama_resource_callback)")
     appendLine("\t_kanama_handle = int(_kanama_bridge.create(_KANAMA_SCRIPT_ID))")
     appendLine("\tif self is Node2D:")
     appendLine("\t\tvar target := self as Node2D")
@@ -277,6 +307,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t_kanama_bridge.frame(_kanama_handle, delta)")
     appendLine()
+    appendLine("func _draw() -> void:")
+    appendLine("\tif _kanama_handle != 0:")
+    appendLine("\t\t_kanama_bridge.draw(_kanama_handle)")
+    appendLine()
     appendLine("func _exit_tree() -> void:")
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\treturn")
@@ -285,8 +319,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_handle = 0")
     appendLine("\t_kanama_bridge.clearApplyCallback()")
     appendLine("\t_kanama_bridge.clearImmediateCallback()")
+    appendLine("\t_kanama_bridge.clearResourceCallback()")
     appendLine("\t_kanama_apply_callback = null")
     appendLine("\t_kanama_immediate_callback = null")
+    appendLine("\t_kanama_resource_callback = null")
+    appendLine("\t_kanama_object_handles.clear()")
     appendLine("\t_kanama_bridge.recordFreed(freed_handle)")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
@@ -296,8 +333,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar command_count := int(args[1])")
     appendLine("\tvar applied := 0")
     appendLine("\tvar last_value := 0")
+    appendLine("\tvar offset := 0")
     appendLine("\tfor command_index in range(command_count):")
-    appendLine("\t\tvar offset := command_index * 16")
     appendLine("\t\tvar opcode := bytes.decode_s32(offset)")
     appendLine("\t\tvar object_handle := bytes.decode_s32(offset + 4)")
     appendLine("\t\tif opcode == 100 and object_handle == _kanama_handle:")
@@ -307,6 +344,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tvar target := self as Node2D")
     appendLine("\t\t\t\ttarget.position = Vector2(float(last_value % 640), target.position.y)")
     appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 3 and object_handle == _kanama_handle and self is Node2D:")
     appendLine("\t\t\tvar target := self as Node2D")
     appendLine("\t\t\tvar position_x := bytes.decode_float(offset + 8)")
@@ -314,9 +352,31 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\ttarget.position = Vector2(position_x, position_y)")
     appendLine("\t\t\tlast_value = int(position_x)")
     appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 5 and object_handle == _kanama_handle and self is CanvasItem:")
     appendLine("\t\t\t(self as CanvasItem).queue_redraw()")
     appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 6 and object_handle == _kanama_handle and self is CanvasItem:")
+    appendLine("\t\t\tvar texture_handle := bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tvar texture := _kanama_object_handles.get(texture_handle) as Texture2D")
+    appendLine("\t\t\tif texture == null:")
+    appendLine("\t\t\t\tpush_error(\"Unknown Kanama Web texture handle: %d\" % texture_handle)")
+    appendLine("\t\t\t\tbreak")
+    appendLine(
+      "\t\t\tvar draw_position := Vector2(bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+    )
+    appendLine(
+      "\t\t\tvar modulate := Color(bytes.decode_float(offset + 20), bytes.decode_float(offset + 24), bytes.decode_float(offset + 28), bytes.decode_float(offset + 32))"
+    )
+    appendLine("\t\t\t(self as CanvasItem).draw_texture(texture, draw_position, modulate)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 36")
+    appendLine("\t\telse:")
+    appendLine(
+      "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
+    )
+    appendLine("\t\t\tbreak")
     appendLine("\t_kanama_bridge.recordApplied(applied, last_value)")
     appendLine("\treturn applied")
     appendLine()
@@ -327,6 +387,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = get_child_count(bool(args[1]))")
     appendLine("\t_kanama_bridge.recordImmediateChildCount(result)")
     appendLine("\treturn result")
+    appendLine()
+    appendLine("func _kanama_resource_load(args: Array) -> int:")
+    appendLine("\tvar resource_handle := int(args[0])")
+    appendLine("\tvar path := String(args[1])")
+    appendLine("\tvar type_hint := String(args[2])")
+    appendLine("\tvar cache_mode := int(args[3])")
+    appendLine("\tvar resource := ResourceLoader.load(path, type_hint, cache_mode)")
+    appendLine("\tif resource == null:")
+    appendLine("\t\t_kanama_bridge.recordImmediateResourceHandle(0)")
+    appendLine("\t\treturn 0")
+    appendLine("\t_kanama_object_handles[resource_handle] = resource")
+    appendLine("\t_kanama_bridge.recordImmediateResourceHandle(resource_handle)")
+    appendLine("\treturn resource_handle")
 
     model.methods.forEachIndexed { index, method ->
       if (

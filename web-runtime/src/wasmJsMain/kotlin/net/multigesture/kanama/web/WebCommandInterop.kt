@@ -13,66 +13,97 @@ private external class WebInt32Array(length: Int) : JsAny {
   operator fun set(index: Int, value: Int)
 }
 
-/** Reused fixed-width command storage: `[opcode, object-handle, value-0, value-1]`. */
+/** Reused packed command storage. Records are variable-width and never grow the backing array. */
 internal class WebCommandBuffer(capacity: Int) {
-  private val capacity = capacity
-  private val words = WebInt32Array(capacity * WORDS_PER_COMMAND)
-  private var size = 0
+  private val commandCapacity = capacity
+  private val words = WebInt32Array(capacity * MAX_WORDS_PER_COMMAND)
+  private var commandCount = 0
+  private var wordCount = 0
 
   fun clear() {
-    size = 0
+    commandCount = 0
+    wordCount = 0
   }
 
   fun appendScalarMutation(objectHandle: Int, value: Int) {
-    check(size < wordsCapacity()) { "Kanama Web command buffer capacity exceeded" }
-    val offset = size * WORDS_PER_COMMAND
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = OPCODE_SCALAR_MUTATION
     words[offset + 1] = objectHandle
     words[offset + 2] = value
     words[offset + 3] = 0
-    size += 1
   }
 
   fun appendPositionMutation(objectHandle: Int, x: Float, y: Float) {
-    check(size < wordsCapacity()) { "Kanama Web command buffer capacity exceeded" }
-    val offset = size * WORDS_PER_COMMAND
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = OPCODE_POSITION_MUTATION
     words[offset + 1] = objectHandle
     words[offset + 2] = x.toBits()
     words[offset + 3] = y.toBits()
-    size += 1
   }
 
   fun appendNoArgsMutation(opcode: Int, objectHandle: Int) {
-    check(size < wordsCapacity()) { "Kanama Web command buffer capacity exceeded" }
-    val offset = size * WORDS_PER_COMMAND
+    val offset = reserve(WORDS_NOARGS)
     words[offset] = opcode
     words[offset + 1] = objectHandle
-    words[offset + 2] = 0
-    words[offset + 3] = 0
-    size += 1
+  }
+
+  fun appendDrawTexture(
+    opcode: Int,
+    objectHandle: Int,
+    textureHandle: Int,
+    x: Float,
+    y: Float,
+    r: Float,
+    g: Float,
+    b: Float,
+    a: Float,
+  ) {
+    val offset = reserve(WORDS_DRAW_TEXTURE)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = textureHandle
+    words[offset + 3] = x.toBits()
+    words[offset + 4] = y.toBits()
+    words[offset + 5] = r.toBits()
+    words[offset + 6] = g.toBits()
+    words[offset + 7] = b.toBits()
+    words[offset + 8] = a.toBits()
   }
 
   fun flush(): Int {
-    if (size == 0) return 0
-    val commandCount = size
-    val applied = flushWebCommands(words, commandCount)
-    size = 0
+    if (commandCount == 0) return 0
+    val expected = commandCount
+    val applied = flushWebCommands(words, wordCount, expected)
+    clear()
+    check(applied == expected) { "Kanama Web command batch applied $applied of $expected commands" }
     return applied
   }
 
-  private fun wordsCapacity(): Int = capacity
+  private fun reserve(wordsNeeded: Int): Int {
+    check(commandCount < commandCapacity) { "Kanama Web command buffer capacity exceeded" }
+    check(wordCount + wordsNeeded <= commandCapacity * MAX_WORDS_PER_COMMAND) {
+      "Kanama Web command word capacity exceeded"
+    }
+    val offset = wordCount
+    wordCount += wordsNeeded
+    commandCount += 1
+    return offset
+  }
 
   companion object {
     const val OPCODE_SCALAR_MUTATION = 100
     const val OPCODE_POSITION_MUTATION = 3
-    const val WORDS_PER_COMMAND = 4
+    const val WORDS_NOARGS = 2
+    const val WORDS_SCALAR_OR_VECTOR = 4
+    const val WORDS_DRAW_TEXTURE = 9
+    const val MAX_WORDS_PER_COMMAND = WORDS_DRAW_TEXTURE
     // The benchmark contributes 10,000 data mutations plus one phase-control mutation (redraw).
     const val BENCHMARK_COMMAND_CAPACITY = 10_001
+    const val DRAW_COMMAND_CAPACITY = 100_000
   }
 }
 
-private fun flushWebCommands(words: WebInt32Array, count: Int): Int =
-  js("globalThis.KanamaWebBridge?.flushCommands(words, count) ?? count")
+private fun flushWebCommands(words: WebInt32Array, wordCount: Int, commandCount: Int): Int =
+  js("globalThis.KanamaWebBridge?.flushCommands(words, wordCount, commandCount) ?? commandCount")
 
 internal fun webNowMillis(): Double = js("performance.now()")

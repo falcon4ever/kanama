@@ -45,16 +45,43 @@ class GodotBackendContractTest {
       probe.viewportRect,
     )
     probe.queueRedraw()
+    probe.drawTexture(
+      GodotHandle.fromBackendToken(23),
+      GodotVector2(12.0f, 34.0f),
+      GodotColor(1.0f, 0.5f, 0.25f),
+    )
+    assertEquals(
+      31L,
+      ResourceLoaderBackendContractProbe.load("res://bunny.svg", "Texture2D")?.backendToken(),
+    )
     assertEquals(7L, probe.getChildCount())
 
-    assertEquals(mapOf(1 to 1, 2 to 1, 3 to 1, 4 to 1, 5 to 1), backend.resolveCounts)
+    assertEquals(
+      mapOf(1 to 1, 2 to 1, 3 to 1, 4 to 1, 5 to 1, 6 to 1, 7 to 1),
+      backend.resolveCounts,
+    )
     assertEquals(1, backend.queuedRedraws)
+    assertEquals(
+      DrawCall(
+        textureToken = 23,
+        position = GodotVector2(12.0f, 34.0f),
+        modulate = GodotColor(1.0f, 0.5f, 0.25f),
+      ),
+      backend.drawCall,
+    )
   }
+
+  private data class DrawCall(
+    val textureToken: Long,
+    val position: GodotVector2,
+    val modulate: GodotColor,
+  )
 
   private class RecordingBackend : GodotBackendSpi {
     val resolveCounts = mutableMapOf<Int, Int>()
     private var position = GodotVector2(1.0f, 2.0f)
     var queuedRedraws = 0
+    var drawCall: DrawCall? = null
 
     override fun requireLive(handle: GodotHandle) {
       require(handle.backendToken() == 17L)
@@ -99,6 +126,30 @@ class GodotBackendContractTest {
       receiver: GodotHandle,
     ) {
       queuedRedraws += 1
+    }
+
+    override fun invokeTexture2DVector2ColorArgs(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      texture: GodotHandle,
+      position: GodotVector2,
+      modulate: GodotColor,
+    ) {
+      drawCall = DrawCall(texture.backendToken(), position, modulate)
+    }
+
+    override fun invokeStringStringLongRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      first: String,
+      second: String,
+      value: Long,
+    ): GodotHandle? {
+      assertEquals("res://bunny.svg", first)
+      assertEquals("Texture2D", second)
+      assertEquals(1L, value)
+      return GodotHandle.fromBackendToken(31)
     }
   }
 }

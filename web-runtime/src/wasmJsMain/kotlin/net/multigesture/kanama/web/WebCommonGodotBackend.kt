@@ -7,6 +7,7 @@ import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
 import net.multigesture.kanama.backend.GodotCallSite
+import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotExecutionMode
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
@@ -82,6 +83,45 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     commands.appendNoArgsMutation(descriptor.opcode, receiver.webId())
   }
 
+  override fun invokeTexture2DVector2ColorArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    texture: GodotHandle,
+    position: GodotVector2,
+    modulate: GodotColor,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(texture.backendToken() > 0) { "Web texture handle must be positive" }
+    drawCommands.appendDrawTexture(
+      descriptor.opcode,
+      receiver.webId(),
+      texture.webId(),
+      position.x,
+      position.y,
+      modulate.r,
+      modulate.g,
+      modulate.b,
+      modulate.a,
+    )
+  }
+
+  override fun invokeStringStringLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+    value: Long,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    val token = immediateWebResourceLoad(first, second, value.toInt())
+    return token.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"
@@ -122,3 +162,6 @@ private fun GodotHandle.webId(): Int = backendToken().toInt()
 
 private fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int =
   js("globalThis.KanamaWebBridge.immediateChildCount(objectId, includeInternal)")
+
+private fun immediateWebResourceLoad(path: String, typeHint: String, cacheMode: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateResourceLoad(path, typeHint, cacheMode)")

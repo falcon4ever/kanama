@@ -1,14 +1,17 @@
 package net.multigesture.kanama.binding.runtime
 
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
 import net.multigesture.kanama.backend.GodotCallSite
+import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
 /** Kotlin/Native/C-shim implementation of the first neutral typed call-shape slice. */
@@ -68,6 +71,36 @@ internal object CommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ) {
     ObjectCalls.ptrcallNoArgs(segment(callSite), segment(receiver))
+  }
+
+  override fun invokeTexture2DVector2ColorArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    texture: GodotHandle,
+    position: GodotVector2,
+    modulate: GodotColor,
+  ) {
+    ObjectCalls.ptrcallWithObjectVector2AndColorArgs(
+      segment(callSite),
+      segment(receiver),
+      segment(texture),
+      Vector2(position.x, position.y),
+      Color(modulate.r, modulate.g, modulate.b, modulate.a),
+    )
+  }
+
+  override fun invokeStringStringLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+    value: Long,
+  ): GodotHandle? {
+    require(value == 1L) { "iOS typed ResourceLoader slice currently supports CACHE_MODE_REUSE" }
+    return IosGodot.resourceLoaderLoad(first, second)
+      .takeIf { it != 0L }
+      ?.let { GodotHandle.fromBackendToken(it) }
   }
 
   private fun segment(handle: GodotHandle): MemorySegment =

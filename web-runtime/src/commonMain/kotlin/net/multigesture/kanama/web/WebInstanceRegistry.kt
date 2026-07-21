@@ -5,9 +5,10 @@ internal data class WebScriptRecord(val scriptId: Int, val script: KanamaWebScri
 /**
  * Small generation-tagged registry for the Phase 0 bridge.
  *
- * A handle packs a 15-bit generation and a 16-bit slot. Reusing a freed slot advances its
- * generation, so a delayed browser callback cannot accidentally target the replacement object.
- * Phase 0.5 owns the eventual platform-neutral handle contract.
+ * A script handle packs a 14-bit generation and a 16-bit slot. Bit 30 remains clear so browser-
+ * owned resource handles can occupy a disjoint positive-int namespace. Reusing a freed slot
+ * advances its generation, so a delayed browser callback cannot accidentally target the replacement
+ * object.
  */
 internal class WebInstanceRegistry(
   private val createScript: (scriptId: Int, objectHandle: Int) -> KanamaWebScript
@@ -66,6 +67,6 @@ internal class WebInstanceRegistry(
   private companion object {
     const val SLOT_BITS = 16
     const val SLOT_MASK = 0xffff
-    const val GENERATION_MASK = 0x7fff
+    const val GENERATION_MASK = 0x3fff
   }
 }

@@ -13,6 +13,7 @@ import net.multigesture.kanama.web.generated.KanamaWebProjectRegistry
 
 internal val instances = WebInstanceRegistry(KanamaWebProjectRegistry::create)
 internal val commands = WebCommandBuffer(WebCommandBuffer.BENCHMARK_COMMAND_CAPACITY)
+internal val drawCommands = WebCommandBuffer(WebCommandBuffer.DRAW_COMMAND_CAPACITY)
 private var frameSequence = 0
 
 @JsExport fun kanamaWebProtocolVersion(): Int = KanamaWebProjectRegistry.PROTOCOL_VERSION
@@ -30,6 +31,7 @@ fun kanamaWebCreate(scriptId: Int): Int {
 fun kanamaWebReady(objectId: Int): Int {
   val record = instances.require(objectId)
   KanamaWebProjectRegistry.ready(record.scriptId, record.script)
+  commands.flush()
   return 1
 }
 
@@ -41,6 +43,14 @@ fun kanamaWebProcess(objectId: Int, delta: Double): Int {
   commands.clear()
   commands.appendScalarMutation(objectId, frameSequence)
   return commands.flush()
+}
+
+@JsExport
+fun kanamaWebDraw(objectId: Int): Int {
+  val record = instances.require(objectId)
+  drawCommands.clear()
+  KanamaWebProjectRegistry.draw(record.scriptId, record.script)
+  return drawCommands.flush()
 }
 
 @JsExport

@@ -33,12 +33,18 @@
     api: null,
     applyCallback: null,
     immediateCallback: null,
+    resourceCallback: null,
     benchmarkCallback: null,
     firstHandle: 0,
     freedHandle: 0,
     readyCount: 0,
     immediateResult: null,
     immediateChildCountResult: null,
+    immediateResourceHandleResult: null,
+    nextResourceHandle: 0x40000001,
+    resourceLoads: 0,
+    drawCalls: 0,
+    drawCommands: 0,
     reloadRequested: false,
     reloadStarted: false,
     benchmarksStarted: false,
@@ -97,6 +103,12 @@
     process(handle, delta) {
       return this.api.kanamaWebProcess(handle, delta);
     },
+    draw(handle) {
+      const applied = this.api.kanamaWebDraw(handle);
+      this.drawCalls += 1;
+      this.drawCommands += applied;
+      return applied;
+    },
     getStringProperty(handle, propertyId) {
       return this.api.kanamaWebGetStringProperty(handle, propertyId);
     },
@@ -124,6 +136,12 @@
     clearImmediateCallback() {
       this.immediateCallback = null;
     },
+    installResourceCallback(callback) {
+      this.resourceCallback = callback;
+    },
+    clearResourceCallback() {
+      this.resourceCallback = null;
+    },
     refreshPositionSnapshot(handle, x, y) {
       this.snapshotBatchLoads += 1;
       this.latestSnapshotX = x;
@@ -143,6 +161,24 @@
       }
       return this.immediateChildCountResult;
     },
+    immediateResourceLoad(path, typeHint, cacheMode) {
+      if (!this.resourceCallback) throw new Error("Godot resource callback is not installed");
+      if (this.nextResourceHandle > 0x7fffffff) {
+        throw new Error("Kanama Web resource handle namespace exhausted");
+      }
+      const resourceHandle = this.nextResourceHandle;
+      this.nextResourceHandle += 1;
+      this.immediateResourceHandleResult = null;
+      this.resourceCallback(resourceHandle, path, typeHint, cacheMode);
+      if (
+        this.immediateResourceHandleResult !== 0 &&
+        this.immediateResourceHandleResult !== resourceHandle
+      ) {
+        throw new Error("Godot resource callback published an invalid handle");
+      }
+      this.resourceLoads += 1;
+      return this.immediateResourceHandleResult;
+    },
     installBenchmarkCallback(callback) {
       this.benchmarkCallback = callback;
       this.maybeRunBenchmarks();
@@ -150,10 +186,10 @@
     clearBenchmarkCallback() {
       this.benchmarkCallback = null;
     },
-    flushCommands(words, count) {
+    flushCommands(words, wordCount, commandCount) {
       if (!this.applyCallback) throw new Error("Godot command callback is not installed");
       const started = performance.now();
-      const applied = this.applyCallback(words.subarray(0, count * 4), count);
+      const applied = this.applyCallback(words.subarray(0, wordCount), commandCount);
       this.kotlinToGodotCalls += 1;
       this.kotlinToGodotMs.push(performance.now() - started);
       return applied;
@@ -178,6 +214,9 @@
     },
     recordImmediateChildCount(value) {
       this.immediateChildCountResult = value;
+    },
+    recordImmediateResourceHandle(value) {
+      this.immediateResourceHandleResult = value;
     },
     recordApplied(count, lastValue) {
       this.appliedCommands += count;
@@ -281,6 +320,11 @@
       this.results.lifecycle.immediateResult = this.immediateResult;
       this.results.lifecycle.appliedCommands = this.appliedCommands;
       this.results.lifecycle.lastAppliedValue = this.lastAppliedValue;
+      this.results.rendering = {
+        resourceLoads: this.resourceLoads,
+        drawCalls: this.drawCalls,
+        drawCommands: this.drawCommands,
+      };
       this.results.environment.peakJsHeapBytes = performance.memory?.usedJSHeapSize ?? null;
       this.reloadRequested = true;
       updateStatus("Benchmarks complete; validating teardown and generation reuse…");
@@ -309,6 +353,8 @@
         backendImmediateValue: this.results.backendContract.childCount === 3,
         backendReadYourWrite: this.results.backendContract.finalPositionX === OPERATIONS - 1,
         backendNoBufferGrowth: this.results.backendContract.commandBufferGrowths === 0,
+        textureLoaded: this.resourceLoads >= 1,
+        kotlinDrawApplied: this.drawCommands >= 1,
       };
       this.results.checks = checks;
       this.results.pass = Object.values(checks).every(Boolean);

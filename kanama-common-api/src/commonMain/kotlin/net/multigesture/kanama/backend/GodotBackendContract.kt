@@ -61,6 +61,10 @@ data class GodotCallDescriptor(
 /** Platform-neutral immutable rectangle snapshot. */
 @InternalKanamaBackendApi data class GodotRect2(val position: GodotVector2, val size: GodotVector2)
 
+/** Platform-neutral immutable RGBA value used by typed draw commands. */
+@InternalKanamaBackendApi
+data class GodotColor(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f)
+
 /** Typed backend SPI. No reflective or `List<Any?>` dispatch is permitted here. */
 @InternalKanamaBackendApi
 interface GodotBackendSpi {
@@ -99,6 +103,23 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
   )
+
+  fun invokeTexture2DVector2ColorArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    texture: GodotHandle,
+    position: GodotVector2,
+    modulate: GodotColor,
+  )
+
+  fun invokeStringStringLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+    value: Long,
+  ): GodotHandle?
 }
 
 /**
@@ -170,6 +191,43 @@ object GodotBackendCalls {
     selected.invokeNoArgsVoid(descriptor, resolve(selected, descriptor), receiver)
   }
 
+  fun invokeTexture2DVector2ColorArgs(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    texture: GodotHandle,
+    position: GodotVector2,
+    modulate: GodotColor,
+  ) {
+    requireShape(descriptor, GodotCallShape.TEXTURE2D_VECTOR2_COLOR_ARGS)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeTexture2DVector2ColorArgs(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      texture,
+      position,
+      modulate,
+    )
+  }
+
+  fun invokeStringStringLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    first: String,
+    second: String,
+    value: Long,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.STRING_STRING_LONG_RET_HANDLE)
+    val selected = requireBackend()
+    return selected.invokeStringStringLongRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      first,
+      second,
+      value,
+    )
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -230,4 +288,26 @@ class Node2DBackendContractProbe(val handle: GodotHandle) {
   fun queueRedraw() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.CANVASITEM_QUEUE_REDRAW, handle)
   }
+
+  fun drawTexture(texture: GodotHandle, position: GodotVector2, modulate: GodotColor) {
+    GodotBackendCalls.invokeTexture2DVector2ColorArgs(
+      InitialGodotCallDescriptors.CANVASITEM_DRAW_TEXTURE,
+      handle,
+      texture,
+      position,
+      modulate,
+    )
+  }
+}
+
+/** First typed singleton-call probe; production wrappers delegate through the same facade. */
+@InternalKanamaBackendApi
+object ResourceLoaderBackendContractProbe {
+  fun load(path: String, typeHint: String = "", cacheMode: Long = 1L): GodotHandle? =
+    GodotBackendCalls.invokeStringStringLongRetHandle(
+      InitialGodotCallDescriptors.RESOURCELOADER_LOAD,
+      path,
+      typeHint,
+      cacheMode,
+    )
 }
