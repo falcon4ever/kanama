@@ -310,8 +310,8 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      *
      * Generated from Godot docs: CollisionObject3D.shape_owner_add_shape
      */
-    fun shapeOwnerAddShape(ownerId: Long, shape: Shape3D?) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun shapeOwnerAddShape(ownerId: Long, shape: Shape3D) {
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape.requireOpenHandle())
     }
 
     /**

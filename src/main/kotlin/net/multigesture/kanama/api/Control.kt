@@ -1292,8 +1292,8 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.add_theme_icon_override
      */
-    fun addThemeIconOverride(name: String, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun addThemeIconOverride(name: String, texture: Texture2D) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture.requireOpenHandle())
     }
 
     /**
@@ -1303,8 +1303,8 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.add_theme_stylebox_override
      */
-    fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun addThemeStyleboxOverride(name: String, stylebox: StyleBox) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox.requireOpenHandle())
     }
 
     /**
@@ -1314,8 +1314,8 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.add_theme_font_override
      */
-    fun addThemeFontOverride(name: String, font: Font?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun addThemeFontOverride(name: String, font: Font) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font.requireOpenHandle())
     }
 
     /**

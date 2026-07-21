@@ -158,8 +158,8 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
         ObjectCalls.ptrcallWithUInt32AndVector2Args(shapeOwnerSetOneWayCollisionDirectionBind, handle, ownerId, direction)
     }
 
-    fun shapeOwnerAddShape(ownerId: Long, shape: Shape2D?) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun shapeOwnerAddShape(ownerId: Long, shape: Shape2D) {
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape.requireOpenHandle())
     }
 
     fun shapeOwnerGetShapeCount(ownerId: Long): Int {

@@ -465,12 +465,12 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallWithStringArg(pushTextInputBind, handle, text)
     }
 
-    fun pushInput(event: InputEvent?, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
+    fun pushInput(event: InputEvent, inLocalCoords: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, handle, event.requireOpenHandle(), inLocalCoords)
     }
 
-    fun pushUnhandledInput(event: InputEvent?, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
+    fun pushUnhandledInput(event: InputEvent, inLocalCoords: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, handle, event.requireOpenHandle(), inLocalCoords)
     }
 
     fun notifyMouseEntered() {

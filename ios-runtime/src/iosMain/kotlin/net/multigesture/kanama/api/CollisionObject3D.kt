@@ -147,8 +147,8 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
         return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerDisabledBind, handle, ownerId)
     }
 
-    fun shapeOwnerAddShape(ownerId: Long, shape: Shape3D?) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun shapeOwnerAddShape(ownerId: Long, shape: Shape3D) {
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape.requireOpenHandle())
     }
 
     fun shapeOwnerGetShapeCount(ownerId: Long): Int {

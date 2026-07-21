@@ -1238,8 +1238,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_test_motion
      */
     @JvmStatic
-    fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D?, result: PhysicsTestMotionResult2D?): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters?.requireOpenHandle() ?: MemorySegment.NULL, result?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D, result: PhysicsTestMotionResult2D?): Boolean {
+        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**

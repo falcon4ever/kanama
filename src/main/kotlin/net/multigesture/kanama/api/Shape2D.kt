@@ -50,8 +50,8 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      *
      * Generated from Godot docs: Shape2D.collide
      */
-    fun collide(localXform: Transform2D, withShape: Shape2D?, shapeXform: Transform2D): Boolean {
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, handle, localXform, withShape?.requireOpenHandle() ?: MemorySegment.NULL, shapeXform)
+    fun collide(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): Boolean {
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
     /**
@@ -63,8 +63,8 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      *
      * Generated from Godot docs: Shape2D.collide_with_motion
      */
-    fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D?, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, handle, localXform, localMotion, withShape?.requireOpenHandle() ?: MemorySegment.NULL, shapeXform, shapeMotion)
+    fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     /**
@@ -79,8 +79,8 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      *
      * Generated from Godot docs: Shape2D.collide_and_get_contacts
      */
-    fun collideAndGetContacts(localXform: Transform2D, withShape: Shape2D?, shapeXform: Transform2D): List<Vector2> {
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(collideAndGetContactsBind, handle, localXform, withShape?.requireOpenHandle() ?: MemorySegment.NULL, shapeXform)
+    fun collideAndGetContacts(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): List<Vector2> {
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(collideAndGetContactsBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
     /**
@@ -97,8 +97,8 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      *
      * Generated from Godot docs: Shape2D.collide_with_motion_and_get_contacts
      */
-    fun collideWithMotionAndGetContacts(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D?, shapeXform: Transform2D, shapeMotion: Vector2): List<Vector2> {
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(collideWithMotionAndGetContactsBind, handle, localXform, localMotion, withShape?.requireOpenHandle() ?: MemorySegment.NULL, shapeXform, shapeMotion)
+    fun collideWithMotionAndGetContacts(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): List<Vector2> {
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(collideWithMotionAndGetContactsBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     /**

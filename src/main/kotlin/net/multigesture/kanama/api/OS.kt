@@ -120,18 +120,17 @@ object OS {
         ObjectCalls.ptrcallNoArgs(closeMidiInputsBind, singleton)
     }
 
-    @JvmStatic
     /**
      * Displays a modal dialog box using the host platform's implementation. The engine execution is
      * blocked until the dialog is closed.
      *
      * Generated from Godot docs: OS.alert
      */
+    @JvmStatic
     fun alert(text: String, title: String = "Alert!") {
         ObjectCalls.ptrcallWithTwoStringArgs(alertBind, singleton, text, title)
     }
 
-    @JvmStatic
     /**
      * Crashes the engine (or the editor if called within a `@tool` script). See also `kill`. Note:
      * This method should only be used for testing the system's crash handler, not for any other
@@ -140,6 +139,7 @@ object OS {
      *
      * Generated from Godot docs: OS.crash
      */
+    @JvmStatic
     fun crash(message: String) {
         ObjectCalls.ptrcallWithStringArg(crashBind, singleton, message)
     }
@@ -375,7 +375,6 @@ object OS {
         return ObjectCalls.ptrcallNoArgsRetLong(getStderrTypeBind, singleton)
     }
 
-    @JvmStatic
     /**
      * Executes the given process in a blocking way. The file specified in `path` must exist and be
      * executable. The system path resolution will be used. The `arguments` are used in the given
@@ -391,6 +390,7 @@ object OS {
      *
      * Generated from Godot docs: OS.execute
      */
+    @JvmStatic
     fun execute(path: String, arguments: List<String>, output: List<Any?> = emptyList(), readStderr: Boolean = false, openConsole: Boolean = false): Int {
         return ObjectCalls.ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt(executeBind, singleton, path, arguments, output, readStderr, openConsole)
     }
@@ -468,7 +468,6 @@ object OS {
         return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(openWithProgramBind, singleton, programPath, paths)
     }
 
-    @JvmStatic
     /**
      * Kill (terminate) the process identified by the given process ID (`pid`), such as the ID returned
      * by `execute` in non-blocking mode. See also `crash`. Note: This method can also be used to kill
@@ -477,6 +476,7 @@ object OS {
      *
      * Generated from Godot docs: OS.kill
      */
+    @JvmStatic
     fun kill(pid: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(killBind, singleton, pid)
     }
@@ -1207,8 +1207,8 @@ object OS {
      * Generated from Godot docs: OS.add_logger
      */
     @JvmStatic
-    fun addLogger(logger: Logger?) {
-        ObjectCalls.ptrcallWithObjectArgs(addLoggerBind, singleton, listOf(logger?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun addLogger(logger: Logger) {
+        ObjectCalls.ptrcallWithObjectArgs(addLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
     /**
@@ -1217,8 +1217,8 @@ object OS {
      * Generated from Godot docs: OS.remove_logger
      */
     @JvmStatic
-    fun removeLogger(logger: Logger?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun removeLogger(logger: Logger) {
+        ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
     @JvmStatic

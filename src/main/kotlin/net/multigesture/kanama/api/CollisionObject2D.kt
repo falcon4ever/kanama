@@ -343,8 +343,8 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      *
      * Generated from Godot docs: CollisionObject2D.shape_owner_add_shape
      */
-    fun shapeOwnerAddShape(ownerId: Long, shape: Shape2D?) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun shapeOwnerAddShape(ownerId: Long, shape: Shape2D) {
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape.requireOpenHandle())
     }
 
     /**

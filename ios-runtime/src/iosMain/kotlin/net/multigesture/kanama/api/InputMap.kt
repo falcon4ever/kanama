@@ -36,24 +36,24 @@ object InputMap {
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(actionGetDeadzoneBind, singleton, action)
     }
 
-    fun actionAddEvent(action: String, event: InputEvent?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionAddEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun actionAddEvent(action: String, event: InputEvent) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionAddEventBind, singleton, action, event.requireOpenHandle())
     }
 
-    fun actionHasEvent(action: String, event: InputEvent?): Boolean {
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(actionHasEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun actionHasEvent(action: String, event: InputEvent): Boolean {
+        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(actionHasEventBind, singleton, action, event.requireOpenHandle())
     }
 
-    fun actionEraseEvent(action: String, event: InputEvent?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionEraseEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun actionEraseEvent(action: String, event: InputEvent) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionEraseEventBind, singleton, action, event.requireOpenHandle())
     }
 
     fun actionEraseEvents(action: String) {
         ObjectCalls.ptrcallWithStringNameArg(actionEraseEventsBind, singleton, action)
     }
 
-    fun eventIsAction(event: InputEvent?, action: String, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(eventIsActionBind, singleton, event?.requireOpenHandle() ?: MemorySegment.NULL, action, exactMatch)
+    fun eventIsAction(event: InputEvent, action: String, exactMatch: Boolean = false): Boolean {
+        return ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(eventIsActionBind, singleton, event.requireOpenHandle(), action, exactMatch)
     }
 
     fun loadFromProjectSettings() {

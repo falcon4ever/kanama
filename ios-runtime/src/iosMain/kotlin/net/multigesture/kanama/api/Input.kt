@@ -106,12 +106,12 @@ object Input {
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionJustReleasedBind, singleton, action, exactMatch)
     }
 
-    fun isActionJustPressedByEvent(action: String, event: InputEvent?, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustPressedByEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
+    fun isActionJustPressedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
+        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustPressedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
     }
 
-    fun isActionJustReleasedByEvent(action: String, event: InputEvent?, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustReleasedByEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
+    fun isActionJustReleasedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
+        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustReleasedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
     }
 
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
@@ -326,8 +326,8 @@ object Input {
         ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: MemorySegment.NULL, shape, hotspot)
     }
 
-    fun parseInputEvent(event: InputEvent?) {
-        ObjectCalls.ptrcallWithObjectArgs(parseInputEventBind, singleton, listOf(event?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun parseInputEvent(event: InputEvent) {
+        ObjectCalls.ptrcallWithObjectArgs(parseInputEventBind, singleton, listOf(event.requireOpenHandle()))
     }
 
     fun setUseAccumulatedInput(enable: Boolean) {

@@ -21,20 +21,20 @@ object ResourceSaver {
     const val FLAG_COMPRESS: Long = 32L
     const val FLAG_REPLACE_SUBRESOURCE_PATHS: Long = 64L
 
-    fun save(resource: Resource?, path: String = "", flags: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource?.requireOpenHandle() ?: MemorySegment.NULL, path, flags)
+    fun save(resource: Resource, path: String = "", flags: Long = 0L): Long {
+        return ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource.requireOpenHandle(), path, flags)
     }
 
     fun setUid(resource: String, uid: Long): Long {
         return ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUidBind, singleton, resource, uid)
     }
 
-    fun addResourceFormatSaver(formatSaver: ResourceFormatSaver?, atFront: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addResourceFormatSaverBind, singleton, formatSaver?.requireOpenHandle() ?: MemorySegment.NULL, atFront)
+    fun addResourceFormatSaver(formatSaver: ResourceFormatSaver, atFront: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addResourceFormatSaverBind, singleton, formatSaver.requireOpenHandle(), atFront)
     }
 
-    fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceFormatSaverBind, singleton, listOf(formatSaver?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver) {
+        ObjectCalls.ptrcallWithObjectArgs(removeResourceFormatSaverBind, singleton, listOf(formatSaver.requireOpenHandle()))
     }
 
     fun getResourceIdForPath(path: String, generate: Boolean = false): Long {

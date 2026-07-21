@@ -20,8 +20,8 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
      *
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_point
      */
-    fun intersectPoint(parameters: PhysicsPointQueryParameters3D?, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectPointBind, handle, parameters?.requireOpenHandle() ?: MemorySegment.NULL, maxResults)
+    fun intersectPoint(parameters: PhysicsPointQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectPointBind, handle, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -37,8 +37,8 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
      *
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_ray
      */
-    fun intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(intersectRayBind, handle, parameters?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun intersectRay(parameters: PhysicsRayQueryParameters3D): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithObjectArgRetDictionary(intersectRayBind, handle, parameters.requireOpenHandle())
     }
 
     /**
@@ -52,8 +52,8 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
      *
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_shape
      */
-    fun intersectShape(parameters: PhysicsShapeQueryParameters3D?, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectShapeBind, handle, parameters?.requireOpenHandle() ?: MemorySegment.NULL, maxResults)
+    fun intersectShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectShapeBind, handle, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -68,8 +68,8 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
      *
      * Generated from Godot docs: PhysicsDirectSpaceState3D.cast_motion
      */
-    fun castMotion(parameters: PhysicsShapeQueryParameters3D?): List<Float> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(castMotionBind, handle, parameters?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun castMotion(parameters: PhysicsShapeQueryParameters3D): List<Float> {
+        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(castMotionBind, handle, parameters.requireOpenHandle())
     }
 
     /**
@@ -83,8 +83,8 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
      *
      * Generated from Godot docs: PhysicsDirectSpaceState3D.collide_shape
      */
-    fun collideShape(parameters: PhysicsShapeQueryParameters3D?, maxResults: Int = 32): List<Vector3> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(collideShapeBind, handle, parameters?.requireOpenHandle() ?: MemorySegment.NULL, maxResults)
+    fun collideShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Vector3> {
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(collideShapeBind, handle, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -100,8 +100,8 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
      *
      * Generated from Godot docs: PhysicsDirectSpaceState3D.get_rest_info
      */
-    fun getRestInfo(parameters: PhysicsShapeQueryParameters3D?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(getRestInfoBind, handle, parameters?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun getRestInfo(parameters: PhysicsShapeQueryParameters3D): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithObjectArgRetDictionary(getRestInfoBind, handle, parameters.requireOpenHandle())
     }
 
     companion object {
