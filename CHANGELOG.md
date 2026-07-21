@@ -17,7 +17,11 @@ versioning once public releases begin.
   `.new()`, so the resource survives a `ResourceSaver.save`). Construction is
   exception-safe (a failed attach never leaks the reference) and the loaded
   script wrapper is released after attach. **Deferred on iOS** (compile-compatible
-  stub that throws at runtime) — supported on desktop and Android.
+  stub that throws at runtime) — supported on desktop and Android, including
+  R8-minified Android release (the `@ScriptClass` annotation is now `BINARY`-retained
+  and consumer keep rules preserve `@ScriptClass` class names, so
+  `T::class.qualifiedName` still matches the registered template under obfuscation;
+  device-validated on Pixel 7).
 
 ### Changed
 

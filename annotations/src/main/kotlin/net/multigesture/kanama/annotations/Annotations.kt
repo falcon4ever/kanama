@@ -394,7 +394,11 @@ annotation class OverrideVirtual
  *   `KanamaScript._get_instance_base_type`.
  */
 @Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.SOURCE)
+// BINARY (not SOURCE) so the marker survives into the class file: R8/ProGuard consumer rules keep
+// @ScriptClass class names by this annotation, which newScriptInstance<T>() needs (it resolves the
+// template by T::class.qualifiedName, and obfuscation would otherwise break that lookup in minified
+// release). KSP reads it from source regardless of retention, and nothing reads it via reflection.
+@Retention(AnnotationRetention.BINARY)
 annotation class ScriptClass(val attachTo: String = "Node")
 
 /**

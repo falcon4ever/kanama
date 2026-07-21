@@ -65,3 +65,14 @@
 # PanamaPort references desktop-only / hidden symbols on code paths it does not
 # take on Android; keep R8 from turning those into app warnings.
 -dontwarn com.v7878.**
+
+# newScriptInstance<T>() resolves the @ScriptClass template by T::class.qualifiedName, which must
+# match the KSP-registered key (the original name, baked into the kept generated registrar). R8
+# obfuscation renames game @ScriptClass classes, so the runtime name diverges and newScriptInstance
+# fails in minified release with "is not a registered @ScriptClass" (confirmed on Pixel 7, 2026-07-20).
+# Keep @ScriptClass class names AND their Kotlin metadata so qualifiedName stays stable; members and
+# non-@ScriptClass game classes remain freely obfuscatable.
+-keepnames @net.multigesture.kanama.annotations.ScriptClass class *
+# Preserve Kotlin metadata on kept @ScriptClass classes so T::class.qualifiedName resolves to the
+# original name at runtime (the value KSP registered as the template key).
+-keepkotlinmetadata
