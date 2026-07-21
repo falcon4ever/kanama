@@ -3639,30 +3639,23 @@ internal class ScriptCodeEmitter(
             ?: p.enumFqName?.let { fq -> ".toInt().let { i -> $fq.entries[i.coerceIn(0, $fq.entries.lastIndex)] }" }
             ?: ""
 
+    // The collection keyword / empty literal for a property, keyed on its declared mutability.
+    // Extracted so the MutableList/List (and MutableMap/Map) choice lives in one place instead of
+    // being repeated across every list/map arm below (task 49 item 2).
+    private val ScriptPropertyModel.listKeyword: String get() = if (isMutableList) "MutableList" else "List"
+    private val ScriptPropertyModel.mapKeyword: String get() = if (isMutableMap) "MutableMap" else "Map"
+    private val ScriptPropertyModel.emptyListLiteral: String get() = if (isMutableList) "mutableListOf()" else "emptyList()"
+    private val ScriptPropertyModel.emptyMapLiteral: String get() = if (isMutableMap) "mutableMapOf()" else "emptyMap()"
+
     private fun scriptPropertyKotlinType(property: ScriptPropertyModel): String =
         when {
             property.objectWrapperFqName != null -> "${property.objectWrapperFqName}?"
-            property.arrayElementWrapperFqName != null -> {
-                val listType = if (property.isMutableList) "MutableList" else "List"
-                "$listType<${property.arrayElementWrapperFqName}>"
-            }
+            property.arrayElementWrapperFqName != null -> "${property.listKeyword}<${property.arrayElementWrapperFqName}>"
             property.customScriptFqName != null -> "${property.customScriptFqName}?"
-            property.arrayElementCustomScriptFqName != null -> {
-                val listType = if (property.isMutableList) "MutableList" else "List"
-                "$listType<${property.arrayElementCustomScriptFqName}>"
-            }
-            property.arrayElementString -> {
-                val listType = if (property.isMutableList) "MutableList" else "List"
-                "$listType<String>"
-            }
-            property.arrayElementEnumFqName != null -> {
-                val listType = if (property.isMutableList) "MutableList" else "List"
-                "$listType<${property.arrayElementEnumFqName}>"
-            }
-            property.mapKeyKotlinType != null -> {
-                val mapType = if (property.isMutableMap) "MutableMap" else "Map"
-                "$mapType<${property.mapKeyKotlinType}, ${mapValueKotlinType(property)}>"
-            }
+            property.arrayElementCustomScriptFqName != null -> "${property.listKeyword}<${property.arrayElementCustomScriptFqName}>"
+            property.arrayElementString -> "${property.listKeyword}<String>"
+            property.arrayElementEnumFqName != null -> "${property.listKeyword}<${property.arrayElementEnumFqName}>"
+            property.mapKeyKotlinType != null -> "${property.mapKeyword}<${property.mapKeyKotlinType}, ${mapValueKotlinType(property)}>"
             property.enumFqName != null -> property.enumFqName
             else -> property.narrow?.kotlinType ?: property.type.kotlinType
         }
@@ -3675,20 +3668,18 @@ internal class ScriptCodeEmitter(
             ?: property.mapValueKotlinType
             ?: "Any?"
 
-    private fun scriptPropertyZeroLiteral(property: ScriptPropertyModel): String {
-        val emptyList = if (property.isMutableList) "mutableListOf()" else "emptyList()"
-        return when {
+    private fun scriptPropertyZeroLiteral(property: ScriptPropertyModel): String =
+        when {
             property.objectWrapperFqName != null -> "null"
-            property.arrayElementWrapperFqName != null -> emptyList
+            property.arrayElementWrapperFqName != null -> property.emptyListLiteral
             property.customScriptFqName != null -> "null"
-            property.arrayElementCustomScriptFqName != null -> emptyList
-            property.arrayElementString -> emptyList
-            property.arrayElementEnumFqName != null -> emptyList
-            property.mapKeyKotlinType != null -> if (property.isMutableMap) "mutableMapOf()" else "emptyMap()"
+            property.arrayElementCustomScriptFqName != null -> property.emptyListLiteral
+            property.arrayElementString -> property.emptyListLiteral
+            property.arrayElementEnumFqName != null -> property.emptyListLiteral
+            property.mapKeyKotlinType != null -> property.emptyMapLiteral
             property.enumFqName != null -> "${property.enumFqName}.entries.first()"
             else -> property.narrow?.zeroLiteral ?: property.type.kotlinLiteralZero
         }
-    }
 
     companion object {
         private val RESOURCE_WRAPPER_FROM_HANDLE = RESOURCE_WRAPPERS_WITH_FROM_HANDLE
