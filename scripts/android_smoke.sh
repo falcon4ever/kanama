@@ -234,6 +234,12 @@ check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaScriptLanguage"
 check_log "registered KanamaResourceFormatLoader for \\.kt"
 check_log "ResourceFormatLoader\\._load bound kotlinClass="
+# task 54 — assert a script instance actually CONSTRUCTED, not merely that the loader bound the
+# class above. A regression that resolves the class but produces no live instance passes the bind
+# check but fails this. (The desktop hot-reload smoke asserts `placeholder=false`; that field is
+# editor-only and never appears here — the Android smoke runs the game, where every construct is a
+# real, non-placeholder instance, so the construct line itself is the equivalent proof.)
+check_log "KanamaScript\\.construct kotlinClass="
 check_log "OnGodotMainLoopStarted"
 
 # Renderer assertion: the override must have actually initialized on device.
