@@ -79,5 +79,12 @@ check_absent "Cannot ptrcall nil constructor"
 # is reliably populated.
 check "ResourceForgeSmoke live=true save_error=0"
 check_absent "ResourceForgeSmoke create_failed"
+# task 56 — the force-real override for newScriptInstance() must be scoped to the specific
+# owner being created, not thread-wide. ReentrantForgeProbe's construction (inside the create
+# window) reentrantly instantiates a *different* non-@Tool script; reentered=true proves that
+# reentrant instantiation ran, and the inner CONSTRUCTED marker must stay ABSENT because that
+# inner owner still gets an editor placeholder. Pre-fix (thread-wide flag) the marker fired.
+check "ReentrantForgeProbe reentered=true"
+check_absent "ReentrantPlaceholderProbe CONSTRUCTED"
 
 echo "[tool_smoke] PASS"

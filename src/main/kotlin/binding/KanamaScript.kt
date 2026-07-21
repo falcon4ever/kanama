@@ -83,21 +83,33 @@ class KanamaScript(
     private val templatesByName = LinkedHashMap<String, KanamaScriptTemplate>()
     private val globalNameToTemplate = LinkedHashMap<String, KanamaScriptTemplate>()
 
-    // Depth counter set while [instantiateResourceScript] drives Object.set_script.
-    // Godot runs _instance_create synchronously on the calling thread, so a
-    // thread-local reliably scopes the whole attach. When > 0, callInstanceCreate
+    // Owners currently being programmatically created (by [instantiateResourceScript]
+    // driving Object.set_script), keyed by owner Object* address → nesting depth.
+    // Godot runs _instance_create synchronously on the calling thread, so a thread-local
+    // reliably scopes the whole attach. When an owner is present, callInstanceCreate
     // builds the real instance even in the editor for a non-@Tool script, so that
     // programmatic creation returns a live Kotlin object rather than a placeholder.
-    private val programmaticCreate = ThreadLocal.withInitial { 0 }
+    //
+    // Keyed by owner (not a thread-wide flag) so a reentrant instantiation of a
+    // *different* script during the attach — e.g. a scene load triggered from a resource
+    // constructor — is NOT force-realized; only the specific owner under construction is.
+    // A depth count (not a boolean) so a script whose constructor legitimately re-enters
+    // for the same owner still survives the nesting.
+    private val programmaticCreateOwners = ThreadLocal.withInitial { HashMap<Long, Int>() }
 
-    private inline fun <R> withProgrammaticCreate(body: () -> R): R {
-      programmaticCreate.set(programmaticCreate.get() + 1)
+    private inline fun <R> withProgrammaticCreate(ownerAddress: Long, body: () -> R): R {
+      val owners = programmaticCreateOwners.get()
+      owners[ownerAddress] = (owners[ownerAddress] ?: 0) + 1
       try {
         return body()
       } finally {
-        programmaticCreate.set(programmaticCreate.get() - 1)
+        val depth = (owners[ownerAddress] ?: 1) - 1
+        if (depth <= 0) owners.remove(ownerAddress) else owners[ownerAddress] = depth
       }
     }
+
+    private fun isProgrammaticCreateOwner(ownerAddress: Long): Boolean =
+      (programmaticCreateOwners.get()[ownerAddress] ?: 0) > 0
 
     data class KanamaScriptTemplate(
       val instanceBaseType: String,
@@ -690,7 +702,7 @@ class KanamaScript(
       net.multigesture.kanama.api.RefCounted.retainHandle(baseHandle)
       var success = false
       try {
-        withProgrammaticCreate {
+        withProgrammaticCreate(baseHandle.address()) {
           net.multigesture.kanama.api.GodotObject(baseHandle).setScript(resolved.script)
         }
         val instance =
@@ -1336,11 +1348,18 @@ class KanamaScript(
       // `if (Engine.isEditorHint()) return` boilerplate every script
       // would otherwise need.
       val script = ObjectRegistry.get(instance.address()) as? KanamaScript
+      // Owner this instance is being created for (double-indirect: args[0] is a type-ptr
+      // → the Object* value), matching callCreateInternal's decode. The force-real
+      // override applies only when *this* owner is the one under programmatic creation, so
+      // a different script instantiated reentrantly on the same thread still gets its
+      // editor placeholder.
+      val forObjectTypePtr = args.reinterpret(8).get(ADDRESS, 0)
+      val forObject = forObjectTypePtr.reinterpret(8).get(ADDRESS, 0)
       val skipForEditor =
         script != null &&
           !script.isTool &&
           net.multigesture.kanama.api.Engine.isEditorHint() &&
-          programmaticCreate.get() == 0
+          !isProgrammaticCreateOwner(forObject.address())
       callCreateInternal(instance, args, rRet, allowPlaceholder = skipForEditor)
     }
 

@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.Tool
+import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.ManualGodotLifetimeApi
@@ -69,6 +70,17 @@ class ResourceForgeSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotO
         "[kanama:kt] ResourceForgeSmoke live=$live save_error=$saveError " +
           "script_ref=$scriptRef payload_saved=$payloadSaved reload_ok=$reloadOk"
       )
+    }
+
+    // task 56: per-owner scoping of the force-real override. Creating ReentrantForgeProbe
+    // reentrantly instantiates a *different* non-@Tool script during its construction; that
+    // inner script must still get an editor placeholder (see the two markers asserted in
+    // tool_smoke). The force-real override must apply only to the resource under creation.
+    // Editor-only: the placeholder-vs-real distinction exists solely in the editor, so this
+    // adds no coverage in game mode — and skipping it there keeps runtime_smoke leak-free
+    // (the reentrant scene instance would otherwise outlive the one-frame --quit run).
+    if (Engine.isEditorHint()) {
+      newScriptInstance<ReentrantForgeProbe>().use {}
     }
   }
 }
