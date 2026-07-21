@@ -317,6 +317,28 @@ class HelloScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, 
 		val pendingSetAmount = pendingSetProbe.get("amount") as? Long ?: -1L
 		pendingSetProbe.queueFree()
 		defaultProbeScript?.close()
+		// task 52a / issue #60 — Node.setOwner accepts null through the TYPED wrapper (not
+		// call("set_owner", null)), and null clears the owner. Also exercises the writable
+		// `owner: Node?` property. owner must be an ancestor, so parent owns child.
+		run {
+			val ownerParent = Node(ObjectCalls.constructObject("Node"))
+			val ownerChild = Node(ObjectCalls.constructObject("Node"))
+			self.addChild(ownerParent)
+			ownerParent.addChild(ownerChild)
+			ownerChild.setOwner(ownerParent)
+			val ownerSet = ownerChild.getOwner() != null
+			ownerChild.setOwner(null)
+			val ownerCleared = ownerChild.getOwner() == null
+			ownerChild.owner = ownerParent
+			val propSet = ownerChild.owner != null
+			ownerChild.owner = null
+			val propCleared = ownerChild.owner == null
+			ownerParent.queueFree()
+			System.err.println(
+				"[kanama:kt] task52a setOwner set=$ownerSet cleared=$ownerCleared " +
+					"prop_set=$propSet prop_cleared=$propCleared",
+			)
+		}
 		val scriptUid = ResourceSaver.getResourceIdForPath("res://HelloScript.kt")
 		val fileExists = FileAccess.fileExists("res://HelloScript.kt")
 		val fileSize = FileAccess.getSize("res://HelloScript.kt")

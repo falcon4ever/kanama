@@ -29,9 +29,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         @JvmName("setSceneFilePathProperty")
         set(value) = setSceneFilePath(value)
 
-    val owner: Node?
+    var owner: Node?
         @JvmName("ownerProperty")
         get() = getOwner()
+        @JvmName("setOwnerProperty")
+        set(value) = setOwner(value)
 
     val multiplayer: MultiplayerAPI?
         @JvmName("multiplayerProperty")
@@ -207,8 +209,8 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getGroupsBind, handle)
     }
 
-    fun setOwner(owner: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, handle, listOf(owner.handle))
+    fun setOwner(owner: Node?) {
+        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, handle, listOf(owner?.handle ?: MemorySegment.NULL))
     }
 
     fun getOwner(): Node? {

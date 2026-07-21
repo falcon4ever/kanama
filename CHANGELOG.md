@@ -23,6 +23,23 @@ versioning once public releases begin.
   `T::class.qualifiedName` still matches the registered template under obfuscation;
   device-validated on Pixel 7).
 
+### Fixed
+
+- `Node.setOwner(null)` now compiles and clears the owner through the typed
+  wrapper (issue #60). Godot uses a null owner to clear it (the engine itself
+  calls `child->set_owner(nullptr)` while replacing nodes), but the generator
+  emitted a non-null `Node` parameter, so the only way to pass null was the
+  dynamic `call("set_owner", null)`. Object-parameter nullability is now decided
+  by one contextual policy (consumed by both the type renderer and the
+  marshalling so they cannot drift): explicitly `meta: "required"` parameters
+  stay non-null; Resource/RefCounted-derived stay nullable (legacy); and an
+  audited `(class, method, arg)` override admits null for a specific ordinary
+  object — seeded with `Node.set_owner(owner)`, each entry citing the pinned 4.7
+  source. Generated `Node.owner` is now a writable `Node?` property, and the
+  desktop hand-shaped `Node` exposes the same. (Tightening the 65 explicitly
+  `required` resource parameters to non-null is a separate, source-breaking
+  follow-up.)
+
 ### Changed
 
 - Desktop/Android `Resource` now extends `RefCounted`, restoring Godot's real

@@ -408,6 +408,16 @@ KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
     ("Node3D", "look_at", "up"): "Vector3.UP",
     ("Node3D", "look_at_from_position", "up"): "Vector3.UP",
 }
+# (class, method, argument) object parameters that accept Kotlin `null` even though they are not
+# Resource/RefCounted-derived (which are nullable by legacy policy) and are not marked
+# `meta: "required"`. Each entry must cite the pinned Godot 4.7-stable source where null is a valid,
+# handled value. Task 52a (issue #60).
+#   Node.set_owner(null): Godot cleans up the previous owner then returns when p_owner is null, and
+#   the engine itself calls child->set_owner(nullptr) while replacing nodes.
+#   scene/main/node.cpp#L2271-L2280 and #L3243-L3249 (4.7-stable).
+NULLABLE_OBJECT_PARAM_OVERRIDES = {
+    ("Node", "set_owner", "owner"),
+}
 CUSTOM_MEMBER_SECTIONS = {
     "AnimationMixer": """
     fun setParameter(path: String, value: Any?) {
@@ -1697,11 +1707,73 @@ def kotlin_return_type(
     return kotlin_type(logical_type, type_name, wrapper_classes, api_classes)
 
 
-def object_arg_expression(name: str, type_name: str, api_classes: dict[str, ApiClass]) -> str:
-    return f"{name}?.requireOpenHandle() ?: MemorySegment.NULL" if is_resource_like(type_name, api_classes) else f"{name}.handle"
+def object_param_is_nullable(
+    class_name: str,
+    method_name: str,
+    arg_name: str,
+    type_name: str,
+    arg_meta: str,
+    api_classes: dict[str, ApiClass],
+) -> bool:
+    """Whether a generated Object parameter should be Kotlin-nullable (accept `null`).
+
+    Single decision point, consumed by both the type renderer and the marshalling so they cannot
+    drift. Order matters:
+
+      1. resource-like (Resource/RefCounted-derived) -> nullable (existing legacy policy).
+      2. `meta: "required"` -> non-null. Godot's RequiredParam marker; an audited override cannot
+         beat it (a Godot upgrade marking an old override required must stop admitting null).
+      3. exact (class, method, arg) in NULLABLE_OBJECT_PARAM_OVERRIDES -> nullable (audited source).
+      4. otherwise -> non-null (conservative legacy default).
+
+    Task 52a is intentionally non-breaking: resource-like stays nullable regardless of `required`.
+    Task 52b tightens by moving the `required` check ABOVE the resource-like line, turning the 65
+    explicitly-required resource-like parameters non-null (its own source-breaking change).
+    """
+    if is_resource_like(type_name, api_classes):
+        return True
+    if arg_meta == "required":
+        return False
+    return (class_name, method_name, arg_name) in NULLABLE_OBJECT_PARAM_OVERRIDES
+
+
+def kotlin_parameter_type(
+    class_name: str,
+    method_name: str,
+    arg_name: str,
+    arg_meta: str,
+    logical_type: str,
+    type_name: str,
+    wrapper_classes: set[str],
+    api_classes: dict[str, ApiClass],
+) -> str:
+    """Parameter type with method/argument context. Object params consult [object_param_is_nullable];
+    all other kinds fall back to the context-free [kotlin_type]. Marshalling uses the same decision."""
+    base = kotlin_type(logical_type, type_name, wrapper_classes, api_classes)
+    if logical_type != "Object":
+        return base
+    non_null = base[:-1] if base.endswith("?") else base
+    nullable = object_param_is_nullable(class_name, method_name, arg_name, type_name, arg_meta, api_classes)
+    return f"{non_null}?" if nullable else non_null
+
+
+def object_arg_expression(
+    name: str,
+    type_name: str,
+    is_nullable: bool,
+    api_classes: dict[str, ApiClass],
+) -> str:
+    """Marshal an Object parameter to its MemorySegment handle. [is_nullable] is the decision from
+    [object_param_is_nullable] so the type and the marshalling stay in lockstep. Resource-like keeps
+    the closed-handle check via requireOpenHandle()."""
+    resource_like = is_resource_like(type_name, api_classes)
+    if resource_like:
+        return f"{name}?.requireOpenHandle() ?: MemorySegment.NULL" if is_nullable else f"{name}.requireOpenHandle()"
+    return f"{name}?.handle ?: MemorySegment.NULL" if is_nullable else f"{name}.handle"
 
 
 def call_argument_expressions(
+    class_name: str,
     method: ApiMethod,
     object_types: set[str],
     api_classes: dict[str, ApiClass],
@@ -1709,9 +1781,19 @@ def call_argument_expressions(
 ) -> list[str]:
     names = names or [arg_name(name, index) for index, name in enumerate(method.argument_names)]
     expressions: list[str] = []
-    for name, type_name, logical_kind in zip(names, method.argument_types, method.logical_arg_kinds(object_types), strict=True):
+    for name, raw_name, type_name, arg_meta, logical_kind in zip(
+        names,
+        method.argument_names,
+        method.argument_types,
+        method.argument_metas,
+        method.logical_arg_kinds(object_types),
+        strict=True,
+    ):
         if logical_kind == "Object":
-            expressions.append(object_arg_expression(name, type_name, api_classes))
+            is_nullable = object_param_is_nullable(
+                class_name, method.name, raw_name, type_name, arg_meta, api_classes
+            )
+            expressions.append(object_arg_expression(name, type_name, is_nullable, api_classes))
         elif logical_kind == "Callable":
             expressions.extend([f"{name}.target.handle", f"{name}.method"])
         elif logical_kind == "Signal":
@@ -1789,11 +1871,12 @@ def render_method(
         for index, name in enumerate(method.argument_names)
     ]
     param_texts = []
-    for name, raw_name, kind, type_name, default_value in zip(
+    for name, raw_name, kind, type_name, arg_meta, default_value in zip(
         param_names,
         method.argument_names,
         logical_args,
         method.argument_types,
+        method.argument_metas,
         method.argument_defaults,
         strict=True,
     ):
@@ -1801,12 +1884,14 @@ def render_method(
         default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
             (class_name, method.name, raw_name),
         ) or kotlin_default_expression(default_value, kind)
-        type_text = kotlin_type(kind, type_name, wrapper_classes, api_classes)
+        type_text = kotlin_parameter_type(
+            class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
+        )
         param_texts.append(
             f"{name}: {type_text} = {default_expression}" if default_expression is not None else f"{name}: {type_text}",
         )
     params = ", ".join(param_texts)
-    call_args = call_argument_expressions(method, object_types, api_classes, param_names)
+    call_args = call_argument_expressions(class_name, method, object_types, api_classes, param_names)
     return_array_element = typed_object_array_element_any(method.logical_return_kind(object_types))
     if return_array_element and shape.function not in DIRECT_TYPED_OBJECT_LIST_HELPERS:
         return_wrapper = api_object_wrapper_type(return_array_element, wrapper_classes)
@@ -1873,11 +1958,12 @@ def render_vararg_method(
         for index, name in enumerate(method.argument_names)
     ]
     fixed_params = []
-    for name, raw_name, kind, type_name, default_value in zip(
+    for name, raw_name, kind, type_name, arg_meta, default_value in zip(
         param_names,
         method.argument_names,
         logical_args,
         method.argument_types,
+        method.argument_metas,
         method.argument_defaults,
         strict=True,
     ):
@@ -1885,7 +1971,9 @@ def render_vararg_method(
         default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
             (class_name, method.name, raw_name),
         ) or kotlin_default_expression(default_value, kind)
-        type_text = kotlin_type(kind, type_name, wrapper_classes, api_classes)
+        type_text = kotlin_parameter_type(
+            class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
+        )
         fixed_params.append(
             f"{name}: {type_text} = {default_expression}" if default_expression is not None else f"{name}: {type_text}",
         )
@@ -1950,6 +2038,7 @@ def first_method(cls: ApiClass, name: str) -> ApiMethod | None:
 
 
 def property_setter_type(
+    class_name: str,
     setter_method: ApiMethod,
     object_types: set[str],
     wrapper_classes: set[str],
@@ -1962,7 +2051,15 @@ def property_setter_type(
     if setter_method.logical_return_kind(object_types) != "void":
         return None
     setter_kind = setter_method.logical_arg_kinds(object_types)[0]
-    return kotlin_type(
+    # Route through the same contextual policy the method renderer uses, so a nullable Object setter
+    # (e.g. Node.set_owner(owner: Node?)) yields a nullable property type — otherwise render_property
+    # sees a Node? getter and a Node setter, the types mismatch, and it suppresses the setter (the
+    # property becomes read-only). Task 52a.
+    return kotlin_parameter_type(
+        class_name,
+        setter_method.name,
+        setter_method.argument_names[0],
+        setter_method.argument_metas[0],
         setter_kind,
         setter_method.argument_types[0],
         wrapper_classes,
@@ -2010,7 +2107,7 @@ def render_property(
     if setter and setter in emitted_methods:
         setter_method = first_method(cls, setter)
         setter_type = (
-            property_setter_type(setter_method, object_types, wrapper_classes, api_classes)
+            property_setter_type(cls.name, setter_method, object_types, wrapper_classes, api_classes)
             if setter_method is not None
             else None
         )

@@ -115,6 +115,9 @@ check "kt script accessor containment tscn_rejected=true baseline=true set_rejec
 # task 51 — Resource extends RefCounted, so setMeta/getMeta (GodotObject surface) work on a
 # Resource directly (no asObject() hop). set_get=51 proves the inherited meta round-trips.
 check "task51 resource meta set_get=51 has=true"
+# task 52a / issue #60 — Node.setOwner(null) clears the owner through the typed wrapper
+# (and the writable owner: Node? property). Reverting to a non-null setOwner fails to compile.
+check "task52a setOwner set=true cleared=true prop_set=true prop_cleared=true"
 # MutableList export (preserves mutability in the setter): ARRAY + PROPERTY_HINT_TYPE_STRING,
 # set/get round-trip for a mutable typed list.
 check "kt script mutable list export type=true hint=true hint_string=true roundtrip=true"

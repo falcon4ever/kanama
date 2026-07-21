@@ -240,6 +240,8 @@ def main() -> int:
                         ),
                     )
 
+    errors.extend(check_object_param_nullability_policy(api_classes))
+
     if errors:
         print("[generator_object_policy] FAIL", file=sys.stderr)
         for error in errors:
@@ -248,6 +250,51 @@ def main() -> int:
 
     print("[generator_object_policy] PASS")
     return 0
+
+
+def _arg_meta(api_classes: dict, class_name: str, method_name: str, arg_name: str) -> str | None:
+    cls = api_classes.get(class_name)
+    if cls is None:
+        return None
+    for method in cls.methods.get(method_name, []):
+        if arg_name in method.argument_names:
+            return method.argument_metas[method.argument_names.index(arg_name)]
+    return None
+
+
+def check_object_param_nullability_policy(api_classes: dict) -> list[str]:
+    """Task 52a — prove the contextual object-parameter nullability policy and validate the override
+    table. Removing a policy branch, or leaving a stale/colliding override, fails here."""
+    from generate_api_wrapper import NULLABLE_OBJECT_PARAM_OVERRIDES, object_param_is_nullable
+
+    errs: list[str] = []
+
+    # Override table: every entry must resolve to a current Object argument that is NOT meta:required
+    # (an override must never admit null for a parameter Godot marks required — a refresh that adds
+    # `required` to an old override must fail here for human review).
+    for class_name, method_name, arg_name in NULLABLE_OBJECT_PARAM_OVERRIDES:
+        meta = _arg_meta(api_classes, class_name, method_name, arg_name)
+        if meta is None:
+            errs.append(f"stale NULLABLE_OBJECT_PARAM_OVERRIDES entry: {(class_name, method_name, arg_name)} not found in the API")
+        elif meta == "required":
+            errs.append(f"NULLABLE_OBJECT_PARAM_OVERRIDES entry {(class_name, method_name, arg_name)} collides with meta:required")
+
+    # The four canonical cases (Node = non-resource object; Texture2D = Resource-derived):
+    cases = [
+        # (class, method, arg, type, meta, expected_nullable, why)
+        ("Node", "set_owner", "owner", "Node", "", True, "audited override -> nullable"),
+        ("Node", "add_child", "node", "Node", "required", False, "required ordinary Object -> non-null"),
+        ("TextureRect", "set_texture", "texture", "Texture2D", "", True, "unmarked Resource -> nullable (legacy)"),
+        # 52a is non-breaking: a required Resource-like param STAYS nullable here; 52b tightens it to
+        # non-null by moving the `required` check above the resource-like line.
+        ("CanvasItem", "draw_texture", "texture", "Texture2D", "required", True, "required Resource -> still nullable in 52a"),
+    ]
+    for class_name, method_name, arg_name, type_name, meta, expected, why in cases:
+        actual = object_param_is_nullable(class_name, method_name, arg_name, type_name, meta, api_classes)
+        if actual != expected:
+            errs.append(f"object_param_is_nullable({class_name}.{method_name}.{arg_name}) = {actual}, expected {expected} ({why})")
+
+    return errs
 
 
 if __name__ == "__main__":

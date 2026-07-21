@@ -423,9 +423,23 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.set_owner
      */
-    fun setOwner(owner: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, handle, listOf(owner.handle))
+    fun setOwner(owner: Node?) {
+        // Godot's Node::set_owner cleans up the previous owner and returns when p_owner is null, so
+        // null clears the owner (the engine itself calls child->set_owner(nullptr) while replacing
+        // nodes). Marshal null as MemorySegment.NULL. Task 52a / issue #60; audited in
+        // NULLABLE_OBJECT_PARAM_OVERRIDES in scripts/generate_api_wrapper.py.
+        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, handle, listOf(owner?.handle ?: MemorySegment.NULL))
     }
+
+    /**
+     * The owner of this node, or `null` to clear it. Honest hand-shaped mirror of the generated
+     * `var owner: Node?` property the reparented iOS wrapper now emits (task 52a).
+     */
+    var owner: Node?
+        @JvmName("ownerProperty")
+        get() = getOwner()
+        @JvmName("setOwnerProperty")
+        set(value) = setOwner(value)
 
     /**
      * The owner of this node. The owner must be an ancestor of this node. When packing the owner node
