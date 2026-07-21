@@ -71,6 +71,8 @@ object KanamaAndroidRemap {
 
     val forbiddenSourceFragments = listOf(
         "java.lang.foreign",
+        "expect class",
+        "actual class",
         "Files.readString",
         "Files.writeString",
         "getClassLoadingLock",

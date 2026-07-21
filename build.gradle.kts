@@ -65,12 +65,13 @@ subprojects {
 
   repositories { mavenCentral() }
 
+  extensions.configure<PublishingExtension> { addKanamaPackageRepository() }
+
   pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
     extensions.configure<JavaPluginExtension> { withSourcesJar() }
 
     extensions.configure<PublishingExtension> {
       publications { create<MavenPublication>("maven") { from(components["java"]) } }
-      addKanamaPackageRepository()
     }
   }
 }
@@ -171,6 +172,7 @@ configure<PublishingExtension> {
 
 dependencies {
   "implementation"(project(":annotations"))
+  "implementation"(project(":kanama-common-api"))
   "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
   "ksp"(project(":processor"))
   "testImplementation"(kotlin("test-junit5"))
@@ -341,6 +343,8 @@ tasks.register("publishKanamaToMavenLocal") {
   dependsOn(
     tasks.named("publishToMavenLocal"),
     ":annotations:publishToMavenLocal",
+    ":kanama-common-api:publishJvmPublicationToMavenLocal",
+    ":kanama-common-api:publishKotlinMultiplatformPublicationToMavenLocal",
     ":processor:publishToMavenLocal",
   )
 }
@@ -350,7 +354,9 @@ val cleanKanamaPackageMavenRepository by
 
 allprojects {
   tasks
-    .matching { it.name == "publishMavenPublicationToKanamaPackageRepository" }
+    .matching {
+      it.name.startsWith("publish") && it.name.endsWith("PublicationToKanamaPackageRepository")
+    }
     .configureEach { mustRunAfter(rootProject.tasks.named("cleanKanamaPackageMavenRepository")) }
 }
 
@@ -361,10 +367,12 @@ val publishKanamaPackageMavenRepository by
       "Publish Kanama runtime, annotations, and KSP processor jars to the package-local Maven repository."
     dependsOn(cleanKanamaPackageMavenRepository)
     dependsOn(
-      tasks.named("publishMavenPublicationToKanamaPackageRepository"),
-      ":annotations:publishMavenPublicationToKanamaPackageRepository",
-      ":processor:publishMavenPublicationToKanamaPackageRepository",
-    )
+    tasks.named("publishMavenPublicationToKanamaPackageRepository"),
+    ":annotations:publishMavenPublicationToKanamaPackageRepository",
+    ":kanama-common-api:publishJvmPublicationToKanamaPackageRepository",
+    ":kanama-common-api:publishKotlinMultiplatformPublicationToKanamaPackageRepository",
+    ":processor:publishMavenPublicationToKanamaPackageRepository",
+  )
   }
 
 fun hostPlatformClassifier(): String {

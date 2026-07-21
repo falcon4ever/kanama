@@ -16,6 +16,7 @@ import net.multigesture.kanama.binding.KanamaScript
 import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
+import net.multigesture.kanama.binding.runtime.installCommonGodotBackend
 import net.multigesture.kanama.ffi.GodotFFI
 
 /**
@@ -38,6 +39,7 @@ object KanamaBinding {
 
     this.library = MemorySegment.ofAddress(library)
     GodotFFI.bootstrap(procAddr)
+    installCommonGodotBackend()
     val version = fetchGodotVersion()
     System.err.println(
       "[kanama:kt] Godot version: " +

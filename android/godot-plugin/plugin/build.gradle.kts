@@ -27,6 +27,15 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
     from(kanamaRoot.dir("annotations/src/main/kotlin")) {
         remapForeignImports()
     }
+    from(kanamaRoot.dir("kanama-common-api/src/commonMain/kotlin")) {
+        exclude("**/GodotPlatformTypes.kt")
+        remapForeignImports()
+    }
+    from(kanamaRoot.dir("kanama-common-api/src/jvmMain/kotlin")) {
+        filter { line: String ->
+            KanamaAndroidRemap.remapLine(line).replace("actual ", "")
+        }
+    }
 
     doLast {
         val realFile = androidKanamaSources.get().file(
