@@ -2475,14 +2475,26 @@ if [[ "$physical_device" -eq 1 ]]; then
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl device install app \
     --device "$device_udid" \
     "$app_path"
+  # `--console` streams the device's stdout/stderr to the host (verified with devicectl on
+  # iPhone 15 Pro), but blocks until the app exits — and the smoke scenes do not self-quit. Run
+  # it in the background and stop capturing after `launch_sleep`, mirroring the simulator branch
+  # rather than depending on `timeout` (absent on a clean macOS host). The app is left running on
+  # the device; the loader / script-error / probe assertions below decide pass/fail from the
+  # captured log, so a launch that never streamed a `[kanama][ios]` line fails at the loader
+  # check, not here.
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl device process launch \
     --device "$device_udid" \
     --terminate-existing \
+    --console \
     "$bundle_id" \
     >"$stdout_log" \
-    2>"$stderr_log"
+    2>"$stderr_log" &
+  launch_pid="$!"
+  printf '%s\n' "$launch_pid" >"$launch_pid_file"
+  sleep "$launch_sleep"
+  kill "$launch_pid" >/dev/null 2>&1 || true
+  wait "$launch_pid" >/dev/null 2>&1 || true
   launch_pid=""
-  : >"$launch_pid_file"
 else
   DEVELOPER_DIR="$xcode_developer_dir" xcodebuild \
     -project "$export_dir/$app_name.xcodeproj" \
@@ -2536,19 +2548,22 @@ if [[ "$physical_device" -eq 1 ]]; then
   echo "[ios_visual_smoke] physical app launched; screenshot capture is not automated"
 fi
 
-if [[ "$physical_device" -eq 1 ]]; then
-  echo "[ios_visual_smoke] physical-device run; no Kanama loader log assertion"
-elif [[ -n "$godot_project_baseline_dir" ]]; then
+if [[ -n "$godot_project_baseline_dir" ]]; then
   echo "[ios_visual_smoke] Godot-only baseline; no Kanama loader log expected"
 elif [[ -f "$stderr_log" ]] && rg -q '\[kanama\]\[ios\]' "$stderr_log"; then
   echo "[ios_visual_smoke] Kanama iOS loader log detected in stderr"
 elif [[ -f "$stdout_log" ]] && rg -q '\[kanama\]\[ios\]' "$stdout_log"; then
   echo "[ios_visual_smoke] Kanama iOS loader log detected in stdout"
+elif [[ "$physical_device" -eq 1 ]]; then
+  # On hardware a missing loader line means the addon did not run (bad install / signing /
+  # bootstrap) — the whole reason to run on a device. Fail rather than report OK on build+install.
+  echo "[ios_visual_smoke] no Kanama iOS loader log captured on device — the addon did not run" >&2
+  exit 1
 else
   echo "[ios_visual_smoke] warning: no Kanama iOS loader log captured from simctl stdout/stderr" >&2
 fi
 
-if [[ "$physical_device" -eq 0 ]] && rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout_log"; then
+if rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout_log"; then
   echo "[ios_visual_smoke] script error detected in launch logs" >&2
   exit 1
 fi
@@ -2557,7 +2572,7 @@ if [[ "$physical_device" -eq 0 && -n "$godot_project_baseline_dir" ]]; then
   echo "[ios_visual_smoke] Godot-only baseline screenshot captured"
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_probe" -eq 1 ]]; then
+if [[ "$kanama_probe" -eq 1 ]]; then
   if rg -q 'updated grouped probe label' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] grouped probe label update log detected"
   else
@@ -2566,7 +2581,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_script_probe" -eq 1 ]]; then
+if [[ "$kanama_script_probe" -eq 1 ]]; then
   if rg -q 'script instance ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] script instance ready log detected"
   else
@@ -2575,7 +2590,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_script_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_user_script_probe" -eq 1 ]]; then
+if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   if rg -q 'project script method call.*_ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script ready log detected"
   else
@@ -2634,7 +2649,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_user_script_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_bunnymark_probe" -eq 1 ]]; then
+if [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
   bunnymark_add_calls="$(
     {
       rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" || true
@@ -2660,7 +2675,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_bunnymark_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_match3_probe" -eq 1 ]]; then
+if [[ "$kanama_match3_probe" -eq 1 ]]; then
   if ! rg -q 'match3 smoke ready tiles=64' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Match3 ready log missing" >&2
     exit 1
@@ -2673,7 +2688,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_match3_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_platformer3d_probe" -eq 1 ]]; then
+if [[ "$kanama_platformer3d_probe" -eq 1 ]]; then
   if ! rg -q 'platformer3d smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] 3D platformer ready log missing" >&2
     exit 1
@@ -2686,7 +2701,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_platformer3d_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_dodge_probe" -eq 1 ]]; then
+if [[ "$kanama_dodge_probe" -eq 1 ]]; then
   if ! rg -q 'dodge smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Dodge ready log missing" >&2
     exit 1
@@ -2699,7 +2714,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_dodge_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_squash_probe" -eq 1 ]]; then
+if [[ "$kanama_squash_probe" -eq 1 ]]; then
   if ! rg -q 'squash smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Squash ready log missing" >&2
     exit 1
@@ -2712,7 +2727,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_squash_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_fps_probe" -eq 1 ]]; then
+if [[ "$kanama_fps_probe" -eq 1 ]]; then
   if ! rg -q 'fps smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] FPS ready log missing" >&2
     exit 1
@@ -2725,7 +2740,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_fps_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_racing_probe" -eq 1 ]]; then
+if [[ "$kanama_racing_probe" -eq 1 ]]; then
   if ! rg -q 'racing smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Racing ready log missing" >&2
     exit 1
@@ -2738,7 +2753,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_racing_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_character_probe" -eq 1 ]]; then
+if [[ "$kanama_character_probe" -eq 1 ]]; then
   if ! rg -q 'character smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Character-controller ready log missing" >&2
     exit 1
@@ -2751,7 +2766,7 @@ if [[ "$physical_device" -eq 0 && "$kanama_character_probe" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$physical_device" -eq 0 && "$kanama_thirdperson_probe" -eq 1 ]]; then
+if [[ "$kanama_thirdperson_probe" -eq 1 ]]; then
   if ! rg -q 'thirdperson smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Third-person ready log missing" >&2
     exit 1
