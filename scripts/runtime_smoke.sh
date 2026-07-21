@@ -135,6 +135,10 @@ check "kt script dictionary malformed survived=true wrong_key_empty=true wrong_v
 # issue #40 review — nullable scalar Map value (Map<String, Long?>) preserves a null value's key
 # (C# parity), and a wrong-typed value nulls rather than dropping. Round-trips through the write path.
 check "kt script dictionary nullable_value null_preserved=true wrong_nulled=true"
+# task 41 — a Kanama @GlobalClass script resource matches a plain GDScript global class for the
+# ClassDB pair (can_instantiate=true, instantiate=null: script classes aren't engine classes),
+# and the supported base-Resource + set_script construction recipe works.
+check "kt script classdb_parity kanama_can=true kanama_instantiate_null=true gdscript_can=true gdscript_instantiate_null=true recipe_works=true"
 check "Mathf lerp=2\\.5 clamp=10 wrap=1 approx=true round=3 lerpf=2\\.5 clampf=10\\.0 sinf=0\\.0 sqrtf=3\\.0"
 check "Generated name constants ok=true"
 check "ProjectSettings string_list=alpha\\|beta"

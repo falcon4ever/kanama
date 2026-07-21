@@ -368,3 +368,13 @@ declaration exists so shared game code compiles, but calling it throws at
 runtime. Construct script-backed resources on desktop/Android, or guard the call
 by platform. Its sibling `kotlinScriptInstance<T>()` (resolving the Kotlin
 instance of an existing resource) is supported on all three backends.
+
+**Not `ClassDB.instantiate`**: `ClassDB.instantiate("Weapon")` returns `null`
+(with `Cannot get class 'Weapon'`) for a custom resource class, even though
+`ClassDB.can_instantiate("Weapon")` returns `true`. This is **upstream Godot
+behaviour, not a Kanama limitation** — script global classes (GDScript, C#, and
+Kanama alike) live in the script server, not the engine `ClassDB` registry, so
+`ClassDB.instantiate` cannot construct them and `can_instantiate` answers from a
+different lookup. Construct with `newScriptInstance<T>()` from Kotlin, or from
+GDScript attach the loaded script to a base resource:
+`var r = Resource.new(); r.set_script(load("res://Weapon.kt"))`.

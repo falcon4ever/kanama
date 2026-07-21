@@ -68,6 +68,7 @@ func _ready() -> void:
 		_kanama_dictionary_export_smoke(properties)
 		_kanama_dictionary_malformed_smoke()
 		_kanama_dictionary_nullable_value_smoke()
+		_kanama_classdb_script_class_smoke()
 		var replace_smoke_scene = $ScriptNode.replace_smoke_scene()
 		print("[kanama:gd] kt script replace_smoke_scene = ", replace_smoke_scene)
 		if not replace_smoke_scene:
@@ -330,6 +331,28 @@ func _kanama_dictionary_malformed_smoke() -> void:
 # Dictionary: a null value keeps its key (unlike a non-null value map, which cannot hold null and
 # drops). Round-trips through the write path too (null -> nil Variant). A wrong-typed value also
 # becomes null rather than dropping, since the key can now hold it.
+func _kanama_classdb_script_class_smoke() -> void:
+	# task 41 — ClassDB honesty for script global classes. `ClassDB.instantiate` only builds
+	# engine classes, so a script `@GlobalClass` (GDScript, C#, or Kanama) returns null +
+	# "Cannot get class" while `can_instantiate` returns true. This is upstream Godot behaviour:
+	# assert Kanama's SmokeResource matches a plain GDScript global class (ProbeGlobalRes), so a
+	# future divergence is caught. Construct script resources with `newScriptInstance<T>()` from
+	# Kotlin, or the base-Resource + set_script recipe below from GDScript — not ClassDB.
+	var kanama_can := ClassDB.can_instantiate("SmokeResource")
+	var kanama_instantiate_null := ClassDB.instantiate("SmokeResource") == null
+	var gdscript_can := ClassDB.can_instantiate("ProbeGlobalRes")
+	var gdscript_instantiate_null := ClassDB.instantiate("ProbeGlobalRes") == null
+	# Supported GDScript-side construction: attach the loaded Kanama script to a base Resource.
+	var built = ClassDB.instantiate("Resource")
+	built.set_script(load("res://SmokeResource.kt"))
+	var recipe_works = built != null and built.get_script() != null
+	print("[kanama:gd] kt script classdb_parity kanama_can=", kanama_can,
+		" kanama_instantiate_null=", kanama_instantiate_null, " gdscript_can=", gdscript_can,
+		" gdscript_instantiate_null=", gdscript_instantiate_null, " recipe_works=", recipe_works)
+	if not (kanama_can and kanama_instantiate_null and gdscript_can \
+			and gdscript_instantiate_null and recipe_works):
+		push_error("Kanama ClassDB script-class parity failed")
+
 func _kanama_dictionary_nullable_value_smoke() -> void:
 	$ScriptNode.smoke_nullable_scalar_map = {"a": null, "b": 2}
 	var got = $ScriptNode.smoke_nullable_scalar_map
