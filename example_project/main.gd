@@ -68,6 +68,7 @@ func _ready() -> void:
 		_kanama_dictionary_export_smoke(properties)
 		_kanama_dictionary_malformed_smoke()
 		_kanama_dictionary_nullable_value_smoke()
+		_kanama_malformed_property_matrix_smoke()
 		_kanama_classdb_script_class_smoke()
 		var replace_smoke_scene = $ScriptNode.replace_smoke_scene()
 		print("[kanama:gd] kt script replace_smoke_scene = ", replace_smoke_scene)
@@ -308,6 +309,46 @@ func _kanama_dictionary_export_smoke(properties: Array) -> void:
 # The decode now drops undecodable entries. Reaching this print at all is the core assertion —
 # an uncontained throw never gets here — and the property must hold a defined value afterwards.
 # Reverting the fail-soft decode (scalarReadCast* -> throwing `as`) reproduces the abort.
+func _kanama_malformed_property_matrix_smoke() -> void:
+	# task 50 — the standing malformed-input gate. Feed a wrong-typed value to a representative
+	# @ScriptProperty of EVERY exported shape and prove the process SURVIVES: an uncontained cast
+	# in a generated setter/getter unwinds through the FFM upcall and aborts the JVM (exit 134)
+	# *before* the summary line prints, so reaching the print at all is the load-bearing
+	# assertion — removing the siSet/siGet Throwable containment reproduces the abort and this
+	# line never appears. Each read-back also confirms the property still holds a defined value.
+	var n = $ScriptNode
+	n.health = "not-a-number"          # scalar Long   <- String
+	n.speed = [1, 2, 3]                # scalar Double <- Array
+	n.label = Vector2(1, 2)            # String        <- value type
+	n.target_path = 42                 # NodePath      <- int
+	n.smoke_difficulty = "not-an-enum" # enum (int)    <- String
+	n.smoke_joints = "not-an-array"    # List<enum>    <- String (non-array)
+	n.smoke_textures = 7               # List<wrapper> <- int (non-array)
+	n.smoke_textures = [7, "x"]        # List<wrapper> <- array of wrong-typed elements
+	n.smoke_resource = 99              # resource      <- int
+	n.smoke_scene = "not-a-scene"      # PackedScene   <- String
+	n.smoke_resources = ["x", 5]       # List<@ScriptClass> <- wrong-typed elements
+	# Read every shape back — a corrupted decode would surface as a wrong type or a null here.
+	var all_readable = (
+		typeof(n.health) == TYPE_INT
+		and typeof(n.speed) == TYPE_FLOAT
+		and typeof(n.label) == TYPE_STRING
+		and typeof(n.target_path) == TYPE_NODE_PATH
+		and typeof(n.smoke_difficulty) == TYPE_INT
+		and typeof(n.smoke_joints) == TYPE_ARRAY
+		and typeof(n.smoke_textures) == TYPE_ARRAY
+		and typeof(n.smoke_resources) == TYPE_ARRAY
+	)
+	# Restore sane values so later probes see defaults, not the malformed pokes.
+	n.health = 99
+	n.speed = 5.1
+	n.label = "hello"
+	n.smoke_textures = []
+	n.smoke_resources = []
+	print("[kanama:gd] kt script malformed_matrix survived=true all_readable=", all_readable)
+	if not all_readable:
+		push_error("Kanama malformed-input matrix: a property was not readable after wrong-typed input")
+
 func _kanama_dictionary_malformed_smoke() -> void:
 	# Wrong-typed keys: Long keys into a String-keyed map. Both keys fail to decode and drop.
 	$ScriptNode.smoke_scalar_map = {1: 2, 3: 4}

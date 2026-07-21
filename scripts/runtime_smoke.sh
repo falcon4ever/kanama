@@ -132,6 +132,12 @@ check "kt script dictionary export scalar_type=true tscn_scalar_map=true scalar_
 # the process, exit 134). Reaching this line at all proves survival; reverting the fail-soft decode
 # makes Godot exit before printing it.
 check "kt script dictionary malformed survived=true wrong_key_empty=true wrong_value_dropped=true wrong_vector_key_dropped=true"
+# task 50 — the standing malformed-input matrix: a wrong-typed value is fed to a representative
+# @ScriptProperty of every exported shape (scalar/Double/String/NodePath/enum/enum-list/wrapper-
+# list/resource/PackedScene/@ScriptClass-list). Reaching this line proves the process survived
+# (an uncontained cast in a generated setter/getter aborts the JVM before it prints); all_readable
+# proves each getter still returns a defined value. Removing siSet/siGet containment fails here.
+check "kt script malformed_matrix survived=true all_readable=true"
 # issue #40 review — nullable scalar Map value (Map<String, Long?>) preserves a null value's key
 # (C# parity), and a wrong-typed value nulls rather than dropping. Round-trips through the write path.
 check "kt script dictionary nullable_value null_preserved=true wrong_nulled=true object_null_dropped=true"
