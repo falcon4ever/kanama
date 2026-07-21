@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>$GODOT_PROJECT_NAME</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        background: #121722;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+      }
+
+      main {
+        display: grid;
+        width: min(960px, 100vw);
+        gap: 0.75rem;
+      }
+
+      canvas {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #171a21;
+      }
+
+      #kanama-status,
+      #kanama-results {
+        margin: 0;
+        padding: 0 1rem;
+        white-space: pre-wrap;
+      }
+
+      [data-kind="pass"] {
+        color: #79dc9a;
+      }
+
+      [data-kind="fail"] {
+        color: #ff8f8f;
+      }
+    </style>
+    $GODOT_HEAD_INCLUDE
+  </head>
+  <body data-status="loading">
+    <main>
+      <canvas id="canvas">Your browser does not support canvas.</canvas>
+      <p id="kanama-status">Loading Kotlin/Wasm before Godot…</p>
+      <pre id="kanama-results"></pre>
+    </main>
+    <script>
+      globalThis.KanamaWebPageStartedAt = performance.now();
+    </script>
+    <script src="$GODOT_URL"></script>
+    <script src="kanama-web-spike.js"></script>
+    <script src="kanama-web-bridge.js"></script>
+    <script>
+      const engine = new Engine($GODOT_CONFIG);
+      globalThis
+        .bootstrapKanamaWeb(globalThis["web-runtime"])
+        .then(() => engine.startGame())
+        .catch((error) => globalThis.failKanamaWeb(error));
+    </script>
+  </body>
+</html>

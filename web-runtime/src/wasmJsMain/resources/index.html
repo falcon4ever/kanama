@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kanama Kotlin/Wasm spike</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+        background: #171a21;
+        color: #e8edf2;
+      }
+
+      main {
+        width: min(42rem, calc(100vw - 3rem));
+        padding: 2rem;
+        border: 1px solid #3a4352;
+        border-radius: 0.75rem;
+        background: #202631;
+      }
+
+      [data-kind="pass"] {
+        color: #79dc9a;
+      }
+
+      [data-kind="fail"] {
+        color: #ff8f8f;
+      }
+    </style>
+  </head>
+  <body data-status="loading">
+    <main>
+      <h1>Kanama Kotlin/Wasm spike</h1>
+      <p id="status">Loading Wasm…</p>
+      <pre id="details"></pre>
+    </main>
+    <script src="kanama-web-spike.js"></script>
+    <script>
+      const SCRIPT_ID = 1;
+      const GREETING_PROPERTY_ID = 1;
+      const ECHO_METHOD_ID = 1;
+
+      function requireEqual(label, actual, expected) {
+        if (actual !== expected) {
+          throw new Error(`${label}: expected ${expected}, got ${actual}`);
+        }
+        return `${label}: ${actual}`;
+      }
+
+      async function runSmoke() {
+        const api = await globalThis["web-runtime"];
+        globalThis.KanamaWebBridge = {
+          flushCommands(_words, count) {
+            return count;
+          },
+        };
+        const objectHandle = api.kanamaWebCreate(SCRIPT_ID);
+        const checks = [
+          requireEqual("protocol", api.kanamaWebProtocolVersion(), 1),
+          requireEqual("round trip", api.kanamaWebRoundTrip(57), 57),
+          requireEqual("live object", api.kanamaWebIsLive(objectHandle), 1),
+          requireEqual("ready", api.kanamaWebReady(objectHandle), 1),
+          requireEqual(
+            "initial property",
+            api.kanamaWebGetStringProperty(objectHandle, GREETING_PROPERTY_ID),
+            "Hello from Kotlin/Wasm",
+          ),
+          requireEqual(
+            "set property",
+            api.kanamaWebSetStringProperty(
+              objectHandle,
+              GREETING_PROPERTY_ID,
+              "Hello from the browser",
+            ),
+            1,
+          ),
+          requireEqual(
+            "updated property",
+            api.kanamaWebGetStringProperty(objectHandle, GREETING_PROPERTY_ID),
+            "Hello from the browser",
+          ),
+          requireEqual("method call", api.kanamaWebCallInt(objectHandle, ECHO_METHOD_ID, 47), 47),
+          requireEqual("queued process mutation", api.kanamaWebProcess(objectHandle, 1 / 60), 1),
+          requireEqual("free", api.kanamaWebFree(objectHandle), 1),
+          requireEqual("freed object", api.kanamaWebIsLive(objectHandle), 0),
+        ];
+
+        const replacementHandle = api.kanamaWebCreate(SCRIPT_ID);
+        checks.push(
+          requireEqual("slot reused with new generation", replacementHandle === objectHandle, false),
+        );
+        api.kanamaWebFree(replacementHandle);
+
+        document.body.dataset.status = "pass";
+        document.querySelector("#status").dataset.kind = "pass";
+        document.querySelector("#status").textContent = "PASS";
+        document.querySelector("#details").textContent = checks.join("\n");
+        console.info("[kanama:web-spike] PASS", checks);
+      }
+
+      runSmoke().catch((error) => {
+        document.body.dataset.status = "fail";
+        document.querySelector("#status").dataset.kind = "fail";
+        document.querySelector("#status").textContent = "FAIL";
+        document.querySelector("#details").textContent = error.stack ?? String(error);
+        console.error("[kanama:web-spike] FAIL", error);
+      });
+    </script>
+  </body>
+</html>

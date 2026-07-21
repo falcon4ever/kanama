@@ -1,0 +1,7 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebSpikeState.kt" id="1_kotlin"]
+
+[resource]
+script = ExtResource("1_kotlin")
+label = "Kotlin/Wasm .tres attachment"
