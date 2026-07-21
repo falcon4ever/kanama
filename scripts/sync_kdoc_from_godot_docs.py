@@ -146,13 +146,24 @@ def load_godot_docs(docs_dir: Path, class_name: str) -> GodotClassDocs | None:
     )
 
 
-def kdoc_block(indent: str, description: str, source: str) -> list[str]:
+def kdoc_block(indent: str, description: str, source: str, *, ktfmt_width: bool = False) -> list[str]:
     lines = [f"{indent}/**\n"]
     words = description.split(" ")
     current = ""
+    # api/ wrappers keep the historical fixed 96-char content width: they are excluded from
+    # ktfmt and byte-compared against generate_api_wrapper.py, so their wrapping must not move.
+    # types/ value-type wrappers ARE ktfmt-formatted, so wrap them to the emitted line's 100-col
+    # budget — the width ktfmt (googleStyle) reflows to. A fixed content width ignored the
+    # indented ` * ` prefix and emitted 101-char lines that ktfmt re-wrapped, leaving sync_kdoc
+    # --check and ktfmtCheck permanently fighting over that one column.
+    def fits(candidate: str) -> bool:
+        if ktfmt_width:
+            return len(indent) + len(" * ") + len(candidate) <= 100
+        return len(candidate) <= 96
+
     for word in words:
         candidate = word if not current else f"{current} {word}"
-        if len(candidate) > 96 and current:
+        if not fits(candidate) and current:
             lines.append(f"{indent} * {current}\n")
             current = word
         else:
@@ -311,7 +322,7 @@ def collect_builtin_replacements(path: Path, docs: GodotClassDocs) -> tuple[list
                 Replacement(
                     start=find_class_replacement_start(lines, index),
                     end=insert_at,
-                    lines=kdoc_block(class_match.group(1), description, docs.class_name),
+                    lines=kdoc_block(class_match.group(1), description, docs.class_name, ktfmt_width=True),
                 ),
             )
             continue
@@ -328,7 +339,7 @@ def collect_builtin_replacements(path: Path, docs: GodotClassDocs) -> tuple[list
                     Replacement(
                         start=replace_start if replace_start is not None else insert_at,
                         end=insert_at,
-                        lines=kdoc_block(fun_match.group(1), description, f"{docs.class_name}.{godot_name}"),
+                        lines=kdoc_block(fun_match.group(1), description, f"{docs.class_name}.{godot_name}", ktfmt_width=True),
                     ),
                 )
                 documented_functions += 1
@@ -351,7 +362,7 @@ def collect_builtin_replacements(path: Path, docs: GodotClassDocs) -> tuple[list
             Replacement(
                 start=replace_start if replace_start is not None else insert_at,
                 end=insert_at,
-                lines=kdoc_block(property_match.group(1), description, source),
+                lines=kdoc_block(property_match.group(1), description, source, ktfmt_width=True),
             ),
         )
         documented_members += 1
