@@ -1,9 +1,11 @@
-"""Generator-owned execution policy for the initial platform-backend seam."""
+"""Generator-owned execution policy for the platform-neutral backend seam."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import json
+from pathlib import Path
 
 
 class ExecutionMode(str, Enum):
@@ -15,6 +17,7 @@ class ExecutionMode(str, Enum):
 @dataclass(frozen=True)
 class BackendCallPolicy:
     opcode: int
+    scope: str
     class_name: str
     method_name: str
     expected_hash: int
@@ -23,41 +26,53 @@ class BackendCallPolicy:
     shape: str
     execution_mode: ExecutionMode
     return_ownership: str = "BORROWED"
+    is_vararg: bool = False
+    typed_vararg_tail: tuple[str, ...] = ()
+    introduced_by: str = ""
+
+
+MANIFEST_PATH = Path(__file__).with_name("platform_backend_calls.json")
+
+
+def _load_backend_calls(path: Path = MANIFEST_PATH) -> tuple[BackendCallPolicy, ...]:
+    payload = json.loads(path.read_text())
+    if payload.get("protocolVersion") != 1:
+        raise ValueError(f"Unsupported platform backend protocol: {payload.get('protocolVersion')}")
+
+    calls = tuple(
+        BackendCallPolicy(
+            opcode=entry["opcode"],
+            scope=entry["scope"],
+            class_name=entry["className"],
+            method_name=entry["methodName"],
+            expected_hash=entry["hash"],
+            arguments=tuple(entry.get("arguments", ())),
+            return_type=entry.get("returnType", "void"),
+            shape=entry["shape"],
+            execution_mode=ExecutionMode(entry["executionMode"]),
+            return_ownership=entry.get("returnOwnership", "BORROWED"),
+            is_vararg=entry.get("isVararg", False),
+            typed_vararg_tail=tuple(entry.get("typedVarargTail", ())),
+            introduced_by=entry.get("introducedBy", ""),
+        )
+        for entry in payload["calls"]
+    )
+    opcodes = tuple(call.opcode for call in calls)
+    if opcodes != tuple(range(1, len(calls) + 1)):
+        raise ValueError(f"Platform backend opcodes must be append-only and contiguous: {opcodes}")
+    identities = tuple(
+        (call.scope, call.class_name, call.method_name, call.expected_hash) for call in calls
+    )
+    if len(identities) != len(set(identities)):
+        raise ValueError("Platform backend call identities must be unique")
+    return calls
 
 
 # Opcodes are append-only protocol IDs. Never derive them from source or alphabetical order.
-INITIAL_BACKEND_CALLS = (
-    BackendCallPolicy(
-        opcode=1,
-        class_name="Node",
-        method_name="get_child_count",
-        expected_hash=894402480,
-        arguments=("bool",),
-        return_type="int",
-        shape="BOOL_RET_INT",
-        execution_mode=ExecutionMode.IMMEDIATE_RESULT,
-    ),
-    BackendCallPolicy(
-        opcode=2,
-        class_name="Node2D",
-        method_name="get_position",
-        expected_hash=3341600327,
-        arguments=(),
-        return_type="Vector2",
-        shape="NOARGS_RET_VECTOR2",
-        execution_mode=ExecutionMode.SNAPSHOT_READ,
-    ),
-    BackendCallPolicy(
-        opcode=3,
-        class_name="Node2D",
-        method_name="set_position",
-        expected_hash=743155724,
-        arguments=("Vector2",),
-        return_type="void",
-        shape="VECTOR2_ARG",
-        execution_mode=ExecutionMode.QUEUED_MUTATION,
-    ),
-)
+BACKEND_CALLS = _load_backend_calls()
+
+# Compatibility name for the Phase 0.5 generator/tests while production naming migrates.
+INITIAL_BACKEND_CALLS = BACKEND_CALLS
 
 
 def execution_mode_for(class_name: str, method_name: str, method_hash: int) -> ExecutionMode:

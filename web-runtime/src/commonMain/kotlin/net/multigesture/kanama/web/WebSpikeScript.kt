@@ -6,10 +6,11 @@ import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
+import net.multigesture.kanama.api.GodotHandle
 
 /** Real KSP input used to prove that the existing ScriptModel can be produced for wasmJs. */
 @ScriptClass(attachTo = "Node2D")
-class WebSpikeScript(objectId: WebObjectId) : KanamaWebScript(objectId) {
+class WebSpikeScript(objectId: GodotHandle) : KanamaWebScript(objectId) {
   @ScriptProperty var greeting: String = "Hello from Kotlin/Wasm"
 
   var readyCount: Int = 0

@@ -109,12 +109,12 @@ import kotlin.random.Random
 annotation class ManualGodotLifetimeApi
 
 abstract class KanamaScript<Self : Any>(
-    val godotObject: MemorySegment,
-    selfFactory: (MemorySegment) -> Self,
+    val godotObject: GodotHandle,
+    selfFactory: (GodotHandle) -> Self,
 ) {
     val self: Self = selfFactory(godotObject)
 
-    inline fun <T> selfAs(ctor: (MemorySegment) -> T): T = ctor(godotObject)
+    inline fun <T> selfAs(ctor: (GodotHandle) -> T): T = ctor(godotObject)
 }
 
 // KANAMA-IOS-HANDWRITTEN: [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json.

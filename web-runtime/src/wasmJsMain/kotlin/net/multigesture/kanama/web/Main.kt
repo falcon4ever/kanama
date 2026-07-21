@@ -81,6 +81,18 @@ fun kanamaWebLoadPositionSnapshot(objectId: Int, x: Double, y: Double): Int {
   return 1
 }
 
+@JsExport
+fun kanamaWebLoadViewportRectSnapshot(
+  objectId: Int,
+  x: Double,
+  y: Double,
+  width: Double,
+  height: Double,
+): Int {
+  loadWebViewportRectSnapshot(objectId, x, y, width, height)
+  return 1
+}
+
 @OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebBenchmarkBackendContract(objectId: Int, operations: Int): Int {
@@ -89,8 +101,11 @@ fun kanamaWebBenchmarkBackendContract(objectId: Int, operations: Int): Int {
   val node = Node2DBackendContractProbe(handle)
   val initial = node.position
   repeat(operations) { check(node.position == initial) }
+  val viewportRect = node.viewportRect
+  repeat(operations) { check(node.viewportRect == viewportRect) }
   val finalPosition = GodotVector2((operations - 1).toFloat(), initial.y)
   repeat(operations) { node.position = finalPosition }
+  node.queueRedraw()
   check(node.position == finalPosition)
   return node.getChildCount(false).toInt()
 }

@@ -36,4 +36,92 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val CANVASITEM_GET_VIEWPORT_RECT =
+    GodotCallDescriptor(
+      opcode = 4,
+      className = "CanvasItem",
+      methodName = "get_viewport_rect",
+      hash = 1639390495L,
+      shape = GodotCallShape.NOARGS_RET_RECT2,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASITEM_QUEUE_REDRAW =
+    GodotCallDescriptor(
+      opcode = 5,
+      className = "CanvasItem",
+      methodName = "queue_redraw",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASITEM_DRAW_TEXTURE =
+    GodotCallDescriptor(
+      opcode = 6,
+      className = "CanvasItem",
+      methodName = "draw_texture",
+      hash = 520200117L,
+      shape = GodotCallShape.TEXTURE2D_VECTOR2_COLOR_ARGS,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RESOURCELOADER_LOAD =
+    GodotCallDescriptor(
+      opcode = 7,
+      className = "ResourceLoader",
+      methodName = "load",
+      hash = 3358495409L,
+      shape = GodotCallShape.STRING_STRING_LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val OBJECT_EMIT_SIGNAL =
+    GodotCallDescriptor(
+      opcode = 8,
+      className = "Object",
+      methodName = "emit_signal",
+      hash = 4047867050L,
+      shape = GodotCallShape.STRINGNAME_INT_RET_INT,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val UTILITY_RANDOMIZE =
+    GodotCallDescriptor(
+      opcode = 9,
+      className = "@GlobalScope",
+      methodName = "randomize",
+      hash = 1691721052L,
+      shape = GodotCallShape.UTILITY_NOARGS_VOID,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val UTILITY_RANDI =
+    GodotCallDescriptor(
+      opcode = 10,
+      className = "@GlobalScope",
+      methodName = "randi",
+      hash = 701202648L,
+      shape = GodotCallShape.UTILITY_NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val UTILITY_RANDF =
+    GodotCallDescriptor(
+      opcode = 11,
+      className = "@GlobalScope",
+      methodName = "randf",
+      hash = 2086227845L,
+      shape = GodotCallShape.UTILITY_NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

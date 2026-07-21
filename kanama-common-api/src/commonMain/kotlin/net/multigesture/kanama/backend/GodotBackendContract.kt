@@ -20,6 +20,14 @@ enum class GodotCallShape {
   BOOL_RET_INT,
   NOARGS_RET_VECTOR2,
   VECTOR2_ARG,
+  NOARGS_RET_RECT2,
+  NOARGS_VOID,
+  TEXTURE2D_VECTOR2_COLOR_ARGS,
+  STRING_STRING_LONG_RET_HANDLE,
+  STRINGNAME_INT_RET_INT,
+  UTILITY_NOARGS_VOID,
+  UTILITY_NOARGS_RET_LONG,
+  UTILITY_NOARGS_RET_DOUBLE,
 }
 
 @InternalKanamaBackendApi
@@ -50,6 +58,9 @@ data class GodotCallDescriptor(
 /** Platform-neutral immutable value used by the first promoted call-shape family. */
 @InternalKanamaBackendApi data class GodotVector2(val x: Float, val y: Float)
 
+/** Platform-neutral immutable rectangle snapshot. */
+@InternalKanamaBackendApi data class GodotRect2(val position: GodotVector2, val size: GodotVector2)
+
 /** Typed backend SPI. No reflective or `List<Any?>` dispatch is permitted here. */
 @InternalKanamaBackendApi
 interface GodotBackendSpi {
@@ -75,6 +86,18 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotVector2,
+  )
+
+  fun invokeNoArgsRetRect2(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotRect2
+
+  fun invokeNoArgsVoid(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
   )
 }
 
@@ -133,6 +156,20 @@ object GodotBackendCalls {
     selected.invokeVector2Arg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
+  fun invokeNoArgsRetRect2(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotRect2 {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_RECT2)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetRect2(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeNoArgsVoid(descriptor: GodotCallDescriptor, receiver: GodotHandle) {
+    requireShape(descriptor, GodotCallShape.NOARGS_VOID)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeNoArgsVoid(descriptor, resolve(selected, descriptor), receiver)
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -161,6 +198,13 @@ object GodotBackendCalls {
  */
 @InternalKanamaBackendApi
 class Node2DBackendContractProbe(val handle: GodotHandle) {
+  val viewportRect: GodotRect2
+    get() =
+      GodotBackendCalls.invokeNoArgsRetRect2(
+        InitialGodotCallDescriptors.CANVASITEM_GET_VIEWPORT_RECT,
+        handle,
+      )
+
   var position: GodotVector2
     get() =
       GodotBackendCalls.invokeNoArgsRetVector2(
@@ -182,4 +226,8 @@ class Node2DBackendContractProbe(val handle: GodotHandle) {
         includeInternal,
       )
       .toLong()
+
+  fun queueRedraw() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.CANVASITEM_QUEUE_REDRAW, handle)
+  }
 }

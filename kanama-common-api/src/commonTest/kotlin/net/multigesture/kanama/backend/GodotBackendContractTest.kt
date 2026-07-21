@@ -40,14 +40,21 @@ class GodotBackendContractTest {
     assertEquals(GodotVector2(1.0f, 2.0f), probe.position)
     probe.position = GodotVector2(3.0f, 4.0f)
     assertEquals(GodotVector2(3.0f, 4.0f), probe.position)
+    assertEquals(
+      GodotRect2(GodotVector2(0.0f, 0.0f), GodotVector2(640.0f, 480.0f)),
+      probe.viewportRect,
+    )
+    probe.queueRedraw()
     assertEquals(7L, probe.getChildCount())
 
-    assertEquals(mapOf(1 to 1, 2 to 1, 3 to 1), backend.resolveCounts)
+    assertEquals(mapOf(1 to 1, 2 to 1, 3 to 1, 4 to 1, 5 to 1), backend.resolveCounts)
+    assertEquals(1, backend.queuedRedraws)
   }
 
   private class RecordingBackend : GodotBackendSpi {
     val resolveCounts = mutableMapOf<Int, Int>()
     private var position = GodotVector2(1.0f, 2.0f)
+    var queuedRedraws = 0
 
     override fun requireLive(handle: GodotHandle) {
       require(handle.backendToken() == 17L)
@@ -78,6 +85,20 @@ class GodotBackendContractTest {
       value: GodotVector2,
     ) {
       position = value
+    }
+
+    override fun invokeNoArgsRetRect2(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): GodotRect2 = GodotRect2(GodotVector2(0.0f, 0.0f), GodotVector2(640.0f, 480.0f))
+
+    override fun invokeNoArgsVoid(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ) {
+      queuedRedraws += 1
     }
   }
 }

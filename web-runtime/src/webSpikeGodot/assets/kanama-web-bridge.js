@@ -130,6 +130,9 @@
       this.latestSnapshotY = y;
       return this.api.kanamaWebLoadPositionSnapshot(handle, x, y);
     },
+    refreshViewportRectSnapshot(handle, x, y, width, height) {
+      return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
+    },
     immediateChildCount(handle, includeInternal) {
       if (!this.immediateCallback) throw new Error("Godot immediate callback is not installed");
       this.immediateCalls += 1;
@@ -299,7 +302,7 @@
         individualMeasurements: Number.isFinite(
           this.results.benchmarks.individualTransformRoundTrips?.p50Ms,
         ),
-        backendQueuedCommands: this.results.backendContract.queuedCommands === OPERATIONS,
+        backendQueuedCommands: this.results.backendContract.queuedCommands === OPERATIONS + 1,
         backendQueuedCrossings: this.results.backendContract.queuedCrossings === 1,
         backendSnapshotBatch: this.results.backendContract.snapshotBatchLoads === 1,
         backendImmediateExplicit: this.results.backendContract.immediateCalls === 1,

@@ -1,6 +1,5 @@
 package net.multigesture.kanama.iosgatefixture
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnExitTree
 import net.multigesture.kanama.annotations.OnInput
@@ -16,6 +15,7 @@ import net.multigesture.kanama.annotations.RpcTransferMode
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
@@ -29,7 +29,7 @@ import net.multigesture.kanama.types.Vector3
 // scalar Long + String + List<String> @ScriptProperty, and a @Signal. Uses only iOS-available
 // wrappers.
 @ScriptClass(attachTo = "Label")
-class GateFixtureScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObject, ::Label) {
+class GateFixtureScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label) {
     @ScriptProperty
     var score: Long = 0L
 

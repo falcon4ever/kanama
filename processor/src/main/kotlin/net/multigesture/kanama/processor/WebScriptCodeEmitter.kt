@@ -241,6 +241,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t_kanama_bridge.refreshPositionSnapshot(_kanama_handle, target.position.x, target.position.y)"
     )
+    appendLine("\t\tvar viewport_rect := target.get_viewport_rect()")
+    appendLine(
+      "\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
+    )
     model.properties.forEachIndexed { index, property ->
       if (property.type == TypeMapping.STRING) {
         appendLine(
@@ -265,6 +269,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func _process(delta: float) -> void:")
     appendLine("\tif _kanama_handle != 0:")
+    appendLine("\t\tif self is Node2D:")
+    appendLine("\t\t\tvar target := self as Node2D")
+    appendLine("\t\t\tvar viewport_rect := target.get_viewport_rect()")
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
+    )
     appendLine("\t\t_kanama_bridge.frame(_kanama_handle, delta)")
     appendLine()
     appendLine("func _exit_tree() -> void:")
@@ -303,6 +313,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tvar position_y := bytes.decode_float(offset + 12)")
     appendLine("\t\t\ttarget.position = Vector2(position_x, position_y)")
     appendLine("\t\t\tlast_value = int(position_x)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\telif opcode == 5 and object_handle == _kanama_handle and self is CanvasItem:")
+    appendLine("\t\t\t(self as CanvasItem).queue_redraw()")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t_kanama_bridge.recordApplied(applied, last_value)")
     appendLine("\treturn applied")

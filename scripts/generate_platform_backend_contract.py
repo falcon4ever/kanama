@@ -14,13 +14,29 @@ from platform_backend_contract import INITIAL_BACKEND_CALLS
 def validate_api(api_path: Path) -> None:
     payload = json.loads(api_path.read_text())
     classes = {entry["name"]: entry for entry in payload["classes"]}
+    utilities = payload["utility_functions"]
     for policy in INITIAL_BACKEND_CALLS:
-        methods = {entry["name"]: entry for entry in classes[policy.class_name]["methods"]}
-        method = methods[policy.method_name]
+        candidates = (
+            utilities
+            if policy.scope == "utility"
+            else classes[policy.class_name].get("methods", ())
+        )
+        method = next(
+            entry
+            for entry in candidates
+            if entry["name"] == policy.method_name and entry["hash"] == policy.expected_hash
+        )
         arguments = tuple(argument["type"] for argument in method.get("arguments", ()))
-        return_type = method.get("return_value", {}).get("type", "void")
-        actual = (method["hash"], arguments, return_type)
-        expected = (policy.expected_hash, policy.arguments, policy.return_type)
+        return_type = method.get("return_value", {}).get(
+            "type", method.get("return_type", "void")
+        )
+        actual = (method["hash"], arguments, return_type, method.get("is_vararg", False))
+        expected = (
+            policy.expected_hash,
+            policy.arguments,
+            policy.return_type,
+            policy.is_vararg,
+        )
         if actual != expected:
             raise ValueError(
                 f"Godot API drift for {policy.class_name}.{policy.method_name}: "
@@ -29,7 +45,8 @@ def validate_api(api_path: Path) -> None:
 
 
 def const_name(class_name: str, method_name: str) -> str:
-    return f"{class_name.upper()}_{method_name.upper()}"
+    owner = "UTILITY" if class_name == "@GlobalScope" else class_name.upper()
+    return f"{owner}_{method_name.upper()}"
 
 
 def render() -> str:

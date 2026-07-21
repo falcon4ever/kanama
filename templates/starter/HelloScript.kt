@@ -9,15 +9,15 @@ import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.Node2D
-import java.lang.foreign.MemorySegment
 
 @ScriptClass(attachTo = "Node2D")
 @ClassName
 @Tool
-class HelloScript(godotObject: MemorySegment) :
+class HelloScript(godotObject: GodotHandle) :
     KanamaScript<Node2D>(godotObject, ::Node2D) {
     @ScriptProperty(hint = PropertyHint.RANGE, hintString = "0,4,0.1")
     var spinSpeed: Double = 0.6

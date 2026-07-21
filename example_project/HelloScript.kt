@@ -1,6 +1,5 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.annotations.ExportCategory
@@ -41,6 +40,7 @@ import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GPUParticles3D
 import net.multigesture.kanama.api.GeometryInstance3D
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Input
 import net.multigesture.kanama.api.KanamaCoroutineOwner
@@ -104,7 +104,7 @@ enum class SmokeDifficulty {
 @GlobalClass
 @Tool
 @OptIn(ManualGodotLifetimeApi::class)
-class HelloScript(godotObject: MemorySegment) :
+class HelloScript(godotObject: GodotHandle) :
   KanamaScript<Node>(godotObject, ::Node), KanamaCoroutineOwner {
   override val kanamaScope = KanamaScope()
 

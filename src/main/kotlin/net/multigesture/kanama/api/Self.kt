@@ -1,7 +1,5 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
-
 /**
  * Base class for attachable scripts that want a typed wrapper for their own
  * Godot object.
@@ -12,7 +10,7 @@ import java.lang.foreign.MemorySegment
  *
  * ```kotlin
  * @ScriptClass(attachTo = "CharacterBody3D")
- * class Player(godotObject: MemorySegment) :
+ * class Player(godotObject: GodotHandle) :
  *     KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
  *
  *     private val node = selfAs(::Node)
@@ -27,15 +25,15 @@ import java.lang.foreign.MemorySegment
  * [self] and [selfAs] do not own the native object and must not free it.
  */
 abstract class KanamaScript<Self : Any>(
-    val godotObject: MemorySegment,
-    selfFactory: (MemorySegment) -> Self,
+    val godotObject: GodotHandle,
+    selfFactory: (GodotHandle) -> Self,
 ) {
     val self: Self = selfFactory(godotObject)
 
     /**
      * Wrap this script's Godot object as another compatible Kanama wrapper type.
      */
-    inline fun <T> selfAs(ctor: (MemorySegment) -> T): T = ctor(godotObject)
+    inline fun <T> selfAs(ctor: (GodotHandle) -> T): T = ctor(godotObject)
 
     /**
      * Refresh the Godot inspector after exported property metadata changes.
@@ -64,4 +62,4 @@ abstract class KanamaScript<Self : Any>(
  * direct construction.
  */
 @Deprecated("Use KanamaScript<T>.self or KanamaScript.selfAs(::Type) in attachable scripts.")
-inline fun <T> selfAs(godotObject: MemorySegment, ctor: (MemorySegment) -> T): T = ctor(godotObject)
+inline fun <T> selfAs(godotObject: GodotHandle, ctor: (GodotHandle) -> T): T = ctor(godotObject)

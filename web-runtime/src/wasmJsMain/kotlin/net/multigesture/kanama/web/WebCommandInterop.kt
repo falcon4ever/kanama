@@ -43,6 +43,16 @@ internal class WebCommandBuffer(capacity: Int) {
     size += 1
   }
 
+  fun appendNoArgsMutation(opcode: Int, objectHandle: Int) {
+    check(size < wordsCapacity()) { "Kanama Web command buffer capacity exceeded" }
+    val offset = size * WORDS_PER_COMMAND
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = 0
+    words[offset + 3] = 0
+    size += 1
+  }
+
   fun flush(): Int {
     if (size == 0) return 0
     val commandCount = size
@@ -57,7 +67,8 @@ internal class WebCommandBuffer(capacity: Int) {
     const val OPCODE_SCALAR_MUTATION = 100
     const val OPCODE_POSITION_MUTATION = 3
     const val WORDS_PER_COMMAND = 4
-    const val BENCHMARK_COMMAND_CAPACITY = 10_000
+    // The benchmark contributes 10,000 data mutations plus one phase-control mutation (redraw).
+    const val BENCHMARK_COMMAND_CAPACITY = 10_001
   }
 }
 

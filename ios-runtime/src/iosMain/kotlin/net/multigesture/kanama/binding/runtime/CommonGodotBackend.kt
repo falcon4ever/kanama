@@ -6,6 +6,7 @@ import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
 import net.multigesture.kanama.backend.GodotCallSite
 import net.multigesture.kanama.backend.GodotHandle
+import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.types.Vector2
@@ -50,6 +51,23 @@ internal object CommonGodotBackend : GodotBackendSpi {
       segment(receiver),
       Vector2(value.x, value.y),
     )
+  }
+
+  override fun invokeNoArgsRetRect2(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotRect2 =
+    ObjectCalls.ptrcallNoArgsRetRect2(segment(callSite), segment(receiver)).let {
+      GodotRect2(GodotVector2(it.position.x, it.position.y), GodotVector2(it.size.x, it.size.y))
+    }
+
+  override fun invokeNoArgsVoid(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ) {
+    ObjectCalls.ptrcallNoArgs(segment(callSite), segment(receiver))
   }
 
   private fun segment(handle: GodotHandle): MemorySegment =
