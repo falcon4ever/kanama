@@ -250,28 +250,28 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(drawEllipseBind, handle, position, major, minor, color, filled, width, antialiased)
     }
 
-    fun drawTexture(texture: Texture2D?, position: Vector2, modulate: Color) {
-        ObjectCalls.ptrcallWithObjectVector2AndColorArgs(drawTextureBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, position, modulate)
+    fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
+        ObjectCalls.ptrcallWithObjectVector2AndColorArgs(drawTextureBind, handle, texture.requireOpenHandle(), position, modulate)
     }
 
-    fun drawTextureRect(texture: Texture2D?, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(drawTextureRectBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, rect, tile, modulate, transpose)
+    fun drawTextureRect(texture: Texture2D, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(drawTextureRectBind, handle, texture.requireOpenHandle(), rect, tile, modulate, transpose)
     }
 
-    fun drawTextureRectRegion(texture: Texture2D?, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(drawTextureRectRegionBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, rect, srcRect, modulate, transpose, clipUv)
+    fun drawTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
+        ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(drawTextureRectRegionBind, handle, texture.requireOpenHandle(), rect, srcRect, modulate, transpose, clipUv)
     }
 
-    fun drawMsdfTextureRectRegion(texture: Texture2D?, rect: Rect2, srcRect: Rect2, modulate: Color, outline: Double = 0.0, pixelRange: Double = 4.0, scale: Double = 1.0) {
-        ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(drawMsdfTextureRectRegionBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, rect, srcRect, modulate, outline, pixelRange, scale)
+    fun drawMsdfTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, outline: Double = 0.0, pixelRange: Double = 4.0, scale: Double = 1.0) {
+        ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(drawMsdfTextureRectRegionBind, handle, texture.requireOpenHandle(), rect, srcRect, modulate, outline, pixelRange, scale)
     }
 
-    fun drawLcdTextureRectRegion(texture: Texture2D?, rect: Rect2, srcRect: Rect2, modulate: Color) {
-        ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(drawLcdTextureRectRegionBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, rect, srcRect, modulate)
+    fun drawLcdTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color) {
+        ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(drawLcdTextureRectRegionBind, handle, texture.requireOpenHandle(), rect, srcRect, modulate)
     }
 
-    fun drawStyleBox(styleBox: StyleBox?, rect: Rect2) {
-        ObjectCalls.ptrcallWithObjectAndRect2Arg(drawStyleBoxBind, handle, styleBox?.requireOpenHandle() ?: MemorySegment.NULL, rect)
+    fun drawStyleBox(styleBox: StyleBox, rect: Rect2) {
+        ObjectCalls.ptrcallWithObjectAndRect2Arg(drawStyleBoxBind, handle, styleBox.requireOpenHandle(), rect)
     }
 
     fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
@@ -286,36 +286,36 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(drawColoredPolygonBind, handle, points, color, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    fun drawString(font: Font?, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
+    fun drawString(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
-    fun drawMultilineString(font: Font?, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+    fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
-    fun drawStringOutline(font: Font?, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
+    fun drawStringOutline(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
-    fun drawMultilineStringOutline(font: Font?, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+    fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
-    fun drawChar(font: Font?, pos: Vector2, char: String, fontSize: Int = 16, modulate: Color, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(drawCharBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, pos, char, fontSize, modulate, oversampling)
+    fun drawChar(font: Font, pos: Vector2, char: String, fontSize: Int = 16, modulate: Color, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(drawCharBind, handle, font.requireOpenHandle(), pos, char, fontSize, modulate, oversampling)
     }
 
-    fun drawCharOutline(font: Font?, pos: Vector2, char: String, fontSize: Int = 16, size: Int = -1, modulate: Color, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(drawCharOutlineBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, pos, char, fontSize, size, modulate, oversampling)
+    fun drawCharOutline(font: Font, pos: Vector2, char: String, fontSize: Int = 16, size: Int = -1, modulate: Color, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(drawCharOutlineBind, handle, font.requireOpenHandle(), pos, char, fontSize, size, modulate, oversampling)
     }
 
-    fun drawMesh(mesh: Mesh?, texture: Texture2D?, transform: Transform2D, modulate: Color) {
-        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, texture?.requireOpenHandle() ?: MemorySegment.NULL, transform, modulate)
+    fun drawMesh(mesh: Mesh, texture: Texture2D?, transform: Transform2D, modulate: Color) {
+        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, handle, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL, transform, modulate)
     }
 
-    fun drawMultimesh(multimesh: MultiMesh?, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, handle, multimesh?.requireOpenHandle() ?: MemorySegment.NULL, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun drawMultimesh(multimesh: MultiMesh, texture: Texture2D?) {
+        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, handle, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun drawSetTransform(position: Vector2, rotation: Double = 0.0, scale: Vector2) {
@@ -426,8 +426,8 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(makeCanvasPositionLocalBind, handle, viewportPoint)
     }
 
-    fun makeInputLocal(event: InputEvent?): InputEvent? {
-        return InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun makeInputLocal(event: InputEvent): InputEvent? {
+        return InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, handle, event.requireOpenHandle()))
     }
 
     fun setVisibilityLayer(layer: Long) {

@@ -317,12 +317,12 @@ object OS {
         ObjectCalls.ptrcallNoArgs(revokeGrantedPermissionsBind, singleton)
     }
 
-    fun addLogger(logger: Logger?) {
-        ObjectCalls.ptrcallWithObjectArgs(addLoggerBind, singleton, listOf(logger?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun addLogger(logger: Logger) {
+        ObjectCalls.ptrcallWithObjectArgs(addLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
-    fun removeLogger(logger: Logger?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun removeLogger(logger: Logger) {
+        ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
     fun fromHandle(handle: MemorySegment): OS? =

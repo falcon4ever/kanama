@@ -90,8 +90,8 @@ object InputMap {
      * Generated from Godot docs: InputMap.action_add_event
      */
     @JvmStatic
-    fun actionAddEvent(action: String, event: InputEvent?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionAddEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun actionAddEvent(action: String, event: InputEvent) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionAddEventBind, singleton, action, event.requireOpenHandle())
     }
 
     /**
@@ -100,8 +100,8 @@ object InputMap {
      * Generated from Godot docs: InputMap.action_has_event
      */
     @JvmStatic
-    fun actionHasEvent(action: String, event: InputEvent?): Boolean {
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(actionHasEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun actionHasEvent(action: String, event: InputEvent): Boolean {
+        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(actionHasEventBind, singleton, action, event.requireOpenHandle())
     }
 
     /**
@@ -110,8 +110,8 @@ object InputMap {
      * Generated from Godot docs: InputMap.action_erase_event
      */
     @JvmStatic
-    fun actionEraseEvent(action: String, event: InputEvent?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionEraseEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun actionEraseEvent(action: String, event: InputEvent) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(actionEraseEventBind, singleton, action, event.requireOpenHandle())
     }
 
     /**
@@ -147,8 +147,8 @@ object InputMap {
      * Generated from Godot docs: InputMap.event_is_action
      */
     @JvmStatic
-    fun eventIsAction(event: InputEvent?, action: String, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(eventIsActionBind, singleton, event?.requireOpenHandle() ?: MemorySegment.NULL, action, exactMatch)
+    fun eventIsAction(event: InputEvent, action: String, exactMatch: Boolean = false): Boolean {
+        return ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(eventIsActionBind, singleton, event.requireOpenHandle(), action, exactMatch)
     }
 
     /**

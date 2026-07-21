@@ -22,7 +22,6 @@ object ResourceSaver {
     const val FLAG_COMPRESS: Long = 32L
     const val FLAG_REPLACE_SUBRESOURCE_PATHS: Long = 64L
 
-    @JvmStatic
     /**
      * Saves a resource to disk to the given path, using a `ResourceFormatSaver` that recognizes the
      * resource object. If `path` is empty, `ResourceSaver` will try to use `Resource.resource_path`.
@@ -32,8 +31,9 @@ object ResourceSaver {
      *
      * Generated from Godot docs: ResourceSaver.save
      */
-    fun save(resource: Resource?, path: String = "", flags: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource?.requireOpenHandle() ?: MemorySegment.NULL, path, flags)
+    @JvmStatic
+    fun save(resource: Resource, path: String = "", flags: Long = 0L): Long {
+        return ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource.requireOpenHandle(), path, flags)
     }
 
     /**
@@ -54,8 +54,8 @@ object ResourceSaver {
      * Generated from Godot docs: ResourceSaver.get_recognized_extensions
      */
     @JvmStatic
-    fun getRecognizedExtensions(type: Resource?): List<String> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getRecognizedExtensionsBind, singleton, type?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun getRecognizedExtensions(type: Resource): List<String> {
+        return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getRecognizedExtensionsBind, singleton, type.requireOpenHandle())
     }
 
     /**
@@ -66,8 +66,8 @@ object ResourceSaver {
      * Generated from Godot docs: ResourceSaver.add_resource_format_saver
      */
     @JvmStatic
-    fun addResourceFormatSaver(formatSaver: ResourceFormatSaver?, atFront: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addResourceFormatSaverBind, singleton, formatSaver?.requireOpenHandle() ?: MemorySegment.NULL, atFront)
+    fun addResourceFormatSaver(formatSaver: ResourceFormatSaver, atFront: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addResourceFormatSaverBind, singleton, formatSaver.requireOpenHandle(), atFront)
     }
 
     /**
@@ -76,8 +76,8 @@ object ResourceSaver {
      * Generated from Godot docs: ResourceSaver.remove_resource_format_saver
      */
     @JvmStatic
-    fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceFormatSaverBind, singleton, listOf(formatSaver?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver) {
+        ObjectCalls.ptrcallWithObjectArgs(removeResourceFormatSaverBind, singleton, listOf(formatSaver.requireOpenHandle()))
     }
 
     /**

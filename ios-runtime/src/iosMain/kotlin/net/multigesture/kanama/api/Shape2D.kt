@@ -28,12 +28,12 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, handle)
     }
 
-    fun collide(localXform: Transform2D, withShape: Shape2D?, shapeXform: Transform2D): Boolean {
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, handle, localXform, withShape?.requireOpenHandle() ?: MemorySegment.NULL, shapeXform)
+    fun collide(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): Boolean {
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
-    fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D?, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, handle, localXform, localMotion, withShape?.requireOpenHandle() ?: MemorySegment.NULL, shapeXform, shapeMotion)
+    fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     fun draw(canvasItem: RID, color: Color) {

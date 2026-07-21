@@ -25,6 +25,22 @@ versioning once public releases begin.
 
 ### Changed
 
+- **Source-breaking:** object parameters that Godot 4.7 explicitly marks
+  `meta: "required"` are now generated as **non-null**, including the 65
+  Resource/RefCounted-derived required arguments that were previously nullable.
+  For example `ResourceSaver.save(resource: Resource, …)`,
+  `CanvasItem.drawTexture(texture: Texture2D, …)`, and the required-shape
+  arguments on `Control`, `InputMap`, `PhysicsServer2D/3D`,
+  `PhysicsDirectSpaceState2D/3D`, `Shape2D`, `CollisionObject2D/3D`, `OS`, and
+  `Input` no longer accept `null` and marshal via `requireOpenHandle()` without a
+  safe-call. This narrows public signatures: a call site passing `null` (or a
+  nullable value without a null-check) to one of these now fails to compile —
+  which is the honest contract, since the engine rejects null there. Unmarked
+  legacy Resource parameters stay nullable, and the audited
+  `NULLABLE_OBJECT_PARAM_OVERRIDES` (e.g. `Node.set_owner`) keep their null. The
+  policy (`required` wins over resource ancestry) is centralized in the generator
+  and locked by `audit_generator_object_policy.py`.
+
 - Desktop/Android `Resource` now extends `RefCounted`, restoring Godot's real
   `Object > RefCounted > Resource` chain (which iOS already had). Previously
   `Resource` was its own wrapper root that re-implemented the refcount lifetime

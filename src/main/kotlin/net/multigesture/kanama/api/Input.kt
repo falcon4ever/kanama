@@ -228,8 +228,8 @@ object Input {
      * Generated from Godot docs: Input.is_action_just_pressed_by_event
      */
     @JvmStatic
-    fun isActionJustPressedByEvent(action: String, event: InputEvent?, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustPressedByEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
+    fun isActionJustPressedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
+        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustPressedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
     }
 
     /**
@@ -245,8 +245,8 @@ object Input {
      * Generated from Godot docs: Input.is_action_just_released_by_event
      */
     @JvmStatic
-    fun isActionJustReleasedByEvent(action: String, event: InputEvent?, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustReleasedByEventBind, singleton, action, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
+    fun isActionJustReleasedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
+        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustReleasedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
     }
 
     /**
@@ -1020,8 +1020,8 @@ object Input {
      * Generated from Godot docs: Input.parse_input_event
      */
     @JvmStatic
-    fun parseInputEvent(event: InputEvent?) {
-        ObjectCalls.ptrcallWithObjectArgs(parseInputEventBind, singleton, listOf(event?.requireOpenHandle() ?: MemorySegment.NULL))
+    fun parseInputEvent(event: InputEvent) {
+        ObjectCalls.ptrcallWithObjectArgs(parseInputEventBind, singleton, listOf(event.requireOpenHandle()))
     }
 
     /**

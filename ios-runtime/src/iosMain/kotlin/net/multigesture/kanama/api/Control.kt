@@ -637,16 +637,16 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, handle)
     }
 
-    fun addThemeIconOverride(name: String, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun addThemeIconOverride(name: String, texture: Texture2D) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture.requireOpenHandle())
     }
 
-    fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun addThemeStyleboxOverride(name: String, stylebox: StyleBox) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox.requireOpenHandle())
     }
 
-    fun addThemeFontOverride(name: String, font: Font?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font?.requireOpenHandle() ?: MemorySegment.NULL)
+    fun addThemeFontOverride(name: String, font: Font) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font.requireOpenHandle())
     }
 
     fun addThemeFontSizeOverride(name: String, fontSize: Int) {

@@ -263,8 +263,8 @@ def _arg_meta(api_classes: dict, class_name: str, method_name: str, arg_name: st
 
 
 def check_object_param_nullability_policy(api_classes: dict) -> list[str]:
-    """Task 52a — prove the contextual object-parameter nullability policy and validate the override
-    table. Removing a policy branch, or leaving a stale/colliding override, fails here."""
+    """Task 52a/52b — prove the contextual object-parameter nullability policy and validate the
+    override table. Removing a policy branch, or leaving a stale/colliding override, fails here."""
     from generate_api_wrapper import NULLABLE_OBJECT_PARAM_OVERRIDES, object_param_is_nullable
 
     errs: list[str] = []
@@ -285,9 +285,9 @@ def check_object_param_nullability_policy(api_classes: dict) -> list[str]:
         ("Node", "set_owner", "owner", "Node", "", True, "audited override -> nullable"),
         ("Node", "add_child", "node", "Node", "required", False, "required ordinary Object -> non-null"),
         ("TextureRect", "set_texture", "texture", "Texture2D", "", True, "unmarked Resource -> nullable (legacy)"),
-        # 52a is non-breaking: a required Resource-like param STAYS nullable here; 52b tightens it to
-        # non-null by moving the `required` check above the resource-like line.
-        ("CanvasItem", "draw_texture", "texture", "Texture2D", "required", True, "required Resource -> still nullable in 52a"),
+        # 52b tightening: a required Resource-like param is now non-null (the `required` check sits
+        # above the resource-like line), calling requireOpenHandle() without a safe-call.
+        ("CanvasItem", "draw_texture", "texture", "Texture2D", "required", False, "required Resource -> non-null (52b)"),
     ]
     for class_name, method_name, arg_name, type_name, meta, expected, why in cases:
         actual = object_param_is_nullable(class_name, method_name, arg_name, type_name, meta, api_classes)

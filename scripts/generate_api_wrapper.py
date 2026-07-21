@@ -1720,20 +1720,22 @@ def object_param_is_nullable(
     Single decision point, consumed by both the type renderer and the marshalling so they cannot
     drift. Order matters:
 
-      1. resource-like (Resource/RefCounted-derived) -> nullable (existing legacy policy).
-      2. `meta: "required"` -> non-null. Godot's RequiredParam marker; an audited override cannot
-         beat it (a Godot upgrade marking an old override required must stop admitting null).
+      1. `meta: "required"` -> non-null. Godot's RequiredParam marker wins over everything,
+         including resource ancestry; an audited override cannot beat it (a Godot upgrade marking
+         an old override required must stop admitting null). This is the task-52b tightening.
+      2. resource-like (Resource/RefCounted-derived) -> nullable (existing legacy policy for
+         *unmarked* resource params).
       3. exact (class, method, arg) in NULLABLE_OBJECT_PARAM_OVERRIDES -> nullable (audited source).
       4. otherwise -> non-null (conservative legacy default).
 
-    Task 52a is intentionally non-breaking: resource-like stays nullable regardless of `required`.
-    Task 52b tightens by moving the `required` check ABOVE the resource-like line, turning the 65
-    explicitly-required resource-like parameters non-null (its own source-breaking change).
+    Task 52a kept resource-like nullable regardless of `required` (non-breaking). Task 52b moves
+    the `required` check ABOVE the resource-like line, turning the 65 explicitly-required
+    resource-like parameters non-null — a source-breaking narrowing of public signatures.
     """
-    if is_resource_like(type_name, api_classes):
-        return True
     if arg_meta == "required":
         return False
+    if is_resource_like(type_name, api_classes):
+        return True
     return (class_name, method_name, arg_name) in NULLABLE_OBJECT_PARAM_OVERRIDES
 
 
