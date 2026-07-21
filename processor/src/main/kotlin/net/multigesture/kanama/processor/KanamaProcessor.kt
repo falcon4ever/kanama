@@ -53,6 +53,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
   // IosScriptCodeEmitter. The `res://…` resource path each script reports to Godot is derived
   // from its source path relative to the configured script roots (passed as a KSP option).
   private val iosScripts = mutableListOf<IosScriptInput>()
+  private val webScripts = mutableListOf<WebScriptInput>()
   private val scriptRoots: List<String> =
     (env.options["kanamaScriptRoots"] ?: "")
       .split(File.pathSeparator, ",")
@@ -60,12 +61,13 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       .filter { it.isNotEmpty() }
 
   // The JVM registrars/aggregators emit MemorySegment/Panama code that only compiles on
-  // the JVM target. On non-JVM targets (iOS Kotlin/Native — Phase 3.1 Option B) the
-  // processor emits ONLY the platform-neutral .script-model.json; the iOS-specific
-  // registrar codegen consumes that JSON (Phase 3.2). Gate all JVM-code emission on this.
+  // the JVM target. Non-JVM targets emit only their platform-specific static registry plus the
+  // platform-neutral .script-model.json; keep JVM code out of both iOS and Web outputs.
   private val emitJvmCode: Boolean =
     env.platforms.isEmpty() ||
       env.platforms.any { it.platformName.equals("JVM", ignoreCase = true) }
+  private val emitWebCode: Boolean = env.options["kanamaRuntimeTarget"] == "web"
+  private val emitIosCode: Boolean = !emitJvmCode && !emitWebCode
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
     // Phase 5: @RegisterClass → full ClassDB type registration.
@@ -118,8 +120,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         scriptAggregatorSources += it
       }
       emitScriptRegistrar(model, symbol.containingFile!!)
-      if (!emitJvmCode) {
-        iosScripts += IosScriptInput(model, iosResourcePath(symbol.containingFile!!))
+      if (emitIosCode) {
+        iosScripts += IosScriptInput(model, scriptResourcePath(symbol.containingFile!!))
+      }
+      if (emitWebCode) {
+        webScripts += WebScriptInput(model, scriptResourcePath(symbol.containingFile!!))
       }
     }
 
@@ -127,7 +132,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
   }
 
   /** The `res://…` path Godot reports for [file], relative to the configured script roots. */
-  private fun iosResourcePath(file: KSFile): String {
+  private fun scriptResourcePath(file: KSFile): String {
     val norm = file.filePath.replace(File.separatorChar, '/')
     val root =
       scriptRoots
@@ -170,11 +175,15 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
   }
 
   override fun finish() {
+    if (emitWebCode) {
+      emitWebScriptRegistry()
+      return
+    }
     // On the iOS (Kotlin/Native) target, emit the aggregated @ScriptClass registry Kotlin
     // (Phase 3.2). During the parallel-run gate these go out as `.kt.txt` RESOURCES so they
     // are not compiled and cannot collide with the still-active regex-generated registry;
     // the cutover flips them to real `.kt`. There are no JVM aggregators to emit on Native.
-    if (!emitJvmCode) {
+    if (emitIosCode) {
       emitIosScriptRegistry()
       return
     }
@@ -1100,6 +1109,41 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     env.logger.warn(
       "[kanama:ksp] generated iOS @ScriptClass registry for ${iosScripts.size} script(s) " +
         "(asResource=$asResource)"
+    )
+  }
+
+  // ---------- Web @ScriptClass registry emission (Kotlin/Wasm target, task 57 Phase 0) ----------
+
+  private fun emitWebScriptRegistry() {
+    val emitter = WebScriptCodeEmitter(webScripts)
+    val dependencies = Dependencies(aggregating = true, *scriptAggregatorSources.toTypedArray())
+    env.codeGenerator
+      .createNewFile(
+        dependencies = dependencies,
+        packageName = "net.multigesture.kanama.web.generated",
+        fileName = "KanamaWebProjectRegistry.generated",
+      )
+      .use { it.write(emitter.registrySource().toByteArray(Charsets.UTF_8)) }
+    emitter.proxySources().forEach { proxy ->
+      env.codeGenerator
+        .createNewFile(
+          dependencies = dependencies,
+          packageName = "net.multigesture.kanama.web.generated.proxies",
+          fileName = proxy.fileName,
+          extensionName = "gd",
+        )
+        .use { it.write(proxy.source.toByteArray(Charsets.UTF_8)) }
+    }
+    env.codeGenerator
+      .createNewFile(
+        dependencies = dependencies,
+        packageName = "net.multigesture.kanama.web.generated.proxies",
+        fileName = "KanamaWebProxyManifest.generated",
+        extensionName = "tsv",
+      )
+      .use { it.write(emitter.proxyManifest().toByteArray(Charsets.UTF_8)) }
+    env.logger.warn(
+      "[kanama:ksp] generated Web @ScriptClass registry for ${webScripts.size} script(s)"
     )
   }
 
