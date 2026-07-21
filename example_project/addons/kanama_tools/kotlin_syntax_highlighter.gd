@@ -211,7 +211,7 @@ func _get_line_syntax_highlighting(line: int) -> Dictionary:
         if _is_identifier_start(ch):
             var end := _consume_identifier(text, i)
             var word := text.substr(i, end - i)
-            var color := _color_for_identifier(word, text, end)
+            var color: Variant = _color_for_identifier(word, text, end)
             if color != null:
                 _set_color(result, i, color)
                 _set_color(result, end, _text_color)
