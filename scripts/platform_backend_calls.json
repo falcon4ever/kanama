@@ -557,6 +557,130 @@
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "RETAINED_REFCOUNTED",
       "introducedBy": "57e-group5"
+    },
+    {
+      "opcode": 43,
+      "scope": "class",
+      "className": "GPUParticles2D",
+      "methodName": "set_emitting",
+      "hash": 2586408642,
+      "arguments": ["bool"],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the Boolean mutation; Web snapshots update immediately for read-your-write behavior.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 44,
+      "scope": "class",
+      "className": "GPUParticles2D",
+      "methodName": "is_emitting",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read synchronously from the latest frame snapshot, including queued read-your-write updates.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 45,
+      "scope": "class",
+      "className": "GPUParticles2D",
+      "methodName": "get_lifetime",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read synchronously from the latest frame snapshot and preserve Godot float precision as Kotlin Double.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 46,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "set_stream",
+      "hash": 2210767741,
+      "arguments": ["AudioStream"],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Assign synchronously before releasing a temporary RETAINED_REFCOUNTED ResourceLoader result; null clears the stream.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 47,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "set_bus",
+      "hash": 3304788590,
+      "arguments": ["StringName"],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue an exact StringName bus value.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 48,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "set_volume_db",
+      "hash": 373806689,
+      "arguments": ["float"],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue one finite Float64 value without Float32 or integer-bit narrowing.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 49,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "set_pitch_scale",
+      "hash": 373806689,
+      "arguments": ["float"],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue one finite Float64 value without Float32 or integer-bit narrowing.",
+      "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 50,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "play",
+      "hash": 1958160172,
+      "arguments": ["float"],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue one finite Float64 from-position value; playback remains Godot-owned.",
+      "introducedBy": "57e-group7"
+    }
+  ],
+  "compositions": [
+    {
+      "name": "ClassDB.instantiate_AudioStreamPlayer",
+      "opcodes": [12],
+      "semantics": "Compose the existing ClassDB.instantiate call with class name AudioStreamPlayer; the returned node handle is OWNED."
+    },
+    {
+      "name": "AudioStreamPlayer.set_stream_from_path",
+      "opcodes": [7, 46],
+      "semantics": "Load with type AudioStream and CACHE_MODE_REUSE, synchronously assign a successful RETAINED_REFCOUNTED result, then release the temporary wrapper. A failed load performs no assignment, leaves the prior stream unchanged, and owns no handle."
     }
   ]
 }

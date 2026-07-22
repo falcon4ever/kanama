@@ -543,9 +543,8 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
 
 class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
     fun setStreamFromPath(path: String) {
-        val stream = IosGodot.resourceLoaderLoad(path, "")
-        if (stream != 0L) {
-            IosGodot.audioStreamPlayerSetStream(handle.address(), stream)
+        ResourceLoader.loadAudioStream(path)?.use { stream ->
+            setStream(stream)
         }
     }
 

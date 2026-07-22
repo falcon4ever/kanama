@@ -17,8 +17,10 @@ enum class GodotExecutionMode {
 
 @InternalKanamaBackendApi
 enum class GodotCallShape {
+  BOOL_ARG,
   BOOL_RET_INT,
   BOOL_RET_HANDLE,
+  DOUBLE_ARG,
   NOARGS_RET_VECTOR2,
   VECTOR2_ARG,
   NOARGS_RET_RECT2,
@@ -41,7 +43,9 @@ enum class GodotCallShape {
   STRINGNAME_RET_INT,
   STRINGNAME_RET_BOOL,
   NOARGS_RET_BOOL,
+  NOARGS_RET_DOUBLE,
   NOARGS_RET_LONG,
+  STRINGNAME_ARG,
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
   COLOR_ARG,
@@ -107,6 +111,24 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: Boolean,
   ): GodotHandle?
+
+  fun invokeBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Double,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
 
   fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
@@ -255,11 +277,27 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
   ): Boolean
 
+  fun invokeNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Double =
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+
   fun invokeNoArgsRetLong(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
   ): Long
+
+  fun invokeStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
 
   fun invokeStringNameVector2iRetInt(
     descriptor: GodotCallDescriptor,
@@ -349,6 +387,21 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     return selected.invokeBoolRetHandle(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeBoolArg(descriptor: GodotCallDescriptor, receiver: GodotHandle, value: Boolean) {
+    requireShape(descriptor, GodotCallShape.BOOL_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeBoolArg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeDoubleArg(descriptor: GodotCallDescriptor, receiver: GodotHandle, value: Double) {
+    requireShape(descriptor, GodotCallShape.DOUBLE_ARG)
+    require(value.isFinite()) { "Godot Double argument must be finite" }
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeDoubleArg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
   fun invokeNoArgsRetVector2(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotVector2 {
@@ -630,11 +683,25 @@ object GodotBackendCalls {
     return selected.invokeNoArgsRetBool(descriptor, resolve(selected, descriptor), receiver)
   }
 
+  fun invokeNoArgsRetDouble(descriptor: GodotCallDescriptor, receiver: GodotHandle): Double {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_DOUBLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetDouble(descriptor, resolve(selected, descriptor), receiver)
+  }
+
   fun invokeNoArgsRetLong(descriptor: GodotCallDescriptor, receiver: GodotHandle): Long {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG)
     val selected = requireBackend()
     selected.requireLive(receiver)
     return selected.invokeNoArgsRetLong(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeStringNameArg(descriptor: GodotCallDescriptor, receiver: GodotHandle, value: String) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameArg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
   fun invokeStringNameVector2iRetInt(
@@ -928,6 +995,79 @@ class PropertyTweenerBackendContractProbe(private val handle: GodotHandle) {
       handle,
       ease,
     )
+}
+
+/** Typed GPUParticles2D state used by Match3's one-shot feedback effects. */
+@InternalKanamaBackendApi
+class GPUParticles2DBackendContractProbe(private val handle: GodotHandle) {
+  var emitting: Boolean
+    get() =
+      GodotBackendCalls.invokeNoArgsRetBool(
+        InitialGodotCallDescriptors.GPUPARTICLES2D_IS_EMITTING,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeBoolArg(
+        InitialGodotCallDescriptors.GPUPARTICLES2D_SET_EMITTING,
+        handle,
+        value,
+      )
+    }
+
+  val lifetime: Double
+    get() =
+      GodotBackendCalls.invokeNoArgsRetDouble(
+        InitialGodotCallDescriptors.GPUPARTICLES2D_GET_LIFETIME,
+        handle,
+      )
+}
+
+/** Typed AudioStreamPlayer configuration and playback slice used by Match3's Audio autoload. */
+@InternalKanamaBackendApi
+class AudioStreamPlayerBackendContractProbe(private val handle: GodotHandle) {
+  fun setStream(stream: GodotHandle?) {
+    GodotBackendCalls.invokeObjectArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_STREAM,
+      handle,
+      stream,
+    )
+  }
+
+  fun setBus(bus: String) {
+    GodotBackendCalls.invokeStringNameArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_BUS,
+      handle,
+      bus,
+    )
+  }
+
+  fun setVolumeDb(volumeDb: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_VOLUME_DB,
+      handle,
+      volumeDb,
+    )
+  }
+
+  fun setPitchScale(pitchScale: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_PITCH_SCALE,
+      handle,
+      pitchScale,
+    )
+  }
+
+  fun play(fromPosition: Double = 0.0) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_PLAY,
+      handle,
+      fromPosition,
+    )
+  }
+
+  companion object {
+    fun create(): GodotHandle? = ClassDBBackendContractProbe.instantiate("AudioStreamPlayer")
+  }
 }
 
 /** Typed Sprite2D mutation slice used by the sprite Bunnymark port. */

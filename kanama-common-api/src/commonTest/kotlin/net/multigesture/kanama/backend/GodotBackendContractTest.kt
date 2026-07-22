@@ -3,6 +3,7 @@ package net.multigesture.kanama.backend
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 @OptIn(InternalKanamaBackendApi::class)
 class GodotBackendContractTest {
@@ -27,6 +28,54 @@ class GodotBackendContractTest {
     assertEquals(
       GodotExecutionMode.QUEUED_MUTATION,
       InitialGodotCallDescriptors.NODE2D_SET_POSITION.executionMode,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.GPUPARTICLES2D_SET_EMITTING,
+      2_586_408_642L,
+      GodotCallShape.BOOL_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.GPUPARTICLES2D_IS_EMITTING,
+      36_873_697L,
+      GodotCallShape.NOARGS_RET_BOOL,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.GPUPARTICLES2D_GET_LIFETIME,
+      1_740_695_150L,
+      GodotCallShape.NOARGS_RET_DOUBLE,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_STREAM,
+      2_210_767_741L,
+      GodotCallShape.OBJECT_ARG,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_BUS,
+      3_304_788_590L,
+      GodotCallShape.STRINGNAME_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_VOLUME_DB,
+      373_806_689L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_PITCH_SCALE,
+      373_806_689L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_PLAY,
+      1_958_160_172L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
     )
   }
 
@@ -120,6 +169,27 @@ class GodotBackendContractTest {
     assertEquals(62L, propertyTweener.setTrans(10L)?.backendToken())
     assertEquals(62L, propertyTweener.setEase(1L)?.backendToken())
     tweenProbe.kill()
+    val particles = GPUParticles2DBackendContractProbe(tile)
+    assertEquals(false, particles.emitting)
+    particles.emitting = true
+    assertEquals(true, particles.emitting)
+    assertEquals(true, particles.emitting)
+    assertEquals(1.0, particles.lifetime)
+    assertEquals(1.0, particles.lifetime)
+    val audioStream =
+      ResourceLoaderBackendContractProbe.load("res://sounds/tile-swap.ogg", "AudioStream")
+    assertEquals(31L, audioStream?.backendToken())
+    val audio =
+      AudioStreamPlayerBackendContractProbe(
+        checkNotNull(AudioStreamPlayerBackendContractProbe.create())
+      )
+    audio.setStream(audioStream)
+    audio.setStream(null)
+    audio.setBus("master")
+    audio.setVolumeDb(-10.0)
+    audio.setPitchScale(1.2)
+    audio.play()
+    assertFailsWith<IllegalArgumentException> { audio.setPitchScale(Double.NaN) }
     GDBackendContractProbe.randomize()
     assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
     assertEquals(0.75, GDBackendContractProbe.randf())
@@ -170,6 +240,14 @@ class GodotBackendContractTest {
         40 to 1,
         41 to 1,
         42 to 1,
+        43 to 1,
+        44 to 1,
+        45 to 1,
+        46 to 1,
+        47 to 1,
+        48 to 1,
+        49 to 1,
+        50 to 1,
       ),
       backend.resolveCounts,
     )
@@ -185,10 +263,19 @@ class GodotBackendContractTest {
     assertEquals(1, backend.randomizeCalls)
     assertEquals("benchmark_finished" to 42, backend.emittedSignal)
     assertEquals("tile_pressed" to GodotVector2i(3, 4), backend.emittedVectorSignal)
-    assertEquals("Sprite2D", backend.constructedClass)
+    assertEquals(listOf("Sprite2D", "AudioStreamPlayer"), backend.constructedClasses)
+    assertEquals(
+      listOf(
+        Triple("res://bunny.svg", "Texture2D", 1L),
+        Triple("res://sounds/tile-swap.ogg", "AudioStream", 1L),
+      ),
+      backend.resourceLoads,
+    )
     assertEquals(Triple(17L, 41L, false), backend.addedChild)
     assertEquals(17L to 41L, backend.removedChild)
-    assertEquals(41L to 31L, backend.objectArgument)
+    assertEquals(listOf(41L to 31L, 41L to 31L, 41L to null), backend.objectArguments)
+    assertEquals("master", backend.stringNameArgument)
+    assertEquals(listOf(48 to -10.0, 49 to 1.2, 50 to 0.0), backend.doubleArguments)
     assertEquals(41L, backend.queuedFree)
   }
 
@@ -197,6 +284,18 @@ class GodotBackendContractTest {
     val position: GodotVector2,
     val modulate: GodotColor,
   )
+
+  private fun assertDescriptor(
+    descriptor: GodotCallDescriptor,
+    hash: Long,
+    shape: GodotCallShape,
+    executionMode: GodotExecutionMode,
+  ) {
+    assertEquals(hash, descriptor.hash)
+    assertEquals(shape, descriptor.shape)
+    assertEquals(executionMode, descriptor.executionMode)
+    assertEquals(GodotReturnOwnership.BORROWED, descriptor.returnOwnership)
+  }
 
   private class RecordingBackend : GodotBackendSpi {
     val resolveCounts = mutableMapOf<Int, Int>()
@@ -208,11 +307,15 @@ class GodotBackendContractTest {
     var randomizeCalls = 0
     var emittedSignal: Pair<String, Int>? = null
     var emittedVectorSignal: Pair<String, GodotVector2i>? = null
-    var constructedClass: String? = null
+    val constructedClasses = mutableListOf<String>()
+    val resourceLoads = mutableListOf<Triple<String, String, Long>>()
     var addedChild: Triple<Long, Long, Boolean>? = null
     var removedChild: Pair<Long, Long>? = null
-    var objectArgument: Pair<Long, Long?>? = null
+    val objectArguments = mutableListOf<Pair<Long, Long?>>()
+    var stringNameArgument: String? = null
+    val doubleArguments = mutableListOf<Pair<Int, Double>>()
     var queuedFree: Long? = null
+    private var particlesEmitting = false
 
     override fun requireLive(handle: GodotHandle) {
       require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L, 61L, 62L, 63L))
@@ -239,6 +342,25 @@ class GodotBackendContractTest {
       assertEquals(61L, receiver.backendToken())
       assertEquals(true, value)
       return receiver
+    }
+
+    override fun invokeBoolArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Boolean,
+    ) {
+      assertEquals(43, descriptor.opcode)
+      particlesEmitting = value
+    }
+
+    override fun invokeDoubleArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Double,
+    ) {
+      doubleArguments += descriptor.opcode to value
     }
 
     override fun invokeNoArgsRetVector2(
@@ -300,9 +422,8 @@ class GodotBackendContractTest {
       second: String,
       value: Long,
     ): GodotHandle? {
-      assertEquals("res://bunny.svg", first)
-      assertEquals("Texture2D", second)
       assertEquals(1L, value)
+      resourceLoads += Triple(first, second, value)
       return GodotHandle.fromBackendToken(31)
     }
 
@@ -336,7 +457,7 @@ class GodotBackendContractTest {
       callSite: GodotCallSite,
       value: String,
     ): GodotHandle {
-      constructedClass = value
+      constructedClasses += value
       return GodotHandle.fromBackendToken(41L)
     }
 
@@ -360,7 +481,7 @@ class GodotBackendContractTest {
     ) {
       val call = receiver.backendToken() to value?.backendToken()
       if (descriptor.opcode == 14) removedChild = call.first to checkNotNull(call.second)
-      else objectArgument = call
+      else objectArguments += call
     }
 
     override fun invokeNodePathRetHandle(
@@ -479,13 +600,32 @@ class GodotBackendContractTest {
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
-    ): Boolean = descriptor.opcode == 24
+    ): Boolean = if (descriptor.opcode == 44) particlesEmitting else descriptor.opcode == 24
+
+    override fun invokeNoArgsRetDouble(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): Double {
+      assertEquals(45, descriptor.opcode)
+      return 1.0
+    }
 
     override fun invokeNoArgsRetLong(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
     ): Long = 1L
+
+    override fun invokeStringNameArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: String,
+    ) {
+      assertEquals(47, descriptor.opcode)
+      stringNameArgument = value
+    }
 
     override fun invokeStringNameVector2iRetInt(
       descriptor: GodotCallDescriptor,

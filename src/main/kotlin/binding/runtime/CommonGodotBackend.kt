@@ -56,6 +56,24 @@ internal object CommonGodotBackend : GodotBackendSpi {
       ObjectCalls.ptrcallWithBoolArgRetObject(segment(callSite), segment(receiver), value),
     )
 
+  override fun invokeBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ) {
+    ObjectCalls.ptrcallWithBoolArg(segment(callSite), segment(receiver), value)
+  }
+
+  override fun invokeDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Double,
+  ) {
+    ObjectCalls.ptrcallWithDoubleArg(segment(callSite), segment(receiver), value)
+  }
+
   override fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -301,11 +319,26 @@ internal object CommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ): Boolean = ObjectCalls.ptrcallNoArgsRetBool(segment(callSite), segment(receiver))
 
+  override fun invokeNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Double = ObjectCalls.ptrcallNoArgsRetDouble(segment(callSite), segment(receiver))
+
   override fun invokeNoArgsRetLong(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
   ): Long = ObjectCalls.ptrcallNoArgsRetLong(segment(callSite), segment(receiver))
+
+  override fun invokeStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ) {
+    ObjectCalls.ptrcallWithStringNameArg(segment(callSite), segment(receiver), value)
+  }
 
   override fun invokeStringNameVector2iRetInt(
     descriptor: GodotCallDescriptor,

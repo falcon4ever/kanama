@@ -465,4 +465,92 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
     )
+
+  val GPUPARTICLES2D_SET_EMITTING =
+    GodotCallDescriptor(
+      opcode = 43,
+      className = "GPUParticles2D",
+      methodName = "set_emitting",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GPUPARTICLES2D_IS_EMITTING =
+    GodotCallDescriptor(
+      opcode = 44,
+      className = "GPUParticles2D",
+      methodName = "is_emitting",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GPUPARTICLES2D_GET_LIFETIME =
+    GodotCallDescriptor(
+      opcode = 45,
+      className = "GPUParticles2D",
+      methodName = "get_lifetime",
+      hash = 1740695150L,
+      shape = GodotCallShape.NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_SET_STREAM =
+    GodotCallDescriptor(
+      opcode = 46,
+      className = "AudioStreamPlayer",
+      methodName = "set_stream",
+      hash = 2210767741L,
+      shape = GodotCallShape.OBJECT_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_SET_BUS =
+    GodotCallDescriptor(
+      opcode = 47,
+      className = "AudioStreamPlayer",
+      methodName = "set_bus",
+      hash = 3304788590L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_SET_VOLUME_DB =
+    GodotCallDescriptor(
+      opcode = 48,
+      className = "AudioStreamPlayer",
+      methodName = "set_volume_db",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_SET_PITCH_SCALE =
+    GodotCallDescriptor(
+      opcode = 49,
+      className = "AudioStreamPlayer",
+      methodName = "set_pitch_scale",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_PLAY =
+    GodotCallDescriptor(
+      opcode = 50,
+      className = "AudioStreamPlayer",
+      methodName = "play",
+      hash = 1958160172L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }
