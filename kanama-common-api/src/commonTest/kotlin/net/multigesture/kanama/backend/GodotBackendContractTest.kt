@@ -59,6 +59,22 @@ class GodotBackendContractTest {
     Sprite2DBackendContractProbe(sprite).setTexture(texture)
     node.removeChild(sprite)
     NodeBackendContractProbe(sprite).queueFree()
+    val board = NodeLookupBackendContractProbe(probe.handle).getNodeOrNull("Board")
+    assertEquals(51L, board?.backendToken())
+    val viewport = NodeLookupBackendContractProbe(probe.handle).getViewport()
+    assertEquals(52L, viewport?.backendToken())
+    assertEquals(
+      GodotRect2(GodotVector2(0.0f, 0.0f), GodotVector2(640.0f, 480.0f)),
+      ViewportBackendContractProbe(checkNotNull(viewport)).visibleRect,
+    )
+    val tile = PackedSceneBackendContractProbe(checkNotNull(texture)).instantiate()
+    assertEquals(53L, tile?.backendToken())
+    InputBackendContractProbe.setCustomMouseCursor(texture)
+    assertEquals(
+      0L,
+      SignalBackendContractProbe(checkNotNull(tile))
+        .connect(probe.handle, "tile_pressed", "_on_tile_pressed"),
+    )
     GDBackendContractProbe.randomize()
     assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
     assertEquals(0.75, GDBackendContractProbe.randf())
@@ -83,6 +99,12 @@ class GodotBackendContractTest {
         14 to 1,
         15 to 1,
         16 to 1,
+        17 to 1,
+        18 to 1,
+        19 to 1,
+        20 to 1,
+        21 to 1,
+        22 to 1,
       ),
       backend.resolveCounts,
     )
@@ -124,7 +146,7 @@ class GodotBackendContractTest {
     var queuedFree: Long? = null
 
     override fun requireLive(handle: GodotHandle) {
-      require(handle.backendToken() in setOf(17L, 31L, 41L))
+      require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L))
     }
 
     override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite {
@@ -247,6 +269,61 @@ class GodotBackendContractTest {
       val call = receiver.backendToken() to value?.backendToken()
       if (descriptor.opcode == 14) removedChild = call.first to checkNotNull(call.second)
       else objectArgument = call
+    }
+
+    override fun invokeNodePathRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      path: String,
+    ): GodotHandle? {
+      assertEquals("Board", path)
+      return GodotHandle.fromBackendToken(51L)
+    }
+
+    override fun invokeLongRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Long,
+    ): GodotHandle? {
+      assertEquals(0L, value)
+      return GodotHandle.fromBackendToken(53L)
+    }
+
+    override fun invokeNoArgsRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): GodotHandle? = GodotHandle.fromBackendToken(52L)
+
+    override fun invokeObjectLongVector2Args(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      objectValue: GodotHandle?,
+      longValue: Long,
+      vectorValue: GodotVector2,
+    ) {
+      assertEquals(31L, objectValue?.backendToken())
+      assertEquals(0L, longValue)
+      assertEquals(GodotVector2(0.0f, 0.0f), vectorValue)
+    }
+
+    override fun invokeStringNameCallableLongRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      signal: String,
+      target: GodotHandle,
+      method: String,
+      flags: Long,
+    ): Long {
+      assertEquals(53L, receiver.backendToken())
+      assertEquals("tile_pressed", signal)
+      assertEquals(17L, target.backendToken())
+      assertEquals("_on_tile_pressed", method)
+      assertEquals(0L, flags)
+      return 0L
     }
   }
 }

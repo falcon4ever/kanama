@@ -20,7 +20,7 @@ private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
 internal enum class WebBrowserHandleKind {
   RESOURCE,
-  SPRITE2D,
+  NODE,
 }
 
 /** Kotlin/Wasm implementation: snapshot reads, queued Vector2 mutations, explicit sync barrier. */
@@ -93,7 +93,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     commands.appendNoArgsMutation(descriptor.opcode, objectId)
     if (descriptor.opcode == 15) {
       positionSnapshots.remove(objectId)
-      unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.SPRITE2D)
+      if (!instances.isLive(objectId)) {
+        unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
+      }
     }
   }
 
@@ -190,7 +192,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return token
       .takeIf { it > 0 }
       ?.let {
-        registerWebBrowserHandle(it, WebBrowserHandleKind.SPRITE2D)
+        registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
         positionSnapshots[it] = GodotVector2(0.0f, 0.0f)
         GodotHandle.fromBackendToken(it.toLong())
       }
@@ -206,7 +208,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    requireWebBrowserHandle(objectValue.webId(), WebBrowserHandleKind.SPRITE2D)
+    requireWebNodeHandle(objectValue.webId())
     commands.appendObjectBoolLongArgs(
       descriptor.opcode,
       receiver.webId(),
@@ -225,11 +227,85 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     when (descriptor.opcode) {
-      14 -> requireWebBrowserHandle(checkNotNull(value).webId(), WebBrowserHandleKind.SPRITE2D)
+      14 -> requireWebNodeHandle(checkNotNull(value).webId())
       16 -> value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
       else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
     }
     commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
+  }
+
+  override fun invokeNodePathRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    path: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return registerReturnedNode(immediateWebNodeLookup(receiver.webId(), path))
+  }
+
+  override fun invokeLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return registerReturnedNode(immediateWebPackedSceneInstantiate(receiver.webId(), value.toInt()))
+  }
+
+  override fun invokeNoArgsRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return registerReturnedNode(immediateWebNoArgsObject(descriptor.opcode, receiver.webId()))
+  }
+
+  override fun invokeObjectLongVector2Args(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    objectValue: GodotHandle?,
+    longValue: Long,
+    vectorValue: GodotVector2,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+    commands.flush()
+    immediateWebSetCustomMouseCursor(
+      requireActiveWebScriptHandle(),
+      objectValue?.webId() ?: 0,
+      longValue.toInt(),
+      vectorValue.x.toDouble(),
+      vectorValue.y.toDouble(),
+    )
+  }
+
+  override fun invokeStringNameCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    flags: Long,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return immediateWebConnect(receiver.webId(), signal, target.webId(), method, flags.toInt())
+      .toLong()
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
@@ -244,7 +320,9 @@ internal fun installWebCommonGodotBackend() {
 }
 
 internal fun loadWebPositionSnapshot(objectId: Int, x: Double, y: Double) {
-  instances.require(objectId)
+  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+    "Cannot snapshot unknown Kanama Web node handle=$objectId"
+  }
   positionSnapshots[objectId] = GodotVector2(x.toFloat(), y.toFloat())
 }
 
@@ -255,7 +333,9 @@ internal fun loadWebViewportRectSnapshot(
   width: Double,
   height: Double,
 ) {
-  instances.require(objectId)
+  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+    "Cannot snapshot unknown Kanama Web node handle=$objectId"
+  }
   viewportRectSnapshots[objectId] =
     GodotRect2(
       GodotVector2(x.toFloat(), y.toFloat()),
@@ -282,9 +362,50 @@ private fun immediateWebEmitSignal(objectId: Int, name: String, value: Int): Int
 private fun immediateWebConstructObject(className: String): Int =
   js("globalThis.KanamaWebBridge.immediateConstructObject(className)")
 
+private fun immediateWebNodeLookup(objectId: Int, path: String): Int =
+  js("globalThis.KanamaWebBridge.immediateNodeLookup(objectId, path)")
+
+private fun immediateWebPackedSceneInstantiate(resourceId: Int, editState: Int): Int =
+  js("globalThis.KanamaWebBridge.immediatePackedSceneInstantiate(resourceId, editState)")
+
+private fun immediateWebNoArgsObject(opcode: Int, objectId: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateNoArgsObject(opcode, objectId)")
+
+private fun immediateWebSetCustomMouseCursor(
+  ownerId: Int,
+  resourceId: Int,
+  shape: Int,
+  hotspotX: Double,
+  hotspotY: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateSetCustomMouseCursor(ownerId, resourceId, shape, hotspotX, hotspotY)"
+  )
+
+private fun immediateWebConnect(
+  objectId: Int,
+  signal: String,
+  targetId: Int,
+  method: String,
+  flags: Int,
+): Int =
+  js("globalThis.KanamaWebBridge.immediateConnect(objectId, signal, targetId, method, flags)")
+
+private fun registerReturnedNode(token: Int): GodotHandle? =
+  token
+    .takeIf { it > 0 }
+    ?.let {
+      if (!instances.isLive(it)) registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
+      GodotHandle.fromBackendToken(it.toLong())
+    }
+
 internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
   check(handle > 0) { "Kanama Web browser handle must be positive" }
-  check(browserHandles.put(handle, kind) == null) { "Duplicate Kanama Web browser handle=$handle" }
+  val previous = browserHandles[handle]
+  if (previous == null) browserHandles[handle] = kind
+  check(previous == null || previous == kind) {
+    "Kanama Web browser handle=$handle already has kind=$previous, requested=$kind"
+  }
 }
 
 internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
@@ -299,11 +420,22 @@ internal fun clearWebBrowserHandles() {
   browserHandles.clear()
 }
 
+internal fun discardWebBrowserHandle(handle: Int): Boolean {
+  positionSnapshots.remove(handle)
+  viewportRectSnapshots.remove(handle)
+  return browserHandles.remove(handle) != null
+}
+
 private fun requireWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
   val actual = browserHandles[handle]
   check(actual == expectedKind) {
     "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
   }
+}
+
+private fun requireWebNodeHandle(handle: Int) {
+  if (instances.isLive(handle)) return
+  requireWebBrowserHandle(handle, WebBrowserHandleKind.NODE)
 }
 
 private object WebRandom {

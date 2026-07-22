@@ -115,8 +115,9 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("opcode == 3"))
     assertTrue(proxy.source.contains("_kanama_immediate_call"))
     assertTrue(proxy.source.contains("_kanama_resource_load"))
-    assertTrue(proxy.source.contains("installResourceCallback"))
-    assertTrue(proxy.source.contains("installSignalCallback"))
+    assertTrue(proxy.source.contains("installProxyCallbacks"))
+    assertTrue(proxy.source.contains("func _kanama_ensure_created() -> int"))
+    assertTrue(proxy.source.contains("setStringProperty(_kanama_handle, 1, greeting)"))
     assertTrue(proxy.source.contains("_kanama_signal_emit"))
     assertTrue(proxy.source.contains("_kanama_resource_release"))
     assertTrue(proxy.source.contains("if _kanama_handle == 0:"))
@@ -278,6 +279,13 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("@export var tile_scene: PackedScene = null"))
     assertTrue(mainProxy.contains("@export var textures: Array[Texture2D] = []"))
     assertTrue(mainProxy.contains("@export var open_hand_cursor: Texture2D = null"))
+    assertTrue(mainProxy.contains("setLongProperty(_kanama_handle, 1, width)"))
+    assertTrue(mainProxy.contains("setObjectProperty(_kanama_handle, 2, property_handle_2)"))
+    assertTrue(mainProxy.contains("setObjectArrayProperty(_kanama_handle, 3, property_handles_3)"))
+    assertTrue(mainProxy.contains("func _kanama_node_lookup(args: Array) -> int:"))
+    assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
+    assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
+    assertTrue(mainProxy.contains("func _kanama_connect(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
     assertTrue(mainProxy.contains("unsupportedGameplayVirtual(_KANAMA_SCRIPT_ID, \"_input\")"))
 
@@ -307,5 +315,10 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
     assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=2\n"))
+
+    val registry = emitter.registrySource()
+    assertTrue(registry.contains("(script as Main).width = value"))
+    assertTrue(registry.contains("(script as Main).tileScene = handle?.let"))
+    assertTrue(registry.contains("(script as Main).textures = values.map"))
   }
 }

@@ -1,13 +1,22 @@
+@file:OptIn(net.multigesture.kanama.backend.InternalKanamaBackendApi::class)
+
 package net.multigesture.kanama.api
 
 import kotlin.math.ln
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.cancel
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.backend.InputBackendContractProbe
+import net.multigesture.kanama.backend.PackedSceneBackendContractProbe
+import net.multigesture.kanama.backend.SignalBackendContractProbe
+import net.multigesture.kanama.backend.ViewportBackendContractProbe
+import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.web.webScriptInstance
 
 /**
  * Compile-visible Match3 wrapper slice for Task 57d.
@@ -28,7 +37,8 @@ object Mathf {
 
 class GodotSignal internal constructor(private val owner: GodotObject, private val name: String) {
   fun connect(target: GodotObject, method: String, flags: Long = 0L): Long =
-    unsupportedWebGameplayCall("Signal.connect_object_method")
+    SignalBackendContractProbe(owner.backendHandle)
+      .connect(target.backendHandle, name, method, flags)
 
   fun connect(
     target: GodotObject,
@@ -39,12 +49,18 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
 }
 
 inline fun <reified T : Any> GodotObject.kotlinScriptInstance(): T? =
-  unsupportedWebGameplayCall("GodotObject.kotlin_script_instance")
+  webScriptInstance(handle.value) as? T
 
 class Area2D(godotObject: GodotHandle) : Node2D(godotObject)
 
 class Viewport(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
-  fun getVisibleRect(): Rect2 = unsupportedWebGameplayCall("Viewport.get_visible_rect")
+  fun getVisibleRect(): Rect2 =
+    ViewportBackendContractProbe(backendHandle).visibleRect.let { rect ->
+      Rect2(
+        Vector2(rect.position.x.toDouble(), rect.position.y.toDouble()),
+        Vector2(rect.size.x.toDouble(), rect.size.y.toDouble()),
+      )
+    }
 }
 
 class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
@@ -86,7 +102,8 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHa
 }
 
 class PackedScene internal constructor(backendHandle: BackendGodotHandle) : Resource(backendHandle) {
-  fun instantiate(): GodotObject? = unsupportedWebGameplayCall("PackedScene.instantiate")
+  fun instantiate(): GodotObject? =
+    PackedSceneBackendContractProbe(backendHandle).instantiate()?.let(::GodotObject)
 }
 
 class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {
@@ -143,7 +160,10 @@ class InputEventMouseButton private constructor(backendHandle: BackendGodotHandl
 
 object Input {
   fun setCustomMouseCursor(texture: Texture2D?, hotspot: Vector2 = Vector2.ZERO) {
-    unsupportedWebGameplayCall("Input.set_custom_mouse_cursor")
+    InputBackendContractProbe.setCustomMouseCursor(
+      texture?.requireOpenHandle(),
+      hotspot = GodotVector2(hotspot.x.toFloat(), hotspot.y.toFloat()),
+    )
   }
 }
 
@@ -159,9 +179,20 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
   }
 }
 
+internal object WebFrameCoroutineDispatcher : CoroutineDispatcher() {
+  private val pending = ArrayDeque<Runnable>()
+
+  val pendingCount: Int
+    get() = pending.size
+
+  override fun dispatch(context: kotlin.coroutines.CoroutineContext, block: Runnable) {
+    pending.addLast(block)
+  }
+}
+
 class KanamaScope : CoroutineScope {
   private val job = SupervisorJob()
-  override val coroutineContext = Dispatchers.Default + job
+  override val coroutineContext = WebFrameCoroutineDispatcher + job
 
   fun cancel() {
     job.cancel()

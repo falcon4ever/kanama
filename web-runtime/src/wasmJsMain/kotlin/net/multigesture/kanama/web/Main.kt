@@ -5,6 +5,7 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
+import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
@@ -15,6 +16,14 @@ internal val instances = WebInstanceRegistry(KanamaWebProjectRegistry::create)
 internal val commands = WebCommandBuffer(WebCommandBuffer.BENCHMARK_COMMAND_CAPACITY)
 internal val drawCommands = WebCommandBuffer(WebCommandBuffer.DRAW_COMMAND_CAPACITY)
 private var frameSequence = 0
+private var activeWebScriptHandle = 0
+
+internal fun requireActiveWebScriptHandle(): Int =
+  activeWebScriptHandle.takeIf { it != 0 }
+    ?: error("A Kanama Web singleton call was made outside a script callback")
+
+@PublishedApi
+internal actual fun webScriptInstance(objectId: Int): Any? = instances.require(objectId).script
 
 private inline fun <T> webCallbackBoundary(
   objectId: Int,
@@ -25,8 +34,10 @@ private inline fun <T> webCallbackBoundary(
 ): T {
   var scriptName = "<unresolved>"
   var memberName = callback
+  val previousActiveHandle = activeWebScriptHandle
   try {
     val record = instances.require(objectId)
+    activeWebScriptHandle = objectId
     val descriptor = KanamaWebProjectRegistry.scripts.firstOrNull { it.id == record.scriptId }
     scriptName = descriptor?.className ?: "script#${record.scriptId}"
     memberName =
@@ -41,12 +52,16 @@ private inline fun <T> webCallbackBoundary(
       "Kanama Web callback failed: script=$scriptName handle=$objectId callback=$callback member=$memberName",
       error,
     )
+  } finally {
+    activeWebScriptHandle = previousActiveHandle
   }
 }
 
 @JsExport fun kanamaWebProtocolVersion(): Int = KanamaWebProjectRegistry.PROTOCOL_VERSION
 
 @JsExport fun kanamaWebRoundTrip(value: Int): Int = value
+
+@JsExport fun kanamaWebPendingCoroutineCount(): Int = WebFrameCoroutineDispatcher.pendingCount
 
 @JsExport
 fun kanamaWebCreate(scriptId: Int): Int {
@@ -61,6 +76,23 @@ fun kanamaWebCreate(scriptId: Int): Int {
 }
 
 @JsExport fun kanamaWebIsLive(objectHandle: Int): Int = if (instances.isLive(objectHandle)) 1 else 0
+
+@JsExport
+fun kanamaWebAdoptNodeHandle(objectHandle: Int): Int {
+  registerWebBrowserHandle(objectHandle, WebBrowserHandleKind.NODE)
+  return 1
+}
+
+@JsExport
+fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
+  clearWebPositionSnapshot(objectHandle)
+  unregisterWebBrowserHandle(objectHandle, WebBrowserHandleKind.NODE)
+  return 1
+}
+
+@JsExport
+fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
+  if (discardWebBrowserHandle(objectHandle)) 1 else 0
 
 @JsExport
 fun kanamaWebReady(objectId: Int): Int {
@@ -123,6 +155,46 @@ fun kanamaWebSetStringProperty(objectId: Int, propertyId: Int, value: String): I
 }
 
 @JsExport
+fun kanamaWebSetLongProperty(objectId: Int, propertyId: Int, value: Double): Int {
+  require(value.isFinite() && value % 1.0 == 0.0) { "Web integer property must be integral" }
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setLongProperty(
+      record.scriptId,
+      propertyId,
+      record.script,
+      value.toLong(),
+    )
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebSetObjectProperty(objectId: Int, propertyId: Int, value: Int): Int {
+  if (value != 0) registerWebBrowserHandle(value, WebBrowserHandleKind.RESOURCE)
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setObjectProperty(record.scriptId, propertyId, record.script, value)
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValues: String): Int {
+  val values =
+    encodedValues.takeIf { it.isNotEmpty() }?.split(',')?.map(String::toInt)?.toIntArray()
+      ?: IntArray(0)
+  values.forEach { registerWebBrowserHandle(it, WebBrowserHandleKind.RESOURCE) }
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setObjectArrayProperty(
+      record.scriptId,
+      propertyId,
+      record.script,
+      values,
+    )
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
     KanamaWebProjectRegistry.callLong(record.scriptId, methodId, record.script, value.toLong())
@@ -145,7 +217,6 @@ fun kanamaWebFree(objectId: Int): Int {
     commands.flush()
     drawCommands.clear()
     clearWebPositionSnapshot(objectId)
-    clearWebBrowserHandles()
     if (instances.free(objectId)) 1 else 0
   }
 }

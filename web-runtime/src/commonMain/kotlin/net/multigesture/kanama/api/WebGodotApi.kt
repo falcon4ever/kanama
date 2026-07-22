@@ -10,6 +10,7 @@ import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
 import net.multigesture.kanama.backend.NodeBackendContractProbe
+import net.multigesture.kanama.backend.NodeLookupBackendContractProbe
 import net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe
 import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
 import net.multigesture.kanama.types.Color
@@ -67,17 +68,20 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   }
 
   fun getNodeOrNull(path: String): GodotObject? =
-    unsupportedWebGameplayCall("Node.get_node_or_null")
+    NodeLookupBackendContractProbe(backendHandle).getNodeOrNull(path)?.let(::GodotObject)
 
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
-    unsupportedWebGameplayCall("Node.get_node_or_null_typed")
+    getNodeOrNull(path)?.let { ctor(it.handle) }
 
   fun <T : GodotObject> requireAs(path: String, ctor: (GodotHandle) -> T): T =
-    unsupportedWebGameplayCall("Node.get_node_required_typed")
+    getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
 
   fun getTree(): SceneTree = unsupportedWebGameplayCall("Node.get_tree")
 
-  fun getViewport(): Viewport? = unsupportedWebGameplayCall("Node.get_viewport")
+  fun getViewport(): Viewport? =
+    NodeLookupBackendContractProbe(backendHandle).getViewport()?.let { handle ->
+      Viewport(WebObjectId(handle.backendToken().toInt()))
+    }
 
   fun createTween(): Tween? = unsupportedWebGameplayCall("Node.create_tween")
 }

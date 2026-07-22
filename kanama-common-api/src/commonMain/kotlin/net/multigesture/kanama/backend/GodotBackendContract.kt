@@ -31,6 +31,11 @@ enum class GodotCallShape {
   STRINGNAME_RET_HANDLE,
   OBJECT_BOOL_LONG_ARGS,
   OBJECT_ARG,
+  NODEPATH_RET_HANDLE,
+  LONG_RET_HANDLE,
+  NOARGS_RET_HANDLE,
+  OBJECT_LONG_VECTOR2_ARGS,
+  STRINGNAME_CALLABLE_LONG_RET_LONG,
 }
 
 @InternalKanamaBackendApi
@@ -159,6 +164,44 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: GodotHandle?,
   )
+
+  fun invokeNodePathRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    path: String,
+  ): GodotHandle?
+
+  fun invokeLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotHandle?
+
+  fun invokeNoArgsRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotHandle?
+
+  fun invokeObjectLongVector2Args(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    objectValue: GodotHandle?,
+    longValue: Long,
+    vectorValue: GodotVector2,
+  )
+
+  fun invokeStringNameCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    flags: Long,
+  ): Long
 }
 
 /**
@@ -338,6 +381,81 @@ object GodotBackendCalls {
     selected.invokeObjectArg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
+  fun invokeNodePathRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    path: String,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.NODEPATH_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNodePathRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      path,
+    )
+  }
+
+  fun invokeLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.LONG_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeLongRetHandle(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeNoArgsRetHandle(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetHandle(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeObjectLongVector2Args(
+    descriptor: GodotCallDescriptor,
+    objectValue: GodotHandle?,
+    longValue: Long,
+    vectorValue: GodotVector2,
+  ) {
+    requireShape(descriptor, GodotCallShape.OBJECT_LONG_VECTOR2_ARGS)
+    val selected = requireBackend()
+    objectValue?.let(selected::requireLive)
+    selected.invokeObjectLongVector2Args(
+      descriptor,
+      resolve(selected, descriptor),
+      objectValue,
+      longValue,
+      vectorValue,
+    )
+  }
+
+  fun invokeStringNameCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    flags: Long,
+  ): Long {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_CALLABLE_LONG_RET_LONG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.requireLive(target)
+    return selected.invokeStringNameCallableLongRetLong(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      signal,
+      target,
+      method,
+      flags,
+    )
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -486,4 +604,71 @@ class Sprite2DBackendContractProbe(private val handle: GodotHandle) {
       texture,
     )
   }
+}
+
+/** Typed board-construction slice shared by Match3 across every backend. */
+@InternalKanamaBackendApi
+class NodeLookupBackendContractProbe(private val handle: GodotHandle) {
+  fun getNodeOrNull(path: String): GodotHandle? =
+    GodotBackendCalls.invokeNodePathRetHandle(
+      InitialGodotCallDescriptors.NODE_GET_NODE_OR_NULL,
+      handle,
+      path,
+    )
+
+  fun getViewport(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_VIEWPORT, handle)
+}
+
+/** Typed PackedScene instantiation slice used by Match3 board construction. */
+@InternalKanamaBackendApi
+class PackedSceneBackendContractProbe(private val handle: GodotHandle) {
+  fun instantiate(editState: Long = 0L): GodotHandle? =
+    GodotBackendCalls.invokeLongRetHandle(
+      InitialGodotCallDescriptors.PACKEDSCENE_INSTANTIATE,
+      handle,
+      editState,
+    )
+}
+
+/** Typed viewport snapshot used by Match3 board centering. */
+@InternalKanamaBackendApi
+class ViewportBackendContractProbe(private val handle: GodotHandle) {
+  val visibleRect: GodotRect2
+    get() =
+      GodotBackendCalls.invokeNoArgsRetRect2(
+        InitialGodotCallDescriptors.VIEWPORT_GET_VISIBLE_RECT,
+        handle,
+      )
+}
+
+/** Typed Input singleton slice used by Match3 cursor setup. */
+@InternalKanamaBackendApi
+object InputBackendContractProbe {
+  fun setCustomMouseCursor(
+    texture: GodotHandle?,
+    shape: Long = 0L,
+    hotspot: GodotVector2 = GodotVector2(0.0f, 0.0f),
+  ) {
+    GodotBackendCalls.invokeObjectLongVector2Args(
+      InitialGodotCallDescriptors.INPUT_SET_CUSTOM_MOUSE_CURSOR,
+      texture,
+      shape,
+      hotspot,
+    )
+  }
+}
+
+/** Typed object-method Callable connection used for board wiring. */
+@InternalKanamaBackendApi
+class SignalBackendContractProbe(private val handle: GodotHandle) {
+  fun connect(target: GodotHandle, signal: String, method: String, flags: Long = 0L): Long =
+    GodotBackendCalls.invokeStringNameCallableLongRetLong(
+      InitialGodotCallDescriptors.OBJECT_CONNECT,
+      handle,
+      signal,
+      target,
+      method,
+      flags,
+    )
 }

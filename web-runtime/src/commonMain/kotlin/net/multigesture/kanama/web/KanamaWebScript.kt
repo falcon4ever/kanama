@@ -33,3 +33,5 @@ abstract class KanamaWebScript(val objectId: WebObjectId) {
     scope.cancel("Kanama Web script object was freed")
   }
 }
+
+@PublishedApi internal expect fun webScriptInstance(objectId: Int): Any?

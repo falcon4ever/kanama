@@ -55,12 +55,19 @@
     bunnymarkLanguage: globalThis.KanamaWebBunnymarkLanguage ?? "kanama",
     previewBunnies: requestedPreviewBunnies(),
     previewScheduled: false,
-    applyCallback: null,
-    immediateCallback: null,
-    resourceCallback: null,
-    signalCallback: null,
-    resourceReleaseCallback: null,
-    constructCallback: null,
+    applyCallbacks: new Map(),
+    immediateCallbacks: new Map(),
+    resourceCallbacks: new Map(),
+    signalCallbacks: new Map(),
+    resourceReleaseCallbacks: new Map(),
+    constructCallbacks: new Map(),
+    nodeLookupCallbacks: new Map(),
+    packedSceneCallbacks: new Map(),
+    noArgsObjectCallbacks: new Map(),
+    inputCursorCallbacks: new Map(),
+    connectCallbacks: new Map(),
+    handleOwners: new Map(),
+    activeOwnerHandle: 0,
     benchmarkCallback: null,
     firstHandle: 0,
     freedHandle: 0,
@@ -115,6 +122,15 @@
     commandBufferGrowths: 0,
     latestSnapshotX: 0,
     latestSnapshotY: 0,
+    match3Properties: new Map(),
+    match3ReadyByClass: {},
+    match3DeferredReadyByClass: {},
+    match3PackedSceneInstantiations: 0,
+    match3AddChildCommands: 0,
+    match3TextureAssignments: 0,
+    match3PositionMutations: 0,
+    match3CursorSets: 0,
+    match3Connections: 0,
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
     gdscriptBaselineCallback: null,
@@ -139,6 +155,8 @@
     },
 
     invoke(handle, callback, member, action, fallback) {
+      const previousOwner = this.activeOwnerHandle;
+      if (handle > 0) this.activeOwnerHandle = this.ownerForHandle(handle);
       try {
         return action();
       } catch (error) {
@@ -150,6 +168,8 @@
         this.lastCallbackError = contextual.message;
         globalThis.failKanamaWeb(contextual);
         return fallback;
+      } finally {
+        this.activeOwnerHandle = previousOwner;
       }
     },
 
@@ -165,7 +185,8 @@
     },
 
     create(scriptId) {
-      return this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebCreate(scriptId), 0);
+      const handle = this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebCreate(scriptId), 0);
+      return handle;
     },
     ready(handle) {
       return this.invoke(handle, "_ready", "_ready", () => this.api.kanamaWebReady(handle), 0);
@@ -173,6 +194,11 @@
     frame(handle, delta) {
       if (this.mode === "bunnymark") {
         return this.process(handle, delta);
+      }
+      if (this.mode === "match3") {
+        // Task 57e group 1 deliberately leaves frame coroutines queued for group 6. Do not run
+        // the transport spike's synthetic per-frame mutation against real Match3 script proxies.
+        return 0;
       }
       const started = performance.now();
       let result;
@@ -255,6 +281,56 @@
         0,
       );
     },
+    setLongProperty(handle, propertyId, value) {
+      this.recordMatch3Property(handle, propertyId, value);
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetLongProperty(handle, propertyId, value),
+        0,
+      );
+    },
+    setObjectProperty(handle, propertyId, value) {
+      this.recordMatch3Property(handle, propertyId, value);
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetObjectProperty(handle, propertyId, value),
+        0,
+      );
+    },
+    setObjectArrayProperty(handle, propertyId, values) {
+      const parsedValues =
+        values === "" ? [] : String(values).split(",").map((value) => Number.parseInt(value, 10));
+      this.recordMatch3Property(handle, propertyId, parsedValues);
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () =>
+          this.api.kanamaWebSetObjectArrayProperty(
+            handle,
+            propertyId,
+            String(values),
+          ),
+        0,
+      );
+    },
+    recordMatch3Property(handle, propertyId, value) {
+      if (this.mode !== "match3") return;
+      const properties = this.match3Properties.get(handle) ?? {};
+      properties[propertyId] = value;
+      this.match3Properties.set(handle, properties);
+    },
+    shouldDeferReady(scriptName) {
+      return this.mode === "match3" && scriptName.endsWith(".Audio");
+    },
+    recordDeferredReady(scriptName) {
+      this.match3DeferredReadyByClass[scriptName] =
+        (this.match3DeferredReadyByClass[scriptName] ?? 0) + 1;
+    },
     callInt(handle, methodId, value) {
       return this.invoke(
         handle,
@@ -297,46 +373,50 @@
         () => this.api.kanamaWebFree(handle),
         0,
       );
-      if (result === 1) this.releaseRemainingBrowserHandles();
+      if (result === 1) this.releaseBrowserHandlesOwnedBy(handle);
       return result;
     },
-    installApplyCallback(callback) {
-      this.applyCallback = callback;
+    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect) {
+      this.handleOwners.set(handle, handle);
+      this.applyCallbacks.set(handle, apply);
+      this.immediateCallbacks.set(handle, immediate);
+      this.resourceCallbacks.set(handle, resource);
+      this.signalCallbacks.set(handle, signal);
+      this.resourceReleaseCallbacks.set(handle, release);
+      this.constructCallbacks.set(handle, construct);
+      this.nodeLookupCallbacks.set(handle, nodeLookup);
+      this.packedSceneCallbacks.set(handle, packedScene);
+      this.noArgsObjectCallbacks.set(handle, noArgsObject);
+      this.inputCursorCallbacks.set(handle, inputCursor);
+      this.connectCallbacks.set(handle, connect);
     },
-    clearApplyCallback() {
-      this.applyCallback = null;
+    clearProxyCallbacks(handle) {
+      this.applyCallbacks.delete(handle);
+      this.immediateCallbacks.delete(handle);
+      this.resourceCallbacks.delete(handle);
+      this.signalCallbacks.delete(handle);
+      this.resourceReleaseCallbacks.delete(handle);
+      this.constructCallbacks.delete(handle);
+      this.nodeLookupCallbacks.delete(handle);
+      this.packedSceneCallbacks.delete(handle);
+      this.noArgsObjectCallbacks.delete(handle);
+      this.inputCursorCallbacks.delete(handle);
+      this.connectCallbacks.delete(handle);
+      this.handleOwners.delete(handle);
     },
-    installImmediateCallback(callback) {
-      this.immediateCallback = callback;
+    ownerForHandle(handle) {
+      const owner = this.handleOwners.get(handle);
+      if (!owner) throw new Error(`No Kanama Web proxy owns handle=${handle}`);
+      return owner;
     },
-    clearImmediateCallback() {
-      this.immediateCallback = null;
+    callbackFor(callbacks, handle, label) {
+      const owner = this.ownerForHandle(handle);
+      const callback = callbacks.get(owner);
+      if (!callback) throw new Error(`${label} callback is not installed for owner=${owner}`);
+      return callback;
     },
-    installResourceCallback(callback) {
-      this.resourceCallback = callback;
-    },
-    clearResourceCallback() {
-      this.resourceCallback = null;
-    },
-    installSignalCallback(callback) {
-      this.signalCallback = callback;
-    },
-    clearSignalCallback() {
-      this.signalCallback = null;
-    },
-    installResourceReleaseCallback(callback) {
-      this.resourceReleaseCallback = callback;
-    },
-    clearResourceReleaseCallback() {
-      this.resourceReleaseCallback = null;
-    },
-    installConstructCallback(callback) {
-      this.constructCallback = callback;
-    },
-    clearConstructCallback() {
-      this.constructCallback = null;
-    },
-    allocateBrowserHandle(kind) {
+    allocateBrowserHandle(kind, owner = this.activeOwnerHandle) {
+      if (!owner) throw new Error(`Cannot allocate ${kind} handle without an active proxy owner`);
       let slotIndex;
       if (this.freeBrowserHandleSlots.length === 0) {
         slotIndex = this.browserHandleSlots.length;
@@ -353,6 +433,7 @@
       slot.kind = kind;
       slot.live = true;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
+      this.handleOwners.set(handle, owner);
       this.liveBrowserHandleCount += 1;
       this.maxLiveBrowserHandles = Math.max(this.maxLiveBrowserHandles, this.liveBrowserHandleCount);
       return handle;
@@ -376,6 +457,7 @@
       const slot = this.requireBrowserHandle(handle, kind);
       slot.live = false;
       slot.kind = null;
+      this.handleOwners.delete(handle);
       this.liveBrowserHandleCount -= 1;
       this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
     },
@@ -386,9 +468,26 @@
         if (slot.kind === "Sprite2D") this.objectFrees += 1;
         slot.live = false;
         slot.kind = null;
+        for (const [handle, owner] of this.handleOwners) {
+          if ((handle & BROWSER_HANDLE_SLOT_MASK) === slotIndex) this.handleOwners.delete(handle);
+        }
         this.freeBrowserHandleSlots.push(slotIndex);
       }
       this.liveBrowserHandleCount = 0;
+    },
+    releaseBrowserHandlesOwnedBy(owner) {
+      for (const [handle, handleOwner] of [...this.handleOwners]) {
+        if (handleOwner !== owner || (handle & BROWSER_HANDLE_NAMESPACE) === 0) continue;
+        const slot = this.browserHandleSlot(handle);
+        if (!slot) continue;
+        if (slot.kind === "Sprite2D") this.objectFrees += 1;
+        this.api.kanamaWebDiscardBrowserHandle(handle);
+        slot.live = false;
+        slot.kind = null;
+        this.handleOwners.delete(handle);
+        this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
+        this.liveBrowserHandleCount -= 1;
+      }
     },
     isBrowserHandleLive(handle) {
       return this.browserHandleSlot(handle) ? 1 : 0;
@@ -403,20 +502,21 @@
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
     },
     immediateChildCount(handle, includeInternal) {
-      if (!this.immediateCallback) throw new Error("Godot immediate callback is not installed");
+      const callback = this.callbackFor(this.immediateCallbacks, handle, "Godot immediate");
       this.immediateCalls += 1;
       this.immediateChildCountResult = null;
-      this.immediateCallback(handle, includeInternal);
+      callback(handle, includeInternal);
       if (!Number.isInteger(this.immediateChildCountResult)) {
         throw new Error("Godot immediate callback did not publish a child count");
       }
       return this.immediateChildCountResult;
     },
     immediateResourceLoad(path, typeHint, cacheMode) {
-      if (!this.resourceCallback) throw new Error("Godot resource callback is not installed");
-      const resourceHandle = this.allocateBrowserHandle("Resource");
+      const owner = this.activeOwnerHandle;
+      const callback = this.callbackFor(this.resourceCallbacks, owner, "Godot resource");
+      const resourceHandle = this.allocateBrowserHandle("Resource", owner);
       this.immediateResourceHandleResult = null;
-      this.resourceCallback(resourceHandle, path, typeHint, cacheMode);
+      callback(resourceHandle, path, typeHint, cacheMode);
       if (
         this.immediateResourceHandleResult !== 0 &&
         this.immediateResourceHandleResult !== resourceHandle
@@ -430,10 +530,11 @@
       return this.immediateResourceHandleResult;
     },
     immediateConstructObject(className) {
-      if (!this.constructCallback) throw new Error("Godot construction callback is not installed");
-      const objectHandle = this.allocateBrowserHandle(className);
+      const owner = this.activeOwnerHandle;
+      const callback = this.callbackFor(this.constructCallbacks, owner, "Godot construction");
+      const objectHandle = this.allocateBrowserHandle(className, owner);
       this.immediateConstructHandleResult = null;
-      this.constructCallback(objectHandle, className);
+      callback(objectHandle, className);
       if (
         this.immediateConstructHandleResult !== 0 &&
         this.immediateConstructHandleResult !== objectHandle
@@ -458,22 +559,24 @@
       return this.immediateConstructHandleResult;
     },
     immediateEmitSignal(handle, name, value) {
-      if (!this.signalCallback) throw new Error("Godot signal callback is not installed");
+      const callback = this.callbackFor(this.signalCallbacks, handle, "Godot signal");
       this.lastSignalName = name;
       this.lastSignalValue = value;
       this.immediateSignalResult = null;
-      this.signalCallback(handle, name, value);
+      callback(handle, name, value);
       if (!Number.isInteger(this.immediateSignalResult)) {
         throw new Error("Godot signal callback did not publish a result");
       }
       return this.immediateSignalResult;
     },
     releaseResource(handle) {
-      if (!this.resourceReleaseCallback) {
-        throw new Error("Godot resource release callback is not installed");
-      }
+      const callback = this.callbackFor(
+        this.resourceReleaseCallbacks,
+        handle,
+        "Godot resource release",
+      );
       this.immediateResourceReleaseResult = null;
-      this.resourceReleaseCallback(handle);
+      callback(handle);
       if (!Number.isInteger(this.immediateResourceReleaseResult)) {
         throw new Error("Godot resource release callback did not publish a result");
       }
@@ -481,6 +584,94 @@
         this.releaseBrowserHandle(handle, "Resource");
       }
       return this.immediateResourceReleaseResult;
+    },
+    immediateNodeLookup(handle, path) {
+      const owner = this.ownerForHandle(handle);
+      const callback = this.callbackFor(this.nodeLookupCallbacks, handle, "Godot node lookup");
+      const resultHandle = this.allocateBrowserHandle("Node", owner);
+      this.api.kanamaWebAdoptNodeHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(handle, resultHandle, path);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        throw new Error("Godot node lookup callback published an invalid handle");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+      }
+      return result;
+    },
+    immediatePackedSceneInstantiate(resourceHandle, editState) {
+      const owner = this.ownerForHandle(resourceHandle);
+      const callback = this.callbackFor(
+        this.packedSceneCallbacks,
+        resourceHandle,
+        "Godot PackedScene",
+      );
+      const proposedHandle = this.allocateBrowserHandle("Node", owner);
+      this.api.kanamaWebAdoptNodeHandle(proposedHandle);
+      this.immediateObjectHandleResult = null;
+      callback(resourceHandle, proposedHandle, editState);
+      const result = this.immediateObjectHandleResult;
+      if (result === 0) {
+        this.api.kanamaWebDiscardNodeHandle(proposedHandle);
+        this.releaseBrowserHandle(proposedHandle, "Node");
+      } else if (result !== proposedHandle) {
+        if (this.api.kanamaWebIsLive(result) !== 1) {
+          throw new Error("PackedScene callback returned neither its proposed nor a live script handle");
+        }
+        this.api.kanamaWebDiscardNodeHandle(proposedHandle);
+        this.releaseBrowserHandle(proposedHandle, "Node");
+        // The proxy that instantiated the scene owns the concrete Godot object table entry. Route
+        // later calls on the child through that proxy as well, even when the PackedScene root has
+        // its own Kanama script handle and callback set.
+        this.handleOwners.set(result, owner);
+      }
+      if (result !== 0) this.match3PackedSceneInstantiations += 1;
+      return result;
+    },
+    immediateNoArgsObject(opcode, handle) {
+      const callback = this.callbackFor(
+        this.noArgsObjectCallbacks,
+        handle,
+        "Godot no-args object",
+      );
+      const resultHandle = this.allocateBrowserHandle("Node", this.ownerForHandle(handle));
+      this.api.kanamaWebAdoptNodeHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(opcode, handle, resultHandle);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        throw new Error("Godot no-args object callback published an invalid handle");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+      }
+      return result;
+    },
+    immediateSetCustomMouseCursor(owner, resourceHandle, shape, hotspotX, hotspotY) {
+      const callback = this.callbackFor(this.inputCursorCallbacks, owner, "Godot Input cursor");
+      callback(resourceHandle, shape, hotspotX, hotspotY);
+      this.match3CursorSets += 1;
+      return 1;
+    },
+    immediateConnect(handle, signal, targetHandle, method, flags) {
+      const callback = this.callbackFor(this.connectCallbacks, targetHandle, "Godot connect");
+      this.immediateConnectResult = null;
+      callback(handle, signal, targetHandle, method, flags);
+      if (!Number.isInteger(this.immediateConnectResult)) {
+        throw new Error("Godot connect callback did not publish a result");
+      }
+      if (this.immediateConnectResult === 0) this.match3Connections += 1;
+      return this.immediateConnectResult;
+    },
+    recordImmediateObjectHandle(value) {
+      this.immediateObjectHandleResult = value;
+    },
+    recordImmediateConnectResult(value) {
+      this.immediateConnectResult = value;
     },
     installBenchmarkCallback(callback) {
       this.benchmarkCallback = callback;
@@ -521,7 +712,6 @@
       };
     },
     flushCommands(words, wordCount, commandCount) {
-      if (!this.applyCallback) throw new Error("Godot command callback is not installed");
       if (this.activeDraw) {
         this.drawBatches += 1;
         this.maxDrawCommands = Math.max(this.maxDrawCommands, commandCount);
@@ -544,18 +734,55 @@
       }
       const started = performance.now();
       const appliedBefore = this.appliedCommands;
-      this.applyCallback(words.subarray(0, wordCount), commandCount);
+      let groupStart = 0;
+      let groupWords = 0;
+      let groupCommands = 0;
+      let groupOwner = 0;
+      let groupCrossings = 0;
+      let scanOffset = 0;
+      const flushGroup = () => {
+        if (groupCommands === 0) return;
+        const callback = this.applyCallbacks.get(groupOwner);
+        if (!callback) {
+          throw new Error(`Godot command callback is not installed for owner=${groupOwner}`);
+        }
+        callback(words.subarray(groupStart, groupStart + groupWords), groupCommands);
+        groupCrossings += 1;
+      };
+      for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
+        const opcode = words[scanOffset];
+        const owner = this.ownerForHandle(words[scanOffset + 1]);
+        const size = commandWordCount(opcode);
+        if (groupCommands > 0 && owner !== groupOwner) {
+          flushGroup();
+          groupStart = scanOffset;
+          groupWords = 0;
+          groupCommands = 0;
+        }
+        if (groupCommands === 0) {
+          groupStart = scanOffset;
+          groupOwner = owner;
+        }
+        groupWords += size;
+        groupCommands += 1;
+        scanOffset += size;
+      }
+      flushGroup();
       const applied = this.appliedCommands - appliedBefore;
-      this.kotlinToGodotCalls += 1;
+      this.kotlinToGodotCalls += groupCrossings;
       this.kotlinToGodotMs.push(performance.now() - started);
       let wordOffset = 0;
       let positionMutationCount = 0;
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[wordOffset];
+        if (commandIndex < applied && opcode === 13) this.match3AddChildCommands += 1;
+        if (commandIndex < applied && opcode === 16) this.match3TextureAssignments += 1;
+        if (commandIndex < applied && opcode === 3) this.match3PositionMutations += 1;
         if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
         if (commandIndex < applied && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
-          this.releaseBrowserHandle(this.lastFreedObjectHandle, "Sprite2D");
+          const slot = this.browserHandleSlot(this.lastFreedObjectHandle);
+          if (slot) this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
           this.objectFrees += 1;
         }
         wordOffset += commandWordCount(opcode);
@@ -571,8 +798,13 @@
       }
       return applied;
     },
-    recordReady(handle) {
+    recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;
+      this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
+      if (this.mode === "match3") {
+        if (scriptName.endsWith(".Main")) this.finishMatch3Group1(handle, scriptId, scriptName);
+        return;
+      }
       if (this.mode === "bunnymark" && this.previewBunnies > 0 && !this.previewScheduled) {
         this.previewScheduled = true;
         setTimeout(() => {
@@ -595,6 +827,71 @@
           this.api.kanamaWebIsLive(this.freedHandle) === 0;
         this.finish();
       }
+    },
+    finishMatch3Group1(handle, scriptId, scriptName) {
+      const properties = this.match3Properties.get(handle) ?? {};
+      const tileClass = Object.keys(this.match3ReadyByClass).find((name) => name.endsWith(".Tile"));
+      const snapshot = {
+        mode: this.mode,
+        main: { handle, scriptId, scriptName },
+        exported: {
+          width: properties[1],
+          height: properties[2],
+          offset: properties[3],
+          tileSceneAssigned: Number.isInteger(properties[4]) && properties[4] > 0,
+          sparklesSceneAssigned: Number.isInteger(properties[5]) && properties[5] > 0,
+          textureCount: Array.isArray(properties[6]) ? properties[6].length : -1,
+          openCursorAssigned: Number.isInteger(properties[7]) && properties[7] > 0,
+          closedCursorAssigned: Number.isInteger(properties[8]) && properties[8] > 0,
+        },
+        board: {
+          tileScriptReadyCount: tileClass ? this.match3ReadyByClass[tileClass] : 0,
+          packedSceneInstantiations: this.match3PackedSceneInstantiations,
+          addChildCommands: this.match3AddChildCommands,
+          textureAssignments: this.match3TextureAssignments,
+          positionMutations: this.match3PositionMutations,
+          cursorSets: this.match3CursorSets,
+          connections: this.match3Connections,
+        },
+        pendingFrameCoroutines: this.api.kanamaWebPendingCoroutineCount(),
+        deferredSubsystemReady: this.match3DeferredReadyByClass,
+        callbackErrors: this.callbackErrors,
+      };
+      const checks = {
+        originalDimensions:
+          snapshot.exported.width === 8 &&
+          snapshot.exported.height === 8 &&
+          snapshot.exported.offset === 68,
+        originalResources:
+          snapshot.exported.tileSceneAssigned &&
+          snapshot.exported.sparklesSceneAssigned &&
+          snapshot.exported.textureCount === 5 &&
+          snapshot.exported.openCursorAssigned &&
+          snapshot.exported.closedCursorAssigned,
+        exactTileInstances: snapshot.board.packedSceneInstantiations === 64,
+        exactTileScripts: snapshot.board.tileScriptReadyCount === 64,
+        exactBoardAdds: snapshot.board.addChildCommands === 64,
+        texturesAssigned: snapshot.board.textureAssignments === 64,
+        boardPositioned: snapshot.board.positionMutations >= 65,
+        cursorConfigured: snapshot.board.cursorSets === 1,
+        boardSignalsWired: snapshot.board.connections === 65,
+        laterCoroutineExplicitlyPending: snapshot.pendingFrameCoroutines === 1,
+        audioGroupExplicitlyPending:
+          Object.entries(snapshot.deferredSubsystemReady).some(
+            ([name, count]) => name.endsWith(".Audio") && count === 1,
+          ),
+        noBoundaryErrors: snapshot.callbackErrors === 0,
+      };
+      snapshot.checks = checks;
+      snapshot.pass = Object.values(checks).every(Boolean);
+      globalThis.KanamaWebMatch3Results = snapshot;
+      document.body.dataset.status = snapshot.pass ? "pass" : "fail";
+      updateStatus(
+        snapshot.pass ? "MATCH3 BOARD PASS" : "MATCH3 BOARD FAIL",
+        snapshot.pass ? "pass" : "fail",
+      );
+      document.querySelector("#kanama-results").textContent = JSON.stringify(snapshot, null, 2);
+      console.info("[kanama:web-match3] RESULT", JSON.stringify(snapshot));
     },
     recordImmediateResult(value) {
       this.immediateResult = value;

@@ -179,4 +179,70 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE_GET_NODE_OR_NULL =
+    GodotCallDescriptor(
+      opcode = 17,
+      className = "Node",
+      methodName = "get_node_or_null",
+      hash = 2734337346L,
+      shape = GodotCallShape.NODEPATH_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val PACKEDSCENE_INSTANTIATE =
+    GodotCallDescriptor(
+      opcode = 18,
+      className = "PackedScene",
+      methodName = "instantiate",
+      hash = 2628778455L,
+      shape = GodotCallShape.LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.OWNED,
+    )
+
+  val NODE_GET_VIEWPORT =
+    GodotCallDescriptor(
+      opcode = 19,
+      className = "Node",
+      methodName = "get_viewport",
+      hash = 3596683776L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val VIEWPORT_GET_VISIBLE_RECT =
+    GodotCallDescriptor(
+      opcode = 20,
+      className = "Viewport",
+      methodName = "get_visible_rect",
+      hash = 1639390495L,
+      shape = GodotCallShape.NOARGS_RET_RECT2,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_SET_CUSTOM_MOUSE_CURSOR =
+    GodotCallDescriptor(
+      opcode = 21,
+      className = "Input",
+      methodName = "set_custom_mouse_cursor",
+      hash = 703945977L,
+      shape = GodotCallShape.OBJECT_LONG_VECTOR2_ARGS,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_CONNECT =
+    GodotCallDescriptor(
+      opcode = 22,
+      className = "Object",
+      methodName = "connect",
+      hash = 1518946055L,
+      shape = GodotCallShape.STRINGNAME_CALLABLE_LONG_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

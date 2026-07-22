@@ -96,8 +96,12 @@ internal class WebCommandBuffer(capacity: Int) {
   fun flush(): Int {
     if (commandCount == 0) return 0
     val expected = commandCount
-    val applied = flushWebCommands(words, wordCount, expected)
+    val expectedWords = wordCount
+    // Mark the batch consumed before crossing into Godot. Applying add_child can synchronously run
+    // a generated child's _ready callback; that nested callback must see an empty queue rather than
+    // recursively replaying the parent batch.
     clear()
+    val applied = flushWebCommands(words, expectedWords, expected)
     check(applied == expected) { "Kanama Web command batch applied $applied of $expected commands" }
     return applied
   }

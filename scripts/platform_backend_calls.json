@@ -210,6 +210,84 @@
       "executionMode": "QUEUED_MUTATION",
       "returnOwnership": "BORROWED",
       "introducedBy": "57c"
+    },
+    {
+      "opcode": 17,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_node_or_null",
+      "hash": 2734337346,
+      "arguments": ["NodePath"],
+      "returnType": "Node",
+      "shape": "NODEPATH_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group1"
+    },
+    {
+      "opcode": 18,
+      "scope": "class",
+      "className": "PackedScene",
+      "methodName": "instantiate",
+      "hash": 2628778455,
+      "arguments": ["enum::PackedScene.GenEditState"],
+      "returnType": "Node",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "OWNED",
+      "introducedBy": "57e-group1"
+    },
+    {
+      "opcode": 19,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_viewport",
+      "hash": 3596683776,
+      "arguments": [],
+      "returnType": "Viewport",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group1"
+    },
+    {
+      "opcode": 20,
+      "scope": "class",
+      "className": "Viewport",
+      "methodName": "get_visible_rect",
+      "hash": 1639390495,
+      "arguments": [],
+      "returnType": "Rect2",
+      "shape": "NOARGS_RET_RECT2",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group1"
+    },
+    {
+      "opcode": 21,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "set_custom_mouse_cursor",
+      "hash": 703945977,
+      "arguments": ["Resource", "enum::Input.CursorShape", "Vector2"],
+      "returnType": "void",
+      "shape": "OBJECT_LONG_VECTOR2_ARGS",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group1"
+    },
+    {
+      "opcode": 22,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "connect",
+      "hash": 1518946055,
+      "arguments": ["StringName", "Callable", "int"],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_CALLABLE_LONG_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group1"
     }
   ]
 }

@@ -79,6 +79,7 @@ val webBunnymarkExport =
 val webMatch3SourceProject =
     providers.gradleProperty("kanamaWebMatch3ProjectDir").orNull?.let(rootProject::file)
 val webMatch3Staging = layout.buildDirectory.dir("web-match3/godot-project")
+val webMatch3Export = layout.buildDirectory.dir("web-match3/export")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -477,6 +478,7 @@ tasks.register("stageWebMatch3Project") {
     description = "Stages Match3 with faithful generated Web proxies without editing its source."
     dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
     webMatch3SourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
     inputs.dir(webProxyResources)
     inputs.file(webGameplayCoverage)
     outputs.dir(webMatch3Staging)
@@ -546,6 +548,14 @@ tasks.register("stageWebMatch3Project") {
             into(stagingDir.resolve("kanama-web"))
         }
         copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
             from(webGameplayCoverage)
             into(stagingDir.resolve("kanama-web"))
         }
@@ -599,6 +609,28 @@ tasks.register("stageWebMatch3Project") {
             "Not every Match3 script attachment was staged: used=$usedMappings"
         }
 
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
+        check(stagedProjectText.contains(forwardFeature)) {
+            "Match3 renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(mobileRenderer)) {
+            "Match3 mobile renderer setting changed; update the Web staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    forwardFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    mobileRenderer,
+                    "renderer/rendering_method=\"gl_compatibility\"\n$mobileRenderer",
+                )
+        )
+
         val checksumAfter = sourceChecksum()
         check(checksumAfter == checksumBefore) {
             "Match3 source project changed during staging: before=$checksumBefore after=$checksumAfter"
@@ -606,6 +638,17 @@ tasks.register("stageWebMatch3Project") {
         val evidence = stagingDir.resolve("kanama-web/Match3SourceChecksum.generated.txt")
         evidence.parentFile.mkdirs()
         evidence.writeText("sha256=$checksumAfter\nstatus=unchanged\n")
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val originalShell = shell.readText()
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        check(originalShell.contains(pageStart)) { "Missing Web shell bootstrap marker" }
+        shell.writeText(
+            originalShell.replace(
+                pageStart,
+                "$pageStart\n      globalThis.KanamaWebMode = \"match3\";",
+            )
+        )
     }
 }
 
@@ -657,5 +700,65 @@ tasks.register<Exec>("importWebMatch3Project") {
             "Staged Match3 import reported script/scene errors:\n${failures.joinToString("\n")}\nFull log: $logFile"
         }
         logger.lifecycle("[kanama:web] Match3 staged import clean; log=$logFile")
+    }
+}
+
+tasks.register<Exec>("exportWebMatch3") {
+    group = "verification"
+    description = "Exports the staged original Match3 project with its Kotlin/Wasm runtime."
+    dependsOn("stageWebMatch3Project", "wasmJsBrowserDistribution")
+    inputs.dir(webMatch3Staging)
+    inputs.dir(webDistribution)
+    outputs.dir(webMatch3Export)
+
+    doFirst {
+        val godotExecutable =
+            providers.gradleProperty("kanamaGodotExecutable").orNull
+                ?: error("Pass -PkanamaGodotExecutable=/absolute/path/to/godot")
+        val webTemplateRelease =
+            providers.gradleProperty("kanamaWebTemplateRelease").orNull
+                ?: error("Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip")
+        val webTemplateFile = file(webTemplateRelease)
+        check(webTemplateFile.isFile) { "Godot Web release template not found: $webTemplateFile" }
+        val stagedPreset = webMatch3Staging.get().file("export_presets.cfg").asFile
+        stagedPreset.writeText(
+            stagedPreset
+                .readText()
+                .replace(
+                    "custom_template/release=\"\"",
+                    "custom_template/release=\"${webTemplateFile.absolutePath}\"",
+                )
+        )
+        val exportDir = webMatch3Export.get().asFile
+        delete(exportDir)
+        exportDir.mkdirs()
+        commandLine(
+            godotExecutable,
+            "--headless",
+            "--path",
+            webMatch3Staging.get().asFile.absolutePath,
+            "--export-release",
+            "Web",
+            exportDir.resolve("index.html").absolutePath,
+        )
+    }
+
+    doLast {
+        val exportDir = webMatch3Export.get().asFile
+        copy {
+            from(webDistribution)
+            include("*.js", "*.wasm")
+            into(exportDir)
+        }
+        copy {
+            from(webSpikeAssets.file("kanama-web-bridge.js"))
+            into(exportDir)
+        }
+        check(exportDir.resolve("index.html").isFile) {
+            "Godot Web Match3 export did not produce index.html"
+        }
+        check(exportDir.resolve("kanama-web-spike.js").isFile) {
+            "Kotlin/Wasm loader was not installed into the Match3 export"
+        }
     }
 }

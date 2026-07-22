@@ -19,6 +19,7 @@ import net.multigesture.kanama.types.Vector2
 @OptIn(InternalKanamaBackendApi::class)
 internal object CommonGodotBackend : GodotBackendSpi {
   private val resourceLoaderSingleton by lazy { ObjectCalls.getSingleton("ResourceLoader") }
+  private val inputSingleton by lazy { ObjectCalls.getSingleton("Input") }
 
   override fun requireLive(handle: GodotHandle) {
     require(handle.backendToken() != 0L) { "Godot object handle must not be NULL" }
@@ -177,6 +178,69 @@ internal object CommonGodotBackend : GodotBackendSpi {
       listOf(value?.let(::segment) ?: MemorySegment.NULL),
     )
   }
+
+  override fun invokeNodePathRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    path: String,
+  ): GodotHandle? =
+    ObjectCalls.ptrcallWithNodePathArgRetObject(segment(callSite), segment(receiver), path)
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
+
+  override fun invokeLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotHandle? =
+    ObjectCalls.ptrcallWithLongArgRetObject(segment(callSite), segment(receiver), value)
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
+
+  override fun invokeNoArgsRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotHandle? =
+    ObjectCalls.ptrcallNoArgsRetObject(segment(callSite), segment(receiver))
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
+
+  override fun invokeObjectLongVector2Args(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    objectValue: GodotHandle?,
+    longValue: Long,
+    vectorValue: GodotVector2,
+  ) {
+    ObjectCalls.ptrcallWithObjectLongAndVector2Arg(
+      segment(callSite),
+      inputSingleton,
+      objectValue?.let(::segment) ?: MemorySegment.NULL,
+      longValue,
+      Vector2(vectorValue.x, vectorValue.y),
+    )
+  }
+
+  override fun invokeStringNameCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    flags: Long,
+  ): Long =
+    ObjectCalls.ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
+      segment(callSite),
+      segment(receiver),
+      signal,
+      segment(target),
+      method,
+      flags,
+    )
 
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())
