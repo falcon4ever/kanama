@@ -292,6 +292,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("setObjectProperty(_kanama_handle, 2, property_handle_2)"))
     assertTrue(mainProxy.contains("setObjectArrayProperty(_kanama_handle, 3, property_handles_3)"))
     assertTrue(mainProxy.contains("func _kanama_node_lookup(args: Array) -> int:"))
+    assertTrue(mainProxy.contains("recordImmediateObjectHandle(script_handle)"))
     assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_connect(args: Array) -> int:"))

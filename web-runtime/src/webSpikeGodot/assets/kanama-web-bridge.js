@@ -140,6 +140,7 @@
     match3TileInputEvents: 0,
     match3Vector2iCalls: 0,
     match3Vector2iSignalEmits: 0,
+    match3ScriptNodeLookups: 0,
     match3DeferredMethods: {},
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
@@ -683,7 +684,12 @@
       callback(handle, resultHandle, path);
       const result = this.immediateObjectHandleResult;
       if (result !== 0 && result !== resultHandle) {
-        throw new Error("Godot node lookup callback published an invalid handle");
+        if (this.api.kanamaWebIsLive(result) !== 1) {
+          throw new Error("Godot node lookup callback returned neither its proposed nor a live script handle");
+        }
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+        if (this.mode === "match3") this.match3ScriptNodeLookups += 1;
       }
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);

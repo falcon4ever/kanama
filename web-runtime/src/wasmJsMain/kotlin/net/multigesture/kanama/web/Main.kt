@@ -23,7 +23,9 @@ internal fun requireActiveWebScriptHandle(): Int =
     ?: error("A Kanama Web singleton call was made outside a script callback")
 
 @PublishedApi
-internal actual fun webScriptInstance(objectId: Int): Any? = instances.require(objectId).script
+internal actual fun webScriptInstance(objectId: Int): Any? {
+  return objectId.takeIf(instances::isLive)?.let { instances.require(it).script }
+}
 
 private inline fun <T> webCallbackBoundary(
   objectId: Int,
