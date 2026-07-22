@@ -434,6 +434,36 @@
       "executionMode": "SNAPSHOT_READ",
       "returnOwnership": "BORROWED",
       "introducedBy": "57e-group3"
+    },
+    {
+      "opcode": 34,
+      "descriptorName": "OBJECT_CONNECT_BOUND_LONG",
+      "scope": "class",
+      "className": "Object",
+      "methodName": "connect",
+      "hash": 1518946055,
+      "arguments": ["StringName", "Callable", "int"],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group4"
+    },
+    {
+      "opcode": 35,
+      "descriptorName": "OBJECT_EMIT_SIGNAL_NOARGS",
+      "scope": "class",
+      "className": "Object",
+      "methodName": "emit_signal",
+      "hash": 4047867050,
+      "arguments": ["StringName"],
+      "returnType": "enum::Error",
+      "isVararg": true,
+      "typedVarargTail": [],
+      "shape": "STRINGNAME_RET_INT",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group4"
     }
   ]
 }

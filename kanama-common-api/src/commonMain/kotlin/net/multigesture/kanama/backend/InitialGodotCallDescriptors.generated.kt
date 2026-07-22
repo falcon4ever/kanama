@@ -366,4 +366,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val OBJECT_CONNECT_BOUND_LONG =
+    GodotCallDescriptor(
+      opcode = 34,
+      className = "Object",
+      methodName = "connect",
+      hash = 1518946055L,
+      shape = GodotCallShape.STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_EMIT_SIGNAL_NOARGS =
+    GodotCallDescriptor(
+      opcode = 35,
+      className = "Object",
+      methodName = "emit_signal",
+      hash = 4047867050L,
+      shape = GodotCallShape.STRINGNAME_RET_INT,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

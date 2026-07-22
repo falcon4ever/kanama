@@ -5,7 +5,9 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
+import net.multigesture.kanama.api.WebSignalCallbackRegistry
 import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
@@ -70,6 +72,8 @@ private inline fun <T> webCallbackBoundary(
 @JsExport fun kanamaWebRoundTrip(value: Int): Int = value
 
 @JsExport fun kanamaWebPendingCoroutineCount(): Int = WebFrameCoroutineDispatcher.pendingCount
+
+@JsExport fun kanamaWebPendingSignalCallbackCount(): Int = WebSignalCallbackRegistry.size
 
 @JsExport
 fun kanamaWebCreate(scriptId: Int): Int {
@@ -272,7 +276,16 @@ fun kanamaWebFree(objectId: Int): Int {
     commands.flush()
     drawCommands.clear()
     clearWebPositionSnapshot(objectId)
+    WebSignalCallbackRegistry.releaseOwner(objectId)
     if (instances.free(objectId)) 1 else 0
+  }
+}
+
+@JsExport
+fun kanamaWebDispatchSignal0(objectId: Int, callbackId: Int): Int {
+  return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch0") {
+    WebSignalCallbackRegistry.dispatch(objectId, callbackId)
+    1
   }
 }
 
@@ -363,6 +376,37 @@ fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {
     result = result or 16
   }
   commands.flush()
+  return result
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebMatch3Group4Probe(tileObjectId: Int): Int {
+  val tile = GodotObject(WebObjectId(tileObjectId))
+  val signalSourceHandle =
+    NodeLookupBackendContractProbe(tile.backendHandle).getNodeOrNull("Sprite2D") ?: return 0
+  val signalSource = GodotObject(WebObjectId(signalSourceHandle.backendToken().toInt()))
+  val callbacksBefore = WebSignalCallbackRegistry.size
+  var callbackCalls = 0
+  val connectResult =
+    signalSource.signal("visibility_changed").connect(
+      tile,
+      argumentCount = 0,
+      flags = GodotObject.CONNECT_ONE_SHOT,
+    ) {
+      callbackCalls += 1
+    }
+  val callbacksAfterConnect = WebSignalCallbackRegistry.size
+  signalSource.emitSignal("visibility_changed")
+  val callbacksAfterFirstEmit = WebSignalCallbackRegistry.size
+  signalSource.emitSignal("visibility_changed")
+
+  var result = 0
+  if (connectResult == 0L) result = result or 1
+  if (callbacksAfterConnect == callbacksBefore + 1) result = result or 2
+  if (callbackCalls == 1) result = result or 4
+  if (callbacksAfterFirstEmit == callbacksBefore) result = result or 8
+  if (WebSignalCallbackRegistry.size == callbacksBefore) result = result or 16
   return result
 }
 

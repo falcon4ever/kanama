@@ -137,6 +137,9 @@
     match3PositionMutations: 0,
     match3CursorSets: 0,
     match3Connections: 0,
+    match3LambdaConnections: 0,
+    match3LambdaCallbacks: 0,
+    match3NoArgsSignalEmits: 0,
     match3InputEvents: 0,
     match3TileInputEvents: 0,
     match3Vector2iCalls: 0,
@@ -664,6 +667,18 @@
       }
       return this.immediateSignalResult;
     },
+    immediateEmitSignalNoArgs(handle, name) {
+      const callback = this.callbackFor(this.signalCallbacks, handle, "Godot no-args signal");
+      this.lastSignalName = name;
+      this.lastSignalValue = null;
+      this.immediateSignalResult = null;
+      callback(handle, name);
+      if (!Number.isInteger(this.immediateSignalResult)) {
+        throw new Error("Godot no-args signal callback did not publish a result");
+      }
+      if (this.mode === "match3") this.match3NoArgsSignalEmits += 1;
+      return this.immediateSignalResult;
+    },
     immediateEmitSignalVector2i(handle, name, x, y) {
       const callback = this.callbackFor(
         this.signalVector2iCallbacks,
@@ -786,6 +801,30 @@
       }
       if (this.immediateConnectResult === 0) this.match3Connections += 1;
       return this.immediateConnectResult;
+    },
+    immediateConnectBound(handle, signal, targetHandle, method, boundValue, flags) {
+      const callback = this.callbackFor(this.connectCallbacks, targetHandle, "Godot bound connect");
+      this.immediateConnectResult = null;
+      callback(handle, signal, targetHandle, method, flags, boundValue);
+      if (!Number.isInteger(this.immediateConnectResult)) {
+        throw new Error("Godot bound connect callback did not publish a result");
+      }
+      if (this.immediateConnectResult === 0) {
+        this.match3Connections += 1;
+        this.match3LambdaConnections += 1;
+      }
+      return this.immediateConnectResult;
+    },
+    dispatchSignal0(handle, callbackId) {
+      const result = this.invoke(
+        handle,
+        "_kanama_web_signal_dispatch0",
+        `callback#${callbackId}`,
+        () => this.api.kanamaWebDispatchSignal0(handle, callbackId),
+        0,
+      );
+      if (result === 1 && this.mode === "match3") this.match3LambdaCallbacks += 1;
+      return result;
     },
     immediateObjectQuery(opcode, handle, value) {
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");

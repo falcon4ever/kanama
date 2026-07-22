@@ -207,6 +207,18 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebEmitSignal(receiver.webId(), name, value)
   }
 
+  override fun invokeStringNameRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebEmitSignalNoArgs(receiver.webId(), value)
+  }
+
   override fun invokeStringNameRetHandle(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -351,6 +363,32 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
     commands.flush()
     return immediateWebConnect(receiver.webId(), signal, target.webId(), method, flags.toInt())
+      .toLong()
+  }
+
+  override fun invokeStringNameBoundCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    boundValue: Long,
+    flags: Long,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(boundValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return immediateWebConnectBound(
+        receiver.webId(),
+        signal,
+        target.webId(),
+        method,
+        boundValue.toInt(),
+        flags.toInt(),
+      )
       .toLong()
   }
 
@@ -502,6 +540,9 @@ private fun immediateWebResourceLoad(path: String, typeHint: String, cacheMode: 
 private fun immediateWebEmitSignal(objectId: Int, name: String, value: Int): Int =
   js("globalThis.KanamaWebBridge.immediateEmitSignal(objectId, name, value)")
 
+private fun immediateWebEmitSignalNoArgs(objectId: Int, name: String): Int =
+  js("globalThis.KanamaWebBridge.immediateEmitSignalNoArgs(objectId, name)")
+
 private fun immediateWebConstructObject(className: String): Int =
   js("globalThis.KanamaWebBridge.immediateConstructObject(className)")
 
@@ -533,6 +574,18 @@ private fun immediateWebConnect(
   flags: Int,
 ): Int =
   js("globalThis.KanamaWebBridge.immediateConnect(objectId, signal, targetId, method, flags)")
+
+private fun immediateWebConnectBound(
+  objectId: Int,
+  signal: String,
+  targetId: Int,
+  method: String,
+  boundValue: Int,
+  flags: Int,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateConnectBound(objectId, signal, targetId, method, boundValue, flags)"
+  )
 
 private fun immediateWebObjectQuery(opcode: Int, objectId: Int, value: String): Int =
   js("globalThis.KanamaWebBridge.immediateObjectQuery(opcode, objectId, value)")

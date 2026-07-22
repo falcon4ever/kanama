@@ -44,6 +44,10 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
   fun signal(name: String): GodotSignal = GodotSignal(this, name)
 
   fun emitSignal(signal: String, vararg args: Any?) {
+    if (args.isEmpty()) {
+      SignalBackendContractProbe(backendHandle).emitNoArgs(signal)
+      return
+    }
     if (args.size == 1 && args[0] is Int) {
       Node2DBackendContractProbe(backendHandle).emitSignal(signal, args[0] as Int)
       return

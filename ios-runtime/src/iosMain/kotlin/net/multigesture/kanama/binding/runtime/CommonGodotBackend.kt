@@ -2,6 +2,7 @@ package net.multigesture.kanama.binding.runtime
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
@@ -230,6 +231,35 @@ internal object CommonGodotBackend : GodotBackendSpi {
     flags: Long,
   ): Long =
     IosGodot.objectConnect(receiver.backendToken(), signal, target.backendToken(), method, flags)
+
+  override fun invokeStringNameBoundCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    boundValue: Long,
+    flags: Long,
+  ): Long =
+    ObjectCalls.connectBound(
+      segment(receiver),
+      signal,
+      segment(target),
+      method,
+      listOf(boundValue),
+      flags,
+    )
+
+  override fun invokeStringNameRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Int {
+    GodotObject(receiver.backendToken()).emitSignal(value)
+    return 0
+  }
 
   override fun invokeStringNameRetBool(
     descriptor: GodotCallDescriptor,

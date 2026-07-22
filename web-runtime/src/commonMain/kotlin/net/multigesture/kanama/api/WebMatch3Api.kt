@@ -32,6 +32,44 @@ import net.multigesture.kanama.web.webScriptInstance
 internal fun unsupportedWebGameplayCall(signature: String): Nothing =
   error("Kanama Web gameplay call is not implemented: $signature (Task 57e backlog)")
 
+internal object WebSignalCallbackRegistry {
+  private data class Entry(
+    val ownerHandle: Int,
+    val oneShot: Boolean,
+    val callback: () -> Unit,
+  )
+
+  private var nextId = 1
+  private val entries = mutableMapOf<Int, Entry>()
+
+  val size: Int
+    get() = entries.size
+
+  fun register(ownerHandle: Int, oneShot: Boolean, callback: () -> Unit): Int {
+    check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
+    val id = nextId++
+    entries[id] = Entry(ownerHandle, oneShot, callback)
+    return id
+  }
+
+  fun unregister(id: Int) {
+    entries.remove(id)
+  }
+
+  fun releaseOwner(ownerHandle: Int) {
+    entries.entries.removeAll { it.value.ownerHandle == ownerHandle }
+  }
+
+  fun dispatch(ownerHandle: Int, id: Int) {
+    val entry = entries[id] ?: error("Stale Kanama Web signal callback id=$id")
+    check(entry.ownerHandle == ownerHandle) {
+      "Kanama Web signal callback id=$id belongs to handle=${entry.ownerHandle}, not $ownerHandle"
+    }
+    if (entry.oneShot) entries.remove(id)
+    entry.callback()
+  }
+}
+
 object Mathf {
   fun abs(value: Double): Double = kotlin.math.abs(value)
 
@@ -48,7 +86,28 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     argumentCount: Int = 0,
     flags: Long = 0L,
     callback: () -> Unit,
-  ): Long = unsupportedWebGameplayCall("Signal.connect_callable")
+  ): Long {
+    require(argumentCount == 0) {
+      "Kanama Web signal lambda callbacks currently support zero emitted arguments"
+    }
+    val callbackId =
+      WebSignalCallbackRegistry.register(
+        target.handle.value,
+        oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
+        callback,
+      )
+    val result =
+      SignalBackendContractProbe(owner.backendHandle)
+        .connectBound(
+          target.backendHandle,
+          name,
+          "_kanama_web_signal_dispatch0",
+          callbackId.toLong(),
+          flags,
+        )
+    if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
+    return result
+  }
 }
 
 inline fun <reified T : Any> GodotObject.kotlinScriptInstance(): T? =

@@ -244,6 +244,36 @@ internal object CommonGodotBackend : GodotBackendSpi {
       flags,
     )
 
+  override fun invokeStringNameBoundCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    boundValue: Long,
+    flags: Long,
+  ): Long =
+    ObjectCalls.ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
+      segment(callSite),
+      segment(receiver),
+      signal,
+      segment(target),
+      method,
+      listOf(boundValue),
+      flags,
+    )
+
+  override fun invokeStringNameRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Int {
+    RuntimeSignals.emitAny(segment(receiver), value, emptyList())
+    return 0
+  }
+
   override fun invokeStringNameRetBool(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

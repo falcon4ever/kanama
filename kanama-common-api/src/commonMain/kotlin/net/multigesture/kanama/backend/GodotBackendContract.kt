@@ -36,6 +36,8 @@ enum class GodotCallShape {
   NOARGS_RET_HANDLE,
   OBJECT_LONG_VECTOR2_ARGS,
   STRINGNAME_CALLABLE_LONG_RET_LONG,
+  STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG,
+  STRINGNAME_RET_INT,
   STRINGNAME_RET_BOOL,
   NOARGS_RET_BOOL,
   NOARGS_RET_LONG,
@@ -211,6 +213,24 @@ interface GodotBackendSpi {
     method: String,
     flags: Long,
   ): Long
+
+  fun invokeStringNameBoundCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    boundValue: Long,
+    flags: Long,
+  ): Long
+
+  fun invokeStringNameRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Int
 
   fun invokeStringNameRetBool(
     descriptor: GodotCallDescriptor,
@@ -502,6 +522,47 @@ object GodotBackendCalls {
       target,
       method,
       flags,
+    )
+  }
+
+  fun invokeStringNameBoundCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    boundValue: Long,
+    flags: Long,
+  ): Long {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.requireLive(target)
+    return selected.invokeStringNameBoundCallableLongRetLong(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      signal,
+      target,
+      method,
+      boundValue,
+      flags,
+    )
+  }
+
+  fun invokeStringNameRetInt(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: String,
+  ): Int {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_INT)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameRetInt(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
     )
   }
 
@@ -816,6 +877,30 @@ class SignalBackendContractProbe(private val handle: GodotHandle) {
       target,
       method,
       flags,
+    )
+
+  fun connectBound(
+    target: GodotHandle,
+    signal: String,
+    method: String,
+    boundValue: Long,
+    flags: Long = 0L,
+  ): Long =
+    GodotBackendCalls.invokeStringNameBoundCallableLongRetLong(
+      InitialGodotCallDescriptors.OBJECT_CONNECT_BOUND_LONG,
+      handle,
+      signal,
+      target,
+      method,
+      boundValue,
+      flags,
+    )
+
+  fun emitNoArgs(name: String): Int =
+    GodotBackendCalls.invokeStringNameRetInt(
+      InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_NOARGS,
+      handle,
+      name,
     )
 
   fun emitVector2i(name: String, value: GodotVector2i): Int =

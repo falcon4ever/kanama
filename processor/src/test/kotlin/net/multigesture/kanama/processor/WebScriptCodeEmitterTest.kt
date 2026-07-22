@@ -300,6 +300,11 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_connect(args: Array) -> int:"))
+    assertTrue(mainProxy.contains("callable = callable.bind(int(args[5]))"))
+    assertTrue(mainProxy.contains("func _kanama_signal_emit(args: Array) -> int:"))
+    assertTrue(mainProxy.contains("result = value.emit_signal(StringName(String(args[1])))"))
+    assertTrue(mainProxy.contains("func _kanama_web_signal_dispatch0(callback_id: int) -> void:"))
+    assertTrue(mainProxy.contains("dispatchSignal0(_kanama_handle, callback_id)"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
     assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, event_handle)"))
     assertTrue(

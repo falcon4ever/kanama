@@ -95,6 +95,12 @@ class GodotBackendContractTest {
       0,
       SignalBackendContractProbe(tile).emitVector2i("tile_pressed", GodotVector2i(3, 4)),
     )
+    assertEquals(
+      0L,
+      SignalBackendContractProbe(tile)
+        .connectBound(tile, "finished", "_kanama_web_signal_dispatch0", 71L, 4L),
+    )
+    assertEquals(0, SignalBackendContractProbe(tile).emitNoArgs("finished"))
     GDBackendContractProbe.randomize()
     assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
     assertEquals(0.75, GDBackendContractProbe.randf())
@@ -136,6 +142,8 @@ class GodotBackendContractTest {
         31 to 1,
         32 to 1,
         33 to 1,
+        34 to 1,
+        35 to 1,
       ),
       backend.resolveCounts,
     )
@@ -367,6 +375,36 @@ class GodotBackendContractTest {
       assertEquals("_on_tile_pressed", method)
       assertEquals(0L, flags)
       return 0L
+    }
+
+    override fun invokeStringNameBoundCallableLongRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      signal: String,
+      target: GodotHandle,
+      method: String,
+      boundValue: Long,
+      flags: Long,
+    ): Long {
+      assertEquals(53L, receiver.backendToken())
+      assertEquals("finished", signal)
+      assertEquals(53L, target.backendToken())
+      assertEquals("_kanama_web_signal_dispatch0", method)
+      assertEquals(71L, boundValue)
+      assertEquals(4L, flags)
+      return 0L
+    }
+
+    override fun invokeStringNameRetInt(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: String,
+    ): Int {
+      assertEquals(53L, receiver.backendToken())
+      assertEquals("finished", value)
+      return 0
     }
 
     override fun invokeStringNameRetBool(
