@@ -33,12 +33,22 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 3] = 0
   }
 
-  fun appendPositionMutation(objectHandle: Int, x: Float, y: Float) {
+  fun appendVector2Mutation(opcode: Int, objectHandle: Int, x: Float, y: Float) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
-    words[offset] = OPCODE_POSITION_MUTATION
+    words[offset] = opcode
     words[offset + 1] = objectHandle
     words[offset + 2] = x.toBits()
     words[offset + 3] = y.toBits()
+  }
+
+  fun appendColorMutation(opcode: Int, objectHandle: Int, r: Float, g: Float, b: Float, a: Float) {
+    val offset = reserve(WORDS_COLOR)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = r.toBits()
+    words[offset + 3] = g.toBits()
+    words[offset + 4] = b.toBits()
+    words[offset + 5] = a.toBits()
   }
 
   fun appendNoArgsMutation(opcode: Int, objectHandle: Int) {
@@ -119,11 +129,11 @@ internal class WebCommandBuffer(capacity: Int) {
 
   companion object {
     const val OPCODE_SCALAR_MUTATION = 100
-    const val OPCODE_POSITION_MUTATION = 3
     const val WORDS_NOARGS = 2
     const val WORDS_OBJECT_ARG = 3
     const val WORDS_SCALAR_OR_VECTOR = 4
     const val WORDS_OBJECT_BOOL_LONG_ARGS = 5
+    const val WORDS_COLOR = 6
     const val WORDS_DRAW_TEXTURE = 9
     const val MAX_WORDS_PER_COMMAND = WORDS_DRAW_TEXTURE
     // The benchmark contributes 10,000 data mutations plus one phase-control mutation (redraw).

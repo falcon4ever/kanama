@@ -40,6 +40,8 @@ enum class GodotCallShape {
   NOARGS_RET_BOOL,
   NOARGS_RET_LONG,
   STRINGNAME_VECTOR2I_RET_INT,
+  NOARGS_RET_COLOR,
+  COLOR_ARG,
 }
 
 @InternalKanamaBackendApi
@@ -236,6 +238,19 @@ interface GodotBackendSpi {
     name: String,
     value: GodotVector2i,
   ): Int
+
+  fun invokeNoArgsRetColor(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotColor
+
+  fun invokeColorArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotColor,
+  )
 }
 
 /**
@@ -538,6 +553,20 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeNoArgsRetColor(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotColor {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_COLOR)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetColor(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeColorArg(descriptor: GodotCallDescriptor, receiver: GodotHandle, value: GodotColor) {
+    requireShape(descriptor, GodotCallShape.COLOR_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeColorArg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -582,6 +611,17 @@ class Node2DBackendContractProbe(val handle: GodotHandle) {
     set(value) {
       GodotBackendCalls.invokeVector2Arg(
         InitialGodotCallDescriptors.NODE2D_SET_POSITION,
+        handle,
+        value,
+      )
+    }
+
+  var scale: GodotVector2
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector2(InitialGodotCallDescriptors.NODE2D_GET_SCALE, handle)
+    set(value) {
+      GodotBackendCalls.invokeVector2Arg(
+        InitialGodotCallDescriptors.NODE2D_SET_SCALE,
         handle,
         value,
       )
@@ -679,6 +719,12 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
 /** Typed Sprite2D mutation slice used by the sprite Bunnymark port. */
 @InternalKanamaBackendApi
 class Sprite2DBackendContractProbe(private val handle: GodotHandle) {
+  fun getTexture(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.SPRITE2D_GET_TEXTURE,
+      handle,
+    )
+
   fun setTexture(texture: GodotHandle?) {
     GodotBackendCalls.invokeObjectArg(
       InitialGodotCallDescriptors.SPRITE2D_SET_TEXTURE,
@@ -686,6 +732,24 @@ class Sprite2DBackendContractProbe(private val handle: GodotHandle) {
       texture,
     )
   }
+}
+
+/** Typed CanvasItem color property slice used by Match3 tile feedback. */
+@InternalKanamaBackendApi
+class CanvasItemBackendContractProbe(private val handle: GodotHandle) {
+  var modulate: GodotColor
+    get() =
+      GodotBackendCalls.invokeNoArgsRetColor(
+        InitialGodotCallDescriptors.CANVASITEM_GET_MODULATE,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeColorArg(
+        InitialGodotCallDescriptors.CANVASITEM_SET_MODULATE,
+        handle,
+        value,
+      )
+    }
 }
 
 /** Typed board-construction slice shared by Match3 across every backend. */

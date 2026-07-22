@@ -14,8 +14,9 @@
   function commandWordCount(opcode) {
     if (opcode === 5 || opcode === 15) return 2;
     if (opcode === 14 || opcode === 16) return 3;
-    if (opcode === 3 || opcode === 100) return 4;
+    if (opcode === 3 || opcode === 30 || opcode === 100) return 4;
     if (opcode === 13) return 5;
+    if (opcode === 32) return 6;
     if (opcode === 6) return 9;
     throw new Error(`Unknown Kanama Web command opcode=${opcode}`);
   }
@@ -141,6 +142,10 @@
     match3Vector2iCalls: 0,
     match3Vector2iSignalEmits: 0,
     match3ScriptNodeLookups: 0,
+    match3ReusedNodeLookups: 0,
+    match3FirstTileHandle: 0,
+    match3ScaleMutations: 0,
+    match3ModulateMutations: 0,
     match3DeferredMethods: {},
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
@@ -572,6 +577,22 @@
       this.latestSnapshotY = y;
       return this.api.kanamaWebLoadPositionSnapshot(handle, x, y);
     },
+    refreshNode2DSnapshot(handle, positionX, positionY, scaleX, scaleY, r, g, b, a) {
+      this.snapshotBatchLoads += 1;
+      this.latestSnapshotX = positionX;
+      this.latestSnapshotY = positionY;
+      return this.api.kanamaWebLoadNode2DSnapshot(
+        handle,
+        positionX,
+        positionY,
+        scaleX,
+        scaleY,
+        r,
+        g,
+        b,
+        a,
+      );
+    },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
     },
@@ -684,12 +705,16 @@
       callback(handle, resultHandle, path);
       const result = this.immediateObjectHandleResult;
       if (result !== 0 && result !== resultHandle) {
-        if (this.api.kanamaWebIsLive(result) !== 1) {
-          throw new Error("Godot node lookup callback returned neither its proposed nor a live script handle");
+        const scriptHandle = this.api.kanamaWebIsLive(result) === 1;
+        if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
+          throw new Error("Godot node lookup callback returned neither its proposed nor a live object handle");
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
-        if (this.mode === "match3") this.match3ScriptNodeLookups += 1;
+        if (this.mode === "match3") {
+          if (scriptHandle) this.match3ScriptNodeLookups += 1;
+          else this.match3ReusedNodeLookups += 1;
+        }
       }
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
@@ -911,6 +936,8 @@
         if (commandIndex < applied && opcode === 13) this.match3AddChildCommands += 1;
         if (commandIndex < applied && opcode === 16) this.match3TextureAssignments += 1;
         if (commandIndex < applied && opcode === 3) this.match3PositionMutations += 1;
+        if (commandIndex < applied && opcode === 30) this.match3ScaleMutations += 1;
+        if (commandIndex < applied && opcode === 32) this.match3ModulateMutations += 1;
         if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
         if (commandIndex < applied && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
@@ -935,6 +962,9 @@
       this.readyCount += 1;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
       if (this.mode === "match3") {
+        if (scriptName.endsWith(".Tile") && this.match3FirstTileHandle === 0) {
+          this.match3FirstTileHandle = handle;
+        }
         if (scriptName.endsWith(".Main")) this.finishMatch3Group1(handle, scriptId, scriptName);
         return;
       }

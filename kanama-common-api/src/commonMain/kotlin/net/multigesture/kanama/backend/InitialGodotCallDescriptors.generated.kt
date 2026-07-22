@@ -311,4 +311,59 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE2D_GET_SCALE =
+    GodotCallDescriptor(
+      opcode = 29,
+      className = "Node2D",
+      methodName = "get_scale",
+      hash = 3341600327L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR2,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE2D_SET_SCALE =
+    GodotCallDescriptor(
+      opcode = 30,
+      className = "Node2D",
+      methodName = "set_scale",
+      hash = 743155724L,
+      shape = GodotCallShape.VECTOR2_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASITEM_GET_MODULATE =
+    GodotCallDescriptor(
+      opcode = 31,
+      className = "CanvasItem",
+      methodName = "get_modulate",
+      hash = 3444240500L,
+      shape = GodotCallShape.NOARGS_RET_COLOR,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASITEM_SET_MODULATE =
+    GodotCallDescriptor(
+      opcode = 32,
+      className = "CanvasItem",
+      methodName = "set_modulate",
+      hash = 2920490490L,
+      shape = GodotCallShape.COLOR_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SPRITE2D_GET_TEXTURE =
+    GodotCallDescriptor(
+      opcode = 33,
+      className = "Sprite2D",
+      methodName = "get_texture",
+      hash = 3635182373L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

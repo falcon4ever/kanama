@@ -696,7 +696,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     if (node2dAttachment) {
       appendLine("\tvar target: Node2D = self")
       appendLine(
-        "\t_kanama_bridge.refreshPositionSnapshot(_kanama_handle, target.position.x, target.position.y)"
+        "\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, target.position.x, target.position.y, target.scale.x, target.scale.y, target.modulate.r, target.modulate.g, target.modulate.b, target.modulate.a)"
       )
     }
     model.properties.forEachIndexed { index, property ->
@@ -864,6 +864,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tlast_value = int(position_x)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 30 and target_object is Node2D:")
+    appendLine("\t\t\tvar target := target_object as Node2D")
+    appendLine(
+      "\t\t\ttarget.scale = Vector2(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 32 and target_object is CanvasItem:")
+    appendLine("\t\t\tvar target := target_object as CanvasItem")
+    appendLine(
+      "\t\t\ttarget.modulate = Color(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16), bytes.decode_float(offset + 20))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 24")
     if (node2dAttachment) {
       appendLine("\t\telif opcode == 5 and object_handle == _kanama_handle:")
       appendLine("\t\t\tvar canvas_target: CanvasItem = self")
@@ -995,11 +1009,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif script_handle != 0:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(script_handle)")
     appendLine("\t\treturn script_handle")
+    appendLine("\tfor existing_handle in _kanama_object_handles:")
+    appendLine("\t\tif is_same(_kanama_object_handles[existing_handle], value):")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateObjectHandle(int(existing_handle))")
+    appendLine("\t\t\treturn int(existing_handle)")
     appendLine("\t_kanama_object_handles[result_handle] = value")
     appendLine("\tif value is Node2D:")
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
-      "\t\t_kanama_bridge.refreshPositionSnapshot(result_handle, node_2d.position.x, node_2d.position.y)"
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
@@ -1023,7 +1041,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value is Node2D:")
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
-      "\t\t_kanama_bridge.refreshPositionSnapshot(result_handle, node_2d.position.x, node_2d.position.y)"
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")

@@ -369,6 +369,71 @@
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
       "introducedBy": "57e-group2"
+    },
+    {
+      "opcode": 29,
+      "scope": "class",
+      "className": "Node2D",
+      "methodName": "get_scale",
+      "hash": 3341600327,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group3"
+    },
+    {
+      "opcode": 30,
+      "scope": "class",
+      "className": "Node2D",
+      "methodName": "set_scale",
+      "hash": 743155724,
+      "arguments": ["Vector2"],
+      "returnType": "void",
+      "shape": "VECTOR2_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group3"
+    },
+    {
+      "opcode": 31,
+      "scope": "class",
+      "className": "CanvasItem",
+      "methodName": "get_modulate",
+      "hash": 3444240500,
+      "arguments": [],
+      "returnType": "Color",
+      "shape": "NOARGS_RET_COLOR",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group3"
+    },
+    {
+      "opcode": 32,
+      "scope": "class",
+      "className": "CanvasItem",
+      "methodName": "set_modulate",
+      "hash": 2920490490,
+      "arguments": ["Color"],
+      "returnType": "void",
+      "shape": "COLOR_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group3"
+    },
+    {
+      "opcode": 33,
+      "scope": "class",
+      "className": "Sprite2D",
+      "methodName": "get_texture",
+      "hash": 3635182373,
+      "arguments": [],
+      "returnType": "Texture2D",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group3"
     }
   ]
 }

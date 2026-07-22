@@ -40,6 +40,13 @@ class GodotBackendContractTest {
     assertEquals(GodotVector2(1.0f, 2.0f), probe.position)
     probe.position = GodotVector2(3.0f, 4.0f)
     assertEquals(GodotVector2(3.0f, 4.0f), probe.position)
+    assertEquals(GodotVector2(1.0f, 1.0f), probe.scale)
+    probe.scale = GodotVector2(1.25f, 0.75f)
+    assertEquals(GodotVector2(1.25f, 0.75f), probe.scale)
+    val canvas = CanvasItemBackendContractProbe(probe.handle)
+    assertEquals(GodotColor(1.0f, 1.0f, 1.0f, 1.0f), canvas.modulate)
+    canvas.modulate = GodotColor(0.8f, 0.7f, 0.6f, 0.5f)
+    assertEquals(GodotColor(0.8f, 0.7f, 0.6f, 0.5f), canvas.modulate)
     assertEquals(
       GodotRect2(GodotVector2(0.0f, 0.0f), GodotVector2(640.0f, 480.0f)),
       probe.viewportRect,
@@ -57,6 +64,7 @@ class GodotBackendContractTest {
     val node = NodeBackendContractProbe(probe.handle)
     node.addChild(checkNotNull(sprite))
     Sprite2DBackendContractProbe(sprite).setTexture(texture)
+    assertEquals(31L, Sprite2DBackendContractProbe(sprite).getTexture()?.backendToken())
     node.removeChild(sprite)
     NodeBackendContractProbe(sprite).queueFree()
     val board = NodeLookupBackendContractProbe(probe.handle).getNodeOrNull("Board")
@@ -123,6 +131,11 @@ class GodotBackendContractTest {
         26 to 1,
         27 to 1,
         28 to 1,
+        29 to 1,
+        30 to 1,
+        31 to 1,
+        32 to 1,
+        33 to 1,
       ),
       backend.resolveCounts,
     )
@@ -154,6 +167,8 @@ class GodotBackendContractTest {
   private class RecordingBackend : GodotBackendSpi {
     val resolveCounts = mutableMapOf<Int, Int>()
     private var position = GodotVector2(1.0f, 2.0f)
+    private var scale = GodotVector2(1.0f, 1.0f)
+    private var modulate = GodotColor(1.0f, 1.0f, 1.0f, 1.0f)
     var queuedRedraws = 0
     var drawCall: DrawCall? = null
     var randomizeCalls = 0
@@ -185,7 +200,12 @@ class GodotBackendContractTest {
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
-    ): GodotVector2 = if (descriptor.opcode == 27) GodotVector2(320.0f, 240.0f) else position
+    ): GodotVector2 =
+      when (descriptor.opcode) {
+        27 -> GodotVector2(320.0f, 240.0f)
+        29 -> scale
+        else -> position
+      }
 
     override fun invokeVector2Arg(
       descriptor: GodotCallDescriptor,
@@ -193,7 +213,10 @@ class GodotBackendContractTest {
       receiver: GodotHandle,
       value: GodotVector2,
     ) {
-      position = value
+      when (descriptor.opcode) {
+        30 -> scale = value
+        else -> position = value
+      }
     }
 
     override fun invokeNoArgsRetRect2(
@@ -315,7 +338,7 @@ class GodotBackendContractTest {
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
-    ): GodotHandle? = GodotHandle.fromBackendToken(52L)
+    ): GodotHandle? = GodotHandle.fromBackendToken(if (descriptor.opcode == 33) 31L else 52L)
 
     override fun invokeObjectLongVector2Args(
       descriptor: GodotCallDescriptor,
@@ -374,6 +397,21 @@ class GodotBackendContractTest {
     ): Int {
       emittedVectorSignal = name to value
       return 0
+    }
+
+    override fun invokeNoArgsRetColor(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): GodotColor = modulate
+
+    override fun invokeColorArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotColor,
+    ) {
+      modulate = value
     }
   }
 }

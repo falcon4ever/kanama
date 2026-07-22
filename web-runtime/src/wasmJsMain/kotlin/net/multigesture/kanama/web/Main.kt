@@ -6,10 +6,14 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
 import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
+import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
+import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
+import net.multigesture.kanama.backend.NodeLookupBackendContractProbe
+import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
 import net.multigesture.kanama.web.generated.KanamaWebProjectRegistry
 
 internal val instances = WebInstanceRegistry(KanamaWebProjectRegistry::create)
@@ -279,6 +283,32 @@ fun kanamaWebLoadPositionSnapshot(objectId: Int, x: Double, y: Double): Int {
 }
 
 @JsExport
+fun kanamaWebLoadNode2DSnapshot(
+  objectId: Int,
+  positionX: Double,
+  positionY: Double,
+  scaleX: Double,
+  scaleY: Double,
+  modulateR: Double,
+  modulateG: Double,
+  modulateB: Double,
+  modulateA: Double,
+): Int {
+  loadWebNode2DSnapshot(
+    objectId,
+    positionX,
+    positionY,
+    scaleX,
+    scaleY,
+    modulateR,
+    modulateG,
+    modulateB,
+    modulateA,
+  )
+  return 1
+}
+
+@JsExport
 fun kanamaWebLoadViewportRectSnapshot(
   objectId: Int,
   x: Double,
@@ -288,6 +318,52 @@ fun kanamaWebLoadViewportRectSnapshot(
 ): Int {
   loadWebViewportRectSnapshot(objectId, x, y, width, height)
   return 1
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {
+  val tileHandle = GodotHandle.fromBackendToken(tileObjectId.toLong())
+  val tile = Node2DBackendContractProbe(tileHandle)
+  val spriteHandle =
+    checkNotNull(NodeLookupBackendContractProbe(tileHandle).getNodeOrNull("Sprite2D"))
+  val sprite = Node2DBackendContractProbe(spriteHandle)
+  val canvas = CanvasItemBackendContractProbe(spriteHandle)
+  val texture = Sprite2DBackendContractProbe(spriteHandle)
+  val originalPosition = tile.position
+  val originalScale = sprite.scale
+  val originalModulate = canvas.modulate
+  val originalTexture = texture.getTexture()
+  val testPosition = GodotVector2(originalPosition.x + 7.0f, originalPosition.y - 5.0f)
+  val testScale = GodotVector2(1.25f, 0.75f)
+  val testModulate = GodotColor(0.8f, 0.7f, 0.6f, 0.5f)
+  tile.position = testPosition
+  sprite.scale = testScale
+  canvas.modulate = testModulate
+
+  var result = 0
+  if (tile.position == testPosition) result = result or 1
+  if (sprite.scale == testScale) result = result or 2
+  if (canvas.modulate == testModulate) result = result or 4
+  if (
+    originalTexture != null &&
+      texture.getTexture()?.backendToken() == originalTexture.backendToken()
+  ) {
+    result = result or 8
+  }
+
+  tile.position = originalPosition
+  sprite.scale = originalScale
+  canvas.modulate = originalModulate
+  if (
+    tile.position == originalPosition &&
+      sprite.scale == originalScale &&
+      canvas.modulate == originalModulate
+  ) {
+    result = result or 16
+  }
+  commands.flush()
+  return result
 }
 
 @OptIn(InternalKanamaBackendApi::class)

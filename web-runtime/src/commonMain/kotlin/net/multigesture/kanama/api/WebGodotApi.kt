@@ -5,6 +5,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GDBackendContractProbe
 import net.multigesture.kanama.backend.ClassDBBackendContractProbe
 import net.multigesture.kanama.backend.CanvasItemInputBackendContractProbe
+import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.GodotVector2
@@ -98,9 +99,13 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {
   var modulate: Color
-    get() = unsupportedWebGameplayCall("CanvasItem.get_modulate")
+    get() =
+      CanvasItemBackendContractProbe(backendHandle).modulate.let { value ->
+        Color(value.r, value.g, value.b, value.a)
+      }
     set(value) {
-      unsupportedWebGameplayCall("CanvasItem.set_modulate")
+      CanvasItemBackendContractProbe(backendHandle).modulate =
+        GodotColor(value.r, value.g, value.b, value.a)
     }
 
   fun getViewportRect(): Rect2 =
@@ -137,9 +142,13 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
     }
 
   var scale: Vector2
-    get() = unsupportedWebGameplayCall("Node2D.get_scale")
+    get() =
+      Node2DBackendContractProbe(backendHandle).scale.let { value ->
+        Vector2(value.x.toDouble(), value.y.toDouble())
+      }
     set(value) {
-      unsupportedWebGameplayCall("Node2D.set_scale")
+      Node2DBackendContractProbe(backendHandle).scale =
+        GodotVector2(value.x.toFloat(), value.y.toFloat())
     }
 
   fun getLocalMousePosition(): Vector2 =
@@ -150,7 +159,7 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
 
 class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
   var texture: Texture2D?
-    get() = unsupportedWebGameplayCall("Sprite2D.get_texture")
+    get() = Sprite2DBackendContractProbe(backendHandle).getTexture()?.let(::Texture2D)
     set(value) {
       setTexture(value)
     }

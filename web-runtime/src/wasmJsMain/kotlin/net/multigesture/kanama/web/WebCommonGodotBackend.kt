@@ -16,6 +16,9 @@ import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 private val positionSnapshots = mutableMapOf<Int, GodotVector2>()
+private val scaleSnapshots = mutableMapOf<Int, GodotVector2>()
+private val modulateSnapshots = mutableMapOf<Int, GodotColor>()
+private val textureSnapshots = mutableMapOf<Int, Int>()
 private val viewportRectSnapshots = mutableMapOf<Int, GodotRect2>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
@@ -57,8 +60,15 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return when (descriptor.executionMode) {
       GodotExecutionMode.SNAPSHOT_READ ->
-        positionSnapshots[receiver.webId()]
-          ?: error("Missing Web frame snapshot for object handle=${receiver.webId()}")
+        when (descriptor.opcode) {
+          2 -> positionSnapshots[receiver.webId()]
+          29 -> scaleSnapshots[receiver.webId()]
+          else -> null
+        }
+          ?: error(
+            "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+              "object handle=${receiver.webId()}"
+          )
       GodotExecutionMode.IMMEDIATE_RESULT -> {
         commands.flush()
         GodotVector2(
@@ -80,8 +90,12 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     val objectId = receiver.webId()
-    commands.appendPositionMutation(objectId, value.x, value.y)
-    positionSnapshots[objectId] = value // read-your-write overlay for the current phase
+    commands.appendVector2Mutation(descriptor.opcode, objectId, value.x, value.y)
+    when (descriptor.opcode) {
+      3 -> positionSnapshots[objectId] = value
+      30 -> scaleSnapshots[objectId] = value
+      else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeNoArgsRetRect2(
@@ -207,6 +221,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       ?.let {
         registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
         positionSnapshots[it] = GodotVector2(0.0f, 0.0f)
+        scaleSnapshots[it] = GodotVector2(1.0f, 1.0f)
+        modulateSnapshots[it] = GodotColor(1.0f, 1.0f, 1.0f, 1.0f)
+        if (value == "Sprite2D") textureSnapshots[it] = 0
         GodotHandle.fromBackendToken(it.toLong())
       }
   }
@@ -241,7 +258,10 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     when (descriptor.opcode) {
       14 -> requireWebNodeHandle(checkNotNull(value).webId())
-      16 -> value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+      16 -> {
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+        textureSnapshots[receiver.webId()] = value?.webId() ?: 0
+      }
       else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
     }
     commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
@@ -278,9 +298,22 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ): GodotHandle? {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    commands.flush()
-    return registerReturnedNode(immediateWebNoArgsObject(descriptor.opcode, receiver.webId()))
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        registerReturnedNode(immediateWebNoArgsObject(descriptor.opcode, receiver.webId()))
+      }
+      GodotExecutionMode.SNAPSHOT_READ -> {
+        require(descriptor.opcode == 33)
+        val objectId = receiver.webId()
+        val textureId =
+          textureSnapshots[objectId]
+            ?: error("Missing Web Sprite2D.get_texture snapshot for object handle=$objectId")
+        textureId.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Handle return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeObjectLongVector2Args(
@@ -368,6 +401,36 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebEmitSignalVector2i(receiver.webId(), name, value.x, value.y)
   }
 
+  override fun invokeNoArgsRetColor(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotColor {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    return modulateSnapshots[receiver.webId()]
+      ?: error("Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}")
+  }
+
+  override fun invokeColorArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotColor,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    commands.appendColorMutation(
+      descriptor.opcode,
+      receiver.webId(),
+      value.r,
+      value.g,
+      value.b,
+      value.a,
+    )
+    modulateSnapshots[receiver.webId()] = value
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"
@@ -384,6 +447,23 @@ internal fun loadWebPositionSnapshot(objectId: Int, x: Double, y: Double) {
     "Cannot snapshot unknown Kanama Web node handle=$objectId"
   }
   positionSnapshots[objectId] = GodotVector2(x.toFloat(), y.toFloat())
+}
+
+internal fun loadWebNode2DSnapshot(
+  objectId: Int,
+  positionX: Double,
+  positionY: Double,
+  scaleX: Double,
+  scaleY: Double,
+  modulateR: Double,
+  modulateG: Double,
+  modulateB: Double,
+  modulateA: Double,
+) {
+  loadWebPositionSnapshot(objectId, positionX, positionY)
+  scaleSnapshots[objectId] = GodotVector2(scaleX.toFloat(), scaleY.toFloat())
+  modulateSnapshots[objectId] =
+    GodotColor(modulateR.toFloat(), modulateG.toFloat(), modulateB.toFloat(), modulateA.toFloat())
 }
 
 internal fun loadWebViewportRectSnapshot(
@@ -405,6 +485,9 @@ internal fun loadWebViewportRectSnapshot(
 
 internal fun clearWebPositionSnapshot(objectId: Int) {
   positionSnapshots.remove(objectId)
+  scaleSnapshots.remove(objectId)
+  modulateSnapshots.remove(objectId)
+  textureSnapshots.remove(objectId)
   viewportRectSnapshots.remove(objectId)
 }
 
@@ -488,13 +571,12 @@ internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHan
 }
 
 internal fun clearWebBrowserHandles() {
-  browserHandles.keys.forEach(positionSnapshots::remove)
+  browserHandles.keys.forEach(::clearWebPositionSnapshot)
   browserHandles.clear()
 }
 
 internal fun discardWebBrowserHandle(handle: Int): Boolean {
-  positionSnapshots.remove(handle)
-  viewportRectSnapshots.remove(handle)
+  clearWebPositionSnapshot(handle)
   return browserHandles.remove(handle) != null
 }
 

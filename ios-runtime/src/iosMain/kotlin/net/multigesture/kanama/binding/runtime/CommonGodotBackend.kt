@@ -264,6 +264,28 @@ internal object CommonGodotBackend : GodotBackendSpi {
       value.y.toLong(),
     )
 
+  override fun invokeNoArgsRetColor(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotColor =
+    ObjectCalls.ptrcallNoArgsRetColor(segment(callSite), segment(receiver)).let {
+      GodotColor(it.r, it.g, it.b, it.a)
+    }
+
+  override fun invokeColorArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotColor,
+  ) {
+    ObjectCalls.ptrcallWithColorArg(
+      segment(callSite),
+      segment(receiver),
+      Color(value.r, value.g, value.b, value.a),
+    )
+  }
+
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())
 
