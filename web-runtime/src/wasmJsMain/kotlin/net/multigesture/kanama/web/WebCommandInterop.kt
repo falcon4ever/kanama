@@ -41,6 +41,14 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 3] = y.toBits()
   }
 
+  fun appendBoolMutation(opcode: Int, objectHandle: Int, value: Boolean) {
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = if (value) 1 else 0
+    words[offset + 3] = 0
+  }
+
   fun appendColorMutation(opcode: Int, objectHandle: Int, r: Float, g: Float, b: Float, a: Float) {
     val offset = reserve(WORDS_COLOR)
     words[offset] = opcode

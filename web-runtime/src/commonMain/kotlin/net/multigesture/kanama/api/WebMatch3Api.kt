@@ -21,6 +21,7 @@ import net.multigesture.kanama.backend.SignalBackendContractProbe
 import net.multigesture.kanama.backend.ViewportBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotColor
+import net.multigesture.kanama.backend.GPUParticles2DBackendContractProbe
 import net.multigesture.kanama.backend.PropertyTweenerBackendContractProbe
 import net.multigesture.kanama.backend.TweenBackendContractProbe
 import net.multigesture.kanama.types.Color
@@ -145,13 +146,13 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
 
 class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
   var emitting: Boolean
-    get() = unsupportedWebGameplayCall("GPUParticles2D.is_emitting")
+    get() = GPUParticles2DBackendContractProbe(backendHandle).emitting
     set(value) {
-      unsupportedWebGameplayCall("GPUParticles2D.set_emitting")
+      GPUParticles2DBackendContractProbe(backendHandle).emitting = value
     }
 
   val lifetime: Double
-    get() = unsupportedWebGameplayCall("GPUParticles2D.get_lifetime")
+    get() = GPUParticles2DBackendContractProbe(backendHandle).lifetime
 }
 
 class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {

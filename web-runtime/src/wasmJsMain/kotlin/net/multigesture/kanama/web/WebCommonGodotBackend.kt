@@ -20,6 +20,8 @@ private val scaleSnapshots = mutableMapOf<Int, GodotVector2>()
 private val modulateSnapshots = mutableMapOf<Int, GodotColor>()
 private val textureSnapshots = mutableMapOf<Int, Int>()
 private val viewportRectSnapshots = mutableMapOf<Int, GodotRect2>()
+private val particlesEmittingSnapshots = mutableMapOf<Int, Boolean>()
+private val particlesLifetimeSnapshots = mutableMapOf<Int, Double>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
 internal enum class WebBrowserHandleKind {
@@ -65,6 +67,20 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       receiver,
       immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),
     )
+  }
+
+  override fun invokeBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 43)
+    val objectId = receiver.webId()
+    commands.appendBoolMutation(descriptor.opcode, objectId, value)
+    particlesEmittingSnapshots[objectId] = value
   }
 
   override fun invokeNoArgsRetVector2(
@@ -135,7 +151,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       GodotExecutionMode.QUEUED_MUTATION -> {
         commands.appendNoArgsMutation(descriptor.opcode, objectId)
         if (descriptor.opcode == 15) {
-          positionSnapshots.remove(objectId)
+          clearWebPositionSnapshot(objectId)
           if (!instances.isLive(objectId)) {
             unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
           }
@@ -452,9 +468,35 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ): Boolean {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    commands.flush()
-    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") != 0
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ -> {
+        require(descriptor.opcode == 44)
+        particlesEmittingSnapshots[receiver.webId()]
+          ?: error(
+            "Missing Web GPUParticles2D.is_emitting snapshot for object handle=${receiver.webId()}"
+          )
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") != 0
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Boolean return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
+  }
+
+  override fun invokeNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 45)
+    return particlesLifetimeSnapshots[receiver.webId()]
+      ?: error(
+        "Missing Web GPUParticles2D.get_lifetime snapshot for object handle=${receiver.webId()}"
+      )
   }
 
   override fun invokeNoArgsRetLong(
@@ -617,12 +659,27 @@ internal fun loadWebViewportRectSnapshot(
     )
 }
 
+internal fun loadWebParticlesSnapshot(objectId: Int, emitting: Boolean, lifetime: Double) {
+  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+    "Cannot snapshot unknown Kanama Web GPUParticles2D handle=$objectId"
+  }
+  require(lifetime.isFinite() && lifetime >= 0.0) {
+    "Kanama Web GPUParticles2D lifetime must be finite and non-negative"
+  }
+  particlesEmittingSnapshots[objectId] = emitting
+  particlesLifetimeSnapshots[objectId] = lifetime
+}
+
+internal fun webParticlesSnapshotCount(): Int = particlesLifetimeSnapshots.size
+
 internal fun clearWebPositionSnapshot(objectId: Int) {
   positionSnapshots.remove(objectId)
   scaleSnapshots.remove(objectId)
   modulateSnapshots.remove(objectId)
   textureSnapshots.remove(objectId)
   viewportRectSnapshots.remove(objectId)
+  particlesEmittingSnapshots.remove(objectId)
+  particlesLifetimeSnapshots.remove(objectId)
 }
 
 private fun GodotHandle.webId(): Int = backendToken().toInt()

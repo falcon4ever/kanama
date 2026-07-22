@@ -18,6 +18,7 @@ import net.multigesture.kanama.api.WebFrameScheduler
 import net.multigesture.kanama.api.WebSignalCallbackRegistry
 import net.multigesture.kanama.api.webFrameSchedulerStateProbe
 import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
+import net.multigesture.kanama.backend.GPUParticles2DBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotVector2
@@ -423,6 +424,45 @@ fun kanamaWebLoadViewportRectSnapshot(
   loadWebViewportRectSnapshot(objectId, x, y, width, height)
   return 1
 }
+
+@JsExport
+fun kanamaWebLoadParticlesSnapshot(objectId: Int, emitting: Boolean, lifetime: Double): Int {
+  loadWebParticlesSnapshot(objectId, emitting, lifetime)
+  return 1
+}
+
+@JsExport fun kanamaWebParticlesSnapshotCount(): Int = webParticlesSnapshotCount()
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebMatch3Group7ParticleProbe(particleObjectId: Int): Int {
+  val particle =
+    GPUParticles2DBackendContractProbe(GodotHandle.fromBackendToken(particleObjectId.toLong()))
+  var result = 0
+  if (particle.emitting) result = result or 1
+  particle.emitting = false
+  if (!particle.emitting) result = result or 2
+  particle.emitting = true
+  if (particle.emitting) result = result or 4
+  if (commands.flush() == 2) result = result or 8
+  if (kotlin.math.abs(particle.lifetime - 1.0) <= 0.000_001) result = result or 16
+  return result
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebMatch3Group7ParticleStaleProbe(particleObjectId: Int): Int =
+  if (
+    runCatching {
+        GPUParticles2DBackendContractProbe(GodotHandle.fromBackendToken(particleObjectId.toLong()))
+          .emitting
+      }
+      .isFailure
+  ) {
+    1
+  } else {
+    0
+  }
 
 @OptIn(InternalKanamaBackendApi::class)
 @JsExport

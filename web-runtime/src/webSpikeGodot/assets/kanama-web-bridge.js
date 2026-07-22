@@ -9,12 +9,12 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 3;
+  const KANAMA_WEB_PROTOCOL_VERSION = 4;
 
   function commandWordCount(opcode) {
     if (opcode === 5 || opcode === 15) return 2;
     if (opcode === 14 || opcode === 16) return 3;
-    if (opcode === 3 || opcode === 30 || opcode === 100) return 4;
+    if (opcode === 3 || opcode === 30 || opcode === 43 || opcode === 100) return 4;
     if (opcode === 13) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -157,6 +157,13 @@
     match3TweensCreated: 0,
     match3TweenProperties: 0,
     match3TweensReleased: 0,
+    match3ParticleInitialSnapshots: 0,
+    match3ParticleInitialNonEmitting: 0,
+    match3ParticleInitialLifetimeOne: 0,
+    match3ParticleEmittingCommands: 0,
+    match3ParticleFrees: 0,
+    match3FirstParticleHandle: 0,
+    particleSnapshots: new Map(),
     match3DeferredMethods: {},
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
@@ -378,10 +385,7 @@
       this.match3Properties.set(handle, properties);
     },
     shouldDeferReady(scriptName) {
-      return (
-        this.mode === "match3" &&
-        (scriptName.endsWith(".Audio") || scriptName.endsWith(".Particles"))
-      );
+      return this.mode === "match3" && scriptName.endsWith(".Audio");
     },
     recordDeferredReady(scriptName) {
       this.match3DeferredReadyByClass[scriptName] =
@@ -621,6 +625,18 @@
     },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
+    },
+    refreshParticlesSnapshot(handle, emitting, lifetime) {
+      if (!this.particleSnapshots.has(handle)) {
+        this.match3ParticleInitialSnapshots += 1;
+        if (emitting === false) this.match3ParticleInitialNonEmitting += 1;
+        if (Math.abs(lifetime - 1.0) <= 0.000001) {
+          this.match3ParticleInitialLifetimeOne += 1;
+        }
+        if (this.match3FirstParticleHandle === 0) this.match3FirstParticleHandle = handle;
+      }
+      this.particleSnapshots.set(handle, { emitting, lifetime });
+      return this.api.kanamaWebLoadParticlesSnapshot(handle, emitting, lifetime);
     },
     immediateChildCount(handle, includeInternal) {
       const callback = this.callbackFor(this.immediateCallbacks, handle, "Godot immediate");
@@ -1087,6 +1103,12 @@
         if (commandIndex < applied && opcode === 3) this.match3PositionMutations += 1;
         if (commandIndex < applied && opcode === 30) this.match3ScaleMutations += 1;
         if (commandIndex < applied && opcode === 32) this.match3ModulateMutations += 1;
+        if (commandIndex < applied && opcode === 43) {
+          this.match3ParticleEmittingCommands += 1;
+          const particleHandle = words[wordOffset + 1];
+          const snapshot = this.particleSnapshots.get(particleHandle);
+          if (snapshot) snapshot.emitting = words[wordOffset + 2] !== 0;
+        }
         if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
         if (commandIndex < applied && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
@@ -1233,6 +1255,7 @@
       this.lastAppliedValue = lastValue;
     },
     recordFreed(handle) {
+      if (this.particleSnapshots.delete(handle)) this.match3ParticleFrees += 1;
       this.freedHandle = handle;
       this.results.lifecycle.freedHandle = handle;
       this.results.lifecycle.liveAfterFree = this.api.kanamaWebIsLive(handle);
