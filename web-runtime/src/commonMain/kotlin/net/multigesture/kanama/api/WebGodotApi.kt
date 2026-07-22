@@ -26,15 +26,33 @@ import net.multigesture.kanama.web.WebObjectId
 annotation class ManualGodotLifetimeApi
 
 open class GodotObject internal constructor(internal val backendHandle: BackendGodotHandle) {
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
+  val handle: GodotHandle
+    get() = WebObjectId(backendHandle.backendToken().toInt())
+
+  /** Returns true when both wrappers refer to the same Godot object instance. */
+  fun isSameInstance(other: GodotObject): Boolean =
+    backendHandle.backendToken() == other.backendHandle.backendToken()
+
+  fun signal(name: String): GodotSignal = GodotSignal(this, name)
+
   fun emitSignal(signal: String, vararg args: Any?) {
-    require(args.size == 1 && args[0] is Int) {
-      "The initial Kanama Web signal slice supports exactly one Int argument"
+    if (args.size == 1 && args[0] is Int) {
+      Node2DBackendContractProbe(backendHandle).emitSignal(signal, args[0] as Int)
+      return
     }
-    Node2DBackendContractProbe(backendHandle).emitSignal(signal, args[0] as Int)
+    unsupportedWebGameplayCall("GodotObject.emit_signal_typed")
+  }
+
+  companion object {
+    const val CONNECT_ONE_SHOT = 4L
   }
 }
 
 open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
   fun addChild(node: Node, forceReadableName: Boolean = false, internalMode: Long = 0L) {
     NodeBackendContractProbe(backendHandle)
       .addChild(node.backendHandle, forceReadableName, internalMode)
@@ -47,9 +65,30 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun queueFree() {
     NodeBackendContractProbe(backendHandle).queueFree()
   }
+
+  fun getNodeOrNull(path: String): GodotObject? =
+    unsupportedWebGameplayCall("Node.get_node_or_null")
+
+  fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
+    unsupportedWebGameplayCall("Node.get_node_or_null_typed")
+
+  fun <T : GodotObject> requireAs(path: String, ctor: (GodotHandle) -> T): T =
+    unsupportedWebGameplayCall("Node.get_node_required_typed")
+
+  fun getTree(): SceneTree = unsupportedWebGameplayCall("Node.get_tree")
+
+  fun getViewport(): Viewport? = unsupportedWebGameplayCall("Node.get_viewport")
+
+  fun createTween(): Tween? = unsupportedWebGameplayCall("Node.create_tween")
 }
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {
+  var modulate: Color
+    get() = unsupportedWebGameplayCall("CanvasItem.get_modulate")
+    set(value) {
+      unsupportedWebGameplayCall("CanvasItem.set_modulate")
+    }
+
   fun getViewportRect(): Rect2 =
     Node2DBackendContractProbe(backendHandle).viewportRect.let { rect ->
       Rect2(
@@ -82,9 +121,24 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
       Node2DBackendContractProbe(backendHandle).position =
         GodotVector2(value.x.toFloat(), value.y.toFloat())
     }
+
+  var scale: Vector2
+    get() = unsupportedWebGameplayCall("Node2D.get_scale")
+    set(value) {
+      unsupportedWebGameplayCall("Node2D.set_scale")
+    }
+
+  fun getLocalMousePosition(): Vector2 =
+    unsupportedWebGameplayCall("Node2D.get_local_mouse_position")
 }
 
 class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  var texture: Texture2D?
+    get() = unsupportedWebGameplayCall("Sprite2D.get_texture")
+    set(value) {
+      setTexture(value)
+    }
+
   fun setTexture(texture: Texture2D?) {
     Sprite2DBackendContractProbe(backendHandle).setTexture(texture?.requireOpenHandle())
   }
@@ -101,14 +155,20 @@ class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
 }
 
 abstract class KanamaScript<T : GodotObject>(
-  godotObject: GodotHandle,
+  val godotObject: GodotHandle,
   wrapper: (GodotHandle) -> T,
 ) : KanamaWebScript(godotObject) {
   protected val self: T = wrapper(godotObject)
+
+  inline fun <R> selfAs(ctor: (GodotHandle) -> R): R = ctor(godotObject)
 }
 
+open class Resource internal constructor(backendHandle: BackendGodotHandle) :
+  GodotObject(backendHandle)
+
 @ManualGodotLifetimeApi
-class Texture2D internal constructor(private var resourceHandle: BackendGodotHandle?) {
+class Texture2D internal constructor(private var resourceHandle: BackendGodotHandle?) :
+  Resource(checkNotNull(resourceHandle)) {
   internal fun requireOpenHandle(): BackendGodotHandle =
     checkNotNull(resourceHandle) { "Texture2D is closed" }
 
@@ -133,9 +193,20 @@ object GD {
   fun randi(): Long = GDBackendContractProbe.randi()
 
   fun randf(): Double = GDBackendContractProbe.randf()
+
+  fun randiRange(from: Long, to: Long): Long {
+    require(from <= to)
+    val range = to - from + 1
+    return from + (randi().toULong() % range.toULong()).toLong()
+  }
+
+  fun randfRange(from: Double, to: Double): Double {
+    require(from <= to)
+    return from + (to - from) * randf()
+  }
 }
 
-private fun GodotHandle.toBackendHandle(): BackendGodotHandle =
+internal fun GodotHandle.toBackendHandle(): BackendGodotHandle =
   BackendGodotHandle.fromBackendToken(value.toLong())
 
 internal expect fun releaseWebResource(resourceHandle: Int)

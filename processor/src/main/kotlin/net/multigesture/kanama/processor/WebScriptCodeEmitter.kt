@@ -3,21 +3,26 @@ package net.multigesture.kanama.processor
 /** One Web script model paired with its Godot resource path. */
 internal data class WebScriptInput(val model: ScriptModel, val resourcePath: String)
 
-/**
- * Minimal static Kotlin/Wasm registry for Task 57 Phase 0.
- *
- * This emitter intentionally covers only the scalar/lifecycle slice used by the bridge probe. It
- * proves that the shared ScriptModel can drive Web codegen without copying the iOS emitter or
- * introducing reflection. Preview breadth belongs after the benchmark GO gate.
- */
+/** Static Kotlin/Wasm registry, protocol manifest, and Godot proxy emitter for Task 57. */
 internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
+
+  companion object {
+    const val PROTOCOL_VERSION = 2
+    const val PROTOCOL_SCHEMA_VERSION = 1
+  }
 
   data class ProxySource(
     val sourceResourcePath: String,
     val proxyResourcePath: String,
     val fileName: String,
     val source: String,
+  )
+
+  private data class ProtocolMethod(
+    val name: String,
+    val args: List<ArgModel>,
+    val returnType: TypeMapping?,
   )
 
   fun proxySources(): List<ProxySource> =
@@ -32,11 +37,159 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
   fun proxyManifest(): String = buildString {
+    appendLine("# kanama-web-protocol=$PROTOCOL_VERSION")
     appendLine("# source-resource\tproxy-resource\tgenerated-file")
     proxySources().forEach { proxy ->
       appendLine("${proxy.sourceResourcePath}\t${proxy.proxyResourcePath}\t${proxy.fileName}.gd")
     }
   }
+
+  fun protocolManifest(): String = buildString {
+    appendLine("{")
+    appendLine("  \"schemaVersion\": $PROTOCOL_SCHEMA_VERSION,")
+    appendLine("  \"protocolVersion\": $PROTOCOL_VERSION,")
+    appendLine("  \"scripts\": [")
+    scripts.forEachIndexed { scriptIndex, input ->
+      val model = input.model
+      appendLine("    {")
+      appendLine("      \"id\": ${scriptIndex + 1},")
+      appendLine("      \"resourcePath\": ${quote(input.resourcePath)},")
+      appendLine("      \"className\": ${quote(model.fqName)},")
+      appendLine("      \"attachTo\": ${quote(model.attachTo)},")
+      appendLine("      \"properties\": [")
+      model.properties.forEachIndexed { index, property ->
+        append("        {\"id\": ${index + 1}, \"name\": ${quote(property.godotName)}, ")
+        append("\"type\": ${quote(protocolPropertyType(property))}, ")
+        append("\"nullable\": ${property.nullable}, \"hint\": ${property.hint}, ")
+        append("\"hintString\": ${quote(property.hintString)}, \"usage\": ${property.usage}}")
+        appendLine(if (index == model.properties.lastIndex) "" else ",")
+      }
+      appendLine("      ],")
+      appendProtocolMethods(
+        "virtuals",
+        model.virtuals.map { virtual ->
+          ProtocolMethod(virtual.virtualName, virtual.args, virtual.returnType)
+        },
+      )
+      appendLine(",")
+      appendProtocolMethods(
+        "methods",
+        model.methods.map { method ->
+          ProtocolMethod(method.godotName, method.args, method.returnType)
+        },
+      )
+      appendLine(",")
+      appendLine("      \"signals\": [")
+      model.signals.forEachIndexed { index, signal ->
+        append("        {\"id\": ${index + 1}, \"name\": ${quote(signal.godotName)}, ")
+        append("\"arguments\": ${protocolArgs(signal.args)}}")
+        appendLine(if (index == model.signals.lastIndex) "" else ",")
+      }
+      appendLine("      ]")
+      append("    }")
+      appendLine(if (scriptIndex == scripts.lastIndex) "" else ",")
+    }
+    appendLine("  ]")
+    appendLine("}")
+  }
+
+  fun constantsSource(): String = buildString {
+    appendLine("package net.multigesture.kanama.generated")
+    appendLine()
+    appendLine("@Suppress(\"unused\")")
+    appendLine(
+      "private fun emitWebSignal(instance: Any, signalName: String, args: Array<out Any?>) {"
+    )
+    appendLine(
+      "  val script = instance as? net.multigesture.kanama.api.KanamaScript<*> ?: error(\"Signal target is not a Kanama script\")"
+    )
+    appendLine(
+      "  net.multigesture.kanama.api.GodotObject(script.godotObject).emitSignal(signalName, *args)"
+    )
+    appendLine("}")
+    scripts.forEach { input ->
+      val model = input.model
+      if (model.signals.isNotEmpty()) {
+        appendLine()
+        appendLine("object ${model.simpleName}Signals {")
+        model.signals.forEach { signal ->
+          val params =
+            signal.args.joinToString("") { arg ->
+              ", ${constantIdentifier(arg.name)}: ${arg.kotlinType}"
+            }
+          val args = signal.args.joinToString(", ") { constantIdentifier(it.name) }
+          appendLine(
+            "  fun ${constantIdentifier(signal.godotName)}(instance: ${model.fqName}$params) {"
+          )
+          appendLine("    emitWebSignal(instance, ${quote(signal.godotName)}, arrayOf($args))")
+          appendLine("  }")
+        }
+        appendLine("}")
+      }
+      if (
+        model.methods.isNotEmpty() || model.properties.isNotEmpty() || model.signals.isNotEmpty()
+      ) {
+        appendLine()
+        appendLine("object ${model.simpleName}Names {")
+        if (model.methods.isNotEmpty()) {
+          appendLine("  object Methods {")
+          model.methods
+            .distinctBy { constantIdentifier(it.kotlinName) }
+            .forEach { method ->
+              appendLine(
+                "    const val ${constantIdentifier(method.kotlinName)}: String = ${quote(method.godotName)}"
+              )
+            }
+          appendLine("  }")
+        }
+        if (model.properties.isNotEmpty()) {
+          appendLine("  object Properties {")
+          model.properties.forEach { property ->
+            appendLine(
+              "    const val ${constantIdentifier(property.kotlinName)}: String = ${quote(property.godotName)}"
+            )
+          }
+          appendLine("  }")
+        }
+        if (model.signals.isNotEmpty()) {
+          appendLine("  object Signals {")
+          model.signals.forEach { signal ->
+            appendLine(
+              "    const val ${constantIdentifier(signal.godotName)}: String = ${quote(signal.godotName)}"
+            )
+          }
+          appendLine("  }")
+        }
+        appendLine("}")
+      }
+    }
+  }
+
+  fun compatibilitySources(): Map<String, String> =
+    scripts
+      .map { it.model.fqName.substringBeforeLast('.', missingDelimiterValue = "") }
+      .filter { it.isNotBlank() }
+      .distinct()
+      .sorted()
+      .associateWith { packageName ->
+        buildString {
+          appendLine("package $packageName")
+          appendLine()
+          appendLine("@Suppress(\"unused\")")
+          appendLine(
+            "internal fun <T> MutableCollection<T>.removeIf(predicate: (T) -> Boolean): Boolean {"
+          )
+          appendLine("  val originalSize = size")
+          appendLine("  removeAll(predicate)")
+          appendLine("  return size != originalSize")
+          appendLine("}")
+          appendLine()
+          appendLine("@Suppress(\"unused\")")
+          appendLine("internal object System {")
+          appendLine("  fun getenv(name: String): String? = null")
+          appendLine("}")
+        }
+      }
 
   fun registrySource(): String = buildString {
     appendLine("// Generated by KanamaProcessor — do not edit.")
@@ -49,7 +202,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     scripts.forEach { appendLine("import ${it.model.fqName}") }
     appendLine()
     appendLine("object KanamaWebProjectRegistry {")
-    appendLine("  const val PROTOCOL_VERSION: Int = 1")
+    appendLine("  const val PROTOCOL_VERSION: Int = $PROTOCOL_VERSION")
     appendLine()
     appendLine("  val scripts: List<WebScriptDescriptor> =")
     appendLine("    listOf(")
@@ -261,23 +414,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   }
 
   private fun proxySource(scriptId: Int, model: ScriptModel): String = buildString {
+    val node2dAttachment = model.attachTo in setOf("Node2D", "Area2D", "Sprite2D", "GPUParticles2D")
     appendLine("# Generated by KanamaProcessor — do not edit.")
     appendLine("extends ${model.attachTo}")
     appendLine()
     model.signals.forEach { signal ->
-      val args = signal.args.joinToString(", ") { "${it.name}: ${gdType(it.type)}" }
+      val args = signal.args.joinToString(", ") { "${it.name}: ${gdType(it)}" }
       appendLine("signal ${signal.godotName}($args)")
     }
     if (model.signals.isNotEmpty()) appendLine()
     model.properties.forEach { property ->
-      val defaultValue = property.defaultLiteral ?: gdDefault(property.type)
-      appendLine("@export var ${property.godotName}: ${gdType(property.type)} = $defaultValue")
+      appendPropertyGroup(property)
+      appendLine("@export var ${property.godotName}: ${gdType(property)} = ${gdDefault(property)}")
     }
 
     if (model.attachTo == "Resource") return@buildString
 
     appendLine()
     appendLine("const _KANAMA_SCRIPT_ID: int = $scriptId")
+    appendLine("const _KANAMA_PROTOCOL_VERSION: int = $PROTOCOL_VERSION")
     appendLine("var _kanama_bridge")
     appendLine("var _kanama_handle: int = 0")
     appendLine("var _kanama_apply_callback")
@@ -294,6 +449,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
     appendLine("\tif _kanama_bridge == null:")
     appendLine("\t\tpush_error(\"Kanama Web bridge was not initialized before Godot\")")
+    appendLine("\t\treturn")
+    appendLine("\tif int(_kanama_bridge.protocolVersion) != _KANAMA_PROTOCOL_VERSION:")
+    appendLine(
+      "\t\tpush_error(\"Kanama Web proxy protocol mismatch: expected %d, received %d\" % [_KANAMA_PROTOCOL_VERSION, int(_kanama_bridge.protocolVersion)])"
+    )
     appendLine("\t\treturn")
     appendLine(
       "\t_kanama_apply_callback = JavaScriptBridge.create_callback(_kanama_apply_commands)"
@@ -322,15 +482,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
     appendLine("\t\t_kanama_clear_callbacks()")
     appendLine("\t\treturn")
-    appendLine("\tif self is Node2D:")
-    appendLine("\t\tvar target := self as Node2D")
-    appendLine(
-      "\t\t_kanama_bridge.refreshPositionSnapshot(_kanama_handle, target.position.x, target.position.y)"
-    )
-    appendLine("\t\tvar viewport_rect := target.get_viewport_rect()")
-    appendLine(
-      "\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
-    )
+    if (node2dAttachment) {
+      appendLine("\tvar target: Node2D = self")
+      appendLine(
+        "\t_kanama_bridge.refreshPositionSnapshot(_kanama_handle, target.position.x, target.position.y)"
+      )
+      appendLine("\tvar viewport_rect := target.get_viewport_rect()")
+      appendLine(
+        "\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
+      )
+    }
     model.properties.forEachIndexed { index, property ->
       if (property.type == TypeMapping.STRING) {
         appendLine(
@@ -355,13 +516,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func _process(delta: float) -> void:")
     appendLine("\tif _kanama_handle != 0:")
-    appendLine("\t\tif self is Node2D:")
-    appendLine("\t\t\tvar target := self as Node2D")
-    appendLine("\t\t\tvar viewport_rect := target.get_viewport_rect()")
-    appendLine(
-      "\t\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
-    )
+    if (node2dAttachment) {
+      appendLine("\t\tvar target: Node2D = self")
+      appendLine("\t\tvar viewport_rect := target.get_viewport_rect()")
+      appendLine(
+        "\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
+      )
+    }
     appendLine("\t\t_kanama_bridge.frame(_kanama_handle, delta)")
+    if (model.virtuals.any { it.virtualName == "_input" }) {
+      appendLine()
+      appendLine("func _input(event: InputEvent) -> void:")
+      appendLine("\tif _kanama_handle != 0:")
+      appendLine("\t\t_kanama_bridge.unsupportedGameplayVirtual(_KANAMA_SCRIPT_ID, \"_input\")")
+    }
     appendLine()
     appendLine("func _draw() -> void:")
     appendLine("\tif _kanama_handle != 0:")
@@ -411,9 +579,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tif opcode == 100 and object_handle == _kanama_handle:")
     appendLine("\t\t\tlast_value = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tset_meta(\"kanama_web_scalar\", last_value)")
-    appendLine("\t\t\tif self is Node2D:")
-    appendLine("\t\t\t\tvar target := self as Node2D")
-    appendLine("\t\t\t\ttarget.position = Vector2(float(last_value % 640), target.position.y)")
+    if (node2dAttachment) {
+      appendLine("\t\t\tvar target: Node2D = self")
+      appendLine("\t\t\ttarget.position = Vector2(float(last_value % 640), target.position.y)")
+    }
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 3 and target_object is Node2D:")
@@ -424,25 +593,29 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tlast_value = int(position_x)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
-    appendLine("\t\telif opcode == 5 and object_handle == _kanama_handle and self is CanvasItem:")
-    appendLine("\t\t\t(self as CanvasItem).queue_redraw()")
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 8")
-    appendLine("\t\telif opcode == 6 and object_handle == _kanama_handle and self is CanvasItem:")
-    appendLine("\t\t\tvar texture_handle := bytes.decode_s32(offset + 8)")
-    appendLine("\t\t\tvar texture := _kanama_object_handles.get(texture_handle) as Texture2D")
-    appendLine("\t\t\tif texture == null:")
-    appendLine("\t\t\t\tpush_error(\"Unknown Kanama Web texture handle: %d\" % texture_handle)")
-    appendLine("\t\t\t\tbreak")
-    appendLine(
-      "\t\t\tvar draw_position := Vector2(bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
-    )
-    appendLine(
-      "\t\t\tvar modulate := Color(bytes.decode_float(offset + 20), bytes.decode_float(offset + 24), bytes.decode_float(offset + 28), bytes.decode_float(offset + 32))"
-    )
-    appendLine("\t\t\t(self as CanvasItem).draw_texture(texture, draw_position, modulate)")
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 36")
+    if (node2dAttachment) {
+      appendLine("\t\telif opcode == 5 and object_handle == _kanama_handle:")
+      appendLine("\t\t\tvar canvas_target: CanvasItem = self")
+      appendLine("\t\t\tcanvas_target.queue_redraw()")
+      appendLine("\t\t\tapplied += 1")
+      appendLine("\t\t\toffset += 8")
+      appendLine("\t\telif opcode == 6 and object_handle == _kanama_handle:")
+      appendLine("\t\t\tvar texture_handle := bytes.decode_s32(offset + 8)")
+      appendLine("\t\t\tvar texture := _kanama_object_handles.get(texture_handle) as Texture2D")
+      appendLine("\t\t\tif texture == null:")
+      appendLine("\t\t\t\tpush_error(\"Unknown Kanama Web texture handle: %d\" % texture_handle)")
+      appendLine("\t\t\t\tbreak")
+      appendLine(
+        "\t\t\tvar draw_position := Vector2(bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+      )
+      appendLine(
+        "\t\t\tvar modulate := Color(bytes.decode_float(offset + 20), bytes.decode_float(offset + 24), bytes.decode_float(offset + 28), bytes.decode_float(offset + 32))"
+      )
+      appendLine("\t\t\tvar canvas_target: CanvasItem = self")
+      appendLine("\t\t\tcanvas_target.draw_texture(texture, draw_position, modulate)")
+      appendLine("\t\t\tapplied += 1")
+      appendLine("\t\t\toffset += 36")
+    }
     appendLine("\t\telif opcode == 13 and target_object is Node:")
     appendLine("\t\t\tvar child_handle := bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tvar child := _kanama_object_handles.get(child_handle) as Node")
@@ -525,7 +698,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("func _kanama_construct_object(args: Array) -> int:")
     appendLine("\tvar object_handle := int(args[0])")
     appendLine("\tvar requested_class := String(args[1])")
-    appendLine("\tvar value := ClassDB.instantiate(requested_class)")
+    appendLine("\tvar value: Object = ClassDB.instantiate(requested_class)")
     appendLine("\tif value == null or not value is Node:")
     appendLine("\t\t_kanama_bridge.recordImmediateConstructHandle(0)")
     appendLine("\t\treturn 0")
@@ -534,25 +707,99 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\treturn object_handle")
 
     model.methods.forEachIndexed { index, method ->
-      if (method.args.isEmpty() && method.returnType == null && method.godotName != "_draw") {
-        appendLine()
-        appendLine("func ${method.godotName}() -> void:")
-        appendLine("\t_kanama_bridge.callNoArgs(_kanama_handle, ${index + 1})")
-      }
-      if (
+      if (method.godotName == "_draw") return@forEachIndexed
+      appendLine()
+      val args = method.args.joinToString(", ") { "${it.name}: ${gdType(it)}" }
+      val returnType = " -> ${method.returnType?.let(::gdType) ?: "void"}"
+      appendLine("func ${method.godotName}($args)$returnType:")
+      when {
+        method.args.isEmpty() && method.returnType == null ->
+          appendLine("\t_kanama_bridge.callNoArgs(_kanama_handle, ${index + 1})")
         method.returnType == TypeMapping.INT &&
           method.args.size == 1 &&
-          method.args.single().type == TypeMapping.INT
-      ) {
-        val arg = method.args.single()
-        appendLine()
-        appendLine("func ${method.godotName}(${arg.name}: int) -> int:")
-        appendLine(
-          "\treturn int(_kanama_bridge.callInt(_kanama_handle, ${index + 1}, ${arg.name}))"
-        )
+          method.args.single().type == TypeMapping.INT -> {
+          val arg = method.args.single()
+          appendLine(
+            "\treturn int(_kanama_bridge.callInt(_kanama_handle, ${index + 1}, ${arg.name}))"
+          )
+        }
+        else -> {
+          appendLine(
+            "\t_kanama_bridge.unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, ${index + 1}, ${quote(method.godotName)})"
+          )
+          method.returnType?.let { appendLine("\treturn ${gdDefault(it)}") }
+        }
       }
     }
   }
+
+  private fun StringBuilder.appendProtocolMethods(label: String, methods: List<ProtocolMethod>) {
+    appendLine("      \"$label\": [")
+    methods.forEachIndexed { index, method ->
+      append("        {\"id\": ${index + 1}, \"name\": ${quote(method.name)}, ")
+      append("\"arguments\": ${protocolArgs(method.args)}, \"returnType\": ")
+      append(method.returnType?.let { quote(it.kotlinType) } ?: "null")
+      append("}")
+      appendLine(if (index == methods.lastIndex) "" else ",")
+    }
+    append("      ]")
+  }
+
+  private fun protocolArgs(args: List<ArgModel>): String = buildString {
+    append('[')
+    args.forEachIndexed { index, arg ->
+      if (index > 0) append(", ")
+      append("{\"name\": ${quote(arg.name)}, \"type\": ${quote(protocolArgType(arg))}, ")
+      append("\"nullable\": ${arg.nullable}, \"hasDefault\": ${arg.hasDefault}}")
+    }
+    append(']')
+  }
+
+  private fun protocolArgType(arg: ArgModel): String =
+    arg.objectWrapperFqName ?: arg.type.kotlinType
+
+  private fun protocolPropertyType(property: ScriptPropertyModel): String =
+    when {
+      property.type == TypeMapping.ARRAY && property.arrayElementWrapperFqName != null ->
+        "List<${property.arrayElementWrapperFqName}>"
+      property.type == TypeMapping.ARRAY && property.arrayElementCustomScriptFqName != null ->
+        "List<${property.arrayElementCustomScriptFqName}>"
+      property.type == TypeMapping.ARRAY && property.arrayElementString -> "List<String>"
+      property.objectWrapperFqName != null -> property.objectWrapperFqName
+      property.customScriptFqName != null -> property.customScriptFqName
+      else -> property.type.kotlinType
+    }
+
+  private fun StringBuilder.appendPropertyGroup(property: ScriptPropertyModel) {
+    fun appendGroup(annotation: String, group: ScriptPropertyGroupModel?) {
+      if (group == null) return
+      val prefix = if (group.prefix.isBlank()) "" else ", ${quote(group.prefix)}"
+      appendLine("@$annotation(${quote(group.name)}$prefix)")
+    }
+    appendGroup("export_category", property.exportCategory)
+    appendGroup("export_group", property.exportGroup)
+    appendGroup("export_subgroup", property.exportSubgroup)
+  }
+
+  private fun gdType(arg: ArgModel): String =
+    arg.objectWrapperFqName?.let(::gdObjectType) ?: gdType(arg.type)
+
+  private fun gdType(property: ScriptPropertyModel): String =
+    when {
+      property.type == TypeMapping.ARRAY && property.arrayElementWrapperFqName != null ->
+        "Array[${property.arrayElementWrapperFqName.substringAfterLast('.')}]"
+      property.type == TypeMapping.ARRAY && property.arrayElementCustomScriptFqName != null ->
+        "Array[${property.arrayElementCustomScriptFqName.substringAfterLast('.')}]"
+      property.type == TypeMapping.ARRAY && property.arrayElementString -> "Array[String]"
+      property.type == TypeMapping.ARRAY -> "Array"
+      property.objectWrapperFqName != null -> gdObjectType(property.objectWrapperFqName)
+      property.customScriptFqName != null -> property.customScriptFqName.substringAfterLast('.')
+      else -> gdType(property.type)
+    }
+
+  private fun gdObjectType(fqName: String): String =
+    if (fqName == "net.multigesture.kanama.api.GodotObject") "Object"
+    else fqName.substringAfterLast('.')
 
   private fun gdType(type: TypeMapping): String =
     when (type) {
@@ -560,7 +807,23 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.INT -> "int"
       TypeMapping.FLOAT -> "float"
       TypeMapping.BOOL -> "bool"
+      TypeMapping.VECTOR2 -> "Vector2"
+      TypeMapping.VECTOR2I -> "Vector2i"
+      TypeMapping.OBJECT -> "Object"
+      TypeMapping.ARRAY -> "Array"
       else -> "Variant"
+    }
+
+  private fun gdDefault(property: ScriptPropertyModel): String =
+    when (property.type) {
+      TypeMapping.STRING -> property.defaultLiteral ?: "\"\""
+      TypeMapping.INT -> property.defaultLiteral?.removeSuffix("L") ?: "0"
+      TypeMapping.FLOAT -> property.defaultLiteral?.removeSuffix("f")?.removeSuffix("F") ?: "0.0"
+      TypeMapping.BOOL -> property.defaultLiteral ?: "false"
+      TypeMapping.VECTOR2 -> "Vector2.ZERO"
+      TypeMapping.VECTOR2I -> "Vector2i.ZERO"
+      TypeMapping.ARRAY -> "[]"
+      else -> "null"
     }
 
   private fun gdDefault(type: TypeMapping): String =
@@ -569,6 +832,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.INT -> "0"
       TypeMapping.FLOAT -> "0.0"
       TypeMapping.BOOL -> "false"
+      TypeMapping.VECTOR2 -> "Vector2.ZERO"
+      TypeMapping.VECTOR2I -> "Vector2i.ZERO"
+      TypeMapping.ARRAY -> "[]"
       else -> "null"
     }
 
@@ -585,5 +851,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       }
     }
     append('"')
+  }
+
+  private fun constantIdentifier(name: String): String {
+    val stripped = name.trim('_')
+    if (stripped.isBlank()) return "value"
+    val words = stripped.split('_', '-', ' ', '.', ':', '/').filter { it.isNotBlank() }
+    val candidate =
+      words.drop(1).fold(words.first()) { acc, part ->
+        acc + part.replaceFirstChar { it.uppercaseChar() }
+      }
+    return candidate.replace(Regex("""[^A-Za-z0-9_]"""), "_").let {
+      if (it.firstOrNull()?.isDigit() == true) "_$it" else it
+    }
   }
 }

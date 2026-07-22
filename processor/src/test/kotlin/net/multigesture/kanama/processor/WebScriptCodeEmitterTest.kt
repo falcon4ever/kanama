@@ -11,7 +11,7 @@ class WebScriptCodeEmitterTest {
     ScriptModel(
       simpleName = simpleName,
       fqName = "net.multigesture.kanama.web.$simpleName",
-      attachTo = "Node",
+      attachTo = "Node2D",
       isTool = false,
       isGlobalClass = false,
       properties =
@@ -72,7 +72,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 1"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 2"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -141,5 +141,171 @@ class WebScriptCodeEmitterTest {
         .proxyManifest()
         .contains("res://FirstScript.kt\tres://kanama-web/generated/FirstScript.gd\tFirstScript.gd")
     )
+  }
+
+  @Test
+  fun emitsMatch3TypedContractAndExplicitGameplayBlockers() {
+    val main =
+      ScriptModel(
+        simpleName = "Main",
+        fqName = "net.multigesture.kanama.demos.match3.Main",
+        attachTo = "Node2D",
+        isTool = false,
+        isGlobalClass = false,
+        properties =
+          listOf(
+            ScriptPropertyModel(
+              kotlinName = "width",
+              godotName = "width",
+              type = TypeMapping.INT,
+              isMutable = true,
+              exportSubgroup = ScriptPropertyGroupModel("Properties", "", usage = 6),
+            ),
+            ScriptPropertyModel(
+              kotlinName = "tileScene",
+              godotName = "tile_scene",
+              type = TypeMapping.OBJECT,
+              isMutable = true,
+              objectWrapperFqName = "net.multigesture.kanama.api.PackedScene",
+              nullable = true,
+            ),
+            ScriptPropertyModel(
+              kotlinName = "textures",
+              godotName = "textures",
+              type = TypeMapping.ARRAY,
+              isMutable = true,
+              arrayElementWrapperFqName = "net.multigesture.kanama.api.Texture2D",
+            ),
+            ScriptPropertyModel(
+              kotlinName = "openHandCursor",
+              godotName = "open_hand_cursor",
+              type = TypeMapping.OBJECT,
+              isMutable = true,
+              objectWrapperFqName = "net.multigesture.kanama.api.Texture2D",
+              nullable = true,
+            ),
+          ),
+        toolButtons = emptyList(),
+        virtuals =
+          listOf(
+            VirtualModel(
+              "_input",
+              "callInput",
+              "input",
+              args =
+                listOf(
+                  ArgModel(
+                    "event",
+                    TypeMapping.OBJECT,
+                    objectWrapperFqName = "net.multigesture.kanama.api.GodotObject",
+                  )
+                ),
+            )
+          ),
+        methods = emptyList(),
+        signals = emptyList(),
+      )
+    val tile =
+      ScriptModel(
+        simpleName = "Tile",
+        fqName = "net.multigesture.kanama.demos.match3.Tile",
+        attachTo = "Area2D",
+        isTool = false,
+        isGlobalClass = false,
+        properties = emptyList(),
+        toolButtons = emptyList(),
+        virtuals = emptyList(),
+        methods =
+          listOf(
+            MethodModel(
+              kotlinName = "setTileType",
+              godotName = "set_tile_type",
+              returnType = null,
+              args =
+                listOf(
+                  ArgModel("id", TypeMapping.STRING),
+                  ArgModel(
+                    "texture",
+                    TypeMapping.OBJECT,
+                    objectWrapperFqName = "net.multigesture.kanama.api.Texture2D",
+                  ),
+                ),
+              kind = MethodKind.REGULAR,
+            ),
+            MethodModel(
+              kotlinName = "inputEvent",
+              godotName = "_input_event",
+              returnType = null,
+              args =
+                listOf(
+                  ArgModel(
+                    "viewport",
+                    TypeMapping.OBJECT,
+                    objectWrapperFqName = "net.multigesture.kanama.api.GodotObject",
+                  ),
+                  ArgModel(
+                    "event",
+                    TypeMapping.OBJECT,
+                    objectWrapperFqName = "net.multigesture.kanama.api.GodotObject",
+                  ),
+                  ArgModel("shapeIdx", TypeMapping.INT),
+                ),
+              kind = MethodKind.REGULAR,
+            ),
+            MethodModel(
+              kotlinName = "getTileType",
+              godotName = "get_tile_type",
+              returnType = TypeMapping.STRING,
+              args = emptyList(),
+              kind = MethodKind.REGULAR,
+            ),
+          ),
+        signals = listOf(SignalModel("tile_pressed", listOf(ArgModel("pos", TypeMapping.VECTOR2I)))),
+      )
+    val emitter =
+      WebScriptCodeEmitter(
+        listOf(
+          WebScriptInput(main, "res://kotlin-src/Main.kt"),
+          WebScriptInput(tile, "res://kotlin-src/Tile.kt"),
+        )
+      )
+    val proxies = emitter.proxySources().associateBy { it.fileName }
+    val mainProxy = proxies.getValue("Main").source
+    val tileProxy = proxies.getValue("Tile").source
+
+    assertTrue(mainProxy.contains("extends Node2D"))
+    assertTrue(mainProxy.contains("@export_subgroup(\"Properties\")"))
+    assertTrue(mainProxy.contains("@export var tile_scene: PackedScene = null"))
+    assertTrue(mainProxy.contains("@export var textures: Array[Texture2D] = []"))
+    assertTrue(mainProxy.contains("@export var open_hand_cursor: Texture2D = null"))
+    assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
+    assertTrue(mainProxy.contains("unsupportedGameplayVirtual(_KANAMA_SCRIPT_ID, \"_input\")"))
+
+    assertTrue(tileProxy.contains("extends Area2D"))
+    assertTrue(tileProxy.contains("signal tile_pressed(pos: Vector2i)"))
+    assertTrue(tileProxy.contains("func set_tile_type(id: String, texture: Texture2D) -> void:"))
+    assertTrue(
+      tileProxy.contains(
+        "func _input_event(viewport: Object, event: Object, shapeIdx: int) -> void:"
+      )
+    )
+    assertTrue(tileProxy.contains("func get_tile_type() -> String:"))
+    assertTrue(
+      tileProxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 1, \"set_tile_type\")")
+    )
+
+    val protocol = emitter.protocolManifest()
+    assertTrue(protocol.contains("\"protocolVersion\": 2"))
+    assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
+    assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
+    assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
+    assertTrue(protocol.contains("\"name\": \"_input_event\""))
+
+    val constants = emitter.constantsSource()
+    assertTrue(constants.contains("object TileSignals"))
+    assertTrue(constants.contains("fun tilePressed("))
+    assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
+    assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=2\n"))
   }
 }

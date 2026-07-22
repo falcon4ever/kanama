@@ -9,6 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
+  const KANAMA_WEB_PROTOCOL_VERSION = 2;
 
   function commandWordCount(opcode) {
     if (opcode === 5 || opcode === 15) return 2;
@@ -48,6 +49,7 @@
 
   const bridge = {
     api: null,
+    protocolVersion: KANAMA_WEB_PROTOCOL_VERSION,
     mode: globalThis.KanamaWebMode ?? "spike",
     bunnymarkVariant: globalThis.KanamaWebBunnymarkVariant ?? null,
     bunnymarkLanguage: globalThis.KanamaWebBunnymarkLanguage ?? "kanama",
@@ -149,6 +151,17 @@
         globalThis.failKanamaWeb(contextual);
         return fallback;
       }
+    },
+
+    unsupportedGameplayMethod(scriptId, methodId, methodName) {
+      throw new Error(
+        `Kanama Web gameplay method is not implemented: script=${scriptId} method=${methodId}/${methodName} (Task 57e backlog)`,
+      );
+    },
+    unsupportedGameplayVirtual(scriptId, virtualName) {
+      throw new Error(
+        `Kanama Web gameplay virtual is not implemented: script=${scriptId} virtual=${virtualName} (Task 57e backlog)`,
+      );
     },
 
     create(scriptId) {
@@ -768,7 +781,7 @@
 
     finish() {
       const checks = {
-        protocol: this.results.protocolVersion === 1,
+        protocol: this.results.protocolVersion === KANAMA_WEB_PROTOCOL_VERSION,
         immediateResult: this.immediateResult === 47,
         queuedMutation: this.appliedCommands >= OPERATIONS,
         freed: this.results.lifecycle.liveAfterFree === 0,
@@ -813,8 +826,10 @@
   globalThis.bootstrapKanamaWeb = async (apiPromise) => {
     const api = await apiPromise;
     const protocolVersion = api.kanamaWebProtocolVersion();
-    if (protocolVersion !== 1) {
-      throw new Error(`Kanama Web protocol mismatch: expected 1, received ${protocolVersion}`);
+    if (protocolVersion !== KANAMA_WEB_PROTOCOL_VERSION) {
+      throw new Error(
+        `Kanama Web protocol mismatch: expected ${KANAMA_WEB_PROTOCOL_VERSION}, received ${protocolVersion}`,
+      );
     }
     bridge.api = api;
     bridge.results.protocolVersion = protocolVersion;

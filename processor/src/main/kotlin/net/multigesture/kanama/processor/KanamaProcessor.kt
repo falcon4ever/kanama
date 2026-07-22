@@ -1112,7 +1112,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     )
   }
 
-  // ---------- Web @ScriptClass registry emission (Kotlin/Wasm target, task 57 Phase 0) ----------
+  // ---------- Web @ScriptClass registry/proxy emission (Kotlin/Wasm target, task 57) ----------
 
   private fun emitWebScriptRegistry() {
     val emitter = WebScriptCodeEmitter(webScripts)
@@ -1124,6 +1124,22 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         fileName = "KanamaWebProjectRegistry.generated",
       )
       .use { it.write(emitter.registrySource().toByteArray(Charsets.UTF_8)) }
+    env.codeGenerator
+      .createNewFile(
+        dependencies = dependencies,
+        packageName = "net.multigesture.kanama.generated",
+        fileName = "KanamaWebScriptConstants.generated",
+      )
+      .use { it.write(emitter.constantsSource().toByteArray(Charsets.UTF_8)) }
+    emitter.compatibilitySources().forEach { (packageName, source) ->
+      env.codeGenerator
+        .createNewFile(
+          dependencies = dependencies,
+          packageName = packageName,
+          fileName = "KanamaWebCompatibility.generated",
+        )
+        .use { it.write(source.toByteArray(Charsets.UTF_8)) }
+    }
     emitter.proxySources().forEach { proxy ->
       env.codeGenerator
         .createNewFile(
@@ -1142,6 +1158,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         extensionName = "tsv",
       )
       .use { it.write(emitter.proxyManifest().toByteArray(Charsets.UTF_8)) }
+    env.codeGenerator
+      .createNewFile(
+        dependencies = dependencies,
+        packageName = "net.multigesture.kanama.web.generated.proxies",
+        fileName = "KanamaWebProtocol.generated",
+        extensionName = "json",
+      )
+      .use { it.write(emitter.protocolManifest().toByteArray(Charsets.UTF_8)) }
     env.logger.warn(
       "[kanama:ksp] generated Web @ScriptClass registry for ${webScripts.size} script(s)"
     )

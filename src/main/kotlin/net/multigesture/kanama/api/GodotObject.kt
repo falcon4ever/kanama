@@ -14,6 +14,9 @@ import java.lang.foreign.MemorySegment
  */
 open class GodotObject(val handle: MemorySegment) {
 
+    /** Returns true when both wrappers refer to the same Godot object instance. */
+    fun isSameInstance(other: GodotObject): Boolean = handle.address() == other.handle.address()
+
     init {
         require(handle.address() != 0L) { "GodotObject handle must not be NULL" }
     }

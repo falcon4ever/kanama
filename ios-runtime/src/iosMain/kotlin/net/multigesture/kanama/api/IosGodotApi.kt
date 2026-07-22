@@ -189,6 +189,9 @@ open class GodotObject(
 ) : AutoCloseable {
     constructor(handle: Long) : this(MemorySegment.ofAddress(handle))
 
+    /** Returns true when both wrappers refer to the same Godot object instance. */
+    fun isSameInstance(other: GodotObject): Boolean = handle.address() == other.handle.address()
+
     fun requireOpenHandle(): MemorySegment = handle
 
     fun isClass(className: String): Boolean =
