@@ -101,6 +101,25 @@ class GodotBackendContractTest {
         .connectBound(tile, "finished", "_kanama_web_signal_dispatch0", 71L, 4L),
     )
     assertEquals(0, SignalBackendContractProbe(tile).emitNoArgs("finished"))
+    val tween = checkNotNull(NodeBackendContractProbe(probe.handle).createTween())
+    assertEquals(61L, tween.backendToken())
+    val tweenProbe = TweenBackendContractProbe(tween)
+    assertEquals(61L, tweenProbe.setParallel()?.backendToken())
+    val vectorTweener =
+      checkNotNull(
+        tweenProbe.tweenProperty(probe.handle, "position", GodotVector2(12.0f, 34.0f), 0.3)
+      )
+    assertEquals(62L, vectorTweener.backendToken())
+    assertEquals(
+      63L,
+      tweenProbe
+        .tweenProperty(probe.handle, "modulate", GodotColor(0.5f, 0.6f, 0.7f, 0.8f), 0.1)
+        ?.backendToken(),
+    )
+    val propertyTweener = PropertyTweenerBackendContractProbe(vectorTweener)
+    assertEquals(62L, propertyTweener.setTrans(10L)?.backendToken())
+    assertEquals(62L, propertyTweener.setEase(1L)?.backendToken())
+    tweenProbe.kill()
     GDBackendContractProbe.randomize()
     assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
     assertEquals(0.75, GDBackendContractProbe.randf())
@@ -144,6 +163,13 @@ class GodotBackendContractTest {
         33 to 1,
         34 to 1,
         35 to 1,
+        36 to 1,
+        37 to 1,
+        38 to 1,
+        39 to 1,
+        40 to 1,
+        41 to 1,
+        42 to 1,
       ),
       backend.resolveCounts,
     )
@@ -189,7 +215,7 @@ class GodotBackendContractTest {
     var queuedFree: Long? = null
 
     override fun requireLive(handle: GodotHandle) {
-      require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L))
+      require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L, 61L, 62L, 63L))
     }
 
     override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite {
@@ -203,6 +229,17 @@ class GodotBackendContractTest {
       receiver: GodotHandle,
       value: Boolean,
     ): Int = 7
+
+    override fun invokeBoolRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Boolean,
+    ): GodotHandle? {
+      assertEquals(61L, receiver.backendToken())
+      assertEquals(true, value)
+      return receiver
+    }
 
     override fun invokeNoArgsRetVector2(
       descriptor: GodotCallDescriptor,
@@ -238,7 +275,11 @@ class GodotBackendContractTest {
       callSite: GodotCallSite,
       receiver: GodotHandle,
     ) {
-      if (descriptor.opcode == 5) queuedRedraws += 1 else queuedFree = receiver.backendToken()
+      when (descriptor.opcode) {
+        5 -> queuedRedraws += 1
+        15 -> queuedFree = receiver.backendToken()
+        37 -> assertEquals(61L, receiver.backendToken())
+      }
     }
 
     override fun invokeTexture2DVector2ColorArgs(
@@ -338,15 +379,35 @@ class GodotBackendContractTest {
       receiver: GodotHandle,
       value: Long,
     ): GodotHandle? {
-      assertEquals(0L, value)
-      return GodotHandle.fromBackendToken(53L)
+      return when (descriptor.opcode) {
+        18 -> {
+          assertEquals(0L, value)
+          GodotHandle.fromBackendToken(53L)
+        }
+        41 -> {
+          assertEquals(10L, value)
+          receiver
+        }
+        42 -> {
+          assertEquals(1L, value)
+          receiver
+        }
+        else -> error("Unexpected long-return-handle opcode=${descriptor.opcode}")
+      }
     }
 
     override fun invokeNoArgsRetHandle(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
-    ): GodotHandle? = GodotHandle.fromBackendToken(if (descriptor.opcode == 33) 31L else 52L)
+    ): GodotHandle? =
+      GodotHandle.fromBackendToken(
+        when (descriptor.opcode) {
+          33 -> 31L
+          36 -> 61L
+          else -> 52L
+        }
+      )
 
     override fun invokeObjectLongVector2Args(
       descriptor: GodotCallDescriptor,
@@ -450,6 +511,40 @@ class GodotBackendContractTest {
       value: GodotColor,
     ) {
       modulate = value
+    }
+
+    override fun invokeObjectNodePathVector2DoubleRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      target: GodotHandle,
+      property: String,
+      finalValue: GodotVector2,
+      duration: Double,
+    ): GodotHandle? {
+      assertEquals(61L, receiver.backendToken())
+      assertEquals(17L, target.backendToken())
+      assertEquals("position", property)
+      assertEquals(GodotVector2(12.0f, 34.0f), finalValue)
+      assertEquals(0.3, duration)
+      return GodotHandle.fromBackendToken(62L)
+    }
+
+    override fun invokeObjectNodePathColorDoubleRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      target: GodotHandle,
+      property: String,
+      finalValue: GodotColor,
+      duration: Double,
+    ): GodotHandle? {
+      assertEquals(61L, receiver.backendToken())
+      assertEquals(17L, target.backendToken())
+      assertEquals("modulate", property)
+      assertEquals(GodotColor(0.5f, 0.6f, 0.7f, 0.8f), finalValue)
+      assertEquals(0.1, duration)
+      return GodotHandle.fromBackendToken(63L)
     }
   }
 }

@@ -6,6 +6,9 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Node2D
+import net.multigesture.kanama.api.Tween
 import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
 import net.multigesture.kanama.api.WebSignalCallbackRegistry
 import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
@@ -16,6 +19,8 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
 import net.multigesture.kanama.backend.NodeLookupBackendContractProbe
 import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
+import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.web.generated.KanamaWebProjectRegistry
 
 internal val instances = WebInstanceRegistry(KanamaWebProjectRegistry::create)
@@ -407,6 +412,100 @@ fun kanamaWebMatch3Group4Probe(tileObjectId: Int): Int {
   if (callbackCalls == 1) result = result or 4
   if (callbacksAfterFirstEmit == callbacksBefore) result = result or 8
   if (WebSignalCallbackRegistry.size == callbacksBefore) result = result or 16
+  return result
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebMatch3Group5Probe(tileObjectId: Int): Int {
+  val tile = Node(WebObjectId(tileObjectId))
+  val spriteHandle =
+    NodeLookupBackendContractProbe(tile.backendHandle).getNodeOrNull("Sprite2D") ?: return 0
+  val sprite = Node2D(WebObjectId(spriteHandle.backendToken().toInt()))
+
+  var result = 0
+  val tween = tile.createTween() ?: return result
+  result = result or 1
+  if (tween.setParallel(true).isSameInstance(tween)) result = result or 2
+  val scaleTweener = tween.tweenProperty(sprite, "scale", Vector2(1.05, 0.95), 0.05)
+  if (scaleTweener != null) result = result or 4
+  if (
+    scaleTweener != null &&
+      scaleTweener.setTrans(Tween.TRANS_BACK).isSameInstance(scaleTweener) &&
+      scaleTweener.setEase(Tween.EASE_OUT).isSameInstance(scaleTweener)
+  ) {
+    result = result or 8
+  }
+  if (tween.tweenProperty(sprite, "modulate", Color(0.9f, 0.8f, 0.7f, 1.0f), 0.05) != null) {
+    result = result or 16
+  }
+  if (
+    tween.signal(Tween.Signals.finished).connect(
+      tile,
+      argumentCount = 0,
+      flags = GodotObject.CONNECT_ONE_SHOT,
+    ) {} == 0L
+  ) {
+    result = result or 32
+  }
+
+  val callbacksBeforeKilledTween = WebSignalCallbackRegistry.size
+  var killedCallbackCalls = 0
+  val killedTween = tile.createTween()
+  val killedConnection =
+    killedTween?.signal(Tween.Signals.finished)?.connect(
+      tile,
+      argumentCount = 0,
+      flags = GodotObject.CONNECT_ONE_SHOT,
+    ) {
+      killedCallbackCalls += 1
+    }
+  if (killedTween != null && killedTween.tweenProperty(sprite, "scale", Vector2.ONE, 1.0) != null) {
+    killedTween.kill()
+    result = result or 64
+  }
+  if (
+    killedConnection == 0L &&
+      killedCallbackCalls == 0 &&
+      WebSignalCallbackRegistry.size == callbacksBeforeKilledTween
+  ) {
+    result = result or 128
+  }
+  return result
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebMatch3Group5SnapshotProbe(
+  tileObjectId: Int,
+  expectedScaleX: Double,
+  expectedScaleY: Double,
+  expectedR: Double,
+  expectedG: Double,
+  expectedB: Double,
+  expectedA: Double,
+): Int {
+  val tile = Node(WebObjectId(tileObjectId))
+  val spriteHandle =
+    NodeLookupBackendContractProbe(tile.backendHandle).getNodeOrNull("Sprite2D") ?: return 0
+  val sprite = Node2D(WebObjectId(spriteHandle.backendToken().toInt()))
+  val scale = sprite.scale
+  val modulate = sprite.modulate
+  var result = 0
+  if (
+    kotlin.math.abs(scale.x - expectedScaleX) <= 0.01 &&
+      kotlin.math.abs(scale.y - expectedScaleY) <= 0.01
+  ) {
+    result = result or 1
+  }
+  if (
+    kotlin.math.abs(modulate.r.toDouble() - expectedR) <= 0.01 &&
+      kotlin.math.abs(modulate.g.toDouble() - expectedG) <= 0.01 &&
+      kotlin.math.abs(modulate.b.toDouble() - expectedB) <= 0.01 &&
+      kotlin.math.abs(modulate.a.toDouble() - expectedA) <= 0.01
+  ) {
+    result = result or 2
+  }
   return result
 }
 

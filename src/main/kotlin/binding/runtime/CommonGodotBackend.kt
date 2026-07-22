@@ -2,6 +2,7 @@ package net.multigesture.kanama.binding.runtime
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
@@ -43,6 +44,17 @@ internal object CommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
     value: Boolean,
   ): Int = ObjectCalls.ptrcallWithBoolArgRetInt(segment(callSite), segment(receiver), value)
+
+  override fun invokeBoolRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): GodotHandle? =
+    collapseRetainedFluentResult(
+      receiver,
+      ObjectCalls.ptrcallWithBoolArgRetObject(segment(callSite), segment(receiver), value),
+    )
 
   override fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
@@ -197,9 +209,10 @@ internal object CommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
     value: Long,
   ): GodotHandle? =
-    ObjectCalls.ptrcallWithLongArgRetObject(segment(callSite), segment(receiver), value)
-      .takeIf { it.address() != 0L }
-      ?.let { GodotHandle.fromBackendToken(it.address()) }
+    collapseRetainedFluentResult(
+      receiver,
+      ObjectCalls.ptrcallWithLongArgRetObject(segment(callSite), segment(receiver), value),
+    )
 
   override fun invokeNoArgsRetHandle(
     descriptor: GodotCallDescriptor,
@@ -327,11 +340,63 @@ internal object CommonGodotBackend : GodotBackendSpi {
     )
   }
 
+  override fun invokeObjectNodePathVector2DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle? =
+    ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+        segment(callSite),
+        segment(receiver),
+        segment(target),
+        property,
+        Vector2(finalValue.x, finalValue.y),
+        duration,
+      )
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
+
+  override fun invokeObjectNodePathColorDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle? =
+    ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+        segment(callSite),
+        segment(receiver),
+        segment(target),
+        property,
+        Color(finalValue.r, finalValue.g, finalValue.b, finalValue.a),
+        duration,
+      )
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
+
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())
 
   private fun segment(callSite: GodotCallSite): MemorySegment =
     MemorySegment.ofAddress(callSite.backendToken())
+
+  private fun collapseRetainedFluentResult(
+    receiver: GodotHandle,
+    returned: MemorySegment,
+  ): GodotHandle? {
+    if (returned.address() == 0L) return null
+    if (returned.address() == receiver.backendToken()) {
+      RefCounted.releaseHandle(returned)
+      return receiver
+    }
+    return GodotHandle.fromBackendToken(returned.address())
+  }
 }
 
 @OptIn(InternalKanamaBackendApi::class)

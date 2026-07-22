@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 2;
+  const KANAMA_WEB_PROTOCOL_VERSION = 3;
 
   function commandWordCount(opcode) {
     if (opcode === 5 || opcode === 15) return 2;
@@ -70,7 +70,9 @@
     objectQueryCallbacks: new Map(),
     noArgsVector2Callbacks: new Map(),
     signalVector2iCallbacks: new Map(),
+    tweenCallbacks: new Map(),
     handleOwners: new Map(),
+    tweenChildren: new Map(),
     activeOwnerHandle: 0,
     benchmarkCallback: null,
     firstHandle: 0,
@@ -149,6 +151,9 @@
     match3FirstTileHandle: 0,
     match3ScaleMutations: 0,
     match3ModulateMutations: 0,
+    match3TweensCreated: 0,
+    match3TweenProperties: 0,
+    match3TweensReleased: 0,
     match3DeferredMethods: {},
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
@@ -203,11 +208,7 @@
       );
     },
     shouldDeferGameplayMethod(scriptName, methodName) {
-      return (
-        this.mode === "match3" &&
-        scriptName.endsWith(".Tile") &&
-        (methodName === "_on_mouse_entered" || methodName === "_on_mouse_exited")
-      );
+      return false;
     },
     recordDeferredGameplayMethod(scriptName, methodName) {
       const key = `${scriptName}.${methodName}`;
@@ -443,7 +444,7 @@
       if (result === 1) this.releaseBrowserHandlesOwnedBy(handle);
       return result;
     },
-    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i) {
+    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i, tween) {
       this.handleOwners.set(handle, handle);
       this.applyCallbacks.set(handle, apply);
       this.immediateCallbacks.set(handle, immediate);
@@ -459,6 +460,7 @@
       this.objectQueryCallbacks.set(handle, objectQuery);
       this.noArgsVector2Callbacks.set(handle, noArgsVector2);
       this.signalVector2iCallbacks.set(handle, signalVector2i);
+      this.tweenCallbacks.set(handle, tween);
     },
     clearProxyCallbacks(handle) {
       this.applyCallbacks.delete(handle);
@@ -475,6 +477,7 @@
       this.objectQueryCallbacks.delete(handle);
       this.noArgsVector2Callbacks.delete(handle);
       this.signalVector2iCallbacks.delete(handle);
+      this.tweenCallbacks.delete(handle);
       this.handleOwners.delete(handle);
     },
     ownerForHandle(handle) {
@@ -556,8 +559,12 @@
         this.freeBrowserHandleSlots.push(slotIndex);
       }
       this.liveBrowserHandleCount = 0;
+      this.tweenChildren.clear();
     },
     releaseBrowserHandlesOwnedBy(owner) {
+      for (const tweenHandle of [...this.tweenChildren.keys()]) {
+        if (this.handleOwners.get(tweenHandle) === owner) this.tweenChildren.delete(tweenHandle);
+      }
       for (const [handle, handleOwner] of [...this.handleOwners]) {
         if (handleOwner !== owner || (handle & BROWSER_HANDLE_NAMESPACE) === 0) continue;
         const slot = this.browserHandleSlot(handle);
@@ -772,8 +779,11 @@
         handle,
         "Godot no-args object",
       );
-      const resultHandle = this.allocateBrowserHandle("Node", this.ownerForHandle(handle));
-      this.api.kanamaWebAdoptNodeHandle(resultHandle);
+      const isTween = opcode === 36;
+      const kind = isTween ? "Tween" : "Node";
+      const resultHandle = this.allocateBrowserHandle(kind, this.ownerForHandle(handle));
+      if (isTween) this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      else this.api.kanamaWebAdoptNodeHandle(resultHandle);
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle);
       const result = this.immediateObjectHandleResult;
@@ -781,10 +791,94 @@
         throw new Error("Godot no-args object callback published an invalid handle");
       }
       if (result === 0) {
-        this.api.kanamaWebDiscardNodeHandle(resultHandle);
-        this.releaseBrowserHandle(resultHandle, "Node");
+        if (isTween) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        else this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, kind);
+      } else if (isTween) {
+        this.tweenChildren.set(resultHandle, new Set());
+        if (this.mode === "match3") this.match3TweensCreated += 1;
       }
       return result;
+    },
+    immediateTweenNoArgs(opcode, handle) {
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween");
+      this.immediateLongResult = null;
+      callback(opcode, handle);
+      if (!Number.isInteger(this.immediateLongResult)) {
+        throw new Error("Godot Tween no-args callback did not publish a result");
+      }
+      return this.immediateLongResult;
+    },
+    immediateTweenBoolRetObject(opcode, handle, value) {
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween bool");
+      this.immediateObjectHandleResult = null;
+      callback(opcode, handle, value);
+      if (this.immediateObjectHandleResult !== handle) {
+        throw new Error("Godot Tween bool callback did not return its receiver");
+      }
+      return handle;
+    },
+    immediateTweenLongRetObject(opcode, handle, value) {
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tweener long");
+      this.immediateObjectHandleResult = null;
+      callback(opcode, handle, value);
+      if (this.immediateObjectHandleResult !== handle) {
+        throw new Error("Godot Tweener long callback did not return its receiver");
+      }
+      return handle;
+    },
+    immediateTweenPropertyVector2(opcode, tweenHandle, targetHandle, property, x, y, duration) {
+      return this.immediateTweenProperty(
+        opcode,
+        tweenHandle,
+        targetHandle,
+        property,
+        [x, y, duration],
+      );
+    },
+    immediateTweenPropertyColor(opcode, tweenHandle, targetHandle, property, r, g, b, a, duration) {
+      return this.immediateTweenProperty(
+        opcode,
+        tweenHandle,
+        targetHandle,
+        property,
+        [r, g, b, a, duration],
+      );
+    },
+    immediateTweenProperty(opcode, tweenHandle, targetHandle, property, values) {
+      const owner = this.ownerForHandle(tweenHandle);
+      const callback = this.callbackFor(this.tweenCallbacks, tweenHandle, "Godot Tween property");
+      const resultHandle = this.allocateBrowserHandle("PropertyTweener", owner);
+      this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(opcode, tweenHandle, resultHandle, targetHandle, property, ...values);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        throw new Error("Godot Tween property callback published an invalid handle");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "PropertyTweener");
+      } else {
+        const children = this.tweenChildren.get(tweenHandle);
+        if (!children) throw new Error(`Unknown Kanama Web Tween handle=${tweenHandle}`);
+        children.add(resultHandle);
+        if (this.mode === "match3") this.match3TweenProperties += 1;
+      }
+      return result;
+    },
+    releaseTweenGraph(tweenHandle) {
+      const children = this.tweenChildren.get(tweenHandle);
+      if (!children) return 0;
+      this.tweenChildren.delete(tweenHandle);
+      for (const handle of [...children, tweenHandle]) {
+        const slot = this.browserHandleSlot(handle);
+        if (!slot) continue;
+        this.api.kanamaWebDiscardBrowserHandle(handle);
+        this.releaseBrowserHandle(handle, slot.kind);
+      }
+      if (this.mode === "match3") this.match3TweensReleased += 1;
+      return 1;
     },
     immediateSetCustomMouseCursor(owner, resourceHandle, shape, hotspotX, hotspotY) {
       const callback = this.callbackFor(this.inputCursorCallbacks, owner, "Godot Input cursor");

@@ -18,6 +18,7 @@ enum class GodotExecutionMode {
 @InternalKanamaBackendApi
 enum class GodotCallShape {
   BOOL_RET_INT,
+  BOOL_RET_HANDLE,
   NOARGS_RET_VECTOR2,
   VECTOR2_ARG,
   NOARGS_RET_RECT2,
@@ -44,6 +45,8 @@ enum class GodotCallShape {
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
   COLOR_ARG,
+  OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE,
+  OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE,
 }
 
 @InternalKanamaBackendApi
@@ -97,6 +100,13 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: Boolean,
   ): Int
+
+  fun invokeBoolRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): GodotHandle?
 
   fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
@@ -271,6 +281,26 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: GodotColor,
   )
+
+  fun invokeObjectNodePathVector2DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle?
+
+  fun invokeObjectNodePathColorDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle?
 }
 
 /**
@@ -308,6 +338,17 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     return selected.invokeBoolRetInt(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeBoolRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.BOOL_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeBoolRetHandle(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
   fun invokeNoArgsRetVector2(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotVector2 {
@@ -628,6 +669,52 @@ object GodotBackendCalls {
     selected.invokeColorArg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
+  fun invokeObjectNodePathVector2DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.requireLive(target)
+    return selected.invokeObjectNodePathVector2DoubleRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+  }
+
+  fun invokeObjectNodePathColorDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.requireLive(target)
+    return selected.invokeObjectNodePathColorDoubleRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -775,6 +862,72 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
   fun queueFree() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.NODE_QUEUE_FREE, handle)
   }
+
+  fun createTween(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_CREATE_TWEEN, handle)
+}
+
+/** Typed Tween slice used by Match3 animation and feedback. */
+@InternalKanamaBackendApi
+class TweenBackendContractProbe(private val handle: GodotHandle) {
+  fun kill() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.TWEEN_KILL, handle)
+  }
+
+  fun setParallel(parallel: Boolean = true): GodotHandle? =
+    GodotBackendCalls.invokeBoolRetHandle(
+      InitialGodotCallDescriptors.TWEEN_SET_PARALLEL,
+      handle,
+      parallel,
+    )
+
+  fun tweenProperty(
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle? =
+    GodotBackendCalls.invokeObjectNodePathVector2DoubleRetHandle(
+      InitialGodotCallDescriptors.TWEEN_TWEEN_PROPERTY_VECTOR2,
+      handle,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+
+  fun tweenProperty(
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle? =
+    GodotBackendCalls.invokeObjectNodePathColorDoubleRetHandle(
+      InitialGodotCallDescriptors.TWEEN_TWEEN_PROPERTY_COLOR,
+      handle,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+}
+
+/** Typed PropertyTweener configuration slice used by Match3 movement easing. */
+@InternalKanamaBackendApi
+class PropertyTweenerBackendContractProbe(private val handle: GodotHandle) {
+  fun setTrans(transition: Long): GodotHandle? =
+    GodotBackendCalls.invokeLongRetHandle(
+      InitialGodotCallDescriptors.PROPERTYTWEENER_SET_TRANS,
+      handle,
+      transition,
+    )
+
+  fun setEase(ease: Long): GodotHandle? =
+    GodotBackendCalls.invokeLongRetHandle(
+      InitialGodotCallDescriptors.PROPERTYTWEENER_SET_EASE,
+      handle,
+      ease,
+    )
 }
 
 /** Typed Sprite2D mutation slice used by the sprite Bunnymark port. */

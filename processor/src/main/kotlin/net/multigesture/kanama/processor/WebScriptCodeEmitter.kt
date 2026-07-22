@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 2
+    const val PROTOCOL_VERSION = 3
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -618,8 +618,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_object_query_callback")
     appendLine("var _kanama_noargs_vector2_callback")
     appendLine("var _kanama_signal_vector2i_callback")
+    appendLine("var _kanama_tween_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
     appendLine("var _kanama_object_handles: Dictionary = {}")
+    appendLine("var _kanama_tween_children: Dictionary = {}")
+    appendLine("var _kanama_tween_targets: Dictionary = {}")
     appendLine()
     appendLine("func _kanama_ensure_created() -> int:")
     appendLine("\tif not OS.has_feature(\"web\"):")
@@ -677,6 +680,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t_kanama_signal_vector2i_callback = JavaScriptBridge.create_callback(_kanama_signal_emit_vector2i)"
     )
+    appendLine("\t_kanama_tween_callback = JavaScriptBridge.create_callback(_kanama_tween_call)")
     appendLine("\t_kanama_bridge.installProxyCallbacks(")
     appendLine("\t\t_kanama_handle,")
     appendLine("\t\t_kanama_apply_callback,")
@@ -692,7 +696,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_connect_callback,")
     appendLine("\t\t_kanama_object_query_callback,")
     appendLine("\t\t_kanama_noargs_vector2_callback,")
-    appendLine("\t\t_kanama_signal_vector2i_callback)")
+    appendLine("\t\t_kanama_signal_vector2i_callback,")
+    appendLine("\t\t_kanama_tween_callback)")
     if (node2dAttachment) {
       appendLine("\tvar target: Node2D = self")
       appendLine(
@@ -811,6 +816,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_clear_callbacks()")
     appendLine("\t_kanama_handle = 0")
     appendLine("\t_kanama_object_handles.clear()")
+    appendLine("\t_kanama_tween_children.clear()")
+    appendLine("\t_kanama_tween_targets.clear()")
     appendLine("\t_kanama_bridge.recordFreed(freed_handle)")
     appendLine()
     appendLine("func _kanama_clear_callbacks() -> void:")
@@ -832,6 +839,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_object_query_callback = null")
     appendLine("\t_kanama_noargs_vector2_callback = null")
     appendLine("\t_kanama_signal_vector2i_callback = null")
+    appendLine("\t_kanama_tween_callback = null")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
     appendLine(
@@ -1059,13 +1067,21 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\tvar receiver: Node = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle) as Node"
     )
-    appendLine(
-      "\tvar value: Object = receiver.get_viewport() if opcode == 19 and receiver != null else null"
-    )
+    appendLine("\tvar value: Object = null")
+    appendLine("\tif opcode == 19 and receiver != null:")
+    appendLine("\t\tvalue = receiver.get_viewport()")
+    appendLine("\telif opcode == 36 and receiver != null:")
+    appendLine("\t\tvalue = receiver.create_tween()")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
     appendLine("\t_kanama_object_handles[result_handle] = value")
+    appendLine("\tif value is Tween:")
+    appendLine("\t\t_kanama_tween_children[result_handle] = []")
+    appendLine("\t\t_kanama_tween_targets[result_handle] = []")
+    appendLine(
+      "\t\t(value as Tween).finished.connect(_kanama_tween_finished.bind(result_handle), CONNECT_ONE_SHOT)"
+    )
     appendLine("\tif value is Viewport:")
     appendLine("\t\tvar viewport_rect := (value as Viewport).get_visible_rect()")
     appendLine(
@@ -1073,6 +1089,77 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
+    appendLine()
+    appendLine("func _kanama_tween_call(args: Array) -> int:")
+    appendLine("\tvar opcode := int(args[0])")
+    appendLine("\tvar receiver_handle := int(args[1])")
+    appendLine("\tvar receiver: Object = _kanama_object_handles.get(receiver_handle)")
+    appendLine("\tif opcode == 37 and receiver is Tween:")
+    appendLine("\t\t(receiver as Tween).kill()")
+    appendLine("\t\t_kanama_release_tween(receiver_handle)")
+    appendLine("\t\t_kanama_bridge.recordImmediateLongResult(1)")
+    appendLine("\t\treturn 1")
+    appendLine("\tvar result_handle := 0")
+    appendLine("\tif opcode == 38 and receiver is Tween:")
+    appendLine("\t\t(receiver as Tween).set_parallel(bool(args[2]))")
+    appendLine("\t\tresult_handle = receiver_handle")
+    appendLine("\telif (opcode == 39 or opcode == 40) and receiver is Tween:")
+    appendLine("\t\tvar proposed_handle := int(args[2])")
+    appendLine("\t\tvar target_handle := int(args[3])")
+    appendLine(
+      "\t\tvar target: Object = self if target_handle == _kanama_handle else _kanama_object_handles.get(target_handle)"
+    )
+    appendLine("\t\tvar tweener: PropertyTweener = null")
+    appendLine("\t\tif target != null and opcode == 39:")
+    appendLine(
+      "\t\t\ttweener = (receiver as Tween).tween_property(target, NodePath(String(args[4])), Vector2(float(args[5]), float(args[6])), float(args[7]))"
+    )
+    appendLine("\t\telif target != null and opcode == 40:")
+    appendLine(
+      "\t\t\ttweener = (receiver as Tween).tween_property(target, NodePath(String(args[4])), Color(float(args[5]), float(args[6]), float(args[7]), float(args[8])), float(args[9]))"
+    )
+    appendLine("\t\tif tweener != null:")
+    appendLine("\t\t\t_kanama_object_handles[proposed_handle] = tweener")
+    appendLine("\t\t\tvar children: Array = _kanama_tween_children.get(receiver_handle, [])")
+    appendLine("\t\t\tchildren.append(proposed_handle)")
+    appendLine("\t\t\t_kanama_tween_children[receiver_handle] = children")
+    appendLine("\t\t\tvar targets: Array = _kanama_tween_targets.get(receiver_handle, [])")
+    appendLine("\t\t\tif not targets.has(target_handle):")
+    appendLine("\t\t\t\ttargets.append(target_handle)")
+    appendLine("\t\t\t_kanama_tween_targets[receiver_handle] = targets")
+    appendLine("\t\t\tresult_handle = proposed_handle")
+    appendLine("\telif opcode == 41 and receiver is PropertyTweener:")
+    appendLine("\t\t(receiver as PropertyTweener).set_trans(int(args[2]))")
+    appendLine("\t\tresult_handle = receiver_handle")
+    appendLine("\telif opcode == 42 and receiver is PropertyTweener:")
+    appendLine("\t\t(receiver as PropertyTweener).set_ease(int(args[2]))")
+    appendLine("\t\tresult_handle = receiver_handle")
+    appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
+    appendLine("\treturn int(result_handle != 0)")
+    appendLine()
+    appendLine("func _kanama_tween_finished(tween_handle: int) -> void:")
+    appendLine("\t_kanama_release_tween(tween_handle)")
+    appendLine()
+    appendLine("func _kanama_release_tween(tween_handle: int) -> void:")
+    appendLine("\tif not _kanama_tween_children.has(tween_handle):")
+    appendLine("\t\treturn")
+    appendLine("\tvar targets: Array = _kanama_tween_targets.get(tween_handle, [])")
+    appendLine("\tfor target_handle in targets:")
+    appendLine(
+      "\t\tvar target: Object = self if int(target_handle) == _kanama_handle else _kanama_object_handles.get(int(target_handle))"
+    )
+    appendLine("\t\tif target is Node2D:")
+    appendLine("\t\t\tvar node_2d := target as Node2D")
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(int(target_handle), node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+    )
+    appendLine("\tvar children: Array = _kanama_tween_children.get(tween_handle, [])")
+    appendLine("\tfor child_handle in children:")
+    appendLine("\t\t_kanama_object_handles.erase(int(child_handle))")
+    appendLine("\t_kanama_object_handles.erase(tween_handle)")
+    appendLine("\t_kanama_tween_children.erase(tween_handle)")
+    appendLine("\t_kanama_tween_targets.erase(tween_handle)")
+    appendLine("\t_kanama_bridge.releaseTweenGraph(tween_handle)")
     appendLine()
     appendLine("func _kanama_input_cursor(args: Array) -> int:")
     appendLine("\tvar resource_handle := int(args[0])")

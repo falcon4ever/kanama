@@ -566,6 +566,7 @@ int32_t kanama_ios_godot_object_disconnect_bound(
     int32_t arg_count
 );
 
+/* Returns an owned +1 PropertyTweener reference; the caller must release it. */
 int64_t kanama_ios_godot_tween_tween_property_vector2(
     int64_t tween,
     int64_t target,
@@ -575,6 +576,7 @@ int64_t kanama_ios_godot_tween_tween_property_vector2(
     double duration
 );
 
+/* Returns an owned +1 PropertyTweener reference; the caller must release it. */
 int64_t kanama_ios_godot_tween_tween_property_color(
     int64_t tween,
     int64_t target,
@@ -588,8 +590,10 @@ int64_t kanama_ios_godot_tween_tween_property_color(
 
 int64_t kanama_ios_godot_tween_set_parallel(int64_t tween, int32_t parallel);
 
+/* Returns an owned +1 CallbackTweener reference; the caller must release it. */
 int64_t kanama_ios_godot_tween_tween_callback(int64_t tween, int64_t target, const char *method);
 
+/* Returns an owned +1 MethodTweener reference; the caller must release it. */
 int64_t kanama_ios_godot_tween_tween_method(
     int64_t tween,
     int64_t target,
@@ -599,6 +603,7 @@ int64_t kanama_ios_godot_tween_tween_method(
     double duration
 );
 
+/* Returns an owned +1 self-reference; fluent callers must collapse and release it. */
 int64_t kanama_ios_godot_property_tweener_from_color(
     int64_t tweener,
     double r,

@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosGodot
+import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
@@ -44,6 +45,17 @@ internal object CommonGodotBackend : GodotBackendSpi {
     value: Boolean,
   ): Int = ObjectCalls.ptrcallWithBoolArgRetInt(segment(callSite), segment(receiver), value)
 
+  override fun invokeBoolRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): GodotHandle? =
+    collapseRetainedFluentResult(
+      receiver,
+      IosGodot.tweenSetParallel(receiver.backendToken(), if (value) 1 else 0),
+    )
+
   override fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -80,7 +92,11 @@ internal object CommonGodotBackend : GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
   ) {
-    ObjectCalls.ptrcallNoArgs(segment(callSite), segment(receiver))
+    if (descriptor.opcode == 37) {
+      IosGodot.tweenKill(receiver.backendToken())
+    } else {
+      ObjectCalls.ptrcallNoArgs(segment(callSite), segment(receiver))
+    }
   }
 
   override fun invokeTexture2DVector2ColorArgs(
@@ -192,18 +208,29 @@ internal object CommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
     value: Long,
   ): GodotHandle? =
-    ObjectCalls.ptrcallWithLongArgRetObject(segment(callSite), segment(receiver), value)
-      .takeIf { it.address() != 0L }
-      ?.let { GodotHandle.fromBackendToken(it.address()) }
+    collapseRetainedFluentResult(
+      receiver,
+      when (descriptor.opcode) {
+        41 -> IosGodot.tweenerSetTrans(receiver.backendToken(), value)
+        42 -> IosGodot.tweenerSetEase(receiver.backendToken(), value)
+        else ->
+          ObjectCalls.ptrcallWithLongArgRetObject(segment(callSite), segment(receiver), value)
+            .address()
+      },
+    )
 
   override fun invokeNoArgsRetHandle(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
   ): GodotHandle? =
-    ObjectCalls.ptrcallNoArgsRetObject(segment(callSite), segment(receiver))
-      .takeIf { it.address() != 0L }
-      ?.let { GodotHandle.fromBackendToken(it.address()) }
+    (if (descriptor.opcode == 36) {
+        IosGodot.nodeCreateTween(receiver.backendToken())
+      } else {
+        ObjectCalls.ptrcallNoArgsRetObject(segment(callSite), segment(receiver)).address()
+      })
+      .takeIf { it != 0L }
+      ?.let(GodotHandle::fromBackendToken)
 
   override fun invokeObjectLongVector2Args(
     descriptor: GodotCallDescriptor,
@@ -316,11 +343,62 @@ internal object CommonGodotBackend : GodotBackendSpi {
     )
   }
 
+  override fun invokeObjectNodePathVector2DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle? =
+    IosGodot.tweenTweenPropertyVector2(
+        receiver.backendToken(),
+        target.backendToken(),
+        property,
+        finalValue.x.toDouble(),
+        finalValue.y.toDouble(),
+        duration,
+      )
+      .takeIf { it != 0L }
+      ?.let(GodotHandle::fromBackendToken)
+
+  override fun invokeObjectNodePathColorDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle? =
+    IosGodot.tweenTweenPropertyColor(
+        receiver.backendToken(),
+        target.backendToken(),
+        property,
+        finalValue.r.toDouble(),
+        finalValue.g.toDouble(),
+        finalValue.b.toDouble(),
+        finalValue.a.toDouble(),
+        duration,
+      )
+      .takeIf { it != 0L }
+      ?.let(GodotHandle::fromBackendToken)
+
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())
 
   private fun segment(callSite: GodotCallSite): MemorySegment =
     MemorySegment.ofAddress(callSite.backendToken())
+
+  private fun collapseRetainedFluentResult(receiver: GodotHandle, returned: Long): GodotHandle? {
+    if (returned == 0L) return null
+    if (returned == receiver.backendToken()) {
+      RefCounted.releaseHandle(MemorySegment.ofAddress(returned))
+      return receiver
+    }
+    return GodotHandle.fromBackendToken(returned)
+  }
 }
 
 @OptIn(InternalKanamaBackendApi::class)

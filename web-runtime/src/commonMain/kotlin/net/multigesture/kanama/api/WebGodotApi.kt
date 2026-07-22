@@ -98,7 +98,7 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
       Viewport(WebObjectId(handle.backendToken().toInt()))
     }
 
-  fun createTween(): Tween? = unsupportedWebGameplayCall("Node.create_tween")
+  fun createTween(): Tween? = NodeBackendContractProbe(backendHandle).createTween()?.let(::Tween)
 }
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {

@@ -589,14 +589,14 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
 
 // KANAMA-IOS-HANDWRITTEN: [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path
 // (final-value is a Variant), not generatable via the audited ptrcall set. Bespoke by design.
-open class Tweener(handle: MemorySegment) : GodotObject(handle) {
+open class Tweener(handle: MemorySegment) : RefCounted(handle) {
     fun setTrans(value: Long): Tweener {
-        IosGodot.tweenerSetTrans(handle.address(), value)
+        releaseIosFluentSelf(handle, IosGodot.tweenerSetTrans(handle.address(), value))
         return this
     }
 
     fun setEase(value: Long): Tweener {
-        IosGodot.tweenerSetEase(handle.address(), value)
+        releaseIosFluentSelf(handle, IosGodot.tweenerSetEase(handle.address(), value))
         return this
     }
 }
@@ -605,9 +605,12 @@ class PropertyTweener(handle: MemorySegment) : Tweener(handle) {
     // PropertyTweener.from(value) — sets the tween's starting value. The demos only use a Color
     // (modulate) start; routed through the C shim (Variant arg). Returns this for chaining.
     fun from(value: Color): PropertyTweener {
-        IosGodot.propertyTweenerFromColor(
-            handle.address(),
-            value.r.toDouble(), value.g.toDouble(), value.b.toDouble(), value.a.toDouble(),
+        releaseIosFluentSelf(
+            handle,
+            IosGodot.propertyTweenerFromColor(
+                handle.address(),
+                value.r.toDouble(), value.g.toDouble(), value.b.toDouble(), value.a.toDouble(),
+            ),
         )
         return this
     }
@@ -615,22 +618,31 @@ class PropertyTweener(handle: MemorySegment) : Tweener(handle) {
 
 class CallbackTweener(handle: MemorySegment) : Tweener(handle)
 
-class Tween(handle: MemorySegment) : GodotObject(handle) {
+class Tween(handle: MemorySegment) : RefCounted(handle) {
     fun setParallel(parallel: Boolean): Tween {
-        IosGodot.tweenSetParallel(handle.address(), if (parallel) 1 else 0)
+        releaseIosFluentSelf(
+            handle,
+            IosGodot.tweenSetParallel(handle.address(), if (parallel) 1 else 0),
+        )
         return this
     }
 
     // Tween.bind_node(node) — ptrcall (object arg, returns self). Mirrors desktop Tween.bindNode.
     fun bindNode(node: Node): Tween {
-        ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, handle, node.handle)
+        releaseIosFluentSelf(
+            handle,
+            ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, handle, node.handle).address(),
+        )
         return this
     }
 
     // Tween.set_ease(ease) — ptrcall (int arg, returns self). Tween-level default ease (distinct
     // from Tweener.setEase, which configures an individual tweener).
     fun setEase(ease: Long): Tween {
-        ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease)
+        releaseIosFluentSelf(
+            handle,
+            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease).address(),
+        )
         return this
     }
 
@@ -676,6 +688,14 @@ class Tween(handle: MemorySegment) : GodotObject(handle) {
         private val bindNodeBind by lazy { ObjectCalls.getMethodBind("Tween", "bind_node", 2946786331L) }
         private val setEaseBind by lazy { ObjectCalls.getMethodBind("Tween", "set_ease", 1208117252L) }
     }
+}
+
+private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long) {
+    if (returned == 0L) return
+    check(returned == receiver.address()) {
+        "Godot fluent RefCounted call returned a different object"
+    }
+    RefCounted.releaseHandle(MemorySegment.ofAddress(returned))
 }
 
 class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {

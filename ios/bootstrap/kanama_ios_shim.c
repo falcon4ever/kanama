@@ -3879,6 +3879,23 @@ int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name)
     );
 }
 
+static int32_t kanama_ios_retain_refcounted_object(GDExtensionObjectPtr object) {
+    if (object == NULL ||
+        !kanama_ios_godot_object_is_class((int64_t)(intptr_t)object, "RefCounted")) {
+        return 0;
+    }
+    GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
+        &g_ref_counted_reference_bind,
+        "RefCounted",
+        "reference",
+        KANAMA_IOS_REF_COUNTED_NOARGS_HASH
+    );
+    if (reference_bind == NULL) return 0;
+    GDExtensionBool referenced = 0;
+    g_object_method_bind_ptrcall(reference_bind, object, NULL, &referenced);
+    return 1;
+}
+
 int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name) {
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_node_is_in_group_bind,
@@ -6057,6 +6074,7 @@ int64_t kanama_ios_godot_tween_tween_property_vector2(
         GDExtensionVariantType rt = g_variant_get_type(ret_v);
         if (rt == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
             g_variant_to_object(&result, ret_v);
+            if (!kanama_ios_retain_refcounted_object(result)) result = NULL;
         }
     }
 
@@ -6127,6 +6145,7 @@ int64_t kanama_ios_godot_tween_tween_property_color(
         GDExtensionVariantType rt = g_variant_get_type(ret_v);
         if (rt == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
             g_variant_to_object(&result, ret_v);
+            if (!kanama_ios_retain_refcounted_object(result)) result = NULL;
         }
     }
 
@@ -6186,6 +6205,7 @@ int64_t kanama_ios_godot_tween_tween_callback(int64_t tween, int64_t target, con
     if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
         if (g_variant_get_type(ret_v) == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
             g_variant_to_object(&result, ret_v);
+            if (!kanama_ios_retain_refcounted_object(result)) result = NULL;
         }
     }
 
@@ -6265,6 +6285,7 @@ int64_t kanama_ios_godot_tween_tween_method(
     if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
         if (g_variant_get_type(ret_v) == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
             g_variant_to_object(&result, ret_v);
+            if (!kanama_ios_retain_refcounted_object(result)) result = NULL;
         }
     }
 
@@ -6319,6 +6340,7 @@ int64_t kanama_ios_godot_property_tweener_from_color(
     if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
         if (g_variant_get_type(ret_v) == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
             g_variant_to_object(&result, ret_v);
+            if (!kanama_ios_retain_refcounted_object(result)) result = NULL;
         }
     }
 

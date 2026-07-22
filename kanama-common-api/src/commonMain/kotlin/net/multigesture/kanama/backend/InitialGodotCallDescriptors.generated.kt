@@ -388,4 +388,81 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE_CREATE_TWEEN =
+    GodotCallDescriptor(
+      opcode = 36,
+      className = "Node",
+      methodName = "create_tween",
+      hash = 3426978995L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val TWEEN_KILL =
+    GodotCallDescriptor(
+      opcode = 37,
+      className = "Tween",
+      methodName = "kill",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TWEEN_SET_PARALLEL =
+    GodotCallDescriptor(
+      opcode = 38,
+      className = "Tween",
+      methodName = "set_parallel",
+      hash = 1942052223L,
+      shape = GodotCallShape.BOOL_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val TWEEN_TWEEN_PROPERTY_VECTOR2 =
+    GodotCallDescriptor(
+      opcode = 39,
+      className = "Tween",
+      methodName = "tween_property",
+      hash = 4049770449L,
+      shape = GodotCallShape.OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val TWEEN_TWEEN_PROPERTY_COLOR =
+    GodotCallDescriptor(
+      opcode = 40,
+      className = "Tween",
+      methodName = "tween_property",
+      hash = 4049770449L,
+      shape = GodotCallShape.OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val PROPERTYTWEENER_SET_TRANS =
+    GodotCallDescriptor(
+      opcode = 41,
+      className = "PropertyTweener",
+      methodName = "set_trans",
+      hash = 1899107404L,
+      shape = GodotCallShape.LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val PROPERTYTWEENER_SET_EASE =
+    GodotCallDescriptor(
+      opcode = 42,
+      className = "PropertyTweener",
+      methodName = "set_ease",
+      hash = 1080455622L,
+      shape = GodotCallShape.LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
 }

@@ -52,6 +52,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebChildCount(receiver.webId(), value)
   }
 
+  override fun invokeBoolRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return existingReturnedObject(
+      receiver,
+      immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),
+    )
+  }
+
   override fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -115,14 +130,26 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ) {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     val objectId = receiver.webId()
-    commands.appendNoArgsMutation(descriptor.opcode, objectId)
-    if (descriptor.opcode == 15) {
-      positionSnapshots.remove(objectId)
-      if (!instances.isLive(objectId)) {
-        unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
+    when (descriptor.executionMode) {
+      GodotExecutionMode.QUEUED_MUTATION -> {
+        commands.appendNoArgsMutation(descriptor.opcode, objectId)
+        if (descriptor.opcode == 15) {
+          positionSnapshots.remove(objectId)
+          if (!instances.isLive(objectId)) {
+            unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
+          }
+        }
       }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode == 37)
+        commands.flush()
+        check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {
+          "Kanama Web Tween.kill failed for handle=$objectId"
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ ->
+        error("Void call cannot use snapshot execution for opcode=${descriptor.opcode}")
     }
   }
 
@@ -301,7 +328,17 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
     commands.flush()
-    return registerReturnedNode(immediateWebPackedSceneInstantiate(receiver.webId(), value.toInt()))
+    return when (descriptor.opcode) {
+      18 ->
+        registerReturnedNode(immediateWebPackedSceneInstantiate(receiver.webId(), value.toInt()))
+      41,
+      42 ->
+        existingReturnedObject(
+          receiver,
+          immediateWebTweenLongRetObject(descriptor.opcode, receiver.webId(), value.toInt()),
+        )
+      else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeNoArgsRetHandle(
@@ -313,7 +350,12 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return when (descriptor.executionMode) {
       GodotExecutionMode.IMMEDIATE_RESULT -> {
         commands.flush()
-        registerReturnedNode(immediateWebNoArgsObject(descriptor.opcode, receiver.webId()))
+        val token = immediateWebNoArgsObject(descriptor.opcode, receiver.webId())
+        when (descriptor.opcode) {
+          19 -> registerReturnedNode(token)
+          36 -> registerReturnedBrowserObject(token)
+          else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
+        }
       }
       GodotExecutionMode.SNAPSHOT_READ -> {
         require(descriptor.opcode == 33)
@@ -469,6 +511,60 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     modulateSnapshots[receiver.webId()] = value
   }
 
+  override fun invokeObjectNodePathVector2DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyVector2(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue.x.toDouble(),
+        finalValue.y.toDouble(),
+        duration,
+      )
+    )
+  }
+
+  override fun invokeObjectNodePathColorDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyColor(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue.r.toDouble(),
+        finalValue.g.toDouble(),
+        finalValue.b.toDouble(),
+        finalValue.a.toDouble(),
+        duration,
+      )
+    )
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"
@@ -555,6 +651,43 @@ private fun immediateWebPackedSceneInstantiate(resourceId: Int, editState: Int):
 private fun immediateWebNoArgsObject(opcode: Int, objectId: Int): Int =
   js("globalThis.KanamaWebBridge.immediateNoArgsObject(opcode, objectId)")
 
+private fun immediateWebTweenNoArgs(opcode: Int, objectId: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenNoArgs(opcode, objectId)")
+
+private fun immediateWebTweenBoolRetObject(opcode: Int, objectId: Int, value: Boolean): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenBoolRetObject(opcode, objectId, value)")
+
+private fun immediateWebTweenLongRetObject(opcode: Int, objectId: Int, value: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenLongRetObject(opcode, objectId, value)")
+
+private fun immediateWebTweenPropertyVector2(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  property: String,
+  x: Double,
+  y: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenPropertyVector2(opcode, tweenId, targetId, property, x, y, duration)"
+  )
+
+private fun immediateWebTweenPropertyColor(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  property: String,
+  r: Double,
+  g: Double,
+  b: Double,
+  a: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenPropertyColor(opcode, tweenId, targetId, property, r, g, b, a, duration)"
+  )
+
 private fun immediateWebSetCustomMouseCursor(
   ownerId: Int,
   resourceId: Int,
@@ -606,6 +739,24 @@ private fun registerReturnedNode(token: Int): GodotHandle? =
       if (!instances.isLive(it)) registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
       GodotHandle.fromBackendToken(it.toLong())
     }
+
+private fun registerReturnedBrowserObject(token: Int): GodotHandle? =
+  token
+    .takeIf { it > 0 }
+    ?.let {
+      registerWebBrowserHandle(it, WebBrowserHandleKind.OBJECT)
+      GodotHandle.fromBackendToken(it.toLong())
+    }
+
+private fun existingReturnedObject(receiver: GodotHandle, token: Int): GodotHandle? =
+  token
+    .takeIf { it > 0 }
+    ?.also {
+      check(it == receiver.webId()) {
+        "Kanama Web fluent call returned handle=$it instead of receiver=${receiver.webId()}"
+      }
+    }
+    ?.let { GodotHandle.fromBackendToken(it.toLong()) }
 
 internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
   check(handle > 0) { "Kanama Web browser handle must be positive" }

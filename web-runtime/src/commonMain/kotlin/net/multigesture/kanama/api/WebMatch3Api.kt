@@ -17,6 +17,10 @@ import net.multigesture.kanama.backend.PackedSceneBackendContractProbe
 import net.multigesture.kanama.backend.SignalBackendContractProbe
 import net.multigesture.kanama.backend.ViewportBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotColor
+import net.multigesture.kanama.backend.PropertyTweenerBackendContractProbe
+import net.multigesture.kanama.backend.TweenBackendContractProbe
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.web.webScriptInstance
@@ -35,6 +39,7 @@ internal fun unsupportedWebGameplayCall(signature: String): Nothing =
 internal object WebSignalCallbackRegistry {
   private data class Entry(
     val ownerHandle: Int,
+    val sourceHandle: Int,
     val oneShot: Boolean,
     val callback: () -> Unit,
   )
@@ -45,10 +50,15 @@ internal object WebSignalCallbackRegistry {
   val size: Int
     get() = entries.size
 
-  fun register(ownerHandle: Int, oneShot: Boolean, callback: () -> Unit): Int {
+  fun register(
+    ownerHandle: Int,
+    sourceHandle: Int,
+    oneShot: Boolean,
+    callback: () -> Unit,
+  ): Int {
     check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
     val id = nextId++
-    entries[id] = Entry(ownerHandle, oneShot, callback)
+    entries[id] = Entry(ownerHandle, sourceHandle, oneShot, callback)
     return id
   }
 
@@ -58,6 +68,10 @@ internal object WebSignalCallbackRegistry {
 
   fun releaseOwner(ownerHandle: Int) {
     entries.entries.removeAll { it.value.ownerHandle == ownerHandle }
+  }
+
+  fun releaseSource(sourceHandle: Int) {
+    entries.entries.removeAll { it.value.sourceHandle == sourceHandle }
   }
 
   fun dispatch(ownerHandle: Int, id: Int) {
@@ -93,6 +107,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     val callbackId =
       WebSignalCallbackRegistry.register(
         target.handle.value,
+        owner.handle.value,
         oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
         callback,
       )
@@ -174,18 +189,49 @@ class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObjec
   }
 
   fun kill() {
-    unsupportedWebGameplayCall("Tween.kill")
+    TweenBackendContractProbe(backendHandle).kill()
+    WebSignalCallbackRegistry.releaseSource(handle.value)
   }
 
-  fun setParallel(parallel: Boolean = true): Tween =
-    unsupportedWebGameplayCall("Tween.set_parallel")
+  fun setParallel(parallel: Boolean = true): Tween {
+    val returned = TweenBackendContractProbe(backendHandle).setParallel(parallel)
+    return if (returned == null || returned.backendToken() == backendHandle.backendToken()) {
+      this
+    } else {
+      Tween(returned)
+    }
+  }
 
   fun tweenProperty(
     target: GodotObject,
     property: String,
     finalValue: Any?,
     duration: Double,
-  ): PropertyTweener? = unsupportedWebGameplayCall("Tween.tween_property")
+  ): PropertyTweener? =
+    when (finalValue) {
+      is Vector2 ->
+        TweenBackendContractProbe(backendHandle)
+          .tweenProperty(
+            target.backendHandle,
+            property,
+            GodotVector2(finalValue.x.toFloat(), finalValue.y.toFloat()),
+            duration,
+          )
+          ?.let(::PropertyTweener)
+      is Color ->
+        TweenBackendContractProbe(backendHandle)
+          .tweenProperty(
+            target.backendHandle,
+            property,
+            GodotColor(finalValue.r, finalValue.g, finalValue.b, finalValue.a),
+            duration,
+          )
+          ?.let(::PropertyTweener)
+      else ->
+        unsupportedWebGameplayCall(
+          "Tween.tween_property final value ${finalValue?.let { it::class.simpleName } ?: "null"}"
+        )
+    }
 
   companion object {
     const val TRANS_BACK = 10L
@@ -197,10 +243,14 @@ class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObjec
 class PropertyTweener internal constructor(backendHandle: BackendGodotHandle) :
   GodotObject(backendHandle) {
   fun setTrans(transition: Long): PropertyTweener =
-    unsupportedWebGameplayCall("PropertyTweener.set_trans")
+    wrapOrThis(PropertyTweenerBackendContractProbe(backendHandle).setTrans(transition))
 
   fun setEase(ease: Long): PropertyTweener =
-    unsupportedWebGameplayCall("PropertyTweener.set_ease")
+    wrapOrThis(PropertyTweenerBackendContractProbe(backendHandle).setEase(ease))
+
+  private fun wrapOrThis(value: BackendGodotHandle?): PropertyTweener =
+    if (value == null || value.backendToken() == backendHandle.backendToken()) this
+    else PropertyTweener(value)
 }
 
 class InputEventMouseButton private constructor(backendHandle: BackendGodotHandle) :
