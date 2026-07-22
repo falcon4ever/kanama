@@ -149,6 +149,9 @@
     match3ScriptNodeLookups: 0,
     match3ReusedNodeLookups: 0,
     match3FirstTileHandle: 0,
+    match3MainHandle: 0,
+    match3FramePumps: 0,
+    match3FrameContinuations: 0,
     match3ScaleMutations: 0,
     match3ModulateMutations: 0,
     match3TweensCreated: 0,
@@ -237,9 +240,18 @@
         return this.process(handle, delta);
       }
       if (this.mode === "match3") {
-        // Task 57e group 1 deliberately leaves frame coroutines queued for group 6. Do not run
-        // the transport spike's synthetic per-frame mutation against real Match3 script proxies.
-        return 0;
+        if (handle !== this.match3MainHandle) return 0;
+        this.match3FramePumps += 1;
+        const executed = this.invoke(
+          handle,
+          "frame_scheduler",
+          "frame scheduler",
+          () => this.api.kanamaWebFrame(handle, delta),
+          0,
+        );
+        this.match3FrameContinuations += executed;
+        this.processCalls += 1;
+        return executed;
       }
       const started = performance.now();
       let result;
@@ -366,7 +378,10 @@
       this.match3Properties.set(handle, properties);
     },
     shouldDeferReady(scriptName) {
-      return this.mode === "match3" && scriptName.endsWith(".Audio");
+      return (
+        this.mode === "match3" &&
+        (scriptName.endsWith(".Audio") || scriptName.endsWith(".Particles"))
+      );
     },
     recordDeferredReady(scriptName) {
       this.match3DeferredReadyByClass[scriptName] =
@@ -441,6 +456,7 @@
         () => this.api.kanamaWebFree(handle),
         0,
       );
+      if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
       if (result === 1) this.releaseBrowserHandlesOwnedBy(handle);
       return result;
     },
@@ -1098,7 +1114,10 @@
         if (scriptName.endsWith(".Tile") && this.match3FirstTileHandle === 0) {
           this.match3FirstTileHandle = handle;
         }
-        if (scriptName.endsWith(".Main")) this.finishMatch3Group1(handle, scriptId, scriptName);
+        if (scriptName.endsWith(".Main")) {
+          this.match3MainHandle = handle;
+          this.finishMatch3Group1(handle, scriptId, scriptName);
+        }
         return;
       }
       if (this.mode === "bunnymark" && this.previewBunnies > 0 && !this.previewScheduled) {

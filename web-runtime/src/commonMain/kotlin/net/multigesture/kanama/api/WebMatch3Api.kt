@@ -3,11 +3,14 @@
 package net.multigesture.kanama.api
 
 import kotlin.math.ln
+import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InputBackendContractProbe
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
@@ -290,19 +293,26 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
 
   companion object {
     suspend fun delaySeconds(seconds: Double) {
-      unsupportedWebGameplayCall("SceneTree.delay_seconds")
+      require(seconds.isFinite() && seconds >= 0.0) {
+        "SceneTree.delaySeconds requires a finite, non-negative duration"
+      }
+      suspendCancellableCoroutine { continuation ->
+        val taskId =
+          WebFrameScheduler.scheduleDelay(seconds, continuation.context[Job]) {
+            if (continuation.isActive) continuation.resume(Unit)
+          }
+        continuation.invokeOnCancellation { WebFrameScheduler.cancelTask(taskId) }
+      }
     }
   }
 }
 
 internal object WebFrameCoroutineDispatcher : CoroutineDispatcher() {
-  private val pending = ArrayDeque<Runnable>()
-
   val pendingCount: Int
-    get() = pending.size
+    get() = WebFrameScheduler.pendingCount
 
   override fun dispatch(context: kotlin.coroutines.CoroutineContext, block: Runnable) {
-    pending.addLast(block)
+    WebFrameScheduler.dispatch(context[Job], block)
   }
 }
 
@@ -321,6 +331,6 @@ interface KanamaCoroutineOwner {
 
 object MainThread {
   fun post(block: () -> Unit) {
-    unsupportedWebGameplayCall("MainThread.post")
+    WebFrameScheduler.post(block)
   }
 }

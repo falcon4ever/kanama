@@ -5,12 +5,18 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
+import kotlinx.coroutines.launch
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.KanamaScope
+import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node2D
+import net.multigesture.kanama.api.SceneTree
 import net.multigesture.kanama.api.Tween
 import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
+import net.multigesture.kanama.api.WebFrameScheduler
 import net.multigesture.kanama.api.WebSignalCallbackRegistry
+import net.multigesture.kanama.api.webFrameSchedulerStateProbe
 import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
@@ -28,17 +34,30 @@ internal val commands = WebCommandBuffer(WebCommandBuffer.BENCHMARK_COMMAND_CAPA
 internal val drawCommands = WebCommandBuffer(WebCommandBuffer.DRAW_COMMAND_CAPACITY)
 private var frameSequence = 0
 private var activeWebScriptHandle = 0
+private var group6ProbeMask = 0
+private var group6ProbeScope: KanamaScope? = null
+private var group6ProbeOwnerHandle = 0
 
 internal fun requireActiveWebScriptHandle(): Int =
   activeWebScriptHandle.takeIf { it != 0 }
     ?: error("A Kanama Web singleton call was made outside a script callback")
+
+private inline fun <T> withActiveWebScriptHandle(objectId: Int, block: () -> T): T {
+  val previous = activeWebScriptHandle
+  activeWebScriptHandle = objectId
+  try {
+    return block()
+  } finally {
+    activeWebScriptHandle = previous
+  }
+}
 
 @PublishedApi
 internal actual fun webScriptInstance(objectId: Int): Any? {
   return objectId.takeIf(instances::isLive)?.let { instances.require(it).script }
 }
 
-private inline fun <T> webCallbackBoundary(
+private fun <T> webCallbackBoundary(
   objectId: Int,
   callback: String,
   memberKind: String? = null,
@@ -47,10 +66,8 @@ private inline fun <T> webCallbackBoundary(
 ): T {
   var scriptName = "<unresolved>"
   var memberName = callback
-  val previousActiveHandle = activeWebScriptHandle
   try {
     val record = instances.require(objectId)
-    activeWebScriptHandle = objectId
     val descriptor = KanamaWebProjectRegistry.scripts.firstOrNull { it.id == record.scriptId }
     scriptName = descriptor?.className ?: "script#${record.scriptId}"
     memberName =
@@ -59,7 +76,9 @@ private inline fun <T> webCallbackBoundary(
         "property" -> descriptor?.properties?.firstOrNull { it.id == memberId }?.name
         else -> null
       } ?: memberKind?.let { "$it#$memberId" } ?: callback
-    return block(record)
+    return WebFrameScheduler.withOwner(objectId) {
+      withActiveWebScriptHandle(objectId) { block(record) }
+    }
   } catch (error: Throwable) {
     val causeDetail = error.message ?: error::class.simpleName ?: "unknown error"
     throw IllegalStateException(
@@ -67,8 +86,6 @@ private inline fun <T> webCallbackBoundary(
         "member=$memberName cause=$causeDetail",
       error,
     )
-  } finally {
-    activeWebScriptHandle = previousActiveHandle
   }
 }
 
@@ -77,6 +94,8 @@ private inline fun <T> webCallbackBoundary(
 @JsExport fun kanamaWebRoundTrip(value: Int): Int = value
 
 @JsExport fun kanamaWebPendingCoroutineCount(): Int = WebFrameCoroutineDispatcher.pendingCount
+
+@JsExport fun kanamaWebRegisteredCoroutineJobCount(): Int = WebFrameScheduler.registeredJobCount
 
 @JsExport fun kanamaWebPendingSignalCallbackCount(): Int = WebSignalCallbackRegistry.size
 
@@ -141,6 +160,21 @@ fun kanamaWebProcess(objectId: Int, delta: Double): Int {
     commands.clear()
     KanamaWebProjectRegistry.process(record.scriptId, record.script, delta)
     commands.flush()
+  }
+}
+
+/** Match3's single frame pump; the JavaScript bridge invokes it only for the Main script. */
+@JsExport
+fun kanamaWebFrame(objectId: Int, delta: Double): Int {
+  return webCallbackBoundary(objectId, "frame_scheduler") { record ->
+    commands.clear()
+    val executed =
+      WebFrameScheduler.pump(delta, instances::isLive) { ownerHandle, action ->
+        withActiveWebScriptHandle(ownerHandle, action)
+      }
+    KanamaWebProjectRegistry.process(record.scriptId, record.script, delta)
+    commands.flush()
+    executed
   }
 }
 
@@ -282,7 +316,59 @@ fun kanamaWebFree(objectId: Int): Int {
     drawCommands.clear()
     clearWebPositionSnapshot(objectId)
     WebSignalCallbackRegistry.releaseOwner(objectId)
+    if (group6ProbeOwnerHandle == objectId) {
+      group6ProbeScope?.cancel()
+      group6ProbeScope = null
+      group6ProbeOwnerHandle = 0
+    }
+    WebFrameScheduler.cancelOwner(objectId)
     if (instances.free(objectId)) 1 else 0
+  }
+}
+
+@JsExport fun kanamaWebFrameSchedulerStateProbe(): Int = webFrameSchedulerStateProbe()
+
+@JsExport
+fun kanamaWebMatch3Group6Probe(objectId: Int): Int {
+  return webCallbackBoundary(objectId, "group6_probe") {
+    group6ProbeScope?.cancel()
+    group6ProbeMask = 0
+    val scope = KanamaScope()
+    group6ProbeScope = scope
+    group6ProbeOwnerHandle = objectId
+    scope.launch {
+      group6ProbeMask = group6ProbeMask or 1
+      SceneTree.delaySeconds(0.05)
+      group6ProbeMask = group6ProbeMask or 2
+      MainThread.post {
+        group6ProbeMask = group6ProbeMask or 4
+        scope.cancel()
+        if (group6ProbeScope === scope) {
+          group6ProbeScope = null
+          group6ProbeOwnerHandle = 0
+        }
+      }
+    }
+    1
+  }
+}
+
+@JsExport fun kanamaWebMatch3Group6ProbeMask(): Int = group6ProbeMask
+
+@JsExport
+fun kanamaWebMatch3Group6CancellationProbe(objectId: Int): Int {
+  return webCallbackBoundary(objectId, "group6_cancel_probe") {
+    val before = WebFrameScheduler.pendingCount
+    val scope = KanamaScope()
+    scope.launch {
+      SceneTree.delaySeconds(10.0)
+      group6ProbeMask = group6ProbeMask or 8
+    }
+    var result = 0
+    if (WebFrameScheduler.pendingCount == before + 1) result = result or 1
+    scope.cancel()
+    if (WebFrameScheduler.pendingCount == before) result = result or 2
+    result
   }
 }
 
