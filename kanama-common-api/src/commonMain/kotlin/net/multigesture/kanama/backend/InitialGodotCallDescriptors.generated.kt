@@ -124,4 +124,59 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val CLASSDB_INSTANTIATE =
+    GodotCallDescriptor(
+      opcode = 12,
+      className = "ClassDB",
+      methodName = "instantiate",
+      hash = 2760726917L,
+      shape = GodotCallShape.STRINGNAME_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.OWNED,
+    )
+
+  val NODE_ADD_CHILD =
+    GodotCallDescriptor(
+      opcode = 13,
+      className = "Node",
+      methodName = "add_child",
+      hash = 3863233950L,
+      shape = GodotCallShape.OBJECT_BOOL_LONG_ARGS,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_REMOVE_CHILD =
+    GodotCallDescriptor(
+      opcode = 14,
+      className = "Node",
+      methodName = "remove_child",
+      hash = 1078189570L,
+      shape = GodotCallShape.OBJECT_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_QUEUE_FREE =
+    GodotCallDescriptor(
+      opcode = 15,
+      className = "Node",
+      methodName = "queue_free",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SPRITE2D_SET_TEXTURE =
+    GodotCallDescriptor(
+      opcode = 16,
+      className = "Sprite2D",
+      methodName = "set_texture",
+      hash = 4051416890L,
+      shape = GodotCallShape.OBJECT_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

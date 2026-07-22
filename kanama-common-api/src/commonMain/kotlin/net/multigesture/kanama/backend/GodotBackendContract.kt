@@ -28,6 +28,9 @@ enum class GodotCallShape {
   UTILITY_NOARGS_VOID,
   UTILITY_NOARGS_RET_LONG,
   UTILITY_NOARGS_RET_DOUBLE,
+  STRINGNAME_RET_HANDLE,
+  OBJECT_BOOL_LONG_ARGS,
+  OBJECT_ARG,
 }
 
 @InternalKanamaBackendApi
@@ -134,6 +137,28 @@ interface GodotBackendSpi {
     name: String,
     value: Int,
   ): Int
+
+  fun invokeStringNameRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): GodotHandle?
+
+  fun invokeObjectBoolLongArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    objectValue: GodotHandle,
+    boolValue: Boolean,
+    longValue: Long,
+  )
+
+  fun invokeObjectArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle?,
+  )
 }
 
 /**
@@ -278,6 +303,41 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeStringNameRetHandle(descriptor: GodotCallDescriptor, value: String): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_HANDLE)
+    val selected = requireBackend()
+    return selected.invokeStringNameRetHandle(descriptor, resolve(selected, descriptor), value)
+  }
+
+  fun invokeObjectBoolLongArgs(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    objectValue: GodotHandle,
+    boolValue: Boolean,
+    longValue: Long,
+  ) {
+    requireShape(descriptor, GodotCallShape.OBJECT_BOOL_LONG_ARGS)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.requireLive(objectValue)
+    selected.invokeObjectBoolLongArgs(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      objectValue,
+      boolValue,
+      longValue,
+    )
+  }
+
+  fun invokeObjectArg(descriptor: GodotCallDescriptor, receiver: GodotHandle, value: GodotHandle?) {
+    requireShape(descriptor, GodotCallShape.OBJECT_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    value?.let(selected::requireLive)
+    selected.invokeObjectArg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -382,4 +442,48 @@ object GDBackendContractProbe {
 
   fun randf(): Double =
     GodotBackendCalls.invokeUtilityNoArgsRetDouble(InitialGodotCallDescriptors.UTILITY_RANDF)
+}
+
+/** Typed dynamic construction slice used by generated wrapper factories. */
+@InternalKanamaBackendApi
+object ClassDBBackendContractProbe {
+  fun instantiate(className: String): GodotHandle? =
+    GodotBackendCalls.invokeStringNameRetHandle(
+      InitialGodotCallDescriptors.CLASSDB_INSTANTIATE,
+      className,
+    )
+}
+
+/** Typed Node mutation slice used by the sprite Bunnymark port. */
+@InternalKanamaBackendApi
+class NodeBackendContractProbe(private val handle: GodotHandle) {
+  fun addChild(child: GodotHandle, forceReadableName: Boolean = false, internalMode: Long = 0L) {
+    GodotBackendCalls.invokeObjectBoolLongArgs(
+      InitialGodotCallDescriptors.NODE_ADD_CHILD,
+      handle,
+      child,
+      forceReadableName,
+      internalMode,
+    )
+  }
+
+  fun removeChild(child: GodotHandle) {
+    GodotBackendCalls.invokeObjectArg(InitialGodotCallDescriptors.NODE_REMOVE_CHILD, handle, child)
+  }
+
+  fun queueFree() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.NODE_QUEUE_FREE, handle)
+  }
+}
+
+/** Typed Sprite2D mutation slice used by the sprite Bunnymark port. */
+@InternalKanamaBackendApi
+class Sprite2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setTexture(texture: GodotHandle?) {
+    GodotBackendCalls.invokeObjectArg(
+      InitialGodotCallDescriptors.SPRITE2D_SET_TEXTURE,
+      handle,
+      texture,
+    )
+  }
 }

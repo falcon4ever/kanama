@@ -200,6 +200,10 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
         internal fun wrap(handle: MemorySegment): Sprite2D? =
             if (handle.address() == 0L) null else Sprite2D(handle)
 
+        // Instantiate a Sprite2D node without exposing platform FFI construction to game code.
+        fun create(): Sprite2D =
+            Sprite2D(MemorySegment.ofAddress(IosGodot.constructObject("Sprite2D")))
+
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {
             ObjectCalls.getMethodBind("Sprite2D", "set_texture", SET_TEXTURE_HASH)

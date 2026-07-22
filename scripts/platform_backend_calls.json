@@ -145,6 +145,71 @@
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
       "introducedBy": "57b"
+    },
+    {
+      "opcode": 12,
+      "scope": "class",
+      "className": "ClassDB",
+      "methodName": "instantiate",
+      "hash": 2760726917,
+      "arguments": ["StringName"],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "OWNED",
+      "introducedBy": "57c"
+    },
+    {
+      "opcode": 13,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "add_child",
+      "hash": 3863233950,
+      "arguments": ["Node", "bool", "enum::Node.InternalMode"],
+      "returnType": "void",
+      "shape": "OBJECT_BOOL_LONG_ARGS",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57c"
+    },
+    {
+      "opcode": 14,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "remove_child",
+      "hash": 1078189570,
+      "arguments": ["Node"],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57c"
+    },
+    {
+      "opcode": 15,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "queue_free",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57c"
+    },
+    {
+      "opcode": 16,
+      "scope": "class",
+      "className": "Sprite2D",
+      "methodName": "set_texture",
+      "hash": 4051416890,
+      "arguments": ["Texture2D"],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57c"
     }
   ]
 }

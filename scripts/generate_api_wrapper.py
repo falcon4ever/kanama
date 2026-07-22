@@ -523,6 +523,11 @@ CUSTOM_MEMBER_SECTIONS = {
 """.strip("\n"),
 }
 CUSTOM_COMPANION_MEMBER_SECTIONS = {
+    "Sprite2D": """
+        @JvmStatic
+        fun create(): Sprite2D =
+            Sprite2D(ObjectCalls.constructObject("Sprite2D"))
+""".strip("\n"),
     "FastNoiseLite": """
         @JvmStatic
         fun create(): FastNoiseLite =
@@ -736,6 +741,11 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
 # iOS-only companion-object custom sections (mirrors CUSTOM_COMPANION_MEMBER_SECTIONS for the
 # IOS_AUDIT_ONLY path). Members are emitted inside the generated companion object (8-space indent).
 IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
+    "Sprite2D": """
+        // Instantiate a Sprite2D node without exposing platform FFI construction to game code.
+        fun create(): Sprite2D =
+            Sprite2D(MemorySegment.ofAddress(IosGodot.constructObject("Sprite2D")))
+""".strip("\n"),
     "RefCounted": """
         // Releases the +1 return-slot reference carried by `handle` without minting a
         // wrapper — the generated self-return-collapse pattern calls this before

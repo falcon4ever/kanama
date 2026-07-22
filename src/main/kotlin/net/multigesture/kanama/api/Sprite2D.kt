@@ -368,6 +368,10 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
         internal fun wrap(handle: MemorySegment): Sprite2D? =
             if (handle.address() == 0L) null else Sprite2D(handle)
 
+        @JvmStatic
+        fun create(): Sprite2D =
+            Sprite2D(ObjectCalls.constructObject("Sprite2D"))
+
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {
             ObjectCalls.getMethodBind("Sprite2D", "set_texture", SET_TEXTURE_HASH)

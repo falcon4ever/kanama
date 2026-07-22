@@ -47,6 +47,29 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 1] = objectHandle
   }
 
+  fun appendObjectArg(opcode: Int, objectHandle: Int, valueHandle: Int) {
+    val offset = reserve(WORDS_OBJECT_ARG)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = valueHandle
+  }
+
+  fun appendObjectBoolLongArgs(
+    opcode: Int,
+    objectHandle: Int,
+    valueHandle: Int,
+    boolValue: Boolean,
+    longValue: Long,
+  ) {
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    val offset = reserve(WORDS_OBJECT_BOOL_LONG_ARGS)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = valueHandle
+    words[offset + 3] = if (boolValue) 1 else 0
+    words[offset + 4] = longValue.toInt()
+  }
+
   fun appendDrawTexture(
     opcode: Int,
     objectHandle: Int,
@@ -94,7 +117,9 @@ internal class WebCommandBuffer(capacity: Int) {
     const val OPCODE_SCALAR_MUTATION = 100
     const val OPCODE_POSITION_MUTATION = 3
     const val WORDS_NOARGS = 2
+    const val WORDS_OBJECT_ARG = 3
     const val WORDS_SCALAR_OR_VECTOR = 4
+    const val WORDS_OBJECT_BOOL_LONG_ARGS = 5
     const val WORDS_DRAW_TEXTURE = 9
     const val MAX_WORDS_PER_COMMAND = WORDS_DRAW_TEXTURE
     // The benchmark contributes 10,000 data mutations plus one phase-control mutation (redraw).

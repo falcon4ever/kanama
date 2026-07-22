@@ -58,8 +58,19 @@ val webSpikeStaging = layout.buildDirectory.dir("web-spike/godot-project")
 val webSpikeExport = layout.buildDirectory.dir("web-spike/export")
 val webBunnymarkSourceProject =
     providers.gradleProperty("kanamaWebBunnymarkProjectDir").orNull?.let(rootProject::file)
-val webBunnymarkStaging = layout.buildDirectory.dir("web-bunnymark/godot-project")
-val webBunnymarkExport = layout.buildDirectory.dir("web-bunnymark/export")
+val webBunnymarkVariant =
+    providers.gradleProperty("kanamaWebBunnymarkVariant").orElse("BunnymarkV1DrawTexture")
+val webBunnymarkLanguage =
+    providers.gradleProperty("kanamaWebBunnymarkLanguage").orElse("kanama")
+val webBunnymarkBuildKey =
+    providers.provider {
+        val language = webBunnymarkLanguage.get()
+        webBunnymarkVariant.get() + if (language == "kanama") "" else "-$language"
+    }
+val webBunnymarkStaging =
+    layout.buildDirectory.dir(webBunnymarkBuildKey.map { "web-bunnymark/$it/godot-project" })
+val webBunnymarkExport =
+    layout.buildDirectory.dir(webBunnymarkBuildKey.map { "web-bunnymark/$it/export" })
 val webDistribution = layout.buildDirectory.dir("dist/wasmJs/productionExecutable")
 
 tasks.register("stageWebSpikeGodotProject") {
@@ -190,11 +201,13 @@ tasks.register<Exec>("exportWebSpike") {
 
 tasks.register("stageWebBunnymarkProject") {
     group = "verification"
-    description = "Stages the real Bunnymark draw-texture demo with its generated Web proxy."
+    description = "Stages a real Bunnymark variant with its generated Web proxy or GDScript baseline."
     dependsOn("kspKotlinWasmJs")
     webBunnymarkSourceProject?.let(inputs::dir)
     inputs.dir(webSpikeAssets)
     inputs.dir(webProxyResources)
+    inputs.property("kanamaWebBunnymarkVariant", webBunnymarkVariant)
+    inputs.property("kanamaWebBunnymarkLanguage", webBunnymarkLanguage)
     outputs.dir(webBunnymarkStaging)
 
     doLast {
@@ -206,6 +219,14 @@ tasks.register("stageWebBunnymarkProject") {
         check(sourceProject.resolve("Benchmarker.tscn").isFile) {
             "Bunnymark project not found: $sourceProject"
         }
+        val variant = webBunnymarkVariant.get()
+        val language = webBunnymarkLanguage.get()
+        check(variant in setOf("BunnymarkV1DrawTexture", "BunnymarkV1Sprites")) {
+            "Unsupported -PkanamaWebBunnymarkVariant=$variant"
+        }
+        check(language in setOf("kanama", "gd")) {
+            "Unsupported -PkanamaWebBunnymarkLanguage=$language"
+        }
 
         val stagingDir = webBunnymarkStaging.get().asFile
         delete(stagingDir)
@@ -215,6 +236,7 @@ tasks.register("stageWebBunnymarkProject") {
                 include("project.godot")
                 include("images/godot_bunny.png")
                 include("scripts/Benchmarker.gd")
+                if (language == "gd") include("benchmarks/$variant/gd/$variant.gd")
             }
             into(stagingDir)
         }
@@ -234,7 +256,7 @@ tasks.register("stageWebBunnymarkProject") {
 
         val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
         check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
-        val sourcePath = "res://kotlin-src/BunnymarkV1DrawTextureKanama.kt"
+        val sourcePath = "res://kotlin-src/${variant}Kanama.kt"
         val proxyPath =
             manifest
                 .readLines()
@@ -250,26 +272,93 @@ tasks.register("stageWebBunnymarkProject") {
             "var benchmark: String = \"BunnymarkV2\""
         val dynamicKotlinScriptPath =
             "return \"res://kotlin-src/\" + benchmark_name + \"Kanama.kt\""
+        val defaultLanguage =
+            "var language: String = \"kanama\""
+        val adaptiveHarnessStart =
+            "if benchmark_node.has_method(\"add_bunny\"):\n        set_process(true)"
         check(originalBenchmarker.contains(defaultBenchmark)) {
             "Bunnymark harness default changed; update the Web staging transform"
         }
         check(originalBenchmarker.contains(dynamicKotlinScriptPath)) {
             "Bunnymark Kotlin script lookup changed; update the Web staging transform"
         }
+        check(originalBenchmarker.contains(defaultLanguage)) {
+            "Bunnymark harness language default changed; update the Web staging transform"
+        }
+        check(originalBenchmarker.contains(adaptiveHarnessStart)) {
+            "Bunnymark adaptive harness startup changed; update the Web staging transform"
+        }
         val stagedBenchmarker =
             originalBenchmarker
-                .replace(defaultBenchmark, "var benchmark: String = \"BunnymarkV1DrawTexture\"")
-                .replace(
-                    dynamicKotlinScriptPath,
-                    "return \"$proxyPath\"",
-                )
+                .replace(defaultBenchmark, "var benchmark: String = \"$variant\"")
+                .replace(defaultLanguage, "var language: String = \"$language\"")
+                .let { staged ->
+                    if (language == "kanama") {
+                        staged.replace(dynamicKotlinScriptPath, "return \"$proxyPath\"")
+                    } else {
+                        staged
+                    }
+                }
+                .replace(adaptiveHarnessStart, "if benchmark_node.has_method(\"add_bunny\"):\n        set_process(false)")
         check(stagedBenchmarker != originalBenchmarker) {
-            "Bunnymark staging did not select the draw-texture Web proxy"
+            "Bunnymark staging did not select the requested Web variant"
         }
-        check(!stagedBenchmarker.contains("res://kotlin-src/")) {
+        check(language != "kanama" || !stagedBenchmarker.contains("res://kotlin-src/")) {
             "A Kotlin script path remains in staged Bunnymark Benchmarker.gd"
         }
         benchmarker.writeText(stagedBenchmarker)
+
+        if (language == "gd") {
+            check(variant == "BunnymarkV1Sprites") {
+                "The GDScript scaling baseline is only defined for BunnymarkV1Sprites"
+            }
+            val gdscript =
+                stagingDir.resolve("benchmarks/$variant/gd/$variant.gd")
+            val originalGdscript = gdscript.readText()
+            val processStart = "func _process(delta):\n"
+            val processEnd = "\t\tbunny[1] = speed\n\nfunc add_bunny():"
+            check(originalGdscript.contains(processStart) && originalGdscript.contains(processEnd)) {
+                "BunnymarkV1Sprites GDScript changed; update the Web baseline instrumentation"
+            }
+            val baselineLifecycle =
+                """
+
+                var _kanama_web_baseline_bridge
+                var _kanama_web_baseline_callback
+
+                func _ready() -> void:
+	                if not OS.has_feature("web"):
+		                return
+	                _kanama_web_baseline_bridge = JavaScriptBridge.get_interface("KanamaWebBridge")
+	                _kanama_web_baseline_callback = JavaScriptBridge.create_callback(_kanama_web_baseline_call)
+	                _kanama_web_baseline_bridge.installGdscriptBaselineCallback(_kanama_web_baseline_callback)
+	                _kanama_web_baseline_bridge.recordGdscriptBaselineReady()
+
+                func _exit_tree() -> void:
+	                if _kanama_web_baseline_bridge != null:
+		                _kanama_web_baseline_bridge.clearGdscriptBaselineCallback()
+	                _kanama_web_baseline_callback = null
+
+                func _kanama_web_baseline_call(args: Array) -> void:
+	                match String(args[0]):
+		                "add": add_bunny()
+		                "remove": remove_bunny()
+		                "finish": finish()
+
+                """.trimIndent()
+            gdscript.writeText(
+                originalGdscript
+                    .replace("extends Node2D\n", "extends Node2D\n$baselineLifecycle\n")
+                    .replace(
+                        processStart,
+                        "${processStart}\tvar _kanama_web_baseline_started_usec := Time.get_ticks_usec()\n",
+                    )
+                    .replace(
+                        processEnd,
+                        "\t\tbunny[1] = speed\n\n\tif _kanama_web_baseline_bridge != null:\n\t\t_kanama_web_baseline_bridge.recordGdscriptBaselineFrame(float(Time.get_ticks_usec() - _kanama_web_baseline_started_usec) / 1000.0)\n\nfunc add_bunny():",
+                    )
+            )
+        }
 
         val shell = stagingDir.resolve("kanama-web/shell.html")
         val originalShell = shell.readText()
@@ -278,7 +367,7 @@ tasks.register("stageWebBunnymarkProject") {
         shell.writeText(
             originalShell.replace(
                 pageStart,
-                "$pageStart\n      globalThis.KanamaWebMode = \"bunnymark\";",
+                "$pageStart\n      globalThis.KanamaWebMode = \"bunnymark\";\n      globalThis.KanamaWebBunnymarkVariant = \"$variant\";\n      globalThis.KanamaWebBunnymarkLanguage = \"$language\";",
             )
         )
     }
@@ -286,7 +375,7 @@ tasks.register("stageWebBunnymarkProject") {
 
 tasks.register<Exec>("exportWebBunnymark") {
     group = "verification"
-    description = "Exports the real Kotlin/Wasm Bunnymark draw-texture demo."
+    description = "Exports the selected real Kotlin/Wasm Bunnymark or GDScript baseline."
     dependsOn("stageWebBunnymarkProject", "wasmJsBrowserDistribution")
     inputs.dir(webBunnymarkStaging)
     inputs.dir(webDistribution)

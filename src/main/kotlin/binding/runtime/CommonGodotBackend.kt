@@ -139,6 +139,45 @@ internal object CommonGodotBackend : GodotBackendSpi {
     return 0
   }
 
+  override fun invokeStringNameRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): GodotHandle? =
+    ObjectCalls.constructObject(value)
+      .takeIf { it.address() != 0L }
+      ?.let { GodotHandle.fromBackendToken(it.address()) }
+
+  override fun invokeObjectBoolLongArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    objectValue: GodotHandle,
+    boolValue: Boolean,
+    longValue: Long,
+  ) {
+    ObjectCalls.ptrcallWithObjectBoolLongArgs(
+      segment(callSite),
+      segment(receiver),
+      segment(objectValue),
+      boolValue,
+      longValue,
+    )
+  }
+
+  override fun invokeObjectArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle?,
+  ) {
+    ObjectCalls.ptrcallWithObjectArgs(
+      segment(callSite),
+      segment(receiver),
+      listOf(value?.let(::segment) ?: MemorySegment.NULL),
+    )
+  }
+
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())
 

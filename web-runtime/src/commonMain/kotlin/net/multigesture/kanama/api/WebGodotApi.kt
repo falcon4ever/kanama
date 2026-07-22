@@ -3,16 +3,20 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GDBackendContractProbe
+import net.multigesture.kanama.backend.ClassDBBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
+import net.multigesture.kanama.backend.NodeBackendContractProbe
 import net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe
+import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.web.KanamaWebScript
+import net.multigesture.kanama.web.WebObjectId
 
 @RequiresOptIn(
   level = RequiresOptIn.Level.WARNING,
@@ -30,7 +34,20 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
   }
 }
 
-open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle)
+open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {
+  fun addChild(node: Node, forceReadableName: Boolean = false, internalMode: Long = 0L) {
+    NodeBackendContractProbe(backendHandle)
+      .addChild(node.backendHandle, forceReadableName, internalMode)
+  }
+
+  fun removeChild(node: Node) {
+    NodeBackendContractProbe(backendHandle).removeChild(node.backendHandle)
+  }
+
+  fun queueFree() {
+    NodeBackendContractProbe(backendHandle).queueFree()
+  }
+}
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {
   fun getViewportRect(): Rect2 =
@@ -55,7 +72,33 @@ open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : 
   }
 }
 
-class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
+open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle()) {
+  var position: Vector2
+    get() =
+      Node2DBackendContractProbe(backendHandle).position.let { value ->
+        Vector2(value.x.toDouble(), value.y.toDouble())
+      }
+    set(value) {
+      Node2DBackendContractProbe(backendHandle).position =
+        GodotVector2(value.x.toFloat(), value.y.toFloat())
+    }
+}
+
+class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  fun setTexture(texture: Texture2D?) {
+    Sprite2DBackendContractProbe(backendHandle).setTexture(texture?.requireOpenHandle())
+  }
+
+  companion object {
+    fun create(): Sprite2D {
+      val handle =
+        checkNotNull(ClassDBBackendContractProbe.instantiate("Sprite2D")) {
+          "Godot could not instantiate Sprite2D"
+        }
+      return Sprite2D(WebObjectId(handle.backendToken().toInt()))
+    }
+  }
+}
 
 abstract class KanamaScript<T : GodotObject>(
   godotObject: GodotHandle,

@@ -50,10 +50,15 @@ class GodotBackendContractTest {
       GodotVector2(12.0f, 34.0f),
       GodotColor(1.0f, 0.5f, 0.25f),
     )
-    assertEquals(
-      31L,
-      ResourceLoaderBackendContractProbe.load("res://bunny.svg", "Texture2D")?.backendToken(),
-    )
+    val texture = ResourceLoaderBackendContractProbe.load("res://bunny.svg", "Texture2D")
+    assertEquals(31L, texture?.backendToken())
+    val sprite = ClassDBBackendContractProbe.instantiate("Sprite2D")
+    assertEquals(41L, sprite?.backendToken())
+    val node = NodeBackendContractProbe(probe.handle)
+    node.addChild(checkNotNull(sprite))
+    Sprite2DBackendContractProbe(sprite).setTexture(texture)
+    node.removeChild(sprite)
+    NodeBackendContractProbe(sprite).queueFree()
     GDBackendContractProbe.randomize()
     assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
     assertEquals(0.75, GDBackendContractProbe.randf())
@@ -73,6 +78,11 @@ class GodotBackendContractTest {
         9 to 1,
         10 to 1,
         11 to 1,
+        12 to 1,
+        13 to 1,
+        14 to 1,
+        15 to 1,
+        16 to 1,
       ),
       backend.resolveCounts,
     )
@@ -87,6 +97,11 @@ class GodotBackendContractTest {
     )
     assertEquals(1, backend.randomizeCalls)
     assertEquals("benchmark_finished" to 42, backend.emittedSignal)
+    assertEquals("Sprite2D", backend.constructedClass)
+    assertEquals(Triple(17L, 41L, false), backend.addedChild)
+    assertEquals(17L to 41L, backend.removedChild)
+    assertEquals(41L to 31L, backend.objectArgument)
+    assertEquals(41L, backend.queuedFree)
   }
 
   private data class DrawCall(
@@ -102,9 +117,14 @@ class GodotBackendContractTest {
     var drawCall: DrawCall? = null
     var randomizeCalls = 0
     var emittedSignal: Pair<String, Int>? = null
+    var constructedClass: String? = null
+    var addedChild: Triple<Long, Long, Boolean>? = null
+    var removedChild: Pair<Long, Long>? = null
+    var objectArgument: Pair<Long, Long?>? = null
+    var queuedFree: Long? = null
 
     override fun requireLive(handle: GodotHandle) {
-      require(handle.backendToken() == 17L)
+      require(handle.backendToken() in setOf(17L, 31L, 41L))
     }
 
     override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite {
@@ -145,7 +165,7 @@ class GodotBackendContractTest {
       callSite: GodotCallSite,
       receiver: GodotHandle,
     ) {
-      queuedRedraws += 1
+      if (descriptor.opcode == 5) queuedRedraws += 1 else queuedFree = receiver.backendToken()
     }
 
     override fun invokeTexture2DVector2ColorArgs(
@@ -195,6 +215,38 @@ class GodotBackendContractTest {
     ): Int {
       emittedSignal = name to value
       return 0
+    }
+
+    override fun invokeStringNameRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ): GodotHandle {
+      constructedClass = value
+      return GodotHandle.fromBackendToken(41L)
+    }
+
+    override fun invokeObjectBoolLongArgs(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      objectValue: GodotHandle,
+      boolValue: Boolean,
+      longValue: Long,
+    ) {
+      assertEquals(0L, longValue)
+      addedChild = Triple(receiver.backendToken(), objectValue.backendToken(), boolValue)
+    }
+
+    override fun invokeObjectArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotHandle?,
+    ) {
+      val call = receiver.backendToken() to value?.backendToken()
+      if (descriptor.opcode == 14) removedChild = call.first to checkNotNull(call.second)
+      else objectArgument = call
     }
   }
 }

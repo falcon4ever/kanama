@@ -6,6 +6,18 @@
   const OPERATIONS = 10_000;
   const BENCHMARK_WARMUP_TRIALS = 5;
   const INDIVIDUAL_WARMUP_TRIALS = 1;
+  const BROWSER_HANDLE_NAMESPACE = 0x40000000;
+  const BROWSER_HANDLE_SLOT_MASK = 0xffff;
+  const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
+
+  function commandWordCount(opcode) {
+    if (opcode === 5 || opcode === 15) return 2;
+    if (opcode === 14 || opcode === 16) return 3;
+    if (opcode === 3 || opcode === 100) return 4;
+    if (opcode === 13) return 5;
+    if (opcode === 6) return 9;
+    throw new Error(`Unknown Kanama Web command opcode=${opcode}`);
+  }
 
   function percentile(values, fraction) {
     const sorted = [...values].sort((left, right) => left - right);
@@ -37,6 +49,8 @@
   const bridge = {
     api: null,
     mode: globalThis.KanamaWebMode ?? "spike",
+    bunnymarkVariant: globalThis.KanamaWebBunnymarkVariant ?? null,
+    bunnymarkLanguage: globalThis.KanamaWebBunnymarkLanguage ?? "kanama",
     previewBunnies: requestedPreviewBunnies(),
     previewScheduled: false,
     applyCallback: null,
@@ -44,6 +58,7 @@
     resourceCallback: null,
     signalCallback: null,
     resourceReleaseCallback: null,
+    constructCallback: null,
     benchmarkCallback: null,
     firstHandle: 0,
     freedHandle: 0,
@@ -53,9 +68,18 @@
     immediateResourceHandleResult: null,
     immediateSignalResult: null,
     immediateResourceReleaseResult: null,
-    nextResourceHandle: 0x40000001,
+    immediateConstructHandleResult: null,
+    browserHandleSlots: [{ generation: 0, kind: null, live: false }],
+    freeBrowserHandleSlots: [],
     resourceLoads: 0,
     resourceReleases: 0,
+    objectConstructions: 0,
+    objectFrees: 0,
+    liveBrowserHandleCount: 0,
+    maxLiveBrowserHandles: 0,
+    lastConstructedObjectHandle: 0,
+    lastFreedObjectHandle: 0,
+    objectHandleGenerationAdvanced: false,
     signalEmits: 0,
     processCalls: 0,
     noArgCalls: 0,
@@ -74,6 +98,10 @@
     firstDrawPosition: null,
     lastDrawPosition: null,
     activeDraw: false,
+    positionMutationCommands: 0,
+    positionMutationBatches: 0,
+    maxPositionMutationBatch: 0,
+    lastPositionMutationBatch: 0,
     reloadRequested: false,
     reloadStarted: false,
     benchmarksStarted: false,
@@ -86,6 +114,11 @@
     latestSnapshotX: 0,
     latestSnapshotY: 0,
     kotlinToGodotMs: [],
+    bunnymarkProcessMs: [],
+    gdscriptBaselineCallback: null,
+    gdscriptBaselineReadyCount: 0,
+    gdscriptBaselineAddCalls: 0,
+    gdscriptBaselineFrameMs: [],
     emptyFrameMs: [],
     batchedFrameMs: [],
     frameIndex: 0,
@@ -161,13 +194,16 @@
     },
     process(handle, delta) {
       this.processCalls += 1;
-      return this.invoke(
+      const started = performance.now();
+      const result = this.invoke(
         handle,
         "_process",
         "_process",
         () => this.api.kanamaWebProcess(handle, delta),
         0,
       );
+      this.bunnymarkProcessMs.push(performance.now() - started);
+      return result;
     },
     draw(handle) {
       const crossingsBefore = this.kotlinToGodotCalls;
@@ -218,9 +254,9 @@
     callNoArgs(handle, methodId) {
       this.noArgCalls += 1;
       if (this.mode === "bunnymark") {
-        if (methodId === 2) this.addBunnyCalls += 1;
-        if (methodId === 3) this.removeBunnyCalls += 1;
-        if (methodId === 4) this.finishCalls += 1;
+        if (methodId === this.bunnymarkMethodId("add")) this.addBunnyCalls += 1;
+        if (methodId === this.bunnymarkMethodId("remove")) this.removeBunnyCalls += 1;
+        if (methodId === this.bunnymarkMethodId("finish")) this.finishCalls += 1;
       }
       return this.invoke(
         handle,
@@ -230,11 +266,26 @@
         0,
       );
     },
+    bunnymarkMethodId(method) {
+      const spriteVariant = this.bunnymarkVariant === "BunnymarkV1Sprites";
+      if (method === "add") return spriteVariant ? 1 : 2;
+      if (method === "remove") return spriteVariant ? 2 : 3;
+      if (method === "finish") return spriteVariant ? 3 : 4;
+      throw new Error(`Unknown Bunnymark method=${method}`);
+    },
     roundTrip(value) {
       return this.api.kanamaWebRoundTrip(value);
     },
     free(handle) {
-      return this.invoke(handle, "_exit_tree", "_exit_tree", () => this.api.kanamaWebFree(handle), 0);
+      const result = this.invoke(
+        handle,
+        "_exit_tree",
+        "_exit_tree",
+        () => this.api.kanamaWebFree(handle),
+        0,
+      );
+      if (result === 1) this.releaseRemainingBrowserHandles();
+      return result;
     },
     installApplyCallback(callback) {
       this.applyCallback = callback;
@@ -266,6 +317,69 @@
     clearResourceReleaseCallback() {
       this.resourceReleaseCallback = null;
     },
+    installConstructCallback(callback) {
+      this.constructCallback = callback;
+    },
+    clearConstructCallback() {
+      this.constructCallback = null;
+    },
+    allocateBrowserHandle(kind) {
+      let slotIndex;
+      if (this.freeBrowserHandleSlots.length === 0) {
+        slotIndex = this.browserHandleSlots.length;
+        if (slotIndex > BROWSER_HANDLE_SLOT_MASK) {
+          throw new Error("Kanama Web browser handle registry exhausted");
+        }
+        this.browserHandleSlots.push({ generation: 0, kind: null, live: false });
+      } else {
+        slotIndex = this.freeBrowserHandleSlots.pop();
+      }
+      const slot = this.browserHandleSlots[slotIndex];
+      slot.generation =
+        slot.generation >= BROWSER_HANDLE_GENERATION_MASK ? 1 : slot.generation + 1;
+      slot.kind = kind;
+      slot.live = true;
+      const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
+      this.liveBrowserHandleCount += 1;
+      this.maxLiveBrowserHandles = Math.max(this.maxLiveBrowserHandles, this.liveBrowserHandleCount);
+      return handle;
+    },
+    browserHandleSlot(handle) {
+      if ((handle & BROWSER_HANDLE_NAMESPACE) === 0 || handle < 0) return null;
+      const slotIndex = handle & BROWSER_HANDLE_SLOT_MASK;
+      if (slotIndex === 0 || slotIndex >= this.browserHandleSlots.length) return null;
+      const generation = (handle >>> 16) & BROWSER_HANDLE_GENERATION_MASK;
+      const slot = this.browserHandleSlots[slotIndex];
+      return slot.live && slot.generation === generation ? slot : null;
+    },
+    requireBrowserHandle(handle, kind) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot || slot.kind !== kind) {
+        throw new Error(`Stale or wrong-kind Kanama Web browser handle=${handle} expected=${kind}`);
+      }
+      return slot;
+    },
+    releaseBrowserHandle(handle, kind) {
+      const slot = this.requireBrowserHandle(handle, kind);
+      slot.live = false;
+      slot.kind = null;
+      this.liveBrowserHandleCount -= 1;
+      this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
+    },
+    releaseRemainingBrowserHandles() {
+      for (let slotIndex = 1; slotIndex < this.browserHandleSlots.length; slotIndex += 1) {
+        const slot = this.browserHandleSlots[slotIndex];
+        if (!slot.live) continue;
+        if (slot.kind === "Sprite2D") this.objectFrees += 1;
+        slot.live = false;
+        slot.kind = null;
+        this.freeBrowserHandleSlots.push(slotIndex);
+      }
+      this.liveBrowserHandleCount = 0;
+    },
+    isBrowserHandleLive(handle) {
+      return this.browserHandleSlot(handle) ? 1 : 0;
+    },
     refreshPositionSnapshot(handle, x, y) {
       this.snapshotBatchLoads += 1;
       this.latestSnapshotX = x;
@@ -287,11 +401,7 @@
     },
     immediateResourceLoad(path, typeHint, cacheMode) {
       if (!this.resourceCallback) throw new Error("Godot resource callback is not installed");
-      if (this.nextResourceHandle > 0x7fffffff) {
-        throw new Error("Kanama Web resource handle namespace exhausted");
-      }
-      const resourceHandle = this.nextResourceHandle;
-      this.nextResourceHandle += 1;
+      const resourceHandle = this.allocateBrowserHandle("Resource");
       this.immediateResourceHandleResult = null;
       this.resourceCallback(resourceHandle, path, typeHint, cacheMode);
       if (
@@ -300,8 +410,39 @@
       ) {
         throw new Error("Godot resource callback published an invalid handle");
       }
+      if (this.immediateResourceHandleResult === 0) {
+        this.releaseBrowserHandle(resourceHandle, "Resource");
+      }
       this.resourceLoads += 1;
       return this.immediateResourceHandleResult;
+    },
+    immediateConstructObject(className) {
+      if (!this.constructCallback) throw new Error("Godot construction callback is not installed");
+      const objectHandle = this.allocateBrowserHandle(className);
+      this.immediateConstructHandleResult = null;
+      this.constructCallback(objectHandle, className);
+      if (
+        this.immediateConstructHandleResult !== 0 &&
+        this.immediateConstructHandleResult !== objectHandle
+      ) {
+        throw new Error("Godot construction callback published an invalid handle");
+      }
+      if (this.immediateConstructHandleResult === 0) {
+        this.releaseBrowserHandle(objectHandle, className);
+      } else {
+        this.objectConstructions += 1;
+        if (
+          this.lastFreedObjectHandle !== 0 &&
+          (this.lastFreedObjectHandle & BROWSER_HANDLE_SLOT_MASK) ===
+            (objectHandle & BROWSER_HANDLE_SLOT_MASK)
+        ) {
+          this.objectHandleGenerationAdvanced =
+            objectHandle !== this.lastFreedObjectHandle &&
+            this.browserHandleSlot(this.lastFreedObjectHandle) === null;
+        }
+        this.lastConstructedObjectHandle = objectHandle;
+      }
+      return this.immediateConstructHandleResult;
     },
     immediateEmitSignal(handle, name, value) {
       if (!this.signalCallback) throw new Error("Godot signal callback is not installed");
@@ -323,6 +464,9 @@
       if (!Number.isInteger(this.immediateResourceReleaseResult)) {
         throw new Error("Godot resource release callback did not publish a result");
       }
+      if (this.immediateResourceReleaseResult === 1) {
+        this.releaseBrowserHandle(handle, "Resource");
+      }
       return this.immediateResourceReleaseResult;
     },
     installBenchmarkCallback(callback) {
@@ -331,6 +475,37 @@
     },
     clearBenchmarkCallback() {
       this.benchmarkCallback = null;
+    },
+    installGdscriptBaselineCallback(callback) {
+      this.gdscriptBaselineCallback = callback;
+    },
+    clearGdscriptBaselineCallback() {
+      this.gdscriptBaselineCallback = null;
+    },
+    recordGdscriptBaselineReady() {
+      this.gdscriptBaselineReadyCount += 1;
+    },
+    recordGdscriptBaselineFrame(elapsedMs) {
+      this.gdscriptBaselineFrameMs.push(elapsedMs);
+    },
+    callGdscriptBaseline(method) {
+      if (!this.gdscriptBaselineCallback) {
+        throw new Error("GDScript baseline callback is not installed");
+      }
+      if (method === "add") this.gdscriptBaselineAddCalls += 1;
+      this.gdscriptBaselineCallback(method);
+    },
+    resetGdscriptBaselineTimings() {
+      this.gdscriptBaselineFrameMs.length = 0;
+    },
+    gdscriptBaselineSnapshot() {
+      return {
+        bunnymarkVariant: this.bunnymarkVariant,
+        bunnymarkLanguage: this.bunnymarkLanguage,
+        readyCount: this.gdscriptBaselineReadyCount,
+        addCalls: this.gdscriptBaselineAddCalls,
+        frameTiming: summary(this.gdscriptBaselineFrameMs),
+      };
     },
     flushCommands(words, wordCount, commandCount) {
       if (!this.applyCallback) throw new Error("Godot command callback is not installed");
@@ -355,9 +530,32 @@
         }
       }
       const started = performance.now();
-      const applied = this.applyCallback(words.subarray(0, wordCount), commandCount);
+      const appliedBefore = this.appliedCommands;
+      this.applyCallback(words.subarray(0, wordCount), commandCount);
+      const applied = this.appliedCommands - appliedBefore;
       this.kotlinToGodotCalls += 1;
       this.kotlinToGodotMs.push(performance.now() - started);
+      let wordOffset = 0;
+      let positionMutationCount = 0;
+      for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
+        const opcode = words[wordOffset];
+        if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
+        if (commandIndex < applied && opcode === 15) {
+          this.lastFreedObjectHandle = words[wordOffset + 1];
+          this.releaseBrowserHandle(this.lastFreedObjectHandle, "Sprite2D");
+          this.objectFrees += 1;
+        }
+        wordOffset += commandWordCount(opcode);
+      }
+      if (positionMutationCount > 0) {
+        this.positionMutationCommands += positionMutationCount;
+        this.positionMutationBatches += 1;
+        this.maxPositionMutationBatch = Math.max(
+          this.maxPositionMutationBatch,
+          positionMutationCount,
+        );
+        this.lastPositionMutationBatch = positionMutationCount;
+      }
       return applied;
     },
     recordReady(handle) {
@@ -367,7 +565,7 @@
         setTimeout(() => {
           if (this.api.kanamaWebIsLive(handle) !== 1) return;
           for (let index = 0; index < this.previewBunnies; index += 1) {
-            this.callNoArgs(handle, 2);
+            this.callNoArgs(handle, this.bunnymarkMethodId("add"));
           }
           updateStatus(`Running Kotlin/Wasm Bunnymark with ${this.previewBunnies} bunnies…`);
         }, 150);
@@ -402,6 +600,9 @@
       this.immediateResourceReleaseResult = value;
       if (value === 1) this.resourceReleases += 1;
     },
+    recordImmediateConstructHandle(value) {
+      this.immediateConstructHandleResult = value;
+    },
     recordApplied(count, lastValue) {
       this.appliedCommands += count;
       this.lastAppliedValue = lastValue;
@@ -427,6 +628,7 @@
     bunnymarkSnapshot() {
       return {
         mode: this.mode,
+        bunnymarkVariant: this.bunnymarkVariant,
         handle: this.firstHandle,
         readyCount: this.readyCount,
         processCalls: this.processCalls,
@@ -438,6 +640,13 @@
         lastCallbackError: this.lastCallbackError,
         resourceLoads: this.resourceLoads,
         resourceReleases: this.resourceReleases,
+        objectConstructions: this.objectConstructions,
+        objectFrees: this.objectFrees,
+        maxLiveBrowserHandles: this.maxLiveBrowserHandles,
+        liveBrowserHandles: this.liveBrowserHandleCount,
+        lastConstructedObjectHandle: this.lastConstructedObjectHandle,
+        lastFreedObjectHandle: this.lastFreedObjectHandle,
+        objectHandleGenerationAdvanced: this.objectHandleGenerationAdvanced,
         signalEmits: this.signalEmits,
         lastSignalName: this.lastSignalName ?? null,
         lastSignalValue: this.lastSignalValue ?? null,
@@ -448,10 +657,23 @@
         maxDrawCommands: this.maxDrawCommands,
         lastDrawCommands: this.lastDrawCommands,
         movingDrawSamples: this.movingDrawSamples,
+        kotlinToGodotCalls: this.kotlinToGodotCalls,
+        appliedCommands: this.appliedCommands,
+        positionMutationCommands: this.positionMutationCommands,
+        positionMutationBatches: this.positionMutationBatches,
+        maxPositionMutationBatch: this.maxPositionMutationBatch,
+        lastPositionMutationBatch: this.lastPositionMutationBatch,
         firstDrawPosition: this.firstDrawPosition,
         lastDrawPosition: this.lastDrawPosition,
         commandBufferGrowths: this.commandBufferGrowths,
+        processTiming: summary(this.bunnymarkProcessMs),
+        applyTiming: summary(this.kotlinToGodotMs),
       };
+    },
+
+    resetBunnymarkTimings() {
+      this.bunnymarkProcessMs.length = 0;
+      this.kotlinToGodotMs.length = 0;
     },
 
     maybeRunBenchmarks() {

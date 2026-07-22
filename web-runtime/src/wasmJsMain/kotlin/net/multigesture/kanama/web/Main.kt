@@ -145,6 +145,7 @@ fun kanamaWebFree(objectId: Int): Int {
     commands.flush()
     drawCommands.clear()
     clearWebPositionSnapshot(objectId)
+    clearWebBrowserHandles()
     if (instances.free(objectId)) 1 else 0
   }
 }

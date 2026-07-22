@@ -16,11 +16,20 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 private val positionSnapshots = mutableMapOf<Int, GodotVector2>()
 private val viewportRectSnapshots = mutableMapOf<Int, GodotRect2>()
+private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
+
+internal enum class WebBrowserHandleKind {
+  RESOURCE,
+  SPRITE2D,
+}
 
 /** Kotlin/Wasm implementation: snapshot reads, queued Vector2 mutations, explicit sync barrier. */
 internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {
-    instances.require(handle.webId())
+    val token = handle.webId()
+    if (!instances.isLive(token)) {
+      check(browserHandles.containsKey(token)) { "Stale Kanama Web browser handle=$token" }
+    }
   }
 
   override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite =
@@ -80,7 +89,12 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    commands.appendNoArgsMutation(descriptor.opcode, receiver.webId())
+    val objectId = receiver.webId()
+    commands.appendNoArgsMutation(descriptor.opcode, objectId)
+    if (descriptor.opcode == 15) {
+      positionSnapshots.remove(objectId)
+      unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.SPRITE2D)
+    }
   }
 
   override fun invokeTexture2DVector2ColorArgs(
@@ -93,7 +107,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(texture.backendToken() > 0) { "Web texture handle must be positive" }
+    requireWebBrowserHandle(texture.webId(), WebBrowserHandleKind.RESOURCE)
     drawCommands.appendDrawTexture(
       descriptor.opcode,
       receiver.webId(),
@@ -119,7 +133,12 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
     commands.flush()
     val token = immediateWebResourceLoad(first, second, value.toInt())
-    return token.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
+    return token
+      .takeIf { it > 0 }
+      ?.let {
+        registerWebBrowserHandle(it, WebBrowserHandleKind.RESOURCE)
+        GodotHandle.fromBackendToken(it.toLong())
+      }
   }
 
   override fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
@@ -157,6 +176,60 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     commands.flush()
     return immediateWebEmitSignal(receiver.webId(), name, value)
+  }
+
+  override fun invokeStringNameRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    val token = immediateWebConstructObject(value)
+    return token
+      .takeIf { it > 0 }
+      ?.let {
+        registerWebBrowserHandle(it, WebBrowserHandleKind.SPRITE2D)
+        positionSnapshots[it] = GodotVector2(0.0f, 0.0f)
+        GodotHandle.fromBackendToken(it.toLong())
+      }
+  }
+
+  override fun invokeObjectBoolLongArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    objectValue: GodotHandle,
+    boolValue: Boolean,
+    longValue: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    requireWebBrowserHandle(objectValue.webId(), WebBrowserHandleKind.SPRITE2D)
+    commands.appendObjectBoolLongArgs(
+      descriptor.opcode,
+      receiver.webId(),
+      objectValue.webId(),
+      boolValue,
+      longValue,
+    )
+  }
+
+  override fun invokeObjectArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle?,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    when (descriptor.opcode) {
+      14 -> requireWebBrowserHandle(checkNotNull(value).webId(), WebBrowserHandleKind.SPRITE2D)
+      16 -> value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+      else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
+    }
+    commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
@@ -205,6 +278,33 @@ private fun immediateWebResourceLoad(path: String, typeHint: String, cacheMode: 
 
 private fun immediateWebEmitSignal(objectId: Int, name: String, value: Int): Int =
   js("globalThis.KanamaWebBridge.immediateEmitSignal(objectId, name, value)")
+
+private fun immediateWebConstructObject(className: String): Int =
+  js("globalThis.KanamaWebBridge.immediateConstructObject(className)")
+
+internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
+  check(handle > 0) { "Kanama Web browser handle must be positive" }
+  check(browserHandles.put(handle, kind) == null) { "Duplicate Kanama Web browser handle=$handle" }
+}
+
+internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
+  val actual = browserHandles.remove(handle)
+  check(actual == expectedKind) {
+    "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
+  }
+}
+
+internal fun clearWebBrowserHandles() {
+  browserHandles.keys.forEach(positionSnapshots::remove)
+  browserHandles.clear()
+}
+
+private fun requireWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
+  val actual = browserHandles[handle]
+  check(actual == expectedKind) {
+    "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
+  }
+}
 
 private object WebRandom {
   private var state = 0x9e3779b97f4a7c15UL
