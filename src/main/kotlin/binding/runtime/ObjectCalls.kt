@@ -71,6 +71,14 @@ object ObjectCalls {
 
   private val notificationBind by lazy { getMethodBind("Object", "notification", 4023243586L) }
 
+  // RefCounted lifetime binds for the issue #81 save guard (see ptrcallWithObjectStringLongArgsRetLong).
+  // reference()/unreference() share the bool() no-arg hash; get_reference_count() is int().
+  private val refCountedReferenceBind by lazy { getMethodBind("RefCounted", "reference", 2240911060L) }
+  private val refCountedUnreferenceBind by lazy { getMethodBind("RefCounted", "unreference", 2240911060L) }
+  private val refCountedGetReferenceCountBind by lazy {
+    getMethodBind("RefCounted", "get_reference_count", 3905245786L)
+  }
+
   private class PtrcallScratch {
     private val arena = Arena.ofAuto()
     val args1: MemorySegment = arena.allocate(ADDRESS, 1)
@@ -3463,6 +3471,17 @@ object ObjectCalls {
     text: String,
     value: Long,
   ): Long {
+    // issue #81: this shape backs ResourceSaver.save (the only wrapper of its (Object, String, int64)
+    // -> int64 signature). save decodes its `const Ref<Resource>&` argument into a transient engine
+    // Ref and releases it on return; for a freshly created, not-yet-assigned resource — whose only
+    // reference is Godot's construction placeholder — that release drops the refcount to zero and
+    // frees the object, leaving its Kotlin wrapper dangling (JVM SIGSEGV on the next touch). Hold a
+    // protective reference across the call, then release it only if the object still has another
+    // holder: when the call consumed the sole reference the protective ref is kept, so the resource
+    // survives and becomes wrapper-owned (close() frees it); for an already-owned resource
+    // (loaded/cached, or held by the scene tree) it is a balanced no-op.
+    val guardHandle = objectArg.address() != 0L
+    if (guardHandle) ptrcallNoArgsRetBool(refCountedReferenceBind, objectArg)
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 3)
       val objCell = arena.allocate(ADDRESS)
@@ -3481,9 +3500,16 @@ object ObjectCalls {
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringArg)
+        if (guardHandle && refCountedGetReferenceCount(objectArg) > 1) {
+          ptrcallNoArgsRetBool(refCountedUnreferenceBind, objectArg)
+        }
       }
     }
   }
+
+  /** Calls RefCounted.get_reference_count on [handle] via ptrcall (int32 return). */
+  private fun refCountedGetReferenceCount(handle: MemorySegment): Int =
+    ptrcallNoArgsRetInt(refCountedGetReferenceCountBind, handle)
 
   /** Calls [methodBind] with no arguments and bool return value. */
   fun ptrcallNoArgsRetBool(methodBind: MemorySegment, instance: MemorySegment): Boolean {

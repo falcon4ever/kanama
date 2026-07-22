@@ -64,6 +64,17 @@ versioning once public releases begin.
 
 ### Fixed
 
+- Saving a freshly created resource with `ResourceSaver.save` no longer crashes
+  the JVM (issue #81). A resource from an `X.create()` factory (e.g.
+  `PackedScene.create()`) holds only Godot's construction placeholder reference;
+  `save` decodes its `Ref<Resource>` argument into a transient reference and
+  releases it on return, which dropped that placeholder to zero and freed the
+  object while the Kotlin wrapper still pointed at it — the `.tscn` was written
+  correctly, then the process segfaulted. `save` now holds a protective
+  reference across the call and keeps it only if the resource still has another
+  holder, so the wrapper stays valid (and, for a just-created resource, becomes
+  owned — `close()` frees it). Resources already owned or held by the scene tree
+  are unaffected. Desktop, Android, and iOS.
 - A throwing `@ScriptProperty` accessor no longer aborts the process. Generated
   property get/set dispatch ran inside an FFM upcall stub with no exception guard
   (unlike method calls), so any `Throwable` escaping a user getter/setter unwound

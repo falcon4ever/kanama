@@ -87,6 +87,11 @@ check "script property cleanup shape type=Shape3D"
 check_absent "Leaked instance: AudioStreamWAV"
 check_absent "Leaked instance: BoxMesh"
 check_absent "Leaked instance: BoxShape3D"
+# issue #81 — the created PackedScene saved via ResourceSaver.save must free cleanly on close().
+# The save guard leaves the scene wrapper-owned (its construction placeholder is consumed by save's
+# transient Ref); the probe's close() releases it. A missing/incorrect guard either crashes the
+# process before shutdown or leaks the scene here.
+check_absent "Leaked instance: PackedScene"
 check "SelfSmoke self_class=Node3D same_object=true"
 # issue #38 — newScriptInstance() creates a script-backed custom resource from Kotlin
 # at runtime: the instance is live, saves (owned reference survives the transient Ref<>
@@ -151,6 +156,10 @@ check "ProjectSettings string_list=alpha\\|beta"
 check "ProjectSettings dictionary name=kanama enabled=true count=2 scale=1\\.5"
 check "ResourceLoader exists=true has_hello=true loaded_path_len=[0-9]+ loaded_is_script=true loaded_ref_count=[0-9]+ loaded_name_len=[0-9]+ loaded_scene_id_len=[0-9]+ loaded_path_id_len=[0-9]+ loaded_built_in=(true|false) loaded_local_to_scene=(true|false) threaded_request=0 threaded_status_before=[0-3] threaded_status_after=[0-3] threaded_packed=true threaded_path_len=[0-9]+ generated_scene_id_len=[0-9]+ packed_scene_pack_error=0 packed_scene_can=true packed_scene_instance_body=true packed_scene_instance_children=[0-9]+ duplicate_is_script=true duplicate_path_len=[0-9]+ deep_duplicate_is_script=true save_ext_has_kt=true save_error=0 save_exists=true save_has_class=true save_uid_set_error=0 save_cleanup_error=0 cached_path_len=[0-9]+ cached_is_script=(true|false) cached_ref_count=[0-9]+"
 check "ResourceSaver script_uid=[0-9-]+"
+# issue #81: created PackedScene survives ResourceSaver.save (create() claims its construction
+# ref via init_ref). ref_after_save>=1 and usable_after_save=true both dereference the wrapper
+# after save — pre-fix the scene was freed there and the process crashed (SIGSEGV) before this line.
+check "issue81 packed_scene_save pack_error=0 save_error=0 ref_after_save=[1-9][0-9]* usable_after_save=true save_exists=true"
 check "Script property replay object_set_amount=777"
 check "FileAccess exists=true size_positive=true has_class=true"
 check "FileAccess metadata modified_positive=true accessed_nonnegative=true md5_len=32 sha256_len=64 permissions=[0-9]+ hidden=(true|false) read_only=(true|false) xattrs=[0-9]+"

@@ -494,6 +494,24 @@ class HelloScript(godotObject: MemorySegment) :
       packedSceneInstance.queueFree()
     }
     packedScene.close()
+    // ── issue #81: a freshly created PackedScene handed by value to ResourceSaver.save must
+    // survive the call. save decodes its `const Ref<Resource>&` argument into a transient Ref and
+    // releases it on return; pre-fix that Ref absorbed the scene's sole (construction placeholder)
+    // reference and freed it, leaving this wrapper dangling → JVM SIGSEGV on the next touch. The
+    // save guard (ObjectCalls.ptrcallWithObjectStringLongArgsRetLong) holds a protective reference
+    // across the call, so the scene stays live and becomes wrapper-owned; close() frees it. ───────
+    val issue81Scene = PackedScene.create()
+    val issue81PackError = issue81Scene.pack(selfNode)
+    val issue81SavePath = "res://.kanama_issue81_scene_smoke.tscn"
+    val issue81SaveAbsolute = ProjectSettings.globalizePath(issue81SavePath)
+    DirAccess.removeAbsolute(issue81SaveAbsolute)
+    val issue81SaveError = ResourceSaver.save(issue81Scene, issue81SavePath)
+    // These three calls dereference the wrapper *after* save — each crashed pre-fix.
+    val issue81RefCountAfterSave = issue81Scene.getReferenceCount()
+    val issue81UsableAfterSave = issue81Scene.canInstantiate()
+    val issue81SaveExists = FileAccess.fileExists(issue81SavePath)
+    issue81Scene.close()
+    if (issue81SaveExists) DirAccess.removeAbsolute(issue81SaveAbsolute)
     if (body3d != null) body3d.position = Vector3(1f, 2f, 3f)
     val bodyPosition = body3d?.position ?: Vector3.ZERO
     body3d?.translate(Vector3(0.5f, 0f, -0.5f))
@@ -1537,6 +1555,11 @@ class HelloScript(godotObject: MemorySegment) :
         "cached_is_script=$cachedScriptIsScript cached_ref_count=$cachedScriptRefCount"
     )
     System.err.println("[kanama:kt] ResourceSaver script_uid=$scriptUid")
+    System.err.println(
+      "[kanama:kt] issue81 packed_scene_save pack_error=$issue81PackError save_error=$issue81SaveError " +
+        "ref_after_save=$issue81RefCountAfterSave usable_after_save=$issue81UsableAfterSave " +
+        "save_exists=$issue81SaveExists"
+    )
     System.err.println("[kanama:kt] Script property replay object_set_amount=$pendingSetAmount")
     System.err.println(
       "[kanama:kt] FileAccess exists=$fileExists size_positive=${fileSize > 0} has_class=$sourceHasClass"

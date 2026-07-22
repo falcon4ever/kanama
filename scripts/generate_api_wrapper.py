@@ -298,6 +298,11 @@ IOS_HANDWRITTEN_HELPERS = {
     "ptrcallWithColorArg",
     "ptrcallWithRect2Arg",
     "ptrcallWithObjectArgs",
+    # issue #81 — hand-written so the iOS save path carries the same RefCounted guard as desktop
+    # (ObjectCalls.ptrcallWithObjectStringLongArgsRetLong). This is the sole wrapper of its shape
+    # (ResourceSaver.save); the guard keeps a freshly created resource alive across save's transient
+    # Ref<Resource> instead of letting it free the object out from under its wrapper.
+    "ptrcallWithObjectStringLongArgsRetLong",
     "ptrcallWithStringNameAndBoolArgRetBool",
     "ptrcallNoArgsRetString",
     "ptrcallNoArgsRetStringName",

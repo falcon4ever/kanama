@@ -8268,37 +8268,9 @@ fun ObjectCalls.ptrcallWithObjectStringIntLongArgs(
   Unit
 }
 
-fun ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(
-  methodBind: MemorySegment,
-  instance: MemorySegment,
-  a0: MemorySegment,
-  a1: String,
-  a2: Long,
-): Long = memScoped {
-  val ret = alloc<LongVar>()
-  val c0 = alloc<LongVar>()
-  c0.value = a0.address()
-  val c2 = alloc<LongVar>()
-  c2.value = a2
-  val types = allocArray<IntVar>(3)
-  types[0] = PT_OBJECT
-  types[1] = PT_STRING
-  types[2] = PT_INT64
-  val ptrs = allocArray<COpaquePointerVar>(3)
-  ptrs[0] = c0.ptr.reinterpret<CPointed>()
-  ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
-  ptrs[2] = c2.ptr.reinterpret<CPointed>()
-  kanama_ios_godot_ptrcall(
-    methodBind.address(),
-    instance.address(),
-    types,
-    ptrs,
-    3,
-    PT_INT64,
-    ret.ptr,
-  )
-  ret.value
-}
+// issue #81: ptrcallWithObjectStringLongArgsRetLong is hand-written in ObjectCalls.kt
+// (IOS_HANDWRITTEN_HELPERS) so the ResourceSaver.save path carries the RefCounted save guard.
+// It is intentionally NOT emitted here.
 
 fun ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(
   methodBind: MemorySegment,

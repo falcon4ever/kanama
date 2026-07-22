@@ -186,6 +186,64 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
+  // RefCounted lifetime binds for the issue #81 save guard below. reference()/unreference() share
+  // the bool() no-arg hash; get_reference_count() is int().
+  private val refCountedReferenceBind by lazy { getMethodBind("RefCounted", "reference", 2240911060L) }
+  private val refCountedUnreferenceBind by lazy { getMethodBind("RefCounted", "unreference", 2240911060L) }
+  private val refCountedGetReferenceCountBind by lazy {
+    getMethodBind("RefCounted", "get_reference_count", 3905245786L)
+  }
+
+  // issue #81 — hand-written (IOS_HANDWRITTEN_HELPERS) mirror of the desktop guard. The only wrapper
+  // of this (Object, String, int64) -> int64 shape is ResourceSaver.save, whose `const Ref<Resource>&`
+  // argument the engine decodes into a transient Ref and releases on return. For a freshly created,
+  // not-yet-assigned resource — whose only reference is Godot's construction placeholder — that
+  // release drops the refcount to zero and frees the object, dangling its Kotlin wrapper. Hold a
+  // protective reference across the call, then release it only if the object still has another holder:
+  // when the call consumed the sole reference the ref is kept (the resource becomes wrapper-owned,
+  // close() frees it); for an already-owned resource it is a balanced no-op.
+  fun ptrcallWithObjectStringLongArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    a0: MemorySegment,
+    a1: String,
+    a2: Long,
+  ): Long {
+    val guardHandle = a0.address() != 0L
+    if (guardHandle) ptrcallNoArgsRetBool(refCountedReferenceBind, a0)
+    try {
+      return memScoped {
+        val ret = alloc<LongVar>()
+        val c0 = alloc<LongVar>()
+        c0.value = a0.address()
+        val c2 = alloc<LongVar>()
+        c2.value = a2
+        val types = allocArray<IntVar>(3)
+        types[0] = PT_OBJECT
+        types[1] = PT_STRING
+        types[2] = PT_INT64
+        val ptrs = allocArray<COpaquePointerVar>(3)
+        ptrs[0] = c0.ptr.reinterpret<CPointed>()
+        ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+        ptrs[2] = c2.ptr.reinterpret<CPointed>()
+        kanama_ios_godot_ptrcall(
+          methodBind.address(),
+          instance.address(),
+          types,
+          ptrs,
+          3,
+          PT_INT64,
+          ret.ptr,
+        )
+        ret.value
+      }
+    } finally {
+      if (guardHandle && ptrcallNoArgsRetInt(refCountedGetReferenceCountBind, a0) > 1) {
+        ptrcallNoArgsRetBool(refCountedUnreferenceBind, a0)
+      }
+    }
+  }
+
   fun ptrcallNoArgsRetLong(methodBind: MemorySegment, instance: MemorySegment): Long = memScoped {
     val ret = alloc<LongVar>()
     kanama_ios_godot_ptrcall(
