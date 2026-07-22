@@ -1,6 +1,7 @@
 package net.multigesture.kanama.binding.runtime
 
 import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotCallDescriptor
@@ -10,6 +11,7 @@ import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.binding.runtime.Signals as RuntimeSignals
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
@@ -23,10 +25,14 @@ internal object CommonGodotBackend : GodotBackendSpi {
   }
 
   override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite =
-    GodotCallSite.fromBackendToken(
-      ObjectCalls.getMethodBind(descriptor.className, descriptor.methodName, descriptor.hash)
-        .address()
-    )
+    if (descriptor.className == "@GlobalScope") {
+      GodotCallSite.fromBackendToken(descriptor.opcode.toLong())
+    } else {
+      GodotCallSite.fromBackendToken(
+        ObjectCalls.getMethodBind(descriptor.className, descriptor.methodName, descriptor.hash)
+          .address()
+      )
+    }
 
   override fun invokeBoolRetInt(
     descriptor: GodotCallDescriptor,
@@ -107,6 +113,31 @@ internal object CommonGodotBackend : GodotBackendSpi {
       )
       .takeIf { it.address() != 0L }
       ?.let { GodotHandle.fromBackendToken(it.address()) }
+
+  override fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
+    GD.randomize()
+  }
+
+  override fun invokeUtilityNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Long = GD.randi()
+
+  override fun invokeUtilityNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Double = GD.randf()
+
+  override fun invokeStringNameIntRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Int,
+  ): Int {
+    RuntimeSignals.emitAny(segment(receiver), name, listOf(value))
+    return 0
+  }
 
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())

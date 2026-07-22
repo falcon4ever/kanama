@@ -67,6 +67,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendReadyDispatcher()
     appendProcessDispatcher()
     appendDrawDispatcher()
+    appendExitTreeDispatcher()
+    appendNoArgsMethodDispatcher()
     appendStringPropertyGetter()
     appendStringPropertySetter()
     appendLongMethodDispatcher()
@@ -143,6 +145,43 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           else -> "Unit"
         }
       appendLine("      ${index + 1} -> $body")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendExitTreeDispatcher() {
+    appendLine("  fun exitTree(scriptId: Int, script: KanamaWebScript) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { index, input ->
+      val exitTree = input.model.virtuals.firstOrNull { it.virtualName == "_exit_tree" }
+      val body =
+        if (exitTree == null) "Unit"
+        else "(script as ${input.model.simpleName}).${exitTree.kotlinMethodName}()"
+      appendLine("      ${index + 1} -> $body")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendNoArgsMethodDispatcher() {
+    appendLine("  fun callNoArgs(scriptId: Int, methodId: Int, script: KanamaWebScript) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (method.args.isEmpty() && method.returnType == null) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}()"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
     appendLine("    }")
@@ -244,6 +283,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_apply_callback")
     appendLine("var _kanama_immediate_callback")
     appendLine("var _kanama_resource_callback")
+    appendLine("var _kanama_signal_callback")
+    appendLine("var _kanama_resource_release_callback")
     appendLine("var _kanama_object_handles: Dictionary = {}")
     appendLine()
     appendLine("func _ready() -> void:")
@@ -262,10 +303,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t_kanama_resource_callback = JavaScriptBridge.create_callback(_kanama_resource_load)"
     )
+    appendLine("\t_kanama_signal_callback = JavaScriptBridge.create_callback(_kanama_signal_emit)")
+    appendLine(
+      "\t_kanama_resource_release_callback = JavaScriptBridge.create_callback(_kanama_resource_release)"
+    )
     appendLine("\t_kanama_bridge.installApplyCallback(_kanama_apply_callback)")
     appendLine("\t_kanama_bridge.installImmediateCallback(_kanama_immediate_callback)")
     appendLine("\t_kanama_bridge.installResourceCallback(_kanama_resource_callback)")
+    appendLine("\t_kanama_bridge.installSignalCallback(_kanama_signal_callback)")
+    appendLine("\t_kanama_bridge.installResourceReleaseCallback(_kanama_resource_release_callback)")
     appendLine("\t_kanama_handle = int(_kanama_bridge.create(_KANAMA_SCRIPT_ID))")
+    appendLine("\tif _kanama_handle == 0:")
+    appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
+    appendLine("\t\t_kanama_clear_callbacks()")
+    appendLine("\t\treturn")
     appendLine("\tif self is Node2D:")
     appendLine("\t\tvar target := self as Node2D")
     appendLine(
@@ -313,18 +364,28 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func _exit_tree() -> void:")
     appendLine("\tif _kanama_handle == 0:")
+    appendLine("\t\t_kanama_clear_callbacks()")
     appendLine("\t\treturn")
     appendLine("\tvar freed_handle := _kanama_handle")
     appendLine("\t_kanama_bridge.free(_kanama_handle)")
     appendLine("\t_kanama_handle = 0")
+    appendLine("\t_kanama_clear_callbacks()")
+    appendLine("\t_kanama_object_handles.clear()")
+    appendLine("\t_kanama_bridge.recordFreed(freed_handle)")
+    appendLine()
+    appendLine("func _kanama_clear_callbacks() -> void:")
+    appendLine("\tif _kanama_bridge == null:")
+    appendLine("\t\treturn")
     appendLine("\t_kanama_bridge.clearApplyCallback()")
     appendLine("\t_kanama_bridge.clearImmediateCallback()")
     appendLine("\t_kanama_bridge.clearResourceCallback()")
+    appendLine("\t_kanama_bridge.clearSignalCallback()")
+    appendLine("\t_kanama_bridge.clearResourceReleaseCallback()")
     appendLine("\t_kanama_apply_callback = null")
     appendLine("\t_kanama_immediate_callback = null")
     appendLine("\t_kanama_resource_callback = null")
-    appendLine("\t_kanama_object_handles.clear()")
-    appendLine("\t_kanama_bridge.recordFreed(freed_handle)")
+    appendLine("\t_kanama_signal_callback = null")
+    appendLine("\t_kanama_resource_release_callback = null")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
     appendLine(
@@ -400,8 +461,27 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_object_handles[resource_handle] = resource")
     appendLine("\t_kanama_bridge.recordImmediateResourceHandle(resource_handle)")
     appendLine("\treturn resource_handle")
+    appendLine()
+    appendLine("func _kanama_signal_emit(args: Array) -> int:")
+    appendLine("\tvar object_handle := int(args[0])")
+    appendLine("\tvar result := ERR_INVALID_PARAMETER")
+    appendLine("\tif object_handle == _kanama_handle:")
+    appendLine("\t\tresult = emit_signal(String(args[1]), int(args[2]))")
+    appendLine("\t_kanama_bridge.recordImmediateSignalResult(result)")
+    appendLine("\treturn result")
+    appendLine()
+    appendLine("func _kanama_resource_release(args: Array) -> int:")
+    appendLine("\tvar resource_handle := int(args[0])")
+    appendLine("\tvar released := int(_kanama_object_handles.erase(resource_handle))")
+    appendLine("\t_kanama_bridge.recordImmediateResourceRelease(released)")
+    appendLine("\treturn released")
 
     model.methods.forEachIndexed { index, method ->
+      if (method.args.isEmpty() && method.returnType == null && method.godotName != "_draw") {
+        appendLine()
+        appendLine("func ${method.godotName}() -> void:")
+        appendLine("\t_kanama_bridge.callNoArgs(_kanama_handle, ${index + 1})")
+      }
       if (
         method.returnType == TypeMapping.INT &&
           method.args.size == 1 &&

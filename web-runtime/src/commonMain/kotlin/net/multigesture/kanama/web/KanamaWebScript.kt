@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
-/** Opaque Phase 0 registry identity. This is not the post-GO common Godot handle contract. */
+/** Generation-tagged Web representation behind the public platform-neutral GodotHandle alias. */
 data class WebObjectId(val value: Int)
 
 data class WebMemberDescriptor(val id: Int, val name: String)
@@ -21,10 +21,10 @@ data class WebScriptDescriptor(
 )
 
 /**
- * Minimal non-JVM script base for the Web feasibility probe.
+ * Web script lifetime base used by the public parity-shaped KanamaScript facade.
  *
- * It deliberately does not reuse the JVM [MemorySegment]-based KanamaScript. Phase 0 measures the
- * Web boundary first; Task 57 Phase 0.5 owns the eventual shared handle and wrapper contract.
+ * The platform keeps the same source-facing constructor shape as JVM and iOS while storing a
+ * generation-tagged browser handle instead of a native pointer.
  */
 abstract class KanamaWebScript(val objectId: WebObjectId) {
   protected val scope = CoroutineScope(SupervisorJob())

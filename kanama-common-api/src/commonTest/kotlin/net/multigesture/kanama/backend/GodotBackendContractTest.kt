@@ -54,10 +54,26 @@ class GodotBackendContractTest {
       31L,
       ResourceLoaderBackendContractProbe.load("res://bunny.svg", "Texture2D")?.backendToken(),
     )
+    GDBackendContractProbe.randomize()
+    assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
+    assertEquals(0.75, GDBackendContractProbe.randf())
+    assertEquals(0, probe.emitSignal("benchmark_finished", 42))
     assertEquals(7L, probe.getChildCount())
 
     assertEquals(
-      mapOf(1 to 1, 2 to 1, 3 to 1, 4 to 1, 5 to 1, 6 to 1, 7 to 1),
+      mapOf(
+        1 to 1,
+        2 to 1,
+        3 to 1,
+        4 to 1,
+        5 to 1,
+        6 to 1,
+        7 to 1,
+        8 to 1,
+        9 to 1,
+        10 to 1,
+        11 to 1,
+      ),
       backend.resolveCounts,
     )
     assertEquals(1, backend.queuedRedraws)
@@ -69,6 +85,8 @@ class GodotBackendContractTest {
       ),
       backend.drawCall,
     )
+    assertEquals(1, backend.randomizeCalls)
+    assertEquals("benchmark_finished" to 42, backend.emittedSignal)
   }
 
   private data class DrawCall(
@@ -82,6 +100,8 @@ class GodotBackendContractTest {
     private var position = GodotVector2(1.0f, 2.0f)
     var queuedRedraws = 0
     var drawCall: DrawCall? = null
+    var randomizeCalls = 0
+    var emittedSignal: Pair<String, Int>? = null
 
     override fun requireLive(handle: GodotHandle) {
       require(handle.backendToken() == 17L)
@@ -150,6 +170,31 @@ class GodotBackendContractTest {
       assertEquals("Texture2D", second)
       assertEquals(1L, value)
       return GodotHandle.fromBackendToken(31)
+    }
+
+    override fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
+      randomizeCalls += 1
+    }
+
+    override fun invokeUtilityNoArgsRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): Long = 4_294_967_295L
+
+    override fun invokeUtilityNoArgsRetDouble(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): Double = 0.75
+
+    override fun invokeStringNameIntRetInt(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: Int,
+    ): Int {
+      emittedSignal = name to value
+      return 0
     }
   }
 }

@@ -33,6 +33,7 @@ class WebScriptCodeEmitterTest {
             "process",
             args = listOf(ArgModel("delta", TypeMapping.FLOAT)),
           ),
+          VirtualModel("_exit_tree", "callExitTree", "exitTree"),
         ),
       methods =
         listOf(
@@ -42,7 +43,14 @@ class WebScriptCodeEmitterTest {
             returnType = TypeMapping.INT,
             args = listOf(ArgModel("value", TypeMapping.INT)),
             kind = MethodKind.REGULAR,
-          )
+          ),
+          MethodModel(
+            kotlinName = "reset",
+            godotName = "reset",
+            returnType = null,
+            args = emptyList(),
+            kind = MethodKind.REGULAR,
+          ),
         ),
       signals = listOf(SignalModel("changed", listOf(ArgModel("value", TypeMapping.INT)))),
     )
@@ -70,7 +78,10 @@ class WebScriptCodeEmitterTest {
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
     assertTrue(source.contains("(script as FirstScript).process(delta)"))
     assertTrue(source.contains("fun draw(scriptId: Int, script: KanamaWebScript)"))
+    assertTrue(source.contains("fun exitTree(scriptId: Int, script: KanamaWebScript)"))
+    assertTrue(source.contains("(script as FirstScript).exitTree()"))
     assertTrue(source.contains("(script as FirstScript).echo(value)"))
+    assertTrue(source.contains("(script as FirstScript).reset()"))
 
     assertFalse(source.contains("java.lang.foreign"))
     assertFalse(source.contains("MemorySegment"))
@@ -105,6 +116,11 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("_kanama_immediate_call"))
     assertTrue(proxy.source.contains("_kanama_resource_load"))
     assertTrue(proxy.source.contains("installResourceCallback"))
+    assertTrue(proxy.source.contains("installSignalCallback"))
+    assertTrue(proxy.source.contains("_kanama_signal_emit"))
+    assertTrue(proxy.source.contains("_kanama_resource_release"))
+    assertTrue(proxy.source.contains("if _kanama_handle == 0:"))
+    assertTrue(proxy.source.contains("_kanama_clear_callbacks()"))
     assertTrue(proxy.source.contains("recordImmediateChildCount(result)"))
     assertTrue(proxy.source.contains("func _process(delta: float)"))
     assertTrue(proxy.source.contains("func _draw()"))
@@ -117,6 +133,8 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("offset += 36"))
     assertTrue(proxy.source.contains("callInt(_kanama_handle, 1, 47)"))
     assertTrue(proxy.source.contains("func echo(value: int) -> int"))
+    assertTrue(proxy.source.contains("func reset() -> void"))
+    assertTrue(proxy.source.contains("callNoArgs(_kanama_handle, 2)"))
 
     assertTrue(
       emitter

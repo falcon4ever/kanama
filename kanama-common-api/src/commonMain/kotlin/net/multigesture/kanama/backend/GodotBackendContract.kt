@@ -120,6 +120,20 @@ interface GodotBackendSpi {
     second: String,
     value: Long,
   ): GodotHandle?
+
+  fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite)
+
+  fun invokeUtilityNoArgsRetLong(descriptor: GodotCallDescriptor, callSite: GodotCallSite): Long
+
+  fun invokeUtilityNoArgsRetDouble(descriptor: GodotCallDescriptor, callSite: GodotCallSite): Double
+
+  fun invokeStringNameIntRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Int,
+  ): Int
 }
 
 /**
@@ -228,6 +242,42 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor) {
+    requireShape(descriptor, GodotCallShape.UTILITY_NOARGS_VOID)
+    val selected = requireBackend()
+    selected.invokeUtilityNoArgsVoid(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeUtilityNoArgsRetLong(descriptor: GodotCallDescriptor): Long {
+    requireShape(descriptor, GodotCallShape.UTILITY_NOARGS_RET_LONG)
+    val selected = requireBackend()
+    return selected.invokeUtilityNoArgsRetLong(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeUtilityNoArgsRetDouble(descriptor: GodotCallDescriptor): Double {
+    requireShape(descriptor, GodotCallShape.UTILITY_NOARGS_RET_DOUBLE)
+    val selected = requireBackend()
+    return selected.invokeUtilityNoArgsRetDouble(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeStringNameIntRetInt(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: Int,
+  ): Int {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_INT_RET_INT)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameIntRetInt(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
+    )
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -298,6 +348,14 @@ class Node2DBackendContractProbe(val handle: GodotHandle) {
       modulate,
     )
   }
+
+  fun emitSignal(name: String, value: Int): Int =
+    GodotBackendCalls.invokeStringNameIntRetInt(
+      InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL,
+      handle,
+      name,
+      value,
+    )
 }
 
 /** First typed singleton-call probe; production wrappers delegate through the same facade. */
@@ -310,4 +368,18 @@ object ResourceLoaderBackendContractProbe {
       typeHint,
       cacheMode,
     )
+}
+
+/** Typed global utility slice used by the first Bunnymark port. */
+@InternalKanamaBackendApi
+object GDBackendContractProbe {
+  fun randomize() {
+    GodotBackendCalls.invokeUtilityNoArgsVoid(InitialGodotCallDescriptors.UTILITY_RANDOMIZE)
+  }
+
+  fun randi(): Long =
+    GodotBackendCalls.invokeUtilityNoArgsRetLong(InitialGodotCallDescriptors.UTILITY_RANDI)
+
+  fun randf(): Double =
+    GodotBackendCalls.invokeUtilityNoArgsRetDouble(InitialGodotCallDescriptors.UTILITY_RANDF)
 }

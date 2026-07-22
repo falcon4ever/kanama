@@ -122,6 +122,43 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return token.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
   }
 
+  override fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    WebRandom.randomize()
+  }
+
+  override fun invokeUtilityNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    return WebRandom.randi()
+  }
+
+  override fun invokeUtilityNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    return WebRandom.randf()
+  }
+
+  override fun invokeStringNameIntRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Int,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebEmitSignal(receiver.webId(), name, value)
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"
@@ -165,3 +202,33 @@ private fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int
 
 private fun immediateWebResourceLoad(path: String, typeHint: String, cacheMode: Int): Int =
   js("globalThis.KanamaWebBridge.immediateResourceLoad(path, typeHint, cacheMode)")
+
+private fun immediateWebEmitSignal(objectId: Int, name: String, value: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateEmitSignal(objectId, name, value)")
+
+private object WebRandom {
+  private var state = 0x9e3779b97f4a7c15UL
+
+  fun randomize() {
+    var seed = webRandomSeed().toLong().toULong() xor 0x9e3779b97f4a7c15UL
+    seed = (seed xor (seed shr 30)) * 0xbf58476d1ce4e5b9UL
+    seed = (seed xor (seed shr 27)) * 0x94d049bb133111ebUL
+    state = (seed xor (seed shr 31)).takeUnless { it == 0UL } ?: 0x2545f4914f6cdd1dUL
+  }
+
+  fun randi(): Long {
+    var next = state
+    next = next xor (next shl 13)
+    next = next xor (next shr 7)
+    next = next xor (next shl 17)
+    state = next
+    return (next and 0xffff_ffffUL).toLong()
+  }
+
+  fun randf(): Double = randi().toDouble() / 4_294_967_295.0
+}
+
+private fun webRandomSeed(): Double =
+  js(
+    "((globalThis.crypto && globalThis.crypto.getRandomValues) ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Date.now()) + performance.now()"
+  )
