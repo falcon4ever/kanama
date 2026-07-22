@@ -156,6 +156,18 @@ object ObjectCalls {
     )
   }
 
+  /**
+   * Creates the six-argument varcall downcall stub while bootstrap is still running through JNI.
+   *
+   * On macOS/AArch64, asking HotSpot to generate this native-entry-point blob for the first time
+   * from inside an FFM upcall can race the thread-local JIT W^X transition. The first generic
+   * `Object.call` normally reaches that path from a script notification. Resolve the handle before
+   * Kanama installs its lifecycle upcalls so later calls only execute an existing blob.
+   */
+  internal fun prewarmVarcallDowncall() {
+    objectMethodBindCall.type()
+  }
+
   private val objectDestroy by lazy {
     GodotFFI.lookup("object_destroy", FunctionDescriptor.ofVoid(ADDRESS))
   }

@@ -16,6 +16,7 @@ import net.multigesture.kanama.binding.KanamaScript
 import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.ffi.GodotFFI
 
 /**
@@ -44,6 +45,7 @@ object KanamaBinding {
         "${version.major}.${version.minor}.${version.patch} (${version.string})"
     )
 
+    ObjectCalls.prewarmVarcallDowncall()
     installInitCallbacks(initPtr)
   }
 
