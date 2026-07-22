@@ -4,11 +4,16 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$ROOT_DIR/example_project"
 SCRIPT_FILE="$PROJECT_DIR/HelloScript.kt"
-LOG_FILE="${KANAMA_HOTRELOAD_IN_PROCESS_LOG:-/tmp/kanama_hot_reload_in_process.log}"
 
 if [[ $# -lt 1 ]]; then
   echo "usage: $0 /absolute/path/to/godot_binary"
   exit 2
+fi
+
+if [[ -n "${KANAMA_HOTRELOAD_IN_PROCESS_LOG:-}" ]]; then
+  LOG_FILE="$KANAMA_HOTRELOAD_IN_PROCESS_LOG"
+else
+  LOG_FILE="$(mktemp "${TMPDIR:-/tmp}/kanama_hot_reload_in_process.XXXXXX.log")"
 fi
 
 GODOT_BIN="$1"
@@ -25,7 +30,9 @@ esac
 BACKUP="$(mktemp /tmp/kanama_hello_backup.XXXXXX.kt)"
 SIGNAL_FILE="$(mktemp /tmp/kanama_hot_reload_signal.XXXXXX)"
 STAGE_FILE="$(mktemp /tmp/kanama_hot_reload_stage.XXXXXX)"
-rm -f "$SIGNAL_FILE" "$STAGE_FILE" "$LOG_FILE"
+rm -f "$SIGNAL_FILE" "$STAGE_FILE"
+: >"$LOG_FILE"
+echo "[hot_reload_in_process_smoke] full log: $LOG_FILE"
 cp "$SCRIPT_FILE" "$BACKUP"
 
 GODOT_PID=""
