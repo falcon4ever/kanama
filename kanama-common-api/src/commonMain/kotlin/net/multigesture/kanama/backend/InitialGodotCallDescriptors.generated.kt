@@ -245,4 +245,70 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val OBJECT_IS_CLASS =
+    GodotCallDescriptor(
+      opcode = 23,
+      className = "Object",
+      methodName = "is_class",
+      hash = 2619796661L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENT_IS_PRESSED =
+    GodotCallDescriptor(
+      opcode = 24,
+      className = "InputEvent",
+      methodName = "is_pressed",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENT_IS_RELEASED =
+    GodotCallDescriptor(
+      opcode = 25,
+      className = "InputEvent",
+      methodName = "is_released",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTMOUSEBUTTON_GET_BUTTON_INDEX =
+    GodotCallDescriptor(
+      opcode = 26,
+      className = "InputEventMouseButton",
+      methodName = "get_button_index",
+      hash = 1132662608L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASITEM_GET_LOCAL_MOUSE_POSITION =
+    GodotCallDescriptor(
+      opcode = 27,
+      className = "CanvasItem",
+      methodName = "get_local_mouse_position",
+      hash = 3341600327L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR2,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_EMIT_SIGNAL_VECTOR2I =
+    GodotCallDescriptor(
+      opcode = 28,
+      className = "Object",
+      methodName = "emit_signal",
+      hash = 4047867050L,
+      shape = GodotCallShape.STRINGNAME_VECTOR2I_RET_INT,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

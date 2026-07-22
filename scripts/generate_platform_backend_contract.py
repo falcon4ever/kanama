@@ -59,9 +59,10 @@ def render() -> str:
         "object InitialGodotCallDescriptors {",
     ]
     for policy in INITIAL_BACKEND_CALLS:
+        descriptor_name = policy.descriptor_name or const_name(policy.class_name, policy.method_name)
         lines.extend(
             [
-                f"  val {const_name(policy.class_name, policy.method_name)} =",
+                f"  val {descriptor_name} =",
                 "    GodotCallDescriptor(",
                 f"      opcode = {policy.opcode},",
                 f'      className = "{policy.class_name}",',

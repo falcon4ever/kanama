@@ -17,6 +17,7 @@ class ExecutionMode(str, Enum):
 @dataclass(frozen=True)
 class BackendCallPolicy:
     opcode: int
+    descriptor_name: str
     scope: str
     class_name: str
     method_name: str
@@ -42,6 +43,7 @@ def _load_backend_calls(path: Path = MANIFEST_PATH) -> tuple[BackendCallPolicy, 
     calls = tuple(
         BackendCallPolicy(
             opcode=entry["opcode"],
+            descriptor_name=entry.get("descriptorName", ""),
             scope=entry["scope"],
             class_name=entry["className"],
             method_name=entry["methodName"],
@@ -61,10 +63,26 @@ def _load_backend_calls(path: Path = MANIFEST_PATH) -> tuple[BackendCallPolicy, 
     if opcodes != tuple(range(1, len(calls) + 1)):
         raise ValueError(f"Platform backend opcodes must be append-only and contiguous: {opcodes}")
     identities = tuple(
-        (call.scope, call.class_name, call.method_name, call.expected_hash) for call in calls
+        (
+            call.scope,
+            call.class_name,
+            call.method_name,
+            call.expected_hash,
+            call.shape,
+            call.typed_vararg_tail,
+        )
+        for call in calls
     )
     if len(identities) != len(set(identities)):
-        raise ValueError("Platform backend call identities must be unique")
+        raise ValueError("Platform backend typed call identities must be unique")
+    base_identities: dict[tuple[str, str, str, int], set[tuple[ExecutionMode, str]]] = {}
+    for call in calls:
+        base_identity = (call.scope, call.class_name, call.method_name, call.expected_hash)
+        base_identities.setdefault(base_identity, set()).add(
+            (call.execution_mode, call.return_ownership)
+        )
+    if any(len(policies) != 1 for policies in base_identities.values()):
+        raise ValueError("Typed variants of one Godot call must share execution and ownership policy")
     return calls
 
 

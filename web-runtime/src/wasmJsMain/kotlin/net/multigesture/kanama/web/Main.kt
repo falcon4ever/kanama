@@ -48,8 +48,10 @@ private inline fun <T> webCallbackBoundary(
       } ?: memberKind?.let { "$it#$memberId" } ?: callback
     return block(record)
   } catch (error: Throwable) {
+    val causeDetail = error.message ?: error::class.simpleName ?: "unknown error"
     throw IllegalStateException(
-      "Kanama Web callback failed: script=$scriptName handle=$objectId callback=$callback member=$memberName",
+      "Kanama Web callback failed: script=$scriptName handle=$objectId callback=$callback " +
+        "member=$memberName cause=$causeDetail",
       error,
     )
   } finally {
@@ -84,6 +86,12 @@ fun kanamaWebAdoptNodeHandle(objectHandle: Int): Int {
 }
 
 @JsExport
+fun kanamaWebAdoptObjectHandle(objectHandle: Int): Int {
+  registerWebBrowserHandle(objectHandle, WebBrowserHandleKind.OBJECT)
+  return 1
+}
+
+@JsExport
 fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
   clearWebPositionSnapshot(objectHandle)
   unregisterWebBrowserHandle(objectHandle, WebBrowserHandleKind.NODE)
@@ -98,6 +106,15 @@ fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
 fun kanamaWebReady(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_ready") { record ->
     KanamaWebProjectRegistry.ready(record.scriptId, record.script)
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebInput(objectId: Int, eventHandle: Int): Int {
+  return webCallbackBoundary(objectId, "_input") { record ->
+    KanamaWebProjectRegistry.input(record.scriptId, record.script, eventHandle)
     commands.flush()
     1
   }
@@ -207,6 +224,38 @@ fun kanamaWebCallNoArgs(objectId: Int, methodId: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
     KanamaWebProjectRegistry.callNoArgs(record.scriptId, methodId, record.script)
     commands.flush()
+  }
+}
+
+@JsExport
+fun kanamaWebCallVector2i(objectId: Int, methodId: Int, x: Int, y: Int): Int {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callVector2i(record.scriptId, methodId, record.script, x, y)
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebCallObjectObjectLong(
+  objectId: Int,
+  methodId: Int,
+  firstHandle: Int,
+  secondHandle: Int,
+  value: Double,
+): Int {
+  require(value.isFinite() && value % 1.0 == 0.0) { "Web integer argument must be integral" }
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callObjectObjectLong(
+      record.scriptId,
+      methodId,
+      record.script,
+      firstHandle,
+      secondHandle,
+      value.toLong(),
+    )
+    commands.flush()
+    1
   }
 }
 

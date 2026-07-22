@@ -288,6 +288,87 @@
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
       "introducedBy": "57e-group1"
+    },
+    {
+      "opcode": 23,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "is_class",
+      "hash": 2619796661,
+      "arguments": ["StringName"],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group2"
+    },
+    {
+      "opcode": 24,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "is_pressed",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group2"
+    },
+    {
+      "opcode": 25,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "is_released",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group2"
+    },
+    {
+      "opcode": 26,
+      "scope": "class",
+      "className": "InputEventMouseButton",
+      "methodName": "get_button_index",
+      "hash": 1132662608,
+      "arguments": [],
+      "returnType": "enum::MouseButton",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group2"
+    },
+    {
+      "opcode": 27,
+      "scope": "class",
+      "className": "CanvasItem",
+      "methodName": "get_local_mouse_position",
+      "hash": 3341600327,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group2"
+    },
+    {
+      "opcode": 28,
+      "descriptorName": "OBJECT_EMIT_SIGNAL_VECTOR2I",
+      "scope": "class",
+      "className": "Object",
+      "methodName": "emit_signal",
+      "hash": 4047867050,
+      "arguments": ["StringName"],
+      "returnType": "enum::Error",
+      "isVararg": true,
+      "typedVarargTail": ["Vector2i"],
+      "shape": "STRINGNAME_VECTOR2I_RET_INT",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "57e-group2"
     }
   ]
 }

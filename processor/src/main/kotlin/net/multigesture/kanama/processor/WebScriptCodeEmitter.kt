@@ -201,6 +201,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("import net.multigesture.kanama.web.WebObjectId")
     appendLine("import net.multigesture.kanama.web.WebScriptDescriptor")
     appendLine("import net.multigesture.kanama.backend.GodotHandle")
+    appendLine("import net.multigesture.kanama.types.Vector2i")
     scripts.forEach { appendLine("import ${it.model.fqName}") }
     appendLine()
     appendLine("object KanamaWebProjectRegistry {")
@@ -223,6 +224,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendProcessDispatcher()
     appendDrawDispatcher()
     appendExitTreeDispatcher()
+    appendInputDispatcher()
     appendNoArgsMethodDispatcher()
     appendStringPropertyGetter()
     appendStringPropertySetter()
@@ -230,6 +232,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendObjectPropertySetter()
     appendObjectArrayPropertySetter()
     appendLongMethodDispatcher()
+    appendVector2iMethodDispatcher()
+    appendObjectObjectLongMethodDispatcher()
     appendLine("  private fun unknown(kind: String, id: Int): Nothing =")
     appendLine("    error(\"Unknown Kanama Web \$kind id=\$id\")")
     appendLine("}")
@@ -318,6 +322,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val body =
         if (exitTree == null) "Unit"
         else "(script as ${input.model.simpleName}).${exitTree.kotlinMethodName}()"
+      appendLine("      ${index + 1} -> $body")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendInputDispatcher() {
+    appendLine("  fun input(scriptId: Int, script: KanamaWebScript, eventHandle: Int) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { index, input ->
+      val virtual = input.model.virtuals.firstOrNull { it.virtualName == "_input" }
+      val argument = virtual?.args?.singleOrNull()
+      val wrapper = argument?.objectWrapperFqName
+      val body =
+        if (virtual == null || argument?.type != TypeMapping.OBJECT || wrapper == null) "Unit"
+        else
+          "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}($wrapper(GodotHandle.fromBackendToken(eventHandle.toLong())))"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -415,6 +438,69 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
     appendLine("    }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendVector2iMethodDispatcher() {
+    appendLine(
+      "  fun callVector2i(scriptId: Int, methodId: Int, script: KanamaWebScript, x: Int, y: Int) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (
+          method.returnType == null &&
+            method.args.size == 1 &&
+            method.args.single().type == TypeMapping.VECTOR2I
+        ) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(Vector2i(x, y))"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendObjectObjectLongMethodDispatcher() {
+    appendLine(
+      "  fun callObjectObjectLong(scriptId: Int, methodId: Int, script: KanamaWebScript, firstHandle: Int, secondHandle: Int, value: Long) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        val first = method.args.getOrNull(0)
+        val second = method.args.getOrNull(1)
+        val third = method.args.getOrNull(2)
+        val firstWrapper = first?.objectWrapperFqName
+        val secondWrapper = second?.objectWrapperFqName
+        if (
+          method.returnType == null &&
+            method.args.size == 3 &&
+            first?.type == TypeMapping.OBJECT &&
+            second?.type == TypeMapping.OBJECT &&
+            third?.type == TypeMapping.INT &&
+            firstWrapper != null &&
+            secondWrapper != null
+        ) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($firstWrapper(GodotHandle.fromBackendToken(firstHandle.toLong())), $secondWrapper(GodotHandle.fromBackendToken(secondHandle.toLong())), value)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
     appendLine()
   }
 
@@ -529,6 +615,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_noargs_object_callback")
     appendLine("var _kanama_input_cursor_callback")
     appendLine("var _kanama_connect_callback")
+    appendLine("var _kanama_object_query_callback")
+    appendLine("var _kanama_noargs_vector2_callback")
+    appendLine("var _kanama_signal_vector2i_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
     appendLine("var _kanama_object_handles: Dictionary = {}")
     appendLine()
@@ -579,6 +668,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t_kanama_input_cursor_callback = JavaScriptBridge.create_callback(_kanama_input_cursor)"
     )
     appendLine("\t_kanama_connect_callback = JavaScriptBridge.create_callback(_kanama_connect)")
+    appendLine(
+      "\t_kanama_object_query_callback = JavaScriptBridge.create_callback(_kanama_object_query)"
+    )
+    appendLine(
+      "\t_kanama_noargs_vector2_callback = JavaScriptBridge.create_callback(_kanama_noargs_vector2)"
+    )
+    appendLine(
+      "\t_kanama_signal_vector2i_callback = JavaScriptBridge.create_callback(_kanama_signal_emit_vector2i)"
+    )
     appendLine("\t_kanama_bridge.installProxyCallbacks(")
     appendLine("\t\t_kanama_handle,")
     appendLine("\t\t_kanama_apply_callback,")
@@ -591,7 +689,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_packed_scene_callback,")
     appendLine("\t\t_kanama_noargs_object_callback,")
     appendLine("\t\t_kanama_input_cursor_callback,")
-    appendLine("\t\t_kanama_connect_callback)")
+    appendLine("\t\t_kanama_connect_callback,")
+    appendLine("\t\t_kanama_object_query_callback,")
+    appendLine("\t\t_kanama_noargs_vector2_callback,")
+    appendLine("\t\t_kanama_signal_vector2i_callback)")
     if (node2dAttachment) {
       appendLine("\tvar target: Node2D = self")
       appendLine(
@@ -688,7 +789,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine()
       appendLine("func _input(event: InputEvent) -> void:")
       appendLine("\tif _kanama_handle != 0:")
-      appendLine("\t\t_kanama_bridge.unsupportedGameplayVirtual(_KANAMA_SCRIPT_ID, \"_input\")")
+      appendLine(
+        "\t\tvar event_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+      )
+      appendLine("\t\t_kanama_object_handles[event_handle] = event")
+      appendLine("\t\t_kanama_bridge.input(_kanama_handle, event_handle)")
+      appendLine("\t\t_kanama_object_handles.erase(event_handle)")
+      appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(event_handle)")
     }
     appendLine()
     appendLine("func _draw() -> void:")
@@ -722,6 +829,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_noargs_object_callback = null")
     appendLine("\t_kanama_input_cursor_callback = null")
     appendLine("\t_kanama_connect_callback = null")
+    appendLine("\t_kanama_object_query_callback = null")
+    appendLine("\t_kanama_noargs_vector2_callback = null")
+    appendLine("\t_kanama_signal_vector2i_callback = null")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
     appendLine(
@@ -963,6 +1073,50 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t_kanama_bridge.recordImmediateConnectResult(result)")
     appendLine("\treturn result")
+    appendLine()
+    appendLine("func _kanama_object_query(args: Array) -> int:")
+    appendLine("\tvar opcode := int(args[0])")
+    appendLine("\tvar object_handle := int(args[1])")
+    appendLine(
+      "\tvar value: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
+    )
+    appendLine("\tvar result := 0")
+    appendLine("\tif value != null:")
+    appendLine("\t\tif opcode == 23:")
+    appendLine("\t\t\tresult = int(value.is_class(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 24 and value is InputEvent:")
+    appendLine("\t\t\tresult = int((value as InputEvent).is_pressed())")
+    appendLine("\t\telif opcode == 25 and value is InputEvent:")
+    appendLine("\t\t\tresult = int((value as InputEvent).is_released())")
+    appendLine("\t\telif opcode == 26 and value is InputEventMouseButton:")
+    appendLine("\t\t\tresult = int((value as InputEventMouseButton).button_index)")
+    appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
+    appendLine("\treturn result")
+    appendLine()
+    appendLine("func _kanama_noargs_vector2(args: Array) -> int:")
+    appendLine("\tvar opcode := int(args[0])")
+    appendLine("\tvar object_handle := int(args[1])")
+    appendLine(
+      "\tvar value: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
+    )
+    appendLine("\tvar result := Vector2.ZERO")
+    appendLine("\tif opcode == 27 and value is CanvasItem:")
+    appendLine("\t\tresult = (value as CanvasItem).get_local_mouse_position()")
+    appendLine("\t_kanama_bridge.recordImmediateVector2(result.x, result.y)")
+    appendLine("\treturn 1")
+    appendLine()
+    appendLine("func _kanama_signal_emit_vector2i(args: Array) -> int:")
+    appendLine("\tvar object_handle := int(args[0])")
+    appendLine(
+      "\tvar value: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
+    )
+    appendLine("\tvar result := ERR_INVALID_PARAMETER")
+    appendLine("\tif value != null:")
+    appendLine(
+      "\t\tresult = value.emit_signal(StringName(String(args[1])), Vector2i(int(args[2]), int(args[3])))"
+    )
+    appendLine("\t_kanama_bridge.recordImmediateSignalResult(result)")
+    appendLine("\treturn result")
 
     model.methods.forEachIndexed { index, method ->
       if (method.godotName == "_draw") return@forEachIndexed
@@ -970,6 +1124,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val args = method.args.joinToString(", ") { "${it.name}: ${gdType(it)}" }
       val returnType = " -> ${method.returnType?.let(::gdType) ?: "void"}"
       appendLine("func ${method.godotName}($args)$returnType:")
+      appendLine(
+        "\tif _kanama_bridge.shouldDeferGameplayMethod(${quote(model.fqName)}, ${quote(method.godotName)}):"
+      )
+      appendLine(
+        "\t\t_kanama_bridge.recordDeferredGameplayMethod(${quote(model.fqName)}, ${quote(method.godotName)})"
+      )
+      appendLine("\t\treturn${method.returnType?.let { " ${gdDefault(it)}" } ?: ""}")
       when {
         method.args.isEmpty() && method.returnType == null ->
           appendLine("\t_kanama_bridge.callNoArgs(_kanama_handle, ${index + 1})")
@@ -980,6 +1141,38 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine(
             "\treturn int(_kanama_bridge.callInt(_kanama_handle, ${index + 1}, ${arg.name}))"
           )
+        }
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.VECTOR2I -> {
+          val arg = method.args.single()
+          appendLine(
+            "\t_kanama_bridge.callVector2i(_kanama_handle, ${index + 1}, ${arg.name}.x, ${arg.name}.y)"
+          )
+        }
+        method.returnType == null &&
+          method.args.size == 3 &&
+          method.args[0].type == TypeMapping.OBJECT &&
+          method.args[1].type == TypeMapping.OBJECT &&
+          method.args[2].type == TypeMapping.INT -> {
+          val first = method.args[0]
+          val second = method.args[1]
+          val value = method.args[2]
+          appendLine(
+            "\tvar first_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+          )
+          appendLine(
+            "\tvar second_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+          )
+          appendLine("\t_kanama_object_handles[first_handle] = ${first.name}")
+          appendLine("\t_kanama_object_handles[second_handle] = ${second.name}")
+          appendLine(
+            "\t_kanama_bridge.callObjectObjectLong(_kanama_handle, ${index + 1}, first_handle, second_handle, ${value.name})"
+          )
+          appendLine("\t_kanama_object_handles.erase(first_handle)")
+          appendLine("\t_kanama_object_handles.erase(second_handle)")
+          appendLine("\t_kanama_bridge.releaseTransientObjectHandle(first_handle)")
+          appendLine("\t_kanama_bridge.releaseTransientObjectHandle(second_handle)")
         }
         else -> {
           appendLine(

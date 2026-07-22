@@ -12,6 +12,7 @@ import net.multigesture.kanama.backend.GodotExecutionMode
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 private val positionSnapshots = mutableMapOf<Int, GodotVector2>()
@@ -21,6 +22,7 @@ private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 internal enum class WebBrowserHandleKind {
   RESOURCE,
   NODE,
+  OBJECT,
 }
 
 /** Kotlin/Wasm implementation: snapshot reads, queued Vector2 mutations, explicit sync barrier. */
@@ -53,9 +55,20 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ): GodotVector2 {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    return positionSnapshots[receiver.webId()]
-      ?: error("Missing Web frame snapshot for object handle=${receiver.webId()}")
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ ->
+        positionSnapshots[receiver.webId()]
+          ?: error("Missing Web frame snapshot for object handle=${receiver.webId()}")
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        GodotVector2(
+          immediateWebNoArgsVector2X(descriptor.opcode, receiver.webId()).toFloat(),
+          immediateWebNoArgsVector2Y().toFloat(),
+        )
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Vector2 return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeVector2Arg(
@@ -308,6 +321,53 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       .toLong()
   }
 
+  override fun invokeStringNameRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value) != 0
+  }
+
+  override fun invokeNoArgsRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") != 0
+  }
+
+  override fun invokeNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "").toLong()
+  }
+
+  override fun invokeStringNameVector2iRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotVector2i,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebEmitSignalVector2i(receiver.webId(), name, value.x, value.y)
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"
@@ -390,6 +450,18 @@ private fun immediateWebConnect(
   flags: Int,
 ): Int =
   js("globalThis.KanamaWebBridge.immediateConnect(objectId, signal, targetId, method, flags)")
+
+private fun immediateWebObjectQuery(opcode: Int, objectId: Int, value: String): Int =
+  js("globalThis.KanamaWebBridge.immediateObjectQuery(opcode, objectId, value)")
+
+private fun immediateWebNoArgsVector2X(opcode: Int, objectId: Int): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector2X(opcode, objectId)")
+
+private fun immediateWebNoArgsVector2Y(): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector2Y()")
+
+private fun immediateWebEmitSignalVector2i(objectId: Int, name: String, x: Int, y: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateEmitSignalVector2i(objectId, name, x, y)")
 
 private fun registerReturnedNode(token: Int): GodotHandle? =
   token

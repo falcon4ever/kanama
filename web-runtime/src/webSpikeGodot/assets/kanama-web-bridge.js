@@ -66,6 +66,9 @@
     noArgsObjectCallbacks: new Map(),
     inputCursorCallbacks: new Map(),
     connectCallbacks: new Map(),
+    objectQueryCallbacks: new Map(),
+    noArgsVector2Callbacks: new Map(),
+    signalVector2iCallbacks: new Map(),
     handleOwners: new Map(),
     activeOwnerHandle: 0,
     benchmarkCallback: null,
@@ -78,6 +81,8 @@
     immediateSignalResult: null,
     immediateResourceReleaseResult: null,
     immediateConstructHandleResult: null,
+    immediateLongResult: null,
+    immediateVector2Result: null,
     browserHandleSlots: [{ generation: 0, kind: null, live: false }],
     freeBrowserHandleSlots: [],
     resourceLoads: 0,
@@ -131,6 +136,11 @@
     match3PositionMutations: 0,
     match3CursorSets: 0,
     match3Connections: 0,
+    match3InputEvents: 0,
+    match3TileInputEvents: 0,
+    match3Vector2iCalls: 0,
+    match3Vector2iSignalEmits: 0,
+    match3DeferredMethods: {},
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
     gdscriptBaselineCallback: null,
@@ -183,6 +193,17 @@
         `Kanama Web gameplay virtual is not implemented: script=${scriptId} virtual=${virtualName} (Task 57e backlog)`,
       );
     },
+    shouldDeferGameplayMethod(scriptName, methodName) {
+      return (
+        this.mode === "match3" &&
+        scriptName.endsWith(".Tile") &&
+        (methodName === "_on_mouse_entered" || methodName === "_on_mouse_exited")
+      );
+    },
+    recordDeferredGameplayMethod(scriptName, methodName) {
+      const key = `${scriptName}.${methodName}`;
+      this.match3DeferredMethods[key] = (this.match3DeferredMethods[key] ?? 0) + 1;
+    },
 
     create(scriptId) {
       const handle = this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebCreate(scriptId), 0);
@@ -190,6 +211,16 @@
     },
     ready(handle) {
       return this.invoke(handle, "_ready", "_ready", () => this.api.kanamaWebReady(handle), 0);
+    },
+    input(handle, eventHandle) {
+      if (this.mode === "match3") this.match3InputEvents += 1;
+      return this.invoke(
+        handle,
+        "_input",
+        "_input",
+        () => this.api.kanamaWebInput(handle, eventHandle),
+        0,
+      );
     },
     frame(handle, delta) {
       if (this.mode === "bunnymark") {
@@ -355,6 +386,33 @@
         0,
       );
     },
+    callVector2i(handle, methodId, x, y) {
+      if (this.mode === "match3") this.match3Vector2iCalls += 1;
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallVector2i(handle, methodId, x, y),
+        0,
+      );
+    },
+    callObjectObjectLong(handle, methodId, firstHandle, secondHandle, value) {
+      if (this.mode === "match3") this.match3TileInputEvents += 1;
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () =>
+          this.api.kanamaWebCallObjectObjectLong(
+            handle,
+            methodId,
+            firstHandle,
+            secondHandle,
+            value,
+          ),
+        0,
+      );
+    },
     bunnymarkMethodId(method) {
       const spriteVariant = this.bunnymarkVariant === "BunnymarkV1Sprites";
       if (method === "add") return spriteVariant ? 1 : 2;
@@ -376,7 +434,7 @@
       if (result === 1) this.releaseBrowserHandlesOwnedBy(handle);
       return result;
     },
-    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect) {
+    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i) {
       this.handleOwners.set(handle, handle);
       this.applyCallbacks.set(handle, apply);
       this.immediateCallbacks.set(handle, immediate);
@@ -389,6 +447,9 @@
       this.noArgsObjectCallbacks.set(handle, noArgsObject);
       this.inputCursorCallbacks.set(handle, inputCursor);
       this.connectCallbacks.set(handle, connect);
+      this.objectQueryCallbacks.set(handle, objectQuery);
+      this.noArgsVector2Callbacks.set(handle, noArgsVector2);
+      this.signalVector2iCallbacks.set(handle, signalVector2i);
     },
     clearProxyCallbacks(handle) {
       this.applyCallbacks.delete(handle);
@@ -402,6 +463,9 @@
       this.noArgsObjectCallbacks.delete(handle);
       this.inputCursorCallbacks.delete(handle);
       this.connectCallbacks.delete(handle);
+      this.objectQueryCallbacks.delete(handle);
+      this.noArgsVector2Callbacks.delete(handle);
+      this.signalVector2iCallbacks.delete(handle);
       this.handleOwners.delete(handle);
     },
     ownerForHandle(handle) {
@@ -437,6 +501,15 @@
       this.liveBrowserHandleCount += 1;
       this.maxLiveBrowserHandles = Math.max(this.maxLiveBrowserHandles, this.liveBrowserHandleCount);
       return handle;
+    },
+    allocateTransientObjectHandle(owner) {
+      const handle = this.allocateBrowserHandle("Object", owner);
+      this.api.kanamaWebAdoptObjectHandle(handle);
+      return handle;
+    },
+    releaseTransientObjectHandle(handle) {
+      this.api.kanamaWebDiscardBrowserHandle(handle);
+      this.releaseBrowserHandle(handle, "Object");
     },
     browserHandleSlot(handle) {
       if ((handle & BROWSER_HANDLE_NAMESPACE) === 0 || handle < 0) return null;
@@ -569,6 +642,22 @@
       }
       return this.immediateSignalResult;
     },
+    immediateEmitSignalVector2i(handle, name, x, y) {
+      const callback = this.callbackFor(
+        this.signalVector2iCallbacks,
+        handle,
+        "Godot Vector2i signal",
+      );
+      this.lastSignalName = name;
+      this.lastSignalValue = { x, y };
+      this.immediateSignalResult = null;
+      callback(handle, name, x, y);
+      if (!Number.isInteger(this.immediateSignalResult)) {
+        throw new Error("Godot Vector2i signal callback did not publish a result");
+      }
+      if (this.mode === "match3") this.match3Vector2iSignalEmits += 1;
+      return this.immediateSignalResult;
+    },
     releaseResource(handle) {
       const callback = this.callbackFor(
         this.resourceReleaseCallbacks,
@@ -667,11 +756,49 @@
       if (this.immediateConnectResult === 0) this.match3Connections += 1;
       return this.immediateConnectResult;
     },
+    immediateObjectQuery(opcode, handle, value) {
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
+      this.immediateLongResult = null;
+      callback(opcode, handle, value);
+      if (!Number.isInteger(this.immediateLongResult)) {
+        throw new Error("Godot object query callback did not publish an integer result");
+      }
+      return this.immediateLongResult;
+    },
+    immediateNoArgsVector2X(opcode, handle) {
+      const callback = this.callbackFor(
+        this.noArgsVector2Callbacks,
+        handle,
+        "Godot no-args Vector2",
+      );
+      this.immediateVector2Result = null;
+      callback(opcode, handle);
+      if (
+        this.immediateVector2Result === null ||
+        !Number.isFinite(this.immediateVector2Result.x) ||
+        !Number.isFinite(this.immediateVector2Result.y)
+      ) {
+        throw new Error("Godot Vector2 callback did not publish a finite result");
+      }
+      return this.immediateVector2Result.x;
+    },
+    immediateNoArgsVector2Y() {
+      if (this.immediateVector2Result === null) {
+        throw new Error("Godot Vector2 y requested before the corresponding x query");
+      }
+      return this.immediateVector2Result.y;
+    },
     recordImmediateObjectHandle(value) {
       this.immediateObjectHandleResult = value;
     },
     recordImmediateConnectResult(value) {
       this.immediateConnectResult = value;
+    },
+    recordImmediateLongResult(value) {
+      this.immediateLongResult = value;
+    },
+    recordImmediateVector2(x, y) {
+      this.immediateVector2Result = { x, y };
     },
     installBenchmarkCallback(callback) {
       this.benchmarkCallback = callback;

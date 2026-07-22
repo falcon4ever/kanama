@@ -75,6 +75,18 @@ class GodotBackendContractTest {
       SignalBackendContractProbe(checkNotNull(tile))
         .connect(probe.handle, "tile_pressed", "_on_tile_pressed"),
     )
+    assertEquals(true, GodotObjectBackendContractProbe(tile).isClass("InputEventMouseButton"))
+    assertEquals(true, InputEventBackendContractProbe(tile).isPressed())
+    assertEquals(false, InputEventBackendContractProbe(tile).isReleased())
+    assertEquals(1L, InputEventMouseButtonBackendContractProbe(tile).getButtonIndex())
+    assertEquals(
+      GodotVector2(320.0f, 240.0f),
+      CanvasItemInputBackendContractProbe(checkNotNull(board)).getLocalMousePosition(),
+    )
+    assertEquals(
+      0,
+      SignalBackendContractProbe(tile).emitVector2i("tile_pressed", GodotVector2i(3, 4)),
+    )
     GDBackendContractProbe.randomize()
     assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
     assertEquals(0.75, GDBackendContractProbe.randf())
@@ -105,6 +117,12 @@ class GodotBackendContractTest {
         20 to 1,
         21 to 1,
         22 to 1,
+        23 to 1,
+        24 to 1,
+        25 to 1,
+        26 to 1,
+        27 to 1,
+        28 to 1,
       ),
       backend.resolveCounts,
     )
@@ -119,6 +137,7 @@ class GodotBackendContractTest {
     )
     assertEquals(1, backend.randomizeCalls)
     assertEquals("benchmark_finished" to 42, backend.emittedSignal)
+    assertEquals("tile_pressed" to GodotVector2i(3, 4), backend.emittedVectorSignal)
     assertEquals("Sprite2D", backend.constructedClass)
     assertEquals(Triple(17L, 41L, false), backend.addedChild)
     assertEquals(17L to 41L, backend.removedChild)
@@ -139,6 +158,7 @@ class GodotBackendContractTest {
     var drawCall: DrawCall? = null
     var randomizeCalls = 0
     var emittedSignal: Pair<String, Int>? = null
+    var emittedVectorSignal: Pair<String, GodotVector2i>? = null
     var constructedClass: String? = null
     var addedChild: Triple<Long, Long, Boolean>? = null
     var removedChild: Pair<Long, Long>? = null
@@ -165,7 +185,7 @@ class GodotBackendContractTest {
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
-    ): GodotVector2 = position
+    ): GodotVector2 = if (descriptor.opcode == 27) GodotVector2(320.0f, 240.0f) else position
 
     override fun invokeVector2Arg(
       descriptor: GodotCallDescriptor,
@@ -324,6 +344,36 @@ class GodotBackendContractTest {
       assertEquals("_on_tile_pressed", method)
       assertEquals(0L, flags)
       return 0L
+    }
+
+    override fun invokeStringNameRetBool(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: String,
+    ): Boolean = value == "InputEventMouseButton"
+
+    override fun invokeNoArgsRetBool(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): Boolean = descriptor.opcode == 24
+
+    override fun invokeNoArgsRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): Long = 1L
+
+    override fun invokeStringNameVector2iRetInt(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: GodotVector2i,
+    ): Int {
+      emittedVectorSignal = name to value
+      return 0
     }
   }
 }

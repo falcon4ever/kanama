@@ -11,6 +11,7 @@ import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
@@ -229,6 +230,39 @@ internal object CommonGodotBackend : GodotBackendSpi {
     flags: Long,
   ): Long =
     IosGodot.objectConnect(receiver.backendToken(), signal, target.backendToken(), method, flags)
+
+  override fun invokeStringNameRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Boolean = IosGodot.objectIsClass(receiver.backendToken(), value)
+
+  override fun invokeNoArgsRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Boolean = ObjectCalls.ptrcallNoArgsRetBool(segment(callSite), segment(receiver))
+
+  override fun invokeNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Long = ObjectCalls.ptrcallNoArgsRetLong(segment(callSite), segment(receiver))
+
+  override fun invokeStringNameVector2iRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotVector2i,
+  ): Int =
+    IosGodot.objectEmitSignalVector2i(
+      receiver.backendToken(),
+      name,
+      value.x.toLong(),
+      value.y.toLong(),
+    )
 
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())

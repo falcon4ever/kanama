@@ -10,10 +10,12 @@ import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.binding.runtime.Signals as RuntimeSignals
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
 
 /** JVM/Panama implementation of the first neutral typed call-shape slice. */
 @OptIn(InternalKanamaBackendApi::class)
@@ -241,6 +243,37 @@ internal object CommonGodotBackend : GodotBackendSpi {
       method,
       flags,
     )
+
+  override fun invokeStringNameRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Boolean =
+    ObjectCalls.ptrcallWithStringNameArgRetBool(segment(callSite), segment(receiver), value)
+
+  override fun invokeNoArgsRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Boolean = ObjectCalls.ptrcallNoArgsRetBool(segment(callSite), segment(receiver))
+
+  override fun invokeNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Long = ObjectCalls.ptrcallNoArgsRetLong(segment(callSite), segment(receiver))
+
+  override fun invokeStringNameVector2iRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotVector2i,
+  ): Int {
+    RuntimeSignals.emitAny(segment(receiver), name, listOf(Vector2i(value.x, value.y)))
+    return 0
+  }
 
   private fun segment(handle: GodotHandle): MemorySegment =
     MemorySegment.ofAddress(handle.backendToken())

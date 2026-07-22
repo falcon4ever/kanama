@@ -36,6 +36,10 @@ enum class GodotCallShape {
   NOARGS_RET_HANDLE,
   OBJECT_LONG_VECTOR2_ARGS,
   STRINGNAME_CALLABLE_LONG_RET_LONG,
+  STRINGNAME_RET_BOOL,
+  NOARGS_RET_BOOL,
+  NOARGS_RET_LONG,
+  STRINGNAME_VECTOR2I_RET_INT,
 }
 
 @InternalKanamaBackendApi
@@ -65,6 +69,9 @@ data class GodotCallDescriptor(
 
 /** Platform-neutral immutable value used by the first promoted call-shape family. */
 @InternalKanamaBackendApi data class GodotVector2(val x: Float, val y: Float)
+
+/** Platform-neutral immutable integer vector used by typed input signals. */
+@InternalKanamaBackendApi data class GodotVector2i(val x: Int, val y: Int)
 
 /** Platform-neutral immutable rectangle snapshot. */
 @InternalKanamaBackendApi data class GodotRect2(val position: GodotVector2, val size: GodotVector2)
@@ -202,6 +209,33 @@ interface GodotBackendSpi {
     method: String,
     flags: Long,
   ): Long
+
+  fun invokeStringNameRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Boolean
+
+  fun invokeNoArgsRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Boolean
+
+  fun invokeNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Long
+
+  fun invokeStringNameVector2iRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotVector2i,
+  ): Int
 }
 
 /**
@@ -456,6 +490,54 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeStringNameRetBool(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: String,
+  ): Boolean {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_BOOL)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameRetBool(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
+  }
+
+  fun invokeNoArgsRetBool(descriptor: GodotCallDescriptor, receiver: GodotHandle): Boolean {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_BOOL)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetBool(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeNoArgsRetLong(descriptor: GodotCallDescriptor, receiver: GodotHandle): Long {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetLong(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeStringNameVector2iRetInt(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotVector2i,
+  ): Int {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_VECTOR2I_RET_INT)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameVector2iRetInt(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
+    )
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -670,5 +752,57 @@ class SignalBackendContractProbe(private val handle: GodotHandle) {
       target,
       method,
       flags,
+    )
+
+  fun emitVector2i(name: String, value: GodotVector2i): Int =
+    GodotBackendCalls.invokeStringNameVector2iRetInt(
+      InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_VECTOR2I,
+      handle,
+      name,
+      value,
+    )
+}
+
+/** Typed runtime type query used to narrow browser-delivered input events. */
+@InternalKanamaBackendApi
+class GodotObjectBackendContractProbe(private val handle: GodotHandle) {
+  fun isClass(className: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBool(
+      InitialGodotCallDescriptors.OBJECT_IS_CLASS,
+      handle,
+      className,
+    )
+}
+
+/** Typed InputEvent state queries shared by the generated input handoff. */
+@InternalKanamaBackendApi
+class InputEventBackendContractProbe(private val handle: GodotHandle) {
+  fun isPressed(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(InitialGodotCallDescriptors.INPUTEVENT_IS_PRESSED, handle)
+
+  fun isReleased(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.INPUTEVENT_IS_RELEASED,
+      handle,
+    )
+}
+
+/** Typed mouse-button query used by Match3 tile input. */
+@InternalKanamaBackendApi
+class InputEventMouseButtonBackendContractProbe(private val handle: GodotHandle) {
+  fun getButtonIndex(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(
+      InitialGodotCallDescriptors.INPUTEVENTMOUSEBUTTON_GET_BUTTON_INDEX,
+      handle,
+    )
+}
+
+/** Immediate local pointer position used only while processing a delivered input event. */
+@InternalKanamaBackendApi
+class CanvasItemInputBackendContractProbe(private val handle: GodotHandle) {
+  fun getLocalMousePosition(): GodotVector2 =
+    GodotBackendCalls.invokeNoArgsRetVector2(
+      InitialGodotCallDescriptors.CANVASITEM_GET_LOCAL_MOUSE_POSITION,
+      handle,
     )
 }

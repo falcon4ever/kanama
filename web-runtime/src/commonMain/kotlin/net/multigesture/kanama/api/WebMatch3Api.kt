@@ -10,6 +10,9 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.cancel
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InputBackendContractProbe
+import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
+import net.multigesture.kanama.backend.InputEventBackendContractProbe
+import net.multigesture.kanama.backend.InputEventMouseButtonBackendContractProbe
 import net.multigesture.kanama.backend.PackedSceneBackendContractProbe
 import net.multigesture.kanama.backend.SignalBackendContractProbe
 import net.multigesture.kanama.backend.ViewportBackendContractProbe
@@ -144,17 +147,21 @@ class PropertyTweener internal constructor(backendHandle: BackendGodotHandle) :
 class InputEventMouseButton private constructor(backendHandle: BackendGodotHandle) :
   GodotObject(backendHandle) {
   fun getButtonIndex(): Long =
-    unsupportedWebGameplayCall("InputEventMouseButton.get_button_index")
+    InputEventMouseButtonBackendContractProbe(backendHandle).getButtonIndex()
 
-  fun isPressed(): Boolean = unsupportedWebGameplayCall("InputEventMouseButton.is_pressed")
+  fun isPressed(): Boolean = InputEventBackendContractProbe(backendHandle).isPressed()
 
-  fun isReleased(): Boolean = unsupportedWebGameplayCall("InputEventMouseButton.is_released")
+  fun isReleased(): Boolean = InputEventBackendContractProbe(backendHandle).isReleased()
 
   companion object {
     const val MOUSE_BUTTON_LEFT = 1L
 
     fun from(event: GodotObject): InputEventMouseButton? =
-      unsupportedWebGameplayCall("InputEventMouseButton.from")
+      event
+        .takeIf {
+          GodotObjectBackendContractProbe(it.backendHandle).isClass("InputEventMouseButton")
+        }
+        ?.let { InputEventMouseButton(it.backendHandle) }
   }
 }
 

@@ -4,18 +4,22 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GDBackendContractProbe
 import net.multigesture.kanama.backend.ClassDBBackendContractProbe
+import net.multigesture.kanama.backend.CanvasItemInputBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
 import net.multigesture.kanama.backend.NodeBackendContractProbe
 import net.multigesture.kanama.backend.NodeLookupBackendContractProbe
 import net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe
+import net.multigesture.kanama.backend.SignalBackendContractProbe
 import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.web.KanamaWebScript
 import net.multigesture.kanama.web.WebObjectId
 
@@ -41,6 +45,12 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
   fun emitSignal(signal: String, vararg args: Any?) {
     if (args.size == 1 && args[0] is Int) {
       Node2DBackendContractProbe(backendHandle).emitSignal(signal, args[0] as Int)
+      return
+    }
+    if (args.size == 1 && args[0] is Vector2i) {
+      val value = args[0] as Vector2i
+      SignalBackendContractProbe(backendHandle)
+        .emitVector2i(signal, GodotVector2i(value.x, value.y))
       return
     }
     unsupportedWebGameplayCall("GodotObject.emit_signal_typed")
@@ -133,7 +143,9 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
     }
 
   fun getLocalMousePosition(): Vector2 =
-    unsupportedWebGameplayCall("Node2D.get_local_mouse_position")
+    CanvasItemInputBackendContractProbe(backendHandle).getLocalMousePosition().let { value ->
+      Vector2(value.x.toDouble(), value.y.toDouble())
+    }
 }
 
 class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {

@@ -203,7 +203,16 @@ class WebScriptCodeEmitterTest {
                 ),
             )
           ),
-        methods = emptyList(),
+        methods =
+          listOf(
+            MethodModel(
+              kotlinName = "onTilePressed",
+              godotName = "_on_tile_pressed",
+              returnType = null,
+              args = listOf(ArgModel("gridPosition", TypeMapping.VECTOR2I)),
+              kind = MethodKind.REGULAR,
+            )
+          ),
         signals = emptyList(),
       )
     val tile =
@@ -287,7 +296,10 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_connect(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
-    assertTrue(mainProxy.contains("unsupportedGameplayVirtual(_KANAMA_SCRIPT_ID, \"_input\")"))
+    assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, event_handle)"))
+    assertTrue(
+      mainProxy.contains("callVector2i(_kanama_handle, 1, gridPosition.x, gridPosition.y)")
+    )
 
     assertTrue(tileProxy.contains("extends Area2D"))
     assertTrue(tileProxy.contains("signal tile_pressed(pos: Vector2i)"))
@@ -298,6 +310,13 @@ class WebScriptCodeEmitterTest {
       )
     )
     assertTrue(tileProxy.contains("func get_tile_type() -> String:"))
+    assertTrue(tileProxy.contains("shouldDeferGameplayMethod"))
+    assertTrue(tileProxy.contains("recordDeferredGameplayMethod"))
+    assertTrue(
+      tileProxy.contains(
+        "callObjectObjectLong(_kanama_handle, 2, first_handle, second_handle, shapeIdx)"
+      )
+    )
     assertTrue(
       tileProxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 1, \"set_tile_type\")")
     )
@@ -320,5 +339,8 @@ class WebScriptCodeEmitterTest {
     assertTrue(registry.contains("(script as Main).width = value"))
     assertTrue(registry.contains("(script as Main).tileScene = handle?.let"))
     assertTrue(registry.contains("(script as Main).textures = values.map"))
+    assertTrue(registry.contains("(script as Main).input("))
+    assertTrue(registry.contains("(script as Main).onTilePressed(Vector2i(x, y))"))
+    assertTrue(registry.contains("(script as Tile).inputEvent("))
   }
 }
