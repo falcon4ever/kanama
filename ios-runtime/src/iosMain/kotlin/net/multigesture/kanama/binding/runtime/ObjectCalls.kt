@@ -188,18 +188,24 @@ object ObjectCalls {
 
   // RefCounted lifetime binds for the issue #81 save guard below. reference()/unreference() share
   // the bool() no-arg hash; get_reference_count() is int().
-  private val refCountedReferenceBind by lazy { getMethodBind("RefCounted", "reference", 2240911060L) }
-  private val refCountedUnreferenceBind by lazy { getMethodBind("RefCounted", "unreference", 2240911060L) }
+  private val refCountedReferenceBind by lazy {
+    getMethodBind("RefCounted", "reference", 2240911060L)
+  }
+  private val refCountedUnreferenceBind by lazy {
+    getMethodBind("RefCounted", "unreference", 2240911060L)
+  }
   private val refCountedGetReferenceCountBind by lazy {
     getMethodBind("RefCounted", "get_reference_count", 3905245786L)
   }
 
-  // issue #81 — hand-written (IOS_HANDWRITTEN_HELPERS) mirror of the desktop guard. The only wrapper
-  // of this (Object, String, int64) -> int64 shape is ResourceSaver.save, whose `const Ref<Resource>&`
-  // argument the engine decodes into a transient Ref and releases on return. For a freshly created,
+  // issue #81 — hand-written (IOS_HANDWRITTEN_HELPERS) mirror of the desktop guard. This shape
+  // backs
+  // ResourceSaver.save — its sole wrapper. save decodes its `const Ref<Resource>&` argument into a
+  // transient Ref and releases it on return. For a freshly created,
   // not-yet-assigned resource — whose only reference is Godot's construction placeholder — that
   // release drops the refcount to zero and frees the object, dangling its Kotlin wrapper. Hold a
-  // protective reference across the call, then release it only if the object still has another holder:
+  // protective reference across the call, then release it only if the object still has another
+  // holder:
   // when the call consumed the sole reference the ref is kept (the resource becomes wrapper-owned,
   // close() frees it); for an already-owned resource it is a balanced no-op.
   fun ptrcallWithObjectStringLongArgsRetLong(

@@ -71,10 +71,15 @@ object ObjectCalls {
 
   private val notificationBind by lazy { getMethodBind("Object", "notification", 4023243586L) }
 
-  // RefCounted lifetime binds for the issue #81 save guard (see ptrcallWithObjectStringLongArgsRetLong).
+  // RefCounted lifetime binds for the issue #81 save guard (see
+  // ptrcallWithObjectStringLongArgsRetLong).
   // reference()/unreference() share the bool() no-arg hash; get_reference_count() is int().
-  private val refCountedReferenceBind by lazy { getMethodBind("RefCounted", "reference", 2240911060L) }
-  private val refCountedUnreferenceBind by lazy { getMethodBind("RefCounted", "unreference", 2240911060L) }
+  private val refCountedReferenceBind by lazy {
+    getMethodBind("RefCounted", "reference", 2240911060L)
+  }
+  private val refCountedUnreferenceBind by lazy {
+    getMethodBind("RefCounted", "unreference", 2240911060L)
+  }
   private val refCountedGetReferenceCountBind by lazy {
     getMethodBind("RefCounted", "get_reference_count", 3905245786L)
   }
@@ -3471,9 +3476,9 @@ object ObjectCalls {
     text: String,
     value: Long,
   ): Long {
-    // issue #81: this shape backs ResourceSaver.save (the only wrapper of its (Object, String, int64)
-    // -> int64 signature). save decodes its `const Ref<Resource>&` argument into a transient engine
-    // Ref and releases it on return; for a freshly created, not-yet-assigned resource — whose only
+    // issue #81: this shape backs ResourceSaver.save — its sole wrapper. save decodes its
+    // `const Ref<Resource>&` argument into a transient engine Ref and releases it on return; for a
+    // freshly created, not-yet-assigned resource — whose only
     // reference is Godot's construction placeholder — that release drops the refcount to zero and
     // frees the object, leaving its Kotlin wrapper dangling (JVM SIGSEGV on the next touch). Hold a
     // protective reference across the call, then release it only if the object still has another
