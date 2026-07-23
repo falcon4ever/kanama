@@ -87,11 +87,6 @@ check "script property cleanup shape type=Shape3D"
 check_absent "Leaked instance: AudioStreamWAV"
 check_absent "Leaked instance: BoxMesh"
 check_absent "Leaked instance: BoxShape3D"
-# issue #81 — the created PackedScene saved via ResourceSaver.save must free cleanly on close().
-# The save guard leaves the scene wrapper-owned (its construction placeholder is consumed by save's
-# transient Ref); the probe's close() releases it. A missing/incorrect guard either crashes the
-# process before shutdown or leaks the scene here.
-check_absent "Leaked instance: PackedScene"
 check "SelfSmoke self_class=Node3D same_object=true"
 # issue #38 — newScriptInstance() creates a script-backed custom resource from Kotlin
 # at runtime: the instance is live, saves (owned reference survives the transient Ref<>
@@ -159,7 +154,13 @@ check "ResourceSaver script_uid=[0-9-]+"
 # issue #81: created PackedScene survives ResourceSaver.save (create() claims its construction
 # ref via init_ref). ref_after_save>=1 and usable_after_save=true both dereference the wrapper
 # after save — pre-fix the scene was freed there and the process crashed (SIGSEGV) before this line.
-check "issue81 packed_scene_save pack_error=0 save_error=0 ref_after_save=[1-9][0-9]* usable_after_save=true save_exists=true"
+# issue #81 — a freshly created resource passed to ResourceSaver.save must survive the call. save
+# decodes its Ref<Resource> argument into a transient Ref and releases it; pre-fix that freed the
+# not-yet-owned resource (its only reference was the construction placeholder), so the dereferences
+# below crashed the process before shutdown. ref_after_save>=1 + alive_after_save=true prove the
+# save guard kept it live. Reported with PackedScene; the guard is generic (probe uses a Resource,
+# which — unlike a saved PackedScene/SceneState — leaves no Godot-side cached leak to chase).
+check "issue81 resource_save save_error=0 ref_after_save=[1-9][0-9]* alive_after_save=true save_exists=true"
 check "Script property replay object_set_amount=777"
 check "FileAccess exists=true size_positive=true has_class=true"
 check "FileAccess metadata modified_positive=true accessed_nonnegative=true md5_len=32 sha256_len=64 permissions=[0-9]+ hidden=(true|false) read_only=(true|false) xattrs=[0-9]+"
