@@ -43,6 +43,7 @@ enum class GodotCallShape {
   STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG,
   STRINGNAME_RET_INT,
   STRINGNAME_RET_BOOL,
+  STRINGNAME_RET_BOOL_SINGLETON,
   NOARGS_RET_BOOL,
   NOARGS_RET_DOUBLE,
   NOARGS_RET_LONG,
@@ -282,6 +283,14 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: String,
   ): Boolean
+
+  /** Singleton query (no receiver): the platform backend supplies the calling context itself. */
+  fun invokeStringNameRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Boolean =
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
 
   fun invokeNoArgsRetBool(
     descriptor: GodotCallDescriptor,
@@ -711,6 +720,16 @@ object GodotBackendCalls {
       descriptor,
       resolve(selected, descriptor),
       receiver,
+      value,
+    )
+  }
+
+  fun invokeStringNameRetBoolSingleton(descriptor: GodotCallDescriptor, value: String): Boolean {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeStringNameRetBoolSingleton(
+      descriptor,
+      resolve(selected, descriptor),
       value,
     )
   }
@@ -1377,6 +1396,12 @@ object InputBackendContractProbe {
       hotspot,
     )
   }
+
+  fun isActionPressed(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.INPUT_IS_ACTION_PRESSED,
+      action,
+    )
 }
 
 /** Typed object-method Callable connection used for board wiring. */

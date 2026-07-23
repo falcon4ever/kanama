@@ -1352,6 +1352,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEvent).is_released())")
     appendLine("\t\telif opcode == 26 and value is InputEventMouseButton:")
     appendLine("\t\t\tresult = int((value as InputEventMouseButton).button_index)")
+    appendLine("\t\telif opcode == 69:")
+    appendLine("\t\t\tresult = int(Input.is_action_pressed(StringName(String(args[2]))))")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()

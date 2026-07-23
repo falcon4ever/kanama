@@ -305,6 +305,9 @@ object Input {
       hotspot = GodotVector2(hotspot.x.toFloat(), hotspot.y.toFloat()),
     )
   }
+
+  fun isActionPressed(action: String): Boolean =
+    InputBackendContractProbe.isActionPressed(action)
 }
 
 class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {

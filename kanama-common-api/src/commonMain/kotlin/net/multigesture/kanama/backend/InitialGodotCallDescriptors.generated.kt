@@ -751,4 +751,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val INPUT_IS_ACTION_PRESSED =
+    GodotCallDescriptor(
+      opcode = 69,
+      className = "Input",
+      methodName = "is_action_pressed",
+      hash = 1558498928L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

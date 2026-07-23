@@ -923,6 +923,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a group broadcast (group, method) with no extra arguments; the Web command applier calls SceneTree.call_group. Only the zero-tail-argument form is admitted.",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 69,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "is_action_pressed",
+      "hash": 1558498928,
+      "arguments": ["StringName", "bool"],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query the Input singleton for an action's pressed state synchronously (exact_match defaults false). No receiver: the Web backend routes through the active script owner and the applier reads the global Input.",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

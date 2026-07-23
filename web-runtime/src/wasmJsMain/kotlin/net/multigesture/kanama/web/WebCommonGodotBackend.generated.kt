@@ -516,6 +516,17 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value) != 0
   }
 
+  override fun invokeStringNameRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) != 0
+  }
+
   override fun invokeNoArgsRetBool(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

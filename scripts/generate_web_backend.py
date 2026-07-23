@@ -103,6 +103,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     66: {},
     67: {},
     68: {},
+    69: {},
 }
 
 
@@ -546,6 +547,15 @@ def body_STRINGNAME_RET_BOOL(calls):
     ]
 
 
+def body_STRINGNAME_RET_BOOL_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        "commands.flush()",
+        "return immediateWebObjectQuery("
+        "descriptor.opcode, requireActiveWebScriptHandle(), value) != 0",
+    ]
+
+
 def body_NOARGS_RET_BOOL(calls):
     snapshot = [c for c in calls if c.execution_mode.value == "SNAPSHOT_READ"]
     snap = _only(snapshot).opcode
@@ -755,6 +765,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     ),
     "STRINGNAME_RET_INT": (["receiver: GodotHandle", "value: String"], "Int"),
     "STRINGNAME_RET_BOOL": (["receiver: GodotHandle", "value: String"], "Boolean"),
+    "STRINGNAME_RET_BOOL_SINGLETON": (["value: String"], "Boolean"),
     "NOARGS_RET_BOOL": (["receiver: GodotHandle"], "Boolean"),
     "NOARGS_RET_DOUBLE": (["receiver: GodotHandle"], "Double"),
     "NOARGS_RET_LONG": (["receiver: GodotHandle"], "Long"),
@@ -819,6 +830,7 @@ _WORD_CASE = {
     "UTILITY": "Utility",
     "CALLABLE": "Callable",
     "BOUND": "Bound",
+    "SINGLETON": "Singleton",
 }
 
 
@@ -858,6 +870,7 @@ EMIT_ORDER = [
     "STRINGNAME_CALLABLE_LONG_RET_LONG",
     "STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG",
     "STRINGNAME_RET_BOOL",
+    "STRINGNAME_RET_BOOL_SINGLETON",
     "NOARGS_RET_BOOL",
     "NOARGS_RET_DOUBLE",
     "NOARGS_RET_LONG",
