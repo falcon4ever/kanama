@@ -15,27 +15,19 @@ import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-private val positionSnapshots = mutableMapOf<Int, GodotVector2>()
-private val scaleSnapshots = mutableMapOf<Int, GodotVector2>()
-private val modulateSnapshots = mutableMapOf<Int, GodotColor>()
-private val textureSnapshots = mutableMapOf<Int, Int>()
-private val viewportRectSnapshots = mutableMapOf<Int, GodotRect2>()
-private val particlesEmittingSnapshots = mutableMapOf<Int, Boolean>()
-private val particlesLifetimeSnapshots = mutableMapOf<Int, Double>()
-private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
-
-internal enum class WebBrowserHandleKind {
-  RESOURCE,
-  NODE,
-  OBJECT,
-}
-
-/** Kotlin/Wasm implementation: snapshot reads, queued Vector2 mutations, explicit sync barrier. */
+/**
+ * Kotlin/Wasm backend dispatch: opcode routing, execution-mode guards, and JS-bridge codec calls.
+ *
+ * Web-only state (property snapshots, browser handle-kind tracking, free-time cache clearing) lives
+ * in `WebBackendBookkeeping.kt` and is reached through its hooks; the `js(...)` transport
+ * primitives live in `WebBackendTransport.kt`. This split is the "Option A" seam that Task 60a's
+ * generator emits — see `docs/contributing/web-internals.md` ("Backend-dispatch codegen").
+ */
 internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {
     val token = handle.webId()
     if (!instances.isLive(token)) {
-      check(browserHandles.containsKey(token)) { "Stale Kanama Web browser handle=$token" }
+      check(containsWebBrowserHandle(token)) { "Stale Kanama Web browser handle=$token" }
     }
   }
 
@@ -80,7 +72,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.opcode == 43)
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
-    particlesEmittingSnapshots[objectId] = value
+    webWriteEmittingSnapshot(objectId, value)
   }
 
   override fun invokeDoubleArg(
@@ -122,8 +114,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return when (descriptor.executionMode) {
       GodotExecutionMode.SNAPSHOT_READ ->
         when (descriptor.opcode) {
-          2 -> positionSnapshots[receiver.webId()]
-          29 -> scaleSnapshots[receiver.webId()]
+          2 -> webVector2Snapshot(receiver.webId(), WebVector2Slot.POSITION)
+          29 -> webVector2Snapshot(receiver.webId(), WebVector2Slot.SCALE)
           else -> null
         }
           ?: error(
@@ -153,8 +145,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     val objectId = receiver.webId()
     commands.appendVector2Mutation(descriptor.opcode, objectId, value.x, value.y)
     when (descriptor.opcode) {
-      3 -> positionSnapshots[objectId] = value
-      30 -> scaleSnapshots[objectId] = value
+      3 -> webWriteVector2Snapshot(objectId, WebVector2Slot.POSITION, value)
+      30 -> webWriteVector2Snapshot(objectId, WebVector2Slot.SCALE, value)
       else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")
     }
   }
@@ -166,7 +158,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ): GodotRect2 {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    return viewportRectSnapshots[receiver.webId()]
+    return webViewportRectSnapshot(receiver.webId())
       ?: error("Missing Web viewport snapshot for object handle=${receiver.webId()}")
   }
 
@@ -180,12 +172,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     when (descriptor.executionMode) {
       GodotExecutionMode.QUEUED_MUTATION -> {
         commands.appendNoArgsMutation(descriptor.opcode, objectId)
-        if (descriptor.opcode == 15) {
-          clearWebPositionSnapshot(objectId)
-          if (!instances.isLive(objectId)) {
-            unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
-          }
-        }
+        if (descriptor.opcode == 15) onWebQueueFree(objectId)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
         require(descriptor.opcode == 37)
@@ -234,13 +221,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
     commands.flush()
-    val token = immediateWebResourceLoad(first, second, value.toInt())
-    return token
-      .takeIf { it > 0 }
-      ?.let {
-        registerWebBrowserHandle(it, WebBrowserHandleKind.RESOURCE)
-        GodotHandle.fromBackendToken(it.toLong())
-      }
+    return registerLoadedResource(immediateWebResourceLoad(first, second, value.toInt()))
   }
 
   override fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
@@ -280,6 +261,17 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebEmitSignal(receiver.webId(), name, value)
   }
 
+  override fun invokeStringNameRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return registerConstructedNode(immediateWebConstructObject(value), value)
+  }
+
   override fun invokeStringNameRetInt(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -290,27 +282,6 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     commands.flush()
     return immediateWebEmitSignalNoArgs(receiver.webId(), value)
-  }
-
-  override fun invokeStringNameRetHandle(
-    descriptor: GodotCallDescriptor,
-    callSite: GodotCallSite,
-    value: String,
-  ): GodotHandle? {
-    requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    commands.flush()
-    val token = immediateWebConstructObject(value)
-    return token
-      .takeIf { it > 0 }
-      ?.let {
-        registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
-        positionSnapshots[it] = GodotVector2(0.0f, 0.0f)
-        scaleSnapshots[it] = GodotVector2(1.0f, 1.0f)
-        modulateSnapshots[it] = GodotColor(1.0f, 1.0f, 1.0f, 1.0f)
-        if (value == "Sprite2D") textureSnapshots[it] = 0
-        GodotHandle.fromBackendToken(it.toLong())
-      }
   }
 
   override fun invokeObjectBoolLongArgs(
@@ -348,7 +319,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       16 -> {
         require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
         value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
-        textureSnapshots[receiver.webId()] = value?.webId() ?: 0
+        webWriteTextureSnapshot(receiver.webId(), value?.webId() ?: 0)
       }
       46 -> {
         require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
@@ -428,7 +399,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         require(descriptor.opcode == 33)
         val objectId = receiver.webId()
         val textureId =
-          textureSnapshots[objectId]
+          webTextureSnapshot(objectId)
             ?: error("Missing Web Sprite2D.get_texture snapshot for object handle=$objectId")
         textureId.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
       }
@@ -522,7 +493,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return when (descriptor.executionMode) {
       GodotExecutionMode.SNAPSHOT_READ -> {
         require(descriptor.opcode == 44)
-        particlesEmittingSnapshots[receiver.webId()]
+        webEmittingSnapshot(receiver.webId())
           ?: error(
             "Missing Web GPUParticles2D.is_emitting snapshot for object handle=${receiver.webId()}"
           )
@@ -544,7 +515,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
     require(descriptor.opcode == 45)
-    return particlesLifetimeSnapshots[receiver.webId()]
+    return webLifetimeSnapshot(receiver.webId())
       ?: error(
         "Missing Web GPUParticles2D.get_lifetime snapshot for object handle=${receiver.webId()}"
       )
@@ -581,7 +552,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ): GodotColor {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    return modulateSnapshots[receiver.webId()]
+    return webModulateSnapshot(receiver.webId())
       ?: error("Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}")
   }
 
@@ -601,7 +572,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       value.b,
       value.a,
     )
-    modulateSnapshots[receiver.webId()] = value
+    webWriteModulateSnapshot(receiver.webId(), value)
   }
 
   override fun invokeObjectNodePathVector2DoubleRetHandle(
@@ -668,265 +639,3 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
 internal fun installWebCommonGodotBackend() {
   GodotBackendCalls.install(WebCommonGodotBackend)
 }
-
-internal fun loadWebPositionSnapshot(objectId: Int, x: Double, y: Double) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
-    "Cannot snapshot unknown Kanama Web node handle=$objectId"
-  }
-  positionSnapshots[objectId] = GodotVector2(x.toFloat(), y.toFloat())
-}
-
-internal fun loadWebNode2DSnapshot(
-  objectId: Int,
-  positionX: Double,
-  positionY: Double,
-  scaleX: Double,
-  scaleY: Double,
-  modulateR: Double,
-  modulateG: Double,
-  modulateB: Double,
-  modulateA: Double,
-) {
-  loadWebPositionSnapshot(objectId, positionX, positionY)
-  scaleSnapshots[objectId] = GodotVector2(scaleX.toFloat(), scaleY.toFloat())
-  modulateSnapshots[objectId] =
-    GodotColor(modulateR.toFloat(), modulateG.toFloat(), modulateB.toFloat(), modulateA.toFloat())
-}
-
-internal fun loadWebViewportRectSnapshot(
-  objectId: Int,
-  x: Double,
-  y: Double,
-  width: Double,
-  height: Double,
-) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
-    "Cannot snapshot unknown Kanama Web node handle=$objectId"
-  }
-  viewportRectSnapshots[objectId] =
-    GodotRect2(
-      GodotVector2(x.toFloat(), y.toFloat()),
-      GodotVector2(width.toFloat(), height.toFloat()),
-    )
-}
-
-internal fun loadWebParticlesSnapshot(objectId: Int, emitting: Boolean, lifetime: Double) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
-    "Cannot snapshot unknown Kanama Web GPUParticles2D handle=$objectId"
-  }
-  require(lifetime.isFinite() && lifetime >= 0.0) {
-    "Kanama Web GPUParticles2D lifetime must be finite and non-negative"
-  }
-  particlesEmittingSnapshots[objectId] = emitting
-  particlesLifetimeSnapshots[objectId] = lifetime
-}
-
-internal fun webParticlesSnapshotCount(): Int = particlesLifetimeSnapshots.size
-
-internal fun clearWebPositionSnapshot(objectId: Int) {
-  positionSnapshots.remove(objectId)
-  scaleSnapshots.remove(objectId)
-  modulateSnapshots.remove(objectId)
-  textureSnapshots.remove(objectId)
-  viewportRectSnapshots.remove(objectId)
-  particlesEmittingSnapshots.remove(objectId)
-  particlesLifetimeSnapshots.remove(objectId)
-}
-
-private fun GodotHandle.webId(): Int = backendToken().toInt()
-
-private fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int =
-  js("globalThis.KanamaWebBridge.immediateChildCount(objectId, includeInternal)")
-
-private fun immediateWebResourceLoad(path: String, typeHint: String, cacheMode: Int): Int =
-  js("globalThis.KanamaWebBridge.immediateResourceLoad(path, typeHint, cacheMode)")
-
-private fun immediateWebEmitSignal(objectId: Int, name: String, value: Int): Int =
-  js("globalThis.KanamaWebBridge.immediateEmitSignal(objectId, name, value)")
-
-private fun immediateWebEmitSignalNoArgs(objectId: Int, name: String): Int =
-  js("globalThis.KanamaWebBridge.immediateEmitSignalNoArgs(objectId, name)")
-
-private fun immediateWebConstructObject(className: String): Int =
-  js("globalThis.KanamaWebBridge.immediateConstructObject(className)")
-
-private fun immediateWebNodeLookup(objectId: Int, path: String): Int =
-  js("globalThis.KanamaWebBridge.immediateNodeLookup(objectId, path)")
-
-private fun immediateWebPackedSceneInstantiate(resourceId: Int, editState: Int): Int =
-  js("globalThis.KanamaWebBridge.immediatePackedSceneInstantiate(resourceId, editState)")
-
-private fun immediateWebNoArgsObject(opcode: Int, objectId: Int): Int =
-  js("globalThis.KanamaWebBridge.immediateNoArgsObject(opcode, objectId)")
-
-private fun immediateWebTweenNoArgs(opcode: Int, objectId: Int): Int =
-  js("globalThis.KanamaWebBridge.immediateTweenNoArgs(opcode, objectId)")
-
-private fun immediateWebTweenBoolRetObject(opcode: Int, objectId: Int, value: Boolean): Int =
-  js("globalThis.KanamaWebBridge.immediateTweenBoolRetObject(opcode, objectId, value)")
-
-private fun immediateWebTweenLongRetObject(opcode: Int, objectId: Int, value: Int): Int =
-  js("globalThis.KanamaWebBridge.immediateTweenLongRetObject(opcode, objectId, value)")
-
-private fun immediateWebTweenPropertyVector2(
-  opcode: Int,
-  tweenId: Int,
-  targetId: Int,
-  property: String,
-  x: Double,
-  y: Double,
-  duration: Double,
-): Int =
-  js(
-    "globalThis.KanamaWebBridge.immediateTweenPropertyVector2(opcode, tweenId, targetId, property, x, y, duration)"
-  )
-
-private fun immediateWebTweenPropertyColor(
-  opcode: Int,
-  tweenId: Int,
-  targetId: Int,
-  property: String,
-  r: Double,
-  g: Double,
-  b: Double,
-  a: Double,
-  duration: Double,
-): Int =
-  js(
-    "globalThis.KanamaWebBridge.immediateTweenPropertyColor(opcode, tweenId, targetId, property, r, g, b, a, duration)"
-  )
-
-private fun immediateWebSetCustomMouseCursor(
-  ownerId: Int,
-  resourceId: Int,
-  shape: Int,
-  hotspotX: Double,
-  hotspotY: Double,
-): Int =
-  js(
-    "globalThis.KanamaWebBridge.immediateSetCustomMouseCursor(ownerId, resourceId, shape, hotspotX, hotspotY)"
-  )
-
-private fun immediateWebConnect(
-  objectId: Int,
-  signal: String,
-  targetId: Int,
-  method: String,
-  flags: Int,
-): Int =
-  js("globalThis.KanamaWebBridge.immediateConnect(objectId, signal, targetId, method, flags)")
-
-private fun immediateWebConnectBound(
-  objectId: Int,
-  signal: String,
-  targetId: Int,
-  method: String,
-  boundValue: Int,
-  flags: Int,
-): Int =
-  js(
-    "globalThis.KanamaWebBridge.immediateConnectBound(objectId, signal, targetId, method, boundValue, flags)"
-  )
-
-private fun immediateWebObjectQuery(opcode: Int, objectId: Int, value: String): Int =
-  js("globalThis.KanamaWebBridge.immediateObjectQuery(opcode, objectId, value)")
-
-private fun immediateWebNoArgsVector2X(opcode: Int, objectId: Int): Double =
-  js("globalThis.KanamaWebBridge.immediateNoArgsVector2X(opcode, objectId)")
-
-private fun immediateWebNoArgsVector2Y(): Double =
-  js("globalThis.KanamaWebBridge.immediateNoArgsVector2Y()")
-
-private fun immediateWebEmitSignalVector2i(objectId: Int, name: String, x: Int, y: Int): Int =
-  js("globalThis.KanamaWebBridge.immediateEmitSignalVector2i(objectId, name, x, y)")
-
-private fun registerReturnedNode(token: Int): GodotHandle? =
-  token
-    .takeIf { it > 0 }
-    ?.let {
-      if (!instances.isLive(it)) registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
-      GodotHandle.fromBackendToken(it.toLong())
-    }
-
-private fun registerReturnedBrowserObject(token: Int): GodotHandle? =
-  token
-    .takeIf { it > 0 }
-    ?.let {
-      registerWebBrowserHandle(it, WebBrowserHandleKind.OBJECT)
-      GodotHandle.fromBackendToken(it.toLong())
-    }
-
-private fun existingReturnedObject(receiver: GodotHandle, token: Int): GodotHandle? =
-  token
-    .takeIf { it > 0 }
-    ?.also {
-      check(it == receiver.webId()) {
-        "Kanama Web fluent call returned handle=$it instead of receiver=${receiver.webId()}"
-      }
-    }
-    ?.let { GodotHandle.fromBackendToken(it.toLong()) }
-
-internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
-  check(handle > 0) { "Kanama Web browser handle must be positive" }
-  val previous = browserHandles[handle]
-  if (previous == null) browserHandles[handle] = kind
-  check(previous == null || previous == kind) {
-    "Kanama Web browser handle=$handle already has kind=$previous, requested=$kind"
-  }
-}
-
-internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
-  val actual = browserHandles.remove(handle)
-  check(actual == expectedKind) {
-    "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
-  }
-}
-
-internal fun clearWebBrowserHandles() {
-  browserHandles.keys.forEach(::clearWebPositionSnapshot)
-  browserHandles.clear()
-}
-
-internal fun discardWebBrowserHandle(handle: Int): Boolean {
-  clearWebPositionSnapshot(handle)
-  return browserHandles.remove(handle) != null
-}
-
-private fun requireWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
-  val actual = browserHandles[handle]
-  check(actual == expectedKind) {
-    "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
-  }
-}
-
-private fun requireWebNodeHandle(handle: Int) {
-  if (instances.isLive(handle)) return
-  requireWebBrowserHandle(handle, WebBrowserHandleKind.NODE)
-}
-
-private object WebRandom {
-  private var state = 0x9e3779b97f4a7c15UL
-
-  fun randomize() {
-    var seed = webRandomSeed().toLong().toULong() xor 0x9e3779b97f4a7c15UL
-    seed = (seed xor (seed shr 30)) * 0xbf58476d1ce4e5b9UL
-    seed = (seed xor (seed shr 27)) * 0x94d049bb133111ebUL
-    state = (seed xor (seed shr 31)).takeUnless { it == 0UL } ?: 0x2545f4914f6cdd1dUL
-  }
-
-  fun randi(): Long {
-    var next = state
-    next = next xor (next shl 13)
-    next = next xor (next shr 7)
-    next = next xor (next shl 17)
-    state = next
-    return (next and 0xffff_ffffUL).toLong()
-  }
-
-  fun randf(): Double = randi().toDouble() / 4_294_967_295.0
-}
-
-private fun webRandomSeed(): Double =
-  js(
-    "((globalThis.crypto && globalThis.crypto.getRandomValues) ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Date.now()) + performance.now()"
-  )
