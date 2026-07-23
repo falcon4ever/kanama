@@ -69,6 +69,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--demo", required=True)
     parser.add_argument("--timeout", type=int, required=True)
     parser.add_argument("--source-checksum", required=True)
+    parser.add_argument("--export-dir", default=None)
     parser.add_argument("--browser-binary", default=None)
     parser.add_argument("--mode", default="success")
     parser.add_argument("--mutate-path", default=None)

@@ -1,4 +1,5 @@
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.security.MessageDigest
 
 plugins {
@@ -760,5 +761,279 @@ tasks.register<Exec>("exportWebMatch3") {
         check(exportDir.resolve("kanama-web-spike.js").isFile) {
             "Kotlin/Wasm loader was not installed into the Match3 export"
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Task 57f -- stable, user-facing Web entry points.
+//
+// `buildWebScripts` publishes the generated GDScript proxy bundle (proxies +
+// manifest + protocol) alongside the Kotlin/Wasm runtime a project attaches.
+// `exportWeb` turns a validated demo into a self-contained, cache-busted,
+// HTTP-servable directory with a release payload report. Both reuse the same
+// generated resources and staging machinery as the per-demo tasks above, so
+// their protocol version and proxy shapes cannot drift from one another.
+// ---------------------------------------------------------------------------
+
+val webScriptsBundle = layout.buildDirectory.dir("web-scripts")
+val webExportRoot = layout.buildDirectory.dir("web-export")
+val webDemo = providers.gradleProperty("kanamaWebDemo").orElse("match3")
+
+// The single renderer/thread contract for the Kotlin/Wasm preview backend.
+val webRendererName = "gl_compatibility"
+val webThreadsSupported = false
+
+fun readProtocolVersion(): Int {
+    val protocolFile =
+        webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile
+    check(protocolFile.isFile) { "Missing generated Web protocol descriptor: $protocolFile" }
+    val match = Regex("\"protocolVersion\"\\s*:\\s*(\\d+)").find(protocolFile.readText())
+    return match?.groupValues?.get(1)?.toInt()
+        ?: error("Could not read protocolVersion from $protocolFile")
+}
+
+tasks.register("buildWebScripts") {
+    group = "kanama-web"
+    description =
+        "Generates the Web GDScript proxies + protocol and collects the Kotlin/Wasm runtime bundle."
+    dependsOn("kspKotlinWasmJs", "wasmJsBrowserDistribution")
+    inputs.dir(webProxyResources)
+    inputs.dir(webDistribution)
+    inputs.dir(webSpikeAssets)
+    outputs.dir(webScriptsBundle)
+
+    doLast {
+        val bundle = webScriptsBundle.get().asFile
+        delete(bundle)
+        bundle.mkdirs()
+
+        // Generated GDScript proxies, manifest, and protocol descriptor.
+        val generatedDir = bundle.resolve("generated")
+        copy {
+            from(webProxyResources)
+            into(generatedDir)
+        }
+
+        // Kotlin/Wasm runtime: the webpack loader + its content-hashed wasm,
+        // plus the versioned JS bridge and HTML shell the project attaches.
+        val runtimeDir = bundle.resolve("runtime")
+        copy {
+            from(webDistribution) {
+                include("*.js", "*.wasm")
+            }
+            into(runtimeDir)
+        }
+        copy {
+            from(webSpikeAssets)
+            into(runtimeDir)
+        }
+
+        // No source maps ship by default (webpack sourceMaps=false); fail loud
+        // if that policy ever regresses into the published bundle.
+        val leakedSourceMaps =
+            fileTree(bundle) { include("**/*.map") }.files.map { it.name }
+        check(leakedSourceMaps.isEmpty()) {
+            "Web script bundle must not ship source maps: $leakedSourceMaps"
+        }
+
+        val protocolVersion = readProtocolVersion()
+        val report = bundle.resolve("build-web-scripts.report.json")
+        val runtimeFiles =
+            runtimeDir.walkTopDown().filter { it.isFile }.sortedBy { it.name }.toList()
+        val proxyFiles =
+            generatedDir.walkTopDown().filter { it.isFile }.sortedBy { it.name }.toList()
+        report.writeText(
+            buildString {
+                append("{\n")
+                append("  \"protocolVersion\": $protocolVersion,\n")
+                append("  \"renderer\": \"$webRendererName\",\n")
+                append("  \"threadsSupported\": $webThreadsSupported,\n")
+                append("  \"sourceMaps\": false,\n")
+                append("  \"proxies\": [")
+                append(proxyFiles.joinToString(", ") { "\"${it.name}\"" })
+                append("],\n")
+                append("  \"runtime\": [")
+                append(runtimeFiles.joinToString(", ") { "\"${it.name}\"" })
+                append("]\n")
+                append("}\n")
+            }
+        )
+        logger.lifecycle(
+            "[kanama:web] buildWebScripts published protocol $protocolVersion to $bundle"
+        )
+    }
+}
+
+fun stageTaskFor(demo: String): String =
+    when (demo) {
+        "match3" -> "stageWebMatch3Project"
+        "bunnymark" -> "stageWebBunnymarkProject"
+        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark)")
+    }
+
+fun stagingDirFor(demo: String): File =
+    when (demo) {
+        "match3" -> webMatch3Staging.get().asFile
+        "bunnymark" -> webBunnymarkStaging.get().asFile
+        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark)")
+    }
+
+tasks.register<Exec>("exportWeb") {
+    group = "kanama-web"
+    description =
+        "Exports a validated demo (-PkanamaWebDemo=match3|bunnymark) to a self-contained, " +
+            "cache-busted, HTTP-servable directory with a release payload report."
+    dependsOn("buildWebScripts", "wasmJsBrowserDistribution")
+    dependsOn(webDemo.map(::stageTaskFor))
+    inputs.property("kanamaWebDemo", webDemo)
+    inputs.dir(webDistribution)
+    inputs.dir(webSpikeAssets)
+    outputs.dir(webExportRoot)
+
+    doFirst {
+        val demo = webDemo.get()
+        val godotExecutable =
+            providers.gradleProperty("kanamaGodotExecutable").orNull
+                ?: error("Pass -PkanamaGodotExecutable=/absolute/path/to/godot")
+        val webTemplateRelease =
+            providers.gradleProperty("kanamaWebTemplateRelease").orNull
+                ?: error("Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip")
+        val webTemplateFile = file(webTemplateRelease)
+        check(webTemplateFile.isFile) { "Godot Web release template not found: $webTemplateFile" }
+
+        val stagingDir = stagingDirFor(demo)
+        val stagedPreset = stagingDir.resolve("export_presets.cfg")
+        check(stagedPreset.isFile) { "Staged project has no export_presets.cfg: $stagedPreset" }
+        stagedPreset.writeText(
+            stagedPreset
+                .readText()
+                .replace(
+                    "custom_template/release=\"\"",
+                    "custom_template/release=\"${webTemplateFile.absolutePath}\"",
+                )
+        )
+
+        val exportDir = webExportRoot.get().dir(demo).asFile
+        delete(exportDir)
+        exportDir.mkdirs()
+        commandLine(
+            godotExecutable,
+            "--headless",
+            "--path",
+            stagingDir.absolutePath,
+            "--export-release",
+            "Web",
+            exportDir.resolve("index.html").absolutePath,
+        )
+    }
+
+    doLast {
+        val demo = webDemo.get()
+        val exportDir = webExportRoot.get().dir(demo).asFile
+
+        // Install the Kotlin/Wasm runtime, versioned bridge into the export.
+        copy {
+            from(webDistribution) {
+                include("*.js", "*.wasm")
+            }
+            into(exportDir)
+        }
+        copy {
+            from(webSpikeAssets.file("kanama-web-bridge.js"))
+            into(exportDir)
+        }
+
+        val indexHtml = exportDir.resolve("index.html")
+        check(indexHtml.isFile) { "Godot Web export did not produce index.html for $demo" }
+        val spikeLoader = exportDir.resolve("kanama-web-spike.js")
+        val bridge = exportDir.resolve("kanama-web-bridge.js")
+        check(spikeLoader.isFile) { "Kotlin/Wasm loader missing from $demo export" }
+        check(bridge.isFile) { "Versioned JS bridge missing from $demo export" }
+
+        // Cache-busting: the Kotlin gameplay wasm is already content-hashed by
+        // webpack (its filename is its hash), and kanama-web-spike.js references
+        // it by that name. Only the two fixed-name entry scripts can go stale, so
+        // stamp them with a content-derived build id the browser treats as a new
+        // resource. This is safe: they are <script src> tags, not module imports.
+        val buildId =
+            MessageDigest.getInstance("SHA-256").let { digest ->
+                digest.update(spikeLoader.readBytes())
+                digest.update(bridge.readBytes())
+                digest.digest().joinToString("") { "%02x".format(it) }.substring(0, 16)
+            }
+        val originalIndex = indexHtml.readText()
+        check(originalIndex.contains("src=\"kanama-web-spike.js\"")) {
+            "Exported shell is missing the kanama-web-spike.js script tag"
+        }
+        check(originalIndex.contains("src=\"kanama-web-bridge.js\"")) {
+            "Exported shell is missing the kanama-web-bridge.js script tag"
+        }
+        indexHtml.writeText(
+            originalIndex
+                .replace(
+                    "src=\"kanama-web-spike.js\"",
+                    "src=\"kanama-web-spike.js?v=$buildId\"",
+                )
+                .replace(
+                    "src=\"kanama-web-bridge.js\"",
+                    "src=\"kanama-web-bridge.js?v=$buildId\"",
+                )
+        )
+
+        // Self-contained check: no workstation-absolute path may leak into the
+        // served HTML, and the payload must not reference the staging tree.
+        val servedIndex = indexHtml.readText()
+        val stagingPath = stagingDirFor(demo).absolutePath
+        check(!servedIndex.contains(stagingPath)) {
+            "Exported index.html leaks the staging path $stagingPath"
+        }
+        check(!servedIndex.contains(System.getProperty("user.home"))) {
+            "Exported index.html leaks a workstation-absolute path"
+        }
+
+        val wasmFiles = exportDir.listFiles { file -> file.extension == "wasm" }?.toList().orEmpty()
+        check(wasmFiles.isNotEmpty()) { "Web export has no wasm payload for $demo" }
+        check(fileTree(exportDir) { include("**/*.map") }.files.isEmpty()) {
+            "Web export must not ship source maps for $demo"
+        }
+
+        // Release payload report: every served file and its size, for budget
+        // tracking and the export-smoke harness to cross-check.
+        val protocolVersion = readProtocolVersion()
+        val servedFiles =
+            exportDir
+                .walkTopDown()
+                .filter { it.isFile }
+                .map { it.relativeTo(exportDir).invariantSeparatorsPath to it.length() }
+                .sortedBy { it.first }
+                .toList()
+        val totalBytes = servedFiles.sumOf { it.second }
+        val reportDir = exportDir.resolve("kanama-web")
+        reportDir.mkdirs()
+        val report = reportDir.resolve("export-report.json")
+        report.writeText(
+            buildString {
+                append("{\n")
+                append("  \"demo\": \"$demo\",\n")
+                append("  \"protocolVersion\": $protocolVersion,\n")
+                append("  \"buildId\": \"$buildId\",\n")
+                append("  \"renderer\": \"$webRendererName\",\n")
+                append("  \"threadsSupported\": $webThreadsSupported,\n")
+                append("  \"sourceMaps\": false,\n")
+                append("  \"totalBytes\": $totalBytes,\n")
+                append("  \"files\": [\n")
+                append(
+                    servedFiles.joinToString(",\n") { (path, size) ->
+                        "    {\"name\": \"$path\", \"bytes\": $size}"
+                    }
+                )
+                append("\n  ]\n")
+                append("}\n")
+            }
+        )
+        logger.lifecycle(
+            "[kanama:web] exportWeb produced $demo export ($totalBytes bytes, protocol " +
+                "$protocolVersion, buildId $buildId) at $exportDir"
+        )
     }
 }

@@ -194,6 +194,7 @@ run_driver() {
     --demo "$DEMO" \
     --timeout "$TIMEOUT" \
     --source-checksum "$CHECKSUM_BEFORE" \
+    --export-dir "$EXPORT_DIR" \
     ${BROWSER_BINARY:+--browser-binary "$BROWSER_BINARY"}
 }
 
@@ -207,6 +208,7 @@ if ! command -v setsid >/dev/null 2>&1; then
       --demo "$DEMO" \
       --timeout "$TIMEOUT" \
       --source-checksum "$CHECKSUM_BEFORE" \
+      --export-dir "$EXPORT_DIR" \
       ${BROWSER_BINARY:+--browser-binary "$BROWSER_BINARY"}
   }
 fi
