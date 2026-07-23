@@ -237,6 +237,17 @@ internal object CommonGodotBackend : GodotBackendSpi {
       },
     )
 
+  override fun invokeLongArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ) {
+    require(descriptor.opcode == 52)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    ObjectCalls.ptrcallWithIntArg(segment(callSite), segment(receiver), value.toInt())
+  }
+
   override fun invokeNoArgsRetHandle(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

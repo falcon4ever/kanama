@@ -553,4 +553,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE_GET_TREE =
+    GodotCallDescriptor(
+      opcode = 51,
+      className = "Node",
+      methodName = "get_tree",
+      hash = 2958820483L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENETREE_QUIT =
+    GodotCallDescriptor(
+      opcode = 52,
+      className = "SceneTree",
+      methodName = "quit",
+      hash = 1995695955L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

@@ -35,6 +35,7 @@ enum class GodotCallShape {
   OBJECT_BOOL_LONG_ARGS,
   OBJECT_ARG,
   NODEPATH_RET_HANDLE,
+  LONG_ARG,
   LONG_RET_HANDLE,
   NOARGS_RET_HANDLE,
   OBJECT_LONG_VECTOR2_ARGS,
@@ -214,6 +215,15 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     path: String,
   ): GodotHandle?
+
+  fun invokeLongArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
 
   fun invokeLongRetHandle(
     descriptor: GodotCallDescriptor,
@@ -558,6 +568,13 @@ object GodotBackendCalls {
       receiver,
       path,
     )
+  }
+
+  fun invokeLongArg(descriptor: GodotCallDescriptor, receiver: GodotHandle, value: Long) {
+    requireShape(descriptor, GodotCallShape.LONG_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeLongArg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
   fun invokeLongRetHandle(
@@ -930,8 +947,22 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.NODE_QUEUE_FREE, handle)
   }
 
+  fun getTree(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_TREE, handle)
+
   fun createTween(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_CREATE_TWEEN, handle)
+}
+
+/** Typed SceneTree lifecycle slice used by Match3's deterministic smoke exit. */
+@InternalKanamaBackendApi
+class SceneTreeBackendContractProbe(private val handle: GodotHandle) {
+  fun quit(exitCode: Long = 0L) {
+    require(exitCode in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+      "SceneTree.quit exit code must fit Godot's int32 ABI"
+    }
+    GodotBackendCalls.invokeLongArg(InitialGodotCallDescriptors.SCENETREE_QUIT, handle, exitCode)
+  }
 }
 
 /** Typed Tween slice used by Match3 animation and feedback. */

@@ -77,6 +77,18 @@ class GodotBackendContractTest {
       GodotCallShape.DOUBLE_ARG,
       GodotExecutionMode.QUEUED_MUTATION,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE_GET_TREE,
+      2_958_820_483L,
+      GodotCallShape.NOARGS_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.SCENETREE_QUIT,
+      1_995_695_955L,
+      GodotCallShape.LONG_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
   }
 
   @Test
@@ -112,6 +124,12 @@ class GodotBackendContractTest {
     assertEquals(41L, sprite?.backendToken())
     val node = NodeBackendContractProbe(probe.handle)
     node.addChild(checkNotNull(sprite))
+    val sceneTree = checkNotNull(node.getTree())
+    assertEquals(71L, sceneTree.backendToken())
+    SceneTreeBackendContractProbe(sceneTree).quit(7L)
+    assertFailsWith<IllegalArgumentException> {
+      SceneTreeBackendContractProbe(sceneTree).quit(Int.MAX_VALUE.toLong() + 1L)
+    }
     Sprite2DBackendContractProbe(sprite).setTexture(texture)
     assertEquals(31L, Sprite2DBackendContractProbe(sprite).getTexture()?.backendToken())
     node.removeChild(sprite)
@@ -248,6 +266,8 @@ class GodotBackendContractTest {
         48 to 1,
         49 to 1,
         50 to 1,
+        51 to 1,
+        52 to 1,
       ),
       backend.resolveCounts,
     )
@@ -276,6 +296,7 @@ class GodotBackendContractTest {
     assertEquals(listOf(41L to 31L, 41L to 31L, 41L to null), backend.objectArguments)
     assertEquals("master", backend.stringNameArgument)
     assertEquals(listOf(48 to -10.0, 49 to 1.2, 50 to 0.0), backend.doubleArguments)
+    assertEquals(71L to 7L, backend.longArgument)
     assertEquals(41L, backend.queuedFree)
   }
 
@@ -314,11 +335,12 @@ class GodotBackendContractTest {
     val objectArguments = mutableListOf<Pair<Long, Long?>>()
     var stringNameArgument: String? = null
     val doubleArguments = mutableListOf<Pair<Int, Double>>()
+    var longArgument: Pair<Long, Long>? = null
     var queuedFree: Long? = null
     private var particlesEmitting = false
 
     override fun requireLive(handle: GodotHandle) {
-      require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L, 61L, 62L, 63L))
+      require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L, 61L, 62L, 63L, 71L))
     }
 
     override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite {
@@ -517,6 +539,16 @@ class GodotBackendContractTest {
       }
     }
 
+    override fun invokeLongArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Long,
+    ) {
+      assertEquals(52, descriptor.opcode)
+      longArgument = receiver.backendToken() to value
+    }
+
     override fun invokeNoArgsRetHandle(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
@@ -526,6 +558,7 @@ class GodotBackendContractTest {
         when (descriptor.opcode) {
           33 -> 31L
           36 -> 61L
+          51 -> 71L
           else -> 52L
         }
       )

@@ -669,6 +669,34 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue one finite Float64 from-position value; playback remains Godot-owned.",
       "introducedBy": "57e-group7"
+    },
+    {
+      "opcode": 51,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_tree",
+      "hash": 2958820483,
+      "arguments": [],
+      "returnType": "SceneTree",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return the engine-owned SceneTree as a borrowed handle. Web interns one handle per script owner and invalidates it when that owner tears down.",
+      "introducedBy": "57e-group8"
+    },
+    {
+      "opcode": 52,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "quit",
+      "hash": 1995695955,
+      "arguments": ["int"],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the end-of-iteration quit request. The Kotlin Long must fit Godot's exact int32 exit-code ABI before any backend call or Web command is emitted.",
+      "introducedBy": "57e-group8"
     }
   ],
   "compositions": [
