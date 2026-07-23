@@ -10,6 +10,66 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: RDShaderSource
  */
 class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
+    var sourceVertex: String
+        @JvmName("sourceVertexProperty")
+        get() = getStageSource(0L)
+        @JvmName("setSourceVertexProperty")
+        set(value) = setStageSource(0L, value)
+
+    var sourceFragment: String
+        @JvmName("sourceFragmentProperty")
+        get() = getStageSource(1L)
+        @JvmName("setSourceFragmentProperty")
+        set(value) = setStageSource(1L, value)
+
+    var sourceTesselationControl: String
+        @JvmName("sourceTesselationControlProperty")
+        get() = getStageSource(2L)
+        @JvmName("setSourceTesselationControlProperty")
+        set(value) = setStageSource(2L, value)
+
+    var sourceTesselationEvaluation: String
+        @JvmName("sourceTesselationEvaluationProperty")
+        get() = getStageSource(3L)
+        @JvmName("setSourceTesselationEvaluationProperty")
+        set(value) = setStageSource(3L, value)
+
+    var sourceCompute: String
+        @JvmName("sourceComputeProperty")
+        get() = getStageSource(4L)
+        @JvmName("setSourceComputeProperty")
+        set(value) = setStageSource(4L, value)
+
+    var sourceRaygen: String
+        @JvmName("sourceRaygenProperty")
+        get() = getStageSource(5L)
+        @JvmName("setSourceRaygenProperty")
+        set(value) = setStageSource(5L, value)
+
+    var sourceAnyHit: String
+        @JvmName("sourceAnyHitProperty")
+        get() = getStageSource(6L)
+        @JvmName("setSourceAnyHitProperty")
+        set(value) = setStageSource(6L, value)
+
+    var sourceClosestHit: String
+        @JvmName("sourceClosestHitProperty")
+        get() = getStageSource(7L)
+        @JvmName("setSourceClosestHitProperty")
+        set(value) = setStageSource(7L, value)
+
+    var sourceMiss: String
+        @JvmName("sourceMissProperty")
+        get() = getStageSource(8L)
+        @JvmName("setSourceMissProperty")
+        set(value) = setStageSource(8L, value)
+
+    var sourceIntersection: String
+        @JvmName("sourceIntersectionProperty")
+        get() = getStageSource(9L)
+        @JvmName("setSourceIntersectionProperty")
+        set(value) = setStageSource(9L, value)
+
     var language: Long
         @JvmName("languageProperty")
         get() = getLanguage()

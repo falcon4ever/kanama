@@ -67,6 +67,60 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         @JvmName("setOptionCountProperty")
         set(value) = setOptionCount(value)
 
+    var hiddenFilesToggleEnabled: Boolean
+        @JvmName("hiddenFilesToggleEnabledProperty")
+        get() = isCustomizationFlagEnabled(0L)
+        @JvmName("setHiddenFilesToggleEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(0L, value)
+
+    var fileFilterToggleEnabled: Boolean
+        @JvmName("fileFilterToggleEnabledProperty")
+        get() = isCustomizationFlagEnabled(2L)
+        @JvmName("setFileFilterToggleEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(2L, value)
+
+    var fileSortOptionsEnabled: Boolean
+        @JvmName("fileSortOptionsEnabledProperty")
+        get() = isCustomizationFlagEnabled(3L)
+        @JvmName("setFileSortOptionsEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(3L, value)
+
+    var folderCreationEnabled: Boolean
+        @JvmName("folderCreationEnabledProperty")
+        get() = isCustomizationFlagEnabled(1L)
+        @JvmName("setFolderCreationEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(1L, value)
+
+    var favoritesEnabled: Boolean
+        @JvmName("favoritesEnabledProperty")
+        get() = isCustomizationFlagEnabled(4L)
+        @JvmName("setFavoritesEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(4L, value)
+
+    var recentListEnabled: Boolean
+        @JvmName("recentListEnabledProperty")
+        get() = isCustomizationFlagEnabled(5L)
+        @JvmName("setRecentListEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(5L, value)
+
+    var layoutToggleEnabled: Boolean
+        @JvmName("layoutToggleEnabledProperty")
+        get() = isCustomizationFlagEnabled(6L)
+        @JvmName("setLayoutToggleEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(6L, value)
+
+    var overwriteWarningEnabled: Boolean
+        @JvmName("overwriteWarningEnabledProperty")
+        get() = isCustomizationFlagEnabled(7L)
+        @JvmName("setOverwriteWarningEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(7L, value)
+
+    var deletingEnabled: Boolean
+        @JvmName("deletingEnabledProperty")
+        get() = isCustomizationFlagEnabled(8L)
+        @JvmName("setDeletingEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(8L, value)
+
     var currentDir: String
         @JvmName("currentDirProperty")
         get() = getCurrentDir()

@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
@@ -12,6 +13,30 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: StyleBox
  */
 open class StyleBox(handle: MemorySegment) : Resource(handle) {
+    var contentMarginLeft: Double
+        @JvmName("contentMarginLeftProperty")
+        get() = getContentMargin(0L)
+        @JvmName("setContentMarginLeftProperty")
+        set(value) = setContentMargin(0L, value)
+
+    var contentMarginTop: Double
+        @JvmName("contentMarginTopProperty")
+        get() = getContentMargin(1L)
+        @JvmName("setContentMarginTopProperty")
+        set(value) = setContentMargin(1L, value)
+
+    var contentMarginRight: Double
+        @JvmName("contentMarginRightProperty")
+        get() = getContentMargin(2L)
+        @JvmName("setContentMarginRightProperty")
+        set(value) = setContentMargin(2L, value)
+
+    var contentMarginBottom: Double
+        @JvmName("contentMarginBottomProperty")
+        get() = getContentMargin(3L)
+        @JvmName("setContentMarginBottomProperty")
+        set(value) = setContentMargin(3L, value)
+
     /**
      * Returns the minimum size that this stylebox can be shrunk to.
      *

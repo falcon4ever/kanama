@@ -259,6 +259,30 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         @JvmName("setPositionalShadowAtlas16BitsProperty")
         set(value) = setPositionalShadowAtlas16Bits(value)
 
+    var positionalShadowAtlasQuad0: Long
+        @JvmName("positionalShadowAtlasQuad0Property")
+        get() = getPositionalShadowAtlasQuadrantSubdiv(0)
+        @JvmName("setPositionalShadowAtlasQuad0Property")
+        set(value) = setPositionalShadowAtlasQuadrantSubdiv(0, value)
+
+    var positionalShadowAtlasQuad1: Long
+        @JvmName("positionalShadowAtlasQuad1Property")
+        get() = getPositionalShadowAtlasQuadrantSubdiv(1)
+        @JvmName("setPositionalShadowAtlasQuad1Property")
+        set(value) = setPositionalShadowAtlasQuadrantSubdiv(1, value)
+
+    var positionalShadowAtlasQuad2: Long
+        @JvmName("positionalShadowAtlasQuad2Property")
+        get() = getPositionalShadowAtlasQuadrantSubdiv(2)
+        @JvmName("setPositionalShadowAtlasQuad2Property")
+        set(value) = setPositionalShadowAtlasQuadrantSubdiv(2, value)
+
+    var positionalShadowAtlasQuad3: Long
+        @JvmName("positionalShadowAtlasQuad3Property")
+        get() = getPositionalShadowAtlasQuadrantSubdiv(3)
+        @JvmName("setPositionalShadowAtlasQuad3Property")
+        set(value) = setPositionalShadowAtlasQuadrantSubdiv(3, value)
+
     var canvasTransform: Transform2D
         @JvmName("canvasTransformProperty")
         get() = getCanvasTransform()

@@ -19,7 +19,7 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | Classes with complete method generation | 761 |
 | Methods generated | 15332/16822 (91.1%) |
 | Methods skipped | 1490 |
-| Properties generated | 3657/4162 (87.9%) |
+| Properties generated | 4072/4162 (97.8%) |
 | Signals generated | 503/503 (100.0%) |
 
 ## Skip Categories
@@ -60,19 +60,19 @@ These classes have every method covered by the conservative generator. Promotion
 | Environment | 188/188 | 93/93 | 0/0 |
 | PhysicsServer3D | 175/175 | 0/0 | 0/0 |
 | NavigationServer3D | 154/154 | 0/0 | 3/3 |
-| BaseMaterial3D | 154/154 | 74/131 | 0/0 |
+| BaseMaterial3D | 154/154 | 131/131 | 0/0 |
 | RichTextLabel | 138/138 | 30/30 | 4/4 |
 | NavigationServer2D | 137/137 | 0/0 | 3/3 |
 | RenderingDevice | 135/135 | 0/0 | 0/0 |
-| Viewport | 130/130 | 46/50 | 2/2 |
+| Viewport | 130/130 | 50/50 | 2/2 |
 | TreeItem | 125/125 | 4/4 | 0/0 |
 | PhysicsServer2D | 119/119 | 0/0 | 0/0 |
-| ParticleProcessMaterial | 116/116 | 53/124 | 1/1 |
+| ParticleProcessMaterial | 116/116 | 124/124 | 1/1 |
 | FontFile | 106/106 | 17/22 | 0/0 |
 | PopupMenu | 102/102 | 14/14 | 4/4 |
 | LineEdit | 97/97 | 36/36 | 4/4 |
 | TileSet | 90/90 | 5/5 | 0/0 |
-| CPUParticles3D | 90/90 | 39/77 | 1/1 |
+| CPUParticles3D | 90/90 | 77/77 | 1/1 |
 | NavigationAgent3D | 86/86 | 33/33 | 6/6 |
 | ItemList | 85/85 | 18/18 | 5/5 |
 | Animation | 85/85 | 4/4 | 0/0 |
@@ -80,7 +80,7 @@ These classes have every method covered by the conservative generator. Promotion
 | OS | 83/83 | 3/3 | 0/0 |
 | NavigationAgent2D | 80/80 | 30/30 | 6/6 |
 | Input | 77/77 | 5/5 | 1/1 |
-| CPUParticles2D | 77/77 | 33/69 | 1/1 |
+| CPUParticles2D | 77/77 | 69/69 | 1/1 |
 | Image | 76/76 | 0/1 | 0/0 |
 | AccessibilityServer | 75/75 | 0/0 | 0/0 |
 | Tree | 72/72 | 16/16 | 15/15 |
@@ -91,9 +91,9 @@ These classes have every method covered by the conservative generator. Promotion
 | NativeMenu | 69/69 | 0/0 | 0/0 |
 | FileAccess | 68/68 | 1/1 | 0/0 |
 | LookAtModifier3D | 63/63 | 30/30 | 0/0 |
-| GPUParticles3D | 63/63 | 28/32 | 1/1 |
+| GPUParticles3D | 63/63 | 32/32 | 1/1 |
 | TextParagraph | 62/62 | 13/13 | 0/0 |
-| Label3D | 61/61 | 29/33 | 0/0 |
+| Label3D | 61/61 | 33/33 | 0/0 |
 | TabBar | 60/60 | 14/14 | 8/8 |
 | NavigationMesh | 58/58 | 25/26 | 0/0 |
 | GPUParticles2D | 57/57 | 26/26 | 1/1 |
@@ -102,14 +102,14 @@ These classes have every method covered by the conservative generator. Promotion
 | GridMap | 56/56 | 13/13 | 2/2 |
 | TileData | 54/54 | 11/11 | 1/1 |
 | AnimationPlayer | 54/54 | 12/12 | 2/2 |
-| Camera2D | 52/52 | 20/28 | 0/0 |
+| Camera2D | 52/52 | 28/28 | 0/0 |
 | TabContainer | 51/51 | 12/12 | 7/7 |
 
 ## Near Ready Classes
 
 | Class | Methods | Properties | Signals | Skips |
 | --- | ---: | ---: | ---: | ---: |
-| Window | 133/134 (99.3%) | 28/41 | 16/16 | 1 |
+| Window | 133/134 (99.3%) | 41/41 | 16/16 | 1 |
 | CanvasItem | 93/94 (98.9%) | 16/16 | 4/4 | 1 |
 | RigidBody3D | 59/60 (98.3%) | 23/23 | 5/5 | 1 |
 | RigidBody2D | 58/59 (98.3%) | 23/23 | 5/5 | 1 |
@@ -125,7 +125,7 @@ These classes have every method covered by the conservative generator. Promotion
 | EditorProperty | 35/37 (94.6%) | 12/12 | 13/13 | 2 |
 | AStarGrid2D | 33/35 (94.3%) | 9/9 | 0/0 | 2 |
 | CompositorEffect | 14/15 (93.3%) | 7/7 | 0/0 | 1 |
-| Control | 181/195 (92.8%) | 49/63 | 10/10 | 14 |
+| Control | 181/195 (92.8%) | 61/63 | 10/10 | 14 |
 | PrimitiveMesh | 12/13 (92.3%) | 5/5 | 0/0 | 1 |
 | VisualInstance3D | 12/13 (92.3%) | 3/3 | 0/0 | 1 |
 | BaseButton | 23/25 (92.0%) | 10/10 | 4/4 | 2 |
@@ -152,18 +152,18 @@ These classes have every method covered by the conservative generator. Promotion
 | TextEdit | 249/255 | 47/47 | 7/7 | 6 |
 | TextServer | 244/244 | 0/0 | 0/0 | 0 |
 | Environment | 188/188 | 93/93 | 0/0 | 0 |
-| Control | 181/195 | 49/63 | 10/10 | 14 |
+| Control | 181/195 | 61/63 | 10/10 | 14 |
 | PhysicsServer3D | 175/175 | 0/0 | 0/0 | 0 |
-| BaseMaterial3D | 154/154 | 74/131 | 0/0 | 0 |
+| BaseMaterial3D | 154/154 | 131/131 | 0/0 | 0 |
 | NavigationServer3D | 154/154 | 0/0 | 3/3 | 0 |
 | RichTextLabel | 138/138 | 30/30 | 4/4 | 0 |
 | NavigationServer2D | 137/137 | 0/0 | 3/3 | 0 |
 | RenderingDevice | 135/135 | 0/0 | 0/0 | 0 |
-| Window | 133/134 | 28/41 | 16/16 | 1 |
-| Viewport | 130/130 | 46/50 | 2/2 | 0 |
+| Window | 133/134 | 41/41 | 16/16 | 1 |
+| Viewport | 130/130 | 50/50 | 2/2 | 0 |
 | TreeItem | 125/125 | 4/4 | 0/0 | 0 |
 | Node | 121/133 | 14/14 | 11/11 | 12 |
 | PhysicsServer2D | 119/119 | 0/0 | 0/0 | 0 |
-| ParticleProcessMaterial | 116/116 | 53/124 | 1/1 | 0 |
+| ParticleProcessMaterial | 116/116 | 124/124 | 1/1 | 0 |
 | CodeEdit | 114/117 | 22/22 | 5/5 | 3 |
 | FontFile | 106/106 | 17/22 | 0/0 | 0 |

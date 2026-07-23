@@ -42,6 +42,30 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
         @JvmName("setNinePatchStretchProperty")
         set(value) = setNinePatchStretch(value)
 
+    var stretchMarginLeft: Int
+        @JvmName("stretchMarginLeftProperty")
+        get() = getStretchMargin(0L)
+        @JvmName("setStretchMarginLeftProperty")
+        set(value) = setStretchMargin(0L, value)
+
+    var stretchMarginTop: Int
+        @JvmName("stretchMarginTopProperty")
+        get() = getStretchMargin(1L)
+        @JvmName("setStretchMarginTopProperty")
+        set(value) = setStretchMargin(1L, value)
+
+    var stretchMarginRight: Int
+        @JvmName("stretchMarginRightProperty")
+        get() = getStretchMargin(2L)
+        @JvmName("setStretchMarginRightProperty")
+        set(value) = setStretchMargin(2L, value)
+
+    var stretchMarginBottom: Int
+        @JvmName("stretchMarginBottomProperty")
+        get() = getStretchMargin(3L)
+        @JvmName("setStretchMarginBottomProperty")
+        set(value) = setStretchMargin(3L, value)
+
     var textureUnder: Texture2D?
         @JvmName("textureUnderProperty")
         get() = getUnderTexture()

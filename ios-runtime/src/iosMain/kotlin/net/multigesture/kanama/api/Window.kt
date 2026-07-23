@@ -87,6 +87,84 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         @JvmName("setExclusiveProperty")
         set(value) = setExclusive(value)
 
+    var unresizable: Boolean
+        @JvmName("unresizableProperty")
+        get() = getFlag(0L)
+        @JvmName("setUnresizableProperty")
+        set(value) = setFlag(0L, value)
+
+    var borderless: Boolean
+        @JvmName("borderlessProperty")
+        get() = getFlag(1L)
+        @JvmName("setBorderlessProperty")
+        set(value) = setFlag(1L, value)
+
+    var alwaysOnTop: Boolean
+        @JvmName("alwaysOnTopProperty")
+        get() = getFlag(2L)
+        @JvmName("setAlwaysOnTopProperty")
+        set(value) = setFlag(2L, value)
+
+    var transparent: Boolean
+        @JvmName("transparentProperty")
+        get() = getFlag(3L)
+        @JvmName("setTransparentProperty")
+        set(value) = setFlag(3L, value)
+
+    var unfocusable: Boolean
+        @JvmName("unfocusableProperty")
+        get() = getFlag(4L)
+        @JvmName("setUnfocusableProperty")
+        set(value) = setFlag(4L, value)
+
+    var popupWindow: Boolean
+        @JvmName("popupWindowProperty")
+        get() = getFlag(5L)
+        @JvmName("setPopupWindowProperty")
+        set(value) = setFlag(5L, value)
+
+    var extendToTitle: Boolean
+        @JvmName("extendToTitleProperty")
+        get() = getFlag(6L)
+        @JvmName("setExtendToTitleProperty")
+        set(value) = setFlag(6L, value)
+
+    var mousePassthrough: Boolean
+        @JvmName("mousePassthroughProperty")
+        get() = getFlag(7L)
+        @JvmName("setMousePassthroughProperty")
+        set(value) = setFlag(7L, value)
+
+    var sharpCorners: Boolean
+        @JvmName("sharpCornersProperty")
+        get() = getFlag(8L)
+        @JvmName("setSharpCornersProperty")
+        set(value) = setFlag(8L, value)
+
+    var excludeFromCapture: Boolean
+        @JvmName("excludeFromCaptureProperty")
+        get() = getFlag(9L)
+        @JvmName("setExcludeFromCaptureProperty")
+        set(value) = setFlag(9L, value)
+
+    var popupWmHint: Boolean
+        @JvmName("popupWmHintProperty")
+        get() = getFlag(10L)
+        @JvmName("setPopupWmHintProperty")
+        set(value) = setFlag(10L, value)
+
+    var minimizeDisabled: Boolean
+        @JvmName("minimizeDisabledProperty")
+        get() = getFlag(11L)
+        @JvmName("setMinimizeDisabledProperty")
+        set(value) = setFlag(11L, value)
+
+    var maximizeDisabled: Boolean
+        @JvmName("maximizeDisabledProperty")
+        get() = getFlag(12L)
+        @JvmName("setMaximizeDisabledProperty")
+        set(value) = setFlag(12L, value)
+
     var forceNative: Boolean
         @JvmName("forceNativeProperty")
         get() = getForceNative()

@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
@@ -10,6 +11,36 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ConeTwistJoint3D
  */
 class ConeTwistJoint3D(handle: MemorySegment) : Joint3D(handle) {
+    var swingSpan: Double
+        @JvmName("swingSpanProperty")
+        get() = getParam(0L)
+        @JvmName("setSwingSpanProperty")
+        set(value) = setParam(0L, value)
+
+    var twistSpan: Double
+        @JvmName("twistSpanProperty")
+        get() = getParam(1L)
+        @JvmName("setTwistSpanProperty")
+        set(value) = setParam(1L, value)
+
+    var bias: Double
+        @JvmName("biasProperty")
+        get() = getParam(2L)
+        @JvmName("setBiasProperty")
+        set(value) = setParam(2L, value)
+
+    var softness: Double
+        @JvmName("softnessProperty")
+        get() = getParam(3L)
+        @JvmName("setSoftnessProperty")
+        set(value) = setParam(3L, value)
+
+    var relaxation: Double
+        @JvmName("relaxationProperty")
+        get() = getParam(4L)
+        @JvmName("setRelaxationProperty")
+        set(value) = setParam(4L, value)
+
     /**
      * Twist is the rotation around the twist axis, this value defined how far the joint can twist.
      * Twist is locked if below 0.05.

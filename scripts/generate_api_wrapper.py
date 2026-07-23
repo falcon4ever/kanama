@@ -696,16 +696,6 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
     fun commit(): ArrayMesh? = commit(null)
 """.strip("\n"),
-    "Light3D": """
-    // ── Kanama iOS sugar (generator custom-section, not from Godot docs) ───────
-    // lightEnergy is an indexed (get_param/set_param) property; the property renderer
-    // skips indexed getters, so expose it explicitly to match the Android/desktop API.
-    var lightEnergy: Double
-        @JvmName("lightEnergyProperty")
-        get() = getParam(PARAM_ENERGY)
-        @JvmName("setLightEnergyProperty")
-        set(value) = setParam(PARAM_ENERGY, value)
-""".strip("\n"),
     "Viewport": """
     // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d);
     // match the Android aliases so shared demo code resolves on both backends.
@@ -2060,14 +2050,18 @@ def property_setter_type(
     object_types: set[str],
     wrapper_classes: set[str],
     api_classes: dict[str, ApiClass],
+    value_slot: int = 0,
 ) -> str | None:
-    if not setter_method.argument_types:
+    # `value_slot` is the argument index that carries the property's value. It is 0 for plain
+    # setters and 1 for indexed setters (set_texture(param, texture)), where slot 0 is the bound
+    # index. Arguments past the value slot must all default (nothing extra to pass).
+    if len(setter_method.argument_types) <= value_slot:
         return None
-    if any(default is None for default in setter_method.argument_defaults[1:]):
+    if any(default is None for default in setter_method.argument_defaults[value_slot + 1 :]):
         return None
     if setter_method.logical_return_kind(object_types) != "void":
         return None
-    setter_kind = setter_method.logical_arg_kinds(object_types)[0]
+    setter_kind = setter_method.logical_arg_kinds(object_types)[value_slot]
     # Route through the same contextual policy the method renderer uses, so a nullable Object setter
     # (e.g. Node.set_owner(owner: Node?)) yields a nullable property type — otherwise render_property
     # sees a Node? getter and a Node setter, the types mismatch, and it suppresses the setter (the
@@ -2075,10 +2069,10 @@ def property_setter_type(
     return kotlin_parameter_type(
         class_name,
         setter_method.name,
-        setter_method.argument_names[0],
-        setter_method.argument_metas[0],
+        setter_method.argument_names[value_slot],
+        setter_method.argument_metas[value_slot],
         setter_kind,
-        setter_method.argument_types[0],
+        setter_method.argument_types[value_slot],
         wrapper_classes,
         api_classes,
     )
@@ -2102,7 +2096,17 @@ def render_property(
     getter_method = first_method(cls, getter)
     if getter_method is None:
         return None
-    if getter_method.argument_types:
+    # Indexed properties (Godot idiom: albedo_texture -> get_texture(param)/set_texture(param, tex),
+    # light_energy -> get_param/set_param, ...) carry an "index" bound as the accessor's first
+    # argument. The getter then takes exactly the index (1 arg) and the setter takes index + value
+    # (2 args); we pre-bind the index literal and treat the trailing slot as the property value.
+    # Without an index a getter that takes arguments is not a property accessor we can express.
+    prop_index = prop.get("index")
+    has_index = isinstance(prop_index, int)
+    if has_index:
+        if len(getter_method.argument_types) != 1:
+            return None
+    elif getter_method.argument_types:
         return None
     raw_property_name = str(prop.get("name") or "")
     if IOS_AUDIT_ONLY and (cls.name, raw_property_name) in IOS_PROPERTY_SUPPRESS:
@@ -2119,12 +2123,36 @@ def render_property(
         api_classes,
         api_dir,
     )
-    getter_call = f"{method_function_name(cls.name, getter)}()"
+    # The bound index literal must match the accessor's first-arg Kotlin type: enum/int64 indices
+    # are `Long` (getTexture(0L)), plain int32 indices are `Int` (getStream(0)). Plain accessors
+    # take no index.
+    if has_index:
+        index_kotlin = kotlin_parameter_type(
+            cls.name,
+            getter,
+            getter_method.argument_names[0],
+            getter_method.argument_metas[0],
+            getter_method.logical_arg_kinds(object_types)[0],
+            getter_method.argument_types[0],
+            wrapper_classes,
+            api_classes,
+        )
+        index_arg = f"{prop_index}" if index_kotlin == "Int" else f"{prop_index}L"
+    else:
+        index_arg = ""
+    value_slot = 1 if has_index else 0
+    getter_call = f"{method_function_name(cls.name, getter)}({index_arg})"
 
     if setter and setter in emitted_methods:
         setter_method = first_method(cls, setter)
+        # property_setter_type gates validity: it needs an argument at `value_slot` (so an indexed
+        # setter must carry index+value), a void return, and defaults on every argument past the
+        # value — which allows plain setters with trailing defaulted args (set_position(pos,
+        # keep_offsets = false)) to stay writable.
         setter_type = (
-            property_setter_type(cls.name, setter_method, object_types, wrapper_classes, api_classes)
+            property_setter_type(
+                cls.name, setter_method, object_types, wrapper_classes, api_classes, value_slot
+            )
             if setter_method is not None
             else None
         )
@@ -2132,7 +2160,8 @@ def render_property(
             setter = ""
 
     if setter and setter in emitted_methods:
-        setter_call = f"{method_function_name(cls.name, setter)}(value)"
+        setter_args = f"{index_arg}, value" if has_index else "value"
+        setter_call = f"{method_function_name(cls.name, setter)}({setter_args})"
         return "\n".join(
             [
                 f"    var {property_name}: {property_type}",

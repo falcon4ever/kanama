@@ -30,6 +30,30 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setBillboardProperty")
         set(value) = setBillboardMode(value)
 
+    var shaded: Boolean
+        @JvmName("shadedProperty")
+        get() = getDrawFlag(0L)
+        @JvmName("setShadedProperty")
+        set(value) = setDrawFlag(0L, value)
+
+    var doubleSided: Boolean
+        @JvmName("doubleSidedProperty")
+        get() = getDrawFlag(1L)
+        @JvmName("setDoubleSidedProperty")
+        set(value) = setDrawFlag(1L, value)
+
+    var noDepthTest: Boolean
+        @JvmName("noDepthTestProperty")
+        get() = getDrawFlag(2L)
+        @JvmName("setNoDepthTestProperty")
+        set(value) = setDrawFlag(2L, value)
+
+    var fixedSize: Boolean
+        @JvmName("fixedSizeProperty")
+        get() = getDrawFlag(3L)
+        @JvmName("setFixedSizeProperty")
+        set(value) = setDrawFlag(3L, value)
+
     var alphaCut: Long
         @JvmName("alphaCutProperty")
         get() = getAlphaCutMode()

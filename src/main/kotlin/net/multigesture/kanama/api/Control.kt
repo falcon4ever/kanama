@@ -38,6 +38,54 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         @JvmName("setClipContentsProperty")
         set(value) = setClipContents(value)
 
+    var anchorLeft: Double
+        @JvmName("anchorLeftProperty")
+        get() = getAnchor(0L)
+        @JvmName("setAnchorLeftProperty")
+        set(value) = setAnchor(0L, value)
+
+    var anchorTop: Double
+        @JvmName("anchorTopProperty")
+        get() = getAnchor(1L)
+        @JvmName("setAnchorTopProperty")
+        set(value) = setAnchor(1L, value)
+
+    var anchorRight: Double
+        @JvmName("anchorRightProperty")
+        get() = getAnchor(2L)
+        @JvmName("setAnchorRightProperty")
+        set(value) = setAnchor(2L, value)
+
+    var anchorBottom: Double
+        @JvmName("anchorBottomProperty")
+        get() = getAnchor(3L)
+        @JvmName("setAnchorBottomProperty")
+        set(value) = setAnchor(3L, value)
+
+    var offsetLeft: Double
+        @JvmName("offsetLeftProperty")
+        get() = getOffset(0L)
+        @JvmName("setOffsetLeftProperty")
+        set(value) = setOffset(0L, value)
+
+    var offsetTop: Double
+        @JvmName("offsetTopProperty")
+        get() = getOffset(1L)
+        @JvmName("setOffsetTopProperty")
+        set(value) = setOffset(1L, value)
+
+    var offsetRight: Double
+        @JvmName("offsetRightProperty")
+        get() = getOffset(2L)
+        @JvmName("setOffsetRightProperty")
+        set(value) = setOffset(2L, value)
+
+    var offsetBottom: Double
+        @JvmName("offsetBottomProperty")
+        get() = getOffset(3L)
+        @JvmName("setOffsetBottomProperty")
+        set(value) = setOffset(3L, value)
+
     var growHorizontal: Long
         @JvmName("growHorizontalProperty")
         get() = getHGrowDirection()
@@ -199,6 +247,30 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         get() = getTooltipAutoTranslateMode()
         @JvmName("setTooltipAutoTranslateModeProperty")
         set(value) = setTooltipAutoTranslateMode(value)
+
+    var focusNeighborLeft: NodePath
+        @JvmName("focusNeighborLeftProperty")
+        get() = getFocusNeighbor(0L)
+        @JvmName("setFocusNeighborLeftProperty")
+        set(value) = setFocusNeighbor(0L, value)
+
+    var focusNeighborTop: NodePath
+        @JvmName("focusNeighborTopProperty")
+        get() = getFocusNeighbor(1L)
+        @JvmName("setFocusNeighborTopProperty")
+        set(value) = setFocusNeighbor(1L, value)
+
+    var focusNeighborRight: NodePath
+        @JvmName("focusNeighborRightProperty")
+        get() = getFocusNeighbor(2L)
+        @JvmName("setFocusNeighborRightProperty")
+        set(value) = setFocusNeighbor(2L, value)
+
+    var focusNeighborBottom: NodePath
+        @JvmName("focusNeighborBottomProperty")
+        get() = getFocusNeighbor(3L)
+        @JvmName("setFocusNeighborBottomProperty")
+        set(value) = setFocusNeighbor(3L, value)
 
     var focusNext: NodePath
         @JvmName("focusNextProperty")
