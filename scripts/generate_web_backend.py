@@ -87,6 +87,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     50: {},
     51: {"ret": "browser"},
     52: {},
+    53: {},
 }
 
 
@@ -139,6 +140,18 @@ def _only(calls: list[BackendCallPolicy]) -> BackendCallPolicy:
     return calls[0]
 
 
+def _opcode_guard(calls: list[BackendCallPolicy]) -> str:
+    """Membership guard over a shape's admitted opcodes.
+
+    Set membership (not a contiguous range) so a shape can admit non-adjacent opcodes as the corpus
+    grows — e.g. Node2D.set_rotation joining the audio DOUBLE_ARG family.
+    """
+    opcodes = [c.opcode for c in calls]
+    if len(opcodes) == 1:
+        return f"descriptor.opcode == {opcodes[0]}"
+    return "descriptor.opcode in setOf(" + ", ".join(str(o) for o in opcodes) + ")"
+
+
 def body_BOOL_RET_INT(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -170,12 +183,9 @@ def body_BOOL_ARG(calls):
 
 
 def body_DOUBLE_ARG(calls):
-    lo = calls[0].opcode
-    hi = calls[-1].opcode
-    span = f"descriptor.opcode == {lo}" if lo == hi else f"descriptor.opcode in {lo}..{hi}"
     return [
         f"require(descriptor.executionMode == {_QUEUED})",
-        f"require({span})",
+        f"require({_opcode_guard(calls)})",
         "require(value.isFinite()) {",
         '"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"',
         "}",

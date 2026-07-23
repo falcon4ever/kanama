@@ -697,6 +697,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue the end-of-iteration quit request. The Kotlin Long must fit Godot's exact int32 exit-code ABI before any backend call or Web command is emitted.",
       "introducedBy": "57e-group8"
+    },
+    {
+      "opcode": 53,
+      "scope": "class",
+      "className": "Node2D",
+      "methodName": "set_rotation",
+      "hash": 373806689,
+      "arguments": ["float"],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue one finite Float64 radians value; the Web command applier writes Node2D.rotation.",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

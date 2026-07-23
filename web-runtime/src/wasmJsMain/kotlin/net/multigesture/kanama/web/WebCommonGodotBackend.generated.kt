@@ -85,7 +85,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in 48..50)
+    require(descriptor.opcode in setOf(48, 49, 50, 53))
     require(value.isFinite()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
     }

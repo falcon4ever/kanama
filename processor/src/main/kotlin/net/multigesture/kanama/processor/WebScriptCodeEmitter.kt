@@ -886,6 +886,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 53 and target_object is Node2D:")
+    appendLine("\t\t\t(target_object as Node2D).rotation = bytes.decode_double(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 32 and target_object is CanvasItem:")
     appendLine("\t\t\tvar target := target_object as CanvasItem")
     appendLine(

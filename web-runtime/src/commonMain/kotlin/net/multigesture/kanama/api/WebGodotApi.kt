@@ -160,6 +160,12 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
         GodotVector2(value.x.toFloat(), value.y.toFloat())
     }
 
+  var rotation: Double
+    get() = unsupportedWebGameplayFamily("Node2D.get_rotation")
+    set(value) {
+      Node2DBackendContractProbe(backendHandle).setRotation(value)
+    }
+
   fun getLocalMousePosition(): Vector2 =
     CanvasItemInputBackendContractProbe(backendHandle).getLocalMousePosition().let { value ->
       Vector2(value.x.toDouble(), value.y.toDouble())
