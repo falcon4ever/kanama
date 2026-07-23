@@ -133,6 +133,49 @@ tasks.register<Exec>("generateWebGameplayCoverage") {
     )
 }
 
+// Task 60a: the Web backend dispatch is generated from the shared platform_backend_calls.json plus
+// the Web-local policy in generate_web_backend.py. `checkWebBackendDispatch` fails loud on drift;
+// `generateWebBackendDispatch` rewrites the committed file (run ktfmtFormat after).
+val webBackendDispatchGenerator = rootProject.file("scripts/generate_web_backend.py")
+val webBackendPolicy = rootProject.file("scripts/platform_backend_calls.json")
+val webBackendDispatchFile =
+    layout.projectDirectory.file(
+        "src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt"
+    )
+
+tasks.register<Exec>("generateWebBackendDispatch") {
+    group = "verification"
+    description = "Regenerates the Kotlin/Wasm Web backend dispatch from the shared backend contract."
+    inputs.file(webBackendDispatchGenerator)
+    inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
+    inputs.file(webBackendPolicy)
+    outputs.file(webBackendDispatchFile)
+    commandLine(
+        "python3",
+        webBackendDispatchGenerator.absolutePath,
+        "--output",
+        webBackendDispatchFile.asFile.absolutePath,
+    )
+}
+
+tasks.register<Exec>("checkWebBackendDispatch") {
+    group = "verification"
+    description = "Fails if the generated Web backend dispatch drifts from the shared contract."
+    inputs.file(webBackendDispatchGenerator)
+    inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
+    inputs.file(webBackendPolicy)
+    inputs.file(webBackendDispatchFile)
+    commandLine(
+        "python3",
+        webBackendDispatchGenerator.absolutePath,
+        "--output",
+        webBackendDispatchFile.asFile.absolutePath,
+        "--check",
+    )
+}
+
+tasks.named("check") { dependsOn("checkWebBackendDispatch") }
+
 tasks.register("stageWebSpikeGodotProject") {
     group = "verification"
     description = "Creates a disposable Godot project with generated Web proxies."
