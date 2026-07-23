@@ -71,10 +71,13 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 43)
+    require(descriptor.opcode in setOf(43, 54, 55, 56))
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
-    webWriteEmittingSnapshot(objectId, value)
+    when (descriptor.opcode) {
+      43 -> webWriteEmittingSnapshot(objectId, value)
+      else -> {}
+    }
   }
 
   override fun invokeDoubleArg(
@@ -341,7 +344,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 47)
+    require(descriptor.opcode in setOf(47, 57))
     commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
   }
 

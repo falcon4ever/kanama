@@ -77,7 +77,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     40: {},
     41: {"ret": "existing"},
     42: {"ret": "existing"},
-    43: {},
+    43: {"bool_snapshot": "emitting"},
     44: {},
     45: {},
     46: {},
@@ -88,6 +88,12 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     51: {"ret": "browser"},
     52: {},
     53: {},
+    54: {},
+    55: {},
+    56: {},
+    57: {},
+    58: {},
+    59: {},
 }
 
 
@@ -172,14 +178,20 @@ def body_BOOL_RET_HANDLE(calls):
 
 
 def body_BOOL_ARG(calls):
-    op = _only(calls).opcode
-    return [
+    lines = [
         f"require(descriptor.executionMode == {_QUEUED})",
-        f"require(descriptor.opcode == {op})",
+        f"require({_opcode_guard(calls)})",
         "val objectId = receiver.webId()",
         "commands.appendBoolMutation(descriptor.opcode, objectId, value)",
-        "webWriteEmittingSnapshot(objectId, value)",
     ]
+    snapshot_arms = [c for c in calls if WEB_POLICY[c.opcode].get("bool_snapshot") == "emitting"]
+    if snapshot_arms:
+        lines.append("when (descriptor.opcode) {")
+        for c in snapshot_arms:
+            lines.append(f"{c.opcode} -> webWriteEmittingSnapshot(objectId, value)")
+        lines.append("else -> {}")
+        lines.append("}")
+    return lines
 
 
 def body_DOUBLE_ARG(calls):
@@ -563,10 +575,9 @@ def body_NOARGS_RET_LONG(calls):
 
 
 def body_STRINGNAME_ARG(calls):
-    op = _only(calls).opcode
     return [
         f"require(descriptor.executionMode == {_QUEUED})",
-        f"require(descriptor.opcode == {op})",
+        f"require({_opcode_guard(calls)})",
         "commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)",
     ]
 

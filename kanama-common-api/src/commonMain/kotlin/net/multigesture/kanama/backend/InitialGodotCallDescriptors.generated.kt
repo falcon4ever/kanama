@@ -586,4 +586,70 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val CANVASITEM_SET_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 54,
+      className = "CanvasItem",
+      methodName = "set_visible",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_SET_FLIP_V =
+    GodotCallDescriptor(
+      opcode = 55,
+      className = "AnimatedSprite2D",
+      methodName = "set_flip_v",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_SET_FLIP_H =
+    GodotCallDescriptor(
+      opcode = 56,
+      className = "AnimatedSprite2D",
+      methodName = "set_flip_h",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_SET_ANIMATION =
+    GodotCallDescriptor(
+      opcode = 57,
+      className = "AnimatedSprite2D",
+      methodName = "set_animation",
+      hash = 3304788590L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_PLAY =
+    GodotCallDescriptor(
+      opcode = 58,
+      className = "AnimatedSprite2D",
+      methodName = "play",
+      hash = 3269405555L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_STOP =
+    GodotCallDescriptor(
+      opcode = 59,
+      className = "AnimatedSprite2D",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

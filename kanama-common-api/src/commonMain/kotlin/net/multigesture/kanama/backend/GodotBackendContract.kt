@@ -1143,6 +1143,50 @@ class CanvasItemBackendContractProbe(private val handle: GodotHandle) {
         value,
       )
     }
+
+  fun setVisible(visible: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.CANVASITEM_SET_VISIBLE,
+      handle,
+      visible,
+    )
+  }
+}
+
+/** Typed AnimatedSprite2D slice used by dodge-the-creeps player/mob animation. */
+@InternalKanamaBackendApi
+class AnimatedSprite2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setFlipV(flip: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_SET_FLIP_V,
+      handle,
+      flip,
+    )
+  }
+
+  fun setFlipH(flip: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_SET_FLIP_H,
+      handle,
+      flip,
+    )
+  }
+
+  fun setAnimation(animation: String) {
+    GodotBackendCalls.invokeStringNameArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_SET_ANIMATION,
+      handle,
+      animation,
+    )
+  }
+
+  fun play() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.ANIMATEDSPRITE2D_PLAY, handle)
+  }
+
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.ANIMATEDSPRITE2D_STOP, handle)
+  }
 }
 
 /** Typed board-construction slice shared by Match3 across every backend. */

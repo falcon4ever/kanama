@@ -12,13 +12,14 @@
   const KANAMA_WEB_PROTOCOL_VERSION = 6;
 
   function commandWordCount(opcode) {
-    if (opcode === 5 || opcode === 15) return 2;
+    if (opcode === 5 || opcode === 15 || opcode === 58 || opcode === 59) return 2;
     if (
       opcode === 14 ||
       opcode === 16 ||
       opcode === 46 ||
       opcode === 47 ||
-      opcode === 52
+      opcode === 52 ||
+      opcode === 57
     ) return 3;
     if (
       opcode === 3 ||
@@ -28,6 +29,9 @@
       opcode === 49 ||
       opcode === 50 ||
       opcode === 53 ||
+      opcode === 54 ||
+      opcode === 55 ||
+      opcode === 56 ||
       opcode === 100
     ) return 4;
     if (opcode === 13) return 5;

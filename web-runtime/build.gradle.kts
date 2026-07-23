@@ -111,6 +111,9 @@ val webGameplayCoverageSources =
         layout.projectDirectory.file(
             "src/commonMain/kotlin/net/multigesture/kanama/api/WebMatch3Api.kt"
         ),
+        layout.projectDirectory.file(
+            "src/commonMain/kotlin/net/multigesture/kanama/api/WebDodgeApi.kt"
+        ),
     )
 val webDistribution = layout.buildDirectory.dir("dist/wasmJs/productionExecutable")
 

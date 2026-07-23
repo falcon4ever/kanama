@@ -129,6 +129,14 @@ open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : 
     Node2DBackendContractProbe(backendHandle).queueRedraw()
   }
 
+  fun show() {
+    CanvasItemBackendContractProbe(backendHandle).setVisible(true)
+  }
+
+  fun hide() {
+    CanvasItemBackendContractProbe(backendHandle).setVisible(false)
+  }
+
   fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
     Node2DBackendContractProbe(backendHandle)
       .drawTexture(
