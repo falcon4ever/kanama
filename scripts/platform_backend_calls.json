@@ -893,6 +893,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue an interned String; the Web command applier writes Label.text (a plain String, not a StringName, though the transport is the shared interned-string command).",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 67,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "set_deferred",
+      "hash": 3776071444,
+      "arguments": ["StringName", "Variant"],
+      "returnType": "void",
+      "shape": "STRINGNAME_BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a deferred property set with a Boolean Variant value; the Web command applier calls Object.set_deferred(property, flag). Only the Boolean slice of set_deferred is admitted.",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

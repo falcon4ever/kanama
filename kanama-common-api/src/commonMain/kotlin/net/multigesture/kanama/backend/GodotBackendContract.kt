@@ -47,6 +47,7 @@ enum class GodotCallShape {
   NOARGS_RET_DOUBLE,
   NOARGS_RET_LONG,
   STRINGNAME_ARG,
+  STRINGNAME_BOOL_ARG,
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
   COLOR_ARG,
@@ -305,6 +306,16 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: String,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeStringNameBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Boolean,
   ) {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
@@ -719,6 +730,24 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     selected.invokeStringNameArg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeStringNameBoolArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: Boolean,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_BOOL_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameBoolArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
+    )
   }
 
   fun invokeStringNameVector2iRetInt(
@@ -1213,6 +1242,16 @@ class CollisionShape2DBackendContractProbe(private val handle: GodotHandle) {
       InitialGodotCallDescriptors.COLLISIONSHAPE2D_SET_DISABLED,
       handle,
       disabled,
+    )
+  }
+
+  /** Object.set_deferred with a Boolean value (the only Variant dodge defers). */
+  fun setDeferredBool(property: String, value: Boolean) {
+    GodotBackendCalls.invokeStringNameBoolArg(
+      InitialGodotCallDescriptors.OBJECT_SET_DEFERRED,
+      handle,
+      property,
+      value,
     )
   }
 }

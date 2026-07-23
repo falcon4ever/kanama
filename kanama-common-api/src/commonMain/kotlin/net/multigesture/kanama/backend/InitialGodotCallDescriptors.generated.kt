@@ -729,4 +729,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val OBJECT_SET_DEFERRED =
+    GodotCallDescriptor(
+      opcode = 67,
+      className = "Object",
+      methodName = "set_deferred",
+      hash = 3776071444L,
+      shape = GodotCallShape.STRINGNAME_BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

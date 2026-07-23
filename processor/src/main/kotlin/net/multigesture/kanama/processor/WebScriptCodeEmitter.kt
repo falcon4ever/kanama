@@ -951,6 +951,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as Label).text = String(_kanama_bridge.resolveCommandStringName(text_id))")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 67 and target_object != null:")
+    appendLine("\t\t\tvar property_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar property_name := String(_kanama_bridge.resolveCommandStringName(property_id))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.set_deferred(StringName(property_name), bytes.decode_s32(offset + 12) != 0)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 32 and target_object is CanvasItem:")
     appendLine("\t\t\tvar target := target_object as CanvasItem")
     appendLine(

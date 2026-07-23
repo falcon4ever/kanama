@@ -101,6 +101,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     64: {},
     65: {},
     66: {},
+    67: {},
 }
 
 
@@ -594,6 +595,14 @@ def body_STRINGNAME_ARG(calls):
     ]
 
 
+def body_STRINGNAME_BOOL_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)",
+    ]
+
+
 def body_STRINGNAME_VECTOR2I_RET_INT(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -741,6 +750,10 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "NOARGS_RET_DOUBLE": (["receiver: GodotHandle"], "Double"),
     "NOARGS_RET_LONG": (["receiver: GodotHandle"], "Long"),
     "STRINGNAME_ARG": (["receiver: GodotHandle", "value: String"], ""),
+    "STRINGNAME_BOOL_ARG": (
+        ["receiver: GodotHandle", "name: String", "value: Boolean"],
+        "",
+    ),
     "STRINGNAME_VECTOR2I_RET_INT": (
         ["receiver: GodotHandle", "name: String", "value: GodotVector2i"],
         "Int",
@@ -823,6 +836,7 @@ EMIT_ORDER = [
     "OBJECT_BOOL_LONG_ARGS",
     "OBJECT_ARG",
     "STRINGNAME_ARG",
+    "STRINGNAME_BOOL_ARG",
     "NODEPATH_RET_HANDLE",
     "LONG_RET_HANDLE",
     "NOARGS_RET_HANDLE",

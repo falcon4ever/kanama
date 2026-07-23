@@ -44,6 +44,7 @@
       opcode === 61 ||
       opcode === 62 ||
       opcode === 65 ||
+      opcode === 67 ||
       opcode === 100
     ) return 4;
     if (opcode === 13) return 5;
