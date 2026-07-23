@@ -43,7 +43,7 @@ class ENetMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
     companion object {
         @JvmStatic
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(ObjectCalls.constructObject("ENetMultiplayerPeer"))
+            ENetMultiplayerPeer(ObjectCalls.constructObject("ENetMultiplayerPeer")).also { it.claimConstructedOwnership() }
 
         private const val CREATE_SERVER_HASH = 2917761309L
         private val createServerBind by lazy {

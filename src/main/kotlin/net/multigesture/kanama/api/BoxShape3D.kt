@@ -45,7 +45,7 @@ class BoxShape3D internal constructor(handle: MemorySegment) : Shape3D(handle) {
 
         @JvmStatic
         fun create(): BoxShape3D =
-            BoxShape3D(ObjectCalls.constructObject("BoxShape3D"))
+            BoxShape3D(ObjectCalls.constructObject("BoxShape3D")).also { it.claimConstructedOwnership() }
 
         @JvmStatic
         fun fromResource(value: Resource): BoxShape3D? =

@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://NonToolScript.kt" id="4"]
 [ext_resource type="Script" path="res://ProcessDisableSmoke.kt" id="5"]
 [ext_resource type="Script" path="res://ResourceForgeSmoke.kt" id="6"]
+[ext_resource type="Script" path="res://MaterialHandoffSmoke.kt" id="7"]
 
 [node name="Node" type="Node" unique_id=1909033900]
 script = ExtResource("1")
@@ -98,3 +99,6 @@ script = ExtResource("5")
 
 [node name="ResourceForgeSmokeNode" type="Node" parent="." unique_id=771122334]
 script = ExtResource("6")
+
+[node name="MaterialHandoffSmokeNode" type="Node" parent="." unique_id=771122335]
+script = ExtResource("7")

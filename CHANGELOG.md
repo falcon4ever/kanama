@@ -74,6 +74,18 @@ versioning once public releases begin.
 
 ### Fixed
 
+- A resource created with `X.create()`, handed to the engine, and then released
+  via `close()`/`use { }` is no longer freed out from under the engine (issue
+  #91). Assigning `StandardMaterial3D.create()` to a `MeshInstance3D` surface (or
+  material) override and closing it dropped the engine's only reference, so the
+  material vanished from the saved scene (`Parameter "material" is null`).
+  `create()` factories now return an **owning** wrapper (they claim their
+  reference via `init_ref`), so `close()` releases only the wrapper's reference
+  while the engine keeps its own. **Contract change: close what you create** — a
+  created resource you never `close()` (or `use { }`) now leaks its reference;
+  prefer `X.create().use { … }`. See the RefCounted lifetime notes in the
+  wrapper-maintenance guide.
+
 - Saving a freshly created resource with `ResourceSaver.save` no longer crashes
   the JVM (issue #81). A resource from an `X.create()` factory (e.g.
   `PackedScene.create()`) holds only Godot's construction placeholder reference;

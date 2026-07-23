@@ -370,7 +370,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
 
         @JvmStatic
         fun create(): MeshDataTool =
-            MeshDataTool(ObjectCalls.constructObject("MeshDataTool"))
+            MeshDataTool(ObjectCalls.constructObject("MeshDataTool")).also { it.claimConstructedOwnership() }
 
         internal fun wrap(handle: MemorySegment): MeshDataTool? =
             if (handle.address() == 0L) null else MeshDataTool(handle)

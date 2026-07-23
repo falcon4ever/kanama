@@ -98,6 +98,15 @@ check_absent "ResourceForgeSmoke create_failed"
 # .close()/use), not leaked. Reverting to the bare-T return + Resource.fromHandle().close() (or
 # dropping the use{}) reintroduces a per-call Resource leak that Godot reports on shutdown.
 check_absent "Leaked instance: Resource:"
+# task 61 / issue #91 — a StandardMaterial3D.create()'d resource handed to the engine (surface
+# override *and* material override, two distinct Ref<Material> sinks) and released via use{}/close()
+# must survive ResourceSaver.save. With owning-create(), close() drops only the wrapper's reference;
+# the engine keeps its own. Pre-fix, close() unreferenced the engine's only reference to zero and
+# freed the material, so the saved scene lost it (…_has_material=false) and Godot logged
+# `Parameter "material" is null`. Every created resource is use{}-closed, so no material/mesh leak.
+check "MaterialHandoffSmoke surface_has_material=true override_has_material=true"
+check_absent "Parameter \"material\" is null"
+check_absent "Leaked instance: StandardMaterial3D"
 check "kt script export groups group=true subgroup=true"
 # task 32 — custom enum exports: INT + PROPERTY_HINT_ENUM metadata, ordinal
 # round-trip via set/get, tscn-stored int deserialized into the enum slot, and

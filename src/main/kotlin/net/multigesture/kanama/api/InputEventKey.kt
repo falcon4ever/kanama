@@ -271,7 +271,7 @@ class InputEventKey(handle: MemorySegment) : InputEventWithModifiers(handle) {
 
         @JvmStatic
         fun create(): InputEventKey =
-            InputEventKey(ObjectCalls.constructObject("InputEventKey"))
+            InputEventKey(ObjectCalls.constructObject("InputEventKey")).also { it.claimConstructedOwnership() }
 
         internal fun wrap(handle: MemorySegment): InputEventKey? =
             if (handle.address() == 0L) null else InputEventKey(handle)

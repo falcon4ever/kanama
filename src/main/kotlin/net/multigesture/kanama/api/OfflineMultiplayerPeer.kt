@@ -19,7 +19,7 @@ class OfflineMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
 
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
+            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer")).also { it.claimConstructedOwnership() }
 
         // No MethodBinds emitted yet.
     }
