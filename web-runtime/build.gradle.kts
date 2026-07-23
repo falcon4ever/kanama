@@ -9,8 +9,27 @@ plugins {
 
 val webScriptSourceRoot =
     layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/web")
-val extraWebScriptSourceRoot =
+
+// The Web gameplay script root. An explicit -PkanamaWebExtraScriptSourceDir wins;
+// otherwise it is derived from the selected demo's checkout as <projectDir>/web,
+// where the committed web/kotlin-src/*.kt live. This keeps exportWeb free of any
+// second workstation path -- pointing at the demo checkout is enough.
+val extraWebScriptSourceRoot: File? =
     providers.gradleProperty("kanamaWebExtraScriptSourceDir").orNull?.let(rootProject::file)
+        ?: run {
+            val demo = providers.gradleProperty("kanamaWebDemo").orElse("match3").get()
+            val projectDirProperty =
+                when (demo) {
+                    "match3" -> "kanamaWebMatch3ProjectDir"
+                    "bunnymark" -> "kanamaWebBunnymarkProjectDir"
+                    else -> null
+                }
+            projectDirProperty
+                ?.let { providers.gradleProperty(it).orNull }
+                ?.let(rootProject::file)
+                ?.resolve("web")
+                ?.takeIf { it.resolve("kotlin-src").isDirectory }
+        }
 
 kotlin {
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
