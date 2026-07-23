@@ -875,9 +875,9 @@
       "arguments": ["float"],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
-      "executionMode": "QUEUED_MUTATION",
+      "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
-      "semantics": "Queue a finite Float64 progress ratio in [0,1]; the Web command applier writes PathFollow2D.progress_ratio.",
+      "semantics": "Apply a finite Float64 progress ratio synchronously; the Web applier sets PathFollow2D.progress_ratio and re-pushes the node's position/rotation snapshot so read-your-write reads reflect the move.",
       "introducedBy": "60b-dodge"
     },
     {
@@ -936,6 +936,20 @@
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
       "semantics": "Query the Input singleton for an action's pressed state synchronously (exact_match defaults false). No receiver: the Web backend routes through the active script owner and the applier reads the global Input.",
+      "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 70,
+      "scope": "class",
+      "className": "Node2D",
+      "methodName": "get_rotation",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read Node2D.rotation synchronously from the latest frame snapshot (sourced at node lookup / self setup and refreshed by immediate mutations such as set_progress_ratio).",
       "introducedBy": "60b-dodge"
     }
   ],

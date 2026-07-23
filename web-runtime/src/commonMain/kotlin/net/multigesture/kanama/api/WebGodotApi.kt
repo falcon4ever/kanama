@@ -169,7 +169,7 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
     }
 
   var rotation: Double
-    get() = unsupportedWebGameplayFamily("Node2D.get_rotation")
+    get() = Node2DBackendContractProbe(backendHandle).getRotation()
     set(value) {
       Node2DBackendContractProbe(backendHandle).setRotation(value)
     }

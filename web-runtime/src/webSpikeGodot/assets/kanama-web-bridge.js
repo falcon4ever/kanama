@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 6;
+  const KANAMA_WEB_PROTOCOL_VERSION = 7;
 
   function commandWordCount(opcode) {
     if (
@@ -762,7 +762,7 @@
       this.latestSnapshotY = y;
       return this.api.kanamaWebLoadPositionSnapshot(handle, x, y);
     },
-    refreshNode2DSnapshot(handle, positionX, positionY, scaleX, scaleY, r, g, b, a) {
+    refreshNode2DSnapshot(handle, positionX, positionY, scaleX, scaleY, r, g, b, a, rotation) {
       this.snapshotBatchLoads += 1;
       this.latestSnapshotX = positionX;
       this.latestSnapshotY = positionY;
@@ -776,6 +776,7 @@
         g,
         b,
         a,
+        rotation,
       );
     },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
@@ -1181,6 +1182,17 @@
       callback(opcode, handle, value);
       if (!Number.isInteger(this.immediateLongResult)) {
         throw new Error("Godot object query callback did not publish an integer result");
+      }
+      return this.immediateLongResult;
+    },
+    immediateSetProgressRatio(handle, ratio) {
+      // Reuses the object-query callback: opcode 65 sets progress_ratio and re-pushes the
+      // PathFollow2D Node2D snapshot so read-your-write position/rotation reads are fresh.
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot progress ratio");
+      this.immediateLongResult = null;
+      callback(65, handle, ratio);
+      if (this.immediateLongResult !== 1) {
+        throw new Error("Godot set_progress_ratio callback did not confirm application");
       }
       return this.immediateLongResult;
     },

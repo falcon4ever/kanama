@@ -109,6 +109,9 @@ internal fun immediateWebConnectBound(
 internal fun immediateWebObjectQuery(opcode: Int, objectId: Int, value: String): Int =
   js("globalThis.KanamaWebBridge.immediateObjectQuery(opcode, objectId, value)")
 
+internal fun immediateWebSetProgressRatio(objectId: Int, ratio: Double): Int =
+  js("globalThis.KanamaWebBridge.immediateSetProgressRatio(objectId, ratio)")
+
 internal fun immediateWebNoArgsVector2X(opcode: Int, objectId: Int): Double =
   js("globalThis.KanamaWebBridge.immediateNoArgsVector2X(opcode, objectId)")
 

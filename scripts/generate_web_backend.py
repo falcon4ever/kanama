@@ -79,7 +79,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     42: {"ret": "existing"},
     43: {"bool_snapshot": "emitting"},
     44: {},
-    45: {},
+    45: {"double_snapshot": "lifetime"},
     46: {},
     47: {},
     48: {},
@@ -99,11 +99,12 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     62: {},
     63: {},
     64: {},
-    65: {},
+    65: {"immediate_double_extern": "immediateWebSetProgressRatio"},
     66: {},
     67: {},
     68: {},
     69: {},
+    70: {"double_snapshot": "rotation"},
 }
 
 
@@ -205,14 +206,41 @@ def body_BOOL_ARG(calls):
 
 
 def body_DOUBLE_ARG(calls):
-    return [
-        f"require(descriptor.executionMode == {_QUEUED})",
-        f"require({_opcode_guard(calls)})",
+    queued = [c for c in calls if c.execution_mode.value == "QUEUED_MUTATION"]
+    immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
+    finite = [
         "require(value.isFinite()) {",
         '"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"',
         "}",
-        "commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)",
     ]
+    if not immediate:
+        return [
+            f"require(descriptor.executionMode == {_QUEUED})",
+            f"require({_opcode_guard(queued)})",
+            *finite,
+            "commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)",
+        ]
+    lines = [*finite, "when (descriptor.executionMode) {"]
+    if queued:
+        lines += [
+            f"{_QUEUED} -> {{",
+            f"require({_opcode_guard(queued)})",
+            "commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)",
+            "}",
+        ]
+    lines += [f"{_IMMEDIATE} -> {{", f"require({_opcode_guard(immediate)})", "commands.flush()", "when (descriptor.opcode) {"]
+    for c in immediate:
+        extern = WEB_POLICY[c.opcode]["immediate_double_extern"]
+        lines.append(f"{c.opcode} -> {extern}(receiver.webId(), value)")
+    lines += [
+        'else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")',
+        "}",
+        "}",
+        f"{_SNAPSHOT} ->",
+        'error("Double argument cannot use snapshot execution for opcode=${descriptor.opcode}")',
+        "}",
+    ]
+    return lines
 
 
 def body_NOARGS_RET_VECTOR2(calls):
@@ -578,16 +606,26 @@ def body_NOARGS_RET_BOOL(calls):
     ]
 
 
+_DOUBLE_SNAPSHOT_HOOK = {"lifetime": "webLifetimeSnapshot", "rotation": "webRotationSnapshot"}
+
+
 def body_NOARGS_RET_DOUBLE(calls):
-    op = _only(calls).opcode
-    return [
+    lines = [
         f"require(descriptor.executionMode == {_SNAPSHOT})",
-        f"require(descriptor.opcode == {op})",
-        "return webLifetimeSnapshot(receiver.webId())",
+        "return when (descriptor.opcode) {",
+    ]
+    for c in calls:
+        hook = _DOUBLE_SNAPSHOT_HOOK[WEB_POLICY[c.opcode]["double_snapshot"]]
+        lines.append(f"{c.opcode} -> {hook}(receiver.webId())")
+    lines += [
+        "else -> null",
+        "}",
         "?: error(",
-        '"Missing Web GPUParticles2D.get_lifetime snapshot for object handle=${receiver.webId()}"',
+        '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
+        '"object handle=${receiver.webId()}"',
         ")",
     ]
+    return lines
 
 
 def body_NOARGS_RET_LONG(calls):

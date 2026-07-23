@@ -401,6 +401,7 @@ fun kanamaWebLoadNode2DSnapshot(
   modulateG: Double,
   modulateB: Double,
   modulateA: Double,
+  rotation: Double,
 ): Int {
   loadWebNode2DSnapshot(
     objectId,
@@ -412,6 +413,7 @@ fun kanamaWebLoadNode2DSnapshot(
     modulateG,
     modulateB,
     modulateA,
+    rotation,
   )
   return 1
 }

@@ -973,6 +973,9 @@ class Node2DBackendContractProbe(val handle: GodotHandle) {
       rotation,
     )
   }
+
+  fun getRotation(): Double =
+    GodotBackendCalls.invokeNoArgsRetDouble(InitialGodotCallDescriptors.NODE2D_GET_ROTATION, handle)
 }
 
 /** First typed singleton-call probe; production wrappers delegate through the same facade. */

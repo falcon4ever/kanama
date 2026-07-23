@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 6
+    const val PROTOCOL_VERSION = 7
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -702,7 +702,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     if (node2dAttachment) {
       appendLine("\tvar target: Node2D = self")
       appendLine(
-        "\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, target.position.x, target.position.y, target.scale.x, target.scale.y, target.modulate.r, target.modulate.g, target.modulate.b, target.modulate.a)"
+        "\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, target.position.x, target.position.y, target.scale.x, target.scale.y, target.modulate.r, target.modulate.g, target.modulate.b, target.modulate.a, target.rotation)"
       )
     }
     if (particlesAttachment) {
@@ -1170,7 +1170,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value is Node2D:")
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
-      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
@@ -1194,7 +1194,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value is Node2D:")
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
-      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
@@ -1354,6 +1354,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEventMouseButton).button_index)")
     appendLine("\t\telif opcode == 69:")
     appendLine("\t\t\tresult = int(Input.is_action_pressed(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 65 and value is PathFollow2D:")
+    appendLine("\t\t\tvar follow := value as PathFollow2D")
+    appendLine("\t\t\tfollow.progress_ratio = float(args[2])")
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(object_handle, follow.position.x, follow.position.y, follow.scale.x, follow.scale.y, follow.modulate.r, follow.modulate.g, follow.modulate.b, follow.modulate.a, follow.rotation)"
+    )
+    appendLine("\t\t\tresult = 1")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()

@@ -87,12 +87,25 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     value: Double,
   ) {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 65))
     require(value.isFinite()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
     }
-    commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
+    when (descriptor.executionMode) {
+      GodotExecutionMode.QUEUED_MUTATION -> {
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62))
+        commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode == 65)
+        commands.flush()
+        when (descriptor.opcode) {
+          65 -> immediateWebSetProgressRatio(receiver.webId(), value)
+          else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ ->
+        error("Double argument cannot use snapshot execution for opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeLongArg(
@@ -557,10 +570,14 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ): Double {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    require(descriptor.opcode == 45)
-    return webLifetimeSnapshot(receiver.webId())
+    return when (descriptor.opcode) {
+      45 -> webLifetimeSnapshot(receiver.webId())
+      70 -> webRotationSnapshot(receiver.webId())
+      else -> null
+    }
       ?: error(
-        "Missing Web GPUParticles2D.get_lifetime snapshot for object handle=${receiver.webId()}"
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
       )
   }
 

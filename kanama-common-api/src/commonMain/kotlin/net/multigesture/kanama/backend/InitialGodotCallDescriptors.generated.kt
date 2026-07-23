@@ -715,7 +715,7 @@ object InitialGodotCallDescriptors {
       methodName = "set_progress_ratio",
       hash = 373806689L,
       shape = GodotCallShape.DOUBLE_ARG,
-      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
@@ -760,6 +760,17 @@ object InitialGodotCallDescriptors {
       hash = 1558498928L,
       shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE2D_GET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 70,
+      className = "Node2D",
+      methodName = "get_rotation",
+      hash = 1740695150L,
+      shape = GodotCallShape.NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 }
