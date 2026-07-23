@@ -234,6 +234,52 @@ ResourceLoader.loadAudioStream("res://sounds/jump.ogg")?.use { stream ->
 }
 ```
 
+### Close what you create
+
+The same rule applies to anything you make with an `X.create()` factory: create
+it, hand it to the engine, then release your handle with `use { }` (or `close()`).
+The engine keeps its own reference, so the resource lives on — you are only
+letting go of *your* copy.
+
+```kotlin
+for (keycode in keycodes) {
+    InputMap.addAction(action)
+    InputEventKey.create().use { inputKey ->   // you own this handle…
+        inputKey.keycode = keycode
+        InputMap.actionAddEvent(action, inputKey) // …InputMap takes its own reference…
+    }                                              // …use { } releases yours
+}
+```
+
+If you coded games in GDScript or C#, note that **the same code there needs no
+cleanup** — and it is not leaking:
+
+```gdscript
+# GDScript
+var input_key = InputEventKey.new()
+input_key.keycode = keycode
+InputMap.action_add_event(action, input_key)
+# input_key's reference is dropped automatically when it leaves scope
+```
+
+```csharp
+// C#
+var inputKey = new InputEventKey();
+inputKey.Keycode = keycode;
+InputMap.ActionAddEvent(action, inputKey);
+// the .NET GC drops the reference for you when inputKey is collected
+```
+
+GDScript's script VM drops your reference the moment the variable leaves scope,
+and C#'s garbage collector drops it when the wrapper is collected. Kanama talks
+to Godot over an FFI boundary and deliberately does **not** hook the JVM garbage
+collector to native Godot lifetimes (that would risk freeing engine objects on
+the wrong thread), so it makes that one step explicit: the `use { }` above does
+exactly what GDScript's scope-exit and C#'s GC do invisibly. A created resource
+you never close leaks its reference — and Godot prints `Leaked instance: <Class>`
+at exit in editor/debug runs, which is your signal that a `use { }`/`close()` is
+missing.
+
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).
 
 ## Resource Slots
