@@ -589,6 +589,13 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
             ObjectCalls.destroyObject(handle)
         }
     }
+
+    // Task 61 / issue #91 mirror: X.create() factories claim Godot's construction placeholder via
+    // init_ref so the wrapper owns its +1; close() then releases only the wrapper's reference, so a
+    // resource handed to the engine survives. Close what you create.
+    internal fun claimConstructedOwnership() {
+        ObjectCalls.ptrcallNoArgsRetBool(initRefBind, handle)
+    }
 """.strip("\n"),
     "Node": """
     // ── Kanama iOS sugar (generator custom-section, not from Godot docs) ───────
@@ -745,6 +752,13 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
                 ObjectCalls.destroyObject(handle)
             }
         }
+
+        // init_ref() shares the bool() no-arg hash with unreference(). Used by
+        // claimConstructedOwnership() so an X.create() wrapper owns its reference (task 61).
+        private const val INIT_REF_HASH = 2240911060L
+        private val initRefBind by lazy {
+            ObjectCalls.getMethodBind("RefCounted", "init_ref", INIT_REF_HASH)
+        }
 """.strip("\n"),
     "InputEventKey": """
         // Godot Key enum constants (subset used by gameplay code; values match @GlobalScope.Key).
@@ -765,7 +779,7 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
 
         // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
         fun create(): InputEventKey =
-            InputEventKey(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey")))
+            InputEventKey(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))).also { it.claimConstructedOwnership() }
 
         // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
         fun from(value: GodotObject): InputEventKey? =
@@ -779,12 +793,12 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
     "SurfaceTool": """
         // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
         fun create(): SurfaceTool =
-            SurfaceTool(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool")))
+            SurfaceTool(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "MeshDataTool": """
         // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
         fun create(): MeshDataTool =
-            MeshDataTool(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool")))
+            MeshDataTool(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "ArrayMesh": """
         // Downcast a Resource/Mesh to ArrayMesh (null if not), mirroring the desktop helper.
@@ -814,7 +828,7 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
     "FastNoiseLite": """
         // Instantiate a FastNoiseLite (RefCounted noise generator).
         fun create(): FastNoiseLite =
-            FastNoiseLite(MemorySegment.ofAddress(IosGodot.constructObject("FastNoiseLite")))
+            FastNoiseLite(MemorySegment.ofAddress(IosGodot.constructObject("FastNoiseLite"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "LightmapGI": """
         // Instantiate a LightmapGI node.
@@ -834,22 +848,22 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
     "ConfigFile": """
         // Instantiate a ConfigFile (RefCounted key/value store).
         fun create(): ConfigFile =
-            ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))
+            ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "OfflineMultiplayerPeer": """
         // Instantiate an OfflineMultiplayerPeer (single-player multiplayer stub).
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("OfflineMultiplayerPeer")))
+            OfflineMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("OfflineMultiplayerPeer"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "ENetMultiplayerPeer": """
         // Instantiate an ENetMultiplayerPeer.
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer")))
+            ENetMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "ButtonGroup": """
         // Instantiate a ButtonGroup (RefCounted radio-button grouping).
         fun create(): ButtonGroup =
-            ButtonGroup(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup")))
+            ButtonGroup(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))).also { it.claimConstructedOwnership() }
 """.strip("\n"),
     "ShaderMaterial": """
         // Downcast a Resource to ShaderMaterial (null if not), mirroring the desktop helper.

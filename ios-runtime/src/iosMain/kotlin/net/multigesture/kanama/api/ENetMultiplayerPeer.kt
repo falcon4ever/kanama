@@ -50,7 +50,7 @@ class ENetMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
 
         // Instantiate an ENetMultiplayerPeer.
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer")))
+            ENetMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))).also { it.claimConstructedOwnership() }
 
         private const val CREATE_SERVER_HASH = 2917761309L
         private val createServerBind by lazy {

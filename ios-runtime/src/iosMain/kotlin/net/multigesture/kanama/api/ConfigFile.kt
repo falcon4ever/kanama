@@ -75,7 +75,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
 
         // Instantiate a ConfigFile (RefCounted key/value store).
         fun create(): ConfigFile =
-            ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))
+            ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))).also { it.claimConstructedOwnership() }
 
         private const val HAS_SECTION_HASH = 3927539163L
         private val hasSectionBind by lazy {

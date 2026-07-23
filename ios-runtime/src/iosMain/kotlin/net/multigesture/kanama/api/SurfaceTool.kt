@@ -150,7 +150,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
 
         // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
         fun create(): SurfaceTool =
-            SurfaceTool(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool")))
+            SurfaceTool(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))).also { it.claimConstructedOwnership() }
 
         private const val SET_SKIN_WEIGHT_COUNT_HASH = 618679515L
         private val setSkinWeightCountBind by lazy {
