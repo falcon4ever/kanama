@@ -72,6 +72,22 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 2] = valueHandle
   }
 
+  fun appendStringNameMutation(opcode: Int, objectHandle: Int, value: String) {
+    val offset = reserve(WORDS_OBJECT_ARG)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(value)
+  }
+
+  fun appendDoubleMutation(opcode: Int, objectHandle: Int, value: Double) {
+    val bits = value.toBits()
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = bits.toInt()
+    words[offset + 3] = (bits ushr 32).toInt()
+  }
+
   fun appendObjectBoolLongArgs(
     opcode: Int,
     objectHandle: Int,
@@ -152,5 +168,8 @@ internal class WebCommandBuffer(capacity: Int) {
 
 private fun flushWebCommands(words: WebInt32Array, wordCount: Int, commandCount: Int): Int =
   js("globalThis.KanamaWebBridge?.flushCommands(words, wordCount, commandCount) ?? commandCount")
+
+private fun internWebCommandStringName(value: String): Int =
+  js("globalThis.KanamaWebBridge.internCommandStringName(value)")
 
 internal fun webNowMillis(): Double = js("performance.now()")

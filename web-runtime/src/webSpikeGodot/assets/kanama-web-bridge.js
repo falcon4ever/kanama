@@ -9,12 +9,20 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 4;
+  const KANAMA_WEB_PROTOCOL_VERSION = 5;
 
   function commandWordCount(opcode) {
     if (opcode === 5 || opcode === 15) return 2;
-    if (opcode === 14 || opcode === 16) return 3;
-    if (opcode === 3 || opcode === 30 || opcode === 43 || opcode === 100) return 4;
+    if (opcode === 14 || opcode === 16 || opcode === 46 || opcode === 47) return 3;
+    if (
+      opcode === 3 ||
+      opcode === 30 ||
+      opcode === 43 ||
+      opcode === 48 ||
+      opcode === 49 ||
+      opcode === 50 ||
+      opcode === 100
+    ) return 4;
     if (opcode === 13) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -73,6 +81,10 @@
     tweenCallbacks: new Map(),
     handleOwners: new Map(),
     tweenChildren: new Map(),
+    commandStringNamesByValue: new Map(),
+    commandStringNamesById: new Map(),
+    nextCommandStringNameId: 1,
+    activeCommandFlushFrame: null,
     activeOwnerHandle: 0,
     benchmarkCallback: null,
     firstHandle: 0,
@@ -164,6 +176,26 @@
     match3ParticleFrees: 0,
     match3FirstParticleHandle: 0,
     particleSnapshots: new Map(),
+    match3AudioHandle: 0,
+    match3AudioProcessCalls: 0,
+    match3AudioPlayersConstructed: 0,
+    match3AudioPlayerAdds: 0,
+    match3AudioConnections: 0,
+    match3AudioStreamAssignments: 0,
+    match3AudioBusCommands: 0,
+    match3AudioVolumeCommands: 0,
+    match3AudioPitchCommands: 0,
+    match3AudioPlayCommands: 0,
+    match3AudioCommandBatches: 0,
+    match3AudioCommandCrossings: 0,
+    match3AudioBatchHistory: [],
+    match3AudioResourceLoads: 0,
+    match3AudioResourceLoadFailures: 0,
+    match3AudioResourceReleases: 0,
+    match3AudioPlayerFrees: 0,
+    match3FirstAudioPlayerHandle: 0,
+    audioPlayerStates: new Map(),
+    resourcePathByHandle: new Map(),
     match3DeferredMethods: {},
     kotlinToGodotMs: [],
     bunnymarkProcessMs: [],
@@ -247,6 +279,16 @@
         return this.process(handle, delta);
       }
       if (this.mode === "match3") {
+        if (handle === this.match3AudioHandle) {
+          this.match3AudioProcessCalls += 1;
+          return this.invoke(
+            handle,
+            "_process",
+            "Audio._process",
+            () => this.api.kanamaWebProcess(handle, delta),
+            0,
+          );
+        }
         if (handle !== this.match3MainHandle) return 0;
         this.match3FramePumps += 1;
         const executed = this.invoke(
@@ -385,7 +427,7 @@
       this.match3Properties.set(handle, properties);
     },
     shouldDeferReady(scriptName) {
-      return this.mode === "match3" && scriptName.endsWith(".Audio");
+      return false;
     },
     recordDeferredReady(scriptName) {
       this.match3DeferredReadyByClass[scriptName] =
@@ -461,6 +503,7 @@
         0,
       );
       if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
+      if (result === 1 && handle === this.match3AudioHandle) this.match3AudioHandle = 0;
       if (result === 1) this.releaseBrowserHandlesOwnedBy(handle);
       return result;
     },
@@ -504,6 +547,26 @@
       const owner = this.handleOwners.get(handle);
       if (!owner) throw new Error(`No Kanama Web proxy owns handle=${handle}`);
       return owner;
+    },
+    internCommandStringName(value) {
+      const normalized = String(value);
+      const existing = this.commandStringNamesByValue.get(normalized);
+      if (existing !== undefined) return existing;
+      const id = this.nextCommandStringNameId;
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        throw new Error("Kanama Web StringName command table exhausted");
+      }
+      this.nextCommandStringNameId += 1;
+      this.commandStringNamesByValue.set(normalized, id);
+      this.commandStringNamesById.set(id, normalized);
+      return id;
+    },
+    resolveCommandStringName(id) {
+      const value = this.commandStringNamesById.get(id);
+      if (value === undefined) {
+        throw new Error(`Unknown Kanama Web StringName command id=${id}`);
+      }
+      return value;
     },
     callbackFor(callbacks, handle, label) {
       const owner = this.ownerForHandle(handle);
@@ -571,11 +634,17 @@
         const slot = this.browserHandleSlots[slotIndex];
         if (!slot.live) continue;
         if (slot.kind === "Sprite2D") this.objectFrees += 1;
+        for (const [handle] of this.handleOwners) {
+          if ((handle & BROWSER_HANDLE_SLOT_MASK) !== slotIndex) continue;
+          if (slot.kind === "AudioStreamPlayer") {
+            this.audioPlayerStates.delete(handle);
+            this.match3AudioPlayerFrees += 1;
+          }
+          if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
+          this.handleOwners.delete(handle);
+        }
         slot.live = false;
         slot.kind = null;
-        for (const [handle, owner] of this.handleOwners) {
-          if ((handle & BROWSER_HANDLE_SLOT_MASK) === slotIndex) this.handleOwners.delete(handle);
-        }
         this.freeBrowserHandleSlots.push(slotIndex);
       }
       this.liveBrowserHandleCount = 0;
@@ -590,6 +659,11 @@
         const slot = this.browserHandleSlot(handle);
         if (!slot) continue;
         if (slot.kind === "Sprite2D") this.objectFrees += 1;
+        if (slot.kind === "AudioStreamPlayer") {
+          this.audioPlayerStates.delete(handle);
+          this.match3AudioPlayerFrees += 1;
+        }
+        if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
         this.api.kanamaWebDiscardBrowserHandle(handle);
         slot.live = false;
         slot.kind = null;
@@ -661,7 +735,15 @@
         throw new Error("Godot resource callback published an invalid handle");
       }
       if (this.immediateResourceHandleResult === 0) {
+        if (owner === this.match3AudioHandle) this.match3AudioResourceLoadFailures += 1;
         this.releaseBrowserHandle(resourceHandle, "Resource");
+      } else {
+        this.resourcePathByHandle.set(resourceHandle, {
+          path: String(path),
+          typeHint: String(typeHint),
+          cacheMode,
+        });
+        if (owner === this.match3AudioHandle) this.match3AudioResourceLoads += 1;
       }
       this.resourceLoads += 1;
       return this.immediateResourceHandleResult;
@@ -682,6 +764,21 @@
         this.releaseBrowserHandle(objectHandle, className);
       } else {
         this.objectConstructions += 1;
+        if (className === "AudioStreamPlayer") {
+          this.match3AudioPlayersConstructed += 1;
+          if (this.match3FirstAudioPlayerHandle === 0) {
+            this.match3FirstAudioPlayerHandle = objectHandle;
+          }
+          this.audioPlayerStates.set(objectHandle, {
+            bus: null,
+            volumeDb: null,
+            pitchScale: null,
+            streamPath: null,
+            streamTypeHint: null,
+            streamCacheMode: null,
+            plays: [],
+          });
+        }
         if (
           this.lastFreedObjectHandle !== 0 &&
           (this.lastFreedObjectHandle & BROWSER_HANDLE_SLOT_MASK) ===
@@ -746,6 +843,10 @@
         throw new Error("Godot resource release callback did not publish a result");
       }
       if (this.immediateResourceReleaseResult === 1) {
+        if (this.resourcePathByHandle.get(handle)?.typeHint === "AudioStream") {
+          this.match3AudioResourceReleases += 1;
+        }
+        this.resourcePathByHandle.delete(handle);
         this.releaseBrowserHandle(handle, "Resource");
       }
       return this.immediateResourceReleaseResult;
@@ -925,7 +1026,11 @@
       if (!Number.isInteger(this.immediateConnectResult)) {
         throw new Error("Godot connect callback did not publish a result");
       }
-      if (this.immediateConnectResult === 0) this.match3Connections += 1;
+      if (this.immediateConnectResult === 0) {
+        const sourceKind = this.browserHandleSlot(handle)?.kind;
+        if (sourceKind === "AudioStreamPlayer") this.match3AudioConnections += 1;
+        else this.match3Connections += 1;
+      }
       return this.immediateConnectResult;
     },
     immediateConnectBound(handle, signal, targetHandle, method, boundValue, flags) {
@@ -936,8 +1041,12 @@
         throw new Error("Godot bound connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
-        this.match3Connections += 1;
-        this.match3LambdaConnections += 1;
+        const sourceKind = this.browserHandleSlot(handle)?.kind;
+        if (sourceKind === "AudioStreamPlayer") this.match3AudioConnections += 1;
+        else {
+          this.match3Connections += 1;
+          this.match3LambdaConnections += 1;
+        }
       }
       return this.immediateConnectResult;
     },
@@ -1056,20 +1165,28 @@
         }
       }
       const started = performance.now();
-      const appliedBefore = this.appliedCommands;
       let groupStart = 0;
       let groupWords = 0;
       let groupCommands = 0;
       let groupOwner = 0;
       let groupCrossings = 0;
       let scanOffset = 0;
+      let applied = 0;
       const flushGroup = () => {
         if (groupCommands === 0) return;
         const callback = this.applyCallbacks.get(groupOwner);
         if (!callback) {
           throw new Error(`Godot command callback is not installed for owner=${groupOwner}`);
         }
-        callback(words.subarray(groupStart, groupStart + groupWords), groupCommands);
+        const parentFrame = this.activeCommandFlushFrame;
+        const frame = { applied: 0 };
+        this.activeCommandFlushFrame = frame;
+        try {
+          callback(words.subarray(groupStart, groupStart + groupWords), groupCommands);
+        } finally {
+          this.activeCommandFlushFrame = parentFrame;
+        }
+        applied += frame.applied;
         groupCrossings += 1;
       };
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
@@ -1091,14 +1208,19 @@
         scanOffset += size;
       }
       flushGroup();
-      const applied = this.appliedCommands - appliedBefore;
       this.kotlinToGodotCalls += groupCrossings;
       this.kotlinToGodotMs.push(performance.now() - started);
       let wordOffset = 0;
       let positionMutationCount = 0;
+      const audioOpcodes = [];
+      const commandData = new DataView(words.buffer, words.byteOffset, wordCount * 4);
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[wordOffset];
-        if (commandIndex < applied && opcode === 13) this.match3AddChildCommands += 1;
+        if (commandIndex < applied && opcode === 13) {
+          const childKind = this.browserHandleSlot(words[wordOffset + 2])?.kind;
+          if (childKind === "AudioStreamPlayer") this.match3AudioPlayerAdds += 1;
+          else this.match3AddChildCommands += 1;
+        }
         if (commandIndex < applied && opcode === 16) this.match3TextureAssignments += 1;
         if (commandIndex < applied && opcode === 3) this.match3PositionMutations += 1;
         if (commandIndex < applied && opcode === 30) this.match3ScaleMutations += 1;
@@ -1109,14 +1231,62 @@
           const snapshot = this.particleSnapshots.get(particleHandle);
           if (snapshot) snapshot.emitting = words[wordOffset + 2] !== 0;
         }
+        if (commandIndex < applied && opcode === 46) {
+          audioOpcodes.push(opcode);
+          const playerHandle = words[wordOffset + 1];
+          const streamHandle = words[wordOffset + 2];
+          const state = this.audioPlayerStates.get(playerHandle);
+          const stream = this.resourcePathByHandle.get(streamHandle);
+          if (state) {
+            state.streamPath = stream?.path ?? null;
+            state.streamTypeHint = stream?.typeHint ?? null;
+            state.streamCacheMode = stream?.cacheMode ?? null;
+          }
+          this.match3AudioStreamAssignments += 1;
+        }
+        if (commandIndex < applied && opcode === 47) {
+          audioOpcodes.push(opcode);
+          const state = this.audioPlayerStates.get(words[wordOffset + 1]);
+          if (state) state.bus = this.resolveCommandStringName(words[wordOffset + 2]);
+          this.match3AudioBusCommands += 1;
+        }
+        if (commandIndex < applied && opcode === 48) {
+          audioOpcodes.push(opcode);
+          const state = this.audioPlayerStates.get(words[wordOffset + 1]);
+          if (state) state.volumeDb = commandData.getFloat64(wordOffset * 4 + 8, true);
+          this.match3AudioVolumeCommands += 1;
+        }
+        if (commandIndex < applied && opcode === 49) {
+          audioOpcodes.push(opcode);
+          const state = this.audioPlayerStates.get(words[wordOffset + 1]);
+          if (state) state.pitchScale = commandData.getFloat64(wordOffset * 4 + 8, true);
+          this.match3AudioPitchCommands += 1;
+        }
+        if (commandIndex < applied && opcode === 50) {
+          audioOpcodes.push(opcode);
+          const state = this.audioPlayerStates.get(words[wordOffset + 1]);
+          const fromPosition = commandData.getFloat64(wordOffset * 4 + 8, true);
+          if (state) state.plays.push(fromPosition);
+          this.match3AudioPlayCommands += 1;
+        }
         if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
         if (commandIndex < applied && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
           const slot = this.browserHandleSlot(this.lastFreedObjectHandle);
+          if (slot?.kind === "AudioStreamPlayer") {
+            this.audioPlayerStates.delete(this.lastFreedObjectHandle);
+            this.match3AudioPlayerFrees += 1;
+          }
           if (slot) this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
           this.objectFrees += 1;
         }
         wordOffset += commandWordCount(opcode);
+      }
+      if (audioOpcodes.length > 0) {
+        this.match3AudioCommandBatches += 1;
+        this.match3AudioCommandCrossings += groupCrossings;
+        this.match3AudioBatchHistory.push(audioOpcodes);
+        if (this.match3AudioBatchHistory.length > 100) this.match3AudioBatchHistory.shift();
       }
       if (positionMutationCount > 0) {
         this.positionMutationCommands += positionMutationCount;
@@ -1133,6 +1303,9 @@
       this.readyCount += 1;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
       if (this.mode === "match3") {
+        if (scriptName.endsWith(".Audio")) {
+          this.match3AudioHandle = handle;
+        }
         if (scriptName.endsWith(".Tile") && this.match3FirstTileHandle === 0) {
           this.match3FirstTileHandle = handle;
         }
@@ -1190,6 +1363,20 @@
           cursorSets: this.match3CursorSets,
           connections: this.match3Connections,
         },
+        audio: {
+          handle: this.match3AudioHandle,
+          readyCount: Object.entries(this.match3ReadyByClass)
+            .filter(([name]) => name.endsWith(".Audio"))
+            .reduce((total, [, count]) => total + count, 0),
+          playersConstructed: this.match3AudioPlayersConstructed,
+          playerAdds: this.match3AudioPlayerAdds,
+          connections: this.match3AudioConnections,
+          busCommands: this.match3AudioBusCommands,
+          volumeCommands: this.match3AudioVolumeCommands,
+          initializedPlayers: [...this.audioPlayerStates.values()].filter(
+            (state) => state.bus === "master" && state.volumeDb === -10.0,
+          ).length,
+        },
         pendingFrameCoroutines: this.api.kanamaWebPendingCoroutineCount(),
         deferredSubsystemReady: this.match3DeferredReadyByClass,
         callbackErrors: this.callbackErrors,
@@ -1213,10 +1400,15 @@
         cursorConfigured: snapshot.board.cursorSets === 1,
         boardSignalsWired: snapshot.board.connections === 65,
         laterCoroutineExplicitlyPending: snapshot.pendingFrameCoroutines === 1,
-        audioGroupExplicitlyPending:
-          Object.entries(snapshot.deferredSubsystemReady).some(
-            ([name, count]) => name.endsWith(".Audio") && count === 1,
-          ),
+        audioPoolReady:
+          snapshot.audio.handle > 0 &&
+          snapshot.audio.readyCount === 1 &&
+          snapshot.audio.playersConstructed === 12 &&
+          snapshot.audio.playerAdds === 12 &&
+          snapshot.audio.connections === 12 &&
+          snapshot.audio.busCommands === 12 &&
+          snapshot.audio.volumeCommands === 12 &&
+          snapshot.audio.initializedPlayers === 12,
         noBoundaryErrors: snapshot.callbackErrors === 0,
       };
       snapshot.checks = checks;
@@ -1252,6 +1444,9 @@
     },
     recordApplied(count, lastValue) {
       this.appliedCommands += count;
+      if (this.activeCommandFlushFrame !== null) {
+        this.activeCommandFlushFrame.applied += count;
+      }
       this.lastAppliedValue = lastValue;
     },
     recordFreed(handle) {

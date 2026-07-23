@@ -6,6 +6,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
 import kotlinx.coroutines.launch
+import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.MainThread
@@ -38,6 +39,7 @@ private var activeWebScriptHandle = 0
 private var group6ProbeMask = 0
 private var group6ProbeScope: KanamaScope? = null
 private var group6ProbeOwnerHandle = 0
+private var group7AudioFreedPlayerHandle = 0
 
 internal fun requireActiveWebScriptHandle(): Int =
   activeWebScriptHandle.takeIf { it != 0 }
@@ -432,6 +434,69 @@ fun kanamaWebLoadParticlesSnapshot(objectId: Int, emitting: Boolean, lifetime: D
 }
 
 @JsExport fun kanamaWebParticlesSnapshotCount(): Int = webParticlesSnapshotCount()
+
+@JsExport
+fun kanamaWebMatch3Group7AudioProbe(
+  audioObjectId: Int,
+  playerObjectId: Int,
+  soundPath: String,
+): Int =
+  webCallbackBoundary(audioObjectId, "group7_audio_probe") {
+    commands.clear()
+    val player = AudioStreamPlayer(WebObjectId(playerObjectId))
+    player.setStreamFromPath(soundPath)
+    player.setBus("master")
+    player.setVolumeDb(-9.25)
+    player.setPitchScale(1.125)
+    player.play(0.0)
+    player.play(0.25)
+    commands.flush()
+  }
+
+@JsExport
+fun kanamaWebMatch3Group7AudioMissingPathProbe(
+  audioObjectId: Int,
+  playerObjectId: Int,
+  soundPath: String,
+): Int =
+  webCallbackBoundary(audioObjectId, "group7_audio_missing_path_probe") {
+    commands.clear()
+    AudioStreamPlayer(WebObjectId(playerObjectId)).setStreamFromPath(soundPath)
+    commands.flush()
+  }
+
+@JsExport
+fun kanamaWebMatch3Group7AudioTeardownProbe(audioObjectId: Int): Int =
+  webCallbackBoundary(audioObjectId, "group7_audio_teardown_probe") {
+    commands.clear()
+    val owner = Node(WebObjectId(audioObjectId))
+    val player = AudioStreamPlayer.create()
+    group7AudioFreedPlayerHandle = player.handle.value
+    owner.addChild(player)
+    var result = if (commands.flush() == 1) 1 else 0
+    player.queueFree()
+    if (commands.flush() == 1) result = result or 2
+    if (
+      runCatching { AudioStreamPlayer(WebObjectId(group7AudioFreedPlayerHandle)).play() }.isFailure
+    ) {
+      result = result or 4
+    }
+    result
+  }
+
+@JsExport fun kanamaWebMatch3Group7AudioFreedPlayerHandle(): Int = group7AudioFreedPlayerHandle
+
+@JsExport
+fun kanamaWebMatch3Group7AudioOwnerTeardownProbe(audioObjectId: Int): Int =
+  webCallbackBoundary(audioObjectId, "group7_audio_owner_teardown_probe") {
+    commands.clear()
+    Node(WebObjectId(audioObjectId)).queueFree()
+    commands.flush()
+  }
+
+@JsExport
+fun kanamaWebMatch3Group7AudioStaleProbe(playerObjectId: Int): Int =
+  if (runCatching { AudioStreamPlayer(WebObjectId(playerObjectId)).play() }.isFailure) 1 else 0
 
 @OptIn(InternalKanamaBackendApi::class)
 @JsExport

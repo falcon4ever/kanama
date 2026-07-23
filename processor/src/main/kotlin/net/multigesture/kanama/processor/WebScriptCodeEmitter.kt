@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 4
+    const val PROTOCOL_VERSION = 5
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -897,6 +897,39 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t\t(target_object as GPUParticles2D).emitting = bytes.decode_s32(offset + 8) != 0"
     )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 46 and target_object is AudioStreamPlayer:")
+    appendLine("\t\t\tvar stream_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar stream: AudioStream = null if stream_handle == 0 else _kanama_object_handles.get(stream_handle) as AudioStream"
+    )
+    appendLine("\t\t\tif stream_handle != 0 and stream == null:")
+    appendLine("\t\t\t\tpush_error(\"Unknown Kanama Web AudioStream handle: %d\" % stream_handle)")
+    appendLine("\t\t\t\tbreak")
+    appendLine("\t\t\t(target_object as AudioStreamPlayer).set_stream(stream)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 47 and target_object is AudioStreamPlayer:")
+    appendLine("\t\t\tvar bus_id := bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tvar bus_name := String(_kanama_bridge.resolveCommandStringName(bus_id))")
+    appendLine("\t\t\t(target_object as AudioStreamPlayer).set_bus(StringName(bus_name))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 48 and target_object is AudioStreamPlayer:")
+    appendLine(
+      "\t\t\t(target_object as AudioStreamPlayer).set_volume_db(bytes.decode_double(offset + 8))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 49 and target_object is AudioStreamPlayer:")
+    appendLine(
+      "\t\t\t(target_object as AudioStreamPlayer).set_pitch_scale(bytes.decode_double(offset + 8))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 50 and target_object is AudioStreamPlayer:")
+    appendLine("\t\t\t(target_object as AudioStreamPlayer).play(bytes.decode_double(offset + 8))")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     if (node2dAttachment) {

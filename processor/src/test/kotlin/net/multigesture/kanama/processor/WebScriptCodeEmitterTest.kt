@@ -72,7 +72,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 4"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 5"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -189,6 +189,25 @@ class WebScriptCodeEmitterTest {
         .single()
         .source
     assertTrue(parentProxy.contains("opcode == 43 and target_object is GPUParticles2D"))
+  }
+
+  @Test
+  fun emitsExactAudioPlayerCommandDecodersInEveryProxy() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single()
+        .source
+
+    assertTrue(proxy.contains("opcode == 46 and target_object is AudioStreamPlayer"))
+    assertTrue(proxy.contains("_kanama_object_handles.get(stream_handle) as AudioStream"))
+    assertTrue(proxy.contains("(target_object as AudioStreamPlayer).set_stream(stream)"))
+    assertTrue(proxy.contains("opcode == 47 and target_object is AudioStreamPlayer"))
+    assertTrue(proxy.contains("resolveCommandStringName(bus_id)"))
+    assertTrue(proxy.contains("set_bus(StringName(bus_name))"))
+    assertTrue(proxy.contains("set_volume_db(bytes.decode_double(offset + 8))"))
+    assertTrue(proxy.contains("set_pitch_scale(bytes.decode_double(offset + 8))"))
+    assertTrue(proxy.contains("play(bytes.decode_double(offset + 8))"))
   }
 
   @Test
@@ -377,7 +396,7 @@ class WebScriptCodeEmitterTest {
     )
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 4"))
+    assertTrue(protocol.contains("\"protocolVersion\": 5"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -388,7 +407,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=4\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=5\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))

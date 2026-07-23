@@ -12,6 +12,7 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.backend.AudioStreamPlayerBackendContractProbe
 import net.multigesture.kanama.backend.InputBackendContractProbe
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.InputEventBackendContractProbe
@@ -23,11 +24,13 @@ import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GPUParticles2DBackendContractProbe
 import net.multigesture.kanama.backend.PropertyTweenerBackendContractProbe
+import net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe
 import net.multigesture.kanama.backend.TweenBackendContractProbe
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.web.webScriptInstance
+import net.multigesture.kanama.web.WebObjectId
 
 /**
  * Compile-visible Match3 wrapper slice for Task 57d.
@@ -157,28 +160,40 @@ class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
 class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
   fun setVolumeDb(value: Double) {
-    unsupportedWebGameplayCall("AudioStreamPlayer.set_volume_db")
+    AudioStreamPlayerBackendContractProbe(backendHandle).setVolumeDb(value)
   }
 
   fun setBus(value: String) {
-    unsupportedWebGameplayCall("AudioStreamPlayer.set_bus")
+    AudioStreamPlayerBackendContractProbe(backendHandle).setBus(value)
   }
 
   fun setStreamFromPath(path: String) {
-    unsupportedWebGameplayCall("AudioStreamPlayer.set_stream_from_path")
+    val stream =
+      ResourceLoaderBackendContractProbe.load(path, "AudioStream", ResourceLoader.CACHE_MODE_REUSE)
+        ?: return
+    try {
+      AudioStreamPlayerBackendContractProbe(backendHandle).setStream(stream)
+    } finally {
+      releaseWebResource(stream.backendToken().toInt())
+    }
   }
 
   fun setPitchScale(value: Double) {
-    unsupportedWebGameplayCall("AudioStreamPlayer.set_pitch_scale")
+    AudioStreamPlayerBackendContractProbe(backendHandle).setPitchScale(value)
   }
 
   fun play(fromPosition: Double = 0.0) {
-    unsupportedWebGameplayCall("AudioStreamPlayer.play")
+    AudioStreamPlayerBackendContractProbe(backendHandle).play(fromPosition)
   }
 
   companion object {
-    fun create(): AudioStreamPlayer =
-      unsupportedWebGameplayCall("ClassDB.instantiate_AudioStreamPlayer")
+    fun create(): AudioStreamPlayer {
+      val handle =
+        checkNotNull(AudioStreamPlayerBackendContractProbe.create()) {
+          "Godot could not instantiate AudioStreamPlayer"
+        }
+      return AudioStreamPlayer(WebObjectId(handle.backendToken().toInt()))
+    }
   }
 }
 

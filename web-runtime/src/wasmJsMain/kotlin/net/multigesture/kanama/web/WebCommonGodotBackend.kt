@@ -83,6 +83,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     particlesEmittingSnapshots[objectId] = value
   }
 
+  override fun invokeDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode in 48..50)
+    require(value.isFinite()) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
+    }
+    commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
+  }
+
   override fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -310,16 +325,36 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     value: GodotHandle?,
   ) {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     when (descriptor.opcode) {
-      14 -> requireWebNodeHandle(checkNotNull(value).webId())
+      14 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        requireWebNodeHandle(checkNotNull(value).webId())
+      }
       16 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
         value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
         textureSnapshots[receiver.webId()] = value?.webId() ?: 0
+      }
+      46 -> {
+        require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
       }
       else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
     }
     commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
+    if (descriptor.opcode == 46) commands.flush()
+  }
+
+  override fun invokeStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 47)
+    commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
   }
 
   override fun invokeNodePathRetHandle(
