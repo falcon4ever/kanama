@@ -23,7 +23,12 @@ case "$(uname -s)" in
     ;;
 esac
 
-BACKUP="$(mktemp /tmp/kanama_hello_backup.XXXXXX.kt)"
+# The template's X's must be trailing: BSD/macOS mktemp does not randomize
+# XXXXXX when a suffix follows it (e.g. a ".kt"), so a suffixed template yields
+# a fixed literal path that collides between concurrent runs and is left behind
+# by an interrupted run, poisoning every later run with "File exists". The
+# backup is only cp'd back and removed, so it needs no extension.
+BACKUP="$(mktemp /tmp/kanama_hello_backup.XXXXXX)"
 cp "$SCRIPT_FILE" "$BACKUP"
 
 restore() {
