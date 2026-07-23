@@ -3485,7 +3485,7 @@ object ObjectCalls {
     // holder: when the call consumed the sole reference the protective ref is kept, so the resource
     // survives and becomes wrapper-owned (close() frees it); for an already-owned resource
     // (loaded/cached, or held by the scene tree) it is a balanced no-op.
-    val guardHandle = objectArg.address() != 0L
+    val guardHandle = false // TEMP: prove Linux CI catches issue #81 without the guard
     if (guardHandle) ptrcallNoArgsRetBool(refCountedReferenceBind, objectArg)
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 3)
