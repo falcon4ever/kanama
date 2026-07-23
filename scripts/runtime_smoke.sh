@@ -151,16 +151,13 @@ check "ProjectSettings string_list=alpha\\|beta"
 check "ProjectSettings dictionary name=kanama enabled=true count=2 scale=1\\.5"
 check "ResourceLoader exists=true has_hello=true loaded_path_len=[0-9]+ loaded_is_script=true loaded_ref_count=[0-9]+ loaded_name_len=[0-9]+ loaded_scene_id_len=[0-9]+ loaded_path_id_len=[0-9]+ loaded_built_in=(true|false) loaded_local_to_scene=(true|false) threaded_request=0 threaded_status_before=[0-3] threaded_status_after=[0-3] threaded_packed=true threaded_path_len=[0-9]+ generated_scene_id_len=[0-9]+ packed_scene_pack_error=0 packed_scene_can=true packed_scene_instance_body=true packed_scene_instance_children=[0-9]+ duplicate_is_script=true duplicate_path_len=[0-9]+ deep_duplicate_is_script=true save_ext_has_kt=true save_error=0 save_exists=true save_has_class=true save_uid_set_error=0 save_cleanup_error=0 cached_path_len=[0-9]+ cached_is_script=(true|false) cached_ref_count=[0-9]+"
 check "ResourceSaver script_uid=[0-9-]+"
-# issue #81: created PackedScene survives ResourceSaver.save (create() claims its construction
-# ref via init_ref). ref_after_save>=1 and usable_after_save=true both dereference the wrapper
-# after save — pre-fix the scene was freed there and the process crashed (SIGSEGV) before this line.
-# issue #81 — a freshly created resource passed to ResourceSaver.save must survive the call. save
-# decodes its Ref<Resource> argument into a transient Ref and releases it; pre-fix that freed the
-# not-yet-owned resource (its only reference was the construction placeholder), so the dereferences
-# below crashed the process before shutdown. ref_after_save>=1 + alive_after_save=true prove the
-# save guard kept it live. Reported with PackedScene; the guard is generic (probe uses a Resource,
-# which — unlike a saved PackedScene/SceneState — leaves no Godot-side cached leak to chase).
-check "issue81 resource_save save_error=0 ref_after_save=[1-9][0-9]* alive_after_save=true save_exists=true"
+# issue #81 — the reporter's repro: PackedScene.create() -> pack -> ResourceSaver.save. save decodes
+# its Ref<Resource> argument into a transient Ref and releases it; pre-fix that freed the not-yet-
+# owned scene (its only reference was the construction placeholder), so ref_after_save / alive_after
+# _save below dereferenced freed memory and aborted the process. Confirmed by removing the guard:
+# getReferenceCount() here aborts (exit 134). ref_after_save>=1 + alive_after_save=true prove the
+# save guard kept the scene live across the call.
+check "issue81 packed_scene_save pack_error=0 save_error=0 ref_after_save=[1-9][0-9]* alive_after_save=true save_exists=true"
 check "Script property replay object_set_amount=777"
 check "FileAccess exists=true size_positive=true has_class=true"
 check "FileAccess metadata modified_positive=true accessed_nonnegative=true md5_len=32 sha256_len=64 permissions=[0-9]+ hidden=(true|false) read_only=(true|false) xattrs=[0-9]+"
