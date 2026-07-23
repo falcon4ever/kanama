@@ -652,4 +652,70 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val RIGIDBODY2D_SET_LINEAR_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 60,
+      className = "RigidBody2D",
+      methodName = "set_linear_velocity",
+      hash = 743155724L,
+      shape = GodotCallShape.VECTOR2_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val COLLISIONSHAPE2D_SET_DISABLED =
+    GodotCallDescriptor(
+      opcode = 61,
+      className = "CollisionShape2D",
+      methodName = "set_disabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TIMER_START =
+    GodotCallDescriptor(
+      opcode = 62,
+      className = "Timer",
+      methodName = "start",
+      hash = 1392008558L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TIMER_STOP =
+    GodotCallDescriptor(
+      opcode = 63,
+      className = "Timer",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_STOP =
+    GodotCallDescriptor(
+      opcode = 64,
+      className = "AudioStreamPlayer",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val PATHFOLLOW2D_SET_PROGRESS_RATIO =
+    GodotCallDescriptor(
+      opcode = 65,
+      className = "PathFollow2D",
+      methodName = "set_progress_ratio",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

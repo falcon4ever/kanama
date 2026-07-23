@@ -94,6 +94,12 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     57: {},
     58: {},
     59: {},
+    60: {},
+    61: {},
+    62: {},
+    63: {},
+    64: {},
+    65: {},
 }
 
 
@@ -242,7 +248,12 @@ def body_VECTOR2_ARG(calls):
         "when (descriptor.opcode) {",
     ]
     for c in calls:
-        lines.append(f"{c.opcode} -> webWriteVector2Snapshot(objectId, {_slot(c.opcode)}, value)")
+        if WEB_POLICY[c.opcode].get("vec2_slot") is not None:
+            lines.append(
+                f"{c.opcode} -> webWriteVector2Snapshot(objectId, {_slot(c.opcode)}, value)"
+            )
+        else:
+            lines.append(f"{c.opcode} -> {{}}")
     lines.append('else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")')
     lines.append("}")
     return lines

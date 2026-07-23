@@ -1104,6 +1104,10 @@ class AudioStreamPlayerBackendContractProbe(private val handle: GodotHandle) {
     )
   }
 
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_STOP, handle)
+  }
+
   companion object {
     fun create(): GodotHandle? = ClassDBBackendContractProbe.instantiate("AudioStreamPlayer")
   }
@@ -1186,6 +1190,54 @@ class AnimatedSprite2DBackendContractProbe(private val handle: GodotHandle) {
 
   fun stop() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.ANIMATEDSPRITE2D_STOP, handle)
+  }
+}
+
+/** Typed RigidBody2D slice used by dodge-the-creeps mob motion. */
+@InternalKanamaBackendApi
+class RigidBody2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setLinearVelocity(velocity: GodotVector2) {
+    GodotBackendCalls.invokeVector2Arg(
+      InitialGodotCallDescriptors.RIGIDBODY2D_SET_LINEAR_VELOCITY,
+      handle,
+      velocity,
+    )
+  }
+}
+
+/** Typed CollisionShape2D slice used by dodge-the-creeps player hit handling. */
+@InternalKanamaBackendApi
+class CollisionShape2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setDisabled(disabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.COLLISIONSHAPE2D_SET_DISABLED,
+      handle,
+      disabled,
+    )
+  }
+}
+
+/** Typed Timer slice used by dodge-the-creeps score/mob/start timers. */
+@InternalKanamaBackendApi
+class TimerBackendContractProbe(private val handle: GodotHandle) {
+  fun start(timeSec: Double) {
+    GodotBackendCalls.invokeDoubleArg(InitialGodotCallDescriptors.TIMER_START, handle, timeSec)
+  }
+
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.TIMER_STOP, handle)
+  }
+}
+
+/** Typed PathFollow2D slice used by dodge-the-creeps mob spawn placement. */
+@InternalKanamaBackendApi
+class PathFollow2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setProgressRatio(progressRatio: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.PATHFOLLOW2D_SET_PROGRESS_RATIO,
+      handle,
+      progressRatio,
+    )
   }
 }
 

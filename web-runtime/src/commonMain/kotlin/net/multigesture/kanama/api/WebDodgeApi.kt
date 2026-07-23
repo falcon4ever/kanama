@@ -3,7 +3,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.AnimatedSprite2DBackendContractProbe
+import net.multigesture.kanama.backend.CollisionShape2DBackendContractProbe
+import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.backend.PathFollow2DBackendContractProbe
+import net.multigesture.kanama.backend.RigidBody2DBackendContractProbe
+import net.multigesture.kanama.backend.TimerBackendContractProbe
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Web API surface specific to the dodge-the-creeps 2D demo (Task 60b).
@@ -39,3 +45,38 @@ class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
     AnimatedSprite2DBackendContractProbe(backendHandle).stop()
   }
 }
+
+class RigidBody2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  var linearVelocity: Vector2
+    get() = unsupportedWebGameplayFamily("RigidBody2D.get_linear_velocity")
+    set(value) {
+      RigidBody2DBackendContractProbe(backendHandle)
+        .setLinearVelocity(GodotVector2(value.x.toFloat(), value.y.toFloat()))
+    }
+}
+
+class CollisionShape2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  fun setDisabled(disabled: Boolean) {
+    CollisionShape2DBackendContractProbe(backendHandle).setDisabled(disabled)
+  }
+}
+
+class Timer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  fun start(timeSec: Double = -1.0) {
+    TimerBackendContractProbe(backendHandle).start(timeSec)
+  }
+
+  fun stop() {
+    TimerBackendContractProbe(backendHandle).stop()
+  }
+}
+
+class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  var progressRatio: Double
+    get() = unsupportedWebGameplayFamily("PathFollow2D.get_progress_ratio")
+    set(value) {
+      PathFollow2DBackendContractProbe(backendHandle).setProgressRatio(value)
+    }
+}
+
+class Marker2D(godotObject: GodotHandle) : Node2D(godotObject)
