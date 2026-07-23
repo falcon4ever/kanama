@@ -63,11 +63,12 @@ project scripts needs the Kanama checkout), and there is no mobile hot reload â€
 see the [iOS export guide](docs/exporting/ios.md) and
 [Version Support](docs/reference/version-support.md).
 
-A **Kotlin/Wasm Web backend is in development**. It runs Bunnymark and Match3
-as production Godot Web exports across Chrome, Firefox, and Safari through a
-generated proxy and a versioned JavaScript bridge, with no on-device JVM. There
-is **no supported packaged export workflow yet** â€” it is not a Supported target
-and there is no user-facing export guide. See
+A **Kotlin/Wasm Web backend is Experimental (preview)**. It runs Bunnymark and
+Match3 as production Godot Web exports across Chrome, Firefox, and Safari through
+a generated proxy and a versioned JavaScript bridge, with no on-device JVM. It is
+**not a Supported target**: single-thread Compatibility renderer only, a
+source-checkout export (no packaged addon), and a two-demo corpus. See the
+[Web export guide](docs/exporting/web.md) and
 [Web Internals](docs/contributing/web-internals.md) for the architecture.
 
 See [Version Support](docs/reference/version-support.md) for the current test matrix and

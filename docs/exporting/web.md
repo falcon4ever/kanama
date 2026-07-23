@@ -2,13 +2,20 @@
 
 ## Current Status
 
-The Web backend is **in development** on the Godot 4.7 stable baseline. It
-compiles Kanama project scripts to **Kotlin/Wasm** and runs them against a Godot
-4.7 Web export through a generated per-call proxy and a versioned JavaScript
-bridge (protocol 6). It is **not a Supported target yet**: two demos are
+The Web backend is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable
+baseline. It compiles Kanama project scripts to **Kotlin/Wasm** and runs them
+against a Godot 4.7 Web export through a generated per-call proxy and a versioned
+JavaScript bridge (protocol 6). It is **not a Supported target**: two demos are
 validated (Starter-Kit-Match3 and Bunnymark) as production Web exports, the
 renderer is single-thread Compatibility only, and the corpus/browser matrix is
 still growing.
+
+**Evidence.** Both demos pass the automated production export smoke in **Chrome**
+(the CI gate) and **Firefox**. In **Safari**, Bunnymark passes the automated gate
+and Match3 is verified running by hand (its runtime-selected swipe works and
+matches/collapses/refills); the automated SafariDriver gate cannot synthesize
+Match3's drag reliably, so that one cell is a manual local check — see Known
+Limitations.
 
 This page is the reproducible export workflow for those two validated demos. For
 the architecture — batching, snapshots, handle generations, the bridge protocol
@@ -170,6 +177,11 @@ rejection, console-error checks, and a protocol-version match.
 
 - Only **Starter-Kit-Match3** and **Bunnymark** are validated; the wider demo
   corpus and 3D are not yet on Web.
+- **Safari automated Match3 drag.** The Match3 export runs correctly in Safari by
+  hand, but SafariDriver's synthesized pointer drag does not reliably trigger the
+  swipe in the automated gate (coordinates and Godot picking are correct; the
+  drag-to-swipe is a WebDriver synthesis limitation). The automated Safari gate
+  covers Bunnymark; Safari Match3 is a manual local check.
 - Single-thread Compatibility renderer only; no threads, no cross-origin
   isolation.
 - No Web editor, no compiler, no hot reload, no Web GDExtension, and no TeaVM or

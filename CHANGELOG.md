@@ -9,6 +9,16 @@ versioning once public releases begin.
 
 ### Added
 
+- **Web backend promoted to Experimental (Kotlin/Wasm preview)** on Godot 4.7
+  stable. A reproducible source-checkout export workflow (`buildWebScripts` /
+  `exportWeb`) turns the two validated demos (Starter-Kit-Match3, Bunnymark) into
+  self-contained, cache-busted, HTTP-servable Web exports with a release payload
+  report and a versioned export-smoke harness (`scripts/web_export_smoke.sh`).
+  Both demos pass the automated smoke in Chrome (the CI gate) and Firefox; in
+  Safari, Bunnymark passes automatically and Match3 is verified by hand. Adds the
+  [Web export guide](exporting/web.md). Still **not a Supported target**:
+  single-thread Compatibility renderer only, no packaged addon, two-demo corpus.
+
 - Create script-backed custom resources from Kotlin with `newScriptInstance<T>()`
   — the equivalent of GDScript's `MyResource.new()` (issue #38). `T` must be a
   `@ScriptClass(attachTo = "Resource")` `@GlobalClass`. It returns an

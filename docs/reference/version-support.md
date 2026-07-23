@@ -13,7 +13,7 @@ page records the platforms and engine versions validated for it.
 | Linux x86_64 | Supported (4.7 stable) | Full local CI, native bootstrap preflight, strict docs, all 11 demo builds, the nine-demo desktop smoke matrix, TPS checked smoke, distribution packaging, and desktop-kit/store-addon install smokes passed on Ubuntu 25.04 with Godot `4.7.stable.official.5b4e0cb0f` and OpenJDK 25.0.2 (2026-07-13/14). The resource-loader/saver teardown fix is required. Packaged desktop exports remain a separate release-readiness track. |
 | Windows x86_64 | Supported (4.7 stable) | Full local revalidation on the 4.7 stable console binary (2026-07-13): demo audits, script builds, imports, the nine-demo desktop runtime smoke, the TPS smoke, and the packaged desktop-kit + store-addon install smokes all passed. Gradle commands that build the native bootstrap run from a VS 2022 developer environment (VsDevCmd); Git Bash runs the smoke scripts. |
 | iOS (Kotlin/Native backend) | Supported (4.7 stable) | Promoted from Experimental 2026-07-14 (§7 mobile promotion bar B1–B4 MET). The iOS backend runs full Kanama project scripts via a C shim + Kotlin/Native static `.xcframework`, using the same wrapper generator as desktop/Android (no JVM on device). Full device gate (9-demo matrix + fresh-project install path) passed on two models: **iPhone 12** (iOS 26.5, 2026-06-25; 0 guardrail failures) + **iPhone 15 Pro** (iOS 26.5, 2026-07-10, full-breadth wrapper runtime), both on 4.7 stable iOS templates. Packaged `.xcframework` addon is runtime-only (compiling project scripts needs the Kanama checkout; ~199.5 MB debug / ~87.6 MB release static `.a`). No mobile hot reload. One FPS Audio autoload follow-up + task-26 multiplayer UI polish tracked as non-blocking — see [exporting/ios.md](../exporting/ios.md). |
-| Web | In development (4.7 stable) | Kotlin/Wasm backend (no on-device JVM); runs the Bunnymark and Match3 production exports in Chrome/Firefox/Safari through a generated proxy + versioned JS bridge. **Not a Supported target: no packaged export workflow, no export guide, single-thread Compatibility renderer only.** See §Web below. |
+| Web | Experimental (4.7 stable) | Kotlin/Wasm backend (no on-device JVM); runs the Bunnymark and Match3 production exports in Chrome/Firefox/Safari through a generated proxy + versioned JS bridge, with a reproducible source-checkout export workflow ([guide](../exporting/web.md)). **Not a Supported target: source-checkout export only (no packaged addon), single-thread Compatibility renderer, 2-demo corpus.** See §Web below. |
 
 Validated support is only claimed after the matching smoke path passes.
 Use the
@@ -103,12 +103,14 @@ stays in sync with desktop/Android).
 
 ## Web
 
-Web is **In development** on the Godot 4.7 stable baseline. It is **not a
-Supported target**: the export workflow is an in-development preview (a
-source-checkout export of the two validated demos, no packaged addon), and there
-is no support claim. A user-facing export guide is at
-[Exporting → Web](../exporting/web.md). This supersedes the earlier note that
-ruled Web out entirely.
+Web is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable baseline. It
+is **not a Supported target**: it is a source-checkout export of the two validated
+demos (no packaged addon), single-thread Compatibility renderer only, and makes no
+support claim. A user-facing export guide is at
+[Exporting → Web](../exporting/web.md). The two demos pass the automated production
+export smoke in Chrome and Firefox; in Safari, Bunnymark passes automatically and
+Match3 is verified by hand (a SafariDriver drag-synthesis limitation, not a runtime
+defect). This supersedes the earlier note that ruled Web out entirely.
 
 Unlike desktop/Android/iOS, the Web backend does **not** use a JVM or an
 FFM/PanamaPort path. It is a **Kotlin/Wasm** backend: project gameplay compiles

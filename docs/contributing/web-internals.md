@@ -1,9 +1,10 @@
 # Web Internals
 
-This page records the current Web implementation path. Web is **In development**
-on the Godot 4.7 stable baseline — not a Supported target, with no packaged
-export workflow and no user-facing export guide yet. The API/build flow is less
-settled than desktop, Android, or iOS.
+This page records the current Web implementation path. Web is **Experimental
+(Kotlin/Wasm preview)** on the Godot 4.7 stable baseline — not a Supported target,
+with a source-checkout export workflow (no packaged addon) and a user-facing
+[export guide](../exporting/web.md). The API/build flow is less settled than
+desktop, Android, or iOS.
 
 ## Where Web Sits Relative to the Other Backends
 
