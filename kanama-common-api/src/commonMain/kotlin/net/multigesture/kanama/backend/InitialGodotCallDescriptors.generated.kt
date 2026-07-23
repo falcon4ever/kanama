@@ -718,4 +718,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val LABEL_SET_TEXT =
+    GodotCallDescriptor(
+      opcode = 66,
+      className = "Label",
+      methodName = "set_text",
+      hash = 83702148L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

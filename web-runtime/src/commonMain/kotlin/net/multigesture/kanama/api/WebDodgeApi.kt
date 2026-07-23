@@ -6,6 +6,7 @@ import net.multigesture.kanama.backend.AnimatedSprite2DBackendContractProbe
 import net.multigesture.kanama.backend.CollisionShape2DBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.backend.LabelBackendContractProbe
 import net.multigesture.kanama.backend.PathFollow2DBackendContractProbe
 import net.multigesture.kanama.backend.RigidBody2DBackendContractProbe
 import net.multigesture.kanama.backend.TimerBackendContractProbe
@@ -80,3 +81,15 @@ class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {
 }
 
 class Marker2D(godotObject: GodotHandle) : Node2D(godotObject)
+
+class CanvasLayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle())
+
+class Label(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle()) {
+  var text: String
+    get() = unsupportedWebGameplayFamily("Label.get_text")
+    set(value) {
+      LabelBackendContractProbe(backendHandle).setText(value)
+    }
+}
+
+class Button(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())

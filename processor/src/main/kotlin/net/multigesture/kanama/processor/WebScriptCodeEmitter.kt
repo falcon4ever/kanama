@@ -946,6 +946,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as PathFollow2D).progress_ratio = bytes.decode_double(offset + 8)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 66 and target_object is Label:")
+    appendLine("\t\t\tvar text_id := bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\t(target_object as Label).text = String(_kanama_bridge.resolveCommandStringName(text_id))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 32 and target_object is CanvasItem:")
     appendLine("\t\t\tvar target := target_object as CanvasItem")
     appendLine(

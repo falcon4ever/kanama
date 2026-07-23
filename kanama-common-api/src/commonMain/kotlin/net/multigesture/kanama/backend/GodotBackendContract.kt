@@ -1241,6 +1241,14 @@ class PathFollow2DBackendContractProbe(private val handle: GodotHandle) {
   }
 }
 
+/** Typed Label slice used by dodge-the-creeps HUD score/message text. */
+@InternalKanamaBackendApi
+class LabelBackendContractProbe(private val handle: GodotHandle) {
+  fun setText(text: String) {
+    GodotBackendCalls.invokeStringNameArg(InitialGodotCallDescriptors.LABEL_SET_TEXT, handle, text)
+  }
+}
+
 /** Typed board-construction slice shared by Match3 across every backend. */
 @InternalKanamaBackendApi
 class NodeLookupBackendContractProbe(private val handle: GodotHandle) {

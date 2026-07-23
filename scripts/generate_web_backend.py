@@ -100,6 +100,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     63: {},
     64: {},
     65: {},
+    66: {},
 }
 
 

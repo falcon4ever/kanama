@@ -879,6 +879,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a finite Float64 progress ratio in [0,1]; the Web command applier writes PathFollow2D.progress_ratio.",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 66,
+      "scope": "class",
+      "className": "Label",
+      "methodName": "set_text",
+      "hash": 83702148,
+      "arguments": ["String"],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue an interned String; the Web command applier writes Label.text (a plain String, not a StringName, though the transport is the shared interned-string command).",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

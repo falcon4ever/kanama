@@ -26,7 +26,8 @@
       opcode === 46 ||
       opcode === 47 ||
       opcode === 52 ||
-      opcode === 57
+      opcode === 57 ||
+      opcode === 66
     ) return 3;
     if (
       opcode === 3 ||
