@@ -19,6 +19,36 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setLifetimeRandomnessProperty")
         set(value) = setLifetimeRandomness(value)
 
+    var particleFlagAlignY: Boolean
+        @JvmName("particleFlagAlignYProperty")
+        get() = getParticleFlag(0L)
+        @JvmName("setParticleFlagAlignYProperty")
+        set(value) = setParticleFlag(0L, value)
+
+    var particleFlagRotateY: Boolean
+        @JvmName("particleFlagRotateYProperty")
+        get() = getParticleFlag(1L)
+        @JvmName("setParticleFlagRotateYProperty")
+        set(value) = setParticleFlag(1L, value)
+
+    var particleFlagDisableZ: Boolean
+        @JvmName("particleFlagDisableZProperty")
+        get() = getParticleFlag(2L)
+        @JvmName("setParticleFlagDisableZProperty")
+        set(value) = setParticleFlag(2L, value)
+
+    var particleFlagDampingAsFriction: Boolean
+        @JvmName("particleFlagDampingAsFrictionProperty")
+        get() = getParticleFlag(3L)
+        @JvmName("setParticleFlagDampingAsFrictionProperty")
+        set(value) = setParticleFlag(3L, value)
+
+    var particleFlagInheritEmitterScale: Boolean
+        @JvmName("particleFlagInheritEmitterScaleProperty")
+        get() = getParticleFlag(4L)
+        @JvmName("setParticleFlagInheritEmitterScaleProperty")
+        set(value) = setParticleFlag(4L, value)
+
     var emissionShapeOffset: Vector3
         @JvmName("emissionShapeOffsetProperty")
         get() = getEmissionShapeOffset()
@@ -103,6 +133,30 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setEmissionRingConeAngleProperty")
         set(value) = setEmissionRingConeAngle(value)
 
+    var angle: Vector2
+        @JvmName("angleProperty")
+        get() = getParam(7L)
+        @JvmName("setAngleProperty")
+        set(value) = setParam(7L, value)
+
+    var angleMin: Double
+        @JvmName("angleMinProperty")
+        get() = getParamMin(7L)
+        @JvmName("setAngleMinProperty")
+        set(value) = setParamMin(7L, value)
+
+    var angleMax: Double
+        @JvmName("angleMaxProperty")
+        get() = getParamMax(7L)
+        @JvmName("setAngleMaxProperty")
+        set(value) = setParamMax(7L, value)
+
+    var angleCurve: Texture2D?
+        @JvmName("angleCurveProperty")
+        get() = getParamTexture(7L)
+        @JvmName("setAngleCurveProperty")
+        set(value) = setParamTexture(7L, value)
+
     var useRotation3d: Boolean
         @JvmName("useRotation3dProperty")
         get() = isUsingRotation3d()
@@ -151,6 +205,120 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setFlatnessProperty")
         set(value) = setFlatness(value)
 
+    var initialVelocity: Vector2
+        @JvmName("initialVelocityProperty")
+        get() = getParam(0L)
+        @JvmName("setInitialVelocityProperty")
+        set(value) = setParam(0L, value)
+
+    var initialVelocityMin: Double
+        @JvmName("initialVelocityMinProperty")
+        get() = getParamMin(0L)
+        @JvmName("setInitialVelocityMinProperty")
+        set(value) = setParamMin(0L, value)
+
+    var initialVelocityMax: Double
+        @JvmName("initialVelocityMaxProperty")
+        get() = getParamMax(0L)
+        @JvmName("setInitialVelocityMaxProperty")
+        set(value) = setParamMax(0L, value)
+
+    var angularVelocity: Vector2
+        @JvmName("angularVelocityProperty")
+        get() = getParam(1L)
+        @JvmName("setAngularVelocityProperty")
+        set(value) = setParam(1L, value)
+
+    var angularVelocityMin: Double
+        @JvmName("angularVelocityMinProperty")
+        get() = getParamMin(1L)
+        @JvmName("setAngularVelocityMinProperty")
+        set(value) = setParamMin(1L, value)
+
+    var angularVelocityMax: Double
+        @JvmName("angularVelocityMaxProperty")
+        get() = getParamMax(1L)
+        @JvmName("setAngularVelocityMaxProperty")
+        set(value) = setParamMax(1L, value)
+
+    var angularVelocityCurve: Texture2D?
+        @JvmName("angularVelocityCurveProperty")
+        get() = getParamTexture(1L)
+        @JvmName("setAngularVelocityCurveProperty")
+        set(value) = setParamTexture(1L, value)
+
+    var directionalVelocity: Vector2
+        @JvmName("directionalVelocityProperty")
+        get() = getParam(16L)
+        @JvmName("setDirectionalVelocityProperty")
+        set(value) = setParam(16L, value)
+
+    var directionalVelocityMin: Double
+        @JvmName("directionalVelocityMinProperty")
+        get() = getParamMin(16L)
+        @JvmName("setDirectionalVelocityMinProperty")
+        set(value) = setParamMin(16L, value)
+
+    var directionalVelocityMax: Double
+        @JvmName("directionalVelocityMaxProperty")
+        get() = getParamMax(16L)
+        @JvmName("setDirectionalVelocityMaxProperty")
+        set(value) = setParamMax(16L, value)
+
+    var directionalVelocityCurve: Texture2D?
+        @JvmName("directionalVelocityCurveProperty")
+        get() = getParamTexture(16L)
+        @JvmName("setDirectionalVelocityCurveProperty")
+        set(value) = setParamTexture(16L, value)
+
+    var orbitVelocity: Vector2
+        @JvmName("orbitVelocityProperty")
+        get() = getParam(2L)
+        @JvmName("setOrbitVelocityProperty")
+        set(value) = setParam(2L, value)
+
+    var orbitVelocityMin: Double
+        @JvmName("orbitVelocityMinProperty")
+        get() = getParamMin(2L)
+        @JvmName("setOrbitVelocityMinProperty")
+        set(value) = setParamMin(2L, value)
+
+    var orbitVelocityMax: Double
+        @JvmName("orbitVelocityMaxProperty")
+        get() = getParamMax(2L)
+        @JvmName("setOrbitVelocityMaxProperty")
+        set(value) = setParamMax(2L, value)
+
+    var orbitVelocityCurve: Texture2D?
+        @JvmName("orbitVelocityCurveProperty")
+        get() = getParamTexture(2L)
+        @JvmName("setOrbitVelocityCurveProperty")
+        set(value) = setParamTexture(2L, value)
+
+    var radialVelocity: Vector2
+        @JvmName("radialVelocityProperty")
+        get() = getParam(15L)
+        @JvmName("setRadialVelocityProperty")
+        set(value) = setParam(15L, value)
+
+    var radialVelocityMin: Double
+        @JvmName("radialVelocityMinProperty")
+        get() = getParamMin(15L)
+        @JvmName("setRadialVelocityMinProperty")
+        set(value) = setParamMin(15L, value)
+
+    var radialVelocityMax: Double
+        @JvmName("radialVelocityMaxProperty")
+        get() = getParamMax(15L)
+        @JvmName("setRadialVelocityMaxProperty")
+        set(value) = setParamMax(15L, value)
+
+    var radialVelocityCurve: Texture2D?
+        @JvmName("radialVelocityCurveProperty")
+        get() = getParamTexture(15L)
+        @JvmName("setRadialVelocityCurveProperty")
+        set(value) = setParamTexture(15L, value)
+
     var velocityLimitCurve: Texture2D?
         @JvmName("velocityLimitCurveProperty")
         get() = getVelocityLimitCurve()
@@ -187,6 +355,102 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setGravityProperty")
         set(value) = setGravity(value)
 
+    var linearAccel: Vector2
+        @JvmName("linearAccelProperty")
+        get() = getParam(3L)
+        @JvmName("setLinearAccelProperty")
+        set(value) = setParam(3L, value)
+
+    var linearAccelMin: Double
+        @JvmName("linearAccelMinProperty")
+        get() = getParamMin(3L)
+        @JvmName("setLinearAccelMinProperty")
+        set(value) = setParamMin(3L, value)
+
+    var linearAccelMax: Double
+        @JvmName("linearAccelMaxProperty")
+        get() = getParamMax(3L)
+        @JvmName("setLinearAccelMaxProperty")
+        set(value) = setParamMax(3L, value)
+
+    var linearAccelCurve: Texture2D?
+        @JvmName("linearAccelCurveProperty")
+        get() = getParamTexture(3L)
+        @JvmName("setLinearAccelCurveProperty")
+        set(value) = setParamTexture(3L, value)
+
+    var radialAccel: Vector2
+        @JvmName("radialAccelProperty")
+        get() = getParam(4L)
+        @JvmName("setRadialAccelProperty")
+        set(value) = setParam(4L, value)
+
+    var radialAccelMin: Double
+        @JvmName("radialAccelMinProperty")
+        get() = getParamMin(4L)
+        @JvmName("setRadialAccelMinProperty")
+        set(value) = setParamMin(4L, value)
+
+    var radialAccelMax: Double
+        @JvmName("radialAccelMaxProperty")
+        get() = getParamMax(4L)
+        @JvmName("setRadialAccelMaxProperty")
+        set(value) = setParamMax(4L, value)
+
+    var radialAccelCurve: Texture2D?
+        @JvmName("radialAccelCurveProperty")
+        get() = getParamTexture(4L)
+        @JvmName("setRadialAccelCurveProperty")
+        set(value) = setParamTexture(4L, value)
+
+    var tangentialAccel: Vector2
+        @JvmName("tangentialAccelProperty")
+        get() = getParam(5L)
+        @JvmName("setTangentialAccelProperty")
+        set(value) = setParam(5L, value)
+
+    var tangentialAccelMin: Double
+        @JvmName("tangentialAccelMinProperty")
+        get() = getParamMin(5L)
+        @JvmName("setTangentialAccelMinProperty")
+        set(value) = setParamMin(5L, value)
+
+    var tangentialAccelMax: Double
+        @JvmName("tangentialAccelMaxProperty")
+        get() = getParamMax(5L)
+        @JvmName("setTangentialAccelMaxProperty")
+        set(value) = setParamMax(5L, value)
+
+    var tangentialAccelCurve: Texture2D?
+        @JvmName("tangentialAccelCurveProperty")
+        get() = getParamTexture(5L)
+        @JvmName("setTangentialAccelCurveProperty")
+        set(value) = setParamTexture(5L, value)
+
+    var damping: Vector2
+        @JvmName("dampingProperty")
+        get() = getParam(6L)
+        @JvmName("setDampingProperty")
+        set(value) = setParam(6L, value)
+
+    var dampingMin: Double
+        @JvmName("dampingMinProperty")
+        get() = getParamMin(6L)
+        @JvmName("setDampingMinProperty")
+        set(value) = setParamMin(6L, value)
+
+    var dampingMax: Double
+        @JvmName("dampingMaxProperty")
+        get() = getParamMax(6L)
+        @JvmName("setDampingMaxProperty")
+        set(value) = setParamMax(6L, value)
+
+    var dampingCurve: Texture2D?
+        @JvmName("dampingCurveProperty")
+        get() = getParamTexture(6L)
+        @JvmName("setDampingCurveProperty")
+        set(value) = setParamTexture(6L, value)
+
     var attractorInteractionEnabled: Boolean
         @JvmName("attractorInteractionEnabledProperty")
         get() = isAttractorInteractionEnabled()
@@ -210,6 +474,54 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         get() = getScale3dMax()
         @JvmName("setScale3dMaxProperty")
         set(value) = setScale3dMax(value)
+
+    var scale: Vector2
+        @JvmName("scaleProperty")
+        get() = getParam(8L)
+        @JvmName("setScaleProperty")
+        set(value) = setParam(8L, value)
+
+    var scaleMin: Double
+        @JvmName("scaleMinProperty")
+        get() = getParamMin(8L)
+        @JvmName("setScaleMinProperty")
+        set(value) = setParamMin(8L, value)
+
+    var scaleMax: Double
+        @JvmName("scaleMaxProperty")
+        get() = getParamMax(8L)
+        @JvmName("setScaleMaxProperty")
+        set(value) = setParamMax(8L, value)
+
+    var scaleCurve: Texture2D?
+        @JvmName("scaleCurveProperty")
+        get() = getParamTexture(8L)
+        @JvmName("setScaleCurveProperty")
+        set(value) = setParamTexture(8L, value)
+
+    var scaleOverVelocity: Vector2
+        @JvmName("scaleOverVelocityProperty")
+        get() = getParam(17L)
+        @JvmName("setScaleOverVelocityProperty")
+        set(value) = setParam(17L, value)
+
+    var scaleOverVelocityMin: Double
+        @JvmName("scaleOverVelocityMinProperty")
+        get() = getParamMin(17L)
+        @JvmName("setScaleOverVelocityMinProperty")
+        set(value) = setParamMin(17L, value)
+
+    var scaleOverVelocityMax: Double
+        @JvmName("scaleOverVelocityMaxProperty")
+        get() = getParamMax(17L)
+        @JvmName("setScaleOverVelocityMaxProperty")
+        set(value) = setParamMax(17L, value)
+
+    var scaleOverVelocityCurve: Texture2D?
+        @JvmName("scaleOverVelocityCurveProperty")
+        get() = getParamTexture(17L)
+        @JvmName("setScaleOverVelocityCurveProperty")
+        set(value) = setParamTexture(17L, value)
 
     var color: Color
         @JvmName("colorProperty")
@@ -241,6 +553,78 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         @JvmName("setEmissionCurveProperty")
         set(value) = setEmissionCurve(value)
 
+    var hueVariation: Vector2
+        @JvmName("hueVariationProperty")
+        get() = getParam(9L)
+        @JvmName("setHueVariationProperty")
+        set(value) = setParam(9L, value)
+
+    var hueVariationMin: Double
+        @JvmName("hueVariationMinProperty")
+        get() = getParamMin(9L)
+        @JvmName("setHueVariationMinProperty")
+        set(value) = setParamMin(9L, value)
+
+    var hueVariationMax: Double
+        @JvmName("hueVariationMaxProperty")
+        get() = getParamMax(9L)
+        @JvmName("setHueVariationMaxProperty")
+        set(value) = setParamMax(9L, value)
+
+    var hueVariationCurve: Texture2D?
+        @JvmName("hueVariationCurveProperty")
+        get() = getParamTexture(9L)
+        @JvmName("setHueVariationCurveProperty")
+        set(value) = setParamTexture(9L, value)
+
+    var animSpeed: Vector2
+        @JvmName("animSpeedProperty")
+        get() = getParam(10L)
+        @JvmName("setAnimSpeedProperty")
+        set(value) = setParam(10L, value)
+
+    var animSpeedMin: Double
+        @JvmName("animSpeedMinProperty")
+        get() = getParamMin(10L)
+        @JvmName("setAnimSpeedMinProperty")
+        set(value) = setParamMin(10L, value)
+
+    var animSpeedMax: Double
+        @JvmName("animSpeedMaxProperty")
+        get() = getParamMax(10L)
+        @JvmName("setAnimSpeedMaxProperty")
+        set(value) = setParamMax(10L, value)
+
+    var animSpeedCurve: Texture2D?
+        @JvmName("animSpeedCurveProperty")
+        get() = getParamTexture(10L)
+        @JvmName("setAnimSpeedCurveProperty")
+        set(value) = setParamTexture(10L, value)
+
+    var animOffset: Vector2
+        @JvmName("animOffsetProperty")
+        get() = getParam(11L)
+        @JvmName("setAnimOffsetProperty")
+        set(value) = setParam(11L, value)
+
+    var animOffsetMin: Double
+        @JvmName("animOffsetMinProperty")
+        get() = getParamMin(11L)
+        @JvmName("setAnimOffsetMinProperty")
+        set(value) = setParamMin(11L, value)
+
+    var animOffsetMax: Double
+        @JvmName("animOffsetMaxProperty")
+        get() = getParamMax(11L)
+        @JvmName("setAnimOffsetMaxProperty")
+        set(value) = setParamMax(11L, value)
+
+    var animOffsetCurve: Texture2D?
+        @JvmName("animOffsetCurveProperty")
+        get() = getParamTexture(11L)
+        @JvmName("setAnimOffsetCurveProperty")
+        set(value) = setParamTexture(11L, value)
+
     var turbulenceEnabled: Boolean
         @JvmName("turbulenceEnabledProperty")
         get() = getTurbulenceEnabled()
@@ -270,6 +654,48 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         get() = getTurbulenceNoiseSpeedRandom()
         @JvmName("setTurbulenceNoiseSpeedRandomProperty")
         set(value) = setTurbulenceNoiseSpeedRandom(value)
+
+    var turbulenceInfluence: Vector2
+        @JvmName("turbulenceInfluenceProperty")
+        get() = getParam(13L)
+        @JvmName("setTurbulenceInfluenceProperty")
+        set(value) = setParam(13L, value)
+
+    var turbulenceInfluenceMin: Double
+        @JvmName("turbulenceInfluenceMinProperty")
+        get() = getParamMin(13L)
+        @JvmName("setTurbulenceInfluenceMinProperty")
+        set(value) = setParamMin(13L, value)
+
+    var turbulenceInfluenceMax: Double
+        @JvmName("turbulenceInfluenceMaxProperty")
+        get() = getParamMax(13L)
+        @JvmName("setTurbulenceInfluenceMaxProperty")
+        set(value) = setParamMax(13L, value)
+
+    var turbulenceInitialDisplacement: Vector2
+        @JvmName("turbulenceInitialDisplacementProperty")
+        get() = getParam(14L)
+        @JvmName("setTurbulenceInitialDisplacementProperty")
+        set(value) = setParam(14L, value)
+
+    var turbulenceInitialDisplacementMin: Double
+        @JvmName("turbulenceInitialDisplacementMinProperty")
+        get() = getParamMin(14L)
+        @JvmName("setTurbulenceInitialDisplacementMinProperty")
+        set(value) = setParamMin(14L, value)
+
+    var turbulenceInitialDisplacementMax: Double
+        @JvmName("turbulenceInitialDisplacementMaxProperty")
+        get() = getParamMax(14L)
+        @JvmName("setTurbulenceInitialDisplacementMaxProperty")
+        set(value) = setParamMax(14L, value)
+
+    var turbulenceInfluenceOverLife: Texture2D?
+        @JvmName("turbulenceInfluenceOverLifeProperty")
+        get() = getParamTexture(12L)
+        @JvmName("setTurbulenceInfluenceOverLifeProperty")
+        set(value) = setParamTexture(12L, value)
 
     var collisionMode: Long
         @JvmName("collisionModeProperty")

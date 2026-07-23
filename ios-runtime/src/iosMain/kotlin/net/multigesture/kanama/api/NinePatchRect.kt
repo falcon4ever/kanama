@@ -28,6 +28,30 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
         @JvmName("setRegionRectProperty")
         set(value) = setRegionRect(value)
 
+    var patchMarginLeft: Int
+        @JvmName("patchMarginLeftProperty")
+        get() = getPatchMargin(0L)
+        @JvmName("setPatchMarginLeftProperty")
+        set(value) = setPatchMargin(0L, value)
+
+    var patchMarginTop: Int
+        @JvmName("patchMarginTopProperty")
+        get() = getPatchMargin(1L)
+        @JvmName("setPatchMarginTopProperty")
+        set(value) = setPatchMargin(1L, value)
+
+    var patchMarginRight: Int
+        @JvmName("patchMarginRightProperty")
+        get() = getPatchMargin(2L)
+        @JvmName("setPatchMarginRightProperty")
+        set(value) = setPatchMargin(2L, value)
+
+    var patchMarginBottom: Int
+        @JvmName("patchMarginBottomProperty")
+        get() = getPatchMargin(3L)
+        @JvmName("setPatchMarginBottomProperty")
+        set(value) = setPatchMargin(3L, value)
+
     var axisStretchHorizontal: Long
         @JvmName("axisStretchHorizontalProperty")
         get() = getHAxisStretchMode()

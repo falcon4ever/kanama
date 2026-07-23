@@ -30,6 +30,30 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
         @JvmName("setSkewProperty")
         set(value) = setSkew(value)
 
+    var borderWidthLeft: Int
+        @JvmName("borderWidthLeftProperty")
+        get() = getBorderWidth(0L)
+        @JvmName("setBorderWidthLeftProperty")
+        set(value) = setBorderWidth(0L, value)
+
+    var borderWidthTop: Int
+        @JvmName("borderWidthTopProperty")
+        get() = getBorderWidth(1L)
+        @JvmName("setBorderWidthTopProperty")
+        set(value) = setBorderWidth(1L, value)
+
+    var borderWidthRight: Int
+        @JvmName("borderWidthRightProperty")
+        get() = getBorderWidth(2L)
+        @JvmName("setBorderWidthRightProperty")
+        set(value) = setBorderWidth(2L, value)
+
+    var borderWidthBottom: Int
+        @JvmName("borderWidthBottomProperty")
+        get() = getBorderWidth(3L)
+        @JvmName("setBorderWidthBottomProperty")
+        set(value) = setBorderWidth(3L, value)
+
     var borderColor: Color
         @JvmName("borderColorProperty")
         get() = getBorderColor()
@@ -42,11 +66,59 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
         @JvmName("setBorderBlendProperty")
         set(value) = setBorderBlend(value)
 
+    var cornerRadiusTopLeft: Int
+        @JvmName("cornerRadiusTopLeftProperty")
+        get() = getCornerRadius(0L)
+        @JvmName("setCornerRadiusTopLeftProperty")
+        set(value) = setCornerRadius(0L, value)
+
+    var cornerRadiusTopRight: Int
+        @JvmName("cornerRadiusTopRightProperty")
+        get() = getCornerRadius(1L)
+        @JvmName("setCornerRadiusTopRightProperty")
+        set(value) = setCornerRadius(1L, value)
+
+    var cornerRadiusBottomRight: Int
+        @JvmName("cornerRadiusBottomRightProperty")
+        get() = getCornerRadius(2L)
+        @JvmName("setCornerRadiusBottomRightProperty")
+        set(value) = setCornerRadius(2L, value)
+
+    var cornerRadiusBottomLeft: Int
+        @JvmName("cornerRadiusBottomLeftProperty")
+        get() = getCornerRadius(3L)
+        @JvmName("setCornerRadiusBottomLeftProperty")
+        set(value) = setCornerRadius(3L, value)
+
     var cornerDetail: Int
         @JvmName("cornerDetailProperty")
         get() = getCornerDetail()
         @JvmName("setCornerDetailProperty")
         set(value) = setCornerDetail(value)
+
+    var expandMarginLeft: Double
+        @JvmName("expandMarginLeftProperty")
+        get() = getExpandMargin(0L)
+        @JvmName("setExpandMarginLeftProperty")
+        set(value) = setExpandMargin(0L, value)
+
+    var expandMarginTop: Double
+        @JvmName("expandMarginTopProperty")
+        get() = getExpandMargin(1L)
+        @JvmName("setExpandMarginTopProperty")
+        set(value) = setExpandMargin(1L, value)
+
+    var expandMarginRight: Double
+        @JvmName("expandMarginRightProperty")
+        get() = getExpandMargin(2L)
+        @JvmName("setExpandMarginRightProperty")
+        set(value) = setExpandMargin(2L, value)
+
+    var expandMarginBottom: Double
+        @JvmName("expandMarginBottomProperty")
+        get() = getExpandMargin(3L)
+        @JvmName("setExpandMarginBottomProperty")
+        set(value) = setExpandMargin(3L, value)
 
     var shadowColor: Color
         @JvmName("shadowColorProperty")

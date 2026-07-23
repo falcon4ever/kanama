@@ -18,6 +18,54 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    var textureMarginLeft: Double
+        @JvmName("textureMarginLeftProperty")
+        get() = getTextureMargin(0L)
+        @JvmName("setTextureMarginLeftProperty")
+        set(value) = setTextureMargin(0L, value)
+
+    var textureMarginTop: Double
+        @JvmName("textureMarginTopProperty")
+        get() = getTextureMargin(1L)
+        @JvmName("setTextureMarginTopProperty")
+        set(value) = setTextureMargin(1L, value)
+
+    var textureMarginRight: Double
+        @JvmName("textureMarginRightProperty")
+        get() = getTextureMargin(2L)
+        @JvmName("setTextureMarginRightProperty")
+        set(value) = setTextureMargin(2L, value)
+
+    var textureMarginBottom: Double
+        @JvmName("textureMarginBottomProperty")
+        get() = getTextureMargin(3L)
+        @JvmName("setTextureMarginBottomProperty")
+        set(value) = setTextureMargin(3L, value)
+
+    var expandMarginLeft: Double
+        @JvmName("expandMarginLeftProperty")
+        get() = getExpandMargin(0L)
+        @JvmName("setExpandMarginLeftProperty")
+        set(value) = setExpandMargin(0L, value)
+
+    var expandMarginTop: Double
+        @JvmName("expandMarginTopProperty")
+        get() = getExpandMargin(1L)
+        @JvmName("setExpandMarginTopProperty")
+        set(value) = setExpandMargin(1L, value)
+
+    var expandMarginRight: Double
+        @JvmName("expandMarginRightProperty")
+        get() = getExpandMargin(2L)
+        @JvmName("setExpandMarginRightProperty")
+        set(value) = setExpandMargin(2L, value)
+
+    var expandMarginBottom: Double
+        @JvmName("expandMarginBottomProperty")
+        get() = getExpandMargin(3L)
+        @JvmName("setExpandMarginBottomProperty")
+        set(value) = setExpandMargin(3L, value)
+
     var axisStretchHorizontal: Long
         @JvmName("axisStretchHorizontalProperty")
         get() = getHAxisStretchMode()

@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
@@ -10,6 +11,42 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: PhysicsBody3D
  */
 open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
+    var axisLockLinearX: Boolean
+        @JvmName("axisLockLinearXProperty")
+        get() = getAxisLock(1L)
+        @JvmName("setAxisLockLinearXProperty")
+        set(value) = setAxisLock(1L, value)
+
+    var axisLockLinearY: Boolean
+        @JvmName("axisLockLinearYProperty")
+        get() = getAxisLock(2L)
+        @JvmName("setAxisLockLinearYProperty")
+        set(value) = setAxisLock(2L, value)
+
+    var axisLockLinearZ: Boolean
+        @JvmName("axisLockLinearZProperty")
+        get() = getAxisLock(4L)
+        @JvmName("setAxisLockLinearZProperty")
+        set(value) = setAxisLock(4L, value)
+
+    var axisLockAngularX: Boolean
+        @JvmName("axisLockAngularXProperty")
+        get() = getAxisLock(8L)
+        @JvmName("setAxisLockAngularXProperty")
+        set(value) = setAxisLock(8L, value)
+
+    var axisLockAngularY: Boolean
+        @JvmName("axisLockAngularYProperty")
+        get() = getAxisLock(16L)
+        @JvmName("setAxisLockAngularYProperty")
+        set(value) = setAxisLock(16L, value)
+
+    var axisLockAngularZ: Boolean
+        @JvmName("axisLockAngularZProperty")
+        get() = getAxisLock(32L)
+        @JvmName("setAxisLockAngularZProperty")
+        set(value) = setAxisLock(32L, value)
+
     fun moveAndCollide(motion: Vector3, testOnly: Boolean = false, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): KinematicCollision3D? {
         return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, handle, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
     }

@@ -156,6 +156,12 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setEmissionRingRadiusProperty")
         set(value) = setEmissionRingRadius(value)
 
+    var particleFlagAlignY: Boolean
+        @JvmName("particleFlagAlignYProperty")
+        get() = getParticleFlag(0L)
+        @JvmName("setParticleFlagAlignYProperty")
+        set(value) = setParticleFlag(0L, value)
+
     var direction: Vector2
         @JvmName("directionProperty")
         get() = getDirection()
@@ -173,6 +179,162 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         get() = getGravity()
         @JvmName("setGravityProperty")
         set(value) = setGravity(value)
+
+    var initialVelocityMin: Double
+        @JvmName("initialVelocityMinProperty")
+        get() = getParamMin(0L)
+        @JvmName("setInitialVelocityMinProperty")
+        set(value) = setParamMin(0L, value)
+
+    var initialVelocityMax: Double
+        @JvmName("initialVelocityMaxProperty")
+        get() = getParamMax(0L)
+        @JvmName("setInitialVelocityMaxProperty")
+        set(value) = setParamMax(0L, value)
+
+    var angularVelocityMin: Double
+        @JvmName("angularVelocityMinProperty")
+        get() = getParamMin(1L)
+        @JvmName("setAngularVelocityMinProperty")
+        set(value) = setParamMin(1L, value)
+
+    var angularVelocityMax: Double
+        @JvmName("angularVelocityMaxProperty")
+        get() = getParamMax(1L)
+        @JvmName("setAngularVelocityMaxProperty")
+        set(value) = setParamMax(1L, value)
+
+    var angularVelocityCurve: Curve?
+        @JvmName("angularVelocityCurveProperty")
+        get() = getParamCurve(1L)
+        @JvmName("setAngularVelocityCurveProperty")
+        set(value) = setParamCurve(1L, value)
+
+    var orbitVelocityMin: Double
+        @JvmName("orbitVelocityMinProperty")
+        get() = getParamMin(2L)
+        @JvmName("setOrbitVelocityMinProperty")
+        set(value) = setParamMin(2L, value)
+
+    var orbitVelocityMax: Double
+        @JvmName("orbitVelocityMaxProperty")
+        get() = getParamMax(2L)
+        @JvmName("setOrbitVelocityMaxProperty")
+        set(value) = setParamMax(2L, value)
+
+    var orbitVelocityCurve: Curve?
+        @JvmName("orbitVelocityCurveProperty")
+        get() = getParamCurve(2L)
+        @JvmName("setOrbitVelocityCurveProperty")
+        set(value) = setParamCurve(2L, value)
+
+    var linearAccelMin: Double
+        @JvmName("linearAccelMinProperty")
+        get() = getParamMin(3L)
+        @JvmName("setLinearAccelMinProperty")
+        set(value) = setParamMin(3L, value)
+
+    var linearAccelMax: Double
+        @JvmName("linearAccelMaxProperty")
+        get() = getParamMax(3L)
+        @JvmName("setLinearAccelMaxProperty")
+        set(value) = setParamMax(3L, value)
+
+    var linearAccelCurve: Curve?
+        @JvmName("linearAccelCurveProperty")
+        get() = getParamCurve(3L)
+        @JvmName("setLinearAccelCurveProperty")
+        set(value) = setParamCurve(3L, value)
+
+    var radialAccelMin: Double
+        @JvmName("radialAccelMinProperty")
+        get() = getParamMin(4L)
+        @JvmName("setRadialAccelMinProperty")
+        set(value) = setParamMin(4L, value)
+
+    var radialAccelMax: Double
+        @JvmName("radialAccelMaxProperty")
+        get() = getParamMax(4L)
+        @JvmName("setRadialAccelMaxProperty")
+        set(value) = setParamMax(4L, value)
+
+    var radialAccelCurve: Curve?
+        @JvmName("radialAccelCurveProperty")
+        get() = getParamCurve(4L)
+        @JvmName("setRadialAccelCurveProperty")
+        set(value) = setParamCurve(4L, value)
+
+    var tangentialAccelMin: Double
+        @JvmName("tangentialAccelMinProperty")
+        get() = getParamMin(5L)
+        @JvmName("setTangentialAccelMinProperty")
+        set(value) = setParamMin(5L, value)
+
+    var tangentialAccelMax: Double
+        @JvmName("tangentialAccelMaxProperty")
+        get() = getParamMax(5L)
+        @JvmName("setTangentialAccelMaxProperty")
+        set(value) = setParamMax(5L, value)
+
+    var tangentialAccelCurve: Curve?
+        @JvmName("tangentialAccelCurveProperty")
+        get() = getParamCurve(5L)
+        @JvmName("setTangentialAccelCurveProperty")
+        set(value) = setParamCurve(5L, value)
+
+    var dampingMin: Double
+        @JvmName("dampingMinProperty")
+        get() = getParamMin(6L)
+        @JvmName("setDampingMinProperty")
+        set(value) = setParamMin(6L, value)
+
+    var dampingMax: Double
+        @JvmName("dampingMaxProperty")
+        get() = getParamMax(6L)
+        @JvmName("setDampingMaxProperty")
+        set(value) = setParamMax(6L, value)
+
+    var dampingCurve: Curve?
+        @JvmName("dampingCurveProperty")
+        get() = getParamCurve(6L)
+        @JvmName("setDampingCurveProperty")
+        set(value) = setParamCurve(6L, value)
+
+    var angleMin: Double
+        @JvmName("angleMinProperty")
+        get() = getParamMin(7L)
+        @JvmName("setAngleMinProperty")
+        set(value) = setParamMin(7L, value)
+
+    var angleMax: Double
+        @JvmName("angleMaxProperty")
+        get() = getParamMax(7L)
+        @JvmName("setAngleMaxProperty")
+        set(value) = setParamMax(7L, value)
+
+    var angleCurve: Curve?
+        @JvmName("angleCurveProperty")
+        get() = getParamCurve(7L)
+        @JvmName("setAngleCurveProperty")
+        set(value) = setParamCurve(7L, value)
+
+    var scaleAmountMin: Double
+        @JvmName("scaleAmountMinProperty")
+        get() = getParamMin(8L)
+        @JvmName("setScaleAmountMinProperty")
+        set(value) = setParamMin(8L, value)
+
+    var scaleAmountMax: Double
+        @JvmName("scaleAmountMaxProperty")
+        get() = getParamMax(8L)
+        @JvmName("setScaleAmountMaxProperty")
+        set(value) = setParamMax(8L, value)
+
+    var scaleAmountCurve: Curve?
+        @JvmName("scaleAmountCurveProperty")
+        get() = getParamCurve(8L)
+        @JvmName("setScaleAmountCurveProperty")
+        set(value) = setParamCurve(8L, value)
 
     var splitScale: Boolean
         @JvmName("splitScaleProperty")
@@ -209,6 +371,60 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         get() = getColorInitialRamp()
         @JvmName("setColorInitialRampProperty")
         set(value) = setColorInitialRamp(value)
+
+    var hueVariationMin: Double
+        @JvmName("hueVariationMinProperty")
+        get() = getParamMin(9L)
+        @JvmName("setHueVariationMinProperty")
+        set(value) = setParamMin(9L, value)
+
+    var hueVariationMax: Double
+        @JvmName("hueVariationMaxProperty")
+        get() = getParamMax(9L)
+        @JvmName("setHueVariationMaxProperty")
+        set(value) = setParamMax(9L, value)
+
+    var hueVariationCurve: Curve?
+        @JvmName("hueVariationCurveProperty")
+        get() = getParamCurve(9L)
+        @JvmName("setHueVariationCurveProperty")
+        set(value) = setParamCurve(9L, value)
+
+    var animSpeedMin: Double
+        @JvmName("animSpeedMinProperty")
+        get() = getParamMin(10L)
+        @JvmName("setAnimSpeedMinProperty")
+        set(value) = setParamMin(10L, value)
+
+    var animSpeedMax: Double
+        @JvmName("animSpeedMaxProperty")
+        get() = getParamMax(10L)
+        @JvmName("setAnimSpeedMaxProperty")
+        set(value) = setParamMax(10L, value)
+
+    var animSpeedCurve: Curve?
+        @JvmName("animSpeedCurveProperty")
+        get() = getParamCurve(10L)
+        @JvmName("setAnimSpeedCurveProperty")
+        set(value) = setParamCurve(10L, value)
+
+    var animOffsetMin: Double
+        @JvmName("animOffsetMinProperty")
+        get() = getParamMin(11L)
+        @JvmName("setAnimOffsetMinProperty")
+        set(value) = setParamMin(11L, value)
+
+    var animOffsetMax: Double
+        @JvmName("animOffsetMaxProperty")
+        get() = getParamMax(11L)
+        @JvmName("setAnimOffsetMaxProperty")
+        set(value) = setParamMax(11L, value)
+
+    var animOffsetCurve: Curve?
+        @JvmName("animOffsetCurveProperty")
+        get() = getParamCurve(11L)
+        @JvmName("setAnimOffsetCurveProperty")
+        set(value) = setParamCurve(11L, value)
 
     /**
      * If `true`, particles are being emitted. `emitting` can be used to start and stop particles from

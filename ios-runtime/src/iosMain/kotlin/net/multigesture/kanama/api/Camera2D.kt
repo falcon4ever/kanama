@@ -56,6 +56,30 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setLimitEnabledProperty")
         set(value) = setLimitEnabled(value)
 
+    var limitLeft: Int
+        @JvmName("limitLeftProperty")
+        get() = getLimit(0L)
+        @JvmName("setLimitLeftProperty")
+        set(value) = setLimit(0L, value)
+
+    var limitTop: Int
+        @JvmName("limitTopProperty")
+        get() = getLimit(1L)
+        @JvmName("setLimitTopProperty")
+        set(value) = setLimit(1L, value)
+
+    var limitRight: Int
+        @JvmName("limitRightProperty")
+        get() = getLimit(2L)
+        @JvmName("setLimitRightProperty")
+        set(value) = setLimit(2L, value)
+
+    var limitBottom: Int
+        @JvmName("limitBottomProperty")
+        get() = getLimit(3L)
+        @JvmName("setLimitBottomProperty")
+        set(value) = setLimit(3L, value)
+
     var limitSmoothed: Boolean
         @JvmName("limitSmoothedProperty")
         get() = isLimitSmoothingEnabled()
@@ -109,6 +133,30 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
         get() = getDragVerticalOffset()
         @JvmName("setDragVerticalOffsetProperty")
         set(value) = setDragVerticalOffset(value)
+
+    var dragLeftMargin: Double
+        @JvmName("dragLeftMarginProperty")
+        get() = getDragMargin(0L)
+        @JvmName("setDragLeftMarginProperty")
+        set(value) = setDragMargin(0L, value)
+
+    var dragTopMargin: Double
+        @JvmName("dragTopMarginProperty")
+        get() = getDragMargin(1L)
+        @JvmName("setDragTopMarginProperty")
+        set(value) = setDragMargin(1L, value)
+
+    var dragRightMargin: Double
+        @JvmName("dragRightMarginProperty")
+        get() = getDragMargin(2L)
+        @JvmName("setDragRightMarginProperty")
+        set(value) = setDragMargin(2L, value)
+
+    var dragBottomMargin: Double
+        @JvmName("dragBottomMarginProperty")
+        get() = getDragMargin(3L)
+        @JvmName("setDragBottomMarginProperty")
+        set(value) = setDragMargin(3L, value)
 
     var editorDrawScreen: Boolean
         @JvmName("editorDrawScreenProperty")

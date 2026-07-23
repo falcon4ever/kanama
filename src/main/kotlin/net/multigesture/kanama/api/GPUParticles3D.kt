@@ -177,6 +177,30 @@ class GPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setDrawPassesProperty")
         set(value) = setDrawPasses(value)
 
+    var drawPass1: Mesh?
+        @JvmName("drawPass1Property")
+        get() = getDrawPassMesh(0)
+        @JvmName("setDrawPass1Property")
+        set(value) = setDrawPassMesh(0, value)
+
+    var drawPass2: Mesh?
+        @JvmName("drawPass2Property")
+        get() = getDrawPassMesh(1)
+        @JvmName("setDrawPass2Property")
+        set(value) = setDrawPassMesh(1, value)
+
+    var drawPass3: Mesh?
+        @JvmName("drawPass3Property")
+        get() = getDrawPassMesh(2)
+        @JvmName("setDrawPass3Property")
+        set(value) = setDrawPassMesh(2, value)
+
+    var drawPass4: Mesh?
+        @JvmName("drawPass4Property")
+        get() = getDrawPassMesh(3)
+        @JvmName("setDrawPass4Property")
+        set(value) = setDrawPassMesh(3, value)
+
     var drawSkin: Skin?
         @JvmName("drawSkinProperty")
         get() = getSkin()

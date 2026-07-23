@@ -15,7 +15,7 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 | Classes with complete method generation | 761 | `█████████░░░` 73.5% |
 | Methods generated | 15332/16822 (91.1%) | `███████████░` 91.1% |
 | Methods skipped | 1490 |  |
-| Properties generated | 3657/4162 (87.9%) | `███████████░` 87.9% |
+| Properties generated | 4072/4162 (97.8%) | `████████████` 97.8% |
 | Signals generated | 503/503 (100.0%) | `████████████` 100.0% |
 
 **Reading the numbers above:** "Methods generated" counts against *all* methods in `extension_api.json`, including the 1437 engine virtuals — which are deliberately not emitted as callable wrappers (a script overrides them via `@OverrideVirtual`) — and the documented by-design skips (root-`Object` policy methods, `RefCounted` lifetime, the Dictionary passthrough revert). Callable-method coverage is the **Promoted Source Summary** below; a sub-100% figure here is not unfinished work.

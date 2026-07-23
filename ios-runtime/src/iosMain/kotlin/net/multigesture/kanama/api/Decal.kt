@@ -17,6 +17,30 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    var textureAlbedo: Texture2D?
+        @JvmName("textureAlbedoProperty")
+        get() = getTexture(0L)
+        @JvmName("setTextureAlbedoProperty")
+        set(value) = setTexture(0L, value)
+
+    var textureNormal: Texture2D?
+        @JvmName("textureNormalProperty")
+        get() = getTexture(1L)
+        @JvmName("setTextureNormalProperty")
+        set(value) = setTexture(1L, value)
+
+    var textureOrm: Texture2D?
+        @JvmName("textureOrmProperty")
+        get() = getTexture(2L)
+        @JvmName("setTextureOrmProperty")
+        set(value) = setTexture(2L, value)
+
+    var textureEmission: Texture2D?
+        @JvmName("textureEmissionProperty")
+        get() = getTexture(3L)
+        @JvmName("setTextureEmissionProperty")
+        set(value) = setTexture(3L, value)
+
     var emissionEnergy: Double
         @JvmName("emissionEnergyProperty")
         get() = getEmissionEnergy()

@@ -221,6 +221,9 @@ python3 "$ROOT_DIR/scripts/audit_singleton_refcounted_policy.py"
 stage "conservative wrapper generator fixture"
 python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
 
+stage "generated property coverage gate"
+python3 "$ROOT_DIR/scripts/check_property_coverage.py"
+
 stage "iOS no-silent-stubs check"
 python3 "$ROOT_DIR/scripts/check_ios_no_silent_stubs.py"
 
