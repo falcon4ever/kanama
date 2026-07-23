@@ -23,7 +23,10 @@ import os from "node:os";
 import path from "node:path";
 
 import { runMatch3 } from "./demos/match3.mjs";
+import { runBunnymark } from "./demos/bunnymark.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
+
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark };
 
 function parseArgs(argv) {
   const args = {};
@@ -63,9 +66,9 @@ async function main() {
   const deadline = Date.now() + timeoutMs;
   const startedAt = Date.now();
 
-  if (args.demo !== "match3") {
-    // Bunnymark + the other demos are formalized in the Phase 3 follow-on.
-    throw new Error(`chrome_cdp: demo '${args.demo}' not yet formalized (Task 57f Phase 3)`);
+  const runDemo = DEMOS[args.demo];
+  if (!runDemo) {
+    throw new Error(`chrome_cdp: unknown demo '${args.demo}' (expected ${Object.keys(DEMOS).join("|")})`);
   }
 
   const chromeBinary = args["browser-binary"] ?? DEFAULT_CHROME;
@@ -220,7 +223,7 @@ async function main() {
 
     // Drive the demo. The demo module returns startup + assertion + lifecycle
     // facts; console/exception capture stays here where CDP delivers it.
-    const demoResult = await runMatch3({ url: args.url, call, evaluate, deadline });
+    const demoResult = await runDemo({ url: args.url, call, evaluate, deadline });
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
