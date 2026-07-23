@@ -232,6 +232,11 @@ class WrapperConvenienceProbe(val godotObject: MemorySegment) {
     gizmoPlugin.createMaterial("kanama_probe", Color(1f, 1f, 1f))
     gizmoPlugin.addMaterial("kanama_probe", material)
     gizmoPlugin.getMaterial("kanama_probe", gizmo)
+    // Indexed properties (set_texture/get_texture with a bound index) are now generated;
+    // these self round-trips lock in that albedo/normal texture accessors exist and are read-write.
+    material.albedoTexture = material.albedoTexture
+    material.normalTexture = material.normalTexture
+    material.metallicTexture = material.metallicTexture
   }
 
   fun promotedExtensionBaseConveniences(

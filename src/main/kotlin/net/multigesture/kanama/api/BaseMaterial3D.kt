@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 
 /**
  * Abstract base class for defining the 3D rendering properties of meshes.
@@ -60,6 +60,12 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setDepthDrawModeProperty")
         set(value) = setDepthDrawMode(value)
 
+    var noDepthTest: Boolean
+        @JvmName("noDepthTestProperty")
+        get() = getFlag(0L)
+        @JvmName("setNoDepthTestProperty")
+        set(value) = setFlag(0L, value)
+
     var depthTest: Long
         @JvmName("depthTestProperty")
         get() = getDepthTest()
@@ -84,11 +90,65 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setSpecularModeProperty")
         set(value) = setSpecularMode(value)
 
+    var disableAmbientLight: Boolean
+        @JvmName("disableAmbientLightProperty")
+        get() = getFlag(14L)
+        @JvmName("setDisableAmbientLightProperty")
+        set(value) = setFlag(14L, value)
+
+    var disableFog: Boolean
+        @JvmName("disableFogProperty")
+        get() = getFlag(21L)
+        @JvmName("setDisableFogProperty")
+        set(value) = setFlag(21L, value)
+
+    var disableSpecularOcclusion: Boolean
+        @JvmName("disableSpecularOcclusionProperty")
+        get() = getFlag(22L)
+        @JvmName("setDisableSpecularOcclusionProperty")
+        set(value) = setFlag(22L, value)
+
+    var vertexColorUseAsAlbedo: Boolean
+        @JvmName("vertexColorUseAsAlbedoProperty")
+        get() = getFlag(1L)
+        @JvmName("setVertexColorUseAsAlbedoProperty")
+        set(value) = setFlag(1L, value)
+
+    var vertexColorIsSrgb: Boolean
+        @JvmName("vertexColorIsSrgbProperty")
+        get() = getFlag(2L)
+        @JvmName("setVertexColorIsSrgbProperty")
+        set(value) = setFlag(2L, value)
+
     var albedoColor: Color
         @JvmName("albedoColorProperty")
         get() = getAlbedo()
         @JvmName("setAlbedoColorProperty")
         set(value) = setAlbedo(value)
+
+    var albedoTexture: Texture2D?
+        @JvmName("albedoTextureProperty")
+        get() = getTexture(0L)
+        @JvmName("setAlbedoTextureProperty")
+        set(value) = setTexture(0L, value)
+
+    var albedoTextureForceSrgb: Boolean
+        @JvmName("albedoTextureForceSrgbProperty")
+        get() = getFlag(12L)
+        @JvmName("setAlbedoTextureForceSrgbProperty")
+        set(value) = setFlag(12L, value)
+
+    var albedoTextureMsdf: Boolean
+        @JvmName("albedoTextureMsdfProperty")
+        get() = getFlag(20L)
+        @JvmName("setAlbedoTextureMsdfProperty")
+        set(value) = setFlag(20L, value)
+
+    var ormTexture: Texture2D?
+        @JvmName("ormTextureProperty")
+        get() = getTexture(17L)
+        @JvmName("setOrmTextureProperty")
+        set(value) = setTexture(17L, value)
 
     var metallic: Double
         @JvmName("metallicProperty")
@@ -102,6 +162,12 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setMetallicSpecularProperty")
         set(value) = setSpecular(value)
 
+    var metallicTexture: Texture2D?
+        @JvmName("metallicTextureProperty")
+        get() = getTexture(1L)
+        @JvmName("setMetallicTextureProperty")
+        set(value) = setTexture(1L, value)
+
     var metallicTextureChannel: Long
         @JvmName("metallicTextureChannelProperty")
         get() = getMetallicTextureChannel()
@@ -114,11 +180,23 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setRoughnessProperty")
         set(value) = setRoughness(value)
 
+    var roughnessTexture: Texture2D?
+        @JvmName("roughnessTextureProperty")
+        get() = getTexture(2L)
+        @JvmName("setRoughnessTextureProperty")
+        set(value) = setTexture(2L, value)
+
     var roughnessTextureChannel: Long
         @JvmName("roughnessTextureChannelProperty")
         get() = getRoughnessTextureChannel()
         @JvmName("setRoughnessTextureChannelProperty")
         set(value) = setRoughnessTextureChannel(value)
+
+    var emissionEnabled: Boolean
+        @JvmName("emissionEnabledProperty")
+        get() = getFeature(0L)
+        @JvmName("setEmissionEnabledProperty")
+        set(value) = setFeature(0L, value)
 
     var emission: Color
         @JvmName("emissionProperty")
@@ -144,11 +222,53 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setEmissionOperatorProperty")
         set(value) = setEmissionOperator(value)
 
+    var emissionOnUv2: Boolean
+        @JvmName("emissionOnUv2Property")
+        get() = getFlag(11L)
+        @JvmName("setEmissionOnUv2Property")
+        set(value) = setFlag(11L, value)
+
+    var emissionTexture: Texture2D?
+        @JvmName("emissionTextureProperty")
+        get() = getTexture(3L)
+        @JvmName("setEmissionTextureProperty")
+        set(value) = setTexture(3L, value)
+
+    var normalEnabled: Boolean
+        @JvmName("normalEnabledProperty")
+        get() = getFeature(1L)
+        @JvmName("setNormalEnabledProperty")
+        set(value) = setFeature(1L, value)
+
     var normalScale: Double
         @JvmName("normalScaleProperty")
         get() = getNormalScale()
         @JvmName("setNormalScaleProperty")
         set(value) = setNormalScale(value)
+
+    var normalTexture: Texture2D?
+        @JvmName("normalTextureProperty")
+        get() = getTexture(4L)
+        @JvmName("setNormalTextureProperty")
+        set(value) = setTexture(4L, value)
+
+    var bentNormalEnabled: Boolean
+        @JvmName("bentNormalEnabledProperty")
+        get() = getFeature(12L)
+        @JvmName("setBentNormalEnabledProperty")
+        set(value) = setFeature(12L, value)
+
+    var bentNormalTexture: Texture2D?
+        @JvmName("bentNormalTextureProperty")
+        get() = getTexture(18L)
+        @JvmName("setBentNormalTextureProperty")
+        set(value) = setTexture(18L, value)
+
+    var rimEnabled: Boolean
+        @JvmName("rimEnabledProperty")
+        get() = getFeature(2L)
+        @JvmName("setRimEnabledProperty")
+        set(value) = setFeature(2L, value)
 
     var rim: Double
         @JvmName("rimProperty")
@@ -162,6 +282,18 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setRimTintProperty")
         set(value) = setRimTint(value)
 
+    var rimTexture: Texture2D?
+        @JvmName("rimTextureProperty")
+        get() = getTexture(5L)
+        @JvmName("setRimTextureProperty")
+        set(value) = setTexture(5L, value)
+
+    var clearcoatEnabled: Boolean
+        @JvmName("clearcoatEnabledProperty")
+        get() = getFeature(3L)
+        @JvmName("setClearcoatEnabledProperty")
+        set(value) = setFeature(3L, value)
+
     var clearcoat: Double
         @JvmName("clearcoatProperty")
         get() = getClearcoat()
@@ -174,11 +306,35 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setClearcoatRoughnessProperty")
         set(value) = setClearcoatRoughness(value)
 
+    var clearcoatTexture: Texture2D?
+        @JvmName("clearcoatTextureProperty")
+        get() = getTexture(6L)
+        @JvmName("setClearcoatTextureProperty")
+        set(value) = setTexture(6L, value)
+
+    var anisotropyEnabled: Boolean
+        @JvmName("anisotropyEnabledProperty")
+        get() = getFeature(4L)
+        @JvmName("setAnisotropyEnabledProperty")
+        set(value) = setFeature(4L, value)
+
     var anisotropy: Double
         @JvmName("anisotropyProperty")
         get() = getAnisotropy()
         @JvmName("setAnisotropyProperty")
         set(value) = setAnisotropy(value)
+
+    var anisotropyFlowmap: Texture2D?
+        @JvmName("anisotropyFlowmapProperty")
+        get() = getTexture(7L)
+        @JvmName("setAnisotropyFlowmapProperty")
+        set(value) = setTexture(7L, value)
+
+    var aoEnabled: Boolean
+        @JvmName("aoEnabledProperty")
+        get() = getFeature(5L)
+        @JvmName("setAoEnabledProperty")
+        set(value) = setFeature(5L, value)
 
     var aoLightAffect: Double
         @JvmName("aoLightAffectProperty")
@@ -186,11 +342,29 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setAoLightAffectProperty")
         set(value) = setAoLightAffect(value)
 
+    var aoTexture: Texture2D?
+        @JvmName("aoTextureProperty")
+        get() = getTexture(8L)
+        @JvmName("setAoTextureProperty")
+        set(value) = setTexture(8L, value)
+
+    var aoOnUv2: Boolean
+        @JvmName("aoOnUv2Property")
+        get() = getFlag(10L)
+        @JvmName("setAoOnUv2Property")
+        set(value) = setFlag(10L, value)
+
     var aoTextureChannel: Long
         @JvmName("aoTextureChannelProperty")
         get() = getAoTextureChannel()
         @JvmName("setAoTextureChannelProperty")
         set(value) = setAoTextureChannel(value)
+
+    var heightmapEnabled: Boolean
+        @JvmName("heightmapEnabledProperty")
+        get() = getFeature(6L)
+        @JvmName("setHeightmapEnabledProperty")
+        set(value) = setFeature(6L, value)
 
     var heightmapScale: Double
         @JvmName("heightmapScaleProperty")
@@ -228,17 +402,59 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setHeightmapFlipBinormalProperty")
         set(value) = setHeightmapDeepParallaxFlipBinormal(value)
 
+    var heightmapTexture: Texture2D?
+        @JvmName("heightmapTextureProperty")
+        get() = getTexture(9L)
+        @JvmName("setHeightmapTextureProperty")
+        set(value) = setTexture(9L, value)
+
+    var heightmapFlipTexture: Boolean
+        @JvmName("heightmapFlipTextureProperty")
+        get() = getFlag(17L)
+        @JvmName("setHeightmapFlipTextureProperty")
+        set(value) = setFlag(17L, value)
+
+    var subsurfScatterEnabled: Boolean
+        @JvmName("subsurfScatterEnabledProperty")
+        get() = getFeature(7L)
+        @JvmName("setSubsurfScatterEnabledProperty")
+        set(value) = setFeature(7L, value)
+
     var subsurfScatterStrength: Double
         @JvmName("subsurfScatterStrengthProperty")
         get() = getSubsurfaceScatteringStrength()
         @JvmName("setSubsurfScatterStrengthProperty")
         set(value) = setSubsurfaceScatteringStrength(value)
 
+    var subsurfScatterSkinMode: Boolean
+        @JvmName("subsurfScatterSkinModeProperty")
+        get() = getFlag(18L)
+        @JvmName("setSubsurfScatterSkinModeProperty")
+        set(value) = setFlag(18L, value)
+
+    var subsurfScatterTexture: Texture2D?
+        @JvmName("subsurfScatterTextureProperty")
+        get() = getTexture(10L)
+        @JvmName("setSubsurfScatterTextureProperty")
+        set(value) = setTexture(10L, value)
+
+    var subsurfScatterTransmittanceEnabled: Boolean
+        @JvmName("subsurfScatterTransmittanceEnabledProperty")
+        get() = getFeature(8L)
+        @JvmName("setSubsurfScatterTransmittanceEnabledProperty")
+        set(value) = setFeature(8L, value)
+
     var subsurfScatterTransmittanceColor: Color
         @JvmName("subsurfScatterTransmittanceColorProperty")
         get() = getTransmittanceColor()
         @JvmName("setSubsurfScatterTransmittanceColorProperty")
         set(value) = setTransmittanceColor(value)
+
+    var subsurfScatterTransmittanceTexture: Texture2D?
+        @JvmName("subsurfScatterTransmittanceTextureProperty")
+        get() = getTexture(11L)
+        @JvmName("setSubsurfScatterTransmittanceTextureProperty")
+        set(value) = setTexture(11L, value)
 
     var subsurfScatterTransmittanceDepth: Double
         @JvmName("subsurfScatterTransmittanceDepthProperty")
@@ -252,11 +468,29 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setSubsurfScatterTransmittanceBoostProperty")
         set(value) = setTransmittanceBoost(value)
 
+    var backlightEnabled: Boolean
+        @JvmName("backlightEnabledProperty")
+        get() = getFeature(9L)
+        @JvmName("setBacklightEnabledProperty")
+        set(value) = setFeature(9L, value)
+
     var backlight: Color
         @JvmName("backlightProperty")
         get() = getBacklight()
         @JvmName("setBacklightProperty")
         set(value) = setBacklight(value)
+
+    var backlightTexture: Texture2D?
+        @JvmName("backlightTextureProperty")
+        get() = getTexture(12L)
+        @JvmName("setBacklightTextureProperty")
+        set(value) = setTexture(12L, value)
+
+    var refractionEnabled: Boolean
+        @JvmName("refractionEnabledProperty")
+        get() = getFeature(10L)
+        @JvmName("setRefractionEnabledProperty")
+        set(value) = setFeature(10L, value)
 
     var refractionScale: Double
         @JvmName("refractionScaleProperty")
@@ -264,11 +498,29 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setRefractionScaleProperty")
         set(value) = setRefraction(value)
 
+    var refractionTexture: Texture2D?
+        @JvmName("refractionTextureProperty")
+        get() = getTexture(13L)
+        @JvmName("setRefractionTextureProperty")
+        set(value) = setTexture(13L, value)
+
     var refractionTextureChannel: Long
         @JvmName("refractionTextureChannelProperty")
         get() = getRefractionTextureChannel()
         @JvmName("setRefractionTextureChannelProperty")
         set(value) = setRefractionTextureChannel(value)
+
+    var detailEnabled: Boolean
+        @JvmName("detailEnabledProperty")
+        get() = getFeature(11L)
+        @JvmName("setDetailEnabledProperty")
+        set(value) = setFeature(11L, value)
+
+    var detailMask: Texture2D?
+        @JvmName("detailMaskProperty")
+        get() = getTexture(14L)
+        @JvmName("setDetailMaskProperty")
+        set(value) = setTexture(14L, value)
 
     var detailBlendMode: Long
         @JvmName("detailBlendModeProperty")
@@ -282,6 +534,18 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setDetailUvLayerProperty")
         set(value) = setDetailUv(value)
 
+    var detailAlbedo: Texture2D?
+        @JvmName("detailAlbedoProperty")
+        get() = getTexture(15L)
+        @JvmName("setDetailAlbedoProperty")
+        set(value) = setTexture(15L, value)
+
+    var detailNormal: Texture2D?
+        @JvmName("detailNormalProperty")
+        get() = getTexture(16L)
+        @JvmName("setDetailNormalProperty")
+        set(value) = setTexture(16L, value)
+
     var uv1Scale: Vector3
         @JvmName("uv1ScaleProperty")
         get() = getUv1Scale()
@@ -294,11 +558,23 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setUv1OffsetProperty")
         set(value) = setUv1Offset(value)
 
+    var uv1Triplanar: Boolean
+        @JvmName("uv1TriplanarProperty")
+        get() = getFlag(6L)
+        @JvmName("setUv1TriplanarProperty")
+        set(value) = setFlag(6L, value)
+
     var uv1TriplanarSharpness: Double
         @JvmName("uv1TriplanarSharpnessProperty")
         get() = getUv1TriplanarBlendSharpness()
         @JvmName("setUv1TriplanarSharpnessProperty")
         set(value) = setUv1TriplanarBlendSharpness(value)
+
+    var uv1WorldTriplanar: Boolean
+        @JvmName("uv1WorldTriplanarProperty")
+        get() = getFlag(8L)
+        @JvmName("setUv1WorldTriplanarProperty")
+        set(value) = setFlag(8L, value)
 
     var uv2Scale: Vector3
         @JvmName("uv2ScaleProperty")
@@ -312,11 +588,23 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setUv2OffsetProperty")
         set(value) = setUv2Offset(value)
 
+    var uv2Triplanar: Boolean
+        @JvmName("uv2TriplanarProperty")
+        get() = getFlag(7L)
+        @JvmName("setUv2TriplanarProperty")
+        set(value) = setFlag(7L, value)
+
     var uv2TriplanarSharpness: Double
         @JvmName("uv2TriplanarSharpnessProperty")
         get() = getUv2TriplanarBlendSharpness()
         @JvmName("setUv2TriplanarSharpnessProperty")
         set(value) = setUv2TriplanarBlendSharpness(value)
+
+    var uv2WorldTriplanar: Boolean
+        @JvmName("uv2WorldTriplanarProperty")
+        get() = getFlag(9L)
+        @JvmName("setUv2WorldTriplanarProperty")
+        set(value) = setFlag(9L, value)
 
     var textureFilter: Long
         @JvmName("textureFilterProperty")
@@ -324,11 +612,35 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setTextureFilterProperty")
         set(value) = setTextureFilter(value)
 
+    var textureRepeat: Boolean
+        @JvmName("textureRepeatProperty")
+        get() = getFlag(16L)
+        @JvmName("setTextureRepeatProperty")
+        set(value) = setFlag(16L, value)
+
+    var disableReceiveShadows: Boolean
+        @JvmName("disableReceiveShadowsProperty")
+        get() = getFlag(13L)
+        @JvmName("setDisableReceiveShadowsProperty")
+        set(value) = setFlag(13L, value)
+
+    var shadowToOpacity: Boolean
+        @JvmName("shadowToOpacityProperty")
+        get() = getFlag(15L)
+        @JvmName("setShadowToOpacityProperty")
+        set(value) = setFlag(15L, value)
+
     var billboardMode: Long
         @JvmName("billboardModeProperty")
         get() = getBillboardMode()
         @JvmName("setBillboardModeProperty")
         set(value) = setBillboardMode(value)
+
+    var billboardKeepScale: Boolean
+        @JvmName("billboardKeepScaleProperty")
+        get() = getFlag(5L)
+        @JvmName("setBillboardKeepScaleProperty")
+        set(value) = setFlag(5L, value)
 
     var particlesAnimHFrames: Int
         @JvmName("particlesAnimHFramesProperty")
@@ -360,17 +672,47 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         @JvmName("setGrowAmountProperty")
         set(value) = setGrow(value)
 
+    var fixedSize: Boolean
+        @JvmName("fixedSizeProperty")
+        get() = getFlag(4L)
+        @JvmName("setFixedSizeProperty")
+        set(value) = setFlag(4L, value)
+
+    var usePointSize: Boolean
+        @JvmName("usePointSizeProperty")
+        get() = getFlag(3L)
+        @JvmName("setUsePointSizeProperty")
+        set(value) = setFlag(3L, value)
+
     var pointSize: Double
         @JvmName("pointSizeProperty")
         get() = getPointSize()
         @JvmName("setPointSizeProperty")
         set(value) = setPointSize(value)
 
+    var useParticleTrails: Boolean
+        @JvmName("useParticleTrailsProperty")
+        get() = getFlag(19L)
+        @JvmName("setUseParticleTrailsProperty")
+        set(value) = setFlag(19L, value)
+
+    var useZClipScale: Boolean
+        @JvmName("useZClipScaleProperty")
+        get() = getFlag(23L)
+        @JvmName("setUseZClipScaleProperty")
+        set(value) = setFlag(23L, value)
+
     var zClipScale: Double
         @JvmName("zClipScaleProperty")
         get() = getZClipScale()
         @JvmName("setZClipScaleProperty")
         set(value) = setZClipScale(value)
+
+    var useFovOverride: Boolean
+        @JvmName("useFovOverrideProperty")
+        get() = getFlag(24L)
+        @JvmName("setUseFovOverrideProperty")
+        set(value) = setFlag(24L, value)
 
     var fovOverride: Double
         @JvmName("fovOverrideProperty")
