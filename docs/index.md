@@ -36,7 +36,7 @@ ownership, signals, and wrapper coverage. For existing GDScript projects, use
 | Windows | Supported (4.7 stable) |
 | Android | Supported (4.7 stable); debug ≥ Android 9, release ≥ Android 13 (Pixel 7 / Moto g 5G / S10+ / Pixel 3 XL) |
 | iOS | Supported (4.7 stable, Kotlin/Native); device-validated iPhone 12 / 15 Pro |
-| Web | Not planned |
+| Web | In development (Kotlin/Wasm backend; no supported export workflow yet) |
 
 See [Version Support](reference/version-support.md) for exact Godot, JDK,
 smoke-test, and packaging boundaries.

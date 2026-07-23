@@ -66,6 +66,7 @@ nav:
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Demo Porting Rules: contributing/demo-porting-rules.md
       - Android Internals: contributing/android-internals.md
+      - Web Internals: contributing/web-internals.md
   - Internals:
       - Index: internals/README.md
       - iOS Backend Architecture: internals/reference/ios-backend-architecture.md

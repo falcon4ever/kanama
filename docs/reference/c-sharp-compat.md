@@ -82,7 +82,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Kotlin script object is separate from the Godot node | Keeps JVM script lifetime, Godot object lifetime, hot reload, and editor placeholders explicit. Use `KanamaScript<T>.self` for the attached node/resource. |
 | Lower-camel Kotlin API only | Matches Kotlin style and avoids maintaining duplicate C#-style aliases. |
 | Explicit install paths | Desktop kits cover new packaged projects, store addons cover existing packaged projects, and source checkouts remain the development path for unreleased Kanama changes. |
-| Desktop-first runtime | Kanama embeds a normal JVM in a desktop Godot process. Android and iOS are both Supported on 4.7 stable (Android through ART and PanamaPort; iOS through a Kotlin/Native `.xcframework`, no on-device JVM); web export is not planned. |
+| Desktop-first runtime | Kanama embeds a normal JVM in a desktop Godot process. Android and iOS are both Supported on 4.7 stable (Android through ART and PanamaPort; iOS through a Kotlin/Native `.xcframework`, no on-device JVM). |
 
 ## Coverage References
 

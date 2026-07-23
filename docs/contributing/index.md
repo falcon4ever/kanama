@@ -21,6 +21,8 @@ you are changing:
   gameplay parity checks.
 - [Android Internals](android-internals.md) before changing Android runtime or
   export support.
+- [Web Internals](web-internals.md) before changing the in-development
+  Kotlin/Wasm Web backend, its generated proxy, or the versioned JS bridge.
 
 Use the narrowest useful check while iterating, then run the broader local gate
 before release-facing changes:

@@ -13,7 +13,7 @@ page records the platforms and engine versions validated for it.
 | Linux x86_64 | Supported (4.7 stable) | Full local CI, native bootstrap preflight, strict docs, all 11 demo builds, the nine-demo desktop smoke matrix, TPS checked smoke, distribution packaging, and desktop-kit/store-addon install smokes passed on Ubuntu 25.04 with Godot `4.7.stable.official.5b4e0cb0f` and OpenJDK 25.0.2 (2026-07-13/14). The resource-loader/saver teardown fix is required. Packaged desktop exports remain a separate release-readiness track. |
 | Windows x86_64 | Supported (4.7 stable) | Full local revalidation on the 4.7 stable console binary (2026-07-13): demo audits, script builds, imports, the nine-demo desktop runtime smoke, the TPS smoke, and the packaged desktop-kit + store-addon install smokes all passed. Gradle commands that build the native bootstrap run from a VS 2022 developer environment (VsDevCmd); Git Bash runs the smoke scripts. |
 | iOS (Kotlin/Native backend) | Supported (4.7 stable) | Promoted from Experimental 2026-07-14 (§7 mobile promotion bar B1–B4 MET). The iOS backend runs full Kanama project scripts via a C shim + Kotlin/Native static `.xcframework`, using the same wrapper generator as desktop/Android (no JVM on device). Full device gate (9-demo matrix + fresh-project install path) passed on two models: **iPhone 12** (iOS 26.5, 2026-06-25; 0 guardrail failures) + **iPhone 15 Pro** (iOS 26.5, 2026-07-10, full-breadth wrapper runtime), both on 4.7 stable iOS templates. Packaged `.xcframework` addon is runtime-only (compiling project scripts needs the Kanama checkout; ~199.5 MB debug / ~87.6 MB release static `.a`). No mobile hot reload. One FPS Audio autoload follow-up + task-26 multiplayer UI polish tracked as non-blocking — see [exporting/ios.md](../exporting/ios.md). |
-| Web | Not planned | Kanama depends on a JVM/FFM-style runtime path. |
+| Web | In development (4.7 stable) | Kotlin/Wasm backend (no on-device JVM); runs the Bunnymark and Match3 production exports in Chrome/Firefox/Safari through a generated proxy + versioned JS bridge. **Not a Supported target: no packaged export workflow, no export guide, single-thread Compatibility renderer only.** See §Web below. |
 
 Validated support is only claimed after the matching smoke path passes.
 Use the
@@ -100,6 +100,50 @@ non-blocking.
 See the [iOS export workflow](../exporting/ios.md) and the
 [iOS backend architecture](../internals/reference/ios-backend-architecture.md) (guardrails, how it
 stays in sync with desktop/Android).
+
+## Web
+
+Web is **In development** on the Godot 4.7 stable baseline. It is **not a
+Supported target**: there is no packaged export workflow, no user-facing export
+guide, and no support claim. This supersedes the earlier note that ruled Web
+out entirely.
+
+Unlike desktop/Android/iOS, the Web backend does **not** use a JVM or an
+FFM/PanamaPort path. It is a **Kotlin/Wasm** backend: project gameplay compiles
+to WebAssembly and talks to the Godot 4.7 Web export (Emscripten/Wasm) through a
+generated per-call proxy and a versioned JavaScript bridge
+(`web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js`, protocol version
+6). The typed backend seam is shared with the other platforms through
+`scripts/platform_backend_calls.json`, and
+`scripts/generate_web_gameplay_coverage.py` fails loudly if a call the demo
+executes has no admitted backend family. See
+[Web Internals](../contributing/web-internals.md) for the architecture.
+
+### Validated evidence
+
+Two production Godot Web exports pass an automated, assertion-driven play
+sequence — not a page-load check — in three browsers:
+
+- **Match3** (`Starter-Kit-Match3`): original board, a runtime-selected legal
+  swap, match/collapse/refill, particles, audio, restart, and two full
+  zero-state teardowns.
+- **Bunnymark**: 256 sprites, one bounded position batch, and deterministic
+  257-to-zero handle teardown.
+
+Browsers (headless): **Chrome 150**, **Firefox 153**, and **Safari 26.5**. Each
+run asserts gameplay deltas, crossing budgets, and handle/callback/scheduler
+teardown to baseline, and rejects stale handles. Gameplay coverage reports zero
+blocking calls; `GodotObject.emit_signal_typed` remains visible as one explicit
+nonblocking unsupported family rather than being pattern-hidden.
+
+### Explicit non-support limitations
+
+- No packaged/user export workflow and no `exporting/web.md` guide yet.
+- Godot **Compatibility renderer, single-thread** only.
+- No Web editor, no hot reload, no threads, no Kotlin/JS path.
+- Reproducible export builds currently require
+  `--no-daemon -Pkotlin.compiler.execution.strategy=in-process` (Kotlin daemon
+  builds exhausted memory).
 
 ## Local Validation
 
