@@ -221,9 +221,19 @@ async function main() {
       mobile: false,
     });
 
+    // Transport the demo modules use, independent of CDP specifics.
+    const navigate = (url) => call("Page.navigate", { url });
+    const pointer = async (press, release) => {
+      await call("Input.dispatchMouseEvent", { type: "mousePressed", x: press.x, y: press.y, button: "left", buttons: 1, clickCount: 1 });
+      await delay(100);
+      await call("Input.dispatchMouseEvent", { type: "mouseMoved", x: release.x, y: release.y, button: "none", buttons: 1 });
+      await delay(25);
+      await call("Input.dispatchMouseEvent", { type: "mouseReleased", x: release.x, y: release.y, button: "left", buttons: 0, clickCount: 1 });
+    };
+
     // Drive the demo. The demo module returns startup + assertion + lifecycle
     // facts; console/exception capture stays here where CDP delivers it.
-    const demoResult = await runDemo({ url: args.url, call, evaluate, deadline });
+    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, deadline });
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);

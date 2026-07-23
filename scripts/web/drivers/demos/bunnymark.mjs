@@ -21,11 +21,10 @@ const trace = (msg) => {
 const snapshot = (evaluate) =>
   evaluate("JSON.stringify(globalThis.KanamaWebBridge.bunnymarkSnapshot())").then(JSON.parse);
 
-export async function runBunnymark({ url, evaluate, deadline }) {
+export async function runBunnymark({ url, evaluate, navigate, deadline }) {
   const startupStart = Date.now();
   trace("navigate");
-  // The driver already navigated to about:blank; go to the served export.
-  await evaluate(`(() => { globalThis.location.href = ${JSON.stringify(`${url}?bunnymark=${Date.now()}`)}; return true; })()`);
+  await navigate(`${url}?bunnymark=${Date.now()}`);
 
   let ready = false;
   const readyDeadline = Math.min(deadline, Date.now() + 30_000);

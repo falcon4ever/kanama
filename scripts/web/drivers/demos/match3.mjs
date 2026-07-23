@@ -115,7 +115,9 @@ function findLegalSwap(tileGrid) {
   return null;
 }
 
-async function drag(call, evaluate, { x, y, dx, dy }) {
+async function drag(pointer, evaluate, { x, y, dx, dy }) {
+  // Board -> CSS client-pixel geometry is browser-agnostic; each driver's
+  // pointer() handles the protocol (and any device-pixel-ratio adjustment).
   const geometry = await evaluate(`(() => {
     const canvas = document.querySelector("canvas");
     const rect = canvas.getBoundingClientRect();
@@ -130,17 +132,13 @@ async function drag(call, evaluate, { x, y, dx, dy }) {
       release: toClient(boardX + (${x} + ${dx}) * ${OFFSET}, boardY + (${y} + ${dy}) * ${OFFSET}),
     };
   })()`);
-  await call("Input.dispatchMouseEvent", { type: "mousePressed", x: geometry.press.x, y: geometry.press.y, button: "left", buttons: 1, clickCount: 1 });
-  await delay(100);
-  await call("Input.dispatchMouseEvent", { type: "mouseMoved", x: geometry.release.x, y: geometry.release.y, button: "none", buttons: 1 });
-  await delay(25);
-  await call("Input.dispatchMouseEvent", { type: "mouseReleased", x: geometry.release.x, y: geometry.release.y, button: "left", buttons: 0, clickCount: 1 });
+  await pointer(geometry.press, geometry.release);
   return geometry;
 }
 
-async function navigateAndSettle(call, evaluate, url, label) {
+async function navigateAndSettle(navigate, evaluate, url, label) {
   trace(`navigate ${label}`);
-  await call("Page.navigate", { url: `${url}?run=${label}&cache=${Date.now()}` });
+  await navigate(`${url}?run=${label}&cache=${Date.now()}`);
   const deadline = Date.now() + 30_000;
   let board = null;
   while (Date.now() < deadline) {
@@ -195,15 +193,15 @@ function teardownClean(t) {
   );
 }
 
-export async function runMatch3({ url, call, evaluate }) {
+export async function runMatch3({ url, evaluate, navigate, pointer }) {
   const startupStart = Date.now();
-  const firstRun = await navigateAndSettle(call, evaluate, url, "first");
+  const firstRun = await navigateAndSettle(navigate, evaluate, url, "first");
   const startupDurationMs = Date.now() - startupStart;
 
   const legalSwap = findLegalSwap(firstRun.settled.tileGrid);
   if (!legalSwap) throw new Error("Settled Match3 board has no legal swap");
   const beforeSwap = await snapshot(evaluate);
-  await drag(call, evaluate, legalSwap);
+  await drag(pointer, evaluate, legalSwap);
   const afterSwap = await waitUntil(
     evaluate,
     (v) => v.tileFrees > beforeSwap.tileFrees && v.tileGrid.length === 64 &&
@@ -214,7 +212,7 @@ export async function runMatch3({ url, call, evaluate }) {
   matrixFrom(afterSwap.tileGrid);
 
   const firstTeardown = await teardownCurrentRun(evaluate);
-  const secondRun = await navigateAndSettle(call, evaluate, url, "restart");
+  const secondRun = await navigateAndSettle(navigate, evaluate, url, "restart");
   const secondTeardown = await teardownCurrentRun(evaluate);
 
   const tileFreeDelta = afterSwap.tileFrees - beforeSwap.tileFrees;
