@@ -104,7 +104,7 @@ check_absent "Leaked instance: Resource:"
 # the engine keeps its own. Pre-fix, close() unreferenced the engine's only reference to zero and
 # freed the material, so the saved scene lost it (…_has_material=false) and Godot logged
 # `Parameter "material" is null`. Every created resource is use{}-closed, so no material/mesh leak.
-check "MaterialHandoffSmoke surface_has_material=true override_has_material=true"
+check "MaterialHandoffSmoke create_refcount=1 surface_has_material=true override_has_material=true"
 check_absent "Parameter \"material\" is null"
 check_absent "Leaked instance: StandardMaterial3D"
 check "kt script export groups group=true subgroup=true"

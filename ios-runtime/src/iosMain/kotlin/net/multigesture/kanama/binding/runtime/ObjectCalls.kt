@@ -3654,11 +3654,13 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     ObjectCalls.destroyObject(res.handle) // probe object was never referenced (rc 0)
   }
 
-  // Task 61 / issue #91 (iOS mirror): an X.create() factory returns an OWNING wrapper —
-  // claimConstructedOwnership() runs init_ref to consume Godot's construction placeholder, so the
-  // wrapper holds its own +1. Handing the resource to the engine adds the engine's own reference;
-  // close() then releases only the wrapper's, so the resource survives. Pre-fix (non-owning create)
-  // close() dropped the engine's only reference and freed the event out from under InputMap.
+  // Task 61 / issue #91 (iOS ownership guard): unlike the desktop/JVM backend (which constructs via
+  // classdb_construct_object2 -> an unclaimed placeholder that needs an init_ref claim), the iOS
+  // backend constructs via classdb_construct_object3 (instantiate_..._with_refcount), so an
+  // X.create() wrapper is ALREADY owning — no claim is added on iOS. This guards that ownership:
+  // create() reads refcount 1, and after handing the event to the engine and close()ing the
+  // wrapper, the event survives (the engine keeps its own reference). A regression that made iOS
+  // construct non-owning, or that re-added an init_ref claim (double-reference/leak), trips here.
   run {
     val action = "kanama_t61_selftest"
     if (!net.multigesture.kanama.api.InputMap.hasAction(action)) {
@@ -3667,7 +3669,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     net.multigesture.kanama.api.InputMap.actionEraseEvents(action)
     val key = net.multigesture.kanama.api.InputEventKey.create()
     key.setKeycode(65L) // KEY_A
-    // create() claimed the placeholder: the fresh event's engine refcount reads exactly 1.
+    // construct_object3 already claimed the reference: the fresh event's refcount reads exactly 1
+    // (a re-added init_ref claim would over-reference to 2 and leak).
     check("t61-create-owns-plus1", key.getReferenceCount() == 1)
     net.multigesture.kanama.api.InputMap.actionAddEvent(action, key) // engine takes its own +1
     key.close() // releases the wrapper's +1; pre-fix this freed the engine's event (rc 1 -> 0)

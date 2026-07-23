@@ -44,7 +44,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
 
         // Instantiate a ButtonGroup (RefCounted radio-button grouping).
         fun create(): ButtonGroup =
-            ButtonGroup(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))).also { it.claimConstructedOwnership() }
+            ButtonGroup(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup")))
 
         private const val GET_PRESSED_BUTTON_HASH = 3886434893L
         private val getPressedButtonBind by lazy {

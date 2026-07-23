@@ -341,7 +341,7 @@ class FastNoiseLite(handle: MemorySegment) : Noise(handle) {
 
         // Instantiate a FastNoiseLite (RefCounted noise generator).
         fun create(): FastNoiseLite =
-            FastNoiseLite(MemorySegment.ofAddress(IosGodot.constructObject("FastNoiseLite"))).also { it.claimConstructedOwnership() }
+            FastNoiseLite(MemorySegment.ofAddress(IosGodot.constructObject("FastNoiseLite")))
 
         private const val SET_NOISE_TYPE_HASH = 2624461392L
         private val setNoiseTypeBind by lazy {

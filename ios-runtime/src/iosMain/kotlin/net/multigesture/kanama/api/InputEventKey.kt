@@ -140,7 +140,7 @@ class InputEventKey(handle: MemorySegment) : InputEventWithModifiers(handle) {
 
         // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
         fun create(): InputEventKey =
-            InputEventKey(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))).also { it.claimConstructedOwnership() }
+            InputEventKey(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey")))
 
         // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
         fun from(value: GodotObject): InputEventKey? =

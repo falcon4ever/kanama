@@ -45,6 +45,13 @@ class MaterialHandoffSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godo
 
   @OnReady
   fun ready() {
+    // create() must return an OWNING wrapper: on the desktop/Android JVM backend (classdb_
+    // construct_object2 -> an unclaimed placeholder) claimConstructedOwnership() runs init_ref so the
+    // fresh resource's refcount reads exactly 1. A non-owning create would leave the placeholder
+    // fragile (issue #91); an over-reference would read 2 and leak. (iOS constructs via
+    // construct_object3/with_refcount and is already owning — guarded separately in the iOS self-test.)
+    val createRefcount = StandardMaterial3D.create().use { it.getReferenceCount() }
+
     // Sink 1 — MeshInstance3D.setSurfaceOverrideMaterial (issue #91's exact path).
     val miSurface = freshBox()
     StandardMaterial3D.create().apply { albedoColor = Color(1f, 0f, 0f) }.use {
@@ -60,8 +67,8 @@ class MaterialHandoffSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godo
     val overrideHasMaterial = savedSceneHasMaterial("override", miOverride)
 
     System.err.println(
-      "[kanama:kt] MaterialHandoffSmoke surface_has_material=$surfaceHasMaterial " +
-        "override_has_material=$overrideHasMaterial"
+      "[kanama:kt] MaterialHandoffSmoke create_refcount=$createRefcount " +
+        "surface_has_material=$surfaceHasMaterial override_has_material=$overrideHasMaterial"
     )
   }
 }

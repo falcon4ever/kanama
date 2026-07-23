@@ -33,13 +33,6 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
         }
     }
 
-    // Task 61 / issue #91 mirror: X.create() factories claim Godot's construction placeholder via
-    // init_ref so the wrapper owns its +1; close() then releases only the wrapper's reference, so a
-    // resource handed to the engine survives. Close what you create.
-    internal fun claimConstructedOwnership() {
-        ObjectCalls.ptrcallNoArgsRetBool(initRefBind, handle)
-    }
-
     companion object {
         fun fromHandle(handle: MemorySegment): RefCounted? =
             wrap(handle)
@@ -54,13 +47,6 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
             if (handle.address() != 0L && ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) {
                 ObjectCalls.destroyObject(handle)
             }
-        }
-
-        // init_ref() shares the bool() no-arg hash with unreference(). Used by
-        // claimConstructedOwnership() so an X.create() wrapper owns its reference (task 61).
-        private const val INIT_REF_HASH = 2240911060L
-        private val initRefBind by lazy {
-            ObjectCalls.getMethodBind("RefCounted", "init_ref", INIT_REF_HASH)
         }
 
         private const val UNREFERENCE_HASH = 2240911060L

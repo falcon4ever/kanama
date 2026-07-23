@@ -19,7 +19,7 @@ class OfflineMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
 
         // Instantiate an OfflineMultiplayerPeer (single-player multiplayer stub).
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("OfflineMultiplayerPeer"))).also { it.claimConstructedOwnership() }
+            OfflineMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("OfflineMultiplayerPeer")))
 
         // No MethodBinds emitted yet.
     }

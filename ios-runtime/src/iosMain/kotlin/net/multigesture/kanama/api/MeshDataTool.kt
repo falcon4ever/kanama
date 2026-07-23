@@ -112,7 +112,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
 
         // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
         fun create(): MeshDataTool =
-            MeshDataTool(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))).also { it.claimConstructedOwnership() }
+            MeshDataTool(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool")))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {
