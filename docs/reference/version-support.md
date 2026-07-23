@@ -104,9 +104,11 @@ stays in sync with desktop/Android).
 ## Web
 
 Web is **In development** on the Godot 4.7 stable baseline. It is **not a
-Supported target**: there is no packaged export workflow, no user-facing export
-guide, and no support claim. This supersedes the earlier note that ruled Web
-out entirely.
+Supported target**: the export workflow is an in-development preview (a
+source-checkout export of the two validated demos, no packaged addon), and there
+is no support claim. A user-facing export guide is at
+[Exporting → Web](../exporting/web.md). This supersedes the earlier note that
+ruled Web out entirely.
 
 Unlike desktop/Android/iOS, the Web backend does **not** use a JVM or an
 FFM/PanamaPort path. It is a **Kotlin/Wasm** backend: project gameplay compiles

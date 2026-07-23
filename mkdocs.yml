@@ -53,6 +53,7 @@ nav:
       - Desktop and Packaging: exporting/desktop.md
       - Android: exporting/android.md
       - iOS: exporting/ios.md
+      - Web: exporting/web.md
   - Reference:
       - Version Support: reference/version-support.md
       - C# Comparison: reference/c-sharp-compat.md

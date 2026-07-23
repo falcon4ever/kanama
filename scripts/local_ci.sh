@@ -75,15 +75,19 @@ ensure_gdextension_header() {
 
 usage() {
   cat <<'EOF'
-usage: scripts/local_ci.sh [--skip-docs] [--skip-bootstrap] /path/to/godot [more_godot_binaries...]
+usage: scripts/local_ci.sh [--skip-docs] [--skip-bootstrap] [--skip-web] /path/to/godot [more_godot_binaries...]
 
 Runs local CI-style checks:
   - Gradle build/sync
   - optional CMake bootstrap build
   - optional mkdocs strict build
+  - Web Kotlin/Wasm compile + fail-loud gameplay coverage gate + smoke scaffold
   - runtime smoke for each Godot binary
   - @Tool editor execution smoke for each Godot binary
   - hot-reload smoke for each Godot binary
+
+The heavy in-browser Web export smoke (a real Godot export driven in Chrome/
+Firefox/Safari) is a separate gate: scripts/web_export_smoke.sh.
 
 You can also provide one Godot binary with KANAMA_GODOT_BIN.
 EOF
@@ -91,6 +95,7 @@ EOF
 
 skip_docs=0
 skip_bootstrap=0
+skip_web=0
 godot_bins=()
 
 while [[ $# -gt 0 ]]; do
@@ -105,6 +110,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-bootstrap)
       skip_bootstrap=1
+      shift
+      ;;
+    --skip-web)
+      skip_web=1
       shift
       ;;
     --*)
@@ -522,6 +531,32 @@ if [[ $skip_docs -eq 0 ]]; then
   fi
 else
   echo "[local_ci] skipping docs build"
+fi
+
+if [[ $skip_web -eq 0 ]]; then
+  # Web bridge + driver static checks (fast, no browser).
+  if command -v node >/dev/null 2>&1; then
+    stage "web bridge + driver syntax"
+    node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js"
+    for driver in "$ROOT_DIR"/scripts/web/drivers/*.mjs "$ROOT_DIR"/scripts/web/drivers/demos/*.mjs; do
+      [[ -e "$driver" ]] && node --check "$driver"
+    done
+  else
+    echo "[local_ci] node not found; skipping web driver syntax check"
+  fi
+
+  # Export-smoke scaffold self-test against the static fake fixture (no browser).
+  stage "web export-smoke scaffold self-test"
+  "$ROOT_DIR/scripts/web/scaffold_selftest.sh"
+
+  # Kotlin/Wasm compile + the fail-loud gameplay coverage gate. The Web build
+  # needs the in-process Kotlin compiler; the daemon can exhaust memory here.
+  stage "web Wasm compile + coverage gate"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon \
+    -Pkotlin.compiler.execution.strategy=in-process \
+    :web-runtime:compileKotlinWasmJs :web-runtime:generateWebGameplayCoverage
+else
+  echo "[local_ci] skipping web checks"
 fi
 
 for godot_bin in "${godot_bins[@]}"; do
