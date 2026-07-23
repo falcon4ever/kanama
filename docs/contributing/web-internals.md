@@ -51,8 +51,11 @@ teardown to baseline, and fails on stale-handle use.
 Gameplay and the Kanama Web runtime live in `web-runtime/` and compile to the
 `wasmJs` target. The platform-neutral API and gameplay proxies are in
 `src/commonMain`; the Wasm entry point, command interop, and the Godot-facing
-backend are in `src/wasmJsMain`
-(`Main.kt`, `WebCommandInterop.kt`, `WebCommonGodotBackend.kt`).
+backend are in `src/wasmJsMain` (`Main.kt`, `WebCommandInterop.kt`). The backend
+is split three ways: `WebCommonGodotBackend.generated.kt` (generated opcode
+dispatch), `WebBackendBookkeeping.kt` (hand-written Web-only state + hooks), and
+`WebBackendTransport.kt` (hand-written `js(...)` bridge externs) — see the
+Backend-dispatch codegen section below.
 
 ### Versioned JavaScript bridge
 
@@ -71,6 +74,49 @@ demo actually executes and **fails if a demo call has no admitted backend
 family**, so coverage metadata cannot be silently erased. The current report has
 zero blocking calls and keeps `GodotObject.emit_signal_typed` visible as one
 explicit nonblocking unsupported family rather than pattern-hiding it.
+
+### Backend-dispatch codegen: generated dispatch + hand-written transport (Task 60a)
+
+The Web backend maps each opcode from `platform_backend_calls.json` to a Godot
+call and its JS-bridge codec. Historically that whole file was hand-written; Task
+60a makes the **dispatch generated** so admitting a new call family is a
+regenerated diff, not a bespoke hand-written path — the mechanism that let iOS
+reach full class coverage.
+
+**Decision (Task 60a, 2026-07-23): generate the mechanical dispatch, keep
+Web-only stateful bookkeeping hand-written next to it ("Option A").** The
+generator (`scripts/generate_web_backend.py`) reads the shared
+`platform_backend_calls.json` (via `scripts/platform_backend_contract.py`, the
+same policy loader desktop/iOS use) joined with a **Web-local** per-opcode policy
+declared in the generator, and emits `WebCommonGodotBackend.generated.kt`: the
+`when (opcode)` routing, the execution-mode / argument-range guards, and calls to
+the `js(...)` bridge externs. The genuinely Web-specific bookkeeping — property
+snapshots and read-your-write updates, browser handle-kind tracking (RESOURCE /
+NODE / OBJECT), and free-time cache clearing — stays hand-written in
+`WebBackendBookkeeping.kt`, reached through a stable, opcode-neutral hook
+interface; the `js(...)` externs are hand-written in `WebBackendTransport.kt`.
+This matches the roadmap's framing of admitting a family as "a regenerated diff
+plus a transport implementation."
+
+Regenerate with `./gradlew :web-runtime:generateWebBackendDispatch` (then
+`ktfmtFormat`). `./gradlew :web-runtime:checkWebBackendDispatch` (also in
+`local_ci.sh` and wired into `check`) fails loud if the committed dispatch drifts
+from the shared contract; it compares token streams, so it is insensitive to
+ktfmt reflow but catches any changed arm, opcode, extern, or guard.
+
+**Why not fully data-driven ("Option B" — encode the snapshot/handle policy into
+`platform_backend_calls.json` and generate the entire file byte-for-byte):**
+`platform_backend_calls.json` is the **platform-neutral** contract that desktop,
+Android, and iOS also consume (via the generated `InitialGodotCallDescriptors`).
+Those backends call Godot in-process and do none of Web's caching; folding Web-only
+snapshot/handle rules into the shared file would stop it being neutral and over-fit
+it to the two-demo corpus. Option A keeps the shared model clean.
+
+**When to reconsider Option B:** if the hand-written bookkeeping companion grows
+faster than the generated dispatch as the corpus expands (60b–60e) — i.e. if
+"admitting a family" routinely means non-trivial new hand-written state rather than
+a near-mechanical hook wiring — revisit encoding a Web-side (not shared-model)
+policy layer so more of the bookkeeping generates. Record any such change here.
 
 ### Batching, snapshots, and handle generations
 

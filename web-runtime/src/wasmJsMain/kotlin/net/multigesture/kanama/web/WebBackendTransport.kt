@@ -1,0 +1,119 @@
+@file:OptIn(ExperimentalWasmJsInterop::class)
+
+package net.multigesture.kanama.web
+
+import kotlin.js.ExperimentalWasmJsInterop
+
+/**
+ * Hand-written Web transport primitives (Task 60a, "Option A").
+ *
+ * These `js(...)` externs are the codec/transport boundary between the Kanama Wasm module and the
+ * `KanamaWebBridge` JavaScript seam. They are hand-written because the JS-interop bodies are not
+ * derivable from the platform-neutral model; the generated dispatch in
+ * `WebCommonGodotBackend.generated.kt` calls them. Admitting a new call family is a regenerated
+ * dispatch diff plus, where a new crossing shape appears, a transport extern added here.
+ */
+internal fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int =
+  js("globalThis.KanamaWebBridge.immediateChildCount(objectId, includeInternal)")
+
+internal fun immediateWebResourceLoad(path: String, typeHint: String, cacheMode: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateResourceLoad(path, typeHint, cacheMode)")
+
+internal fun immediateWebEmitSignal(objectId: Int, name: String, value: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateEmitSignal(objectId, name, value)")
+
+internal fun immediateWebEmitSignalNoArgs(objectId: Int, name: String): Int =
+  js("globalThis.KanamaWebBridge.immediateEmitSignalNoArgs(objectId, name)")
+
+internal fun immediateWebConstructObject(className: String): Int =
+  js("globalThis.KanamaWebBridge.immediateConstructObject(className)")
+
+internal fun immediateWebNodeLookup(objectId: Int, path: String): Int =
+  js("globalThis.KanamaWebBridge.immediateNodeLookup(objectId, path)")
+
+internal fun immediateWebPackedSceneInstantiate(resourceId: Int, editState: Int): Int =
+  js("globalThis.KanamaWebBridge.immediatePackedSceneInstantiate(resourceId, editState)")
+
+internal fun immediateWebNoArgsObject(opcode: Int, objectId: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateNoArgsObject(opcode, objectId)")
+
+internal fun immediateWebTweenNoArgs(opcode: Int, objectId: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenNoArgs(opcode, objectId)")
+
+internal fun immediateWebTweenBoolRetObject(opcode: Int, objectId: Int, value: Boolean): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenBoolRetObject(opcode, objectId, value)")
+
+internal fun immediateWebTweenLongRetObject(opcode: Int, objectId: Int, value: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenLongRetObject(opcode, objectId, value)")
+
+internal fun immediateWebTweenPropertyVector2(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  property: String,
+  x: Double,
+  y: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenPropertyVector2(opcode, tweenId, targetId, property, x, y, duration)"
+  )
+
+internal fun immediateWebTweenPropertyColor(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  property: String,
+  r: Double,
+  g: Double,
+  b: Double,
+  a: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenPropertyColor(opcode, tweenId, targetId, property, r, g, b, a, duration)"
+  )
+
+internal fun immediateWebSetCustomMouseCursor(
+  ownerId: Int,
+  resourceId: Int,
+  shape: Int,
+  hotspotX: Double,
+  hotspotY: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateSetCustomMouseCursor(ownerId, resourceId, shape, hotspotX, hotspotY)"
+  )
+
+internal fun immediateWebConnect(
+  objectId: Int,
+  signal: String,
+  targetId: Int,
+  method: String,
+  flags: Int,
+): Int =
+  js("globalThis.KanamaWebBridge.immediateConnect(objectId, signal, targetId, method, flags)")
+
+internal fun immediateWebConnectBound(
+  objectId: Int,
+  signal: String,
+  targetId: Int,
+  method: String,
+  boundValue: Int,
+  flags: Int,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateConnectBound(objectId, signal, targetId, method, boundValue, flags)"
+  )
+
+internal fun immediateWebObjectQuery(opcode: Int, objectId: Int, value: String): Int =
+  js("globalThis.KanamaWebBridge.immediateObjectQuery(opcode, objectId, value)")
+
+internal fun immediateWebNoArgsVector2X(opcode: Int, objectId: Int): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector2X(opcode, objectId)")
+
+internal fun immediateWebNoArgsVector2Y(): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector2Y()")
+
+internal fun immediateWebEmitSignalVector2i(objectId: Int, name: String, x: Int, y: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateEmitSignalVector2i(objectId, name, x, y)")
