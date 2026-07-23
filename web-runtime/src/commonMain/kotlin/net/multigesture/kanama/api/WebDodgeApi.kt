@@ -9,8 +9,10 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.LabelBackendContractProbe
 import net.multigesture.kanama.backend.PathFollow2DBackendContractProbe
 import net.multigesture.kanama.backend.RigidBody2DBackendContractProbe
+import net.multigesture.kanama.backend.SpriteFramesBackendContractProbe
 import net.multigesture.kanama.backend.TimerBackendContractProbe
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.web.WebObjectId
 
 /**
  * Web API surface specific to the dodge-the-creeps 2D demo (Task 60b).
@@ -45,6 +47,16 @@ class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
   fun stop() {
     AnimatedSprite2DBackendContractProbe(backendHandle).stop()
   }
+
+  fun getSpriteFrames(): SpriteFrames? =
+    AnimatedSprite2DBackendContractProbe(backendHandle).getSpriteFrames()?.let {
+      SpriteFrames(WebObjectId(it.backendToken().toInt()))
+    }
+}
+
+class SpriteFrames(godotObject: GodotHandle) : GodotObject(godotObject) {
+  fun getAnimationNames(): List<String> =
+    SpriteFramesBackendContractProbe(backendHandle).getAnimationNames()
 }
 
 class RigidBody2D(godotObject: GodotHandle) : Node2D(godotObject) {

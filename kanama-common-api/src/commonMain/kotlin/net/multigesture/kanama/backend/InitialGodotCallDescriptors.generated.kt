@@ -773,4 +773,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val ANIMATEDSPRITE2D_GET_SPRITE_FRAMES =
+    GodotCallDescriptor(
+      opcode = 71,
+      className = "AnimatedSprite2D",
+      methodName = "get_sprite_frames",
+      hash = 3804851214L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SPRITEFRAMES_GET_ANIMATION_NAMES =
+    GodotCallDescriptor(
+      opcode = 72,
+      className = "SpriteFrames",
+      methodName = "get_animation_names",
+      hash = 1139954409L,
+      shape = GodotCallShape.NOARGS_RET_STRING_ARRAY,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

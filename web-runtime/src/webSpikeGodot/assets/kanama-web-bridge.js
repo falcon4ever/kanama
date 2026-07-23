@@ -782,6 +782,9 @@
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
     },
+    loadAnimationNames(handle, joined) {
+      return this.api.kanamaWebLoadAnimationNames(handle, String(joined));
+    },
     refreshParticlesSnapshot(handle, emitting, lifetime) {
       if (!this.particleSnapshots.has(handle)) {
         this.match3ParticleInitialSnapshots += 1;

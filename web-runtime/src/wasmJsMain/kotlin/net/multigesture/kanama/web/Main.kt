@@ -419,6 +419,12 @@ fun kanamaWebLoadNode2DSnapshot(
 }
 
 @JsExport
+fun kanamaWebLoadAnimationNames(objectId: Int, joined: String): Int {
+  loadWebAnimationNames(objectId, joined)
+  return 1
+}
+
+@JsExport
 fun kanamaWebLoadViewportRectSnapshot(
   objectId: Int,
   x: Double,

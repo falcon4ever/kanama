@@ -951,6 +951,34 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read Node2D.rotation synchronously from the latest frame snapshot (sourced at node lookup / self setup and refreshed by immediate mutations such as set_progress_ratio).",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 71,
+      "scope": "class",
+      "className": "AnimatedSprite2D",
+      "methodName": "get_sprite_frames",
+      "hash": 3804851214,
+      "arguments": [],
+      "returnType": "SpriteFrames",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return the sprite's borrowed SpriteFrames as a browser handle; the Web applier also records the resource's animation names so a subsequent get_animation_names reads them from a snapshot.",
+      "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 72,
+      "scope": "class",
+      "className": "SpriteFrames",
+      "methodName": "get_animation_names",
+      "hash": 1139954409,
+      "arguments": [],
+      "returnType": "PackedStringArray",
+      "shape": "NOARGS_RET_STRING_ARRAY",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the SpriteFrames animation-name list synchronously from the snapshot recorded when the resource was obtained via get_sprite_frames.",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

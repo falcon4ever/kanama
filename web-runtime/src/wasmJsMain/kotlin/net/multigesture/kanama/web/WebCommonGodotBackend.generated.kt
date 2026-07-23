@@ -437,6 +437,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           19 -> registerReturnedNode(token)
           36 -> registerReturnedBrowserObject(token)
           51 -> registerReturnedBrowserObject(token)
+          71 -> registerReturnedBrowserObject(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }
@@ -590,6 +591,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     commands.flush()
     return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "").toLong()
+  }
+
+  override fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<String> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 72)
+    return webAnimationNamesSnapshot(receiver.webId())
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
+      )
   }
 
   override fun invokeStringNameVector2iRetInt(

@@ -105,6 +105,8 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     68: {},
     69: {},
     70: {"double_snapshot": "rotation"},
+    71: {"ret": "browser"},
+    72: {},
 }
 
 
@@ -636,6 +638,19 @@ def body_NOARGS_RET_LONG(calls):
     ]
 
 
+def body_NOARGS_RET_STRING_ARRAY(calls):
+    op = _only(calls).opcode
+    return [
+        f"require(descriptor.executionMode == {_SNAPSHOT})",
+        f"require(descriptor.opcode == {op})",
+        "return webAnimationNamesSnapshot(receiver.webId())",
+        "?: error(",
+        '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
+        '"object handle=${receiver.webId()}"',
+        ")",
+    ]
+
+
 def body_STRINGNAME_ARG(calls):
     return [
         f"require(descriptor.executionMode == {_QUEUED})",
@@ -807,6 +822,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "NOARGS_RET_BOOL": (["receiver: GodotHandle"], "Boolean"),
     "NOARGS_RET_DOUBLE": (["receiver: GodotHandle"], "Double"),
     "NOARGS_RET_LONG": (["receiver: GodotHandle"], "Long"),
+    "NOARGS_RET_STRING_ARRAY": (["receiver: GodotHandle"], "List<String>"),
     "STRINGNAME_ARG": (["receiver: GodotHandle", "value: String"], ""),
     "STRINGNAME_BOOL_ARG": (
         ["receiver: GodotHandle", "name: String", "value: Boolean"],
@@ -869,6 +885,7 @@ _WORD_CASE = {
     "CALLABLE": "Callable",
     "BOUND": "Bound",
     "SINGLETON": "Singleton",
+    "ARRAY": "Array",
 }
 
 
@@ -912,6 +929,7 @@ EMIT_ORDER = [
     "NOARGS_RET_BOOL",
     "NOARGS_RET_DOUBLE",
     "NOARGS_RET_LONG",
+    "NOARGS_RET_STRING_ARRAY",
     "STRINGNAME_VECTOR2I_RET_INT",
     "NOARGS_RET_COLOR",
     "COLOR_ARG",

@@ -47,6 +47,7 @@ enum class GodotCallShape {
   NOARGS_RET_BOOL,
   NOARGS_RET_DOUBLE,
   NOARGS_RET_LONG,
+  NOARGS_RET_STRING_ARRAY,
   STRINGNAME_ARG,
   STRINGNAME_BOOL_ARG,
   STRINGNAME_STRINGNAME_ARG,
@@ -310,6 +311,13 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
   ): Long
+
+  fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<String> =
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
 
   fun invokeStringNameArg(
     descriptor: GodotCallDescriptor,
@@ -746,6 +754,16 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     return selected.invokeNoArgsRetDouble(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+  ): List<String> {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_STRING_ARRAY)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetStringArray(descriptor, resolve(selected, descriptor), receiver)
   }
 
   fun invokeNoArgsRetLong(descriptor: GodotCallDescriptor, receiver: GodotHandle): Long {
@@ -1280,6 +1298,22 @@ class AnimatedSprite2DBackendContractProbe(private val handle: GodotHandle) {
   fun stop() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.ANIMATEDSPRITE2D_STOP, handle)
   }
+
+  fun getSpriteFrames(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_GET_SPRITE_FRAMES,
+      handle,
+    )
+}
+
+/** Typed SpriteFrames slice used by dodge-the-creeps mob-type selection. */
+@InternalKanamaBackendApi
+class SpriteFramesBackendContractProbe(private val handle: GodotHandle) {
+  fun getAnimationNames(): List<String> =
+    GodotBackendCalls.invokeNoArgsRetStringArray(
+      InitialGodotCallDescriptors.SPRITEFRAMES_GET_ANIMATION_NAMES,
+      handle,
+    )
 }
 
 /** Typed RigidBody2D slice used by dodge-the-creeps mob motion. */

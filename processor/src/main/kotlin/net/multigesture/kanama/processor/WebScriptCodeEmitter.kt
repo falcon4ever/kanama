@@ -1213,10 +1213,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.create_tween()")
     appendLine("\telif opcode == 51 and receiver != null:")
     appendLine("\t\tvalue = receiver.get_tree()")
+    appendLine("\telif opcode == 71 and receiver is AnimatedSprite2D:")
+    appendLine("\t\tvalue = (receiver as AnimatedSprite2D).sprite_frames")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
     appendLine("\t_kanama_object_handles[result_handle] = value")
+    appendLine("\tif value is SpriteFrames:")
+    appendLine(
+      "\t\t_kanama_bridge.loadAnimationNames(result_handle, \"\\n\".join((value as SpriteFrames).get_animation_names()))"
+    )
     appendLine("\tif value is Tween:")
     appendLine("\t\t_kanama_tween_children[result_handle] = []")
     appendLine("\t\t_kanama_tween_targets[result_handle] = []")
