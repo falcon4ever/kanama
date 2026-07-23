@@ -10,6 +10,18 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: OmniLight3D
  */
 class OmniLight3D(handle: MemorySegment) : Light3D(handle) {
+    var omniRange: Double
+        @JvmName("omniRangeProperty")
+        get() = getParam(4L)
+        @JvmName("setOmniRangeProperty")
+        set(value) = setParam(4L, value)
+
+    var omniAttenuation: Double
+        @JvmName("omniAttenuationProperty")
+        get() = getParam(6L)
+        @JvmName("setOmniAttenuationProperty")
+        set(value) = setParam(6L, value)
+
     var omniShadowMode: Long
         @JvmName("omniShadowModeProperty")
         get() = getShadowMode()

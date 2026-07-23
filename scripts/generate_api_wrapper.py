@@ -2044,6 +2044,35 @@ def first_method(cls: ApiClass, name: str) -> ApiMethod | None:
     return methods[0] if methods else None
 
 
+def resolve_inherited_accessor(
+    cls: ApiClass,
+    name: str,
+    object_types: set[str],
+    wrapper_classes: set[str],
+    api_classes: dict[str, ApiClass],
+    api_dir: Path,
+) -> tuple[ApiClass, ApiMethod] | None:
+    """Find an indexed property's accessor on the nearest ancestor that both declares and emits it.
+
+    Godot redeclares indexed accessors on subclasses (SpotLight3D.spot_range -> Light3D.get_param).
+    The method lives on the ancestor, so a plain `getParam(idx)` call on the subclass resolves through
+    Kotlin inheritance. Returns the ancestor and its method only when the ancestor is a wrapper class
+    that actually emits the accessor (unsupported_reason clears it) — otherwise the inherited call
+    would not exist.
+    """
+    cursor = api_classes.get(cls.inherits) if cls.inherits else None
+    while cursor is not None:
+        method = first_method(cursor, name)
+        if method is not None:
+            if cursor.name not in wrapper_classes:
+                return None
+            if unsupported_reason(cursor.name, method, object_types, wrapper_classes, api_classes, api_dir) is not None:
+                return None
+            return cursor, method
+        cursor = api_classes.get(cursor.inherits) if cursor.inherits else None
+    return None
+
+
 def property_setter_type(
     class_name: str,
     setter_method: ApiMethod,
@@ -2091,10 +2120,7 @@ def render_property(
     setter = str(prop.get("setter") or "")
     if setter and setter not in emitted_methods and setter.startswith("_") and setter[1:] in emitted_methods:
         setter = setter[1:]
-    if not getter or getter not in emitted_methods:
-        return None
-    getter_method = first_method(cls, getter)
-    if getter_method is None:
+    if not getter:
         return None
     # Indexed properties (Godot idiom: albedo_texture -> get_texture(param)/set_texture(param, tex),
     # light_energy -> get_param/set_param, ...) carry an "index" bound as the accessor's first
@@ -2103,6 +2129,20 @@ def render_property(
     # Without an index a getter that takes arguments is not a property accessor we can express.
     prop_index = prop.get("index")
     has_index = isinstance(prop_index, int)
+
+    # Resolve the getter to (owner_class_name, method): a class-local emitted method, or — for an
+    # indexed property whose accessor is inherited (SpotLight3D.spot_range -> Light3D.get_param) —
+    # the nearest ancestor that emits it. `method_function_name(owner, ...)` yields the same call
+    # (getParam) that Kotlin inheritance resolves on the subclass.
+    getter_owner = cls.name
+    getter_method = first_method(cls, getter) if getter in emitted_methods else None
+    if getter_method is None and has_index:
+        inherited = resolve_inherited_accessor(cls, getter, object_types, wrapper_classes, api_classes, api_dir)
+        if inherited is not None:
+            owner_cls, getter_method = inherited
+            getter_owner = owner_cls.name
+    if getter_method is None:
+        return None
     if has_index:
         if len(getter_method.argument_types) != 1:
             return None
@@ -2128,7 +2168,7 @@ def render_property(
     # take no index.
     if has_index:
         index_kotlin = kotlin_parameter_type(
-            cls.name,
+            getter_owner,
             getter,
             getter_method.argument_names[0],
             getter_method.argument_metas[0],
@@ -2141,27 +2181,30 @@ def render_property(
     else:
         index_arg = ""
     value_slot = 1 if has_index else 0
-    getter_call = f"{method_function_name(cls.name, getter)}({index_arg})"
+    getter_call = f"{method_function_name(getter_owner, getter)}({index_arg})"
 
-    if setter and setter in emitted_methods:
-        setter_method = first_method(cls, setter)
+    # Resolve the setter the same way (local, or inherited for an indexed property).
+    setter_owner = cls.name
+    setter_method = first_method(cls, setter) if (setter and setter in emitted_methods) else None
+    if setter_method is None and setter and has_index:
+        inherited = resolve_inherited_accessor(cls, setter, object_types, wrapper_classes, api_classes, api_dir)
+        if inherited is not None:
+            owner_cls, setter_method = inherited
+            setter_owner = owner_cls.name
+    if setter_method is not None:
         # property_setter_type gates validity: it needs an argument at `value_slot` (so an indexed
         # setter must carry index+value), a void return, and defaults on every argument past the
         # value — which allows plain setters with trailing defaulted args (set_position(pos,
         # keep_offsets = false)) to stay writable.
-        setter_type = (
-            property_setter_type(
-                cls.name, setter_method, object_types, wrapper_classes, api_classes, value_slot
-            )
-            if setter_method is not None
-            else None
+        setter_type = property_setter_type(
+            setter_owner, setter_method, object_types, wrapper_classes, api_classes, value_slot
         )
         if setter_type != property_type:
-            setter = ""
+            setter_method = None
 
-    if setter and setter in emitted_methods:
+    if setter_method is not None:
         setter_args = f"{index_arg}, value" if has_index else "value"
-        setter_call = f"{method_function_name(cls.name, setter)}({setter_args})"
+        setter_call = f"{method_function_name(setter_owner, setter)}({setter_args})"
         return "\n".join(
             [
                 f"    var {property_name}: {property_type}",

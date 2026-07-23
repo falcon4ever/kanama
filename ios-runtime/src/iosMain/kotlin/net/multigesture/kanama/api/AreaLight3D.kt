@@ -10,6 +10,18 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: AreaLight3D
  */
 class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
+    var areaRange: Double
+        @JvmName("areaRangeProperty")
+        get() = getParam(4L)
+        @JvmName("setAreaRangeProperty")
+        set(value) = setParam(4L, value)
+
+    var areaAttenuation: Double
+        @JvmName("areaAttenuationProperty")
+        get() = getParam(6L)
+        @JvmName("setAreaAttenuationProperty")
+        set(value) = setParam(6L, value)
+
     var areaNormalizeEnergy: Boolean
         @JvmName("areaNormalizeEnergyProperty")
         get() = isAreaNormalizingEnergy()

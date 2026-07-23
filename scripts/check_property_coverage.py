@@ -7,9 +7,9 @@ does not is either:
 
   * backed by a private `_get_*` engine internal (no public bound accessor — genuinely
     unwrappable, allowed by rule), or
-  * a documented generator limitation in KNOWN_UNWRAPPABLE_PROPERTIES below (mostly indexed
-    properties whose accessor is *inherited*, e.g. SpotLight3D.spot_range via Light3D.get_param,
-    and redeclared-getter cases), or
+  * a documented generator limitation in KNOWN_UNWRAPPABLE_PROPERTIES below (non-indexed
+    properties whose getter lives on a parent while the setter is local, e.g. CurveTexture.width,
+    and `..._count` / vertex-array accessors the generator does not model), or
   * a NEW silent drop — which fails this gate.
 
 This is the durable guard that turned the `albedo_texture` regression (indexed properties were
@@ -35,15 +35,15 @@ from check_wrapper_generator import API_DIR, DESKTOP_HANDSHAPED
 ROOT = Path(__file__).resolve().parents[1]
 
 # (class, raw_property_name) pairs on generated classes whose property the generator cannot yet
-# express. Overwhelmingly indexed properties reached through an *inherited* accessor (get_param on
-# the Light3D subclasses) or a getter that lives on a parent while the setter is local
-# (CurveTexture.width). Keep sorted; see module docstring for how to retire an entry.
+# express. Mostly a getter inherited from a parent paired with a local setter, or no bound getter
+# at all (CurveTexture.width -> Texture2D.get_width), plus `..._count` and vertex/index array
+# accessors the generator does not model. Indexed properties reached through an inherited accessor
+# (the Light3D get_param subclasses) are now emitted, so they are no longer listed here.
+# Keep sorted; see module docstring for how to retire an entry.
 KNOWN_UNWRAPPABLE_PROPERTIES: frozenset[tuple[str, str]] = frozenset(
     {
         ("AimModifier3D", "setting_count"),
         ("AnimationNodeTransition", "input_count"),
-        ("AreaLight3D", "area_attenuation"),
-        ("AreaLight3D", "area_range"),
         ("ArrayOccluder3D", "indices"),
         ("ArrayOccluder3D", "vertices"),
         ("ConvertTransformModifier3D", "setting_count"),
@@ -51,12 +51,6 @@ KNOWN_UNWRAPPABLE_PROPERTIES: frozenset[tuple[str, str]] = frozenset(
         ("CurveTexture", "width"),
         ("CurveXYZTexture", "width"),
         ("DirectionalLight2D", "height"),
-        ("DirectionalLight3D", "directional_shadow_fade_start"),
-        ("DirectionalLight3D", "directional_shadow_max_distance"),
-        ("DirectionalLight3D", "directional_shadow_pancake_size"),
-        ("DirectionalLight3D", "directional_shadow_split_1"),
-        ("DirectionalLight3D", "directional_shadow_split_2"),
-        ("DirectionalLight3D", "directional_shadow_split_3"),
         ("ExternalTexture", "size"),
         ("FontFile", "font_name"),
         ("FontFile", "font_stretch"),
@@ -64,10 +58,6 @@ KNOWN_UNWRAPPABLE_PROPERTIES: frozenset[tuple[str, str]] = frozenset(
         ("FontFile", "font_weight"),
         ("FontFile", "style_name"),
         ("FontVariation", "opentype_features"),
-        ("FontVariation", "spacing_bottom"),
-        ("FontVariation", "spacing_glyph"),
-        ("FontVariation", "spacing_space"),
-        ("FontVariation", "spacing_top"),
         ("GradientTexture1D", "width"),
         ("GradientTexture2D", "height"),
         ("GradientTexture2D", "width"),
@@ -82,17 +72,11 @@ KNOWN_UNWRAPPABLE_PROPERTIES: frozenset[tuple[str, str]] = frozenset(
         ("NoiseTexture3D", "depth"),
         ("NoiseTexture3D", "height"),
         ("NoiseTexture3D", "width"),
-        ("OmniLight3D", "omni_attenuation"),
-        ("OmniLight3D", "omni_range"),
         ("PlaceholderMesh", "aabb"),
         ("PlaceholderTexture2D", "size"),
         ("PlaceholderTextureLayered", "layers"),
         ("PointLight2D", "height"),
         ("SplineIK3D", "setting_count"),
-        ("SpotLight3D", "spot_angle"),
-        ("SpotLight3D", "spot_angle_attenuation"),
-        ("SpotLight3D", "spot_attenuation"),
-        ("SpotLight3D", "spot_range"),
         ("SystemFont", "font_stretch"),
         ("SystemFont", "font_weight"),
         ("TwoBoneIK3D", "setting_count"),

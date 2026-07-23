@@ -16,11 +16,47 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
         @JvmName("setDirectionalShadowModeProperty")
         set(value) = setShadowMode(value)
 
+    var directionalShadowSplit1: Double
+        @JvmName("directionalShadowSplit1Property")
+        get() = getParam(10L)
+        @JvmName("setDirectionalShadowSplit1Property")
+        set(value) = setParam(10L, value)
+
+    var directionalShadowSplit2: Double
+        @JvmName("directionalShadowSplit2Property")
+        get() = getParam(11L)
+        @JvmName("setDirectionalShadowSplit2Property")
+        set(value) = setParam(11L, value)
+
+    var directionalShadowSplit3: Double
+        @JvmName("directionalShadowSplit3Property")
+        get() = getParam(12L)
+        @JvmName("setDirectionalShadowSplit3Property")
+        set(value) = setParam(12L, value)
+
     var directionalShadowBlendSplits: Boolean
         @JvmName("directionalShadowBlendSplitsProperty")
         get() = isBlendSplitsEnabled()
         @JvmName("setDirectionalShadowBlendSplitsProperty")
         set(value) = setBlendSplits(value)
+
+    var directionalShadowFadeStart: Double
+        @JvmName("directionalShadowFadeStartProperty")
+        get() = getParam(13L)
+        @JvmName("setDirectionalShadowFadeStartProperty")
+        set(value) = setParam(13L, value)
+
+    var directionalShadowMaxDistance: Double
+        @JvmName("directionalShadowMaxDistanceProperty")
+        get() = getParam(9L)
+        @JvmName("setDirectionalShadowMaxDistanceProperty")
+        set(value) = setParam(9L, value)
+
+    var directionalShadowPancakeSize: Double
+        @JvmName("directionalShadowPancakeSizeProperty")
+        get() = getParam(16L)
+        @JvmName("setDirectionalShadowPancakeSizeProperty")
+        set(value) = setParam(16L, value)
 
     var skyMode: Long
         @JvmName("skyModeProperty")

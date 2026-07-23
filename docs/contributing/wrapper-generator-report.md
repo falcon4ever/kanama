@@ -15,11 +15,11 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | Metric | Count |
 | --- | ---: |
 | API classes | 1036 |
-| Classes with generated output | 844 |
+| Classes with generated output | 845 |
 | Classes with complete method generation | 761 |
 | Methods generated | 15332/16822 (91.1%) |
 | Methods skipped | 1490 |
-| Properties generated | 4072/4162 (97.8%) |
+| Properties generated | 4090/4162 (98.3%) |
 | Signals generated | 503/503 (100.0%) |
 
 ## Skip Categories

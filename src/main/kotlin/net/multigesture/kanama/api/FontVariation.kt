@@ -42,6 +42,30 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         @JvmName("setVariationTransformProperty")
         set(value) = setVariationTransform(value)
 
+    var spacingGlyph: Int
+        @JvmName("spacingGlyphProperty")
+        get() = getSpacing(0L)
+        @JvmName("setSpacingGlyphProperty")
+        set(value) = setSpacing(0L, value)
+
+    var spacingSpace: Int
+        @JvmName("spacingSpaceProperty")
+        get() = getSpacing(1L)
+        @JvmName("setSpacingSpaceProperty")
+        set(value) = setSpacing(1L, value)
+
+    var spacingTop: Int
+        @JvmName("spacingTopProperty")
+        get() = getSpacing(2L)
+        @JvmName("setSpacingTopProperty")
+        set(value) = setSpacing(2L, value)
+
+    var spacingBottom: Int
+        @JvmName("spacingBottomProperty")
+        get() = getSpacing(3L)
+        @JvmName("setSpacingBottomProperty")
+        set(value) = setSpacing(3L, value)
+
     var baselineOffset: Double
         @JvmName("baselineOffsetProperty")
         get() = getBaselineOffset()
