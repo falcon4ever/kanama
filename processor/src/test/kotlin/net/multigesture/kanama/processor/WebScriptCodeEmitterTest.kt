@@ -72,7 +72,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 5"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 6"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -208,6 +208,20 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.contains("set_volume_db(bytes.decode_double(offset + 8))"))
     assertTrue(proxy.contains("set_pitch_scale(bytes.decode_double(offset + 8))"))
     assertTrue(proxy.contains("play(bytes.decode_double(offset + 8))"))
+  }
+
+  @Test
+  fun emitsExactSceneTreeLifecycleCallsInEveryProxy() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single()
+        .source
+
+    assertTrue(proxy.contains("opcode == 51 and receiver != null"))
+    assertTrue(proxy.contains("value = receiver.get_tree()"))
+    assertTrue(proxy.contains("opcode == 52 and target_object is SceneTree"))
+    assertTrue(proxy.contains("quit(bytes.decode_s32(offset + 8))"))
   }
 
   @Test
@@ -396,7 +410,7 @@ class WebScriptCodeEmitterTest {
     )
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 5"))
+    assertTrue(protocol.contains("\"protocolVersion\": 6"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -407,7 +421,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=5\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=6\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))

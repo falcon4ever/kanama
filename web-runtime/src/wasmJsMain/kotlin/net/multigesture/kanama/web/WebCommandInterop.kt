@@ -79,6 +79,14 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 2] = internWebCommandStringName(value)
   }
 
+  fun appendLongMutation(opcode: Int, objectHandle: Int, value: Long) {
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    val offset = reserve(WORDS_OBJECT_ARG)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = value.toInt()
+  }
+
   fun appendDoubleMutation(opcode: Int, objectHandle: Int, value: Double) {
     val bits = value.toBits()
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)

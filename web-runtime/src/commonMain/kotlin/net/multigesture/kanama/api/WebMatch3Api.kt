@@ -25,6 +25,7 @@ import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GPUParticles2DBackendContractProbe
 import net.multigesture.kanama.backend.PropertyTweenerBackendContractProbe
 import net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe
+import net.multigesture.kanama.backend.SceneTreeBackendContractProbe
 import net.multigesture.kanama.backend.TweenBackendContractProbe
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -42,6 +43,10 @@ import net.multigesture.kanama.web.WebObjectId
 @PublishedApi
 internal fun unsupportedWebGameplayCall(signature: String): Nothing =
   error("Kanama Web gameplay call is not implemented: $signature (Task 57e backlog)")
+
+@PublishedApi
+internal fun unsupportedWebGameplayFamily(signature: String): Nothing =
+  error("Kanama Web gameplay call family is not implemented: $signature")
 
 internal object WebSignalCallbackRegistry {
   private data class Entry(
@@ -304,7 +309,7 @@ object Input {
 
 class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {
   fun quit(exitCode: Long = 0L) {
-    unsupportedWebGameplayCall("SceneTree.quit")
+    SceneTreeBackendContractProbe(backendHandle).quit(exitCode)
   }
 
   companion object {

@@ -40,6 +40,7 @@ private var group6ProbeMask = 0
 private var group6ProbeScope: KanamaScope? = null
 private var group6ProbeOwnerHandle = 0
 private var group7AudioFreedPlayerHandle = 0
+private var group8SceneTreeHandle = 0
 
 internal fun requireActiveWebScriptHandle(): Int =
   activeWebScriptHandle.takeIf { it != 0 }
@@ -485,6 +486,50 @@ fun kanamaWebMatch3Group7AudioTeardownProbe(audioObjectId: Int): Int =
   }
 
 @JsExport fun kanamaWebMatch3Group7AudioFreedPlayerHandle(): Int = group7AudioFreedPlayerHandle
+
+@JsExport
+fun kanamaWebMatch3Group8SceneTreeProbe(objectId: Int): Int =
+  webCallbackBoundary(objectId, "group8_scene_tree_probe") {
+    commands.clear()
+    val node = Node(WebObjectId(objectId))
+    val first = node.getTree()
+    val second = node.getTree()
+    group8SceneTreeHandle = first.handle.value
+    var result = 0
+    if (first.isSameInstance(second)) result = result or 1
+    if (group8SceneTreeHandle > 0) result = result or 2
+    result
+  }
+
+@JsExport fun kanamaWebMatch3Group8SceneTreeHandle(): Int = group8SceneTreeHandle
+
+@JsExport
+fun kanamaWebMatch3Group8SceneTreeQuitProbe(objectId: Int, exitCode: Int): Int =
+  webCallbackBoundary(objectId, "group8_scene_tree_quit_probe") {
+    commands.clear()
+    Node(WebObjectId(objectId)).getTree().quit(exitCode.toLong())
+    commands.flush()
+  }
+
+@JsExport
+@OptIn(InternalKanamaBackendApi::class)
+fun kanamaWebMatch3Group8SceneTreeStaleProbe(sceneTreeObjectId: Int): Int =
+  if (
+    runCatching { SceneTree(GodotHandle.fromBackendToken(sceneTreeObjectId.toLong())).quit() }
+      .isFailure
+  ) {
+    1
+  } else {
+    0
+  }
+
+@JsExport
+fun kanamaWebMatch3Group8MainTeardownProbe(objectId: Int): Int =
+  webCallbackBoundary(objectId, "group8_main_teardown_probe") {
+    commands.clear()
+    Node(WebObjectId(objectId)).queueFree()
+    commands.flush()
+  }
 
 @JsExport
 fun kanamaWebMatch3Group7AudioOwnerTeardownProbe(audioObjectId: Int): Int =

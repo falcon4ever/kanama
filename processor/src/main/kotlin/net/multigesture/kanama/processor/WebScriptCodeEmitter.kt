@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 5
+    const val PROTOCOL_VERSION = 6
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -932,6 +932,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as AudioStreamPlayer).play(bytes.decode_double(offset + 8))")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 52 and target_object is SceneTree:")
+    appendLine("\t\t\t(target_object as SceneTree).quit(bytes.decode_s32(offset + 8))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
     if (node2dAttachment) {
       appendLine("\t\telif opcode == 5 and object_handle == _kanama_handle:")
       appendLine("\t\t\tvar canvas_target: CanvasItem = self")
@@ -1118,6 +1122,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.get_viewport()")
     appendLine("\telif opcode == 36 and receiver != null:")
     appendLine("\t\tvalue = receiver.create_tween()")
+    appendLine("\telif opcode == 51 and receiver != null:")
+    appendLine("\t\tvalue = receiver.get_tree()")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")

@@ -9,7 +9,8 @@ import re
 from pathlib import Path
 
 
-MARKER = re.compile(r'unsupportedWebGameplayCall\("([^"]+)"\)')
+BLOCKING_MARKER = re.compile(r'unsupportedWebGameplayCall\("([^"]+)"\)')
+NONBLOCKING_MARKER = re.compile(r'unsupportedWebGameplayFamily\("([^"]+)"\)')
 
 
 def main() -> int:
@@ -19,24 +20,29 @@ def main() -> int:
     args = parser.parse_args()
 
     blocking_calls: set[str] = set()
+    nonblocking_calls: set[str] = set()
     for source in args.sources:
         text = source.read_text(encoding="utf-8")
-        blocking_calls.update(MARKER.findall(text))
+        blocking_calls.update(BLOCKING_MARKER.findall(text))
+        nonblocking_calls.update(NONBLOCKING_MARKER.findall(text))
 
-    if not blocking_calls:
-        raise SystemExit("no explicit Web gameplay backlog markers found")
+    if not blocking_calls and not nonblocking_calls:
+        raise SystemExit("no explicit Web gameplay coverage markers found")
 
     payload = {
-        "schemaVersion": 1,
-        "status": "blocking",
+        "schemaVersion": 2,
+        "status": "blocking" if blocking_calls else "unblocked",
         "task": "57e",
         "blockingCallCount": len(blocking_calls),
         "blockingCalls": sorted(blocking_calls),
+        "nonblockingUnsupportedCallCount": len(nonblocking_calls),
+        "nonblockingUnsupportedCalls": sorted(nonblocking_calls),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(
-        f"[web_gameplay_coverage] blocking={len(blocking_calls)} output={args.output}"
+        f"[web_gameplay_coverage] blocking={len(blocking_calls)} "
+        f"nonblocking={len(nonblocking_calls)} output={args.output}"
     )
     return 0
 

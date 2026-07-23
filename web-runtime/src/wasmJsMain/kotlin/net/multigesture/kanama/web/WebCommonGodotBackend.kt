@@ -98,6 +98,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
   }
 
+  override fun invokeLongArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 52)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+      "Kanama Web SceneTree.quit exit code must fit Godot's int32 ABI"
+    }
+    commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)
+  }
+
   override fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -405,6 +420,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         when (descriptor.opcode) {
           19 -> registerReturnedNode(token)
           36 -> registerReturnedBrowserObject(token)
+          51 -> registerReturnedBrowserObject(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }

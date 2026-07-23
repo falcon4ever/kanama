@@ -58,7 +58,7 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
         .emitVector2i(signal, GodotVector2i(value.x, value.y))
       return
     }
-    unsupportedWebGameplayCall("GodotObject.emit_signal_typed")
+    unsupportedWebGameplayFamily("GodotObject.emit_signal_typed")
   }
 
   companion object {
@@ -91,7 +91,12 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun <T : GodotObject> requireAs(path: String, ctor: (GodotHandle) -> T): T =
     getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
 
-  fun getTree(): SceneTree = unsupportedWebGameplayCall("Node.get_tree")
+  fun getTree(): SceneTree =
+    SceneTree(
+      checkNotNull(NodeBackendContractProbe(backendHandle).getTree()) {
+        "Node is not inside a SceneTree"
+      }
+    )
 
   fun getViewport(): Viewport? =
     NodeLookupBackendContractProbe(backendHandle).getViewport()?.let { handle ->

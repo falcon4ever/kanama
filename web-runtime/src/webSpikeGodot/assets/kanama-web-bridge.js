@@ -9,11 +9,17 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 5;
+  const KANAMA_WEB_PROTOCOL_VERSION = 6;
 
   function commandWordCount(opcode) {
     if (opcode === 5 || opcode === 15) return 2;
-    if (opcode === 14 || opcode === 16 || opcode === 46 || opcode === 47) return 3;
+    if (
+      opcode === 14 ||
+      opcode === 16 ||
+      opcode === 46 ||
+      opcode === 47 ||
+      opcode === 52
+    ) return 3;
     if (
       opcode === 3 ||
       opcode === 30 ||
@@ -80,7 +86,9 @@
     signalVector2iCallbacks: new Map(),
     tweenCallbacks: new Map(),
     handleOwners: new Map(),
+    browserNodeHandlesByScript: new Map(),
     tweenChildren: new Map(),
+    sceneTreeHandlesByOwner: new Map(),
     commandStringNamesByValue: new Map(),
     commandStringNamesById: new Map(),
     nextCommandStringNameId: 1,
@@ -149,6 +157,7 @@
     match3AddChildCommands: 0,
     match3TextureAssignments: 0,
     match3PositionMutations: 0,
+    match3PositionTweenTargets: 0,
     match3CursorSets: 0,
     match3Connections: 0,
     match3LambdaConnections: 0,
@@ -156,11 +165,18 @@
     match3NoArgsSignalEmits: 0,
     match3InputEvents: 0,
     match3TileInputEvents: 0,
+    match3TileScriptFrees: 0,
     match3Vector2iCalls: 0,
     match3Vector2iSignalEmits: 0,
     match3ScriptNodeLookups: 0,
     match3ReusedNodeLookups: 0,
     match3FirstTileHandle: 0,
+    match3ScriptNamesByHandle: new Map(),
+    match3TextureIndexByHandle: new Map(),
+    match3TileSpriteByRoot: new Map(),
+    match3TileRootBySprite: new Map(),
+    match3TileTypeByHandle: new Map(),
+    match3NodePositions: new Map(),
     match3MainHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
@@ -194,6 +210,9 @@
     match3AudioResourceReleases: 0,
     match3AudioPlayerFrees: 0,
     match3FirstAudioPlayerHandle: 0,
+    match3SceneTreeHandlesCreated: 0,
+    match3SceneTreeHandleReuses: 0,
+    match3SceneTreeQuitCommands: 0,
     audioPlayerStates: new Map(),
     resourcePathByHandle: new Map(),
     match3DeferredMethods: {},
@@ -406,6 +425,10 @@
     setObjectArrayProperty(handle, propertyId, values) {
       const parsedValues =
         values === "" ? [] : String(values).split(",").map((value) => Number.parseInt(value, 10));
+      if (this.mode === "match3" && propertyId === 6) {
+        this.match3TextureIndexByHandle.clear();
+        parsedValues.forEach((value, index) => this.match3TextureIndexByHandle.set(value, index));
+      }
       this.recordMatch3Property(handle, propertyId, parsedValues);
       return this.invoke(
         handle,
@@ -495,6 +518,7 @@
       return this.api.kanamaWebRoundTrip(value);
     },
     free(handle) {
+      const scriptName = this.match3ScriptNamesByHandle.get(handle);
       const result = this.invoke(
         handle,
         "_exit_tree",
@@ -504,7 +528,29 @@
       );
       if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
       if (result === 1 && handle === this.match3AudioHandle) this.match3AudioHandle = 0;
-      if (result === 1) this.releaseBrowserHandlesOwnedBy(handle);
+      if (result === 1) {
+        const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
+        if (childNodeHandles) {
+          for (const childHandle of childNodeHandles) {
+            if (this.browserHandleSlot(childHandle)?.kind !== "Node") continue;
+            this.api.kanamaWebDiscardNodeHandle(childHandle);
+            this.releaseBrowserHandle(childHandle, "Node");
+          }
+          this.browserNodeHandlesByScript.delete(handle);
+        }
+        if (scriptName?.endsWith(".Tile")) {
+          const spriteHandle = this.match3TileSpriteByRoot.get(handle);
+          if (spriteHandle !== undefined) {
+            this.match3TileRootBySprite.delete(spriteHandle);
+          }
+          this.match3TileSpriteByRoot.delete(handle);
+          this.match3TileTypeByHandle.delete(handle);
+          this.match3NodePositions.delete(handle);
+          this.match3TileScriptFrees += 1;
+        }
+        this.match3ScriptNamesByHandle.delete(handle);
+        this.releaseBrowserHandlesOwnedBy(handle);
+      }
       return result;
     },
     installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i, tween) {
@@ -623,6 +669,10 @@
     },
     releaseBrowserHandle(handle, kind) {
       const slot = this.requireBrowserHandle(handle, kind);
+      const owner = this.handleOwners.get(handle);
+      if (kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
+        this.sceneTreeHandlesByOwner.delete(owner);
+      }
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
@@ -634,13 +684,16 @@
         const slot = this.browserHandleSlots[slotIndex];
         if (!slot.live) continue;
         if (slot.kind === "Sprite2D") this.objectFrees += 1;
-        for (const [handle] of this.handleOwners) {
+        for (const [handle, owner] of this.handleOwners) {
           if ((handle & BROWSER_HANDLE_SLOT_MASK) !== slotIndex) continue;
           if (slot.kind === "AudioStreamPlayer") {
             this.audioPlayerStates.delete(handle);
             this.match3AudioPlayerFrees += 1;
           }
           if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
+          if (slot.kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
+            this.sceneTreeHandlesByOwner.delete(owner);
+          }
           this.handleOwners.delete(handle);
         }
         slot.live = false;
@@ -648,7 +701,9 @@
         this.freeBrowserHandleSlots.push(slotIndex);
       }
       this.liveBrowserHandleCount = 0;
+      this.browserNodeHandlesByScript.clear();
       this.tweenChildren.clear();
+      this.sceneTreeHandlesByOwner.clear();
     },
     releaseBrowserHandlesOwnedBy(owner) {
       for (const tweenHandle of [...this.tweenChildren.keys()]) {
@@ -664,6 +719,12 @@
           this.match3AudioPlayerFrees += 1;
         }
         if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
+        if (
+          slot.kind === "SceneTree" &&
+          this.sceneTreeHandlesByOwner.get(handleOwner) === handle
+        ) {
+          this.sceneTreeHandlesByOwner.delete(handleOwner);
+        }
         this.api.kanamaWebDiscardBrowserHandle(handle);
         slot.live = false;
         slot.kind = null;
@@ -671,6 +732,7 @@
         this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
         this.liveBrowserHandleCount -= 1;
       }
+      this.sceneTreeHandlesByOwner.delete(owner);
     },
     isBrowserHandleLive(handle) {
       return this.browserHandleSlot(handle) ? 1 : 0;
@@ -875,6 +937,22 @@
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
       }
+      if (
+        this.api.kanamaWebIsLive(handle) === 1 &&
+        this.browserHandleSlot(result)?.kind === "Node"
+      ) {
+        const childHandles = this.browserNodeHandlesByScript.get(handle) ?? new Set();
+        childHandles.add(result);
+        this.browserNodeHandlesByScript.set(handle, childHandles);
+      }
+      if (this.mode === "match3" && path === "Sprite2D" && result !== 0) {
+        const previousSprite = this.match3TileSpriteByRoot.get(handle);
+        if (previousSprite !== undefined && previousSprite !== result) {
+          this.match3TileRootBySprite.delete(previousSprite);
+        }
+        this.match3TileSpriteByRoot.set(handle, result);
+        this.match3TileRootBySprite.set(result, handle);
+      }
       return result;
     },
     immediatePackedSceneInstantiate(resourceHandle, editState) {
@@ -907,15 +985,25 @@
       return result;
     },
     immediateNoArgsObject(opcode, handle) {
+      const owner = this.ownerForHandle(handle);
+      const isSceneTree = opcode === 51;
+      if (isSceneTree) {
+        const existing = this.sceneTreeHandlesByOwner.get(owner);
+        if (existing !== undefined && this.browserHandleSlot(existing)?.kind === "SceneTree") {
+          this.match3SceneTreeHandleReuses += 1;
+          return existing;
+        }
+        this.sceneTreeHandlesByOwner.delete(owner);
+      }
       const callback = this.callbackFor(
         this.noArgsObjectCallbacks,
         handle,
         "Godot no-args object",
       );
       const isTween = opcode === 36;
-      const kind = isTween ? "Tween" : "Node";
-      const resultHandle = this.allocateBrowserHandle(kind, this.ownerForHandle(handle));
-      if (isTween) this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      const kind = isTween ? "Tween" : isSceneTree ? "SceneTree" : "Node";
+      const resultHandle = this.allocateBrowserHandle(kind, owner);
+      if (isTween || isSceneTree) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle);
@@ -924,12 +1012,15 @@
         throw new Error("Godot no-args object callback published an invalid handle");
       }
       if (result === 0) {
-        if (isTween) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        if (isTween || isSceneTree) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
         else this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, kind);
       } else if (isTween) {
         this.tweenChildren.set(resultHandle, new Set());
         if (this.mode === "match3") this.match3TweensCreated += 1;
+      } else if (isSceneTree) {
+        this.sceneTreeHandlesByOwner.set(owner, resultHandle);
+        this.match3SceneTreeHandlesCreated += 1;
       }
       return result;
     },
@@ -961,6 +1052,10 @@
       return handle;
     },
     immediateTweenPropertyVector2(opcode, tweenHandle, targetHandle, property, x, y, duration) {
+      if (this.mode === "match3" && property === "position") {
+        this.match3NodePositions.set(targetHandle, { x, y });
+        this.match3PositionTweenTargets += 1;
+      }
       return this.immediateTweenProperty(
         opcode,
         tweenHandle,
@@ -1221,8 +1316,21 @@
           if (childKind === "AudioStreamPlayer") this.match3AudioPlayerAdds += 1;
           else this.match3AddChildCommands += 1;
         }
-        if (commandIndex < applied && opcode === 16) this.match3TextureAssignments += 1;
-        if (commandIndex < applied && opcode === 3) this.match3PositionMutations += 1;
+        if (commandIndex < applied && opcode === 16) {
+          this.match3TextureAssignments += 1;
+          const tileHandle = this.match3TileRootBySprite.get(words[wordOffset + 1]);
+          const textureIndex = this.match3TextureIndexByHandle.get(words[wordOffset + 2]);
+          if (tileHandle !== undefined && textureIndex !== undefined) {
+            this.match3TileTypeByHandle.set(tileHandle, textureIndex);
+          }
+        }
+        if (commandIndex < applied && opcode === 3) {
+          this.match3PositionMutations += 1;
+          this.match3NodePositions.set(words[wordOffset + 1], {
+            x: commandData.getFloat32(wordOffset * 4 + 8, true),
+            y: commandData.getFloat32(wordOffset * 4 + 12, true),
+          });
+        }
         if (commandIndex < applied && opcode === 30) this.match3ScaleMutations += 1;
         if (commandIndex < applied && opcode === 32) this.match3ModulateMutations += 1;
         if (commandIndex < applied && opcode === 43) {
@@ -1269,6 +1377,9 @@
           if (state) state.plays.push(fromPosition);
           this.match3AudioPlayCommands += 1;
         }
+        if (commandIndex < applied && opcode === 52) {
+          this.match3SceneTreeQuitCommands += 1;
+        }
         if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
         if (commandIndex < applied && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
@@ -1303,6 +1414,7 @@
       this.readyCount += 1;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
       if (this.mode === "match3") {
+        this.match3ScriptNamesByHandle.set(handle, scriptName);
         if (scriptName.endsWith(".Audio")) {
           this.match3AudioHandle = handle;
         }
