@@ -94,6 +94,20 @@ any pin drifts.
       deliberately before touching it.
     - Bump the KDoc docs-pin commit hash in
       `docs/contributing/wrapper-maintenance.md` to the new stable tag.
+    - **Scan `gdextension/gdextension_interface.h` for newly `@deprecated`
+      functions and migrate off them.** 4.7 is the baseline — we don't carry
+      deprecated GDExtension callbacks. `grep -B1 '@deprecated'
+      gdextension/gdextension_interface.h | grep '@name'` lists them; cross-check
+      each against the FFI lookups every backend binds (`rg
+      'classdb_construct_object|script_instance_create|register_extension_class|get_godot_version'
+      src ios --glob '*.kt' --glob '*.c'`) and move to the newest variant.
+    - **Assert the backends have not diverged.** The desktop/Android JVM backend
+      (`src/main`) and the iOS Kotlin/Native shim (`ios/bootstrap/kanama_ios_shim.c`)
+      choose their own GDExtension entry points and *have* silently drifted before
+      (desktop `construct_object2` vs iOS `construct_object3` — issue #91 / task 61).
+      Confirm both bind the **same, newest** construct/register/script-instance
+      functions. (A convergence gate is planned; until it lands this is a manual
+      cross-check.)
     - Before tagging:
       `scripts/fresh_clone_smoke.sh /absolute/path/to/new_godot_binary`.
 
