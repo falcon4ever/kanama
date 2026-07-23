@@ -94,6 +94,15 @@ async function main() {
       // Viewport-origin coordinates are CSS client pixels (W3C), which the demo
       // already produces. Safari requires the trailing DELETE /actions release
       // to actually finalize and dispatch the pointer sequence.
+      // Discrete waypoints (not one interpolated move) so Godot reliably tracks
+      // the pointer to the release position before the button release -- Main.input
+      // reads getLocalMousePosition() at mouse-up, and a single move can race.
+      const px = Math.round(press.x);
+      const py = Math.round(press.y);
+      const rx = Math.round(release.x);
+      const ry = Math.round(release.y);
+      const mx = Math.round((px + rx) / 2);
+      const my = Math.round((py + ry) / 2);
       await wd("POST", `/session/${sessionId}/actions`, {
         actions: [
           {
@@ -101,11 +110,13 @@ async function main() {
             id: "mouse",
             parameters: { pointerType: "mouse" },
             actions: [
-              { type: "pointerMove", duration: 0, x: Math.round(press.x), y: Math.round(press.y), origin: "viewport" },
+              { type: "pointerMove", duration: 0, x: px, y: py, origin: "viewport" },
               { type: "pointerDown", button: 0 },
-              { type: "pause", duration: 100 },
-              { type: "pointerMove", duration: 100, x: Math.round(release.x), y: Math.round(release.y), origin: "viewport" },
-              { type: "pause", duration: 25 },
+              { type: "pause", duration: 120 },
+              { type: "pointerMove", duration: 80, x: mx, y: my, origin: "viewport" },
+              { type: "pause", duration: 40 },
+              { type: "pointerMove", duration: 80, x: rx, y: ry, origin: "viewport" },
+              { type: "pause", duration: 200 },
               { type: "pointerUp", button: 0 },
             ],
           },

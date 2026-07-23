@@ -132,6 +132,7 @@ async function drag(pointer, evaluate, { x, y, dx, dy }) {
       release: toClient(boardX + (${x} + ${dx}) * ${OFFSET}, boardY + (${y} + ${dy}) * ${OFFSET}),
     };
   })()`);
+  trace(`drag swap=${JSON.stringify({ x, y, dx, dy })} press=${JSON.stringify(geometry.press)} release=${JSON.stringify(geometry.release)}`);
   await pointer(geometry.press, geometry.release);
   return geometry;
 }
