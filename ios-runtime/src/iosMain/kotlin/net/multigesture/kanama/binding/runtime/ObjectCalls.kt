@@ -3654,5 +3654,33 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     ObjectCalls.destroyObject(res.handle) // probe object was never referenced (rc 0)
   }
 
+  // Task 61 / issue #91 (iOS mirror): an X.create() factory returns an OWNING wrapper —
+  // claimConstructedOwnership() runs init_ref to consume Godot's construction placeholder, so the
+  // wrapper holds its own +1. Handing the resource to the engine adds the engine's own reference;
+  // close() then releases only the wrapper's, so the resource survives. Pre-fix (non-owning create)
+  // close() dropped the engine's only reference and freed the event out from under InputMap.
+  run {
+    val action = "kanama_t61_selftest"
+    if (!net.multigesture.kanama.api.InputMap.hasAction(action)) {
+      net.multigesture.kanama.api.InputMap.addAction(action)
+    }
+    net.multigesture.kanama.api.InputMap.actionEraseEvents(action)
+    val key = net.multigesture.kanama.api.InputEventKey.create()
+    key.setKeycode(65L) // KEY_A
+    // create() claimed the placeholder: the fresh event's engine refcount reads exactly 1.
+    check("t61-create-owns-plus1", key.getReferenceCount() == 1)
+    net.multigesture.kanama.api.InputMap.actionAddEvent(action, key) // engine takes its own +1
+    key.close() // releases the wrapper's +1; pre-fix this freed the engine's event (rc 1 -> 0)
+    val probe = net.multigesture.kanama.api.InputEventKey.create()
+    probe.setKeycode(65L)
+    // The event survived the close and is still held by InputMap (an equal event is found).
+    check(
+      "t61-create-close-survives-handoff",
+      net.multigesture.kanama.api.InputMap.actionHasEvent(action, probe),
+    )
+    probe.close()
+    net.multigesture.kanama.api.InputMap.actionEraseEvents(action)
+  }
+
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
 }
