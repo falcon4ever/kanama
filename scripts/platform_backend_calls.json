@@ -907,6 +907,22 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a deferred property set with a Boolean Variant value; the Web command applier calls Object.set_deferred(property, flag). Only the Boolean slice of set_deferred is admitted.",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 68,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "call_group",
+      "hash": 1257962832,
+      "arguments": ["StringName", "StringName"],
+      "returnType": "void",
+      "isVararg": true,
+      "typedVarargTail": [],
+      "shape": "STRINGNAME_STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a group broadcast (group, method) with no extra arguments; the Web command applier calls SceneTree.call_group. Only the zero-tail-argument form is admitted.",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

@@ -362,6 +362,19 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)
   }
 
+  override fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 68)
+    commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)
+  }
+
   override fun invokeNodePathRetHandle(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

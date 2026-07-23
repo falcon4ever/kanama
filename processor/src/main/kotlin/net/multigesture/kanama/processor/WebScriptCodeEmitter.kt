@@ -961,6 +961,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 68 and target_object is SceneTree:")
+    appendLine("\t\t\tvar group_id := bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tvar method_id := bytes.decode_s32(offset + 12)")
+    appendLine(
+      "\t\t\tvar group_name := String(_kanama_bridge.resolveCommandStringName(group_id))"
+    )
+    appendLine(
+      "\t\t\tvar method_name := String(_kanama_bridge.resolveCommandStringName(method_id))"
+    )
+    appendLine(
+      "\t\t\t(target_object as SceneTree).call_group(StringName(group_name), StringName(method_name))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 32 and target_object is CanvasItem:")
     appendLine("\t\t\tvar target := target_object as CanvasItem")
     appendLine(

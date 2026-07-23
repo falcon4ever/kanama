@@ -48,6 +48,7 @@ enum class GodotCallShape {
   NOARGS_RET_LONG,
   STRINGNAME_ARG,
   STRINGNAME_BOOL_ARG,
+  STRINGNAME_STRINGNAME_ARG,
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
   COLOR_ARG,
@@ -316,6 +317,16 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: Boolean,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
   ) {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
@@ -750,6 +761,24 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_STRINGNAME_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameStringNameArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      first,
+      second,
+    )
+  }
+
   fun invokeStringNameVector2iRetInt(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
@@ -999,6 +1028,15 @@ class SceneTreeBackendContractProbe(private val handle: GodotHandle) {
       "SceneTree.quit exit code must fit Godot's int32 ABI"
     }
     GodotBackendCalls.invokeLongArg(InitialGodotCallDescriptors.SCENETREE_QUIT, handle, exitCode)
+  }
+
+  fun callGroup(group: String, method: String) {
+    GodotBackendCalls.invokeStringNameStringNameArg(
+      InitialGodotCallDescriptors.SCENETREE_CALL_GROUP,
+      handle,
+      group,
+      method,
+    )
   }
 }
 

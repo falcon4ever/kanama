@@ -102,6 +102,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     65: {},
     66: {},
     67: {},
+    68: {},
 }
 
 
@@ -603,6 +604,14 @@ def body_STRINGNAME_BOOL_ARG(calls):
     ]
 
 
+def body_STRINGNAME_STRINGNAME_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)",
+    ]
+
+
 def body_STRINGNAME_VECTOR2I_RET_INT(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -754,6 +763,10 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["receiver: GodotHandle", "name: String", "value: Boolean"],
         "",
     ),
+    "STRINGNAME_STRINGNAME_ARG": (
+        ["receiver: GodotHandle", "first: String", "second: String"],
+        "",
+    ),
     "STRINGNAME_VECTOR2I_RET_INT": (
         ["receiver: GodotHandle", "name: String", "value: GodotVector2i"],
         "Int",
@@ -837,6 +850,7 @@ EMIT_ORDER = [
     "OBJECT_ARG",
     "STRINGNAME_ARG",
     "STRINGNAME_BOOL_ARG",
+    "STRINGNAME_STRINGNAME_ARG",
     "NODEPATH_RET_HANDLE",
     "LONG_RET_HANDLE",
     "NOARGS_RET_HANDLE",

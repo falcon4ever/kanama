@@ -312,6 +312,10 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
     SceneTreeBackendContractProbe(backendHandle).quit(exitCode)
   }
 
+  fun callGroup(group: String, method: String) {
+    SceneTreeBackendContractProbe(backendHandle).callGroup(group, method)
+  }
+
   companion object {
     suspend fun delaySeconds(seconds: Double) {
       require(seconds.isFinite() && seconds >= 0.0) {

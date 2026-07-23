@@ -740,4 +740,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val SCENETREE_CALL_GROUP =
+    GodotCallDescriptor(
+      opcode = 68,
+      className = "SceneTree",
+      methodName = "call_group",
+      hash = 1257962832L,
+      shape = GodotCallShape.STRINGNAME_STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }
