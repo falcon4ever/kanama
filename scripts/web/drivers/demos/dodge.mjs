@@ -62,8 +62,9 @@ async function callMain(evaluate, method) {
 // Polls the snapshot until `predicate` holds or the window elapses, tracking the
 // running peak and returning { last, peak }. Robust to the page briefly returning null.
 async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
-  const peak = { ...seedPeak };
+  const peak = { mobFrees: 0, ...seedPeak };
   let last = null;
+  let prevLive = seedPeak.maxLiveHandles;
   const until = Math.min(deadline, Date.now() + windowMs);
   while (Date.now() < until) {
     const snap = await snapshot(evaluate);
@@ -73,8 +74,13 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
       peak.maxLiveHandles = Math.max(peak.maxLiveHandles, snap.maxLiveHandles);
       peak.crossings = Math.max(peak.crossings, snap.crossings);
       peak.callbackErrors = Math.max(peak.callbackErrors, snap.callbackErrors);
+      // A drop in the live-handle count means a mob (and its child nodes) was freed —
+      // dodge mobs queue_free themselves when a VisibleOnScreenNotifier2D reports they
+      // left the screen. Counting drops proves the free/release path works during play.
+      if (snap.liveHandles < prevLive) peak.mobFrees += 1;
+      prevLive = snap.liveHandles;
       last = snap;
-      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} crossings=${snap.crossings} errs=${snap.callbackErrors}`);
+      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors}`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);
@@ -116,18 +122,13 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   const seedPeak = { mobInstantiations: 0, mobAddChildCommands: 0, maxLiveHandles: ready.liveHandles, crossings: ready.crossings, callbackErrors: 0 };
   trace("new_game");
   await callMain(evaluate, "new_game");
-  const gameplay = await observe(evaluate, seedPeak, 8_000, deadline, (snap) => snap.mobInstantiations >= 4);
+  // Play long enough for several mobs to spawn AND for the earliest ones to fly across
+  // and leave the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D
+  // screen_exited). Run the full window so the spawn+free lifecycle is exercised.
+  const gameplay = await observe(evaluate, seedPeak, 11_000, deadline, (snap, p) => p.mobFrees >= 2);
   const peak = gameplay.peak;
-  const atPeak = gameplay.last ?? ready;
-  trace(`peak: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} crossings=${peak.crossings} live@peak=${atPeak.liveHandles}`);
-
-  // Tear the run down: a second new_game runs callGroup("mobs", "queue_free"), freeing
-  // every spawned mob. StartTimer holds new mobs off, so live handles settle back.
-  trace("new_game (teardown)");
-  await callMain(evaluate, "new_game");
-  const teardown = await observe(evaluate, peak, 4_000, deadline, (snap) => snap.liveHandles <= ready.liveHandles);
-  const settled = teardown.last ?? atPeak;
-  trace(`teardown: live=${settled.liveHandles} (baseline=${ready.liveHandles}) mobs=${settled.mobInstantiations} errs=${settled.callbackErrors}`);
+  const settled = gameplay.last ?? ready;
+  trace(`gameplay: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${settled.liveHandles} crossings=${peak.crossings}`);
 
   const protocolVersion = ready.protocol;
   const checks = {
@@ -136,9 +137,11 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     sceneScriptsReady: ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1,
     mobsInstantiated: peak.mobInstantiations >= 4,
     mobsAddedToTree: peak.mobAddChildCommands >= peak.mobInstantiations,
-    handleGrowthDuringGameplay: atPeak.liveHandles > ready.liveHandles,
+    handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
-    mobsTornDownToBaseline: settled.liveHandles <= ready.liveHandles,
+    // The spawn/free lifecycle works: mobs left the screen and released their handles
+    // (>=2 observed drops), and the live-handle count stayed bounded by the peak — no leak.
+    mobsSpawnAndFree: peak.mobFrees >= 2 && settled.liveHandles <= peak.maxLiveHandles,
     noCallbackFaults: peak.callbackErrors === 0 && settled.failure === null,
   };
 
@@ -177,10 +180,10 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     },
     teardown: {
       outcome:
-        last.liveHandles <= ready.liveHandles && last.callbackErrors === 0 && last.failure === null
+        checks.mobsSpawnAndFree && last.callbackErrors === 0 && last.failure === null
           ? "clean"
           : "incomplete",
-      ownerRegistriesToBaseline: last.liveHandles <= ready.liveHandles,
+      ownerRegistriesToBaseline: last.liveHandles <= peak.maxLiveHandles,
     },
     boundaryErrors,
   };
