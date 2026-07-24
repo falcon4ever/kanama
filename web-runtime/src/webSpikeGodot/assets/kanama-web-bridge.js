@@ -341,6 +341,25 @@
         this.processCalls += 1;
         return executed;
       }
+      if (this.mode === "dodge") {
+        // Real scene demo: the main script pumps the shared coroutine frame scheduler
+        // (and runs its own _process); every other dodge script (Player, spawned Mobs)
+        // runs its _process via process(). Neither path takes the spike benchmark
+        // transport below, which appends a scalar (op100) marker that only the spike
+        // main script can apply — that mis-route is what fataled dodge's per-frame scripts.
+        if (handle === this.dodgeMainHandle) {
+          const executed = this.invoke(
+            handle,
+            "frame_scheduler",
+            "frame scheduler",
+            () => this.api.kanamaWebFrame(handle, delta),
+            0,
+          );
+          this.processCalls += 1;
+          return executed;
+        }
+        return this.process(handle, delta);
+      }
       const started = performance.now();
       let result;
       const emptyLimit = WARMUP_FRAMES + SAMPLE_FRAMES;
