@@ -1322,7 +1322,13 @@
         const frame = { applied: 0 };
         this.activeCommandFlushFrame = frame;
         try {
-          callback(words.subarray(groupStart, groupStart + groupWords), groupCommands);
+          // Must be slice(), not subarray(): Godot's js_buffer_to_packed_byte_array reads
+          // from the underlying ArrayBuffer's start and ignores a view's byteOffset, so a
+          // subarray view for any group after the first (non-zero offset) would deliver the
+          // wrong commands to that owner's proxy. slice() copies into a fresh zero-offset
+          // buffer. Single-group batches (match3/bunnymark) start at 0 and were unaffected;
+          // multi-owner batches (e.g. dodge's new_game) require this.
+          callback(words.slice(groupStart, groupStart + groupWords), groupCommands);
         } finally {
           this.activeCommandFlushFrame = parentFrame;
         }
