@@ -921,11 +921,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 55 and target_object is AnimatedSprite2D:")
-    appendLine("\t\t\t(target_object as AnimatedSprite2D).flip_v = bytes.decode_s32(offset + 8) != 0")
+    appendLine(
+      "\t\t\t(target_object as AnimatedSprite2D).flip_v = bytes.decode_s32(offset + 8) != 0"
+    )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 56 and target_object is AnimatedSprite2D:")
-    appendLine("\t\t\t(target_object as AnimatedSprite2D).flip_h = bytes.decode_s32(offset + 8) != 0")
+    appendLine(
+      "\t\t\t(target_object as AnimatedSprite2D).flip_h = bytes.decode_s32(offset + 8) != 0"
+    )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 57 and target_object is AnimatedSprite2D:")
@@ -969,12 +973,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 8")
     appendLine("\t\telif opcode == 65 and target_object is PathFollow2D:")
-    appendLine("\t\t\t(target_object as PathFollow2D).progress_ratio = bytes.decode_double(offset + 8)")
+    appendLine(
+      "\t\t\t(target_object as PathFollow2D).progress_ratio = bytes.decode_double(offset + 8)"
+    )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 66 and target_object is Label:")
     appendLine("\t\t\tvar text_id := bytes.decode_s32(offset + 8)")
-    appendLine("\t\t\t(target_object as Label).text = String(_kanama_bridge.resolveCommandStringName(text_id))")
+    appendLine(
+      "\t\t\t(target_object as Label).text = String(_kanama_bridge.resolveCommandStringName(text_id))"
+    )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 67 and target_object != null:")
@@ -990,9 +998,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif opcode == 68 and target_object is SceneTree:")
     appendLine("\t\t\tvar group_id := bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tvar method_id := bytes.decode_s32(offset + 12)")
-    appendLine(
-      "\t\t\tvar group_name := String(_kanama_bridge.resolveCommandStringName(group_id))"
-    )
+    appendLine("\t\t\tvar group_name := String(_kanama_bridge.resolveCommandStringName(group_id))")
     appendLine(
       "\t\t\tvar method_name := String(_kanama_bridge.resolveCommandStringName(method_id))"
     )
