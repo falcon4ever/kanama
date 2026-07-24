@@ -1298,7 +1298,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tif target is Node2D:")
     appendLine("\t\t\tvar node_2d := target as Node2D")
     appendLine(
-      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(int(target_handle), node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(int(target_handle), node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
     appendLine("\tvar children: Array = _kanama_tween_children.get(tween_handle, [])")
     appendLine("\tfor child_handle in children:")
