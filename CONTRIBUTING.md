@@ -85,7 +85,18 @@ your changes before pushing:
 ```
 
 `local_ci.sh` runs `ktfmtCheck` as a gate stage, so an unformatted change fails
-CI. Two things are deliberately **not** formatted:
+CI. To catch that locally in seconds instead of a CI round-trip, install the
+pre-push hook once per clone:
+
+```sh
+scripts/install-git-hooks.sh   # points core.hooksPath at .githooks
+```
+
+The `.githooks/pre-push` hook runs `ktfmtCheck` before every push and refuses
+unformatted Kotlin (it never rewrites files; run `./gradlew ktfmtFormat` yourself,
+or `git push --no-verify` to bypass in an emergency).
+
+Two things are deliberately **not** formatted:
 
 - Generated Godot API wrappers under `**/net/multigesture/kanama/api/**` — they
   are byte-compared against `scripts/generate_api_wrapper.py` by the drift gate,

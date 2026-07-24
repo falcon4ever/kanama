@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Kanama pre-push hook — reject pushes containing unformatted Kotlin, the same check
+# CI's local-ci gate runs (scripts/local_ci.sh -> ktfmtCheck). Catches it in ~seconds
+# locally instead of burning a CI round-trip.
+#
+# Install once per clone:  scripts/install-git-hooks.sh
+set -euo pipefail
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+echo "[pre-push] ktfmtCheck (matches CI)…"
+if ! "$ROOT_DIR/gradlew" -q -p "$ROOT_DIR" ktfmtCheck; then
+  echo "" >&2
+  echo "[pre-push] BLOCKED: Kotlin is not ktfmt-formatted." >&2
+  echo "  Fix all modules at once with:  ./gradlew ktfmtFormat" >&2
+  echo "  then re-commit and push again. (Bypass in emergencies: git push --no-verify)" >&2
+  exit 1
+fi
