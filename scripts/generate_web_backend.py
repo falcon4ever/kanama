@@ -123,6 +123,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     81: {"ret": "browser"},
     82: {},
     83: {},
+    84: {},
 }
 
 
@@ -332,6 +333,19 @@ def body_NOARGS_RET_VECTOR3(calls):
         ")",
     ]
     return lines
+
+
+def body_LONG_DOUBLE_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "require(doubleValue.isFinite()) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"',
+        "}",
+        "commands.appendLongDoubleMutation("
+        "descriptor.opcode, receiver.webId(), longValue, doubleValue)",
+    ]
 
 
 def body_VECTOR3_ARG(calls):
@@ -811,6 +825,10 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "VECTOR2_ARG": (["receiver: GodotHandle", "value: GodotVector2"], ""),
     "NOARGS_RET_VECTOR3": (["receiver: GodotHandle"], "GodotVector3"),
     "VECTOR3_ARG": (["receiver: GodotHandle", "value: GodotVector3"], ""),
+    "LONG_DOUBLE_ARG": (
+        ["receiver: GodotHandle", "longValue: Long", "doubleValue: Double"],
+        "",
+    ),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -995,6 +1013,7 @@ EMIT_ORDER = [
     "OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE",
     "NOARGS_RET_VECTOR3",
     "VECTOR3_ARG",
+    "LONG_DOUBLE_ARG",
 ]
 
 

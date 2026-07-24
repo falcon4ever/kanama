@@ -1133,6 +1133,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Query an OS feature tag (e.g. android/ios) through the active script's proxy singleton.",
       "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 84,
+      "scope": "class",
+      "className": "Light3D",
+      "methodName": "set_param",
+      "hash": 1722734213,
+      "arguments": ["enum::Light3D.Param", "float"],
+      "returnType": "void",
+      "shape": "LONG_DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Light3D parameter mutation (PARAM_ENERGY=light_energy, PARAM_SHADOW_OPACITY=shadow_opacity) on a node handle.",
+      "introducedBy": "60c-platformer"
     }
   ],
   "compositions": [

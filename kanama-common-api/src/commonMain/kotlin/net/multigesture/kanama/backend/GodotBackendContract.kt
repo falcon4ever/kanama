@@ -58,6 +58,7 @@ enum class GodotCallShape {
   OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE,
   NOARGS_RET_VECTOR3,
   VECTOR3_ARG,
+  LONG_DOUBLE_ARG,
 }
 
 @InternalKanamaBackendApi
@@ -406,6 +407,16 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: GodotVector3,
   )
+
+  fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
 }
 
 /**
@@ -928,6 +939,25 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     selected.invokeVector3Arg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    requireShape(descriptor, GodotCallShape.LONG_DOUBLE_ARG)
+    require(doubleValue.isFinite()) { "Godot Double argument must be finite" }
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeLongDoubleArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      longValue,
+      doubleValue,
+    )
   }
 
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
@@ -1661,4 +1691,22 @@ object OSBackendContractProbe {
       InitialGodotCallDescriptors.OS_HAS_FEATURE,
       tagName,
     )
+}
+
+/**
+ * Typed Light3D parameter slice used by the 3D platformer's Compatibility-renderer tuning.
+ *
+ * Godot's `light_energy` / `shadow_opacity` properties are backed by `set_param(param, value)`; the
+ * param index is the Light3D.Param enum (PARAM_ENERGY = 0, PARAM_SHADOW_OPACITY = 17).
+ */
+@InternalKanamaBackendApi
+class Light3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setParam(param: Long, value: Double) {
+    GodotBackendCalls.invokeLongDoubleArg(
+      InitialGodotCallDescriptors.LIGHT3D_SET_PARAM,
+      handle,
+      param,
+      value,
+    )
+  }
 }

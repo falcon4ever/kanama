@@ -54,7 +54,8 @@
       opcode === 13 ||
       opcode === 74 ||
       opcode === 76 ||
-      opcode === 78
+      opcode === 78 ||
+      opcode === 84
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;

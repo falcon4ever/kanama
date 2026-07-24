@@ -745,6 +745,23 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
   }
 
+  override fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 84)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(doubleValue.isFinite()) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
+    }
+    commands.appendLongDoubleMutation(descriptor.opcode, receiver.webId(), longValue, doubleValue)
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"

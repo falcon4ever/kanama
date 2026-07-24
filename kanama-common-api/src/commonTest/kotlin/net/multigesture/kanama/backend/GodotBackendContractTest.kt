@@ -164,6 +164,9 @@ class GodotBackendContractTest {
     assertEquals(52L, environment?.backendToken())
     EnvironmentBackendContractProbe(checkNotNull(environment)).setBgEnergyMultiplier(0.25)
     assertEquals(82 to 0.25, backend.doubleArguments.last())
+    Light3DBackendContractProbe(handle).setParam(0L, 0.24)
+    Light3DBackendContractProbe(handle).setParam(17L, 0.85)
+    assertEquals(listOf(Triple(84, 0L, 0.24), Triple(84, 17L, 0.85)), backend.longDoubleArgs)
   }
 
   @Test
@@ -463,6 +466,18 @@ class GodotBackendContractTest {
     ): Boolean {
       assertEquals(83, descriptor.opcode)
       return value == "android"
+    }
+
+    val longDoubleArgs = mutableListOf<Triple<Int, Long, Double>>()
+
+    override fun invokeLongDoubleArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      longValue: Long,
+      doubleValue: Double,
+    ) {
+      longDoubleArgs += Triple(descriptor.opcode, longValue, doubleValue)
     }
 
     override fun invokeDoubleArg(

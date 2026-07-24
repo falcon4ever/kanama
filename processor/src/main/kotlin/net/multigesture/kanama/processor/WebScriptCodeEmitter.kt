@@ -1166,6 +1166,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 84 and target_object is Light3D:")
+    appendLine(
+      "\t\t\t(target_object as Light3D).set_param(bytes.decode_s32(offset + 8), bytes.decode_double(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
     appendLine("\t\telse:")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"

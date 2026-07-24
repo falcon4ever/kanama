@@ -916,4 +916,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val LIGHT3D_SET_PARAM =
+    GodotCallDescriptor(
+      opcode = 84,
+      className = "Light3D",
+      methodName = "set_param",
+      hash = 1722734213L,
+      shape = GodotCallShape.LONG_DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }
