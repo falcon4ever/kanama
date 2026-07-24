@@ -428,6 +428,34 @@ fun kanamaWebLoadNode2DSnapshot(
 }
 
 @JsExport
+fun kanamaWebLoadNode3DSnapshot(
+  objectId: Int,
+  positionX: Double,
+  positionY: Double,
+  positionZ: Double,
+  rotationX: Double,
+  rotationY: Double,
+  rotationZ: Double,
+  scaleX: Double,
+  scaleY: Double,
+  scaleZ: Double,
+): Int {
+  loadWebNode3DSnapshot(
+    objectId,
+    positionX,
+    positionY,
+    positionZ,
+    rotationX,
+    rotationY,
+    rotationZ,
+    scaleX,
+    scaleY,
+    scaleZ,
+  )
+  return 1
+}
+
+@JsExport
 fun kanamaWebLoadAnimationNames(objectId: Int, joined: String): Int {
   loadWebAnimationNames(objectId, joined)
   return 1

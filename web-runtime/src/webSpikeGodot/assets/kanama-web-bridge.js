@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 7;
+  const KANAMA_WEB_PROTOCOL_VERSION = 8;
 
   function commandWordCount(opcode) {
     if (
@@ -48,7 +48,12 @@
       opcode === 68 ||
       opcode === 100
     ) return 4;
-    if (opcode === 13) return 5;
+    if (
+      opcode === 13 ||
+      opcode === 74 ||
+      opcode === 76 ||
+      opcode === 78
+    ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
     throw new Error(`Unknown Kanama Web command opcode=${opcode}`);
@@ -817,6 +822,21 @@
         b,
         a,
         rotation,
+      );
+    },
+    refreshNode3DSnapshot(handle, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ) {
+      this.snapshotBatchLoads += 1;
+      return this.api.kanamaWebLoadNode3DSnapshot(
+        handle,
+        positionX,
+        positionY,
+        positionZ,
+        rotationX,
+        rotationY,
+        rotationZ,
+        scaleX,
+        scaleY,
+        scaleZ,
       );
     },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
