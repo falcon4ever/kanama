@@ -555,6 +555,13 @@ if [[ $skip_web -eq 0 ]]; then
   stage "web export-smoke scaffold self-test"
   "$ROOT_DIR/scripts/web/scaffold_selftest.sh"
 
+  # Generated Web backend dispatch drift gate (Task 60a): the shared backend
+  # contract + Web policy must still render the committed dispatch file.
+  stage "web backend dispatch drift gate"
+  python3 "$ROOT_DIR/scripts/generate_web_backend.py" \
+    --output "$ROOT_DIR/web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt" \
+    --check
+
   # Kotlin/Wasm compile + the fail-loud gameplay coverage gate. The Web build
   # needs the in-process Kotlin compiler; the daemon can exhaust memory here.
   stage "web Wasm compile + coverage gate"
