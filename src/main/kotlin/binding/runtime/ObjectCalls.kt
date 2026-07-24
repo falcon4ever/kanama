@@ -3468,7 +3468,8 @@ object ObjectCalls {
     value: Long,
   ): Long {
     // Backs ResourceSaver.save. With classdb_construct_object3 (task 62) a freshly created resource
-    // comes back already owned (refcount 1), so save's transient `Ref<Resource>` no longer drops the
+    // comes back already owned (refcount 1), so save's transient `Ref<Resource>` no longer drops
+    // the
     // last reference to zero — the issue #81 protective-reference guard is no longer needed and was
     // removed. Loaded/cached resources were always owned; nothing here needs a lifetime guard.
     Arena.ofConfined().use { arena ->

@@ -50,9 +50,10 @@ object KanamaBinding {
   }
 
   /**
-   * Layout of `GDExtensionGodotVersion2` (4.7; replaces the deprecated
-   * `GDExtensionGodotVersion` — task 62). Four `uint32` pack to 16 bytes, so the
-   * pointers are naturally 8-byte aligned with no padding; `string` is at offset 48.
+   * Layout of `GDExtensionGodotVersion2` (4.7; replaces the deprecated `GDExtensionGodotVersion` —
+   * task 62). Four `uint32` pack to 16 bytes, so the pointers are naturally 8-byte aligned with no
+   * padding; `string` is at offset 48.
+   *
    * ```
    * typedef struct {
    *     uint32_t major;      // 0

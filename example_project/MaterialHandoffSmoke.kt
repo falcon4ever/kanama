@@ -29,7 +29,9 @@ class MaterialHandoffSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godo
   // Parent each mesh instance under this (in-tree) node so scene teardown frees it and the mesh.
   private fun freshBox(): MeshInstance3D {
     val mi = MeshInstance3D.fromHandle(ObjectCalls.constructObject("MeshInstance3D"))!!
-    BoxMesh.create().use { mi.mesh = it } // surface 0 exists; release the wrapper's ref, mesh keeps its
+    BoxMesh.create().use {
+      mi.mesh = it
+    } // surface 0 exists; release the wrapper's ref, mesh keeps its
     node.addChild(mi)
     return mi
   }
@@ -53,16 +55,16 @@ class MaterialHandoffSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godo
 
     // Sink 1 — MeshInstance3D.setSurfaceOverrideMaterial (issue #91's exact path).
     val miSurface = freshBox()
-    StandardMaterial3D.create().apply { albedoColor = Color(1f, 0f, 0f) }.use {
-      miSurface.setSurfaceOverrideMaterial(0, it)
-    }
+    StandardMaterial3D.create()
+      .apply { albedoColor = Color(1f, 0f, 0f) }
+      .use { miSurface.setSurfaceOverrideMaterial(0, it) }
     val surfaceHasMaterial = savedSceneHasMaterial("surface", miSurface)
 
     // Sink 2 — GeometryInstance3D.materialOverride (a different Ref<Material> slot).
     val miOverride = freshBox()
-    StandardMaterial3D.create().apply { albedoColor = Color(0f, 1f, 0f) }.use {
-      miOverride.materialOverride = it
-    }
+    StandardMaterial3D.create()
+      .apply { albedoColor = Color(0f, 1f, 0f) }
+      .use { miOverride.materialOverride = it }
     val overrideHasMaterial = savedSceneHasMaterial("override", miOverride)
 
     System.err.println(
