@@ -68,6 +68,9 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   fun isOnFloor(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnFloor()
 }
 
+/** 3D area monitor: emits body_entered when a physics body overlaps (coin/trigger pickups). */
+open class Area3D(godotObject: GodotHandle) : Node3D(godotObject)
+
 open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject)
 
 open class GeometryInstance3D(godotObject: GodotHandle) : VisualInstance3D(godotObject)

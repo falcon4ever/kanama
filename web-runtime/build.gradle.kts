@@ -973,6 +973,7 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/Main.kt",
                 "res://kotlin-src/SmokeQuit.kt",
                 "res://kotlin-src/Player.kt",
+                "res://kotlin-src/Coin.kt",
             )
         val mappings =
             manifest

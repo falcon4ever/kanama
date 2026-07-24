@@ -22,15 +22,17 @@ class Player(godotObject: GodotHandle) :
   @OnPhysicsProcess
   fun physicsProcess(delta: Double) {
     gravity += 22.0 * delta
-    if (self.isOnFloor() && gravity > 0.0) gravity = 0.0
+
+    // Platformer bounce: hop on every floor contact so the character arcs across the level.
+    if (self.isOnFloor() && gravity > 0.0) gravity = -8.0
 
     val x = self.position.x
-    if (x > 3.0) direction = -1.0
-    if (x < -3.0) direction = 1.0
+    if (x > 3.5) direction = -1.0
+    if (x < -3.5) direction = 1.0
 
-    self.velocity = Vector3(direction * 3.0, -gravity, 0.0)
+    self.velocity = Vector3(direction * 4.0, -gravity, 0.0)
     self.moveAndSlide()
 
-    if (self.position.y < -5.0) self.position = Vector3(0.0, 3.0, 0.0)
+    if (self.position.y < -6.0) self.position = Vector3(-3.0, 4.0, 0.0)
   }
 }
