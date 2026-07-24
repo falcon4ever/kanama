@@ -15,7 +15,7 @@
   <img alt="JDK 25+" src="https://img.shields.io/badge/JDK-25%2B-f89820.svg">
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
-  <img alt="Status: 0.3.0 preview" src="https://img.shields.io/badge/status-0.3.0_preview-478cbf.svg">
+  <img alt="Status: 0.4.0 preview" src="https://img.shields.io/badge/status-0.4.0_preview-478cbf.svg">
 </p>
 
 Kanama lets Kotlin scripts attach to Godot nodes through a GDExtension runtime.
@@ -26,14 +26,14 @@ the JVM ecosystem.
 
 ## Related Projects
 
-Kanama is a preview-stage (`0.3.0`) project using a Panama/FFM-based GDExtension
+Kanama is a preview-stage (`0.4.0`) project using a Panama/FFM-based GDExtension
 architecture. If you want a more established Kotlin integration for Godot today, also
 evaluate [Godot Kotlin/JVM](https://godot-kotl.in/en/stable/). It is a
 separate project with a different runtime and export model.
 
 ## Status
 
-Kanama is desktop-first. The `0.3.0` preview baseline is
+Kanama is desktop-first. The `0.4.0` preview baseline is
 Godot 4.7 stable. macOS arm64, Windows x86_64, and Linux x86_64/arm64 are
 **supported** on 4.7 stable. Use the
 [Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
@@ -42,7 +42,7 @@ release kits and store add-ons are package artifacts that can be built from
 source today and are the intended release path; exported-game packaging remains
 a separate release-readiness track.
 
-Android is **Supported** on 4.7 stable for the v0.3.0 line: the workflow builds a
+Android is **Supported** on 4.7 stable for the v0.4.0 line: the workflow builds a
 Godot Android plugin AAR and uses
 [PanamaPort](https://github.com/vova7878/PanamaPort) for the Android FFM layer.
 Device-validated across four models (Pixel 7 / Moto g 5G 2023 / Galaxy S10+ /
@@ -72,7 +72,7 @@ source-checkout export (no packaged addon), and a two-demo corpus. See the
 [Web Internals](docs/contributing/web-internals.md) for the architecture.
 
 See [Version Support](docs/reference/version-support.md) for the current test matrix and
-the `0.3.0` public preview criteria.
+the `0.4.0` public preview criteria.
 
 ## Highlights
 

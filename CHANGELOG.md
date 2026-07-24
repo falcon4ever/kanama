@@ -5,7 +5,7 @@ All notable user-facing changes will be recorded here.
 This project uses a Keep a Changelog-style format and follows semantic
 versioning once public releases begin.
 
-## Unreleased
+## 0.4.0 - 2026-07-24
 
 ### Added
 
@@ -90,16 +90,10 @@ versioning once public releases begin.
 - Migrated off deprecated 4.7 GDExtension functions and converged the JVM and iOS
   backends on the same entry points: `classdb_construct_object3` (was
   `construct_object2` on desktop/Android) and `get_godot_version2` (was
-  `get_godot_version`). A resource from an `X.create()` factory (e.g.
-  `PackedScene.create()`) holds only Godot's construction placeholder reference;
-  `save` decodes its `Ref<Resource>` argument into a transient reference and
-  releases it on return, which dropped that placeholder to zero and freed the
-  object while the Kotlin wrapper still pointed at it — the `.tscn` was written
-  correctly, then the process segfaulted. `save` now holds a protective
-  reference across the call and keeps it only if the resource still has another
-  holder, so the wrapper stays valid (and, for a just-created resource, becomes
-  owned — `close()` frees it). Resources already owned or held by the scene tree
-  are unaffected. Desktop, Android, and iOS.
+  `get_godot_version`). This is what makes a freshly created resource owned at
+  construction (see the `X.create()` fix above), which is why the earlier
+  issue-#81 `ResourceSaver.save` protective-reference guard could be removed —
+  `save` needs no special-casing now.
 - A throwing `@ScriptProperty` accessor no longer aborts the process. Generated
   property get/set dispatch ran inside an FFM upcall stub with no exception guard
   (unlike method calls), so any `Throwable` escaping a user getter/setter unwound
