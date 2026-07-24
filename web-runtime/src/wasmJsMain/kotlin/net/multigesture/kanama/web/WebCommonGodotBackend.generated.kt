@@ -71,10 +71,13 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 43)
+    require(descriptor.opcode in setOf(43, 54, 55, 56, 61))
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
-    webWriteEmittingSnapshot(objectId, value)
+    when (descriptor.opcode) {
+      43 -> webWriteEmittingSnapshot(objectId, value)
+      else -> {}
+    }
   }
 
   override fun invokeDoubleArg(
@@ -84,12 +87,25 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     value: Double,
   ) {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in 48..50)
     require(value.isFinite()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
     }
-    commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
+    when (descriptor.executionMode) {
+      GodotExecutionMode.QUEUED_MUTATION -> {
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62))
+        commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode == 65)
+        commands.flush()
+        when (descriptor.opcode) {
+          65 -> immediateWebSetProgressRatio(receiver.webId(), value)
+          else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ ->
+        error("Double argument cannot use snapshot execution for opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeLongArg(
@@ -149,6 +165,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     when (descriptor.opcode) {
       3 -> webWriteVector2Snapshot(objectId, WebVector2Slot.POSITION, value)
       30 -> webWriteVector2Snapshot(objectId, WebVector2Slot.SCALE, value)
+      60 -> {}
       else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")
     }
   }
@@ -341,8 +358,34 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 47)
+    require(descriptor.opcode in setOf(47, 57, 66))
     commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
+  }
+
+  override fun invokeStringNameBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Boolean,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 67)
+    commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)
+  }
+
+  override fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 68)
+    commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)
   }
 
   override fun invokeNodePathRetHandle(
@@ -394,6 +437,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           19 -> registerReturnedNode(token)
           36 -> registerReturnedBrowserObject(token)
           51 -> registerReturnedBrowserObject(token)
+          71 -> registerReturnedBrowserObject(token)
+          73 -> registerReturnedNode(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }
@@ -486,6 +531,17 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value) != 0
   }
 
+  override fun invokeStringNameRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) != 0
+  }
+
   override fun invokeNoArgsRetBool(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -516,10 +572,14 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ): Double {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    require(descriptor.opcode == 45)
-    return webLifetimeSnapshot(receiver.webId())
+    return when (descriptor.opcode) {
+      45 -> webLifetimeSnapshot(receiver.webId())
+      70 -> webRotationSnapshot(receiver.webId())
+      else -> null
+    }
       ?: error(
-        "Missing Web GPUParticles2D.get_lifetime snapshot for object handle=${receiver.webId()}"
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
       )
   }
 
@@ -532,6 +592,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     commands.flush()
     return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "").toLong()
+  }
+
+  override fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<String> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 72)
+    return webAnimationNamesSnapshot(receiver.webId())
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
+      )
   }
 
   override fun invokeStringNameVector2iRetInt(

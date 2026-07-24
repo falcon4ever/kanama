@@ -43,10 +43,14 @@ enum class GodotCallShape {
   STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG,
   STRINGNAME_RET_INT,
   STRINGNAME_RET_BOOL,
+  STRINGNAME_RET_BOOL_SINGLETON,
   NOARGS_RET_BOOL,
   NOARGS_RET_DOUBLE,
   NOARGS_RET_LONG,
+  NOARGS_RET_STRING_ARRAY,
   STRINGNAME_ARG,
+  STRINGNAME_BOOL_ARG,
+  STRINGNAME_STRINGNAME_ARG,
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
   COLOR_ARG,
@@ -281,6 +285,14 @@ interface GodotBackendSpi {
     value: String,
   ): Boolean
 
+  /** Singleton query (no receiver): the platform backend supplies the calling context itself. */
+  fun invokeStringNameRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Boolean =
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+
   fun invokeNoArgsRetBool(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -300,11 +312,38 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
   ): Long
 
+  fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<String> =
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+
   fun invokeStringNameArg(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: String,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeStringNameBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Boolean,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
   ) {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
@@ -693,6 +732,16 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeStringNameRetBoolSingleton(descriptor: GodotCallDescriptor, value: String): Boolean {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeStringNameRetBoolSingleton(
+      descriptor,
+      resolve(selected, descriptor),
+      value,
+    )
+  }
+
   fun invokeNoArgsRetBool(descriptor: GodotCallDescriptor, receiver: GodotHandle): Boolean {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_BOOL)
     val selected = requireBackend()
@@ -707,6 +756,16 @@ object GodotBackendCalls {
     return selected.invokeNoArgsRetDouble(descriptor, resolve(selected, descriptor), receiver)
   }
 
+  fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+  ): List<String> {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_STRING_ARRAY)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetStringArray(descriptor, resolve(selected, descriptor), receiver)
+  }
+
   fun invokeNoArgsRetLong(descriptor: GodotCallDescriptor, receiver: GodotHandle): Long {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG)
     val selected = requireBackend()
@@ -719,6 +778,42 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     selected.invokeStringNameArg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeStringNameBoolArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: Boolean,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_BOOL_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameBoolArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
+    )
+  }
+
+  fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_STRINGNAME_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameStringNameArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      first,
+      second,
+    )
   }
 
   fun invokeStringNameVector2iRetInt(
@@ -888,6 +983,17 @@ class Node2DBackendContractProbe(val handle: GodotHandle) {
       name,
       value,
     )
+
+  fun setRotation(rotation: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.NODE2D_SET_ROTATION,
+      handle,
+      rotation,
+    )
+  }
+
+  fun getRotation(): Double =
+    GodotBackendCalls.invokeNoArgsRetDouble(InitialGodotCallDescriptors.NODE2D_GET_ROTATION, handle)
 }
 
 /** First typed singleton-call probe; production wrappers delegate through the same facade. */
@@ -952,6 +1058,9 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
 
   fun createTween(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_CREATE_TWEEN, handle)
+
+  fun getParent(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_PARENT, handle)
 }
 
 /** Typed SceneTree lifecycle slice used by Match3's deterministic smoke exit. */
@@ -962,6 +1071,15 @@ class SceneTreeBackendContractProbe(private val handle: GodotHandle) {
       "SceneTree.quit exit code must fit Godot's int32 ABI"
     }
     GodotBackendCalls.invokeLongArg(InitialGodotCallDescriptors.SCENETREE_QUIT, handle, exitCode)
+  }
+
+  fun callGroup(group: String, method: String) {
+    GodotBackendCalls.invokeStringNameStringNameArg(
+      InitialGodotCallDescriptors.SCENETREE_CALL_GROUP,
+      handle,
+      group,
+      method,
+    )
   }
 }
 
@@ -1096,6 +1214,10 @@ class AudioStreamPlayerBackendContractProbe(private val handle: GodotHandle) {
     )
   }
 
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_STOP, handle)
+  }
+
   companion object {
     fun create(): GodotHandle? = ClassDBBackendContractProbe.instantiate("AudioStreamPlayer")
   }
@@ -1135,6 +1257,132 @@ class CanvasItemBackendContractProbe(private val handle: GodotHandle) {
         value,
       )
     }
+
+  fun setVisible(visible: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.CANVASITEM_SET_VISIBLE,
+      handle,
+      visible,
+    )
+  }
+}
+
+/** Typed AnimatedSprite2D slice used by dodge-the-creeps player/mob animation. */
+@InternalKanamaBackendApi
+class AnimatedSprite2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setFlipV(flip: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_SET_FLIP_V,
+      handle,
+      flip,
+    )
+  }
+
+  fun setFlipH(flip: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_SET_FLIP_H,
+      handle,
+      flip,
+    )
+  }
+
+  fun setAnimation(animation: String) {
+    GodotBackendCalls.invokeStringNameArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_SET_ANIMATION,
+      handle,
+      animation,
+    )
+  }
+
+  fun play() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.ANIMATEDSPRITE2D_PLAY, handle)
+  }
+
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.ANIMATEDSPRITE2D_STOP, handle)
+  }
+
+  fun getSpriteFrames(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE2D_GET_SPRITE_FRAMES,
+      handle,
+    )
+}
+
+/** Typed SpriteFrames slice used by dodge-the-creeps mob-type selection. */
+@InternalKanamaBackendApi
+class SpriteFramesBackendContractProbe(private val handle: GodotHandle) {
+  fun getAnimationNames(): List<String> =
+    GodotBackendCalls.invokeNoArgsRetStringArray(
+      InitialGodotCallDescriptors.SPRITEFRAMES_GET_ANIMATION_NAMES,
+      handle,
+    )
+}
+
+/** Typed RigidBody2D slice used by dodge-the-creeps mob motion. */
+@InternalKanamaBackendApi
+class RigidBody2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setLinearVelocity(velocity: GodotVector2) {
+    GodotBackendCalls.invokeVector2Arg(
+      InitialGodotCallDescriptors.RIGIDBODY2D_SET_LINEAR_VELOCITY,
+      handle,
+      velocity,
+    )
+  }
+}
+
+/** Typed CollisionShape2D slice used by dodge-the-creeps player hit handling. */
+@InternalKanamaBackendApi
+class CollisionShape2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setDisabled(disabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.COLLISIONSHAPE2D_SET_DISABLED,
+      handle,
+      disabled,
+    )
+  }
+
+  /** Object.set_deferred with a Boolean value (the only Variant dodge defers). */
+  fun setDeferredBool(property: String, value: Boolean) {
+    GodotBackendCalls.invokeStringNameBoolArg(
+      InitialGodotCallDescriptors.OBJECT_SET_DEFERRED,
+      handle,
+      property,
+      value,
+    )
+  }
+}
+
+/** Typed Timer slice used by dodge-the-creeps score/mob/start timers. */
+@InternalKanamaBackendApi
+class TimerBackendContractProbe(private val handle: GodotHandle) {
+  fun start(timeSec: Double) {
+    GodotBackendCalls.invokeDoubleArg(InitialGodotCallDescriptors.TIMER_START, handle, timeSec)
+  }
+
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.TIMER_STOP, handle)
+  }
+}
+
+/** Typed PathFollow2D slice used by dodge-the-creeps mob spawn placement. */
+@InternalKanamaBackendApi
+class PathFollow2DBackendContractProbe(private val handle: GodotHandle) {
+  fun setProgressRatio(progressRatio: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.PATHFOLLOW2D_SET_PROGRESS_RATIO,
+      handle,
+      progressRatio,
+    )
+  }
+}
+
+/** Typed Label slice used by dodge-the-creeps HUD score/message text. */
+@InternalKanamaBackendApi
+class LabelBackendContractProbe(private val handle: GodotHandle) {
+  fun setText(text: String) {
+    GodotBackendCalls.invokeStringNameArg(InitialGodotCallDescriptors.LABEL_SET_TEXT, handle, text)
+  }
 }
 
 /** Typed board-construction slice shared by Match3 across every backend. */
@@ -1188,6 +1436,12 @@ object InputBackendContractProbe {
       hotspot,
     )
   }
+
+  fun isActionPressed(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.INPUT_IS_ACTION_PRESSED,
+      action,
+    )
 }
 
 /** Typed object-method Callable connection used for board wiring. */

@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 6
+    const val PROTOCOL_VERSION = 7
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -233,6 +233,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendObjectArrayPropertySetter()
     appendLongMethodDispatcher()
     appendVector2iMethodDispatcher()
+    appendObjectMethodDispatcher()
     appendObjectObjectLongMethodDispatcher()
     appendLine("  private fun unknown(kind: String, id: Int): Nothing =")
     appendLine("    error(\"Unknown Kanama Web \$kind id=\$id\")")
@@ -456,6 +457,31 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         ) {
           appendLine(
             "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(Vector2i(x, y))"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendObjectMethodDispatcher() {
+    appendLine(
+      "  fun callObject(scriptId: Int, methodId: Int, script: KanamaWebScript, objectHandle: Int) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        val arg = method.args.singleOrNull()
+        val wrapper = arg?.objectWrapperFqName
+        if (method.returnType == null && arg?.type == TypeMapping.OBJECT && wrapper != null) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($wrapper(WebObjectId(objectHandle)))"
           )
         }
       }
@@ -702,7 +728,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     if (node2dAttachment) {
       appendLine("\tvar target: Node2D = self")
       appendLine(
-        "\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, target.position.x, target.position.y, target.scale.x, target.scale.y, target.modulate.r, target.modulate.g, target.modulate.b, target.modulate.a)"
+        "\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, target.position.x, target.position.y, target.scale.x, target.scale.y, target.modulate.r, target.modulate.g, target.modulate.b, target.modulate.a, target.rotation)"
       )
     }
     if (particlesAttachment) {
@@ -883,6 +909,101 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tvar target := target_object as Node2D")
     appendLine(
       "\t\t\ttarget.scale = Vector2(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 53 and target_object is Node2D:")
+    appendLine("\t\t\t(target_object as Node2D).rotation = bytes.decode_double(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 54 and target_object is CanvasItem:")
+    appendLine("\t\t\t(target_object as CanvasItem).visible = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 55 and target_object is AnimatedSprite2D:")
+    appendLine(
+      "\t\t\t(target_object as AnimatedSprite2D).flip_v = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 56 and target_object is AnimatedSprite2D:")
+    appendLine(
+      "\t\t\t(target_object as AnimatedSprite2D).flip_h = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 57 and target_object is AnimatedSprite2D:")
+    appendLine("\t\t\tvar animation_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar animation_name := String(_kanama_bridge.resolveCommandStringName(animation_id))"
+    )
+    appendLine("\t\t\t(target_object as AnimatedSprite2D).animation = StringName(animation_name)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 58 and target_object is AnimatedSprite2D:")
+    appendLine("\t\t\t(target_object as AnimatedSprite2D).play()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 59 and target_object is AnimatedSprite2D:")
+    appendLine("\t\t\t(target_object as AnimatedSprite2D).stop()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 60 and target_object is RigidBody2D:")
+    appendLine(
+      "\t\t\t(target_object as RigidBody2D).linear_velocity = Vector2(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 61 and target_object is CollisionShape2D:")
+    appendLine(
+      "\t\t\t(target_object as CollisionShape2D).disabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 62 and target_object is Timer:")
+    appendLine("\t\t\t(target_object as Timer).start(bytes.decode_double(offset + 8))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 63 and target_object is Timer:")
+    appendLine("\t\t\t(target_object as Timer).stop()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 64 and target_object is AudioStreamPlayer:")
+    appendLine("\t\t\t(target_object as AudioStreamPlayer).stop()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 65 and target_object is PathFollow2D:")
+    appendLine(
+      "\t\t\t(target_object as PathFollow2D).progress_ratio = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 66 and target_object is Label:")
+    appendLine("\t\t\tvar text_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\t(target_object as Label).text = String(_kanama_bridge.resolveCommandStringName(text_id))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 67 and target_object != null:")
+    appendLine("\t\t\tvar property_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar property_name := String(_kanama_bridge.resolveCommandStringName(property_id))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.set_deferred(StringName(property_name), bytes.decode_s32(offset + 12) != 0)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 68 and target_object is SceneTree:")
+    appendLine("\t\t\tvar group_id := bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tvar method_id := bytes.decode_s32(offset + 12)")
+    appendLine("\t\t\tvar group_name := String(_kanama_bridge.resolveCommandStringName(group_id))")
+    appendLine(
+      "\t\t\tvar method_name := String(_kanama_bridge.resolveCommandStringName(method_id))"
+    )
+    appendLine(
+      "\t\t\t(target_object as SceneTree).call_group(StringName(group_name), StringName(method_name))"
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
@@ -1081,7 +1202,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value is Node2D:")
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
-      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
@@ -1105,7 +1226,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value is Node2D:")
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
-      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
@@ -1124,10 +1245,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.create_tween()")
     appendLine("\telif opcode == 51 and receiver != null:")
     appendLine("\t\tvalue = receiver.get_tree()")
+    appendLine("\telif opcode == 71 and receiver is AnimatedSprite2D:")
+    appendLine("\t\tvalue = (receiver as AnimatedSprite2D).sprite_frames")
+    appendLine("\telif opcode == 73 and receiver != null:")
+    appendLine("\t\tvalue = receiver.get_parent()")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
     appendLine("\t_kanama_object_handles[result_handle] = value")
+    appendLine("\tif value is SpriteFrames:")
+    appendLine(
+      "\t\t_kanama_bridge.loadAnimationNames(result_handle, \"\\n\".join((value as SpriteFrames).get_animation_names()))"
+    )
     appendLine("\tif value is Tween:")
     appendLine("\t\t_kanama_tween_children[result_handle] = []")
     appendLine("\t\t_kanama_tween_targets[result_handle] = []")
@@ -1203,7 +1332,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tif target is Node2D:")
     appendLine("\t\t\tvar node_2d := target as Node2D")
     appendLine(
-      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(int(target_handle), node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a)"
+      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(int(target_handle), node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
     appendLine("\tvar children: Array = _kanama_tween_children.get(tween_handle, [])")
     appendLine("\tfor child_handle in children:")
@@ -1263,6 +1392,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEvent).is_released())")
     appendLine("\t\telif opcode == 26 and value is InputEventMouseButton:")
     appendLine("\t\t\tresult = int((value as InputEventMouseButton).button_index)")
+    appendLine("\t\telif opcode == 69:")
+    appendLine("\t\t\tresult = int(Input.is_action_pressed(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 65 and value is PathFollow2D:")
+    appendLine("\t\t\tvar follow := value as PathFollow2D")
+    appendLine("\t\t\tfollow.progress_ratio = float(args[2])")
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode2DSnapshot(object_handle, follow.position.x, follow.position.y, follow.scale.x, follow.scale.y, follow.modulate.r, follow.modulate.g, follow.modulate.b, follow.modulate.a, follow.rotation)"
+    )
+    appendLine("\t\t\tresult = 1")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -1322,6 +1460,22 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine(
             "\t_kanama_bridge.callVector2i(_kanama_handle, ${index + 1}, ${arg.name}.x, ${arg.name}.y)"
           )
+        }
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.OBJECT &&
+          method.args.single().objectWrapperFqName != null -> {
+          // Registered function taking a single Godot object (e.g. a body_entered signal
+          // handler): register the node under a transient handle so the Kotlin side can
+          // reconstruct its wrapper, invoke, then release it.
+          val arg = method.args.single()
+          appendLine(
+            "\tvar arg_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+          )
+          appendLine("\t_kanama_object_handles[arg_handle] = ${arg.name}")
+          appendLine("\t_kanama_bridge.callObject(_kanama_handle, ${index + 1}, arg_handle)")
+          appendLine("\t_kanama_object_handles.erase(arg_handle)")
+          appendLine("\t_kanama_bridge.releaseTransientObjectHandle(arg_handle)")
         }
         method.returnType == null &&
           method.args.size == 3 &&

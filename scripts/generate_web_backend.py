@@ -77,9 +77,9 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     40: {},
     41: {"ret": "existing"},
     42: {"ret": "existing"},
-    43: {},
+    43: {"bool_snapshot": "emitting"},
     44: {},
-    45: {},
+    45: {"double_snapshot": "lifetime"},
     46: {},
     47: {},
     48: {},
@@ -87,6 +87,27 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     50: {},
     51: {"ret": "browser"},
     52: {},
+    53: {},
+    54: {},
+    55: {},
+    56: {},
+    57: {},
+    58: {},
+    59: {},
+    60: {},
+    61: {},
+    62: {},
+    63: {},
+    64: {},
+    65: {"immediate_double_extern": "immediateWebSetProgressRatio"},
+    66: {},
+    67: {},
+    68: {},
+    69: {},
+    70: {"double_snapshot": "rotation"},
+    71: {"ret": "browser"},
+    72: {},
+    73: {"ret": "node"},
 }
 
 
@@ -139,6 +160,18 @@ def _only(calls: list[BackendCallPolicy]) -> BackendCallPolicy:
     return calls[0]
 
 
+def _opcode_guard(calls: list[BackendCallPolicy]) -> str:
+    """Membership guard over a shape's admitted opcodes.
+
+    Set membership (not a contiguous range) so a shape can admit non-adjacent opcodes as the corpus
+    grows — e.g. Node2D.set_rotation joining the audio DOUBLE_ARG family.
+    """
+    opcodes = [c.opcode for c in calls]
+    if len(opcodes) == 1:
+        return f"descriptor.opcode == {opcodes[0]}"
+    return "descriptor.opcode in setOf(" + ", ".join(str(o) for o in opcodes) + ")"
+
+
 def body_BOOL_RET_INT(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -159,28 +192,58 @@ def body_BOOL_RET_HANDLE(calls):
 
 
 def body_BOOL_ARG(calls):
-    op = _only(calls).opcode
-    return [
+    lines = [
         f"require(descriptor.executionMode == {_QUEUED})",
-        f"require(descriptor.opcode == {op})",
+        f"require({_opcode_guard(calls)})",
         "val objectId = receiver.webId()",
         "commands.appendBoolMutation(descriptor.opcode, objectId, value)",
-        "webWriteEmittingSnapshot(objectId, value)",
     ]
+    snapshot_arms = [c for c in calls if WEB_POLICY[c.opcode].get("bool_snapshot") == "emitting"]
+    if snapshot_arms:
+        lines.append("when (descriptor.opcode) {")
+        for c in snapshot_arms:
+            lines.append(f"{c.opcode} -> webWriteEmittingSnapshot(objectId, value)")
+        lines.append("else -> {}")
+        lines.append("}")
+    return lines
 
 
 def body_DOUBLE_ARG(calls):
-    lo = calls[0].opcode
-    hi = calls[-1].opcode
-    span = f"descriptor.opcode == {lo}" if lo == hi else f"descriptor.opcode in {lo}..{hi}"
-    return [
-        f"require(descriptor.executionMode == {_QUEUED})",
-        f"require({span})",
+    queued = [c for c in calls if c.execution_mode.value == "QUEUED_MUTATION"]
+    immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
+    finite = [
         "require(value.isFinite()) {",
         '"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"',
         "}",
-        "commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)",
     ]
+    if not immediate:
+        return [
+            f"require(descriptor.executionMode == {_QUEUED})",
+            f"require({_opcode_guard(queued)})",
+            *finite,
+            "commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)",
+        ]
+    lines = [*finite, "when (descriptor.executionMode) {"]
+    if queued:
+        lines += [
+            f"{_QUEUED} -> {{",
+            f"require({_opcode_guard(queued)})",
+            "commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)",
+            "}",
+        ]
+    lines += [f"{_IMMEDIATE} -> {{", f"require({_opcode_guard(immediate)})", "commands.flush()", "when (descriptor.opcode) {"]
+    for c in immediate:
+        extern = WEB_POLICY[c.opcode]["immediate_double_extern"]
+        lines.append(f"{c.opcode} -> {extern}(receiver.webId(), value)")
+    lines += [
+        'else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")',
+        "}",
+        "}",
+        f"{_SNAPSHOT} ->",
+        'error("Double argument cannot use snapshot execution for opcode=${descriptor.opcode}")',
+        "}",
+    ]
+    return lines
 
 
 def body_NOARGS_RET_VECTOR2(calls):
@@ -220,7 +283,12 @@ def body_VECTOR2_ARG(calls):
         "when (descriptor.opcode) {",
     ]
     for c in calls:
-        lines.append(f"{c.opcode} -> webWriteVector2Snapshot(objectId, {_slot(c.opcode)}, value)")
+        if WEB_POLICY[c.opcode].get("vec2_slot") is not None:
+            lines.append(
+                f"{c.opcode} -> webWriteVector2Snapshot(objectId, {_slot(c.opcode)}, value)"
+            )
+        else:
+            lines.append(f"{c.opcode} -> {{}}")
     lines.append('else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")')
     lines.append("}")
     return lines
@@ -510,6 +578,15 @@ def body_STRINGNAME_RET_BOOL(calls):
     ]
 
 
+def body_STRINGNAME_RET_BOOL_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        "commands.flush()",
+        "return immediateWebObjectQuery("
+        "descriptor.opcode, requireActiveWebScriptHandle(), value) != 0",
+    ]
+
+
 def body_NOARGS_RET_BOOL(calls):
     snapshot = [c for c in calls if c.execution_mode.value == "SNAPSHOT_READ"]
     snap = _only(snapshot).opcode
@@ -532,16 +609,26 @@ def body_NOARGS_RET_BOOL(calls):
     ]
 
 
+_DOUBLE_SNAPSHOT_HOOK = {"lifetime": "webLifetimeSnapshot", "rotation": "webRotationSnapshot"}
+
+
 def body_NOARGS_RET_DOUBLE(calls):
-    op = _only(calls).opcode
-    return [
+    lines = [
         f"require(descriptor.executionMode == {_SNAPSHOT})",
-        f"require(descriptor.opcode == {op})",
-        "return webLifetimeSnapshot(receiver.webId())",
+        "return when (descriptor.opcode) {",
+    ]
+    for c in calls:
+        hook = _DOUBLE_SNAPSHOT_HOOK[WEB_POLICY[c.opcode]["double_snapshot"]]
+        lines.append(f"{c.opcode} -> {hook}(receiver.webId())")
+    lines += [
+        "else -> null",
+        "}",
         "?: error(",
-        '"Missing Web GPUParticles2D.get_lifetime snapshot for object handle=${receiver.webId()}"',
+        '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
+        '"object handle=${receiver.webId()}"',
         ")",
     ]
+    return lines
 
 
 def body_NOARGS_RET_LONG(calls):
@@ -552,12 +639,40 @@ def body_NOARGS_RET_LONG(calls):
     ]
 
 
-def body_STRINGNAME_ARG(calls):
+def body_NOARGS_RET_STRING_ARRAY(calls):
     op = _only(calls).opcode
     return [
-        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require(descriptor.executionMode == {_SNAPSHOT})",
         f"require(descriptor.opcode == {op})",
+        "return webAnimationNamesSnapshot(receiver.webId())",
+        "?: error(",
+        '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
+        '"object handle=${receiver.webId()}"',
+        ")",
+    ]
+
+
+def body_STRINGNAME_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
         "commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)",
+    ]
+
+
+def body_STRINGNAME_BOOL_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)",
+    ]
+
+
+def body_STRINGNAME_STRINGNAME_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)",
     ]
 
 
@@ -704,10 +819,20 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     ),
     "STRINGNAME_RET_INT": (["receiver: GodotHandle", "value: String"], "Int"),
     "STRINGNAME_RET_BOOL": (["receiver: GodotHandle", "value: String"], "Boolean"),
+    "STRINGNAME_RET_BOOL_SINGLETON": (["value: String"], "Boolean"),
     "NOARGS_RET_BOOL": (["receiver: GodotHandle"], "Boolean"),
     "NOARGS_RET_DOUBLE": (["receiver: GodotHandle"], "Double"),
     "NOARGS_RET_LONG": (["receiver: GodotHandle"], "Long"),
+    "NOARGS_RET_STRING_ARRAY": (["receiver: GodotHandle"], "List<String>"),
     "STRINGNAME_ARG": (["receiver: GodotHandle", "value: String"], ""),
+    "STRINGNAME_BOOL_ARG": (
+        ["receiver: GodotHandle", "name: String", "value: Boolean"],
+        "",
+    ),
+    "STRINGNAME_STRINGNAME_ARG": (
+        ["receiver: GodotHandle", "first: String", "second: String"],
+        "",
+    ),
     "STRINGNAME_VECTOR2I_RET_INT": (
         ["receiver: GodotHandle", "name: String", "value: GodotVector2i"],
         "Int",
@@ -760,6 +885,8 @@ _WORD_CASE = {
     "UTILITY": "Utility",
     "CALLABLE": "Callable",
     "BOUND": "Bound",
+    "SINGLETON": "Singleton",
+    "ARRAY": "Array",
 }
 
 
@@ -790,6 +917,8 @@ EMIT_ORDER = [
     "OBJECT_BOOL_LONG_ARGS",
     "OBJECT_ARG",
     "STRINGNAME_ARG",
+    "STRINGNAME_BOOL_ARG",
+    "STRINGNAME_STRINGNAME_ARG",
     "NODEPATH_RET_HANDLE",
     "LONG_RET_HANDLE",
     "NOARGS_RET_HANDLE",
@@ -797,9 +926,11 @@ EMIT_ORDER = [
     "STRINGNAME_CALLABLE_LONG_RET_LONG",
     "STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG",
     "STRINGNAME_RET_BOOL",
+    "STRINGNAME_RET_BOOL_SINGLETON",
     "NOARGS_RET_BOOL",
     "NOARGS_RET_DOUBLE",
     "NOARGS_RET_LONG",
+    "NOARGS_RET_STRING_ARRAY",
     "STRINGNAME_VECTOR2I_RET_INT",
     "NOARGS_RET_COLOR",
     "COLOR_ARG",

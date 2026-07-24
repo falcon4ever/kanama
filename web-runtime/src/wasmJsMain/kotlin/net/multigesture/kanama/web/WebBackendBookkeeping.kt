@@ -26,6 +26,8 @@ private val textureSnapshots = mutableMapOf<Int, Int>()
 private val viewportRectSnapshots = mutableMapOf<Int, GodotRect2>()
 private val particlesEmittingSnapshots = mutableMapOf<Int, Boolean>()
 private val particlesLifetimeSnapshots = mutableMapOf<Int, Double>()
+private val rotationSnapshots = mutableMapOf<Int, Double>()
+private val animationNamesSnapshots = mutableMapOf<Int, List<String>>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
 internal enum class WebBrowserHandleKind {
@@ -60,6 +62,16 @@ internal fun webModulateSnapshot(objectId: Int): GodotColor? = modulateSnapshots
 internal fun webEmittingSnapshot(objectId: Int): Boolean? = particlesEmittingSnapshots[objectId]
 
 internal fun webLifetimeSnapshot(objectId: Int): Double? = particlesLifetimeSnapshots[objectId]
+
+internal fun webRotationSnapshot(objectId: Int): Double? = rotationSnapshots[objectId]
+
+internal fun webAnimationNamesSnapshot(objectId: Int): List<String>? =
+  animationNamesSnapshots[objectId]
+
+/** Records a SpriteFrames animation-name list (newline-joined by the bridge; empty = no names). */
+internal fun loadWebAnimationNames(objectId: Int, joined: String) {
+  animationNamesSnapshots[objectId] = if (joined.isEmpty()) emptyList() else joined.split('\n')
+}
 
 /** Texture handle id snapshot: null = no snapshot registered, 0 = registered-but-cleared. */
 internal fun webTextureSnapshot(objectId: Int): Int? = textureSnapshots[objectId]
@@ -212,11 +224,14 @@ internal fun loadWebNode2DSnapshot(
   modulateG: Double,
   modulateB: Double,
   modulateA: Double,
+  rotation: Double,
 ) {
   loadWebPositionSnapshot(objectId, positionX, positionY)
   scaleSnapshots[objectId] = GodotVector2(scaleX.toFloat(), scaleY.toFloat())
   modulateSnapshots[objectId] =
     GodotColor(modulateR.toFloat(), modulateG.toFloat(), modulateB.toFloat(), modulateA.toFloat())
+  require(rotation.isFinite()) { "Kanama Web Node2D rotation snapshot must be finite" }
+  rotationSnapshots[objectId] = rotation
 }
 
 internal fun loadWebViewportRectSnapshot(
@@ -257,6 +272,8 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   viewportRectSnapshots.remove(objectId)
   particlesEmittingSnapshots.remove(objectId)
   particlesLifetimeSnapshots.remove(objectId)
+  rotationSnapshots.remove(objectId)
+  animationNamesSnapshots.remove(objectId)
 }
 
 // ---------------------------------------------------------------------------

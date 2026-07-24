@@ -85,6 +85,9 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun getNodeOrNull(path: String): GodotObject? =
     NodeLookupBackendContractProbe(backendHandle).getNodeOrNull(path)?.let(::GodotObject)
 
+  fun getParent(): GodotObject? =
+    NodeBackendContractProbe(backendHandle).getParent()?.let(::GodotObject)
+
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
     getNodeOrNull(path)?.let { ctor(it.handle) }
 
@@ -129,6 +132,14 @@ open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : 
     Node2DBackendContractProbe(backendHandle).queueRedraw()
   }
 
+  fun show() {
+    CanvasItemBackendContractProbe(backendHandle).setVisible(true)
+  }
+
+  fun hide() {
+    CanvasItemBackendContractProbe(backendHandle).setVisible(false)
+  }
+
   fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
     Node2DBackendContractProbe(backendHandle)
       .drawTexture(
@@ -158,6 +169,12 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHa
     set(value) {
       Node2DBackendContractProbe(backendHandle).scale =
         GodotVector2(value.x.toFloat(), value.y.toFloat())
+    }
+
+  var rotation: Double
+    get() = Node2DBackendContractProbe(backendHandle).getRotation()
+    set(value) {
+      Node2DBackendContractProbe(backendHandle).setRotation(value)
     }
 
   fun getLocalMousePosition(): Vector2 =

@@ -575,4 +575,235 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE2D_SET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 53,
+      className = "Node2D",
+      methodName = "set_rotation",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASITEM_SET_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 54,
+      className = "CanvasItem",
+      methodName = "set_visible",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_SET_FLIP_V =
+    GodotCallDescriptor(
+      opcode = 55,
+      className = "AnimatedSprite2D",
+      methodName = "set_flip_v",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_SET_FLIP_H =
+    GodotCallDescriptor(
+      opcode = 56,
+      className = "AnimatedSprite2D",
+      methodName = "set_flip_h",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_SET_ANIMATION =
+    GodotCallDescriptor(
+      opcode = 57,
+      className = "AnimatedSprite2D",
+      methodName = "set_animation",
+      hash = 3304788590L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_PLAY =
+    GodotCallDescriptor(
+      opcode = 58,
+      className = "AnimatedSprite2D",
+      methodName = "play",
+      hash = 3269405555L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_STOP =
+    GodotCallDescriptor(
+      opcode = 59,
+      className = "AnimatedSprite2D",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RIGIDBODY2D_SET_LINEAR_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 60,
+      className = "RigidBody2D",
+      methodName = "set_linear_velocity",
+      hash = 743155724L,
+      shape = GodotCallShape.VECTOR2_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val COLLISIONSHAPE2D_SET_DISABLED =
+    GodotCallDescriptor(
+      opcode = 61,
+      className = "CollisionShape2D",
+      methodName = "set_disabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TIMER_START =
+    GodotCallDescriptor(
+      opcode = 62,
+      className = "Timer",
+      methodName = "start",
+      hash = 1392008558L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TIMER_STOP =
+    GodotCallDescriptor(
+      opcode = 63,
+      className = "Timer",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_STOP =
+    GodotCallDescriptor(
+      opcode = 64,
+      className = "AudioStreamPlayer",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val PATHFOLLOW2D_SET_PROGRESS_RATIO =
+    GodotCallDescriptor(
+      opcode = 65,
+      className = "PathFollow2D",
+      methodName = "set_progress_ratio",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val LABEL_SET_TEXT =
+    GodotCallDescriptor(
+      opcode = 66,
+      className = "Label",
+      methodName = "set_text",
+      hash = 83702148L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_SET_DEFERRED =
+    GodotCallDescriptor(
+      opcode = 67,
+      className = "Object",
+      methodName = "set_deferred",
+      hash = 3776071444L,
+      shape = GodotCallShape.STRINGNAME_BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENETREE_CALL_GROUP =
+    GodotCallDescriptor(
+      opcode = 68,
+      className = "SceneTree",
+      methodName = "call_group",
+      hash = 1257962832L,
+      shape = GodotCallShape.STRINGNAME_STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_IS_ACTION_PRESSED =
+    GodotCallDescriptor(
+      opcode = 69,
+      className = "Input",
+      methodName = "is_action_pressed",
+      hash = 1558498928L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE2D_GET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 70,
+      className = "Node2D",
+      methodName = "get_rotation",
+      hash = 1740695150L,
+      shape = GodotCallShape.NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE2D_GET_SPRITE_FRAMES =
+    GodotCallDescriptor(
+      opcode = 71,
+      className = "AnimatedSprite2D",
+      methodName = "get_sprite_frames",
+      hash = 3804851214L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SPRITEFRAMES_GET_ANIMATION_NAMES =
+    GodotCallDescriptor(
+      opcode = 72,
+      className = "SpriteFrames",
+      methodName = "get_animation_names",
+      hash = 1139954409L,
+      shape = GodotCallShape.NOARGS_RET_STRING_ARRAY,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_GET_PARENT =
+    GodotCallDescriptor(
+      opcode = 73,
+      className = "Node",
+      methodName = "get_parent",
+      hash = 3160264692L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

@@ -9,16 +9,25 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 6;
+  const KANAMA_WEB_PROTOCOL_VERSION = 7;
 
   function commandWordCount(opcode) {
-    if (opcode === 5 || opcode === 15) return 2;
+    if (
+      opcode === 5 ||
+      opcode === 15 ||
+      opcode === 58 ||
+      opcode === 59 ||
+      opcode === 63 ||
+      opcode === 64
+    ) return 2;
     if (
       opcode === 14 ||
       opcode === 16 ||
       opcode === 46 ||
       opcode === 47 ||
-      opcode === 52
+      opcode === 52 ||
+      opcode === 57 ||
+      opcode === 66
     ) return 3;
     if (
       opcode === 3 ||
@@ -27,6 +36,16 @@
       opcode === 48 ||
       opcode === 49 ||
       opcode === 50 ||
+      opcode === 53 ||
+      opcode === 54 ||
+      opcode === 55 ||
+      opcode === 56 ||
+      opcode === 60 ||
+      opcode === 61 ||
+      opcode === 62 ||
+      opcode === 65 ||
+      opcode === 67 ||
+      opcode === 68 ||
       opcode === 100
     ) return 4;
     if (opcode === 13) return 5;
@@ -178,6 +197,8 @@
     match3TileTypeByHandle: new Map(),
     match3NodePositions: new Map(),
     match3MainHandle: 0,
+    dodgeMainHandle: 0,
+    dodgeSmokeQuitHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -320,6 +341,25 @@
         this.match3FrameContinuations += executed;
         this.processCalls += 1;
         return executed;
+      }
+      if (this.mode === "dodge") {
+        // Real scene demo: the main script pumps the shared coroutine frame scheduler
+        // (and runs its own _process); every other dodge script (Player, spawned Mobs)
+        // runs its _process via process(). Neither path takes the spike benchmark
+        // transport below, which appends a scalar (op100) marker that only the spike
+        // main script can apply — that mis-route is what fataled dodge's per-frame scripts.
+        if (handle === this.dodgeMainHandle) {
+          const executed = this.invoke(
+            handle,
+            "frame_scheduler",
+            "frame scheduler",
+            () => this.api.kanamaWebFrame(handle, delta),
+            0,
+          );
+          this.processCalls += 1;
+          return executed;
+        }
+        return this.process(handle, delta);
       }
       const started = performance.now();
       let result;
@@ -507,12 +547,31 @@
         0,
       );
     },
+    callObject(handle, methodId, objectHandle) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallObject(handle, methodId, objectHandle),
+        0,
+      );
+    },
     bunnymarkMethodId(method) {
       const spriteVariant = this.bunnymarkVariant === "BunnymarkV1Sprites";
       if (method === "add") return spriteVariant ? 1 : 2;
       if (method === "remove") return spriteVariant ? 2 : 3;
       if (method === "finish") return spriteVariant ? 3 : 4;
       throw new Error(`Unknown Bunnymark method=${method}`);
+    },
+    dodgeMethodId(method) {
+      // Ordinals follow the @RegisterFunction order in dodge's Main.kt (mirrored by
+      // the generated Main.gd proxy: game_over=1, new_game=2, timer callbacks 3-5).
+      if (method === "game_over") return 1;
+      if (method === "new_game") return 2;
+      if (method === "_on_MobTimer_timeout") return 3;
+      if (method === "_on_ScoreTimer_timeout") return 4;
+      if (method === "_on_StartTimer_timeout") return 5;
+      throw new Error(`Unknown dodge method=${method}`);
     },
     roundTrip(value) {
       return this.api.kanamaWebRoundTrip(value);
@@ -743,7 +802,7 @@
       this.latestSnapshotY = y;
       return this.api.kanamaWebLoadPositionSnapshot(handle, x, y);
     },
-    refreshNode2DSnapshot(handle, positionX, positionY, scaleX, scaleY, r, g, b, a) {
+    refreshNode2DSnapshot(handle, positionX, positionY, scaleX, scaleY, r, g, b, a, rotation) {
       this.snapshotBatchLoads += 1;
       this.latestSnapshotX = positionX;
       this.latestSnapshotY = positionY;
@@ -757,10 +816,14 @@
         g,
         b,
         a,
+        rotation,
       );
     },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
+    },
+    loadAnimationNames(handle, joined) {
+      return this.api.kanamaWebLoadAnimationNames(handle, String(joined));
     },
     refreshParticlesSnapshot(handle, emitting, lifetime) {
       if (!this.particleSnapshots.has(handle)) {
@@ -1001,9 +1064,20 @@
         "Godot no-args object",
       );
       const isTween = opcode === 36;
-      const kind = isTween ? "Tween" : isSceneTree ? "SceneTree" : "Node";
+      // opcode 71 = AnimatedSprite2D.get_sprite_frames returns a Resource (SpriteFrames),
+      // not a Node, so it must be adopted as an Object like Tween/SceneTree — otherwise the
+      // handle is registered NODE and Kotlin's use as an OBJECT trips a handle-kind conflict.
+      const isSpriteFrames = opcode === 71;
+      const isObjectResult = isTween || isSceneTree || isSpriteFrames;
+      const kind = isTween
+        ? "Tween"
+        : isSceneTree
+          ? "SceneTree"
+          : isSpriteFrames
+            ? "SpriteFrames"
+            : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
-      if (isTween || isSceneTree) this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle);
@@ -1012,7 +1086,7 @@
         throw new Error("Godot no-args object callback published an invalid handle");
       }
       if (result === 0) {
-        if (isTween || isSceneTree) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
         else this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, kind);
       } else if (isTween) {
@@ -1165,6 +1239,17 @@
       }
       return this.immediateLongResult;
     },
+    immediateSetProgressRatio(handle, ratio) {
+      // Reuses the object-query callback: opcode 65 sets progress_ratio and re-pushes the
+      // PathFollow2D Node2D snapshot so read-your-write position/rotation reads are fresh.
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot progress ratio");
+      this.immediateLongResult = null;
+      callback(65, handle, ratio);
+      if (this.immediateLongResult !== 1) {
+        throw new Error("Godot set_progress_ratio callback did not confirm application");
+      }
+      return this.immediateLongResult;
+    },
     immediateNoArgsVector2X(opcode, handle) {
       const callback = this.callbackFor(
         this.noArgsVector2Callbacks,
@@ -1239,6 +1324,14 @@
       };
     },
     flushCommands(words, wordCount, commandCount) {
+      // Snapshot the batch: `words` is a live view into the Kotlin command buffer, which
+      // is cleared and refilled by any nested flush. Applying a command can synchronously
+      // re-enter (e.g. add_child fires a spawned node's _ready, which flushes its own
+      // commands into the same buffer), so without this copy the post-dispatch telemetry
+      // pass — and any later command group — would read commands from the nested batch and
+      // misparse (a handle read as an opcode). Only surfaces for demos that mutate during a
+      // flush, i.e. dodge's mob spawning; match3/bunnymark never re-enter mid-batch.
+      words = words.slice(0, wordCount);
       if (this.activeDraw) {
         this.drawBatches += 1;
         this.maxDrawCommands = Math.max(this.maxDrawCommands, commandCount);
@@ -1277,7 +1370,13 @@
         const frame = { applied: 0 };
         this.activeCommandFlushFrame = frame;
         try {
-          callback(words.subarray(groupStart, groupStart + groupWords), groupCommands);
+          // Must be slice(), not subarray(): Godot's js_buffer_to_packed_byte_array reads
+          // from the underlying ArrayBuffer's start and ignores a view's byteOffset, so a
+          // subarray view for any group after the first (non-zero offset) would deliver the
+          // wrong commands to that owner's proxy. slice() copies into a fresh zero-offset
+          // buffer. Single-group batches (match3/bunnymark) start at 0 and were unaffected;
+          // multi-owner batches (e.g. dodge's new_game) require this.
+          callback(words.slice(groupStart, groupStart + groupWords), groupCommands);
         } finally {
           this.activeCommandFlushFrame = parentFrame;
         }
@@ -1413,6 +1512,17 @@
     recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
+      if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
+        // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit
+        // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
+        // through this handle instead, mirroring bunnymark's method-call driving).
+        this.dodgeMainHandle = handle;
+      }
+      if (this.mode === "dodge" && scriptName.endsWith(".SmokeQuit")) {
+        // The driver calls SmokeQuit.smoke_teardown (method#1) through this handle to
+        // quit the SceneTree and drain live handles to zero for the teardown assertion.
+        this.dodgeSmokeQuitHandle = handle;
+      }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);
         if (scriptName.endsWith(".Audio")) {
@@ -1437,17 +1547,23 @@
           updateStatus(`Running Kotlin/Wasm Bunnymark with ${this.previewBunnies} bunnies…`);
         }, 150);
       }
-      if (this.readyCount === 1) {
-        this.firstHandle = handle;
-        this.results.startup.timeToFirstReadyMs =
-          performance.now() - globalThis.KanamaWebPageStartedAt;
-        updateStatus("Running frame and bridge benchmarks…");
-      } else {
-        this.results.lifecycle.replacementHandle = handle;
-        this.results.lifecycle.generationAdvanced = handle !== this.firstHandle;
-        this.results.lifecycle.staleHandleInvalidated =
-          this.api.kanamaWebIsLive(this.freedHandle) === 0;
-        this.finish();
+      // Single-script benchmark lifecycle (spike/bunnymark): the first ready is the
+      // benchmark script; a second ready is a hot-reload replacement that finishes the
+      // run. Scene-based demos (match3 returns early above; dodge and any future scene
+      // demo) have many scripts and must not treat the 2nd ready as a benchmark finish.
+      if (this.mode === "bunnymark" || this.mode === "spike") {
+        if (this.readyCount === 1) {
+          this.firstHandle = handle;
+          this.results.startup.timeToFirstReadyMs =
+            performance.now() - globalThis.KanamaWebPageStartedAt;
+          updateStatus("Running frame and bridge benchmarks…");
+        } else {
+          this.results.lifecycle.replacementHandle = handle;
+          this.results.lifecycle.generationAdvanced = handle !== this.firstHandle;
+          this.results.lifecycle.staleHandleInvalidated =
+            this.api.kanamaWebIsLive(this.freedHandle) === 0;
+          this.finish();
+        }
       }
     },
     finishMatch3Group1(handle, scriptId, scriptName) {

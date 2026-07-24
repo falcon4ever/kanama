@@ -24,9 +24,10 @@ import path from "node:path";
 
 import { runMatch3 } from "./demos/match3.mjs";
 import { runBunnymark } from "./demos/bunnymark.mjs";
+import { runDodge } from "./demos/dodge.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge };
 
 function parseArgs(argv) {
   const args = {};

@@ -313,6 +313,15 @@ fun kanamaWebCallObjectObjectLong(
 }
 
 @JsExport
+fun kanamaWebCallObject(objectId: Int, methodId: Int, argHandle: Int): Int {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callObject(record.scriptId, methodId, record.script, argHandle)
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebFree(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_exit_tree") { record ->
     KanamaWebProjectRegistry.exitTree(record.scriptId, record.script)
@@ -401,6 +410,7 @@ fun kanamaWebLoadNode2DSnapshot(
   modulateG: Double,
   modulateB: Double,
   modulateA: Double,
+  rotation: Double,
 ): Int {
   loadWebNode2DSnapshot(
     objectId,
@@ -412,7 +422,14 @@ fun kanamaWebLoadNode2DSnapshot(
     modulateG,
     modulateB,
     modulateA,
+    rotation,
   )
+  return 1
+}
+
+@JsExport
+fun kanamaWebLoadAnimationNames(objectId: Int, joined: String): Int {
+  loadWebAnimationNames(objectId, joined)
   return 1
 }
 
