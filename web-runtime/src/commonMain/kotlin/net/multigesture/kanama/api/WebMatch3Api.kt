@@ -99,10 +99,26 @@ internal object WebSignalCallbackRegistry {
 
 object Mathf {
   val PI: Double = kotlin.math.PI
+  val TAU: Double = kotlin.math.PI * 2.0
 
   fun abs(value: Double): Double = kotlin.math.abs(value)
 
   fun log(value: Double): Double = ln(value)
+
+  fun cos(value: Double): Double = kotlin.math.cos(value)
+
+  fun sin(value: Double): Double = kotlin.math.sin(value)
+
+  fun clamp(value: Double, min: Double, max: Double): Double = value.coerceIn(min, max)
+
+  fun lerp(from: Double, to: Double, weight: Double): Double = from + (to - from) * weight
+
+  /** Godot's angle_lerp / lerp_angle: interpolate the shortest arc between two angles (radians). */
+  fun lerpAngle(from: Double, to: Double, weight: Double): Double {
+    val difference = (to - from) % TAU
+    val distance = (2.0 * difference) % TAU - difference
+    return from + distance * weight
+  }
 }
 
 class GodotSignal internal constructor(private val owner: GodotObject, private val name: String) {
