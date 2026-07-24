@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
+[ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -37,3 +38,6 @@ surface_material_override/0 = SubResource("Mat_1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 
 [node name="MobileControls" type="CanvasLayer" parent="."]
+
+[node name="SmokeQuit" type="Node" parent="."]
+script = ExtResource("2_smoke")

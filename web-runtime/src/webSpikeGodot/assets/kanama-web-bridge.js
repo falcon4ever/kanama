@@ -207,6 +207,8 @@
     match3MainHandle: 0,
     dodgeMainHandle: 0,
     dodgeSmokeQuitHandle: 0,
+    web3dMainHandle: 0,
+    web3dSmokeQuitHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -1559,6 +1561,12 @@
         // The driver calls SmokeQuit.smoke_teardown (method#1) through this handle to
         // quit the SceneTree and drain live handles to zero for the teardown assertion.
         this.dodgeSmokeQuitHandle = handle;
+      }
+      if (this.mode === "web3d" && scriptName.endsWith(".Main")) this.web3dMainHandle = handle;
+      if (this.mode === "web3d" && scriptName.endsWith(".SmokeQuit")) {
+        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
+        // drain live handles to zero for the render smoke's teardown assertion.
+        this.web3dSmokeQuitHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);
