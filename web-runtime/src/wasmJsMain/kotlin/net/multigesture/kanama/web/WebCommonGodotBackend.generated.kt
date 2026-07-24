@@ -438,6 +438,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           36 -> registerReturnedBrowserObject(token)
           51 -> registerReturnedBrowserObject(token)
           71 -> registerReturnedBrowserObject(token)
+          73 -> registerReturnedNode(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }

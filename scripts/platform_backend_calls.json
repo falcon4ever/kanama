@@ -979,6 +979,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read the SpriteFrames animation-name list synchronously from the snapshot recorded when the resource was obtained via get_sprite_frames.",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 73,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_parent",
+      "hash": 3160264692,
+      "arguments": [],
+      "returnType": "Node",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return the node's borrowed parent as a Web node handle (interned in the owning script's table); null at the scene root.",
+      "introducedBy": "60b-dodge"
     }
   ],
   "compositions": [

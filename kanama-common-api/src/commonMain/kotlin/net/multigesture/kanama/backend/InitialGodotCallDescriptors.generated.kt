@@ -795,4 +795,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE_GET_PARENT =
+    GodotCallDescriptor(
+      opcode = 73,
+      className = "Node",
+      methodName = "get_parent",
+      hash = 3160264692L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

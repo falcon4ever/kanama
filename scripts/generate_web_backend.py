@@ -107,6 +107,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     70: {"double_snapshot": "rotation"},
     71: {"ret": "browser"},
     72: {},
+    73: {"ret": "node"},
 }
 
 

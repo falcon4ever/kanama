@@ -86,6 +86,10 @@ class Timer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
   fun stop() {
     TimerBackendContractProbe(backendHandle).stop()
   }
+
+  object Signals {
+    const val timeout = "timeout"
+  }
 }
 
 class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {

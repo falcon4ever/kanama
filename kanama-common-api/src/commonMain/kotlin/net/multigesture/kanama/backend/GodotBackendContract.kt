@@ -1058,6 +1058,9 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
 
   fun createTween(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_CREATE_TWEEN, handle)
+
+  fun getParent(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_PARENT, handle)
 }
 
 /** Typed SceneTree lifecycle slice used by Match3's deterministic smoke exit. */

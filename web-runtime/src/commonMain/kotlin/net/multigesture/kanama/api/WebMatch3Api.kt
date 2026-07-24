@@ -319,6 +319,9 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
     SceneTreeBackendContractProbe(backendHandle).callGroup(group, method)
   }
 
+  /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
+  suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)
+
   companion object {
     suspend fun delaySeconds(seconds: Double) {
       require(seconds.isFinite() && seconds >= 0.0) {

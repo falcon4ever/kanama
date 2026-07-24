@@ -1215,6 +1215,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.get_tree()")
     appendLine("\telif opcode == 71 and receiver is AnimatedSprite2D:")
     appendLine("\t\tvalue = (receiver as AnimatedSprite2D).sprite_frames")
+    appendLine("\telif opcode == 73 and receiver != null:")
+    appendLine("\t\tvalue = receiver.get_parent()")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")

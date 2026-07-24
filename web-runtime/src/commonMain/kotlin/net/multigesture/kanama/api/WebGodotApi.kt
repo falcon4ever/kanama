@@ -85,6 +85,9 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun getNodeOrNull(path: String): GodotObject? =
     NodeLookupBackendContractProbe(backendHandle).getNodeOrNull(path)?.let(::GodotObject)
 
+  fun getParent(): GodotObject? =
+    NodeBackendContractProbe(backendHandle).getParent()?.let(::GodotObject)
+
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
     getNodeOrNull(path)?.let { ctor(it.handle) }
 
