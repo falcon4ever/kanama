@@ -47,6 +47,8 @@ async function snapshot(evaluate) {
       positionTweenTargets: bridge.match3PositionTweenTargets,
       playCommands: bridge.match3AudioPlayCommands,
       playersConstructed: bridge.match3AudioPlayersConstructed,
+      audioResourceLoads: bridge.match3AudioResourceLoads,
+      audioResourceLoadFailures: bridge.match3AudioResourceLoadFailures,
       sceneTreeHandles: [...bridge.sceneTreeHandlesByOwner.entries()],
       sceneTreeHandlesCreated: bridge.match3SceneTreeHandlesCreated,
       sceneTreeHandleReuses: bridge.match3SceneTreeHandleReuses,
@@ -237,6 +239,16 @@ export async function runMatch3({ url, evaluate, navigate, pointer }) {
       packedDelta === tileReadyDelta + particleReadyDelta && addDelta === packedDelta &&
       positionTweenDelta >= tileReadyDelta + 2 && afterSwap.tileGrid.length === 64,
     audiovisualFeedback: afterSwap.playCommands > beforeSwap.playCommands && particleReadyDelta > 0,
+    // Bridge-level RefCounted ownership (Task 60a): Match3 audio loads a stream via
+    // ResourceLoader (setStreamFromPath), hands it to a player, then releases the temp
+    // wrapper. Ownership holds iff every load-and-handoff succeeded (the handed-off
+    // resource survived its temp release), the streams actually played, and no resource
+    // handle leaked at teardown.
+    resourceOwnershipHandoffSurvives:
+      afterSwap.audioResourceLoads > 0 &&
+      afterSwap.audioResourceLoadFailures === 0 &&
+      afterSwap.playCommands > beforeSwap.playCommands &&
+      secondTeardown.afterAudio.liveHandles === 0,
     boundedAfterGameplay:
       afterSwap.liveHandles === beforeSwap.liveHandles && afterSwap.callbacks === 12 &&
       afterSwap.pending === 0 && afterSwap.jobs === 0,
