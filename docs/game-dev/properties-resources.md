@@ -280,6 +280,13 @@ you never close leaks its reference — and Godot prints `Leaked instance: <Clas
 at exit in editor/debug runs, which is your signal that a `use { }`/`close()` is
 missing.
 
+The **Web (Kotlin/Wasm)** backend reaches Godot over a JavaScript *handle bridge*
+rather than an FFI pointer boundary, but the rule is identical: `close()`/`use { }`
+emits a release-handle command that drops the engine-side reference, and the bridge
+does not GC handles for you either — so the same code, unchanged, is correct on
+Web. Only the mechanism differs; see
+[Web internals → RefCounted resource ownership](../contributing/web-internals.md).
+
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).
 
 ## Resource Slots

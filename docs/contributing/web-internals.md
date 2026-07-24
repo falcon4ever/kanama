@@ -138,6 +138,50 @@ tables are owned per script/owner and released at owner, direct, and full
 teardown. The validated runs return every owned registry to baseline after both
 gameplay and full scene teardown; stale handle use after teardown fails.
 
+### RefCounted resource ownership (create/close on the handle bridge)
+
+The user-facing contract is the **same** as the pointer backends —
+[*close what you create*](../game-dev/properties-resources.md): a factory
+(`X.create()`) or a temporary load hands back an owning handle, you hand the value
+to the engine, then release your handle with `use { }`/`close()`; the engine keeps
+its own reference so the object lives on. The **implementation is different**, and
+that difference is the answer 60a owed for this backend (issue #91 was an
+FFI-backend bug and its fix does not apply here):
+
+- **Pointer backends** (desktop/Android/iOS) construct via
+  `classdb_construct_object3` (an already-owning object) and `close()` `ptrcall`s
+  `RefCounted.unreference()` to drop the caller's reference.
+- **Web holds no pointers and makes no `ptrcall`.** The real Godot object lives
+  engine-side and **GDScript refcounts it**; the bridge only carries an opaque
+  handle ID interned in the owning script's object table. So the Web model is
+  **"drop the handle = release the reference"**: `close()` (e.g.
+  `Texture2D.close()` → `releaseWebResource`) emits a release-handle bridge command
+  that runs the generated GDScript `_kanama_resource_release`, which *erases the
+  handle from that script's `_kanama_object_handles`* — dropping GDScript's
+  reference. If nothing else holds the object, its engine-side refcount reaches
+  zero and Godot frees it; if the caller already handed it to a node/resource, the
+  engine's own reference keeps it alive.
+
+**There is no `init_ref` claim to get wrong** (the #91 root cause) because the
+bridge never constructs the native object itself — it asks GDScript to, and
+GDScript's return value is already a live, refcounted reference. **The
+created-then-handed-off-then-closed case survives** for the same reason it must on
+the pointer backends: the handoff (e.g. `AudioStreamPlayer.setStream`) is applied
+**before** the temporary handle is released, so the engine takes its reference
+first. `AudioStreamPlayer.setStreamFromPath` is the canonical example —
+`load → setStream(player) → finally { releaseWebResource(temp) }` — and it is
+covered by an explicit **bridge-level ownership assertion** in the Match3 export
+smoke (`scripts/web/drivers/demos/match3.mjs`): the stream resources are loaded
+and handed off with zero failures, they play (survived their temp release), and
+every resource handle returns to baseline at teardown (no leak).
+
+Practical consequence for generated wrappers: a Web `X.create()` proxy returns an
+**owning** handle and `close()` is a real "release this reference" command — the
+bridge does **not** silently GC handles behind your back, so *the same
+`use { }`/`close()` discipline the docs teach applies on Web*, and forgetting it
+leaks the same way (until the owning script tears down and its whole object table
+is released).
+
 ## Validation Fixtures
 
 The current fixtures are per-browser driver scripts plus machine-readable JSON
