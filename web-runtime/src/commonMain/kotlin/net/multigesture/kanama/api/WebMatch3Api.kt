@@ -13,6 +13,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.AudioStreamPlayerBackendContractProbe
+import net.multigesture.kanama.backend.InputActionBackendContractProbe
 import net.multigesture.kanama.backend.InputBackendContractProbe
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.InputEventBackendContractProbe
@@ -326,6 +327,14 @@ object Input {
 
   fun isActionPressed(action: String): Boolean =
     InputBackendContractProbe.isActionPressed(action)
+
+  fun actionPress(action: String) {
+    InputActionBackendContractProbe.actionPress(action)
+  }
+
+  fun actionRelease(action: String) {
+    InputActionBackendContractProbe.actionRelease(action)
+  }
 }
 
 class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {

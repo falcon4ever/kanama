@@ -3,6 +3,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.AnimatedSprite2DBackendContractProbe
+import net.multigesture.kanama.backend.CanvasLayerBackendContractProbe
 import net.multigesture.kanama.backend.CollisionShape2DBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
@@ -102,7 +103,14 @@ class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
 class Marker2D(godotObject: GodotHandle) : Node2D(godotObject)
 
-class CanvasLayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle())
+class CanvasLayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  /** Write-only on Web: the 3D platformer sets the mobile-control overlay visibility, never reads it. */
+  var visible: Boolean
+    get() = unsupportedWebGameplayFamily("CanvasLayer.get_visible")
+    set(value) {
+      CanvasLayerBackendContractProbe(backendHandle).setVisible(value)
+    }
+}
 
 class Label(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle()) {
   var text: String
