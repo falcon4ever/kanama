@@ -1488,6 +1488,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEventMouseButton).button_index)")
     appendLine("\t\telif opcode == 69:")
     appendLine("\t\t\tresult = int(Input.is_action_pressed(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 92:")
+    appendLine("\t\t\tresult = int(Input.is_action_just_pressed(StringName(String(args[2]))))")
     appendLine("\t\telif opcode == 83:")
     appendLine("\t\t\tresult = int(OS.has_feature(String(args[2])))")
     appendLine("\t\telif opcode == 86:")

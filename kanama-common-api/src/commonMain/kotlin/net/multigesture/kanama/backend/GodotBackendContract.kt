@@ -1539,6 +1539,12 @@ object InputBackendContractProbe {
       InitialGodotCallDescriptors.INPUT_IS_ACTION_PRESSED,
       action,
     )
+
+  fun isActionJustPressed(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.INPUT_IS_ACTION_JUST_PRESSED,
+      action,
+    )
 }
 
 /** Typed object-method Callable connection used for board wiring. */

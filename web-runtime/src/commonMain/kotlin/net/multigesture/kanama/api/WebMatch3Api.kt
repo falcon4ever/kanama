@@ -344,6 +344,9 @@ object Input {
   fun isActionPressed(action: String): Boolean =
     InputBackendContractProbe.isActionPressed(action)
 
+  fun isActionJustPressed(action: String): Boolean =
+    InputBackendContractProbe.isActionJustPressed(action)
+
   fun actionPress(action: String) {
     InputActionBackendContractProbe.actionPress(action)
   }

@@ -1245,6 +1245,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Query CharacterBody3D floor contact after move_and_slide.",
       "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 92,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "is_action_just_pressed",
+      "hash": 1558498928,
+      "arguments": ["StringName", "bool"],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query whether an input action was just pressed this frame (character jump), via the active script proxy singleton.",
+      "introducedBy": "60d-physics"
     }
   ],
   "compositions": [
