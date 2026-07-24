@@ -106,8 +106,9 @@ any pin drifts.
       choose their own GDExtension entry points and *have* silently drifted before
       (desktop `construct_object2` vs iOS `construct_object3` — issue #91 / task 61).
       Confirm both bind the **same, newest** construct/register/script-instance
-      functions. (A convergence gate is planned; until it lands this is a manual
-      cross-check.)
+      functions. Enforced by `scripts/check_gdextension_modernization.py` (in the
+      gates below and in `local_ci.sh`) — it fails on any deprecated binding or a
+      backend divergence.
     - Before tagging:
       `scripts/fresh_clone_smoke.sh /absolute/path/to/new_godot_binary`.
 
@@ -119,6 +120,7 @@ upgrade is never "done" over a red gate.
 
 ```sh
 python3 scripts/check_wrapper_generator.py        # full per-platform drift-gate
+python3 scripts/check_gdextension_modernization.py # no deprecated bindings; backends converged
 python3 scripts/sync_kdoc_from_godot_docs.py --godot-docs <doc/classes> --check
 python3 scripts/check_godot_version_pin.py
 python3 scripts/validate_godot_api.py

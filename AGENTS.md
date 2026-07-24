@@ -233,7 +233,9 @@ backend to the newest variant, and confirm the **desktop/Android JVM** backend
 (`src/main`) and the **iOS Kotlin/Native** shim (`ios/bootstrap/kanama_ios_shim.c`)
 bind the **same** construct/register/script-instance entry points — they pick these
 independently and have drifted silently before (`construct_object2` vs
-`construct_object3`, issue #91 / task 61). Steps are in the upgrade runbook.
+`construct_object3`, issue #91 / task 61). Enforced by
+`scripts/check_gdextension_modernization.py` (in `local_ci.sh` and the upgrade
+gates); steps are in the upgrade runbook.
 
 ### Android Work
 
