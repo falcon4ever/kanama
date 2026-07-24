@@ -2,6 +2,7 @@
 
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.backend.CharacterBody3DBackendContractProbe
 import net.multigesture.kanama.backend.EnvironmentBackendContractProbe
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.GodotVector3
@@ -45,6 +46,26 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
       Node3DBackendContractProbe(backendHandle).scale =
         GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
     }
+}
+
+/** 3D physics body base (Task 60d). */
+open class PhysicsBody3D(godotObject: GodotHandle) : Node3D(godotObject)
+
+open class StaticBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject)
+
+/** Kinematic character controller: set [velocity] then [moveAndSlide] from `@OnPhysicsProcess`. */
+class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
+  var velocity: Vector3
+    get() =
+      CharacterBody3DBackendContractProbe(backendHandle).velocity.let { Vector3(it.x, it.y, it.z) }
+    set(value) {
+      CharacterBody3DBackendContractProbe(backendHandle).velocity =
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
+    }
+
+  fun moveAndSlide(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).moveAndSlide()
+
+  fun isOnFloor(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnFloor()
 }
 
 open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject)

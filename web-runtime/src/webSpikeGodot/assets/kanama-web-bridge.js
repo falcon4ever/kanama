@@ -55,7 +55,8 @@
       opcode === 74 ||
       opcode === 76 ||
       opcode === 78 ||
-      opcode === 84
+      opcode === 84 ||
+      opcode === 88
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -419,6 +420,18 @@
       );
       this.bunnymarkProcessMs.push(performance.now() - started);
       return result;
+    },
+    physicsFrame(handle, delta) {
+      // Godot's fixed physics tick: run the script's _physics_process (character controllers
+      // set velocity + move_and_slide here). Applies to every mode with a physics-body script.
+      this.physicsProcessCalls = (this.physicsProcessCalls ?? 0) + 1;
+      return this.invoke(
+        handle,
+        "_physics_process",
+        "_physics_process",
+        () => this.api.kanamaWebPhysicsProcess(handle, delta),
+        0,
+      );
     },
     draw(handle) {
       const crossingsBefore = this.kotlinToGodotCalls;

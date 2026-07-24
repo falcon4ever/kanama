@@ -719,6 +719,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
       77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
       79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
+      89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
       else -> null
     }
       ?: error(
@@ -741,6 +742,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       74 -> webWriteVector3Snapshot(objectId, WebVector3Slot.POSITION, value)
       76 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION, value)
       78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
+      88 -> webWriteVector3Snapshot(objectId, WebVector3Slot.VELOCITY, value)
       else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
     }
   }

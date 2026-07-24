@@ -32,6 +32,7 @@ private val animationNamesSnapshots = mutableMapOf<Int, List<String>>()
 private val position3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val rotation3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val scale3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val velocity3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val renderingMethodSnapshots = mutableMapOf<Int, String>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
@@ -47,11 +48,12 @@ internal enum class WebVector2Slot {
   SCALE,
 }
 
-/** Which mirrored Node3D Vector3 property a snapshot read/write targets. */
+/** Which mirrored Node3D/CharacterBody3D Vector3 property a snapshot read/write targets. */
 internal enum class WebVector3Slot {
   POSITION,
   ROTATION,
   SCALE,
+  VELOCITY,
 }
 
 internal fun GodotHandle.webId(): Int = backendToken().toInt()
@@ -72,6 +74,7 @@ internal fun webVector3Snapshot(objectId: Int, slot: WebVector3Slot): GodotVecto
     WebVector3Slot.POSITION -> position3Snapshots[objectId]
     WebVector3Slot.ROTATION -> rotation3Snapshots[objectId]
     WebVector3Slot.SCALE -> scale3Snapshots[objectId]
+    WebVector3Slot.VELOCITY -> velocity3Snapshots[objectId]
   }
 
 internal fun webViewportRectSnapshot(objectId: Int): GodotRect2? = viewportRectSnapshots[objectId]
@@ -122,6 +125,7 @@ internal fun webWriteVector3Snapshot(objectId: Int, slot: WebVector3Slot, value:
     WebVector3Slot.POSITION -> position3Snapshots[objectId] = value
     WebVector3Slot.ROTATION -> rotation3Snapshots[objectId] = value
     WebVector3Slot.SCALE -> scale3Snapshots[objectId] = value
+    WebVector3Slot.VELOCITY -> velocity3Snapshots[objectId] = value
   }
 }
 
@@ -336,6 +340,7 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   position3Snapshots.remove(objectId)
   rotation3Snapshots.remove(objectId)
   scale3Snapshots.remove(objectId)
+  velocity3Snapshots.remove(objectId)
   renderingMethodSnapshots.remove(objectId)
 }
 

@@ -968,7 +968,12 @@ tasks.register("stageWebWeb3dProject") {
 
         val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
         check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
-        val expectedSources = setOf("res://kotlin-src/Main.kt", "res://kotlin-src/SmokeQuit.kt")
+        val expectedSources =
+            setOf(
+                "res://kotlin-src/Main.kt",
+                "res://kotlin-src/SmokeQuit.kt",
+                "res://kotlin-src/Player.kt",
+            )
         val mappings =
             manifest
                 .readLines()

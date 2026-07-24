@@ -960,4 +960,48 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val CHARACTERBODY3D_SET_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 88,
+      className = "CharacterBody3D",
+      methodName = "set_velocity",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_GET_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 89,
+      className = "CharacterBody3D",
+      methodName = "get_velocity",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_MOVE_AND_SLIDE =
+    GodotCallDescriptor(
+      opcode = 90,
+      className = "CharacterBody3D",
+      methodName = "move_and_slide",
+      hash = 2240911060L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_IS_ON_FLOOR =
+    GodotCallDescriptor(
+      opcode = 91,
+      className = "CharacterBody3D",
+      methodName = "is_on_floor",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

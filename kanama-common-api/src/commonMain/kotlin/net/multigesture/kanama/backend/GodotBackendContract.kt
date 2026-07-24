@@ -1742,6 +1742,41 @@ class Light3DBackendContractProbe(private val handle: GodotHandle) {
   }
 }
 
+/**
+ * Typed CharacterBody3D slice: the first 3D physics family (Task 60d).
+ *
+ * velocity is mirrored read-your-write; move_and_slide/is_on_floor flush queued mutations then run
+ * synchronously in Godot's physics step. Called from a script's `@OnPhysicsProcess` tick.
+ */
+@InternalKanamaBackendApi
+class CharacterBody3DBackendContractProbe(private val handle: GodotHandle) {
+  var velocity: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.CHARACTERBODY3D_GET_VELOCITY,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.CHARACTERBODY3D_SET_VELOCITY,
+        handle,
+        value,
+      )
+    }
+
+  fun moveAndSlide(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_MOVE_AND_SLIDE,
+      handle,
+    )
+
+  fun isOnFloor(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_IS_ON_FLOOR,
+      handle,
+    )
+}
+
 /** Typed RenderingServer singleton query used by the 3D platformer's renderer branch. */
 @InternalKanamaBackendApi
 object RenderingServerBackendContractProbe {

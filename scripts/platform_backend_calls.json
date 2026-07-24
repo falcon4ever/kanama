@@ -1189,6 +1189,62 @@
       "returnOwnership": "BORROWED",
       "semantics": "Release an input action through the active script's proxy singleton.",
       "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 88,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "set_velocity",
+      "hash": 3460891852,
+      "arguments": ["Vector3"],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a CharacterBody3D velocity mutation (character controller physics tick).",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 89,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "get_velocity",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the CharacterBody3D velocity from the Web read-your-write snapshot.",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 90,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "move_and_slide",
+      "hash": 2240911060,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Run CharacterBody3D.move_and_slide in Godot's physics step (flushes the queued velocity first).",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 91,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "is_on_floor",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query CharacterBody3D floor contact after move_and_slide.",
+      "introducedBy": "60d-physics"
     }
   ],
   "compositions": [

@@ -38,6 +38,7 @@ _SCALE = "WebVector2Slot.SCALE"
 _POSITION3 = "WebVector3Slot.POSITION"
 _ROTATION3 = "WebVector3Slot.ROTATION"
 _SCALE3 = "WebVector3Slot.SCALE"
+_VELOCITY3 = "WebVector3Slot.VELOCITY"
 
 WEB_POLICY: dict[int, dict[str, object]] = {
     1: {},
@@ -127,6 +128,10 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     85: {},
     86: {},
     87: {},
+    88: {"vec3_slot": _VELOCITY3},
+    89: {"vec3_slot": _VELOCITY3},
+    90: {},
+    91: {},
 }
 
 
