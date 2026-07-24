@@ -233,6 +233,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendObjectArrayPropertySetter()
     appendLongMethodDispatcher()
     appendVector2iMethodDispatcher()
+    appendObjectMethodDispatcher()
     appendObjectObjectLongMethodDispatcher()
     appendLine("  private fun unknown(kind: String, id: Int): Nothing =")
     appendLine("    error(\"Unknown Kanama Web \$kind id=\$id\")")
@@ -456,6 +457,31 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         ) {
           appendLine(
             "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(Vector2i(x, y))"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendObjectMethodDispatcher() {
+    appendLine(
+      "  fun callObject(scriptId: Int, methodId: Int, script: KanamaWebScript, objectHandle: Int) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        val arg = method.args.singleOrNull()
+        val wrapper = arg?.objectWrapperFqName
+        if (method.returnType == null && arg?.type == TypeMapping.OBJECT && wrapper != null) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($wrapper(WebObjectId(objectHandle)))"
           )
         }
       }
@@ -1428,6 +1454,22 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine(
             "\t_kanama_bridge.callVector2i(_kanama_handle, ${index + 1}, ${arg.name}.x, ${arg.name}.y)"
           )
+        }
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.OBJECT &&
+          method.args.single().objectWrapperFqName != null -> {
+          // Registered function taking a single Godot object (e.g. a body_entered signal
+          // handler): register the node under a transient handle so the Kotlin side can
+          // reconstruct its wrapper, invoke, then release it.
+          val arg = method.args.single()
+          appendLine(
+            "\tvar arg_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+          )
+          appendLine("\t_kanama_object_handles[arg_handle] = ${arg.name}")
+          appendLine("\t_kanama_bridge.callObject(_kanama_handle, ${index + 1}, arg_handle)")
+          appendLine("\t_kanama_object_handles.erase(arg_handle)")
+          appendLine("\t_kanama_bridge.releaseTransientObjectHandle(arg_handle)")
         }
         method.returnType == null &&
           method.args.size == 3 &&

@@ -546,6 +546,15 @@
         0,
       );
     },
+    callObject(handle, methodId, objectHandle) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallObject(handle, methodId, objectHandle),
+        0,
+      );
+    },
     bunnymarkMethodId(method) {
       const spriteVariant = this.bunnymarkVariant === "BunnymarkV1Sprites";
       if (method === "add") return spriteVariant ? 1 : 2;
