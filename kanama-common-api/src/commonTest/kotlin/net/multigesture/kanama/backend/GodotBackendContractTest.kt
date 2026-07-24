@@ -107,6 +107,30 @@ class GodotBackendContractTest {
       GodotCallShape.VECTOR3_ARG,
       GodotExecutionMode.QUEUED_MUTATION,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.CANVASLAYER_SET_VISIBLE,
+      2_586_408_642L,
+      GodotCallShape.BOOL_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.WORLDENVIRONMENT_GET_ENVIRONMENT,
+      3_082_064_660L,
+      GodotCallShape.NOARGS_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER,
+      373_806_689L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.OS_HAS_FEATURE,
+      3_927_539_163L,
+      GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
   }
 
   @Test
@@ -124,6 +148,22 @@ class GodotBackendContractTest {
     assertEquals(GodotVector3(1.0f, 1.0f, 1.0f), probe.scale)
     probe.scale = GodotVector3(2.0f, 2.0f, 2.0f)
     assertEquals(GodotVector3(2.0f, 2.0f, 2.0f), probe.scale)
+  }
+
+  @Test
+  fun platformerFamilyProbesUseTypedCalls() {
+    val backend = RecordingBackend()
+    GodotBackendCalls.install(backend)
+    val handle = GodotHandle.fromBackendToken(17)
+
+    CanvasLayerBackendContractProbe(handle).setVisible(true)
+    assertEquals(true, backend.canvasLayerVisible)
+    assertEquals(true, OSBackendContractProbe.hasFeature("android"))
+    assertEquals(false, OSBackendContractProbe.hasFeature("ios"))
+    val environment = WorldEnvironmentBackendContractProbe(handle).getEnvironment()
+    assertEquals(52L, environment?.backendToken())
+    EnvironmentBackendContractProbe(checkNotNull(environment)).setBgEnergyMultiplier(0.25)
+    assertEquals(82 to 0.25, backend.doubleArguments.last())
   }
 
   @Test
@@ -404,14 +444,25 @@ class GodotBackendContractTest {
       return receiver
     }
 
+    var canvasLayerVisible: Boolean? = null
+
     override fun invokeBoolArg(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
       value: Boolean,
     ) {
-      assertEquals(43, descriptor.opcode)
-      particlesEmitting = value
+      require(descriptor.opcode in setOf(43, 80))
+      if (descriptor.opcode == 80) canvasLayerVisible = value else particlesEmitting = value
+    }
+
+    override fun invokeStringNameRetBoolSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ): Boolean {
+      assertEquals(83, descriptor.opcode)
+      return value == "android"
     }
 
     override fun invokeDoubleArg(

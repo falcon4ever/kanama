@@ -1618,3 +1618,47 @@ class Node3DBackendContractProbe(val handle: GodotHandle) {
       )
     }
 }
+
+/** Typed CanvasLayer visibility slice used by the 3D platformer's mobile-control overlay. */
+@InternalKanamaBackendApi
+class CanvasLayerBackendContractProbe(private val handle: GodotHandle) {
+  fun setVisible(visible: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.CANVASLAYER_SET_VISIBLE,
+      handle,
+      visible,
+    )
+  }
+}
+
+/** Typed WorldEnvironment slice: fetch the borrowed Environment resource for tuning. */
+@InternalKanamaBackendApi
+class WorldEnvironmentBackendContractProbe(private val handle: GodotHandle) {
+  fun getEnvironment(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.WORLDENVIRONMENT_GET_ENVIRONMENT,
+      handle,
+    )
+}
+
+/** Typed Environment slice used by the 3D platformer's Compatibility-renderer tuning. */
+@InternalKanamaBackendApi
+class EnvironmentBackendContractProbe(private val handle: GodotHandle) {
+  fun setBgEnergyMultiplier(energy: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER,
+      handle,
+      energy,
+    )
+  }
+}
+
+/** Typed OS singleton feature query used by the 3D platformer's platform detection. */
+@InternalKanamaBackendApi
+object OSBackendContractProbe {
+  fun hasFeature(tagName: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.OS_HAS_FEATURE,
+      tagName,
+    )
+}

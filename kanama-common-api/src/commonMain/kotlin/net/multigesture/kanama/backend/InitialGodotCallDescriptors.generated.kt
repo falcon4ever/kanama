@@ -872,4 +872,48 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val CANVASLAYER_SET_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 80,
+      className = "CanvasLayer",
+      methodName = "set_visible",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val WORLDENVIRONMENT_GET_ENVIRONMENT =
+    GodotCallDescriptor(
+      opcode = 81,
+      className = "WorldEnvironment",
+      methodName = "get_environment",
+      hash = 3082064660L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER =
+    GodotCallDescriptor(
+      opcode = 82,
+      className = "Environment",
+      methodName = "set_bg_energy_multiplier",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OS_HAS_FEATURE =
+    GodotCallDescriptor(
+      opcode = 83,
+      className = "OS",
+      methodName = "has_feature",
+      hash = 3927539163L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

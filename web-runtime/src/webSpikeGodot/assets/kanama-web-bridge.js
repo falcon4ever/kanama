@@ -46,6 +46,8 @@
       opcode === 65 ||
       opcode === 67 ||
       opcode === 68 ||
+      opcode === 80 ||
+      opcode === 82 ||
       opcode === 100
     ) return 4;
     if (

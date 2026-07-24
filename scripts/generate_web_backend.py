@@ -119,6 +119,10 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     77: {"vec3_slot": _ROTATION3},
     78: {"vec3_slot": _SCALE3},
     79: {"vec3_slot": _SCALE3},
+    80: {},
+    81: {"ret": "browser"},
+    82: {},
+    83: {},
 }
 
 

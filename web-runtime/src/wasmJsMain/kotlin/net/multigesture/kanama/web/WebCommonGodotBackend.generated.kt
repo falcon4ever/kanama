@@ -72,7 +72,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(43, 54, 55, 56, 61))
+    require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80))
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
     when (descriptor.opcode) {
@@ -93,7 +93,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
     when (descriptor.executionMode) {
       GodotExecutionMode.QUEUED_MUTATION -> {
-        require(descriptor.opcode in setOf(48, 49, 50, 53, 62))
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82))
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
@@ -440,6 +440,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           51 -> registerReturnedBrowserObject(token)
           71 -> registerReturnedBrowserObject(token)
           73 -> registerReturnedNode(token)
+          81 -> registerReturnedBrowserObject(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }

@@ -1077,6 +1077,62 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read the Node3D scale from the Web read-your-write snapshot without an engine crossing.",
       "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 80,
+      "scope": "class",
+      "className": "CanvasLayer",
+      "methodName": "set_visible",
+      "hash": 2586408642,
+      "arguments": ["bool"],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a CanvasLayer visibility mutation (mobile-control overlay show/hide).",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 81,
+      "scope": "class",
+      "className": "WorldEnvironment",
+      "methodName": "get_environment",
+      "hash": 3082064660,
+      "arguments": [],
+      "returnType": "Environment",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return the WorldEnvironment's borrowed Environment resource as a Web browser handle.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 82,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_bg_energy_multiplier",
+      "hash": 373806689,
+      "arguments": ["float"],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue an Environment background energy-multiplier mutation on a resource handle.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 83,
+      "scope": "class",
+      "className": "OS",
+      "methodName": "has_feature",
+      "hash": 3927539163,
+      "arguments": ["String"],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query an OS feature tag (e.g. android/ios) through the active script's proxy singleton.",
+      "introducedBy": "60c-platformer"
     }
   ],
   "compositions": [

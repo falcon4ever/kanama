@@ -1156,6 +1156,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 80 and target_object is CanvasLayer:")
+    appendLine("\t\t\t(target_object as CanvasLayer).visible = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 82 and target_object is Environment:")
+    appendLine(
+      "\t\t\t(target_object as Environment).background_energy_multiplier = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telse:")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
@@ -1289,6 +1299,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = (receiver as AnimatedSprite2D).sprite_frames")
     appendLine("\telif opcode == 73 and receiver != null:")
     appendLine("\t\tvalue = receiver.get_parent()")
+    appendLine("\telif opcode == 81 and receiver is WorldEnvironment:")
+    appendLine("\t\tvalue = (receiver as WorldEnvironment).environment")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
@@ -1434,6 +1446,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEventMouseButton).button_index)")
     appendLine("\t\telif opcode == 69:")
     appendLine("\t\t\tresult = int(Input.is_action_pressed(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 83:")
+    appendLine("\t\t\tresult = int(OS.has_feature(String(args[2])))")
     appendLine("\t\telif opcode == 65 and value is PathFollow2D:")
     appendLine("\t\t\tvar follow := value as PathFollow2D")
     appendLine("\t\t\tfollow.progress_ratio = float(args[2])")
