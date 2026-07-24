@@ -1314,6 +1314,14 @@
       };
     },
     flushCommands(words, wordCount, commandCount) {
+      // Snapshot the batch: `words` is a live view into the Kotlin command buffer, which
+      // is cleared and refilled by any nested flush. Applying a command can synchronously
+      // re-enter (e.g. add_child fires a spawned node's _ready, which flushes its own
+      // commands into the same buffer), so without this copy the post-dispatch telemetry
+      // pass — and any later command group — would read commands from the nested batch and
+      // misparse (a handle read as an opcode). Only surfaces for demos that mutate during a
+      // flush, i.e. dodge's mob spawning; match3/bunnymark never re-enter mid-batch.
+      words = words.slice(0, wordCount);
       if (this.activeDraw) {
         this.drawBatches += 1;
         this.maxDrawCommands = Math.max(this.maxDrawCommands, commandCount);
