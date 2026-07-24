@@ -125,6 +125,8 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     83: {},
     84: {},
     85: {},
+    86: {},
+    87: {},
 }
 
 
@@ -334,6 +336,15 @@ def body_NOARGS_RET_VECTOR3(calls):
         ")",
     ]
     return lines
+
+
+def body_STRINGNAME_ARG_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)",
+    ]
 
 
 def body_NOARGS_RET_STRING_SINGLETON(calls):
@@ -844,6 +855,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         "",
     ),
     "NOARGS_RET_STRING_SINGLETON": ([], "String"),
+    "STRINGNAME_ARG_SINGLETON": (["value: String"], ""),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -1030,6 +1042,7 @@ EMIT_ORDER = [
     "VECTOR3_ARG",
     "LONG_DOUBLE_ARG",
     "NOARGS_RET_STRING_SINGLETON",
+    "STRINGNAME_ARG_SINGLETON",
 ]
 
 

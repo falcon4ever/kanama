@@ -1161,6 +1161,34 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read the active renderer name (gl_compatibility on the Web export) from a per-script snapshot the proxy seeds at ready.",
       "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 86,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "action_press",
+      "hash": 1713091165,
+      "arguments": ["StringName", "float"],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Press an input action through the active script's proxy singleton (Web bakes GDScript default strength 1.0, the only value the platformer uses).",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 87,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "action_release",
+      "hash": 3304788590,
+      "arguments": ["StringName"],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Release an input action through the active script's proxy singleton.",
+      "introducedBy": "60c-platformer"
     }
   ],
   "compositions": [

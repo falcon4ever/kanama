@@ -938,4 +938,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val INPUT_ACTION_PRESS =
+    GodotCallDescriptor(
+      opcode = 86,
+      className = "Input",
+      methodName = "action_press",
+      hash = 1713091165L,
+      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_ACTION_RELEASE =
+    GodotCallDescriptor(
+      opcode = 87,
+      className = "Input",
+      methodName = "action_release",
+      hash = 3304788590L,
+      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

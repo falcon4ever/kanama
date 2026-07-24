@@ -143,6 +143,18 @@ class GodotBackendContractTest {
       GodotCallShape.NOARGS_RET_STRING_SINGLETON,
       GodotExecutionMode.SNAPSHOT_READ,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUT_ACTION_PRESS,
+      1_713_091_165L,
+      GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUT_ACTION_RELEASE,
+      3_304_788_590L,
+      GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
   }
 
   @Test
@@ -183,6 +195,9 @@ class GodotBackendContractTest {
       "gl_compatibility",
       RenderingServerBackendContractProbe.getCurrentRenderingMethod(),
     )
+    InputActionBackendContractProbe.actionPress("jump")
+    InputActionBackendContractProbe.actionRelease("jump")
+    assertEquals(listOf(86 to "jump", 87 to "jump"), backend.singletonStringArgs)
   }
 
   @Test
@@ -502,6 +517,16 @@ class GodotBackendContractTest {
     ): String {
       assertEquals(85, descriptor.opcode)
       return "gl_compatibility"
+    }
+
+    val singletonStringArgs = mutableListOf<Pair<Int, String>>()
+
+    override fun invokeStringNameArgSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ) {
+      singletonStringArgs += descriptor.opcode to value
     }
 
     override fun invokeDoubleArg(

@@ -776,6 +776,18 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       )
   }
 
+  override fun invokeStringNameArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(86, 87))
+    commands.flush()
+    immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"

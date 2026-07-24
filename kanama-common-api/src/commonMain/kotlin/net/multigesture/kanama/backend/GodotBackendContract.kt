@@ -60,6 +60,7 @@ enum class GodotCallShape {
   VECTOR3_ARG,
   LONG_DOUBLE_ARG,
   NOARGS_RET_STRING_SINGLETON,
+  STRINGNAME_ARG_SINGLETON,
 }
 
 @InternalKanamaBackendApi
@@ -424,6 +425,15 @@ interface GodotBackendSpi {
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
   ): String {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton String-argument void call (no receiver): e.g. Input.action_press/action_release. */
+  fun invokeStringNameArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ) {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -973,6 +983,12 @@ object GodotBackendCalls {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_STRING_SINGLETON)
     val selected = requireBackend()
     return selected.invokeNoArgsRetStringSingleton(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeStringNameArgSingleton(descriptor: GodotCallDescriptor, value: String) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_ARG_SINGLETON)
+    val selected = requireBackend()
+    selected.invokeStringNameArgSingleton(descriptor, resolve(selected, descriptor), value)
   }
 
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
@@ -1733,4 +1749,22 @@ object RenderingServerBackendContractProbe {
     GodotBackendCalls.invokeNoArgsRetStringSingleton(
       InitialGodotCallDescriptors.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD
     )
+}
+
+/** Typed Input singleton action slice used by the 3D platformer's jump-button handlers. */
+@InternalKanamaBackendApi
+object InputActionBackendContractProbe {
+  fun actionPress(action: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(
+      InitialGodotCallDescriptors.INPUT_ACTION_PRESS,
+      action,
+    )
+  }
+
+  fun actionRelease(action: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(
+      InitialGodotCallDescriptors.INPUT_ACTION_RELEASE,
+      action,
+    )
+  }
 }
