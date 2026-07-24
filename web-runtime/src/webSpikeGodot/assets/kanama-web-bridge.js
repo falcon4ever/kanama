@@ -1054,9 +1054,20 @@
         "Godot no-args object",
       );
       const isTween = opcode === 36;
-      const kind = isTween ? "Tween" : isSceneTree ? "SceneTree" : "Node";
+      // opcode 71 = AnimatedSprite2D.get_sprite_frames returns a Resource (SpriteFrames),
+      // not a Node, so it must be adopted as an Object like Tween/SceneTree — otherwise the
+      // handle is registered NODE and Kotlin's use as an OBJECT trips a handle-kind conflict.
+      const isSpriteFrames = opcode === 71;
+      const isObjectResult = isTween || isSceneTree || isSpriteFrames;
+      const kind = isTween
+        ? "Tween"
+        : isSceneTree
+          ? "SceneTree"
+          : isSpriteFrames
+            ? "SpriteFrames"
+            : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
-      if (isTween || isSceneTree) this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle);
@@ -1065,7 +1076,7 @@
         throw new Error("Godot no-args object callback published an invalid handle");
       }
       if (result === 0) {
-        if (isTween || isSceneTree) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
         else this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, kind);
       } else if (isTween) {
