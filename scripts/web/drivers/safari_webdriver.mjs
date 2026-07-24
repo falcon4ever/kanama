@@ -16,9 +16,10 @@ import fs from "node:fs";
 
 import { runMatch3 } from "./demos/match3.mjs";
 import { runBunnymark } from "./demos/bunnymark.mjs";
+import { runDodge } from "./demos/dodge.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function parseArgs(argv) {

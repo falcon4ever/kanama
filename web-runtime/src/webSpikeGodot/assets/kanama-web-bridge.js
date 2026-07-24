@@ -198,6 +198,7 @@
     match3NodePositions: new Map(),
     match3MainHandle: 0,
     dodgeMainHandle: 0,
+    dodgeSmokeQuitHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -1516,6 +1517,11 @@
         // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
         // through this handle instead, mirroring bunnymark's method-call driving).
         this.dodgeMainHandle = handle;
+      }
+      if (this.mode === "dodge" && scriptName.endsWith(".SmokeQuit")) {
+        // The driver calls SmokeQuit.smoke_teardown (method#1) through this handle to
+        // quit the SceneTree and drain live handles to zero for the teardown assertion.
+        this.dodgeSmokeQuitHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

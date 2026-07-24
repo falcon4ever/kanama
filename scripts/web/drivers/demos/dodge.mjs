@@ -31,6 +31,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? 0,
         mainHandle: bridge.dodgeMainHandle,
+        smokeQuitHandle: bridge.dodgeSmokeQuitHandle,
         readyCount: bridge.readyCount,
         mainReady: classCount(".Main"),
         playerReady: classCount(".Player"),
@@ -56,6 +57,14 @@ async function snapshot(evaluate) {
 async function callMain(evaluate, method) {
   return evaluate(
     `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeMainHandle, globalThis.KanamaWebBridge.dodgeMethodId(${JSON.stringify(method)})); true`,
+  );
+}
+
+// SmokeQuit.smoke_teardown is its only @RegisterFunction (method#1); it quits the
+// SceneTree so every node exits the tree and releases its handles.
+async function callTeardown(evaluate) {
+  return evaluate(
+    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeSmokeQuitHandle, 1); true",
   );
 }
 
@@ -105,7 +114,8 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
       snap.mainReady >= 1 &&
       snap.playerReady >= 1 &&
       snap.hudReady >= 1 &&
-      snap.mainHandle > 0
+      snap.mainHandle > 0 &&
+      snap.smokeQuitHandle > 0
     ) {
       ready = snap;
       break;
@@ -127,8 +137,18 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   // screen_exited). Run the full window so the spawn+free lifecycle is exercised.
   const gameplay = await observe(evaluate, seedPeak, 11_000, deadline, (snap, p) => p.mobFrees >= 2);
   const peak = gameplay.peak;
-  const settled = gameplay.last ?? ready;
-  trace(`gameplay: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${settled.liveHandles} crossings=${peak.crossings}`);
+  const atPeak = gameplay.last ?? ready;
+  trace(`gameplay: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);
+
+  // Full teardown: SmokeQuit.smoke_teardown quits the SceneTree, exiting every node so it
+  // releases its handles. Poll until the live-handle count drains to zero (the smoke
+  // wrapper's schema requires liveAfterTeardown === 0). The wasm/JS stays readable after
+  // the loop stops, so the snapshot still resolves.
+  trace("smoke_teardown");
+  await callTeardown(evaluate);
+  const teardown = await observe(evaluate, { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
+  const settled = teardown.last ?? atPeak;
+  trace(`teardown: live=${settled.liveHandles} (peak=${peak.maxLiveHandles}) callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);
 
   const protocolVersion = ready.protocol;
   const checks = {
@@ -140,9 +160,11 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
     // The spawn/free lifecycle works: mobs left the screen and released their handles
-    // (>=2 observed drops), and the live-handle count stayed bounded by the peak — no leak.
-    mobsSpawnAndFree: peak.mobFrees >= 2 && settled.liveHandles <= peak.maxLiveHandles,
-    noCallbackFaults: peak.callbackErrors === 0 && settled.failure === null,
+    // (>=2 observed drops during play) and stayed bounded by the peak — no leak.
+    mobsSpawnAndFree: peak.mobFrees >= 2 && atPeak.liveHandles <= peak.maxLiveHandles,
+    // Full teardown: quitting the tree drained every live handle to zero.
+    fullTeardownToZero: settled.liveHandles === 0,
+    noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
 
   const last = settled;
@@ -180,7 +202,7 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     },
     teardown: {
       outcome:
-        checks.mobsSpawnAndFree && last.callbackErrors === 0 && last.failure === null
+        checks.fullTeardownToZero && last.callbackErrors === 0 && last.failure === null
           ? "clean"
           : "incomplete",
       ownerRegistriesToBaseline: last.liveHandles <= peak.maxLiveHandles,
