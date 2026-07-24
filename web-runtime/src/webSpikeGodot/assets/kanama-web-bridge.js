@@ -326,6 +326,11 @@
       if (this.mode === "bunnymark") {
         return this.process(handle, delta);
       }
+      if (this.mode === "web3d") {
+        // Minimal 3D render smoke: the single Node3D script runs its _process (spins a
+        // child); no coroutine frame scheduler and no benchmark transport.
+        return this.process(handle, delta);
+      }
       if (this.mode === "match3") {
         if (handle === this.match3AudioHandle) {
           this.match3AudioProcessCalls += 1;
@@ -1094,14 +1099,20 @@
       // not a Node, so it must be adopted as an Object like Tween/SceneTree — otherwise the
       // handle is registered NODE and Kotlin's use as an OBJECT trips a handle-kind conflict.
       const isSpriteFrames = opcode === 71;
-      const isObjectResult = isTween || isSceneTree || isSpriteFrames;
+      // opcode 81 = WorldEnvironment.get_environment returns an Environment Resource, not a
+      // Node — same handle-kind rule as SpriteFrames (adopt as Object, or Kotlin's OBJECT use
+      // trips a NODE-vs-OBJECT conflict).
+      const isEnvironment = opcode === 81;
+      const isObjectResult = isTween || isSceneTree || isSpriteFrames || isEnvironment;
       const kind = isTween
         ? "Tween"
         : isSceneTree
           ? "SceneTree"
           : isSpriteFrames
             ? "SpriteFrames"
-            : "Node";
+            : isEnvironment
+              ? "Environment"
+              : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
       if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
