@@ -456,6 +456,12 @@ fun kanamaWebLoadNode3DSnapshot(
 }
 
 @JsExport
+fun kanamaWebLoadRenderingMethodSnapshot(objectId: Int, value: String): Int {
+  loadWebRenderingMethodSnapshot(objectId, value)
+  return 1
+}
+
+@JsExport
 fun kanamaWebLoadAnimationNames(objectId: Int, joined: String): Int {
   loadWebAnimationNames(objectId, joined)
   return 1

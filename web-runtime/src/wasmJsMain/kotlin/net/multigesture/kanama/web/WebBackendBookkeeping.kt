@@ -32,6 +32,7 @@ private val animationNamesSnapshots = mutableMapOf<Int, List<String>>()
 private val position3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val rotation3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val scale3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val renderingMethodSnapshots = mutableMapOf<Int, String>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
 internal enum class WebBrowserHandleKind {
@@ -74,6 +75,13 @@ internal fun webVector3Snapshot(objectId: Int, slot: WebVector3Slot): GodotVecto
   }
 
 internal fun webViewportRectSnapshot(objectId: Int): GodotRect2? = viewportRectSnapshots[objectId]
+
+internal fun webRenderingMethodSnapshot(objectId: Int): String? = renderingMethodSnapshots[objectId]
+
+/** RenderingServer.get_current_rendering_method snapshot, seeded by the proxy at ready. */
+internal fun loadWebRenderingMethodSnapshot(objectId: Int, value: String) {
+  renderingMethodSnapshots[objectId] = value
+}
 
 internal fun webModulateSnapshot(objectId: Int): GodotColor? = modulateSnapshots[objectId]
 
@@ -328,6 +336,7 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   position3Snapshots.remove(objectId)
   rotation3Snapshots.remove(objectId)
   scale3Snapshots.remove(objectId)
+  renderingMethodSnapshots.remove(objectId)
 }
 
 // ---------------------------------------------------------------------------

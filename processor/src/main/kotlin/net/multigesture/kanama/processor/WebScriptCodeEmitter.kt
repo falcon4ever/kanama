@@ -746,6 +746,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine(
         "\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, target3d.position.x, target3d.position.y, target3d.position.z, target3d.rotation.x, target3d.rotation.y, target3d.rotation.z, target3d.scale.x, target3d.scale.y, target3d.scale.z)"
       )
+      appendLine(
+        "\t_kanama_bridge.refreshRenderingMethodSnapshot(_kanama_handle, RenderingServer.get_current_rendering_method())"
+      )
     }
     if (particlesAttachment) {
       appendLine("\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")

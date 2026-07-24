@@ -927,4 +927,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD =
+    GodotCallDescriptor(
+      opcode = 85,
+      className = "RenderingServer",
+      methodName = "get_current_rendering_method",
+      hash = 201670096L,
+      shape = GodotCallShape.NOARGS_RET_STRING_SINGLETON,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

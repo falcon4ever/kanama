@@ -124,6 +124,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     82: {},
     83: {},
     84: {},
+    85: {},
 }
 
 
@@ -333,6 +334,19 @@ def body_NOARGS_RET_VECTOR3(calls):
         ")",
     ]
     return lines
+
+
+def body_NOARGS_RET_STRING_SINGLETON(calls):
+    op = _only(calls).opcode
+    return [
+        f"require(descriptor.executionMode == {_SNAPSHOT})",
+        f"require(descriptor.opcode == {op})",
+        "return webRenderingMethodSnapshot(requireActiveWebScriptHandle())",
+        "?: error(",
+        '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
+        '"active script handle"',
+        ")",
+    ]
 
 
 def body_LONG_DOUBLE_ARG(calls):
@@ -829,6 +843,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["receiver: GodotHandle", "longValue: Long", "doubleValue: Double"],
         "",
     ),
+    "NOARGS_RET_STRING_SINGLETON": ([], "String"),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -1014,6 +1029,7 @@ EMIT_ORDER = [
     "NOARGS_RET_VECTOR3",
     "VECTOR3_ARG",
     "LONG_DOUBLE_ARG",
+    "NOARGS_RET_STRING_SINGLETON",
 ]
 
 

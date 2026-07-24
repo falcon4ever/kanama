@@ -131,6 +131,18 @@ class GodotBackendContractTest {
       GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
       GodotExecutionMode.IMMEDIATE_RESULT,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.LIGHT3D_SET_PARAM,
+      1_722_734_213L,
+      GodotCallShape.LONG_DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD,
+      201_670_096L,
+      GodotCallShape.NOARGS_RET_STRING_SINGLETON,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
   }
 
   @Test
@@ -167,6 +179,10 @@ class GodotBackendContractTest {
     Light3DBackendContractProbe(handle).setParam(0L, 0.24)
     Light3DBackendContractProbe(handle).setParam(17L, 0.85)
     assertEquals(listOf(Triple(84, 0L, 0.24), Triple(84, 17L, 0.85)), backend.longDoubleArgs)
+    assertEquals(
+      "gl_compatibility",
+      RenderingServerBackendContractProbe.getCurrentRenderingMethod(),
+    )
   }
 
   @Test
@@ -478,6 +494,14 @@ class GodotBackendContractTest {
       doubleValue: Double,
     ) {
       longDoubleArgs += Triple(descriptor.opcode, longValue, doubleValue)
+    }
+
+    override fun invokeNoArgsRetStringSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): String {
+      assertEquals(85, descriptor.opcode)
+      return "gl_compatibility"
     }
 
     override fun invokeDoubleArg(

@@ -762,6 +762,20 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     commands.appendLongDoubleMutation(descriptor.opcode, receiver.webId(), longValue, doubleValue)
   }
 
+  override fun invokeNoArgsRetStringSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): String {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 85)
+    return webRenderingMethodSnapshot(requireActiveWebScriptHandle())
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "active script handle"
+      )
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"

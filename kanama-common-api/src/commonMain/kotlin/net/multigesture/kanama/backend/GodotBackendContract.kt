@@ -59,6 +59,7 @@ enum class GodotCallShape {
   NOARGS_RET_VECTOR3,
   VECTOR3_ARG,
   LONG_DOUBLE_ARG,
+  NOARGS_RET_STRING_SINGLETON,
 }
 
 @InternalKanamaBackendApi
@@ -415,6 +416,14 @@ interface GodotBackendSpi {
     longValue: Long,
     doubleValue: Double,
   ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton String query (no receiver): the platform backend supplies the calling context. */
+  fun invokeNoArgsRetStringSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): String {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -958,6 +967,12 @@ object GodotBackendCalls {
       longValue,
       doubleValue,
     )
+  }
+
+  fun invokeNoArgsRetStringSingleton(descriptor: GodotCallDescriptor): String {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_STRING_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeNoArgsRetStringSingleton(descriptor, resolve(selected, descriptor))
   }
 
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
@@ -1709,4 +1724,13 @@ class Light3DBackendContractProbe(private val handle: GodotHandle) {
       value,
     )
   }
+}
+
+/** Typed RenderingServer singleton query used by the 3D platformer's renderer branch. */
+@InternalKanamaBackendApi
+object RenderingServerBackendContractProbe {
+  fun getCurrentRenderingMethod(): String =
+    GodotBackendCalls.invokeNoArgsRetStringSingleton(
+      InitialGodotCallDescriptors.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD
+    )
 }

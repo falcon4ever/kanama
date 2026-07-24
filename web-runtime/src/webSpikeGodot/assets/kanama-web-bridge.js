@@ -842,6 +842,9 @@
         scaleZ,
       );
     },
+    refreshRenderingMethodSnapshot(handle, method) {
+      return this.api.kanamaWebLoadRenderingMethodSnapshot(handle, String(method));
+    },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
     },

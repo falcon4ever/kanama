@@ -1147,6 +1147,20 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a Light3D parameter mutation (PARAM_ENERGY=light_energy, PARAM_SHADOW_OPACITY=shadow_opacity) on a node handle.",
       "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 85,
+      "scope": "class",
+      "className": "RenderingServer",
+      "methodName": "get_current_rendering_method",
+      "hash": 201670096,
+      "arguments": [],
+      "returnType": "String",
+      "shape": "NOARGS_RET_STRING_SINGLETON",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the active renderer name (gl_compatibility on the Web export) from a per-script snapshot the proxy seeds at ready.",
+      "introducedBy": "60c-platformer"
     }
   ],
   "compositions": [
