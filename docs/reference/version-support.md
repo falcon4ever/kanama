@@ -1,6 +1,6 @@
 # Version Support
 
-Kanama `0.3.0` is the current public release (a pre-1.0 preview baseline). This
+Kanama `0.4.0` is the current public release (a pre-1.0 preview baseline). This
 page records the platforms and engine versions validated for it.
 
 ## Current Support Claims
@@ -44,7 +44,7 @@ TPS, package, and native-artifact gates against Godot 4.7 stable (x86_64 on
 
 ## Kanama Version
 
-The current Gradle artifact version is `0.3.0`.
+The current Gradle artifact version is `0.4.0`.
 
 Release version changes should be paired with matching Gradle coordinates, docs
 snippets, demo project versions, badges, changelog headings, and a passing
