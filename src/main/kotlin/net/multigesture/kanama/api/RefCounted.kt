@@ -35,23 +35,6 @@ open class RefCounted internal constructor(
     }
 
     /**
-     * Claims ownership of a freshly `constructObject`-minted RefCounted — called only by the
-     * generated `X.create()` factories (task 61 / issue #91). `init_ref` consumes Godot's
-     * construction placeholder so this wrapper holds a real `+1` reference, exactly like a
-     * [retainForKotlinWrapper] value, and [close] releases it.
-     *
-     * Because the wrapper now owns its own reference, handing the resource to the engine (a
-     * surface-override material, a node property, `ResourceSaver.save`, …) adds the *engine's* own
-     * reference on top; a later `close()`/`use { }` then drops only the wrapper's, so the resource
-     * survives for the engine. The contract is symmetric with any other `AutoCloseable`: **close
-     * what you create** — a created resource that is never closed leaks its `+1`.
-     */
-    internal fun claimConstructedOwnership() {
-        checkOpen()
-        ObjectCalls.ptrcallNoArgsRetBool(initRefBind, handle)
-    }
-
-    /**
      * Takes a `+1` reference on the underlying object for a Kotlin wrapper that outlives the call
      * that produced it (e.g. a resource read out of a typed Array/Dictionary, or a script resource
      * retained by `ScriptBridge`). Balanced by [close]. Lifted here from the former standalone
@@ -99,12 +82,6 @@ open class RefCounted internal constructor(
 
         private val referenceBind by lazy {
             ObjectCalls.getMethodBind("RefCounted", "reference", REFERENCE_HASH)
-        }
-
-        // init_ref() shares the bool() no-arg hash with reference()/unreference(). Used by
-        // [claimConstructedOwnership] so an X.create() wrapper owns its reference (task 61).
-        private val initRefBind by lazy {
-            ObjectCalls.getMethodBind("RefCounted", "init_ref", UNREFERENCE_HASH)
         }
 
         /**

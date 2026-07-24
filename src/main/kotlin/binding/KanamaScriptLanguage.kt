@@ -424,7 +424,7 @@ object KanamaScriptLanguage {
     // Trigger createInstance — it constructs the parent object, registers our sentinel,
     // and stores the result in godotObject.
     val constructObject =
-      GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+      GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
     System.err.println("[kanama:kt] constructing KanamaScriptLanguage singleton")
     constructObject.invoke(cls.className)
     check(godotObject.address() != 0L) { "KanamaScriptLanguage construction failed" }
@@ -517,7 +517,7 @@ object KanamaScriptLanguage {
     // Construct a base ScriptLanguageExtension object, attach our sentinel as
     // the extension instance data, and store the result as the singleton.
     val constructParent =
-      GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+      GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
     val objectSetInstance =
       GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
     val obj = constructParent.invoke(cls.parentName) as MemorySegment

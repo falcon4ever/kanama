@@ -382,7 +382,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
 
         @JvmStatic
         fun create(): SurfaceTool =
-            SurfaceTool(ObjectCalls.constructObject("SurfaceTool")).also { it.claimConstructedOwnership() }
+            SurfaceTool(ObjectCalls.constructObject("SurfaceTool"))
 
         internal fun wrap(handle: MemorySegment): SurfaceTool? =
             if (handle.address() == 0L) null else SurfaceTool(handle)

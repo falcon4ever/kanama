@@ -94,22 +94,26 @@ and the collapse emission are locked by `check_ios_policies`, and the on-device
 self-test matrix carries a `refcounted-ret-owns-plus1` refcount probe
 (duplicate() → refcount 1 → close()).
 
-### Freshly created resources own their reference — *close what you create* (task 61)
+### Freshly created resources own their reference — *close what you create* (tasks 61/62)
 
-`X.create()` factories return an **owning** wrapper. The factory constructs the
-object, then calls `RefCounted.claimConstructedOwnership()`, whose `init_ref()`
-consumes Godot's construction placeholder so the wrapper holds a real `+1`
-reference — the same lifetime a resource read out of an Array/Dictionary gets
-from `retainForKotlinWrapper()`. Balanced by `close()` (or `use { }`).
+`X.create()` factories return an **owning** wrapper. All backends construct via
+`classdb_construct_object3` (Godot 4.7), which returns a RefCounted subtype
+**already owned** (refcount 1) — Godot's own contract: *"the caller … is
+responsible for decrementing it again when the object is no longer needed."* No
+hand-rolled `init_ref` claim: the wrapper owns its `+1` straight out of
+construction, balanced by `close()` (or `use { }`).
 
 This is what makes handing a created resource to the engine safe. When you pass
 it to a `Ref<>`-taking sink — a surface-override material, a node property,
 `ResourceSaver.save` — the engine takes **its own** reference on top of the
 wrapper's. A later `close()`/`use { }` then drops only the wrapper's `+1`, so the
-resource survives for the engine (issue #91 — previously `close()` dropped the
-engine's only reference and the material/mesh vanished from the saved scene).
-Two `Ref<Material>` sinks (surface override + material override) are guarded by
-the `MaterialHandoffSmoke` row in `scripts/runtime_smoke.sh`.
+resource survives for the engine (issue #91 — previously, on the deprecated
+`construct_object2` path, `create()` was non-owning and `close()` dropped the
+engine's only reference, so the material/mesh vanished from the saved scene).
+Two `Ref<Material>` sinks (surface override + material override) plus a
+`create_refcount=1` assertion are guarded by the `MaterialHandoffSmoke` row in
+`scripts/runtime_smoke.sh`; iOS guards the same on-device in its
+`ObjectCalls` self-test.
 
 The contract is the ordinary `AutoCloseable` one: **close what you create.** A
 created resource that is never closed leaks its `+1` (Godot prints
@@ -119,17 +123,14 @@ A `getMesh()`/`getMaterial()`-style read-back is *also* an owned return (see
 [RefCounted Return Ownership](#refcounted-return-ownership) above) and must be
 closed too — forgetting one leaks the resource it points at.
 
-> **`ResourceSaver.save` guard — now redundant, retained.** Before task 61,
-> `create()` was non-owning, so `save`'s transient `Ref` could drop a fresh
-> resource's only reference to zero and free it mid-call (issue #81, a JVM
-> SIGSEGV). A guard in the save ptrcall helper
-> (`ObjectCalls.ptrcallWithObjectStringLongArgsRetLong`) held a protective
-> `reference()` across the call. With owning-`create()` the wrapper's own `+1`
-> already outlives the transient `Ref`, so the guard is a **balanced no-op** and
-> could be retired (desktop `ObjectCalls.kt` + the iOS `IOS_HANDWRITTEN_HELPERS`
-> mirror). It is kept for now — removing it is a separate, independently
-> validated change; the `issue81 packed_scene_save` row in `runtime_smoke.sh`
-> passes with it in place.
+> **Issue #81 is subsumed.** Before the `construct_object3` migration (task 62),
+> `create()` was non-owning, so `ResourceSaver.save`'s transient `Ref` could drop
+> a fresh resource's only reference to zero and free it mid-call (issue #81, a JVM
+> SIGSEGV), which a protective-reference guard in the save ptrcall helper worked
+> around. With `construct_object3` the wrapper's own `+1` outlives the transient
+> `Ref`, so the guard was **removed** — `save` needs no special-casing. The
+> `issue81 packed_scene_save` row (`ref_after_save=1`, `alive_after_save=true`)
+> proves the fresh resource survives save with no guard.
 
 Two **dynamic** paths share this ownership problem: `ClassDB.instantiate` and
 `ClassDB.class_call_static` both return a Variant that holds the fresh

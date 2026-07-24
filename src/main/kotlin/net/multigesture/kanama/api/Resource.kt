@@ -438,6 +438,6 @@ open class Resource internal constructor(
 
         @JvmStatic
         fun create(): Resource =
-            Resource(ObjectCalls.constructObject("Resource")).also { it.claimConstructedOwnership() }
+            Resource(ObjectCalls.constructObject("Resource"))
     }
 }

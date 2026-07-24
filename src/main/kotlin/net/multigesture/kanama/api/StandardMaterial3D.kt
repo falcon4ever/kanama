@@ -12,7 +12,7 @@ class StandardMaterial3D internal constructor(handle: MemorySegment) : BaseMater
     companion object {
         @JvmStatic
         fun create(): StandardMaterial3D =
-            StandardMaterial3D(ObjectCalls.constructObject("StandardMaterial3D")).also { it.claimConstructedOwnership() }
+            StandardMaterial3D(ObjectCalls.constructObject("StandardMaterial3D"))
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): StandardMaterial3D? =

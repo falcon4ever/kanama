@@ -131,7 +131,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
 
         @JvmStatic
         fun create(): BoxMesh =
-            BoxMesh(ObjectCalls.constructObject("BoxMesh")).also { it.claimConstructedOwnership() }
+            BoxMesh(ObjectCalls.constructObject("BoxMesh"))
 
     }
 }

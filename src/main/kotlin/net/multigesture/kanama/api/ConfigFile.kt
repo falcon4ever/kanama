@@ -187,7 +187,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun create(): ConfigFile =
-            ConfigFile(ObjectCalls.constructObject("ConfigFile")).also { it.claimConstructedOwnership() }
+            ConfigFile(ObjectCalls.constructObject("ConfigFile"))
 
         private const val SET_VALUE_HASH = 2504492430L
         private val setValueBind by lazy {

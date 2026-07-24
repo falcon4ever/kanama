@@ -341,7 +341,7 @@ class FastNoiseLite(handle: MemorySegment) : Noise(handle) {
 
         @JvmStatic
         fun create(): FastNoiseLite =
-            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite")).also { it.claimConstructedOwnership() }
+            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
 
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =

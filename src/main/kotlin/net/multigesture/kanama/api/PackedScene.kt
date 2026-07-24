@@ -84,7 +84,7 @@ class PackedScene internal constructor(
 
         @JvmStatic
         fun create(): PackedScene =
-            PackedScene(ObjectCalls.constructObject("PackedScene")).also { it.claimConstructedOwnership() }
+            PackedScene(ObjectCalls.constructObject("PackedScene"))
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): PackedScene? =

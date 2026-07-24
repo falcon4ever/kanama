@@ -60,7 +60,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
     companion object {
         @JvmStatic
         fun create(): ButtonGroup =
-            ButtonGroup(ObjectCalls.constructObject("ButtonGroup")).also { it.claimConstructedOwnership() }
+            ButtonGroup(ObjectCalls.constructObject("ButtonGroup"))
 
         @JvmStatic
         fun fromHandle(handle: MemorySegment): ButtonGroup? =

@@ -531,7 +531,7 @@ CUSTOM_COMPANION_MEMBER_SECTIONS = {
     "FastNoiseLite": """
         @JvmStatic
         fun create(): FastNoiseLite =
-            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite")).also { it.claimConstructedOwnership() }
+            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
 
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
@@ -540,7 +540,7 @@ CUSTOM_COMPANION_MEMBER_SECTIONS = {
     "OfflineMultiplayerPeer": """
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer")).also { it.claimConstructedOwnership() }
+            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
 """.strip("\n"),
     "ParticleProcessMaterial": """
         @JvmStatic

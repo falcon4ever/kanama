@@ -241,7 +241,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
 
         @JvmStatic
         fun create(): MeshLibrary =
-            MeshLibrary(ObjectCalls.constructObject("MeshLibrary")).also { it.claimConstructedOwnership() }
+            MeshLibrary(ObjectCalls.constructObject("MeshLibrary"))
 
         internal fun wrap(handle: MemorySegment): MeshLibrary? =
             if (handle.address() == 0L) null else MeshLibrary(handle)
