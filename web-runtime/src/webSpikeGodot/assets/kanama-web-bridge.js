@@ -197,6 +197,7 @@
     match3TileTypeByHandle: new Map(),
     match3NodePositions: new Map(),
     match3MainHandle: 0,
+    dodgeMainHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -532,6 +533,16 @@
       if (method === "remove") return spriteVariant ? 2 : 3;
       if (method === "finish") return spriteVariant ? 3 : 4;
       throw new Error(`Unknown Bunnymark method=${method}`);
+    },
+    dodgeMethodId(method) {
+      // Ordinals follow the @RegisterFunction order in dodge's Main.kt (mirrored by
+      // the generated Main.gd proxy: game_over=1, new_game=2, timer callbacks 3-5).
+      if (method === "game_over") return 1;
+      if (method === "new_game") return 2;
+      if (method === "_on_MobTimer_timeout") return 3;
+      if (method === "_on_ScoreTimer_timeout") return 4;
+      if (method === "_on_StartTimer_timeout") return 5;
+      throw new Error(`Unknown dodge method=${method}`);
     },
     roundTrip(value) {
       return this.api.kanamaWebRoundTrip(value);
@@ -1447,6 +1458,12 @@
     recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
+      if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
+        // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit
+        // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
+        // through this handle instead, mirroring bunnymark's method-call driving).
+        this.dodgeMainHandle = handle;
+      }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);
         if (scriptName.endsWith(".Audio")) {
@@ -1471,17 +1488,23 @@
           updateStatus(`Running Kotlin/Wasm Bunnymark with ${this.previewBunnies} bunnies…`);
         }, 150);
       }
-      if (this.readyCount === 1) {
-        this.firstHandle = handle;
-        this.results.startup.timeToFirstReadyMs =
-          performance.now() - globalThis.KanamaWebPageStartedAt;
-        updateStatus("Running frame and bridge benchmarks…");
-      } else {
-        this.results.lifecycle.replacementHandle = handle;
-        this.results.lifecycle.generationAdvanced = handle !== this.firstHandle;
-        this.results.lifecycle.staleHandleInvalidated =
-          this.api.kanamaWebIsLive(this.freedHandle) === 0;
-        this.finish();
+      // Single-script benchmark lifecycle (spike/bunnymark): the first ready is the
+      // benchmark script; a second ready is a hot-reload replacement that finishes the
+      // run. Scene-based demos (match3 returns early above; dodge and any future scene
+      // demo) have many scripts and must not treat the 2nd ready as a benchmark finish.
+      if (this.mode === "bunnymark" || this.mode === "spike") {
+        if (this.readyCount === 1) {
+          this.firstHandle = handle;
+          this.results.startup.timeToFirstReadyMs =
+            performance.now() - globalThis.KanamaWebPageStartedAt;
+          updateStatus("Running frame and bridge benchmarks…");
+        } else {
+          this.results.lifecycle.replacementHandle = handle;
+          this.results.lifecycle.generationAdvanced = handle !== this.firstHandle;
+          this.results.lifecycle.staleHandleInvalidated =
+            this.api.kanamaWebIsLive(this.freedHandle) === 0;
+          this.finish();
+        }
       }
     },
     finishMatch3Group1(handle, scriptId, scriptName) {
