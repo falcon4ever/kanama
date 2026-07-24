@@ -41,6 +41,15 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 3] = y.toBits()
   }
 
+  fun appendVector3Mutation(opcode: Int, objectHandle: Int, x: Float, y: Float, z: Float) {
+    val offset = reserve(WORDS_VECTOR3)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = x.toBits()
+    words[offset + 3] = y.toBits()
+    words[offset + 4] = z.toBits()
+  }
+
   fun appendBoolMutation(opcode: Int, objectHandle: Int, value: Boolean) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = opcode
@@ -186,6 +195,7 @@ internal class WebCommandBuffer(capacity: Int) {
     const val WORDS_OBJECT_ARG = 3
     const val WORDS_SCALAR_OR_VECTOR = 4
     const val WORDS_OBJECT_BOOL_LONG_ARGS = 5
+    const val WORDS_VECTOR3 = 5
     const val WORDS_COLOR = 6
     const val WORDS_DRAW_TEXTURE = 9
     const val MAX_WORDS_PER_COMMAND = WORDS_DRAW_TEXTURE

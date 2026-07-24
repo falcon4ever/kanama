@@ -14,6 +14,7 @@ import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 /**
@@ -704,6 +705,43 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         duration,
       )
     )
+  }
+
+  override fun invokeNoArgsRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotVector3 {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    return when (descriptor.opcode) {
+      75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
+      77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
+      79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
+      else -> null
+    }
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
+      )
+  }
+
+  override fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    val objectId = receiver.webId()
+    commands.appendVector3Mutation(descriptor.opcode, objectId, value.x, value.y, value.z)
+    when (descriptor.opcode) {
+      74 -> webWriteVector3Snapshot(objectId, WebVector3Slot.POSITION, value)
+      76 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION, value)
+      78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
+      else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
+    }
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {

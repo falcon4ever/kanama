@@ -34,6 +34,11 @@ from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy
 _POSITION = "WebVector2Slot.POSITION"
 _SCALE = "WebVector2Slot.SCALE"
 
+# Snapshot slots for the mirrored Node3D Vector3 properties.
+_POSITION3 = "WebVector3Slot.POSITION"
+_ROTATION3 = "WebVector3Slot.ROTATION"
+_SCALE3 = "WebVector3Slot.SCALE"
+
 WEB_POLICY: dict[int, dict[str, object]] = {
     1: {},
     2: {"vec2_slot": _POSITION},
@@ -108,6 +113,12 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     71: {"ret": "browser"},
     72: {},
     73: {"ret": "node"},
+    74: {"vec3_slot": _POSITION3},
+    75: {"vec3_slot": _POSITION3},
+    76: {"vec3_slot": _ROTATION3},
+    77: {"vec3_slot": _ROTATION3},
+    78: {"vec3_slot": _SCALE3},
+    79: {"vec3_slot": _SCALE3},
 }
 
 
@@ -130,6 +141,13 @@ def _slot(opcode: int) -> str:
     slot = WEB_POLICY[opcode].get("vec2_slot")
     if slot is None:
         raise GenerationError(f"opcode {opcode} missing vec2_slot")
+    return str(slot)
+
+
+def _slot3(opcode: int) -> str:
+    slot = WEB_POLICY[opcode].get("vec3_slot")
+    if slot is None:
+        raise GenerationError(f"opcode {opcode} missing vec3_slot")
     return str(slot)
 
 
@@ -290,6 +308,38 @@ def body_VECTOR2_ARG(calls):
         else:
             lines.append(f"{c.opcode} -> {{}}")
     lines.append('else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")')
+    lines.append("}")
+    return lines
+
+
+def body_NOARGS_RET_VECTOR3(calls):
+    lines = [
+        f"require(descriptor.executionMode == {_SNAPSHOT})",
+        "return when (descriptor.opcode) {",
+    ]
+    for c in calls:
+        lines.append(f"{c.opcode} -> webVector3Snapshot(receiver.webId(), {_slot3(c.opcode)})")
+    lines += [
+        "else -> null",
+        "}",
+        "?: error(",
+        '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
+        '"object handle=${receiver.webId()}"',
+        ")",
+    ]
+    return lines
+
+
+def body_VECTOR3_ARG(calls):
+    lines = [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        "val objectId = receiver.webId()",
+        "commands.appendVector3Mutation(descriptor.opcode, objectId, value.x, value.y, value.z)",
+        "when (descriptor.opcode) {",
+    ]
+    for c in calls:
+        lines.append(f"{c.opcode} -> webWriteVector3Snapshot(objectId, {_slot3(c.opcode)}, value)")
+    lines.append('else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")')
     lines.append("}")
     return lines
 
@@ -755,6 +805,8 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "DOUBLE_ARG": (["receiver: GodotHandle", "value: Double"], ""),
     "NOARGS_RET_VECTOR2": (["receiver: GodotHandle"], "GodotVector2"),
     "VECTOR2_ARG": (["receiver: GodotHandle", "value: GodotVector2"], ""),
+    "NOARGS_RET_VECTOR3": (["receiver: GodotHandle"], "GodotVector3"),
+    "VECTOR3_ARG": (["receiver: GodotHandle", "value: GodotVector3"], ""),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -877,6 +929,7 @@ _WORD_CASE = {
     "RECT2": "Rect2",
     "VECTOR2": "Vector2",
     "VECTOR2I": "Vector2i",
+    "VECTOR3": "Vector3",
     "STRING": "String",
     "STRINGNAME": "StringName",
     "NODEPATH": "NodePath",
@@ -936,6 +989,8 @@ EMIT_ORDER = [
     "COLOR_ARG",
     "OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE",
     "OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE",
+    "NOARGS_RET_VECTOR3",
+    "VECTOR3_ARG",
 ]
 
 
@@ -969,6 +1024,7 @@ import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 /**

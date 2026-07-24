@@ -89,6 +89,41 @@ class GodotBackendContractTest {
       GodotCallShape.LONG_ARG,
       GodotExecutionMode.QUEUED_MUTATION,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_SET_POSITION,
+      3_460_891_852L,
+      GodotCallShape.VECTOR3_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_GET_POSITION,
+      3_360_562_783L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_SET_SCALE,
+      3_460_891_852L,
+      GodotCallShape.VECTOR3_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+  }
+
+  @Test
+  fun node3dProbeMirrorsTransformProperties() {
+    val backend = RecordingBackend()
+    GodotBackendCalls.install(backend)
+    val probe = Node3DBackendContractProbe(GodotHandle.fromBackendToken(17))
+
+    assertEquals(GodotVector3(0.0f, 0.0f, 0.0f), probe.position)
+    probe.position = GodotVector3(1.0f, 2.0f, 3.0f)
+    assertEquals(GodotVector3(1.0f, 2.0f, 3.0f), probe.position)
+    assertEquals(GodotVector3(0.0f, 0.0f, 0.0f), probe.rotation)
+    probe.rotation = GodotVector3(0.1f, 0.2f, 0.3f)
+    assertEquals(GodotVector3(0.1f, 0.2f, 0.3f), probe.rotation)
+    assertEquals(GodotVector3(1.0f, 1.0f, 1.0f), probe.scale)
+    probe.scale = GodotVector3(2.0f, 2.0f, 2.0f)
+    assertEquals(GodotVector3(2.0f, 2.0f, 2.0f), probe.scale)
   }
 
   @Test
@@ -338,6 +373,9 @@ class GodotBackendContractTest {
     var longArgument: Pair<Long, Long>? = null
     var queuedFree: Long? = null
     private var particlesEmitting = false
+    private var position3 = GodotVector3(0.0f, 0.0f, 0.0f)
+    private var rotation3 = GodotVector3(0.0f, 0.0f, 0.0f)
+    private var scale3 = GodotVector3(1.0f, 1.0f, 1.0f)
 
     override fun requireLive(handle: GodotHandle) {
       require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L, 61L, 62L, 63L, 71L))
@@ -718,6 +756,32 @@ class GodotBackendContractTest {
       assertEquals(GodotColor(0.5f, 0.6f, 0.7f, 0.8f), finalValue)
       assertEquals(0.1, duration)
       return GodotHandle.fromBackendToken(63L)
+    }
+
+    override fun invokeNoArgsRetVector3(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): GodotVector3 =
+      when (descriptor.opcode) {
+        75 -> position3
+        77 -> rotation3
+        79 -> scale3
+        else -> error("Unexpected Vector3 read opcode=${descriptor.opcode}")
+      }
+
+    override fun invokeVector3Arg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotVector3,
+    ) {
+      when (descriptor.opcode) {
+        74 -> position3 = value
+        76 -> rotation3 = value
+        78 -> scale3 = value
+        else -> error("Unexpected Vector3 write opcode=${descriptor.opcode}")
+      }
     }
   }
 }

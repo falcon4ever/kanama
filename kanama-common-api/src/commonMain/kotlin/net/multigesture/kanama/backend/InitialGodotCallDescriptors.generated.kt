@@ -806,4 +806,70 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE3D_SET_POSITION =
+    GodotCallDescriptor(
+      opcode = 74,
+      className = "Node3D",
+      methodName = "set_position",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_POSITION =
+    GodotCallDescriptor(
+      opcode = 75,
+      className = "Node3D",
+      methodName = "get_position",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 76,
+      className = "Node3D",
+      methodName = "set_rotation",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 77,
+      className = "Node3D",
+      methodName = "get_rotation",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_SCALE =
+    GodotCallDescriptor(
+      opcode = 78,
+      className = "Node3D",
+      methodName = "set_scale",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_SCALE =
+    GodotCallDescriptor(
+      opcode = 79,
+      className = "Node3D",
+      methodName = "get_scale",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

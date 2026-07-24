@@ -56,6 +56,8 @@ enum class GodotCallShape {
   COLOR_ARG,
   OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE,
   OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE,
+  NOARGS_RET_VECTOR3,
+  VECTOR3_ARG,
 }
 
 @InternalKanamaBackendApi
@@ -88,6 +90,9 @@ data class GodotCallDescriptor(
 
 /** Platform-neutral immutable integer vector used by typed input signals. */
 @InternalKanamaBackendApi data class GodotVector2i(val x: Int, val y: Int)
+
+/** Platform-neutral immutable 3D vector used by the 3D node transform families. */
+@InternalKanamaBackendApi data class GodotVector3(val x: Float, val y: Float, val z: Float)
 
 /** Platform-neutral immutable rectangle snapshot. */
 @InternalKanamaBackendApi data class GodotRect2(val position: GodotVector2, val size: GodotVector2)
@@ -388,6 +393,19 @@ interface GodotBackendSpi {
     finalValue: GodotColor,
     duration: Double,
   ): GodotHandle?
+
+  fun invokeNoArgsRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotVector3
+
+  fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  )
 }
 
 /**
@@ -892,6 +910,24 @@ object GodotBackendCalls {
       finalValue,
       duration,
     )
+  }
+
+  fun invokeNoArgsRetVector3(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotVector3 {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_VECTOR3)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetVector3(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ) {
+    requireShape(descriptor, GodotCallShape.VECTOR3_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeVector3Arg(descriptor, resolve(selected, descriptor), receiver, value)
   }
 
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
@@ -1532,4 +1568,53 @@ class CanvasItemInputBackendContractProbe(private val handle: GodotHandle) {
       InitialGodotCallDescriptors.CANVASITEM_GET_LOCAL_MOUSE_POSITION,
       handle,
     )
+}
+
+/**
+ * Typed Node3D transform slice: the first 3D scene-graph family (Task 60c).
+ *
+ * position/rotation/scale share the Vector3 call shapes; each is mirrored read-your-write on the
+ * Web backend the same way Node2D.position is, so a script can read back a value it just wrote
+ * without a synchronous engine crossing.
+ */
+@InternalKanamaBackendApi
+class Node3DBackendContractProbe(val handle: GodotHandle) {
+  var position: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.NODE3D_GET_POSITION,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.NODE3D_SET_POSITION,
+        handle,
+        value,
+      )
+    }
+
+  var rotation: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.NODE3D_GET_ROTATION,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.NODE3D_SET_ROTATION,
+        handle,
+        value,
+      )
+    }
+
+  var scale: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(InitialGodotCallDescriptors.NODE3D_GET_SCALE, handle)
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.NODE3D_SET_SCALE,
+        handle,
+        value,
+      )
+    }
 }
