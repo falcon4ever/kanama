@@ -1,5 +1,7 @@
 package net.multigesture.kanama.types
 
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 data class Vector2(val x: Double, val y: Double) {
@@ -20,7 +22,23 @@ data class Vector2(val x: Double, val y: Double) {
 
   fun length(): Double = sqrt(x * x + y * y)
 
+  fun withX(value: Number): Vector2 = Vector2(value.toDouble(), y)
+
   fun withY(value: Number): Vector2 = Vector2(x, value.toDouble())
+
+  fun normalized(): Vector2 {
+    val len = length()
+    return if (len > 0.0) Vector2(x / len, y / len) else ZERO
+  }
+
+  fun clamp(min: Vector2, max: Vector2): Vector2 =
+    Vector2(x.coerceIn(min.x, max.x), y.coerceIn(min.y, max.y))
+
+  fun rotated(angle: Double): Vector2 {
+    val c = cos(angle)
+    val s = sin(angle)
+    return Vector2(x * c - y * s, x * s + y * c)
+  }
 
   companion object {
     val ZERO = Vector2(0.0, 0.0)

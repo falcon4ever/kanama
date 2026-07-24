@@ -22,6 +22,7 @@ val extraWebScriptSourceRoot: File? =
                 when (demo) {
                     "match3" -> "kanamaWebMatch3ProjectDir"
                     "bunnymark" -> "kanamaWebBunnymarkProjectDir"
+                    "dodge" -> "kanamaWebDodgeProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -100,6 +101,9 @@ val webMatch3SourceProject =
     providers.gradleProperty("kanamaWebMatch3ProjectDir").orNull?.let(rootProject::file)
 val webMatch3Staging = layout.buildDirectory.dir("web-match3/godot-project")
 val webMatch3Export = layout.buildDirectory.dir("web-match3/export")
+val webDodgeSourceProject =
+    providers.gradleProperty("kanamaWebDodgeProjectDir").orNull?.let(rootProject::file)
+val webDodgeStaging = layout.buildDirectory.dir("web-dodge/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -718,6 +722,169 @@ tasks.register("stageWebMatch3Project") {
     }
 }
 
+tasks.register("stageWebDodgeProject") {
+    group = "verification"
+    description = "Stages dodge-the-creeps with faithful generated Web proxies without editing its source."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webDodgeSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webDodgeStaging)
+
+    doLast {
+        val sourceProject =
+            webDodgeSourceProject
+                ?: error(
+                    "Pass -PkanamaWebDodgeProjectDir=/absolute/path/to/kanama-demos/godot-demo-2d-dodge-the-creeps"
+                )
+        check(sourceProject.resolve("main.tscn").isFile) {
+            "dodge-the-creeps project not found: $sourceProject"
+        }
+
+        fun sourceChecksum(): String {
+            val excludedRoots = setOf(".git", ".godot", ".gradle", ".kotlin", "build", "android/build")
+            val digest = MessageDigest.getInstance("SHA-256")
+            sourceProject
+                .walkTopDown()
+                .filter { it.isFile }
+                .map { file -> file.relativeTo(sourceProject).invariantSeparatorsPath to file }
+                .filter { (path, _) ->
+                    excludedRoots.none { root -> path == root || path.startsWith("$root/") }
+                }
+                .sortedBy { it.first }
+                .forEach { (path, file) ->
+                    digest.update(path.toByteArray(Charsets.UTF_8))
+                    digest.update(0)
+                    digest.update(file.readBytes())
+                    digest.update(0)
+                }
+            return digest.digest().joinToString("") { "%02x".format(it) }
+        }
+
+        val checksumBefore = sourceChecksum()
+        val stagingDir = webDodgeStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("android/**")
+                exclude("addons/kanama/**")
+                exclude("gradle/**")
+                exclude("kotlin-src/**")
+                exclude("build.gradle.kts")
+                exclude("gradle.properties")
+                exclude("gradlew")
+                exclude("gradlew.bat")
+                exclude("settings.gradle.kts")
+            }
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
+        val expectedSources =
+            setOf(
+                "res://kotlin-src/HUD.kt",
+                "res://kotlin-src/Main.kt",
+                "res://kotlin-src/Mob.kt",
+                "res://kotlin-src/Player.kt",
+                "res://kotlin-src/SmokeQuit.kt",
+            )
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { line ->
+                    val columns = line.split('\t')
+                    check(columns.size == 3) { "Invalid Web proxy manifest row: $line" }
+                    columns[0] to columns[1]
+                }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "dodge Web proxy mappings are incomplete: expected=$expectedSources actual=${mappings.keys}"
+        }
+
+        val stagedReferences =
+            fileTree(stagingDir) {
+                    include("project.godot")
+                    include("**/*.tscn")
+                    include("**/*.tres")
+                }
+                .files
+        val usedMappings = mutableSetOf<String>()
+        stagedReferences.forEach { stagedFile ->
+            val original = stagedFile.readText()
+            val rewritten =
+                mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                    if (text.contains(sourcePath)) usedMappings += sourcePath
+                    text.replace(sourcePath, proxyPath)
+                }
+            if (rewritten != original) stagedFile.writeText(rewritten)
+            check(!rewritten.contains("res://kotlin-src/")) {
+                "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+            }
+        }
+        check(usedMappings == expectedSources) {
+            "Not every dodge script attachment was staged: used=$usedMappings"
+        }
+
+        // dodge-the-creeps already ships the GL Compatibility renderer, so unlike
+        // Match3 there is no Forward Plus -> GL Compatibility rewrite; just guard it.
+        val stagedProject = stagingDir.resolve("project.godot")
+        check(stagedProject.readText().contains("renderer/rendering_method=\"gl_compatibility\"")) {
+            "dodge renderer is no longer gl_compatibility; the Web export needs it"
+        }
+
+        val checksumAfter = sourceChecksum()
+        check(checksumAfter == checksumBefore) {
+            "dodge source project changed during staging: before=$checksumBefore after=$checksumAfter"
+        }
+        val evidence = stagingDir.resolve("kanama-web/DodgeSourceChecksum.generated.txt")
+        evidence.parentFile.mkdirs()
+        evidence.writeText("sha256=$checksumAfter\nstatus=unchanged\n")
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val originalShell = shell.readText()
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        check(originalShell.contains(pageStart)) { "Missing Web shell bootstrap marker" }
+        shell.writeText(
+            originalShell.replace(
+                pageStart,
+                "$pageStart\n      globalThis.KanamaWebMode = \"dodge\";",
+            )
+        )
+    }
+}
+
 tasks.register<Exec>("importWebMatch3Project") {
     group = "verification"
     description = "Runs a headless Godot import of the disposable Match3 Web-proxy project."
@@ -933,14 +1100,16 @@ fun stageTaskFor(demo: String): String =
     when (demo) {
         "match3" -> "stageWebMatch3Project"
         "bunnymark" -> "stageWebBunnymarkProject"
-        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark)")
+        "dodge" -> "stageWebDodgeProject"
+        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge)")
     }
 
 fun stagingDirFor(demo: String): File =
     when (demo) {
         "match3" -> webMatch3Staging.get().asFile
         "bunnymark" -> webBunnymarkStaging.get().asFile
-        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark)")
+        "dodge" -> webDodgeStaging.get().asFile
+        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge)")
     }
 
 tasks.register<Exec>("exportWeb") {

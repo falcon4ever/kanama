@@ -97,6 +97,8 @@ internal object WebSignalCallbackRegistry {
 }
 
 object Mathf {
+  val PI: Double = kotlin.math.PI
+
   fun abs(value: Double): Double = kotlin.math.abs(value)
 
   fun log(value: Double): Double = ln(value)
@@ -134,6 +136,18 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
         )
     if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
     return result
+  }
+
+  /** Suspends until this signal fires once (a one-shot connection resumes the coroutine). */
+  suspend fun await(target: GodotObject, argumentCount: Int = 0) {
+    require(argumentCount == 0) {
+      "Kanama Web signal await currently supports zero emitted arguments"
+    }
+    suspendCancellableCoroutine { continuation ->
+      connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) {
+        if (continuation.isActive) continuation.resume(Unit)
+      }
+    }
   }
 }
 
@@ -189,6 +203,10 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHa
 
   fun play(fromPosition: Double = 0.0) {
     AudioStreamPlayerBackendContractProbe(backendHandle).play(fromPosition)
+  }
+
+  fun stop() {
+    AudioStreamPlayerBackendContractProbe(backendHandle).stop()
   }
 
   companion object {
