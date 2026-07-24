@@ -225,6 +225,18 @@ wrappers, re-syncs KDoc, refreshes reports, and re-runs the gates — then stops
 at the human-judgment boundary (device gates, support claims, release wording).
 Run local CI and demo smoke checks before changing support claims.
 
+**Every stable bump: scan for newly deprecated GDExtension functions and keep the
+backends converged.** 4.7 is the baseline — we do not carry deprecated GDExtension
+callbacks once a newer variant solves the same problem. Diff
+`gdextension/gdextension_interface.h` for `@deprecated` entries, migrate every
+backend to the newest variant, and confirm the **desktop/Android JVM** backend
+(`src/main`) and the **iOS Kotlin/Native** shim (`ios/bootstrap/kanama_ios_shim.c`)
+bind the **same** construct/register/script-instance entry points — they pick these
+independently and have drifted silently before (`construct_object2` vs
+`construct_object3`, issue #91 / task 61). Enforced by
+`scripts/check_gdextension_modernization.py` (in `local_ci.sh` and the upgrade
+gates); steps are in the upgrade runbook.
+
 ### Android Work
 
 Android is Supported (4.7 stable), but never widen a support claim past what

@@ -50,15 +50,22 @@ object KanamaBinding {
   }
 
   /**
-   * Layout of `GDExtensionGodotVersion`:
+   * Layout of `GDExtensionGodotVersion2` (4.7; replaces the deprecated `GDExtensionGodotVersion` —
+   * task 62). Four `uint32` pack to 16 bytes, so the pointers are naturally 8-byte aligned with no
+   * padding; `string` is at offset 48.
+   *
    * ```
    * typedef struct {
-   *     uint32_t major;     // offset 0
-   *     uint32_t minor;     // offset 4
-   *     uint32_t patch;     // offset 8
-   *     // 4 bytes padding — pointer is 8-byte aligned on 64-bit
-   *     const char *string; // offset 16
-   * } GDExtensionGodotVersion;
+   *     uint32_t major;      // 0
+   *     uint32_t minor;      // 4
+   *     uint32_t patch;      // 8
+   *     uint32_t hex;        // 12
+   *     const char *status;  // 16
+   *     const char *build;   // 24
+   *     const char *hash;    // 32
+   *     uint64_t timestamp;  // 40
+   *     const char *string;  // 48
+   * } GDExtensionGodotVersion2;
    * ```
    */
   private val godotVersionLayout: MemoryLayout =
@@ -66,7 +73,11 @@ object KanamaBinding {
       JAVA_INT.withName("major"),
       JAVA_INT.withName("minor"),
       JAVA_INT.withName("patch"),
-      MemoryLayout.paddingLayout(4),
+      JAVA_INT.withName("hex"),
+      ADDRESS.withName("status"),
+      ADDRESS.withName("build"),
+      ADDRESS.withName("hash"),
+      MemoryLayout.paddingLayout(8),
       ADDRESS.withName("string"),
     )
 
@@ -78,7 +89,7 @@ object KanamaBinding {
   )
 
   private fun fetchGodotVersion(): GodotVersion {
-    val getVersion = GodotFFI.lookup("get_godot_version", FunctionDescriptor.ofVoid(ADDRESS))
+    val getVersion = GodotFFI.lookup("get_godot_version2", FunctionDescriptor.ofVoid(ADDRESS))
     Arena.ofConfined().use { arena ->
       val struct = arena.allocate(godotVersionLayout)
       getVersion.invoke(struct)
@@ -86,7 +97,7 @@ object KanamaBinding {
       val major = struct.get(JAVA_INT, 0)
       val minor = struct.get(JAVA_INT, 4)
       val patch = struct.get(JAVA_INT, 8)
-      val stringPtr: MemorySegment = struct.get(ADDRESS, 16)
+      val stringPtr: MemorySegment = struct.get(ADDRESS, 48)
       val stringValue = stringPtr.reinterpret(Long.MAX_VALUE).getString(0)
 
       return GodotVersion(major, minor, patch, stringValue)

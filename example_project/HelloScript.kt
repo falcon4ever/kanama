@@ -807,6 +807,10 @@ class HelloScript(godotObject: GodotHandle) :
     meshInstance3d?.setMesh(null)
     assignedMaterial.close()
     assignedBoxMesh.close()
+    // getMesh() returns an owned (+1) wrapper (task-31 RefCounted-return convention); release it,
+    // or the mesh it points at leaks. Masked before task 61 (the mesh was freed early under the old
+    // non-owning create()); owning-create() keeps it alive, so the missing close() now surfaces.
+    assignedMesh?.close()
     val instancedMeshRaw = selfNode.getNodeOrNull("../InstancedMesh")
     val instancedMeshClass = instancedMeshRaw?.getClassName() ?: "<null>"
     val instancedMeshIsClass = instancedMeshRaw?.isClass("MeshInstance3D") ?: false

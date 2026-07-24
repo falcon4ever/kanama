@@ -59,7 +59,11 @@ object ObjectCalls {
   }
 
   private val classdbConstructObject by lazy {
-    GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+    // classdb_construct_object3 (Godot 4.7, replaces the deprecated construct_object2). For a
+    // RefCounted subtype it returns the object already owned (refcount 1) — the caller is
+    // responsible for releasing it (close()) — so X.create() factories are owning without a hand
+    // -rolled init_ref claim (task 62 / issue #91). No-op vs construct_object2 for non-RefCounted.
+    GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
   }
 
   private val objectMethodBindPtrcall by lazy {
@@ -70,19 +74,6 @@ object ObjectCalls {
   }
 
   private val notificationBind by lazy { getMethodBind("Object", "notification", 4023243586L) }
-
-  // RefCounted lifetime binds for the issue #81 save guard (see
-  // ptrcallWithObjectStringLongArgsRetLong).
-  // reference()/unreference() share the bool() no-arg hash; get_reference_count() is int().
-  private val refCountedReferenceBind by lazy {
-    getMethodBind("RefCounted", "reference", 2240911060L)
-  }
-  private val refCountedUnreferenceBind by lazy {
-    getMethodBind("RefCounted", "unreference", 2240911060L)
-  }
-  private val refCountedGetReferenceCountBind by lazy {
-    getMethodBind("RefCounted", "get_reference_count", 3905245786L)
-  }
 
   private class PtrcallScratch {
     private val arena = Arena.ofAuto()
@@ -3476,17 +3467,11 @@ object ObjectCalls {
     text: String,
     value: Long,
   ): Long {
-    // issue #81: this shape backs ResourceSaver.save — its sole wrapper. save decodes its
-    // `const Ref<Resource>&` argument into a transient engine Ref and releases it on return; for a
-    // freshly created, not-yet-assigned resource — whose only
-    // reference is Godot's construction placeholder — that release drops the refcount to zero and
-    // frees the object, leaving its Kotlin wrapper dangling (JVM SIGSEGV on the next touch). Hold a
-    // protective reference across the call, then release it only if the object still has another
-    // holder: when the call consumed the sole reference the protective ref is kept, so the resource
-    // survives and becomes wrapper-owned (close() frees it); for an already-owned resource
-    // (loaded/cached, or held by the scene tree) it is a balanced no-op.
-    val guardHandle = objectArg.address() != 0L
-    if (guardHandle) ptrcallNoArgsRetBool(refCountedReferenceBind, objectArg)
+    // Backs ResourceSaver.save. With classdb_construct_object3 (task 62) a freshly created resource
+    // comes back already owned (refcount 1), so save's transient `Ref<Resource>` no longer drops
+    // the
+    // last reference to zero — the issue #81 protective-reference guard is no longer needed and was
+    // removed. Loaded/cached resources were always owned; nothing here needs a lifetime guard.
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 3)
       val objCell = arena.allocate(ADDRESS)
@@ -3505,16 +3490,9 @@ object ObjectCalls {
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringArg)
-        if (guardHandle && refCountedGetReferenceCount(objectArg) > 1) {
-          ptrcallNoArgsRetBool(refCountedUnreferenceBind, objectArg)
-        }
       }
     }
   }
-
-  /** Calls RefCounted.get_reference_count on [handle] via ptrcall (int32 return). */
-  private fun refCountedGetReferenceCount(handle: MemorySegment): Int =
-    ptrcallNoArgsRetInt(refCountedGetReferenceCountBind, handle)
 
   /** Calls [methodBind] with no arguments and bool return value. */
   fun ptrcallNoArgsRetBool(methodBind: MemorySegment, instance: MemorySegment): Boolean {
@@ -40125,7 +40103,7 @@ object ObjectCalls {
     }
   }
 
-  /** Destroys a Godot Object pointer allocated via classdb_construct_object2. */
+  /** Destroys a Godot Object pointer allocated via classdb_construct_object3. */
   fun destroyObject(instance: MemorySegment) {
     if (instance.address() == 0L) return
     objectDestroy.invoke(instance)

@@ -132,7 +132,7 @@ object KanamaResourceFormatSaver {
       )
 
     val constructObject =
-      GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+      GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
     val objectSetInstance =
       GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
     val obj = constructObject.invoke(cls.parentName) as MemorySegment
@@ -182,7 +182,7 @@ object KanamaResourceFormatSaver {
   @JvmStatic
   fun createInstance(userdata: MemorySegment, notifyPostinitialize: Byte): MemorySegment {
     val constructParent =
-      GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+      GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
     val objectSetInstance =
       GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
     val obj = constructParent.invoke(cls.parentName) as MemorySegment

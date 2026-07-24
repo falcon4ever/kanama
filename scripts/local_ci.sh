@@ -230,6 +230,9 @@ python3 "$ROOT_DIR/scripts/check_ios_no_silent_stubs.py"
 stage "Godot version pin consistency"
 python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
 
+stage "GDExtension modernization + backend convergence"
+python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
+
 stage "vararg ptrcall audit"
 python3 "$ROOT_DIR/scripts/audit_vararg_ptrcalls.py"
 

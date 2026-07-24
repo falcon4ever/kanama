@@ -453,7 +453,7 @@ class KanamaScript(
       propertyCount: Int = 0,
     ): MemorySegment {
       val constructObject =
-        GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+        GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
       val objectSetInstance =
         GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
       val obj = constructObject.invoke(cls.className) as MemorySegment
@@ -524,7 +524,7 @@ class KanamaScript(
 
     fun constructUnbound(): MemorySegment {
       val constructObject =
-        GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+        GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
       val objectSetInstance =
         GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
       val obj = constructObject.invoke(cls.className) as MemorySegment
@@ -695,11 +695,12 @@ class KanamaScript(
             "newScriptInstance: could not resolve the script resource for '${template.kotlinClassName}'. " +
               "Mark it @GlobalClass and name the file after the class so its res:// path is discoverable."
           )
+      // constructObject uses classdb_construct_object3 (task 62): a fresh Resource comes back
+      // already owned (refcount 1), so we do NOT take an extra reference here — the returned
+      // Resource's close() releases that owning +1 on the happy path, or releaseHandle in finally
+      // on failure. (Pre-task-62 this called retainHandle to claim a placeholder from
+      // construct_object2; construct3 makes that a double-own.)
       val baseHandle = ObjectCalls.constructObject("Resource")
-      // Own the fresh resource immediately (before attach) so the +1 is released on any error
-      // path, not just success — mirrors the task-43 owned-return convention. Balanced by the
-      // returned Resource's close() on the happy path, or releaseHandle in finally otherwise.
-      net.multigesture.kanama.api.RefCounted.retainHandle(baseHandle)
       var success = false
       try {
         withProgrammaticCreate(baseHandle.address()) {
@@ -892,7 +893,7 @@ class KanamaScript(
     @JvmStatic
     fun createInstance(userdata: MemorySegment, notifyPostinitialize: Byte): MemorySegment {
       val constructObject =
-        GodotFFI.lookup("classdb_construct_object2", FunctionDescriptor.of(ADDRESS, ADDRESS))
+        GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
       val objectSetInstance =
         GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
       val obj = constructObject.invoke(cls.parentName) as MemorySegment

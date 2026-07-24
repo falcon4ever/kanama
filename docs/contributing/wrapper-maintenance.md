@@ -94,36 +94,43 @@ and the collapse emission are locked by `check_ios_policies`, and the on-device
 self-test matrix carries a `refcounted-ret-owns-plus1` refcount probe
 (duplicate() → refcount 1 → close()).
 
-### Freshly created resources and the `ResourceSaver.save` guard
+### Freshly created resources own their reference — *close what you create* (tasks 61/62)
 
-`X.create()` factories return a **non-owning** wrapper: it holds only Godot's
-construction placeholder (refcount 1, `refcount_init` still set), *not* an owned
-`+1`. That is deliberate — it matches GDScript's `MyResource.new()` idiom where
-you create a resource, assign it to the engine (a mesh, a material slot, the
-scene tree), and never explicitly free it (`RefCounted.close()`'s contract says
-so). An owning `create()` would leak every such assign-and-forget, because
-there is no wrapper finalizer to release the reference.
+`X.create()` factories return an **owning** wrapper. All backends construct via
+`classdb_construct_object3` (Godot 4.7), which returns a RefCounted subtype
+**already owned** (refcount 1) — Godot's own contract: *"the caller … is
+responsible for decrementing it again when the object is no longer needed."* No
+hand-rolled `init_ref` claim: the wrapper owns its `+1` straight out of
+construction, balanced by `close()` (or `use { }`).
 
-The one hazard is passing a freshly created resource **by value to a method that
-takes `const Ref<Resource>&` and releases its transient `Ref` on return** — the
-canonical case is `ResourceSaver.save`. The engine's `PtrToArg<Ref<Resource>>`
-claims the placeholder and drops it on return; for a resource whose only
-reference *was* that placeholder, the refcount hits zero and the object is freed
-while its Kotlin wrapper still points at it (issue #81 — a JVM SIGSEGV on the
-next touch, after the file has already been written).
+This is what makes handing a created resource to the engine safe. When you pass
+it to a `Ref<>`-taking sink — a surface-override material, a node property,
+`ResourceSaver.save` — the engine takes **its own** reference on top of the
+wrapper's. A later `close()`/`use { }` then drops only the wrapper's `+1`, so the
+resource survives for the engine (issue #91 — previously, on the deprecated
+`construct_object2` path, `create()` was non-owning and `close()` dropped the
+engine's only reference, so the material/mesh vanished from the saved scene).
+Two `Ref<Material>` sinks (surface override + material override) plus a
+`create_refcount=1` assertion are guarded by the `MaterialHandoffSmoke` row in
+`scripts/runtime_smoke.sh`; iOS guards the same on-device in its
+`ObjectCalls` self-test.
 
-The fix is a guard inside the save ptrcall helper
-(`ObjectCalls.ptrcallWithObjectStringLongArgsRetLong`, the sole wrapper of its
-`(Object, String, int64) -> int64` shape): take a protective `reference()`
-before the call, then release it **only if `get_reference_count() > 1`
-afterward**. When the call consumed the sole reference the protective ref is
-kept — the resource survives and becomes wrapper-owned, so `close()` frees it
-once; an already-owned resource (loaded/cached, scene-held) is restored to its
-original count, a balanced no-op. The desktop helper is hand-written in
-`ObjectCalls.kt`; the iOS mirror is hand-written too
-(`IOS_HANDWRITTEN_HELPERS`), so `ResourceSaver` stays fully generated on both
-platforms. Covered by the `issue81 packed_scene_save` row in
-`scripts/runtime_smoke.sh`.
+The contract is the ordinary `AutoCloseable` one: **close what you create.** A
+created resource that is never closed leaks its `+1` (Godot prints
+`Leaked instance: <Class>` at exit in debug/editor runs — the same signal the
+smoke gates on). Prefer `X.create().use { … }`, or assign it and `close()` after.
+A `getMesh()`/`getMaterial()`-style read-back is *also* an owned return (see
+[RefCounted Return Ownership](#refcounted-return-ownership) above) and must be
+closed too — forgetting one leaks the resource it points at.
+
+> **Issue #81 is subsumed.** Before the `construct_object3` migration (task 62),
+> `create()` was non-owning, so `ResourceSaver.save`'s transient `Ref` could drop
+> a fresh resource's only reference to zero and free it mid-call (issue #81, a JVM
+> SIGSEGV), which a protective-reference guard in the save ptrcall helper worked
+> around. With `construct_object3` the wrapper's own `+1` outlives the transient
+> `Ref`, so the guard was **removed** — `save` needs no special-casing. The
+> `issue81 packed_scene_save` row (`ref_after_save=1`, `alive_after_save=true`)
+> proves the fresh resource survives save with no guard.
 
 Two **dynamic** paths share this ownership problem: `ClassDB.instantiate` and
 `ClassDB.class_call_static` both return a Variant that holds the fresh

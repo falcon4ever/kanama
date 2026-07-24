@@ -89,6 +89,7 @@ class WrapperConvenienceProbe(val godotObject: MemorySegment) {
 
     key.setKeycode(InputEventKey.KEY_W)
     key.setPressed(true)
+    key.close() // close what you create (task 61) — this probe otherwise models a leak
   }
 
   fun resourceFactoryConveniences(resource: Resource, mesh: Mesh) {
@@ -100,6 +101,10 @@ class WrapperConvenienceProbe(val godotObject: MemorySegment) {
     surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
     surfaceTool.createFrom(mesh, 0)
     surfaceTool.commit(arrayMesh)
+    // close what you create (task 61) — these factories return owned wrappers.
+    meshLibrary.close()
+    meshDataTool.close()
+    surfaceTool.close()
   }
 
   fun animationConveniences(
