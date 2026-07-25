@@ -1159,6 +1159,37 @@ tasks.register("stageWebPlatformerProject") {
                 }
             }
 
+        // The demo targets Forward+ (with a mobile gl_compatibility override); the Web
+        // template only runs the Compatibility renderer, so pin it explicitly and turn off
+        // screen-space AA -- Compatibility rejects it with a console error on every run,
+        // which would trip the smoke's zero-console-errors gate (match3 precedent above).
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
+        val screenSpaceAa = "anti_aliasing/quality/screen_space_aa=1"
+        check(stagedProjectText.contains(forwardFeature)) {
+            "platformer renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(mobileRenderer)) {
+            "platformer mobile renderer setting changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(screenSpaceAa)) {
+            "platformer screen-space AA setting changed; update the Web staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    forwardFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    mobileRenderer,
+                    "renderer/rendering_method=\"gl_compatibility\"\n$mobileRenderer",
+                )
+                .replace(screenSpaceAa, "anti_aliasing/quality/screen_space_aa=0")
+        )
+
         val shell = stagingDir.resolve("kanama-web/shell.html")
         val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
         shell.writeText(
