@@ -7,7 +7,9 @@
       "className": "Node",
       "methodName": "get_child_count",
       "hash": 894402480,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "int",
       "shape": "BOOL_RET_INT",
       "executionMode": "IMMEDIATE_RESULT",
@@ -33,7 +35,9 @@
       "className": "Node2D",
       "methodName": "set_position",
       "hash": 743155724,
-      "arguments": ["Vector2"],
+      "arguments": [
+        "Vector2"
+      ],
       "returnType": "void",
       "shape": "VECTOR2_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -72,7 +76,11 @@
       "className": "CanvasItem",
       "methodName": "draw_texture",
       "hash": 520200117,
-      "arguments": ["Texture2D", "Vector2", "Color"],
+      "arguments": [
+        "Texture2D",
+        "Vector2",
+        "Color"
+      ],
       "returnType": "void",
       "shape": "TEXTURE2D_VECTOR2_COLOR_ARGS",
       "executionMode": "QUEUED_MUTATION",
@@ -85,7 +93,11 @@
       "className": "ResourceLoader",
       "methodName": "load",
       "hash": 3358495409,
-      "arguments": ["String", "String", "enum::ResourceLoader.CacheMode"],
+      "arguments": [
+        "String",
+        "String",
+        "enum::ResourceLoader.CacheMode"
+      ],
       "returnType": "Resource",
       "shape": "STRING_STRING_LONG_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -98,10 +110,14 @@
       "className": "Object",
       "methodName": "emit_signal",
       "hash": 4047867050,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "enum::Error",
       "isVararg": true,
-      "typedVarargTail": ["int"],
+      "typedVarargTail": [
+        "int"
+      ],
       "shape": "STRINGNAME_INT_RET_INT",
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
@@ -152,7 +168,9 @@
       "className": "ClassDB",
       "methodName": "instantiate",
       "hash": 2760726917,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "Variant",
       "shape": "STRINGNAME_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -165,7 +183,11 @@
       "className": "Node",
       "methodName": "add_child",
       "hash": 3863233950,
-      "arguments": ["Node", "bool", "enum::Node.InternalMode"],
+      "arguments": [
+        "Node",
+        "bool",
+        "enum::Node.InternalMode"
+      ],
       "returnType": "void",
       "shape": "OBJECT_BOOL_LONG_ARGS",
       "executionMode": "QUEUED_MUTATION",
@@ -178,7 +200,9 @@
       "className": "Node",
       "methodName": "remove_child",
       "hash": 1078189570,
-      "arguments": ["Node"],
+      "arguments": [
+        "Node"
+      ],
       "returnType": "void",
       "shape": "OBJECT_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -204,7 +228,9 @@
       "className": "Sprite2D",
       "methodName": "set_texture",
       "hash": 4051416890,
-      "arguments": ["Texture2D"],
+      "arguments": [
+        "Texture2D"
+      ],
       "returnType": "void",
       "shape": "OBJECT_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -217,7 +243,9 @@
       "className": "Node",
       "methodName": "get_node_or_null",
       "hash": 2734337346,
-      "arguments": ["NodePath"],
+      "arguments": [
+        "NodePath"
+      ],
       "returnType": "Node",
       "shape": "NODEPATH_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -230,7 +258,9 @@
       "className": "PackedScene",
       "methodName": "instantiate",
       "hash": 2628778455,
-      "arguments": ["enum::PackedScene.GenEditState"],
+      "arguments": [
+        "enum::PackedScene.GenEditState"
+      ],
       "returnType": "Node",
       "shape": "LONG_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -269,7 +299,11 @@
       "className": "Input",
       "methodName": "set_custom_mouse_cursor",
       "hash": 703945977,
-      "arguments": ["Resource", "enum::Input.CursorShape", "Vector2"],
+      "arguments": [
+        "Resource",
+        "enum::Input.CursorShape",
+        "Vector2"
+      ],
       "returnType": "void",
       "shape": "OBJECT_LONG_VECTOR2_ARGS",
       "executionMode": "IMMEDIATE_RESULT",
@@ -282,7 +316,11 @@
       "className": "Object",
       "methodName": "connect",
       "hash": 1518946055,
-      "arguments": ["StringName", "Callable", "int"],
+      "arguments": [
+        "StringName",
+        "Callable",
+        "int"
+      ],
       "returnType": "enum::Error",
       "shape": "STRINGNAME_CALLABLE_LONG_RET_LONG",
       "executionMode": "IMMEDIATE_RESULT",
@@ -295,7 +333,9 @@
       "className": "Object",
       "methodName": "is_class",
       "hash": 2619796661,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "bool",
       "shape": "STRINGNAME_RET_BOOL",
       "executionMode": "IMMEDIATE_RESULT",
@@ -361,10 +401,14 @@
       "className": "Object",
       "methodName": "emit_signal",
       "hash": 4047867050,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "enum::Error",
       "isVararg": true,
-      "typedVarargTail": ["Vector2i"],
+      "typedVarargTail": [
+        "Vector2i"
+      ],
       "shape": "STRINGNAME_VECTOR2I_RET_INT",
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
@@ -389,7 +433,9 @@
       "className": "Node2D",
       "methodName": "set_scale",
       "hash": 743155724,
-      "arguments": ["Vector2"],
+      "arguments": [
+        "Vector2"
+      ],
       "returnType": "void",
       "shape": "VECTOR2_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -415,7 +461,9 @@
       "className": "CanvasItem",
       "methodName": "set_modulate",
       "hash": 2920490490,
-      "arguments": ["Color"],
+      "arguments": [
+        "Color"
+      ],
       "returnType": "void",
       "shape": "COLOR_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -442,7 +490,11 @@
       "className": "Object",
       "methodName": "connect",
       "hash": 1518946055,
-      "arguments": ["StringName", "Callable", "int"],
+      "arguments": [
+        "StringName",
+        "Callable",
+        "int"
+      ],
       "returnType": "enum::Error",
       "shape": "STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG",
       "executionMode": "IMMEDIATE_RESULT",
@@ -456,7 +508,9 @@
       "className": "Object",
       "methodName": "emit_signal",
       "hash": 4047867050,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "enum::Error",
       "isVararg": true,
       "typedVarargTail": [],
@@ -497,7 +551,9 @@
       "className": "Tween",
       "methodName": "set_parallel",
       "hash": 1942052223,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "Tween",
       "shape": "BOOL_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -511,7 +567,12 @@
       "className": "Tween",
       "methodName": "tween_property",
       "hash": 4049770449,
-      "arguments": ["Object", "NodePath", "Variant", "float"],
+      "arguments": [
+        "Object",
+        "NodePath",
+        "Variant",
+        "float"
+      ],
       "returnType": "PropertyTweener",
       "shape": "OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -525,7 +586,12 @@
       "className": "Tween",
       "methodName": "tween_property",
       "hash": 4049770449,
-      "arguments": ["Object", "NodePath", "Variant", "float"],
+      "arguments": [
+        "Object",
+        "NodePath",
+        "Variant",
+        "float"
+      ],
       "returnType": "PropertyTweener",
       "shape": "OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -538,7 +604,9 @@
       "className": "PropertyTweener",
       "methodName": "set_trans",
       "hash": 1899107404,
-      "arguments": ["enum::Tween.TransitionType"],
+      "arguments": [
+        "enum::Tween.TransitionType"
+      ],
       "returnType": "PropertyTweener",
       "shape": "LONG_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -551,7 +619,9 @@
       "className": "PropertyTweener",
       "methodName": "set_ease",
       "hash": 1080455622,
-      "arguments": ["enum::Tween.EaseType"],
+      "arguments": [
+        "enum::Tween.EaseType"
+      ],
       "returnType": "PropertyTweener",
       "shape": "LONG_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
@@ -564,7 +634,9 @@
       "className": "GPUParticles2D",
       "methodName": "set_emitting",
       "hash": 2586408642,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "void",
       "shape": "BOOL_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -606,7 +678,9 @@
       "className": "AudioStreamPlayer",
       "methodName": "set_stream",
       "hash": 2210767741,
-      "arguments": ["AudioStream"],
+      "arguments": [
+        "AudioStream"
+      ],
       "returnType": "void",
       "shape": "OBJECT_ARG",
       "executionMode": "IMMEDIATE_RESULT",
@@ -620,7 +694,9 @@
       "className": "AudioStreamPlayer",
       "methodName": "set_bus",
       "hash": 3304788590,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "void",
       "shape": "STRINGNAME_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -634,7 +710,9 @@
       "className": "AudioStreamPlayer",
       "methodName": "set_volume_db",
       "hash": 373806689,
-      "arguments": ["float"],
+      "arguments": [
+        "float"
+      ],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -648,7 +726,9 @@
       "className": "AudioStreamPlayer",
       "methodName": "set_pitch_scale",
       "hash": 373806689,
-      "arguments": ["float"],
+      "arguments": [
+        "float"
+      ],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -662,7 +742,9 @@
       "className": "AudioStreamPlayer",
       "methodName": "play",
       "hash": 1958160172,
-      "arguments": ["float"],
+      "arguments": [
+        "float"
+      ],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -690,7 +772,9 @@
       "className": "SceneTree",
       "methodName": "quit",
       "hash": 1995695955,
-      "arguments": ["int"],
+      "arguments": [
+        "int"
+      ],
       "returnType": "void",
       "shape": "LONG_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -704,7 +788,9 @@
       "className": "Node2D",
       "methodName": "set_rotation",
       "hash": 373806689,
-      "arguments": ["float"],
+      "arguments": [
+        "float"
+      ],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -718,7 +804,9 @@
       "className": "CanvasItem",
       "methodName": "set_visible",
       "hash": 2586408642,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "void",
       "shape": "BOOL_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -732,7 +820,9 @@
       "className": "AnimatedSprite2D",
       "methodName": "set_flip_v",
       "hash": 2586408642,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "void",
       "shape": "BOOL_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -746,7 +836,9 @@
       "className": "AnimatedSprite2D",
       "methodName": "set_flip_h",
       "hash": 2586408642,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "void",
       "shape": "BOOL_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -760,7 +852,9 @@
       "className": "AnimatedSprite2D",
       "methodName": "set_animation",
       "hash": 3304788590,
-      "arguments": ["StringName"],
+      "arguments": [
+        "StringName"
+      ],
       "returnType": "void",
       "shape": "STRINGNAME_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -774,7 +868,11 @@
       "className": "AnimatedSprite2D",
       "methodName": "play",
       "hash": 3269405555,
-      "arguments": ["StringName", "float", "bool"],
+      "arguments": [
+        "StringName",
+        "float",
+        "bool"
+      ],
       "returnType": "void",
       "shape": "NOARGS_VOID",
       "executionMode": "QUEUED_MUTATION",
@@ -802,7 +900,9 @@
       "className": "RigidBody2D",
       "methodName": "set_linear_velocity",
       "hash": 743155724,
-      "arguments": ["Vector2"],
+      "arguments": [
+        "Vector2"
+      ],
       "returnType": "void",
       "shape": "VECTOR2_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -816,7 +916,9 @@
       "className": "CollisionShape2D",
       "methodName": "set_disabled",
       "hash": 2586408642,
-      "arguments": ["bool"],
+      "arguments": [
+        "bool"
+      ],
       "returnType": "void",
       "shape": "BOOL_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -830,7 +932,9 @@
       "className": "Timer",
       "methodName": "start",
       "hash": 1392008558,
-      "arguments": ["float"],
+      "arguments": [
+        "float"
+      ],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -872,7 +976,9 @@
       "className": "PathFollow2D",
       "methodName": "set_progress_ratio",
       "hash": 373806689,
-      "arguments": ["float"],
+      "arguments": [
+        "float"
+      ],
       "returnType": "void",
       "shape": "DOUBLE_ARG",
       "executionMode": "IMMEDIATE_RESULT",
@@ -886,7 +992,9 @@
       "className": "Label",
       "methodName": "set_text",
       "hash": 83702148,
-      "arguments": ["String"],
+      "arguments": [
+        "String"
+      ],
       "returnType": "void",
       "shape": "STRINGNAME_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -900,7 +1008,10 @@
       "className": "Object",
       "methodName": "set_deferred",
       "hash": 3776071444,
-      "arguments": ["StringName", "Variant"],
+      "arguments": [
+        "StringName",
+        "Variant"
+      ],
       "returnType": "void",
       "shape": "STRINGNAME_BOOL_ARG",
       "executionMode": "QUEUED_MUTATION",
@@ -914,7 +1025,10 @@
       "className": "SceneTree",
       "methodName": "call_group",
       "hash": 1257962832,
-      "arguments": ["StringName", "StringName"],
+      "arguments": [
+        "StringName",
+        "StringName"
+      ],
       "returnType": "void",
       "isVararg": true,
       "typedVarargTail": [],
@@ -930,7 +1044,10 @@
       "className": "Input",
       "methodName": "is_action_pressed",
       "hash": 1558498928,
-      "arguments": ["StringName", "bool"],
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
       "returnType": "bool",
       "shape": "STRINGNAME_RET_BOOL_SINGLETON",
       "executionMode": "IMMEDIATE_RESULT",
@@ -993,17 +1110,469 @@
       "returnOwnership": "BORROWED",
       "semantics": "Return the node's borrowed parent as a Web node handle (interned in the owning script's table); null at the scene root.",
       "introducedBy": "60b-dodge"
+    },
+    {
+      "opcode": 74,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_position",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Node3D world-space position mutation; mirrored read-your-write in the Web position snapshot.",
+      "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 75,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "get_position",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the Node3D position from the Web read-your-write snapshot without an engine crossing.",
+      "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 76,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_rotation",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Node3D Euler-rotation mutation; mirrored read-your-write in the Web rotation snapshot.",
+      "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 77,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "get_rotation",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the Node3D Euler rotation from the Web read-your-write snapshot without an engine crossing.",
+      "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 78,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_scale",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Node3D scale mutation; mirrored read-your-write in the Web scale snapshot.",
+      "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 79,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "get_scale",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the Node3D scale from the Web read-your-write snapshot without an engine crossing.",
+      "introducedBy": "60c-web-3d"
+    },
+    {
+      "opcode": 80,
+      "scope": "class",
+      "className": "CanvasLayer",
+      "methodName": "set_visible",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a CanvasLayer visibility mutation (mobile-control overlay show/hide).",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 81,
+      "scope": "class",
+      "className": "WorldEnvironment",
+      "methodName": "get_environment",
+      "hash": 3082064660,
+      "arguments": [],
+      "returnType": "Environment",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return the WorldEnvironment's borrowed Environment resource as a Web browser handle.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 82,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_bg_energy_multiplier",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue an Environment background energy-multiplier mutation on a resource handle.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 83,
+      "scope": "class",
+      "className": "OS",
+      "methodName": "has_feature",
+      "hash": 3927539163,
+      "arguments": [
+        "String"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query an OS feature tag (e.g. android/ios) through the active script's proxy singleton.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 84,
+      "scope": "class",
+      "className": "Light3D",
+      "methodName": "set_param",
+      "hash": 1722734213,
+      "arguments": [
+        "enum::Light3D.Param",
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "LONG_DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Light3D parameter mutation (PARAM_ENERGY=light_energy, PARAM_SHADOW_OPACITY=shadow_opacity) on a node handle.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 85,
+      "scope": "class",
+      "className": "RenderingServer",
+      "methodName": "get_current_rendering_method",
+      "hash": 201670096,
+      "arguments": [],
+      "returnType": "String",
+      "shape": "NOARGS_RET_STRING_SINGLETON",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the active renderer name (gl_compatibility on the Web export) from a per-script snapshot the proxy seeds at ready.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 86,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "action_press",
+      "hash": 1713091165,
+      "arguments": [
+        "StringName",
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Press an input action through the active script's proxy singleton (Web bakes GDScript default strength 1.0, the only value the platformer uses).",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 87,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "action_release",
+      "hash": 3304788590,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Release an input action through the active script's proxy singleton.",
+      "introducedBy": "60c-platformer"
+    },
+    {
+      "opcode": 88,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "set_velocity",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a CharacterBody3D velocity mutation (character controller physics tick).",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 89,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "get_velocity",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the CharacterBody3D velocity from the Web read-your-write snapshot.",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 90,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "move_and_slide",
+      "hash": 2240911060,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Run CharacterBody3D.move_and_slide in Godot's physics step (flushes the queued velocity first).",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 91,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "is_on_floor",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query CharacterBody3D floor contact after move_and_slide.",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 92,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "is_action_just_pressed",
+      "hash": 1558498928,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query whether an input action was just pressed this frame (character jump), via the active script proxy singleton.",
+      "introducedBy": "60d-physics"
+    },
+    {
+      "opcode": 93,
+      "scope": "class",
+      "className": "GPUParticles3D",
+      "methodName": "set_emitting",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle a GPUParticles3D emission (coin/trail/brick effects).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 94,
+      "scope": "class",
+      "className": "GPUParticles3D",
+      "methodName": "restart",
+      "hash": 107499316,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Restart a GPUParticles3D burst (brick break).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 95,
+      "scope": "class",
+      "className": "CollisionShape3D",
+      "methodName": "set_disabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Disable a CollisionShape3D (brick after break).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 96,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "set_stream_paused",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Pause/resume an AudioStreamPlayer stream (footsteps).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 97,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_visible",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle Node3D visibility (mesh hide).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 98,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "is_in_group",
+      "hash": 2619796661,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Query group membership (brick checks the player group).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 99,
+      "scope": "class",
+      "className": "AnimationPlayer",
+      "methodName": "set_speed_scale",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Set AnimationPlayer speed scale (walk speed).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 100,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "reload_current_scene",
+      "hash": 166280745,
+      "arguments": [],
+      "returnType": "enum::Error",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Reload the current scene (player fell off the level).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 101,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_rotation_degrees",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Node3D rotation_degrees mutation (camera view).",
+      "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 102,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "get_rotation_degrees",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "SNAPSHOT_READ",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read Node3D rotation_degrees from the Web snapshot (camera view).",
+      "introducedBy": "60d-platformer"
     }
   ],
   "compositions": [
     {
       "name": "ClassDB.instantiate_AudioStreamPlayer",
-      "opcodes": [12],
+      "opcodes": [
+        12
+      ],
       "semantics": "Compose the existing ClassDB.instantiate call with class name AudioStreamPlayer; the returned node handle is OWNED."
     },
     {
       "name": "AudioStreamPlayer.set_stream_from_path",
-      "opcodes": [7, 46],
+      "opcodes": [
+        7,
+        46
+      ],
       "semantics": "Load with type AudioStream and CACHE_MODE_REUSE, synchronously assign a successful RETAINED_REFCOUNTED result, then release the temporary wrapper. A failed load performs no assignment, leaves the prior stream unchanged, and owns no handle."
     }
   ]

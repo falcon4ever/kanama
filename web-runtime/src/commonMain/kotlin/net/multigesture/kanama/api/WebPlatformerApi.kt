@@ -1,0 +1,184 @@
+@file:OptIn(InternalKanamaBackendApi::class)
+
+package net.multigesture.kanama.api
+
+import net.multigesture.kanama.backend.CharacterBody3DBackendContractProbe
+import net.multigesture.kanama.backend.EnvironmentBackendContractProbe
+import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.backend.Light3DBackendContractProbe
+import net.multigesture.kanama.backend.Node3DBackendContractProbe
+import net.multigesture.kanama.backend.OSBackendContractProbe
+import net.multigesture.kanama.backend.RenderingServerBackendContractProbe
+import net.multigesture.kanama.backend.WorldEnvironmentBackendContractProbe
+import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.web.WebObjectId
+
+private fun BackendGodotHandle.bool3(descriptor: net.multigesture.kanama.backend.GodotCallDescriptor, value: Boolean) =
+  GodotBackendCalls.invokeBoolArg(descriptor, this, value)
+
+/**
+ * Web API surface for the 3D rendering foundation (Task 60c).
+ *
+ * Shared Godot classes live in [WebGodotApi]; the 3D scene-graph, lighting, and environment classes
+ * the 3D platformer drives live here and are scanned by the fail-loud Web gameplay coverage gate.
+ * Transform reads round-trip through the read-your-write snapshot; write-only render-tuning
+ * properties (whose getters the demo never calls) surface as nonblocking unsupported families.
+ */
+open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  var position: Vector3
+    get() =
+      Node3DBackendContractProbe(backendHandle).position.let { Vector3(it.x, it.y, it.z) }
+    set(value) {
+      Node3DBackendContractProbe(backendHandle).position =
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
+    }
+
+  var rotation: Vector3
+    get() =
+      Node3DBackendContractProbe(backendHandle).rotation.let { Vector3(it.x, it.y, it.z) }
+    set(value) {
+      Node3DBackendContractProbe(backendHandle).rotation =
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
+    }
+
+  var scale: Vector3
+    get() = Node3DBackendContractProbe(backendHandle).scale.let { Vector3(it.x, it.y, it.z) }
+    set(value) {
+      Node3DBackendContractProbe(backendHandle).scale =
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
+    }
+
+  var rotationDegrees: Vector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(D.NODE3D_GET_ROTATION_DEGREES, backendHandle).let {
+        Vector3(it.x, it.y, it.z)
+      }
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        D.NODE3D_SET_ROTATION_DEGREES,
+        backendHandle,
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat()),
+      )
+    }
+
+  /** Write-only on Web (the demos only set visibility). */
+  var visible: Boolean
+    get() = unsupportedWebGameplayFamily("Node3D.get_visible")
+    set(value) {
+      backendHandle.bool3(D.NODE3D_SET_VISIBLE, value)
+    }
+
+  fun hide() {
+    visible = false
+  }
+}
+
+class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
+  fun setEmitting(emitting: Boolean) {
+    backendHandle.bool3(D.GPUPARTICLES3D_SET_EMITTING, emitting)
+  }
+
+  fun restart(keepSeed: Boolean = false) {
+    backendHandle.bool3(D.GPUPARTICLES3D_RESTART, keepSeed)
+  }
+}
+
+class CollisionShape3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  fun setDisabled(disabled: Boolean) {
+    backendHandle.bool3(D.COLLISIONSHAPE3D_SET_DISABLED, disabled)
+  }
+}
+
+class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  fun setSpeedScale(scale: Double) {
+    GodotBackendCalls.invokeDoubleArg(D.ANIMATIONPLAYER_SET_SPEED_SCALE, backendHandle, scale)
+  }
+}
+
+open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
+
+class Camera3D(godotObject: GodotHandle) : Node3D(godotObject)
+
+/** 3D physics body base (Task 60d). */
+open class PhysicsBody3D(godotObject: GodotHandle) : Node3D(godotObject)
+
+open class StaticBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject)
+
+/** Kinematic character controller: set [velocity] then [moveAndSlide] from `@OnPhysicsProcess`. */
+class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
+  var velocity: Vector3
+    get() =
+      CharacterBody3DBackendContractProbe(backendHandle).velocity.let { Vector3(it.x, it.y, it.z) }
+    set(value) {
+      CharacterBody3DBackendContractProbe(backendHandle).velocity =
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
+    }
+
+  fun moveAndSlide(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).moveAndSlide()
+
+  fun isOnFloor(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnFloor()
+}
+
+/** 3D area monitor: emits body_entered when a physics body overlaps (coin/trigger pickups). */
+open class Area3D(godotObject: GodotHandle) : Node3D(godotObject)
+
+open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject)
+
+open class GeometryInstance3D(godotObject: GodotHandle) : VisualInstance3D(godotObject)
+
+open class Light3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
+  protected fun setParam(param: Long, value: Double) {
+    Light3DBackendContractProbe(backendHandle).setParam(param, value)
+  }
+
+  companion object {
+    const val PARAM_ENERGY: Long = 0L
+    const val PARAM_SHADOW_OPACITY: Long = 17L
+  }
+}
+
+class DirectionalLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
+  /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
+  var lightEnergy: Double
+    get() = unsupportedWebGameplayFamily("Light3D.get_light_energy")
+    set(value) {
+      setParam(PARAM_ENERGY, value)
+    }
+
+  /** Write-only on Web: shadow_opacity is Light3D.set_param(PARAM_SHADOW_OPACITY, value). */
+  var shadowOpacity: Double
+    get() = unsupportedWebGameplayFamily("Light3D.get_shadow_opacity")
+    set(value) {
+      setParam(PARAM_SHADOW_OPACITY, value)
+    }
+}
+
+class Environment(godotObject: GodotHandle) : Resource(godotObject.toBackendHandle()) {
+  /** Write-only on Web: the platformer lowers the Compatibility-renderer background energy. */
+  var backgroundEnergyMultiplier: Double
+    get() = unsupportedWebGameplayFamily("Environment.get_bg_energy_multiplier")
+    set(value) {
+      EnvironmentBackendContractProbe(backendHandle).setBgEnergyMultiplier(value)
+    }
+}
+
+class WorldEnvironment(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  val environment: Environment
+    get() =
+      WorldEnvironmentBackendContractProbe(backendHandle).getEnvironment()?.let { handle ->
+        Environment(WebObjectId(handle.backendToken().toInt()))
+      } ?: error("WorldEnvironment has no Environment resource")
+}
+
+object OS {
+  fun hasFeature(tagName: String): Boolean = OSBackendContractProbe.hasFeature(tagName)
+}
+
+object RenderingServer {
+  fun getCurrentRenderingMethod(): String =
+    RenderingServerBackendContractProbe.getCurrentRenderingMethod()
+}

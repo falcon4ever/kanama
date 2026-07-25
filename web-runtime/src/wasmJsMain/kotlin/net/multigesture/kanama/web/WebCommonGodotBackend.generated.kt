@@ -14,6 +14,7 @@ import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 /**
@@ -71,7 +72,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(43, 54, 55, 56, 61))
+    require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80, 93, 94, 95, 96, 97))
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
     when (descriptor.opcode) {
@@ -92,7 +93,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
     when (descriptor.executionMode) {
       GodotExecutionMode.QUEUED_MUTATION -> {
-        require(descriptor.opcode in setOf(48, 49, 50, 53, 62))
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99))
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
@@ -439,6 +440,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           51 -> registerReturnedBrowserObject(token)
           71 -> registerReturnedBrowserObject(token)
           73 -> registerReturnedNode(token)
+          81 -> registerReturnedBrowserObject(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }
@@ -704,6 +706,90 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         duration,
       )
     )
+  }
+
+  override fun invokeNoArgsRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotVector3 {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    return when (descriptor.opcode) {
+      75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
+      77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
+      79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
+      89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
+      102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
+      else -> null
+    }
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
+      )
+  }
+
+  override fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    val objectId = receiver.webId()
+    commands.appendVector3Mutation(descriptor.opcode, objectId, value.x, value.y, value.z)
+    when (descriptor.opcode) {
+      74 -> webWriteVector3Snapshot(objectId, WebVector3Slot.POSITION, value)
+      76 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION, value)
+      78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
+      88 -> webWriteVector3Snapshot(objectId, WebVector3Slot.VELOCITY, value)
+      101 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION_DEGREES, value)
+      else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
+    }
+  }
+
+  override fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 84)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(doubleValue.isFinite()) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
+    }
+    commands.appendLongDoubleMutation(descriptor.opcode, receiver.webId(), longValue, doubleValue)
+  }
+
+  override fun invokeNoArgsRetStringSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): String {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 85)
+    return webRenderingMethodSnapshot(requireActiveWebScriptHandle())
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "active script handle"
+      )
+  }
+
+  override fun invokeStringNameArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(86, 87))
+    commands.flush()
+    immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {

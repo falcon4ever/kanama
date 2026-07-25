@@ -23,6 +23,8 @@ val extraWebScriptSourceRoot: File? =
                     "match3" -> "kanamaWebMatch3ProjectDir"
                     "bunnymark" -> "kanamaWebBunnymarkProjectDir"
                     "dodge" -> "kanamaWebDodgeProjectDir"
+                    "web3d" -> "kanamaWebWeb3dProjectDir"
+                    "platformer" -> "kanamaWebPlatformerProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -30,6 +32,10 @@ val extraWebScriptSourceRoot: File? =
                 ?.let(rootProject::file)
                 ?.resolve("web")
                 ?.takeIf { it.resolve("kotlin-src").isDirectory }
+                ?: layout.projectDirectory
+                    .dir("src/web3dSmoke/web")
+                    .asFile
+                    .takeIf { demo == "web3d" && it.resolve("kotlin-src").isDirectory }
         }
 
 kotlin {
@@ -104,6 +110,15 @@ val webMatch3Export = layout.buildDirectory.dir("web-match3/export")
 val webDodgeSourceProject =
     providers.gradleProperty("kanamaWebDodgeProjectDir").orNull?.let(rootProject::file)
 val webDodgeStaging = layout.buildDirectory.dir("web-dodge/godot-project")
+// The web3d render smoke is a self-contained in-repo fixture (like the webSpike), not an
+// external demo checkout; an explicit -PkanamaWebWeb3dProjectDir can still override it.
+val webWeb3dSourceProject: File =
+    providers.gradleProperty("kanamaWebWeb3dProjectDir").orNull?.let(rootProject::file)
+        ?: layout.projectDirectory.dir("src/web3dSmoke").asFile
+val webWeb3dStaging = layout.buildDirectory.dir("web-web3d/godot-project")
+val webPlatformerSourceProject =
+    providers.gradleProperty("kanamaWebPlatformerProjectDir").orNull?.let(rootProject::file)
+val webPlatformerStaging = layout.buildDirectory.dir("web-platformer/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -885,6 +900,262 @@ tasks.register("stageWebDodgeProject") {
     }
 }
 
+tasks.register("stageWebWeb3dProject") {
+    group = "verification"
+    description = "Stages the minimal 3D render smoke with generated Web proxies (Task 60c)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    inputs.dir(webWeb3dSourceProject)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webWeb3dStaging)
+
+    doLast {
+        val sourceProject = webWeb3dSourceProject
+        check(sourceProject.resolve("main.tscn").isFile) {
+            "web3d-smoke project not found: $sourceProject"
+        }
+
+        fun sourceChecksum(): String {
+            val excludedRoots = setOf(".git", ".godot", ".gradle", ".kotlin", "build")
+            val digest = MessageDigest.getInstance("SHA-256")
+            sourceProject
+                .walkTopDown()
+                .filter { it.isFile }
+                .map { file -> file.relativeTo(sourceProject).invariantSeparatorsPath to file }
+                .filter { (path, _) ->
+                    excludedRoots.none { root -> path == root || path.startsWith("$root/") }
+                }
+                .sortedBy { it.first }
+                .forEach { (path, file) ->
+                    digest.update(path.toByteArray(Charsets.UTF_8))
+                    digest.update(0)
+                    digest.update(file.readBytes())
+                    digest.update(0)
+                }
+            return digest.digest().joinToString("") { "%02x".format(it) }
+        }
+
+        val checksumBefore = sourceChecksum()
+        val stagingDir = webWeb3dStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+            }
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
+        val expectedSources =
+            setOf(
+                "res://kotlin-src/Main.kt",
+                "res://kotlin-src/SmokeQuit.kt",
+                "res://kotlin-src/Player.kt",
+                "res://kotlin-src/Coin.kt",
+            )
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { line ->
+                    val columns = line.split('\t')
+                    check(columns.size == 3) { "Invalid Web proxy manifest row: $line" }
+                    columns[0] to columns[1]
+                }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "web3d Web proxy mappings are incomplete: expected=$expectedSources actual=${mappings.keys}"
+        }
+
+        val stagedReferences =
+            fileTree(stagingDir) {
+                    include("project.godot")
+                    include("**/*.tscn")
+                    include("**/*.tres")
+                }
+                .files
+        val usedMappings = mutableSetOf<String>()
+        stagedReferences.forEach { stagedFile ->
+            val original = stagedFile.readText()
+            val rewritten =
+                mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                    if (text.contains(sourcePath)) usedMappings += sourcePath
+                    text.replace(sourcePath, proxyPath)
+                }
+            if (rewritten != original) stagedFile.writeText(rewritten)
+            check(!rewritten.contains("res://kotlin-src/")) {
+                "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+            }
+        }
+        check(usedMappings == expectedSources) {
+            "Not every web3d script attachment was staged: used=$usedMappings"
+        }
+
+        val stagedProject = stagingDir.resolve("project.godot")
+        check(stagedProject.readText().contains("renderer/rendering_method=\"gl_compatibility\"")) {
+            "web3d renderer is no longer gl_compatibility; the Web export needs it"
+        }
+
+        val checksumAfter = sourceChecksum()
+        check(checksumAfter == checksumBefore) {
+            "web3d source project changed during staging: before=$checksumBefore after=$checksumAfter"
+        }
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val originalShell = shell.readText()
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        check(originalShell.contains(pageStart)) { "Missing Web shell bootstrap marker" }
+        shell.writeText(
+            originalShell.replace(
+                pageStart,
+                "$pageStart\n      globalThis.KanamaWebMode = \"web3d\";",
+            )
+        )
+    }
+}
+
+tasks.register("stageWebPlatformerProject") {
+    group = "verification"
+    description = "Stages the Starter-Kit-3D-Platformer with generated Web proxies (Task 60c/60d)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webPlatformerSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webPlatformerStaging)
+
+    doLast {
+        val sourceProject =
+            webPlatformerSourceProject
+                ?: error(
+                    "Pass -PkanamaWebPlatformerProjectDir=/absolute/path/to/kanama-demos/Starter-Kit-3D-Platformer"
+                )
+        check(sourceProject.resolve("scenes/main.tscn").isFile) {
+            "platformer project not found: $sourceProject"
+        }
+
+        val stagingDir = webPlatformerStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+                exclude("kotlin-src/**")
+                exclude("addons/kanama_tools/**")
+                exclude("addons/kanama/**")
+                exclude("export_presets.cfg")
+            }
+            into(stagingDir)
+        }
+        // The demo ships Android/iOS presets; the Web export needs the canonical Web preset.
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        val expectedSources =
+            setOf(
+                    "Main",
+                    "View",
+                    "Hud",
+                    "SmokeQuit",
+                    "Player",
+                    "Brick",
+                    "Cloud",
+                    "Coin",
+                    "PlatformFalling",
+                )
+                .map { "res://kotlin-src/$it.kt" }
+                .toSet()
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { it.split('\t').let { c -> c[0] to c[1] } }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "platformer Web proxy mappings incomplete: missing=${expectedSources - mappings.keys}"
+        }
+
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                val rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        text.replace(sourcePath, proxyPath)
+                    }
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        shell.writeText(
+            shell.readText()
+                .replace(pageStart, "$pageStart\n      globalThis.KanamaWebMode = \"platformer\";")
+        )
+    }
+}
+
 tasks.register<Exec>("importWebMatch3Project") {
     group = "verification"
     description = "Runs a headless Godot import of the disposable Match3 Web-proxy project."
@@ -1101,7 +1372,10 @@ fun stageTaskFor(demo: String): String =
         "match3" -> "stageWebMatch3Project"
         "bunnymark" -> "stageWebBunnymarkProject"
         "dodge" -> "stageWebDodgeProject"
-        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge)")
+        "web3d" -> "stageWebWeb3dProject"
+        "platformer" -> "stageWebPlatformerProject"
+        else ->
+            error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer)")
     }
 
 fun stagingDirFor(demo: String): File =
@@ -1109,7 +1383,10 @@ fun stagingDirFor(demo: String): File =
         "match3" -> webMatch3Staging.get().asFile
         "bunnymark" -> webBunnymarkStaging.get().asFile
         "dodge" -> webDodgeStaging.get().asFile
-        else -> error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge)")
+        "web3d" -> webWeb3dStaging.get().asFile
+        "platformer" -> webPlatformerStaging.get().asFile
+        else ->
+            error("Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer)")
     }
 
 tasks.register<Exec>("exportWeb") {

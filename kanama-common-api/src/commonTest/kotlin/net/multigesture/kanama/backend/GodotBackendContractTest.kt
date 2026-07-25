@@ -89,6 +89,115 @@ class GodotBackendContractTest {
       GodotCallShape.LONG_ARG,
       GodotExecutionMode.QUEUED_MUTATION,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_SET_POSITION,
+      3_460_891_852L,
+      GodotCallShape.VECTOR3_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_GET_POSITION,
+      3_360_562_783L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_SET_SCALE,
+      3_460_891_852L,
+      GodotCallShape.VECTOR3_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.CANVASLAYER_SET_VISIBLE,
+      2_586_408_642L,
+      GodotCallShape.BOOL_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.WORLDENVIRONMENT_GET_ENVIRONMENT,
+      3_082_064_660L,
+      GodotCallShape.NOARGS_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER,
+      373_806_689L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.OS_HAS_FEATURE,
+      3_927_539_163L,
+      GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.LIGHT3D_SET_PARAM,
+      1_722_734_213L,
+      GodotCallShape.LONG_DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD,
+      201_670_096L,
+      GodotCallShape.NOARGS_RET_STRING_SINGLETON,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUT_ACTION_PRESS,
+      1_713_091_165L,
+      GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUT_ACTION_RELEASE,
+      3_304_788_590L,
+      GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+  }
+
+  @Test
+  fun node3dProbeMirrorsTransformProperties() {
+    val backend = RecordingBackend()
+    GodotBackendCalls.install(backend)
+    val probe = Node3DBackendContractProbe(GodotHandle.fromBackendToken(17))
+
+    assertEquals(GodotVector3(0.0f, 0.0f, 0.0f), probe.position)
+    probe.position = GodotVector3(1.0f, 2.0f, 3.0f)
+    assertEquals(GodotVector3(1.0f, 2.0f, 3.0f), probe.position)
+    assertEquals(GodotVector3(0.0f, 0.0f, 0.0f), probe.rotation)
+    probe.rotation = GodotVector3(0.1f, 0.2f, 0.3f)
+    assertEquals(GodotVector3(0.1f, 0.2f, 0.3f), probe.rotation)
+    assertEquals(GodotVector3(1.0f, 1.0f, 1.0f), probe.scale)
+    probe.scale = GodotVector3(2.0f, 2.0f, 2.0f)
+    assertEquals(GodotVector3(2.0f, 2.0f, 2.0f), probe.scale)
+  }
+
+  @Test
+  fun platformerFamilyProbesUseTypedCalls() {
+    val backend = RecordingBackend()
+    GodotBackendCalls.install(backend)
+    val handle = GodotHandle.fromBackendToken(17)
+
+    CanvasLayerBackendContractProbe(handle).setVisible(true)
+    assertEquals(true, backend.canvasLayerVisible)
+    assertEquals(true, OSBackendContractProbe.hasFeature("android"))
+    assertEquals(false, OSBackendContractProbe.hasFeature("ios"))
+    val environment = WorldEnvironmentBackendContractProbe(handle).getEnvironment()
+    assertEquals(52L, environment?.backendToken())
+    EnvironmentBackendContractProbe(checkNotNull(environment)).setBgEnergyMultiplier(0.25)
+    assertEquals(82 to 0.25, backend.doubleArguments.last())
+    Light3DBackendContractProbe(handle).setParam(0L, 0.24)
+    Light3DBackendContractProbe(handle).setParam(17L, 0.85)
+    assertEquals(listOf(Triple(84, 0L, 0.24), Triple(84, 17L, 0.85)), backend.longDoubleArgs)
+    assertEquals(
+      "gl_compatibility",
+      RenderingServerBackendContractProbe.getCurrentRenderingMethod(),
+    )
+    InputActionBackendContractProbe.actionPress("jump")
+    InputActionBackendContractProbe.actionRelease("jump")
+    assertEquals(listOf(86 to "jump", 87 to "jump"), backend.singletonStringArgs)
   }
 
   @Test
@@ -338,6 +447,9 @@ class GodotBackendContractTest {
     var longArgument: Pair<Long, Long>? = null
     var queuedFree: Long? = null
     private var particlesEmitting = false
+    private var position3 = GodotVector3(0.0f, 0.0f, 0.0f)
+    private var rotation3 = GodotVector3(0.0f, 0.0f, 0.0f)
+    private var scale3 = GodotVector3(1.0f, 1.0f, 1.0f)
 
     override fun requireLive(handle: GodotHandle) {
       require(handle.backendToken() in setOf(17L, 31L, 41L, 51L, 52L, 53L, 61L, 62L, 63L, 71L))
@@ -366,14 +478,55 @@ class GodotBackendContractTest {
       return receiver
     }
 
+    var canvasLayerVisible: Boolean? = null
+
     override fun invokeBoolArg(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
       value: Boolean,
     ) {
-      assertEquals(43, descriptor.opcode)
-      particlesEmitting = value
+      require(descriptor.opcode in setOf(43, 80))
+      if (descriptor.opcode == 80) canvasLayerVisible = value else particlesEmitting = value
+    }
+
+    override fun invokeStringNameRetBoolSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ): Boolean {
+      assertEquals(83, descriptor.opcode)
+      return value == "android"
+    }
+
+    val longDoubleArgs = mutableListOf<Triple<Int, Long, Double>>()
+
+    override fun invokeLongDoubleArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      longValue: Long,
+      doubleValue: Double,
+    ) {
+      longDoubleArgs += Triple(descriptor.opcode, longValue, doubleValue)
+    }
+
+    override fun invokeNoArgsRetStringSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): String {
+      assertEquals(85, descriptor.opcode)
+      return "gl_compatibility"
+    }
+
+    val singletonStringArgs = mutableListOf<Pair<Int, String>>()
+
+    override fun invokeStringNameArgSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ) {
+      singletonStringArgs += descriptor.opcode to value
     }
 
     override fun invokeDoubleArg(
@@ -718,6 +871,32 @@ class GodotBackendContractTest {
       assertEquals(GodotColor(0.5f, 0.6f, 0.7f, 0.8f), finalValue)
       assertEquals(0.1, duration)
       return GodotHandle.fromBackendToken(63L)
+    }
+
+    override fun invokeNoArgsRetVector3(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): GodotVector3 =
+      when (descriptor.opcode) {
+        75 -> position3
+        77 -> rotation3
+        79 -> scale3
+        else -> error("Unexpected Vector3 read opcode=${descriptor.opcode}")
+      }
+
+    override fun invokeVector3Arg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotVector3,
+    ) {
+      when (descriptor.opcode) {
+        74 -> position3 = value
+        76 -> rotation3 = value
+        78 -> scale3 = value
+        else -> error("Unexpected Vector3 write opcode=${descriptor.opcode}")
+      }
     }
   }
 }

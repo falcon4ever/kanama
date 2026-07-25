@@ -1,0 +1,125 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
+[ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
+[ext_resource type="Script" path="res://kotlin-src/Player.kt" id="3_player"]
+[ext_resource type="Script" path="res://kotlin-src/Coin.kt" id="4_coin"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_1"]
+albedo_color = Color(0.92, 0.52, 0.20, 1)
+metallic = 0.1
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="Mat_Floor"]
+albedo_color = Color(0.35, 0.45, 0.55, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Coin"]
+albedo_color = Color(0.95, 0.78, 0.2, 1)
+metallic = 0.6
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.6, 0.45, 0.05, 1)
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 1
+background_color = Color(0.09, 0.11, 0.17, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.4, 0.45, 0.55, 1)
+ambient_light_energy = 0.6
+
+[sub_resource type="BoxShape3D" id="Shape_Floor"]
+size = Vector3(12, 0.5, 12)
+
+[sub_resource type="BoxShape3D" id="Shape_Player"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_Coin"]
+size = Vector3(0.6, 0.6, 0.6)
+
+[node name="Web3D" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 3, 0)
+shadow_enabled = true
+light_energy = 1.0
+
+[node name="Spinner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, -2)
+
+[node name="Box" type="MeshInstance3D" parent="Spinner"]
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("Mat_1")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="FloorShape" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("Shape_Floor")
+
+[node name="FloorMesh" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(6, 0, 0, 0, 0.25, 0, 0, 0, 6, 0, 0, 0)
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("Mat_Floor")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3, 0)
+script = ExtResource("3_player")
+
+[node name="PlayerShape" type="CollisionShape3D" parent="Player"]
+shape = SubResource("Shape_Player")
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="Player"]
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("Mat_1")
+
+[node name="Coin1" type="Area3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -1, 0.2, 0)
+script = ExtResource("4_coin")
+
+[node name="Coin1Shape" type="CollisionShape3D" parent="Coin1"]
+shape = SubResource("Shape_Coin")
+
+[node name="Coin1Mesh" type="MeshInstance3D" parent="Coin1"]
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("Mat_Coin")
+
+[node name="Coin2" type="Area3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 1, 0.2, 0)
+script = ExtResource("4_coin")
+
+[node name="Coin2Shape" type="CollisionShape3D" parent="Coin2"]
+shape = SubResource("Shape_Coin")
+
+[node name="Coin2Mesh" type="MeshInstance3D" parent="Coin2"]
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("Mat_Coin")
+
+[node name="Coin3" type="Area3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 3, 0.2, 0)
+script = ExtResource("4_coin")
+
+[node name="Coin3Shape" type="CollisionShape3D" parent="Coin3"]
+shape = SubResource("Shape_Coin")
+
+[node name="Coin3Mesh" type="MeshInstance3D" parent="Coin3"]
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("Mat_Coin")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2, 7)
+
+[node name="MobileControls" type="CanvasLayer" parent="."]
+
+[node name="SmokeQuit" type="Node" parent="."]
+script = ExtResource("2_smoke")
+
+[connection signal="body_entered" from="Coin1" to="Coin1" method="_on_body_entered"]
+[connection signal="body_entered" from="Coin2" to="Coin2" method="_on_body_entered"]
+[connection signal="body_entered" from="Coin3" to="Coin3" method="_on_body_entered"]

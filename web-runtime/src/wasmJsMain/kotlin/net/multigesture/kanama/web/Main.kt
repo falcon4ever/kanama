@@ -167,6 +167,15 @@ fun kanamaWebProcess(objectId: Int, delta: Double): Int {
   }
 }
 
+@JsExport
+fun kanamaWebPhysicsProcess(objectId: Int, delta: Double): Int {
+  return webCallbackBoundary(objectId, "_physics_process") { record ->
+    commands.clear()
+    KanamaWebProjectRegistry.physicsProcess(record.scriptId, record.script, delta)
+    commands.flush()
+  }
+}
+
 /** Match3's single frame pump; the JavaScript bridge invokes it only for the Main script. */
 @JsExport
 fun kanamaWebFrame(objectId: Int, delta: Double): Int {
@@ -424,6 +433,40 @@ fun kanamaWebLoadNode2DSnapshot(
     modulateA,
     rotation,
   )
+  return 1
+}
+
+@JsExport
+fun kanamaWebLoadNode3DSnapshot(
+  objectId: Int,
+  positionX: Double,
+  positionY: Double,
+  positionZ: Double,
+  rotationX: Double,
+  rotationY: Double,
+  rotationZ: Double,
+  scaleX: Double,
+  scaleY: Double,
+  scaleZ: Double,
+): Int {
+  loadWebNode3DSnapshot(
+    objectId,
+    positionX,
+    positionY,
+    positionZ,
+    rotationX,
+    rotationY,
+    rotationZ,
+    scaleX,
+    scaleY,
+    scaleZ,
+  )
+  return 1
+}
+
+@JsExport
+fun kanamaWebLoadRenderingMethodSnapshot(objectId: Int, value: String): Int {
+  loadWebRenderingMethodSnapshot(objectId, value)
   return 1
 }
 

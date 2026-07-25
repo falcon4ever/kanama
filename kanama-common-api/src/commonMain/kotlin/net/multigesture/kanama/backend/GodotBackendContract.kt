@@ -56,6 +56,11 @@ enum class GodotCallShape {
   COLOR_ARG,
   OBJECT_NODEPATH_VECTOR2_DOUBLE_RET_HANDLE,
   OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE,
+  NOARGS_RET_VECTOR3,
+  VECTOR3_ARG,
+  LONG_DOUBLE_ARG,
+  NOARGS_RET_STRING_SINGLETON,
+  STRINGNAME_ARG_SINGLETON,
 }
 
 @InternalKanamaBackendApi
@@ -88,6 +93,9 @@ data class GodotCallDescriptor(
 
 /** Platform-neutral immutable integer vector used by typed input signals. */
 @InternalKanamaBackendApi data class GodotVector2i(val x: Int, val y: Int)
+
+/** Platform-neutral immutable 3D vector used by the 3D node transform families. */
+@InternalKanamaBackendApi data class GodotVector3(val x: Float, val y: Float, val z: Float)
 
 /** Platform-neutral immutable rectangle snapshot. */
 @InternalKanamaBackendApi data class GodotRect2(val position: GodotVector2, val size: GodotVector2)
@@ -388,6 +396,46 @@ interface GodotBackendSpi {
     finalValue: GodotColor,
     duration: Double,
   ): GodotHandle?
+
+  fun invokeNoArgsRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotVector3
+
+  fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  )
+
+  fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton String query (no receiver): the platform backend supplies the calling context. */
+  fun invokeNoArgsRetStringSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): String {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton String-argument void call (no receiver): e.g. Input.action_press/action_release. */
+  fun invokeStringNameArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
 }
 
 /**
@@ -892,6 +940,55 @@ object GodotBackendCalls {
       finalValue,
       duration,
     )
+  }
+
+  fun invokeNoArgsRetVector3(descriptor: GodotCallDescriptor, receiver: GodotHandle): GodotVector3 {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_VECTOR3)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetVector3(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ) {
+    requireShape(descriptor, GodotCallShape.VECTOR3_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeVector3Arg(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    requireShape(descriptor, GodotCallShape.LONG_DOUBLE_ARG)
+    require(doubleValue.isFinite()) { "Godot Double argument must be finite" }
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeLongDoubleArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      longValue,
+      doubleValue,
+    )
+  }
+
+  fun invokeNoArgsRetStringSingleton(descriptor: GodotCallDescriptor): String {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_STRING_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeNoArgsRetStringSingleton(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeStringNameArgSingleton(descriptor: GodotCallDescriptor, value: String) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_ARG_SINGLETON)
+    val selected = requireBackend()
+    selected.invokeStringNameArgSingleton(descriptor, resolve(selected, descriptor), value)
   }
 
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
@@ -1442,6 +1539,12 @@ object InputBackendContractProbe {
       InitialGodotCallDescriptors.INPUT_IS_ACTION_PRESSED,
       action,
     )
+
+  fun isActionJustPressed(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.INPUT_IS_ACTION_JUST_PRESSED,
+      action,
+    )
 }
 
 /** Typed object-method Callable connection used for board wiring. */
@@ -1532,4 +1635,177 @@ class CanvasItemInputBackendContractProbe(private val handle: GodotHandle) {
       InitialGodotCallDescriptors.CANVASITEM_GET_LOCAL_MOUSE_POSITION,
       handle,
     )
+}
+
+/**
+ * Typed Node3D transform slice: the first 3D scene-graph family (Task 60c).
+ *
+ * position/rotation/scale share the Vector3 call shapes; each is mirrored read-your-write on the
+ * Web backend the same way Node2D.position is, so a script can read back a value it just wrote
+ * without a synchronous engine crossing.
+ */
+@InternalKanamaBackendApi
+class Node3DBackendContractProbe(val handle: GodotHandle) {
+  var position: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.NODE3D_GET_POSITION,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.NODE3D_SET_POSITION,
+        handle,
+        value,
+      )
+    }
+
+  var rotation: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.NODE3D_GET_ROTATION,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.NODE3D_SET_ROTATION,
+        handle,
+        value,
+      )
+    }
+
+  var scale: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(InitialGodotCallDescriptors.NODE3D_GET_SCALE, handle)
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.NODE3D_SET_SCALE,
+        handle,
+        value,
+      )
+    }
+}
+
+/** Typed CanvasLayer visibility slice used by the 3D platformer's mobile-control overlay. */
+@InternalKanamaBackendApi
+class CanvasLayerBackendContractProbe(private val handle: GodotHandle) {
+  fun setVisible(visible: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.CANVASLAYER_SET_VISIBLE,
+      handle,
+      visible,
+    )
+  }
+}
+
+/** Typed WorldEnvironment slice: fetch the borrowed Environment resource for tuning. */
+@InternalKanamaBackendApi
+class WorldEnvironmentBackendContractProbe(private val handle: GodotHandle) {
+  fun getEnvironment(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.WORLDENVIRONMENT_GET_ENVIRONMENT,
+      handle,
+    )
+}
+
+/** Typed Environment slice used by the 3D platformer's Compatibility-renderer tuning. */
+@InternalKanamaBackendApi
+class EnvironmentBackendContractProbe(private val handle: GodotHandle) {
+  fun setBgEnergyMultiplier(energy: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER,
+      handle,
+      energy,
+    )
+  }
+}
+
+/** Typed OS singleton feature query used by the 3D platformer's platform detection. */
+@InternalKanamaBackendApi
+object OSBackendContractProbe {
+  fun hasFeature(tagName: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.OS_HAS_FEATURE,
+      tagName,
+    )
+}
+
+/**
+ * Typed Light3D parameter slice used by the 3D platformer's Compatibility-renderer tuning.
+ *
+ * Godot's `light_energy` / `shadow_opacity` properties are backed by `set_param(param, value)`; the
+ * param index is the Light3D.Param enum (PARAM_ENERGY = 0, PARAM_SHADOW_OPACITY = 17).
+ */
+@InternalKanamaBackendApi
+class Light3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setParam(param: Long, value: Double) {
+    GodotBackendCalls.invokeLongDoubleArg(
+      InitialGodotCallDescriptors.LIGHT3D_SET_PARAM,
+      handle,
+      param,
+      value,
+    )
+  }
+}
+
+/**
+ * Typed CharacterBody3D slice: the first 3D physics family (Task 60d).
+ *
+ * velocity is mirrored read-your-write; move_and_slide/is_on_floor flush queued mutations then run
+ * synchronously in Godot's physics step. Called from a script's `@OnPhysicsProcess` tick.
+ */
+@InternalKanamaBackendApi
+class CharacterBody3DBackendContractProbe(private val handle: GodotHandle) {
+  var velocity: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.CHARACTERBODY3D_GET_VELOCITY,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.CHARACTERBODY3D_SET_VELOCITY,
+        handle,
+        value,
+      )
+    }
+
+  fun moveAndSlide(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_MOVE_AND_SLIDE,
+      handle,
+    )
+
+  fun isOnFloor(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_IS_ON_FLOOR,
+      handle,
+    )
+}
+
+/** Typed RenderingServer singleton query used by the 3D platformer's renderer branch. */
+@InternalKanamaBackendApi
+object RenderingServerBackendContractProbe {
+  fun getCurrentRenderingMethod(): String =
+    GodotBackendCalls.invokeNoArgsRetStringSingleton(
+      InitialGodotCallDescriptors.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD
+    )
+}
+
+/** Typed Input singleton action slice used by the 3D platformer's jump-button handlers. */
+@InternalKanamaBackendApi
+object InputActionBackendContractProbe {
+  fun actionPress(action: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(
+      InitialGodotCallDescriptors.INPUT_ACTION_PRESS,
+      action,
+    )
+  }
+
+  fun actionRelease(action: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(
+      InitialGodotCallDescriptors.INPUT_ACTION_RELEASE,
+      action,
+    )
+  }
 }

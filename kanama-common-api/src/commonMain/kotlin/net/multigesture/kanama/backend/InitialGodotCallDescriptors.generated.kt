@@ -806,4 +806,323 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE3D_SET_POSITION =
+    GodotCallDescriptor(
+      opcode = 74,
+      className = "Node3D",
+      methodName = "set_position",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_POSITION =
+    GodotCallDescriptor(
+      opcode = 75,
+      className = "Node3D",
+      methodName = "get_position",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 76,
+      className = "Node3D",
+      methodName = "set_rotation",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_ROTATION =
+    GodotCallDescriptor(
+      opcode = 77,
+      className = "Node3D",
+      methodName = "get_rotation",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_SCALE =
+    GodotCallDescriptor(
+      opcode = 78,
+      className = "Node3D",
+      methodName = "set_scale",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_SCALE =
+    GodotCallDescriptor(
+      opcode = 79,
+      className = "Node3D",
+      methodName = "get_scale",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CANVASLAYER_SET_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 80,
+      className = "CanvasLayer",
+      methodName = "set_visible",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val WORLDENVIRONMENT_GET_ENVIRONMENT =
+    GodotCallDescriptor(
+      opcode = 81,
+      className = "WorldEnvironment",
+      methodName = "get_environment",
+      hash = 3082064660L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER =
+    GodotCallDescriptor(
+      opcode = 82,
+      className = "Environment",
+      methodName = "set_bg_energy_multiplier",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OS_HAS_FEATURE =
+    GodotCallDescriptor(
+      opcode = 83,
+      className = "OS",
+      methodName = "has_feature",
+      hash = 3927539163L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val LIGHT3D_SET_PARAM =
+    GodotCallDescriptor(
+      opcode = 84,
+      className = "Light3D",
+      methodName = "set_param",
+      hash = 1722734213L,
+      shape = GodotCallShape.LONG_DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD =
+    GodotCallDescriptor(
+      opcode = 85,
+      className = "RenderingServer",
+      methodName = "get_current_rendering_method",
+      hash = 201670096L,
+      shape = GodotCallShape.NOARGS_RET_STRING_SINGLETON,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_ACTION_PRESS =
+    GodotCallDescriptor(
+      opcode = 86,
+      className = "Input",
+      methodName = "action_press",
+      hash = 1713091165L,
+      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_ACTION_RELEASE =
+    GodotCallDescriptor(
+      opcode = 87,
+      className = "Input",
+      methodName = "action_release",
+      hash = 3304788590L,
+      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_SET_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 88,
+      className = "CharacterBody3D",
+      methodName = "set_velocity",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_GET_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 89,
+      className = "CharacterBody3D",
+      methodName = "get_velocity",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_MOVE_AND_SLIDE =
+    GodotCallDescriptor(
+      opcode = 90,
+      className = "CharacterBody3D",
+      methodName = "move_and_slide",
+      hash = 2240911060L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_IS_ON_FLOOR =
+    GodotCallDescriptor(
+      opcode = 91,
+      className = "CharacterBody3D",
+      methodName = "is_on_floor",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_IS_ACTION_JUST_PRESSED =
+    GodotCallDescriptor(
+      opcode = 92,
+      className = "Input",
+      methodName = "is_action_just_pressed",
+      hash = 1558498928L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GPUPARTICLES3D_SET_EMITTING =
+    GodotCallDescriptor(
+      opcode = 93,
+      className = "GPUParticles3D",
+      methodName = "set_emitting",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GPUPARTICLES3D_RESTART =
+    GodotCallDescriptor(
+      opcode = 94,
+      className = "GPUParticles3D",
+      methodName = "restart",
+      hash = 107499316L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val COLLISIONSHAPE3D_SET_DISABLED =
+    GodotCallDescriptor(
+      opcode = 95,
+      className = "CollisionShape3D",
+      methodName = "set_disabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_SET_STREAM_PAUSED =
+    GodotCallDescriptor(
+      opcode = 96,
+      className = "AudioStreamPlayer",
+      methodName = "set_stream_paused",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 97,
+      className = "Node3D",
+      methodName = "set_visible",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_IS_IN_GROUP =
+    GodotCallDescriptor(
+      opcode = 98,
+      className = "Node",
+      methodName = "is_in_group",
+      hash = 2619796661L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATIONPLAYER_SET_SPEED_SCALE =
+    GodotCallDescriptor(
+      opcode = 99,
+      className = "AnimationPlayer",
+      methodName = "set_speed_scale",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENETREE_RELOAD_CURRENT_SCENE =
+    GodotCallDescriptor(
+      opcode = 100,
+      className = "SceneTree",
+      methodName = "reload_current_scene",
+      hash = 166280745L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_ROTATION_DEGREES =
+    GodotCallDescriptor(
+      opcode = 101,
+      className = "Node3D",
+      methodName = "set_rotation_degrees",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_ROTATION_DEGREES =
+    GodotCallDescriptor(
+      opcode = 102,
+      className = "Node3D",
+      methodName = "get_rotation_degrees",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

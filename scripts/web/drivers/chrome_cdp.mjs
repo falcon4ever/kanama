@@ -25,9 +25,10 @@ import path from "node:path";
 import { runMatch3 } from "./demos/match3.mjs";
 import { runBunnymark } from "./demos/bunnymark.mjs";
 import { runDodge } from "./demos/dodge.mjs";
+import { runWeb3d } from "./demos/web3d.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d };
 
 function parseArgs(argv) {
   const args = {};

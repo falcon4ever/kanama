@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 7;
+  const KANAMA_WEB_PROTOCOL_VERSION = 8;
 
   function commandWordCount(opcode) {
     if (
@@ -46,9 +46,25 @@
       opcode === 65 ||
       opcode === 67 ||
       opcode === 68 ||
-      opcode === 100
+      opcode === 80 ||
+      opcode === 82 ||
+      opcode === 93 ||
+      opcode === 94 ||
+      opcode === 95 ||
+      opcode === 96 ||
+      opcode === 97 ||
+      opcode === 99 ||
+      opcode === 1000
     ) return 4;
-    if (opcode === 13) return 5;
+    if (
+      opcode === 13 ||
+      opcode === 74 ||
+      opcode === 76 ||
+      opcode === 78 ||
+      opcode === 84 ||
+      opcode === 88 ||
+      opcode === 101
+    ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
     throw new Error(`Unknown Kanama Web command opcode=${opcode}`);
@@ -199,6 +215,10 @@
     match3MainHandle: 0,
     dodgeMainHandle: 0,
     dodgeSmokeQuitHandle: 0,
+    web3dMainHandle: 0,
+    web3dSmokeQuitHandle: 0,
+    platformerMainHandle: 0,
+    platformerSmokeQuitHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -318,6 +338,27 @@
       if (this.mode === "bunnymark") {
         return this.process(handle, delta);
       }
+      if (this.mode === "web3d") {
+        // Minimal 3D render smoke: the single Node3D script runs its _process (spins a
+        // child); no coroutine frame scheduler and no benchmark transport.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "platformer") {
+        // The Main scene root pumps the shared coroutine frame scheduler (Brick's delaySeconds);
+        // every other script runs its own _process/_physics_process. No benchmark transport.
+        if (handle === this.platformerMainHandle) {
+          const executed = this.invoke(
+            handle,
+            "frame_scheduler",
+            "frame scheduler",
+            () => this.api.kanamaWebFrame(handle, delta),
+            0,
+          );
+          this.processCalls += 1;
+          return executed;
+        }
+        return this.process(handle, delta);
+      }
       if (this.mode === "match3") {
         if (handle === this.match3AudioHandle) {
           this.match3AudioProcessCalls += 1;
@@ -404,6 +445,18 @@
       );
       this.bunnymarkProcessMs.push(performance.now() - started);
       return result;
+    },
+    physicsFrame(handle, delta) {
+      // Godot's fixed physics tick: run the script's _physics_process (character controllers
+      // set velocity + move_and_slide here). Applies to every mode with a physics-body script.
+      this.physicsProcessCalls = (this.physicsProcessCalls ?? 0) + 1;
+      return this.invoke(
+        handle,
+        "_physics_process",
+        "_physics_process",
+        () => this.api.kanamaWebPhysicsProcess(handle, delta),
+        0,
+      );
     },
     draw(handle) {
       const crossingsBefore = this.kotlinToGodotCalls;
@@ -819,6 +872,24 @@
         rotation,
       );
     },
+    refreshNode3DSnapshot(handle, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ) {
+      this.snapshotBatchLoads += 1;
+      return this.api.kanamaWebLoadNode3DSnapshot(
+        handle,
+        positionX,
+        positionY,
+        positionZ,
+        rotationX,
+        rotationY,
+        rotationZ,
+        scaleX,
+        scaleY,
+        scaleZ,
+      );
+    },
+    refreshRenderingMethodSnapshot(handle, method) {
+      return this.api.kanamaWebLoadRenderingMethodSnapshot(handle, String(method));
+    },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);
     },
@@ -1068,14 +1139,20 @@
       // not a Node, so it must be adopted as an Object like Tween/SceneTree — otherwise the
       // handle is registered NODE and Kotlin's use as an OBJECT trips a handle-kind conflict.
       const isSpriteFrames = opcode === 71;
-      const isObjectResult = isTween || isSceneTree || isSpriteFrames;
+      // opcode 81 = WorldEnvironment.get_environment returns an Environment Resource, not a
+      // Node — same handle-kind rule as SpriteFrames (adopt as Object, or Kotlin's OBJECT use
+      // trips a NODE-vs-OBJECT conflict).
+      const isEnvironment = opcode === 81;
+      const isObjectResult = isTween || isSceneTree || isSpriteFrames || isEnvironment;
       const kind = isTween
         ? "Tween"
         : isSceneTree
           ? "SceneTree"
           : isSpriteFrames
             ? "SpriteFrames"
-            : "Node";
+            : isEnvironment
+              ? "Environment"
+              : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
       if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
@@ -1522,6 +1599,18 @@
         // The driver calls SmokeQuit.smoke_teardown (method#1) through this handle to
         // quit the SceneTree and drain live handles to zero for the teardown assertion.
         this.dodgeSmokeQuitHandle = handle;
+      }
+      if (this.mode === "web3d" && scriptName.endsWith(".Main")) this.web3dMainHandle = handle;
+      if (this.mode === "web3d" && scriptName.endsWith(".SmokeQuit")) {
+        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
+        // drain live handles to zero for the render smoke's teardown assertion.
+        this.web3dSmokeQuitHandle = handle;
+      }
+      if (this.mode === "platformer" && scriptName.endsWith(".Main")) {
+        this.platformerMainHandle = handle;
+      }
+      if (this.mode === "platformer" && scriptName.endsWith(".SmokeQuit")) {
+        this.platformerSmokeQuitHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

@@ -1,0 +1,23 @@
+; Minimal 3D scene for the Kanama Web 3D rendering foundation smoke (Task 60c).
+; Camera + directional light + mesh + material + environment, driven by a Kanama
+; Web (Kotlin/Wasm) script through the generated proxy.
+
+config_version=5
+
+[application]
+
+config/name="Kanama Web 3D Smoke"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7")
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/size/window_width_override=960
+window/size/window_height_override=540
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

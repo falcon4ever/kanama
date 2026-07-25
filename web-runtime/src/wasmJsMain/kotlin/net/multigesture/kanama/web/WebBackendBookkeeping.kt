@@ -7,6 +7,7 @@ import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 /**
@@ -28,6 +29,12 @@ private val particlesEmittingSnapshots = mutableMapOf<Int, Boolean>()
 private val particlesLifetimeSnapshots = mutableMapOf<Int, Double>()
 private val rotationSnapshots = mutableMapOf<Int, Double>()
 private val animationNamesSnapshots = mutableMapOf<Int, List<String>>()
+private val position3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val rotation3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val scale3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val velocity3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val rotationDegrees3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val renderingMethodSnapshots = mutableMapOf<Int, String>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
 internal enum class WebBrowserHandleKind {
@@ -40,6 +47,15 @@ internal enum class WebBrowserHandleKind {
 internal enum class WebVector2Slot {
   POSITION,
   SCALE,
+}
+
+/** Which mirrored Node3D/CharacterBody3D Vector3 property a snapshot read/write targets. */
+internal enum class WebVector3Slot {
+  POSITION,
+  ROTATION,
+  SCALE,
+  VELOCITY,
+  ROTATION_DEGREES,
 }
 
 internal fun GodotHandle.webId(): Int = backendToken().toInt()
@@ -55,7 +71,23 @@ internal fun webVector2Snapshot(objectId: Int, slot: WebVector2Slot): GodotVecto
     WebVector2Slot.SCALE -> scaleSnapshots[objectId]
   }
 
+internal fun webVector3Snapshot(objectId: Int, slot: WebVector3Slot): GodotVector3? =
+  when (slot) {
+    WebVector3Slot.POSITION -> position3Snapshots[objectId]
+    WebVector3Slot.ROTATION -> rotation3Snapshots[objectId]
+    WebVector3Slot.SCALE -> scale3Snapshots[objectId]
+    WebVector3Slot.VELOCITY -> velocity3Snapshots[objectId]
+    WebVector3Slot.ROTATION_DEGREES -> rotationDegrees3Snapshots[objectId]
+  }
+
 internal fun webViewportRectSnapshot(objectId: Int): GodotRect2? = viewportRectSnapshots[objectId]
+
+internal fun webRenderingMethodSnapshot(objectId: Int): String? = renderingMethodSnapshots[objectId]
+
+/** RenderingServer.get_current_rendering_method snapshot, seeded by the proxy at ready. */
+internal fun loadWebRenderingMethodSnapshot(objectId: Int, value: String) {
+  renderingMethodSnapshots[objectId] = value
+}
 
 internal fun webModulateSnapshot(objectId: Int): GodotColor? = modulateSnapshots[objectId]
 
@@ -89,6 +121,16 @@ internal fun webWriteVector2Snapshot(objectId: Int, slot: WebVector2Slot, value:
 
 internal fun webWriteModulateSnapshot(objectId: Int, value: GodotColor) {
   modulateSnapshots[objectId] = value
+}
+
+internal fun webWriteVector3Snapshot(objectId: Int, slot: WebVector3Slot, value: GodotVector3) {
+  when (slot) {
+    WebVector3Slot.POSITION -> position3Snapshots[objectId] = value
+    WebVector3Slot.ROTATION -> rotation3Snapshots[objectId] = value
+    WebVector3Slot.SCALE -> scale3Snapshots[objectId] = value
+    WebVector3Slot.VELOCITY -> velocity3Snapshots[objectId] = value
+    WebVector3Slot.ROTATION_DEGREES -> rotationDegrees3Snapshots[objectId] = value
+  }
 }
 
 internal fun webWriteEmittingSnapshot(objectId: Int, value: Boolean) {
@@ -234,6 +276,31 @@ internal fun loadWebNode2DSnapshot(
   rotationSnapshots[objectId] = rotation
 }
 
+/**
+ * Node3D transform frame snapshot pushed from the bridge for scene-graph (non-constructed) nodes.
+ */
+internal fun loadWebNode3DSnapshot(
+  objectId: Int,
+  positionX: Double,
+  positionY: Double,
+  positionZ: Double,
+  rotationX: Double,
+  rotationY: Double,
+  rotationZ: Double,
+  scaleX: Double,
+  scaleY: Double,
+  scaleZ: Double,
+) {
+  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+    "Cannot snapshot unknown Kanama Web Node3D handle=$objectId"
+  }
+  position3Snapshots[objectId] =
+    GodotVector3(positionX.toFloat(), positionY.toFloat(), positionZ.toFloat())
+  rotation3Snapshots[objectId] =
+    GodotVector3(rotationX.toFloat(), rotationY.toFloat(), rotationZ.toFloat())
+  scale3Snapshots[objectId] = GodotVector3(scaleX.toFloat(), scaleY.toFloat(), scaleZ.toFloat())
+}
+
 internal fun loadWebViewportRectSnapshot(
   objectId: Int,
   x: Double,
@@ -274,6 +341,12 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   particlesLifetimeSnapshots.remove(objectId)
   rotationSnapshots.remove(objectId)
   animationNamesSnapshots.remove(objectId)
+  position3Snapshots.remove(objectId)
+  rotation3Snapshots.remove(objectId)
+  scale3Snapshots.remove(objectId)
+  velocity3Snapshots.remove(objectId)
+  rotationDegrees3Snapshots.remove(objectId)
+  renderingMethodSnapshots.remove(objectId)
 }
 
 // ---------------------------------------------------------------------------
