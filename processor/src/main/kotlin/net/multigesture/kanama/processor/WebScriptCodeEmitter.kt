@@ -873,6 +873,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine()
       appendLine("func _physics_process(delta: float) -> void:")
       appendLine("\tif _kanama_handle != 0:")
+      if (model.attachTo == "CharacterBody3D") {
+        // Post-slide velocity refresh: the script reads self.velocity each tick, and after
+        // move_and_slide the engine's velocity differs from the last written value.
+        appendLine("\t\tvar body: CharacterBody3D = self")
+        appendLine(
+          "\t\t_kanama_bridge.refreshVelocitySnapshot(_kanama_handle, body.velocity.x, body.velocity.y, body.velocity.z)"
+        )
+      }
       appendLine("\t\t_kanama_bridge.physicsFrame(_kanama_handle, delta)")
     }
     if (model.virtuals.any { it.virtualName == "_input" }) {
@@ -1246,6 +1254,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 103 and target_object is AnimationPlayer:")
+    appendLine("\t\t\tvar anim_id := bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tvar anim_name := String(_kanama_bridge.resolveCommandStringName(anim_id))")
+    appendLine(
+      "\t\t\t(target_object as AnimationPlayer).play(StringName(anim_name), bytes.decode_double(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
     appendLine("\t\telse:")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
@@ -1334,6 +1350,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
     )
+    appendLine("\tif value is Node3D:")
+    appendLine("\t\tvar node_3d := value as Node3D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, node_3d.position.x, node_3d.position.y, node_3d.position.z, node_3d.rotation.x, node_3d.rotation.y, node_3d.rotation.z, node_3d.scale.x, node_3d.scale.y, node_3d.scale.z)"
+    )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
     appendLine()
@@ -1357,6 +1378,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvar node_2d := value as Node2D")
     appendLine(
       "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
+    )
+    appendLine("\tif value is Node3D:")
+    appendLine("\t\tvar node_3d := value as Node3D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, node_3d.position.x, node_3d.position.y, node_3d.position.z, node_3d.rotation.x, node_3d.rotation.y, node_3d.rotation.z, node_3d.scale.x, node_3d.scale.y, node_3d.scale.z)"
     )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
@@ -1532,6 +1558,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as Node).is_in_group(StringName(String(args[2]))))")
     appendLine("\t\telif opcode == 100 and value is SceneTree:")
     appendLine("\t\t\tresult = int((value as SceneTree).reload_current_scene())")
+    appendLine("\t\telif opcode == 104:")
+    appendLine("\t\t\tvar axis_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = int(round(Input.get_axis(StringName(axis_parts[0]), StringName(axis_parts[1])) * 1000.0))"
+    )
     appendLine("\t\telif opcode == 83:")
     appendLine("\t\t\tresult = int(OS.has_feature(String(args[2])))")
     appendLine("\t\telif opcode == 86:")

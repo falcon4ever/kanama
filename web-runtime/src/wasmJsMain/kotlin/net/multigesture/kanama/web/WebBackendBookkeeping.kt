@@ -299,6 +299,20 @@ internal fun loadWebNode3DSnapshot(
   rotation3Snapshots[objectId] =
     GodotVector3(rotationX.toFloat(), rotationY.toFloat(), rotationZ.toFloat())
   scale3Snapshots[objectId] = GodotVector3(scaleX.toFloat(), scaleY.toFloat(), scaleZ.toFloat())
+  // rotation_degrees is by definition rotation in degrees; derive it from the same refresh so
+  // reads work before any write (the camera rig reads it at ready).
+  val toDegrees = 180.0 / kotlin.math.PI
+  rotationDegrees3Snapshots[objectId] =
+    GodotVector3(
+      (rotationX * toDegrees).toFloat(),
+      (rotationY * toDegrees).toFloat(),
+      (rotationZ * toDegrees).toFloat(),
+    )
+}
+
+/** CharacterBody3D velocity refresh: the proxy pushes the post-slide velocity each physics tick. */
+internal fun loadWebVelocitySnapshot(objectId: Int, x: Double, y: Double, z: Double) {
+  velocity3Snapshots[objectId] = GodotVector3(x.toFloat(), y.toFloat(), z.toFloat())
 }
 
 internal fun loadWebViewportRectSnapshot(

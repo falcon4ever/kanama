@@ -63,7 +63,8 @@
       opcode === 78 ||
       opcode === 84 ||
       opcode === 88 ||
-      opcode === 101
+      opcode === 101 ||
+      opcode === 103
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -889,6 +890,9 @@
     },
     refreshRenderingMethodSnapshot(handle, method) {
       return this.api.kanamaWebLoadRenderingMethodSnapshot(handle, String(method));
+    },
+    refreshVelocitySnapshot(handle, x, y, z) {
+      return this.api.kanamaWebLoadVelocitySnapshot(handle, x, y, z);
     },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);

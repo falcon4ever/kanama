@@ -1137,10 +1137,22 @@ tasks.register("stageWebPlatformerProject") {
             .files
             .forEach { stagedFile ->
                 val original = stagedFile.readText()
-                val rewritten =
+                var rewritten =
                     mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
                         text.replace(sourcePath, proxyPath)
                     }
+                // Godot resolves Script ext_resources by UID before path; a rewritten reference
+                // whose original .gd (and its UID) still exists in the staged tree would silently
+                // load the ORIGINAL script instead of the generated proxy. Strip the UID from
+                // rewritten references so the text path wins.
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
                 if (rewritten != original) stagedFile.writeText(rewritten)
                 check(!rewritten.contains("res://kotlin-src/")) {
                     "Unmapped Kotlin attachment remains in staged file: $stagedFile"
@@ -1399,6 +1411,10 @@ tasks.register<Exec>("exportWeb") {
     inputs.property("kanamaWebDemo", webDemo)
     inputs.dir(webDistribution)
     inputs.dir(webSpikeAssets)
+    // The staged project is what Godot actually exports; without it as an input a
+    // proxy/staging-only change (e.g. a regenerated GDScript applier) leaves exportWeb UP-TO-DATE
+    // and ships a stale export.
+    inputs.dir(webDemo.map(::stagingDirFor))
     outputs.dir(webExportRoot)
 
     doFirst {

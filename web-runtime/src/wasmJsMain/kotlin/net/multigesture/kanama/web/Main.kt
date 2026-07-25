@@ -471,6 +471,12 @@ fun kanamaWebLoadRenderingMethodSnapshot(objectId: Int, value: String): Int {
 }
 
 @JsExport
+fun kanamaWebLoadVelocitySnapshot(objectId: Int, x: Double, y: Double, z: Double): Int {
+  loadWebVelocitySnapshot(objectId, x, y, z)
+  return 1
+}
+
+@JsExport
 fun kanamaWebLoadAnimationNames(objectId: Int, joined: String): Int {
   loadWebAnimationNames(objectId, joined)
   return 1

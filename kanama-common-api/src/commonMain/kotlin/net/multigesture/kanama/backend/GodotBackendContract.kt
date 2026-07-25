@@ -61,6 +61,8 @@ enum class GodotCallShape {
   LONG_DOUBLE_ARG,
   NOARGS_RET_STRING_SINGLETON,
   STRINGNAME_ARG_SINGLETON,
+  STRINGNAME_DOUBLE_ARG,
+  STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON,
 }
 
 @InternalKanamaBackendApi
@@ -434,6 +436,26 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     value: String,
   ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeStringNameDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+    doubleValue: Double,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton two-StringName → Double query (no receiver): e.g. Input.get_axis. */
+  fun invokeStringNameStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+  ): Double {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -989,6 +1011,40 @@ object GodotBackendCalls {
     requireShape(descriptor, GodotCallShape.STRINGNAME_ARG_SINGLETON)
     val selected = requireBackend()
     selected.invokeStringNameArgSingleton(descriptor, resolve(selected, descriptor), value)
+  }
+
+  fun invokeStringNameDoubleArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: String,
+    doubleValue: Double,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_DOUBLE_ARG)
+    require(doubleValue.isFinite())
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameDoubleArg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+      doubleValue,
+    )
+  }
+
+  fun invokeStringNameStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    first: String,
+    second: String,
+  ): Double {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeStringNameStringNameRetDoubleSingleton(
+      descriptor,
+      resolve(selected, descriptor),
+      first,
+      second,
+    )
   }
 
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {

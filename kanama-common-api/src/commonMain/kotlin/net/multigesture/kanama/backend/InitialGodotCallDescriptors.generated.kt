@@ -1125,4 +1125,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.SNAPSHOT_READ,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val ANIMATIONPLAYER_PLAY =
+    GodotCallDescriptor(
+      opcode = 103,
+      className = "AnimationPlayer",
+      methodName = "play",
+      hash = 3118260607L,
+      shape = GodotCallShape.STRINGNAME_DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_GET_AXIS =
+    GodotCallDescriptor(
+      opcode = 104,
+      className = "Input",
+      methodName = "get_axis",
+      hash = 1958752504L,
+      shape = GodotCallShape.STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

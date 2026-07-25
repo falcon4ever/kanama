@@ -1557,6 +1557,42 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read Node3D rotation_degrees from the Web snapshot (camera view).",
       "introducedBy": "60d-platformer"
+    },
+    {
+      "opcode": 103,
+      "scope": "class",
+      "className": "AnimationPlayer",
+      "methodName": "play",
+      "hash": 3118260607,
+      "arguments": [
+        "StringName",
+        "float",
+        "float",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Play a named animation with a custom blend (custom_speed/from_end baked to Godot defaults in the proxy).",
+      "introducedBy": "60d-animation"
+    },
+    {
+      "opcode": 104,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "get_axis",
+      "hash": 1958752504,
+      "arguments": [
+        "StringName",
+        "StringName"
+      ],
+      "returnType": "float",
+      "shape": "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read a -1..1 input axis (negative/positive actions) via the active script proxy singleton (character/camera movement).",
+      "introducedBy": "60d-input"
     }
   ],
   "compositions": [
