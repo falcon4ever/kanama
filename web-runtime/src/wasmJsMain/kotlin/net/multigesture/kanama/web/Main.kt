@@ -282,6 +282,15 @@ fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
 }
 
 @JsExport
+fun kanamaWebCallLongVoid(objectId: Int, methodId: Int, value: Int): Int {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callLongVoid(record.scriptId, methodId, record.script, value.toLong())
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebCallNoArgs(objectId: Int, methodId: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
     KanamaWebProjectRegistry.callNoArgs(record.scriptId, methodId, record.script)
@@ -467,6 +476,12 @@ fun kanamaWebLoadNode3DSnapshot(
 @JsExport
 fun kanamaWebLoadRenderingMethodSnapshot(objectId: Int, value: String): Int {
   loadWebRenderingMethodSnapshot(objectId, value)
+  return 1
+}
+
+@JsExport
+fun kanamaWebLoadVelocitySnapshot(objectId: Int, x: Double, y: Double, z: Double): Int {
+  loadWebVelocitySnapshot(objectId, x, y, z)
   return 1
 }
 

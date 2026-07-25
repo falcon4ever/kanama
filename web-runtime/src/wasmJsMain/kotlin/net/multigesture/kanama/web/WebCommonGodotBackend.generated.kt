@@ -385,7 +385,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 68)
+    require(descriptor.opcode in setOf(68, 105))
     commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)
   }
 
@@ -790,6 +790,39 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.opcode in setOf(86, 87))
     commands.flush()
     immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
+  }
+
+  override fun invokeStringNameDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+    doubleValue: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 103)
+    require(doubleValue.isFinite())
+    commands.appendStringNameDoubleMutation(descriptor.opcode, receiver.webId(), value, doubleValue)
+  }
+
+  override fun invokeStringNameStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 104)
+    commands.flush()
+    // Two action names are packed into one query string (unit separator) and the axis is
+    // returned scaled by 1000 through the shared object-query transport.
+    return immediateWebObjectQuery(
+      descriptor.opcode,
+      requireActiveWebScriptHandle(),
+      first + "\u001f" + second,
+    ) / 1000.0
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {

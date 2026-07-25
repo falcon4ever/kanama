@@ -97,6 +97,16 @@ class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHand
   fun setSpeedScale(scale: Double) {
     GodotBackendCalls.invokeDoubleArg(D.ANIMATIONPLAYER_SET_SPEED_SCALE, backendHandle, scale)
   }
+
+  /** Play a named animation (custom_speed/from_end baked to Godot defaults in the proxy). */
+  fun play(animation: String, customBlend: Double = -1.0) {
+    GodotBackendCalls.invokeStringNameDoubleArg(
+      D.ANIMATIONPLAYER_PLAY,
+      backendHandle,
+      animation,
+      customBlend,
+    )
+  }
 }
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())

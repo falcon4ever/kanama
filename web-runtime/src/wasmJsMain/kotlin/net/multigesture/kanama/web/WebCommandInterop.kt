@@ -50,6 +50,16 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 4] = z.toBits()
   }
 
+  fun appendStringNameDoubleMutation(opcode: Int, objectHandle: Int, name: String, value: Double) {
+    val bits = value.toBits()
+    val offset = reserve(WORDS_STRINGNAME_DOUBLE)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(name)
+    words[offset + 3] = bits.toInt()
+    words[offset + 4] = (bits ushr 32).toInt()
+  }
+
   fun appendLongDoubleMutation(
     opcode: Int,
     objectHandle: Int,
@@ -212,6 +222,7 @@ internal class WebCommandBuffer(capacity: Int) {
     const val WORDS_OBJECT_BOOL_LONG_ARGS = 5
     const val WORDS_VECTOR3 = 5
     const val WORDS_LONG_DOUBLE = 5
+    const val WORDS_STRINGNAME_DOUBLE = 5
     const val WORDS_COLOR = 6
     const val WORDS_DRAW_TEXTURE = 9
     const val MAX_WORDS_PER_COMMAND = WORDS_DRAW_TEXTURE

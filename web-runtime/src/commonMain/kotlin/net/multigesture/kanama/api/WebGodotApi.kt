@@ -3,6 +3,8 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GDBackendContractProbe
+import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.InitialGodotCallDescriptors
 import net.multigesture.kanama.backend.ClassDBBackendContractProbe
 import net.multigesture.kanama.backend.CanvasItemInputBackendContractProbe
 import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
@@ -50,6 +52,10 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
     }
     if (args.size == 1 && args[0] is Int) {
       Node2DBackendContractProbe(backendHandle).emitSignal(signal, args[0] as Int)
+      return
+    }
+    if (args.size == 1 && args[0] is Long) {
+      Node2DBackendContractProbe(backendHandle).emitSignal(signal, (args[0] as Long).toInt())
       return
     }
     if (args.size == 1 && args[0] is Vector2i) {
@@ -107,6 +113,33 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
     }
 
   fun createTween(): Tween? = NodeBackendContractProbe(backendHandle).createTween()?.let(::Tween)
+
+  fun isInGroup(group: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBool(
+      InitialGodotCallDescriptors.NODE_IS_IN_GROUP,
+      backendHandle,
+      group,
+    )
+
+  /** Dynamic one-String-argument method call (e.g. a native GDScript autoload's play(path)). */
+  fun call(method: String, argument: String) {
+    GodotBackendCalls.invokeStringNameStringNameArg(
+      InitialGodotCallDescriptors.OBJECT_CALL,
+      backendHandle,
+      method,
+      argument,
+    )
+  }
+
+  /** Object.set_deferred with a Boolean value (physics-safe property writes). */
+  fun setDeferred(property: String, value: Boolean) {
+    GodotBackendCalls.invokeStringNameBoolArg(
+      InitialGodotCallDescriptors.OBJECT_SET_DEFERRED,
+      backendHandle,
+      property,
+      value,
+    )
+  }
 }
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {

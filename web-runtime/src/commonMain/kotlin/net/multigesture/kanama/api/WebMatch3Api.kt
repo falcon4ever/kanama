@@ -13,6 +13,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.AudioStreamPlayerBackendContractProbe
+import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.InitialGodotCallDescriptors
 import net.multigesture.kanama.backend.InputActionBackendContractProbe
 import net.multigesture.kanama.backend.InputBackendContractProbe
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
@@ -218,6 +220,14 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHa
     AudioStreamPlayerBackendContractProbe(backendHandle).setPitchScale(value)
   }
 
+  fun setStreamPaused(paused: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER_SET_STREAM_PAUSED,
+      backendHandle,
+      paused,
+    )
+  }
+
   fun play(fromPosition: Double = 0.0) {
     AudioStreamPlayerBackendContractProbe(backendHandle).play(fromPosition)
   }
@@ -354,6 +364,13 @@ object Input {
   fun actionRelease(action: String) {
     InputActionBackendContractProbe.actionRelease(action)
   }
+
+  fun getAxis(negativeAction: String, positiveAction: String): Double =
+    GodotBackendCalls.invokeStringNameStringNameRetDoubleSingleton(
+      InitialGodotCallDescriptors.INPUT_GET_AXIS,
+      negativeAction,
+      positiveAction,
+    )
 }
 
 class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {
@@ -363,6 +380,13 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
 
   fun callGroup(group: String, method: String) {
     SceneTreeBackendContractProbe(backendHandle).callGroup(group, method)
+  }
+
+  fun reloadCurrentScene() {
+    GodotBackendCalls.invokeNoArgsRetLong(
+      InitialGodotCallDescriptors.SCENETREE_RELOAD_CURRENT_SCENE,
+      backendHandle,
+    )
   }
 
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */

@@ -54,6 +54,7 @@
       opcode === 96 ||
       opcode === 97 ||
       opcode === 99 ||
+      opcode === 105 ||
       opcode === 1000
     ) return 4;
     if (
@@ -63,7 +64,8 @@
       opcode === 78 ||
       opcode === 84 ||
       opcode === 88 ||
-      opcode === 101
+      opcode === 101 ||
+      opcode === 103
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -558,6 +560,15 @@
         0,
       );
     },
+    callLongVoid(handle, methodId, value) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallLongVoid(handle, methodId, value),
+        0,
+      );
+    },
     callNoArgs(handle, methodId) {
       this.noArgCalls += 1;
       if (this.mode === "bunnymark") {
@@ -889,6 +900,9 @@
     },
     refreshRenderingMethodSnapshot(handle, method) {
       return this.api.kanamaWebLoadRenderingMethodSnapshot(handle, String(method));
+    },
+    refreshVelocitySnapshot(handle, x, y, z) {
+      return this.api.kanamaWebLoadVelocitySnapshot(handle, x, y, z);
     },
     refreshViewportRectSnapshot(handle, x, y, width, height) {
       return this.api.kanamaWebLoadViewportRectSnapshot(handle, x, y, width, height);

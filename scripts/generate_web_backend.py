@@ -144,6 +144,9 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     100: {},
     101: {"vec3_slot": _ROTATION_DEGREES3},
     102: {"vec3_slot": _ROTATION_DEGREES3},
+    103: {},
+    104: {},
+    105: {},
 }
 
 
@@ -353,6 +356,28 @@ def body_NOARGS_RET_VECTOR3(calls):
         ")",
     ]
     return lines
+
+
+def body_STRINGNAME_DOUBLE_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "require(doubleValue.isFinite())",
+        "commands.appendStringNameDoubleMutation("
+        "descriptor.opcode, receiver.webId(), value, doubleValue)",
+    ]
+
+
+def body_STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Two action names are packed into one query string (unit separator) and the axis is",
+        "// returned scaled by 1000 through the shared object-query transport.",
+        'return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), '
+        'first + "\\u001f" + second) / 1000.0',
+    ]
 
 
 def body_STRINGNAME_ARG_SINGLETON(calls):
@@ -873,6 +898,11 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     ),
     "NOARGS_RET_STRING_SINGLETON": ([], "String"),
     "STRINGNAME_ARG_SINGLETON": (["value: String"], ""),
+    "STRINGNAME_DOUBLE_ARG": (
+        ["receiver: GodotHandle", "value: String", "doubleValue: Double"],
+        "",
+    ),
+    "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON": (["first: String", "second: String"], "Double"),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -1060,6 +1090,8 @@ EMIT_ORDER = [
     "LONG_DOUBLE_ARG",
     "NOARGS_RET_STRING_SINGLETON",
     "STRINGNAME_ARG_SINGLETON",
+    "STRINGNAME_DOUBLE_ARG",
+    "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON",
 ]
 
 
