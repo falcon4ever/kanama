@@ -940,7 +940,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\tvar target_object: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
     )
-    appendLine("\t\tif opcode == 100 and object_handle == _kanama_handle:")
+    appendLine("\t\tif opcode == 1000 and object_handle == _kanama_handle:")
     appendLine("\t\t\tlast_value = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tset_meta(\"kanama_web_scalar\", last_value)")
     if (node2dAttachment) {
@@ -1205,6 +1205,44 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif opcode == 88 and target_object is CharacterBody3D:")
     appendLine(
       "\t\t\t(target_object as CharacterBody3D).velocity = Vector3(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 93 and target_object is GPUParticles3D:")
+    appendLine(
+      "\t\t\t(target_object as GPUParticles3D).emitting = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 94 and target_object is GPUParticles3D:")
+    appendLine("\t\t\t(target_object as GPUParticles3D).restart(bytes.decode_s32(offset + 8) != 0)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 95 and target_object is CollisionShape3D:")
+    appendLine(
+      "\t\t\t(target_object as CollisionShape3D).disabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 96 and target_object is AudioStreamPlayer:")
+    appendLine(
+      "\t\t\t(target_object as AudioStreamPlayer).stream_paused = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 97 and target_object is Node3D:")
+    appendLine("\t\t\t(target_object as Node3D).visible = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 99 and target_object is AnimationPlayer:")
+    appendLine(
+      "\t\t\t(target_object as AnimationPlayer).speed_scale = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 101 and target_object is Node3D:")
+    appendLine(
+      "\t\t\t(target_object as Node3D).rotation_degrees = Vector3(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 20")
@@ -1490,6 +1528,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int(Input.is_action_pressed(StringName(String(args[2]))))")
     appendLine("\t\telif opcode == 92:")
     appendLine("\t\t\tresult = int(Input.is_action_just_pressed(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 98 and value is Node:")
+    appendLine("\t\t\tresult = int((value as Node).is_in_group(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 100 and value is SceneTree:")
+    appendLine("\t\t\tresult = int((value as SceneTree).reload_current_scene())")
     appendLine("\t\telif opcode == 83:")
     appendLine("\t\t\tresult = int(OS.has_feature(String(args[2])))")
     appendLine("\t\telif opcode == 86:")

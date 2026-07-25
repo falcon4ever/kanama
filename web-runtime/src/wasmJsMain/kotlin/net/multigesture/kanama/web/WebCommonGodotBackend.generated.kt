@@ -72,7 +72,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80))
+    require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80, 93, 94, 95, 96, 97))
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
     when (descriptor.opcode) {
@@ -93,7 +93,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
     when (descriptor.executionMode) {
       GodotExecutionMode.QUEUED_MUTATION -> {
-        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82))
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99))
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
@@ -720,6 +720,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
       79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
       89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
+      102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
       else -> null
     }
       ?: error(
@@ -743,6 +744,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       76 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION, value)
       78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
       88 -> webWriteVector3Snapshot(objectId, WebVector3Slot.VELOCITY, value)
+      101 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION_DEGREES, value)
       else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
     }
   }

@@ -1015,4 +1015,114 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val GPUPARTICLES3D_SET_EMITTING =
+    GodotCallDescriptor(
+      opcode = 93,
+      className = "GPUParticles3D",
+      methodName = "set_emitting",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GPUPARTICLES3D_RESTART =
+    GodotCallDescriptor(
+      opcode = 94,
+      className = "GPUParticles3D",
+      methodName = "restart",
+      hash = 107499316L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val COLLISIONSHAPE3D_SET_DISABLED =
+    GodotCallDescriptor(
+      opcode = 95,
+      className = "CollisionShape3D",
+      methodName = "set_disabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER_SET_STREAM_PAUSED =
+    GodotCallDescriptor(
+      opcode = 96,
+      className = "AudioStreamPlayer",
+      methodName = "set_stream_paused",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 97,
+      className = "Node3D",
+      methodName = "set_visible",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_IS_IN_GROUP =
+    GodotCallDescriptor(
+      opcode = 98,
+      className = "Node",
+      methodName = "is_in_group",
+      hash = 2619796661L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATIONPLAYER_SET_SPEED_SCALE =
+    GodotCallDescriptor(
+      opcode = 99,
+      className = "AnimationPlayer",
+      methodName = "set_speed_scale",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENETREE_RELOAD_CURRENT_SCENE =
+    GodotCallDescriptor(
+      opcode = 100,
+      className = "SceneTree",
+      methodName = "reload_current_scene",
+      hash = 166280745L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_ROTATION_DEGREES =
+    GodotCallDescriptor(
+      opcode = 101,
+      className = "Node3D",
+      methodName = "set_rotation_degrees",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_GET_ROTATION_DEGREES =
+    GodotCallDescriptor(
+      opcode = 102,
+      className = "Node3D",
+      methodName = "get_rotation_degrees",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

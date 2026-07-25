@@ -205,7 +205,7 @@ internal class WebCommandBuffer(capacity: Int) {
   }
 
   companion object {
-    const val OPCODE_SCALAR_MUTATION = 100
+    const val OPCODE_SCALAR_MUTATION = 1000
     const val WORDS_NOARGS = 2
     const val WORDS_OBJECT_ARG = 3
     const val WORDS_SCALAR_OR_VECTOR = 4

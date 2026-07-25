@@ -4,8 +4,10 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.CharacterBody3DBackendContractProbe
 import net.multigesture.kanama.backend.EnvironmentBackendContractProbe
+import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Light3DBackendContractProbe
 import net.multigesture.kanama.backend.Node3DBackendContractProbe
@@ -14,6 +16,9 @@ import net.multigesture.kanama.backend.RenderingServerBackendContractProbe
 import net.multigesture.kanama.backend.WorldEnvironmentBackendContractProbe
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
+
+private fun BackendGodotHandle.bool3(descriptor: net.multigesture.kanama.backend.GodotCallDescriptor, value: Boolean) =
+  GodotBackendCalls.invokeBoolArg(descriptor, this, value)
 
 /**
  * Web API surface for the 3D rendering foundation (Task 60c).
@@ -46,7 +51,57 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
       Node3DBackendContractProbe(backendHandle).scale =
         GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat())
     }
+
+  var rotationDegrees: Vector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(D.NODE3D_GET_ROTATION_DEGREES, backendHandle).let {
+        Vector3(it.x, it.y, it.z)
+      }
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        D.NODE3D_SET_ROTATION_DEGREES,
+        backendHandle,
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat()),
+      )
+    }
+
+  /** Write-only on Web (the demos only set visibility). */
+  var visible: Boolean
+    get() = unsupportedWebGameplayFamily("Node3D.get_visible")
+    set(value) {
+      backendHandle.bool3(D.NODE3D_SET_VISIBLE, value)
+    }
+
+  fun hide() {
+    visible = false
+  }
 }
+
+class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
+  fun setEmitting(emitting: Boolean) {
+    backendHandle.bool3(D.GPUPARTICLES3D_SET_EMITTING, emitting)
+  }
+
+  fun restart(keepSeed: Boolean = false) {
+    backendHandle.bool3(D.GPUPARTICLES3D_RESTART, keepSeed)
+  }
+}
+
+class CollisionShape3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  fun setDisabled(disabled: Boolean) {
+    backendHandle.bool3(D.COLLISIONSHAPE3D_SET_DISABLED, disabled)
+  }
+}
+
+class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  fun setSpeedScale(scale: Double) {
+    GodotBackendCalls.invokeDoubleArg(D.ANIMATIONPLAYER_SET_SPEED_SCALE, backendHandle, scale)
+  }
+}
+
+open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
+
+class Camera3D(godotObject: GodotHandle) : Node3D(godotObject)
 
 /** 3D physics body base (Task 60d). */
 open class PhysicsBody3D(godotObject: GodotHandle) : Node3D(godotObject)

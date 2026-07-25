@@ -48,7 +48,13 @@
       opcode === 68 ||
       opcode === 80 ||
       opcode === 82 ||
-      opcode === 100
+      opcode === 93 ||
+      opcode === 94 ||
+      opcode === 95 ||
+      opcode === 96 ||
+      opcode === 97 ||
+      opcode === 99 ||
+      opcode === 1000
     ) return 4;
     if (
       opcode === 13 ||
@@ -56,7 +62,8 @@
       opcode === 76 ||
       opcode === 78 ||
       opcode === 84 ||
-      opcode === 88
+      opcode === 88 ||
+      opcode === 101
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -210,6 +217,8 @@
     dodgeSmokeQuitHandle: 0,
     web3dMainHandle: 0,
     web3dSmokeQuitHandle: 0,
+    platformerMainHandle: 0,
+    platformerSmokeQuitHandle: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -332,6 +341,22 @@
       if (this.mode === "web3d") {
         // Minimal 3D render smoke: the single Node3D script runs its _process (spins a
         // child); no coroutine frame scheduler and no benchmark transport.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "platformer") {
+        // The Main scene root pumps the shared coroutine frame scheduler (Brick's delaySeconds);
+        // every other script runs its own _process/_physics_process. No benchmark transport.
+        if (handle === this.platformerMainHandle) {
+          const executed = this.invoke(
+            handle,
+            "frame_scheduler",
+            "frame scheduler",
+            () => this.api.kanamaWebFrame(handle, delta),
+            0,
+          );
+          this.processCalls += 1;
+          return executed;
+        }
         return this.process(handle, delta);
       }
       if (this.mode === "match3") {
@@ -1580,6 +1605,12 @@
         // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
         // drain live handles to zero for the render smoke's teardown assertion.
         this.web3dSmokeQuitHandle = handle;
+      }
+      if (this.mode === "platformer" && scriptName.endsWith(".Main")) {
+        this.platformerMainHandle = handle;
+      }
+      if (this.mode === "platformer" && scriptName.endsWith(".SmokeQuit")) {
+        this.platformerSmokeQuitHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);
