@@ -385,7 +385,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 68)
+    require(descriptor.opcode in setOf(68, 105))
     commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)
   }
 

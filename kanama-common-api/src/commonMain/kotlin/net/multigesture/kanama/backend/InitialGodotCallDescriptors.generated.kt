@@ -1147,4 +1147,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val OBJECT_CALL =
+    GodotCallDescriptor(
+      opcode = 105,
+      className = "Object",
+      methodName = "call",
+      hash = 3400424181L,
+      shape = GodotCallShape.STRINGNAME_STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

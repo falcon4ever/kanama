@@ -1593,6 +1593,26 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read a -1..1 input axis (negative/positive actions) via the active script proxy singleton (character/camera movement).",
       "introducedBy": "60d-input"
+    },
+    {
+      "opcode": 105,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "call",
+      "hash": 3400424181,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "isVararg": true,
+      "typedVarargTail": [
+        "String"
+      ],
+      "semantics": "Queue a dynamic one-String-argument method call (the platformer's native GDScript Audio autoload play(path)); the Variant return is discarded.",
+      "introducedBy": "60d-audio"
     }
   ],
   "compositions": [

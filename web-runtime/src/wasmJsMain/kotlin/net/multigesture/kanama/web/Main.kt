@@ -282,6 +282,15 @@ fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
 }
 
 @JsExport
+fun kanamaWebCallLongVoid(objectId: Int, methodId: Int, value: Int): Int {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callLongVoid(record.scriptId, methodId, record.script, value.toLong())
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebCallNoArgs(objectId: Int, methodId: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
     KanamaWebProjectRegistry.callNoArgs(record.scriptId, methodId, record.script)

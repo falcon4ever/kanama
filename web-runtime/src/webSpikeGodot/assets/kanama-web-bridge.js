@@ -54,6 +54,7 @@
       opcode === 96 ||
       opcode === 97 ||
       opcode === 99 ||
+      opcode === 105 ||
       opcode === 1000
     ) return 4;
     if (
@@ -556,6 +557,15 @@
         "registered_function",
         `method#${methodId}`,
         () => this.api.kanamaWebCallInt(handle, methodId, value),
+        0,
+      );
+    },
+    callLongVoid(handle, methodId, value) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallLongVoid(handle, methodId, value),
         0,
       );
     },

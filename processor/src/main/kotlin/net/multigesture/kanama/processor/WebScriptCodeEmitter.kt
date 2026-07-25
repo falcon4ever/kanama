@@ -233,6 +233,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendObjectPropertySetter()
     appendObjectArrayPropertySetter()
     appendLongMethodDispatcher()
+    appendLongVoidMethodDispatcher()
     appendVector2iMethodDispatcher()
     appendObjectMethodDispatcher()
     appendObjectObjectLongMethodDispatcher()
@@ -456,6 +457,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
     appendLine("    }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendLongVoidMethodDispatcher() {
+    appendLine(
+      "  fun callLongVoid(scriptId: Int, methodId: Int, script: KanamaWebScript, value: Long) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (
+          method.returnType == null &&
+            method.args.size == 1 &&
+            method.args.single().type == TypeMapping.INT
+        ) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(value)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
     appendLine()
   }
 
@@ -1254,6 +1282,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 105 and target_object != null:")
+    appendLine(
+      "\t\t\tvar call_method := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine(
+      "\t\t\tvar call_arg := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 12)))"
+    )
+    appendLine("\t\t\ttarget_object.call(StringName(call_method), call_arg)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 103 and target_object is AnimationPlayer:")
     appendLine("\t\t\tvar anim_id := bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tvar anim_name := String(_kanama_bridge.resolveCommandStringName(anim_id))")
@@ -1644,19 +1682,34 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         }
         method.returnType == null &&
           method.args.size == 1 &&
+          method.args.single().type == TypeMapping.INT -> {
+          val arg = method.args.single()
+          appendLine("\t_kanama_bridge.callLongVoid(_kanama_handle, ${index + 1}, ${arg.name})")
+        }
+        method.returnType == null &&
+          method.args.size == 1 &&
           method.args.single().type == TypeMapping.OBJECT &&
           method.args.single().objectWrapperFqName != null -> {
           // Registered function taking a single Godot object (e.g. a body_entered signal
-          // handler): register the node under a transient handle so the Kotlin side can
-          // reconstruct its wrapper, invoke, then release it.
+          // handler). A Kanama-scripted node is passed as its SCRIPT handle (mirrors node
+          // lookup) so the Kotlin side can resolve kotlinScriptInstance on it; anything else
+          // rides a transient handle registered for the call, then released.
           val arg = method.args.single()
+          appendLine("\tvar script_arg_handle := 0")
+          appendLine("\tif ${arg.name}.has_method(\"_kanama_ensure_created\"):")
+          appendLine("\t\tscript_arg_handle = int(${arg.name}.call(\"_kanama_ensure_created\"))")
+          appendLine("\tif script_arg_handle != 0:")
           appendLine(
-            "\tvar arg_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+            "\t\t_kanama_bridge.callObject(_kanama_handle, ${index + 1}, script_arg_handle)"
           )
-          appendLine("\t_kanama_object_handles[arg_handle] = ${arg.name}")
-          appendLine("\t_kanama_bridge.callObject(_kanama_handle, ${index + 1}, arg_handle)")
-          appendLine("\t_kanama_object_handles.erase(arg_handle)")
-          appendLine("\t_kanama_bridge.releaseTransientObjectHandle(arg_handle)")
+          appendLine("\telse:")
+          appendLine(
+            "\t\tvar arg_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+          )
+          appendLine("\t\t_kanama_object_handles[arg_handle] = ${arg.name}")
+          appendLine("\t\t_kanama_bridge.callObject(_kanama_handle, ${index + 1}, arg_handle)")
+          appendLine("\t\t_kanama_object_handles.erase(arg_handle)")
+          appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(arg_handle)")
         }
         method.returnType == null &&
           method.args.size == 3 &&

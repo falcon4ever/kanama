@@ -146,6 +146,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     102: {"vec3_slot": _ROTATION_DEGREES3},
     103: {},
     104: {},
+    105: {},
 }
 
 

@@ -73,10 +73,7 @@ class CollisionShape2D(godotObject: GodotHandle) : Node2D(godotObject) {
   fun setDisabled(disabled: Boolean) {
     CollisionShape2DBackendContractProbe(backendHandle).setDisabled(disabled)
   }
-
-  fun setDeferred(property: String, value: Boolean) {
-    CollisionShape2DBackendContractProbe(backendHandle).setDeferredBool(property, value)
-  }
+  // set_deferred rides the inherited Node.setDeferred (same Object.set_deferred opcode).
 }
 
 class Timer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
