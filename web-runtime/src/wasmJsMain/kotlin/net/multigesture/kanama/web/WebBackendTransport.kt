@@ -112,6 +112,24 @@ internal fun immediateWebObjectQuery(opcode: Int, objectId: Int, value: String):
 internal fun immediateWebSetProgressRatio(objectId: Int, ratio: Double): Int =
   js("globalThis.KanamaWebBridge.immediateSetProgressRatio(objectId, ratio)")
 
+internal fun immediateWebSetProgressRatio3D(objectId: Int, ratio: Double): Int =
+  js("globalThis.KanamaWebBridge.immediateDoubleQuery(107, objectId, ratio)")
+
+internal fun immediateWebRotateY(objectId: Int, angle: Double): Int =
+  js("globalThis.KanamaWebBridge.immediateDoubleQuery(109, objectId, angle)")
+
+internal fun immediateWebSlideCollision(objectId: Int, index: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateSlideCollision(objectId, index)")
+
+internal fun immediateWebNoArgsVector3X(opcode: Int, objectId: Int): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector3X(opcode, objectId)")
+
+internal fun immediateWebNoArgsVector3Y(): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector3Y()")
+
+internal fun immediateWebNoArgsVector3Z(): Double =
+  js("globalThis.KanamaWebBridge.immediateNoArgsVector3Z()")
+
 internal fun immediateWebNoArgsVector2X(opcode: Int, objectId: Int): Double =
   js("globalThis.KanamaWebBridge.immediateNoArgsVector2X(opcode, objectId)")
 

@@ -227,10 +227,17 @@ internal fun requireWebNodeHandle(handle: Int) {
 
 internal fun containsWebBrowserHandle(handle: Int): Boolean = browserHandles.containsKey(handle)
 
-/** Node.queue_free bookkeeping: drop mirrored snapshots and release a browser NODE handle. */
+/**
+ * Node.queue_free bookkeeping: release a browser NODE handle and its mirrored snapshots.
+ *
+ * A live script instance keeps its snapshots: Godot frees the node at end of frame, so its
+ * _physics_process/_process can still run (and read mirrored properties) between queue_free and the
+ * actual free — kanamaWebFree clears them when the node really exits the tree (squash: a dying
+ * Player queue_frees itself from body_entered, then ticks once more).
+ */
 internal fun onWebQueueFree(objectId: Int) {
-  clearWebPositionSnapshot(objectId)
   if (!instances.isLive(objectId)) {
+    clearWebPositionSnapshot(objectId)
     unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
   }
 }

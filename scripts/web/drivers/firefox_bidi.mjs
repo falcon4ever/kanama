@@ -20,9 +20,10 @@ import { runBunnymark } from "./demos/bunnymark.mjs";
 import { runDodge } from "./demos/dodge.mjs";
 import { runWeb3d } from "./demos/web3d.mjs";
 import { runPlatformer } from "./demos/platformer.mjs";
+import { runSquash } from "./demos/squash.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash };
 const DEFAULT_FIREFOX = "/Applications/Firefox.app/Contents/MacOS/firefox";
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

@@ -147,6 +147,18 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     103: {},
     104: {},
     105: {},
+    106: {},
+    107: {"immediate_double_extern": "immediateWebSetProgressRatio3D"},
+    108: {},
+    109: {"immediate_double_extern": "immediateWebRotateY"},
+    110: {},
+    111: {"ret": "collision"},
+    112: {"ret": "node"},
+    113: {},
+    114: {"ret": "node"},
+    115: {},
+    116: {},
+    117: {},
 }
 
 
@@ -341,11 +353,12 @@ def body_VECTOR2_ARG(calls):
 
 
 def body_NOARGS_RET_VECTOR3(calls):
-    lines = [
-        f"require(descriptor.executionMode == {_SNAPSHOT})",
-        "return when (descriptor.opcode) {",
-    ]
-    for c in calls:
+    snapshot_arms = [c for c in calls if c.execution_mode.value == "SNAPSHOT_READ"]
+    immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
+    lines = ["return when (descriptor.executionMode) {"]
+    lines.append(f"{_SNAPSHOT} ->")
+    lines.append("when (descriptor.opcode) {")
+    for c in snapshot_arms:
         lines.append(f"{c.opcode} -> webVector3Snapshot(receiver.webId(), {_slot3(c.opcode)})")
     lines += [
         "else -> null",
@@ -354,6 +367,23 @@ def body_NOARGS_RET_VECTOR3(calls):
         '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
         '"object handle=${receiver.webId()}"',
         ")",
+    ]
+    if immediate:
+        lines += [
+            f"{_IMMEDIATE} -> {{",
+            f"require({_opcode_guard(immediate)})",
+            "commands.flush()",
+            "GodotVector3(",
+            "immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),",
+            "immediateWebNoArgsVector3Y().toFloat(),",
+            "immediateWebNoArgsVector3Z().toFloat(),",
+            ")",
+            "}",
+        ]
+    lines += [
+        f"{_QUEUED} ->",
+        'error("Vector3 return cannot use queued execution for opcode=${descriptor.opcode}")',
+        "}",
     ]
     return lines
 
@@ -377,6 +407,31 @@ def body_STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON(calls):
         "// returned scaled by 1000 through the shared object-query transport.",
         'return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), '
         'first + "\\u001f" + second) / 1000.0',
+    ]
+
+
+def body_VECTOR3_VECTOR3_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Six Float32 components are packed into one query string (unit separator); the applier",
+        "// re-pushes the Node3D transform snapshot so rotation reads reflect the new orientation.",
+        "val packed =",
+        'listOf(first.x, first.y, first.z, second.x, second.y, second.z).joinToString("\\u001f")',
+        "check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+        "}",
+    ]
+
+
+def body_LONG_ARG_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value.toString())",
     ]
 
 
@@ -588,12 +643,12 @@ def body_NODEPATH_RET_HANDLE(calls):
 
 
 def body_LONG_ARG(calls):
-    op = _only(calls).opcode
     return [
         f"require(descriptor.executionMode == {_QUEUED})",
-        f"require(descriptor.opcode == {op})",
+        f"require({_opcode_guard(calls)})",
         "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {",
-        '"Kanama Web SceneTree.quit exit code must fit Godot\'s int32 ABI"',
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit '
+        "Godot's int32 ABI\"",
         "}",
         "commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)",
     ]
@@ -608,6 +663,7 @@ def body_LONG_RET_HANDLE(calls):
     ]
     node_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "node"]
     existing_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "existing"]
+    collision_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "collision"]
     for op in node_ops:
         lines.append(f"{op} ->")
         lines.append(
@@ -621,6 +677,11 @@ def body_LONG_RET_HANDLE(calls):
             "immediateWebTweenLongRetObject(descriptor.opcode, receiver.webId(), value.toInt()),",
             ")",
         ]
+    for op in collision_ops:
+        lines.append(f"{op} ->")
+        lines.append(
+            "registerReturnedBrowserObject(immediateWebSlideCollision(receiver.webId(), value.toInt()))"
+        )
     lines.append('else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")')
     lines.append("}")
     return lines
@@ -903,6 +964,11 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         "",
     ),
     "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON": (["first: String", "second: String"], "Double"),
+    "VECTOR3_VECTOR3_ARG": (
+        ["receiver: GodotHandle", "first: GodotVector3", "second: GodotVector3"],
+        "",
+    ),
+    "LONG_ARG_SINGLETON": (["value: Long"], ""),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -1092,6 +1158,8 @@ EMIT_ORDER = [
     "STRINGNAME_ARG_SINGLETON",
     "STRINGNAME_DOUBLE_ARG",
     "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON",
+    "VECTOR3_VECTOR3_ARG",
+    "LONG_ARG_SINGLETON",
 ]
 
 

@@ -155,6 +155,83 @@ class GodotBackendContractTest {
       GodotCallShape.STRINGNAME_ARG_SINGLETON,
       GodotExecutionMode.IMMEDIATE_RESULT,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.CANVASITEM_IS_VISIBLE,
+      36_873_697L,
+      GodotCallShape.NOARGS_RET_BOOL,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.PATHFOLLOW3D_SET_PROGRESS_RATIO,
+      373_806_689L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_LOOK_AT_FROM_POSITION,
+      2_086_826_090L,
+      GodotCallShape.VECTOR3_VECTOR3_ARG,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_ROTATE_Y,
+      373_806_689L,
+      GodotCallShape.DOUBLE_ARG,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_GET_SLIDE_COLLISION_COUNT,
+      3_905_245_786L,
+      GodotCallShape.NOARGS_RET_LONG,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_GET_SLIDE_COLLISION,
+      107_003_663L,
+      GodotCallShape.LONG_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.KINEMATICCOLLISION3D_GET_COLLIDER,
+      2_639_523_548L,
+      GodotCallShape.NOARGS_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.KINEMATICCOLLISION3D_GET_NORMAL,
+      1_914_908_202L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    // Node.duplicate returns a brand-new node the caller owns until add_child.
+    assertEquals(3_511_555_459L, InitialGodotCallDescriptors.NODE_DUPLICATE.hash)
+    assertEquals(GodotCallShape.NOARGS_RET_HANDLE, InitialGodotCallDescriptors.NODE_DUPLICATE.shape)
+    assertEquals(
+      GodotExecutionMode.IMMEDIATE_RESULT,
+      InitialGodotCallDescriptors.NODE_DUPLICATE.executionMode,
+    )
+    assertEquals(
+      GodotReturnOwnership.OWNED,
+      InitialGodotCallDescriptors.NODE_DUPLICATE.returnOwnership,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.DIRECTIONALLIGHT3D_SET_SKY_MODE,
+      2_691_194_817L,
+      GodotCallShape.LONG_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RENDERINGSERVER_DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY,
+      3_613_045_266L,
+      GodotCallShape.LONG_ARG_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUTEVENT_IS_ACTION_PRESSED,
+      1_631_499_404L,
+      GodotCallShape.STRINGNAME_RET_BOOL,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
   }
 
   @Test

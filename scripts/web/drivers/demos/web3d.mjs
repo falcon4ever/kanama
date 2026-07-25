@@ -121,7 +121,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeWeb3d: ready.mode === "web3d",
-    protocol8: protocolVersion === 8,
+    protocol9: protocolVersion === 9,
     sceneReady: ready.mainReady >= 1,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
     renderFramesAdvanced: peak.processCalls >= ready.processCalls + 10,

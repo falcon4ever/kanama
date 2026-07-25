@@ -88,6 +88,10 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
     NodeBackendContractProbe(backendHandle).queueFree()
   }
 
+  /** Duplicate this node (flags baked to Godot's default 15); parent the copy via addChild. */
+  fun duplicate(): GodotObject? =
+    NodeBackendContractProbe(backendHandle).duplicate()?.let(::GodotObject)
+
   fun getNodeOrNull(path: String): GodotObject? =
     NodeLookupBackendContractProbe(backendHandle).getNodeOrNull(path)?.let(::GodotObject)
 
@@ -172,6 +176,8 @@ open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : 
   fun hide() {
     CanvasItemBackendContractProbe(backendHandle).setVisible(false)
   }
+
+  fun isVisible(): Boolean = CanvasItemBackendContractProbe(backendHandle).isVisible()
 
   fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
     Node2DBackendContractProbe(backendHandle)

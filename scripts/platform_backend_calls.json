@@ -1613,6 +1613,199 @@
       ],
       "semantics": "Queue a dynamic one-String-argument method call (the platformer's native GDScript Audio autoload play(path)); the Variant return is discarded.",
       "introducedBy": "60d-audio"
+    },
+    {
+      "opcode": 106,
+      "scope": "class",
+      "className": "CanvasItem",
+      "methodName": "is_visible",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read CanvasItem visibility synchronously through the shared object-query transport (squash gates retry on the overlay being visible).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 107,
+      "scope": "class",
+      "className": "PathFollow3D",
+      "methodName": "set_progress_ratio",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Apply a finite Float64 progress ratio synchronously; the Web applier sets PathFollow3D.progress_ratio and re-pushes the node's transform snapshot so read-your-write reads reflect the move (squash mob spawn location).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 108,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "look_at_from_position",
+      "hash": 2086826090,
+      "arguments": [
+        "Vector3",
+        "Vector3",
+        "Vector3",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Synchronously position the node and orient -Z at the target (up/use_model_front baked to Godot defaults, the only values the demos pass); the Web applier re-pushes the transform snapshot so rotation reads reflect the new orientation.",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 109,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "rotate_y",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Rotate the node around global Y synchronously; the Web applier re-pushes the transform snapshot so a following rotation read sees the result (squash mob spawn aim).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 110,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "get_slide_collision_count",
+      "hash": 3905245786,
+      "arguments": [],
+      "returnType": "int",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the number of collisions from the body's last move_and_slide synchronously (squash checks landings on mobs).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 111,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "get_slide_collision",
+      "hash": 107003663,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "KinematicCollision3D",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return one collision record from the body's last move_and_slide as a browser handle the caller releases when done (the body owns the underlying Ref).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 112,
+      "scope": "class",
+      "className": "KinematicCollision3D",
+      "methodName": "get_collider",
+      "hash": 2639523548,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Object",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return the colliding object (deepest-collision index baked to Godot default 0, the only value the demos pass) as an existing tracked handle.",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 113,
+      "scope": "class",
+      "className": "KinematicCollision3D",
+      "methodName": "get_normal",
+      "hash": 1914908202,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the collision normal synchronously (deepest-collision index baked to Godot default 0); squash requires the up-facing check to award a bounce.",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 114,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "duplicate",
+      "hash": 3511555459,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Node",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "OWNED",
+      "semantics": "Duplicate the node (flags baked to Godot default 15) and adopt the new node handle; the caller parents it via add_child (squash duplicates the DirectionalLight3D for gl_compatibility).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 115,
+      "scope": "class",
+      "className": "DirectionalLight3D",
+      "methodName": "set_sky_mode",
+      "hash": 2691194817,
+      "arguments": [
+        "enum::DirectionalLight3D.SkyMode"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a DirectionalLight3D sky-mode mutation (SKY_ONLY/LIGHT_ONLY split for the gl_compatibility light tuning).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 116,
+      "scope": "class",
+      "className": "RenderingServer",
+      "methodName": "directional_soft_shadow_filter_set_quality",
+      "hash": 3613045266,
+      "arguments": [
+        "enum::RenderingServer.ShadowQuality"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Set the directional soft-shadow filter quality through the active script's proxy singleton (squash raises it to PCF13 on gl_compatibility).",
+      "introducedBy": "60d-squash"
+    },
+    {
+      "opcode": 117,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "is_action_pressed",
+      "hash": 1631499404,
+      "arguments": [
+        "StringName",
+        "bool",
+        "bool"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Ask an InputEvent whether it presses a named action (allow_echo/exact_match baked to Godot defaults); squash retries on ui_accept.",
+      "introducedBy": "60d-squash"
     }
   ],
   "compositions": [
