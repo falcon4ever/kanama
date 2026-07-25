@@ -150,6 +150,8 @@ def _validate_console(console: Any) -> None:
     path = "console"
     errors = _get(console, "errors", path)
     _check_type(errors, list, f"{path}.errors")
+    warnings = _get(console, "warnings", path)
+    _check_type(warnings, list, f"{path}.warnings")
     boundary = _get(console, "boundaryErrors", path)
     _check_type(boundary, list, f"{path}.boundaryErrors")
 

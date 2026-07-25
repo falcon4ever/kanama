@@ -57,7 +57,7 @@ def _envelope(demo: str, checksum: str, *, passing: bool) -> dict:
         "callbacks": {"pending": 0},
         "connections": {"open": 0},
         "scheduler": {"pendingCoroutines": 0},
-        "console": {"errors": [], "boundaryErrors": []},
+        "console": {"errors": [], "warnings": [], "boundaryErrors": []},
         "teardown": {"outcome": "clean", "ownerRegistriesToBaseline": True},
     }
 

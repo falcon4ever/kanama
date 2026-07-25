@@ -54,7 +54,21 @@ export function buildEnvelope({
   const total = checkNames.length;
   const failed = total - passed;
 
-  const consoleErrors = consoleEvents.map((event) => `${event.type}: ${event.text}`);
+  // Godot's web shell routes engine stderr to console.error, so engine WARNINGs the
+  // engine itself recovered from (e.g. per-GPU texture-format fallbacks) arrive as
+  // console errors. Those must not make the gate GPU/driver-dependent: record them as
+  // warnings, fail only on everything else. Each WARNING is followed by an "at:" source
+  // line, classified with the warning it belongs to.
+  const consoleErrors = [];
+  const consoleWarnings = [];
+  let lastWasWarning = false;
+  for (const event of consoleEvents) {
+    const isWarning =
+      event.type === "console.error" &&
+      (event.text.startsWith("WARNING:") || (lastWasWarning && /^\s*at: /.test(event.text)));
+    (isWarning ? consoleWarnings : consoleErrors).push(`${event.type}: ${event.text}`);
+    lastWasWarning = isWarning;
+  }
   const boundaryErrors = [...(demoResult.boundaryErrors ?? [])];
 
   const loaded = demoResult.startup.loaded === true;
@@ -78,7 +92,7 @@ export function buildEnvelope({
     callbacks: demoResult.callbacks,
     connections: demoResult.connections,
     scheduler: demoResult.scheduler,
-    console: { errors: consoleErrors, boundaryErrors },
+    console: { errors: consoleErrors, warnings: consoleWarnings, boundaryErrors },
     teardown: demoResult.teardown,
   };
 }
