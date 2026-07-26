@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 9;
+  const KANAMA_WEB_PROTOCOL_VERSION = 10;
 
   function commandWordCount(opcode) {
     if (
@@ -61,6 +61,7 @@
     if (
       opcode === 13 ||
       opcode === 74 ||
+      opcode === 118 ||
       opcode === 76 ||
       opcode === 78 ||
       opcode === 84 ||
@@ -920,6 +921,9 @@
         rotation,
       );
     },
+    refreshRayTargetSnapshot(handle, x, y, z) {
+      return this.api.kanamaWebLoadRayTargetSnapshot(handle, x, y, z);
+    },
     refreshNode3DSnapshot(handle, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ) {
       this.snapshotBatchLoads += 1;
       return this.api.kanamaWebLoadNode3DSnapshot(
@@ -1218,7 +1222,7 @@
       // Ground reuses its browser handle) — tolerate an existing live handle like a node
       // lookup instead of requiring the proposed one. opcode 114 = Node.duplicate adopts a
       // genuinely new node through the proposed handle.
-      const isCollider = opcode === 112;
+      const isCollider = opcode === 112 || opcode === 122;
       const isObjectResult = isTween || isSceneTree || isSpriteFrames || isEnvironment;
       const kind = isTween
         ? "Tween"

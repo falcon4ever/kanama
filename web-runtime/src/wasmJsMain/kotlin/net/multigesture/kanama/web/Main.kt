@@ -23,6 +23,7 @@ import net.multigesture.kanama.backend.GPUParticles2DBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
 import net.multigesture.kanama.backend.NodeLookupBackendContractProbe
@@ -450,6 +451,17 @@ fun kanamaWebLoadNode2DSnapshot(
     modulateB,
     modulateA,
     rotation,
+  )
+  return 1
+}
+
+@OptIn(InternalKanamaBackendApi::class)
+@JsExport
+fun kanamaWebLoadRayTargetSnapshot(objectId: Int, x: Double, y: Double, z: Double): Int {
+  webWriteVector3Snapshot(
+    objectId,
+    WebVector3Slot.TARGET_POSITION,
+    GodotVector3(x.toFloat(), y.toFloat(), z.toFloat()),
   )
   return 1
 }

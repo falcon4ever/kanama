@@ -34,6 +34,7 @@ private val rotation3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val scale3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val velocity3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val rotationDegrees3Snapshots = mutableMapOf<Int, GodotVector3>()
+private val targetPosition3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val renderingMethodSnapshots = mutableMapOf<Int, String>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
@@ -56,6 +57,7 @@ internal enum class WebVector3Slot {
   SCALE,
   VELOCITY,
   ROTATION_DEGREES,
+  TARGET_POSITION,
 }
 
 internal fun GodotHandle.webId(): Int = backendToken().toInt()
@@ -78,6 +80,7 @@ internal fun webVector3Snapshot(objectId: Int, slot: WebVector3Slot): GodotVecto
     WebVector3Slot.SCALE -> scale3Snapshots[objectId]
     WebVector3Slot.VELOCITY -> velocity3Snapshots[objectId]
     WebVector3Slot.ROTATION_DEGREES -> rotationDegrees3Snapshots[objectId]
+    WebVector3Slot.TARGET_POSITION -> targetPosition3Snapshots[objectId]
   }
 
 internal fun webViewportRectSnapshot(objectId: Int): GodotRect2? = viewportRectSnapshots[objectId]
@@ -130,6 +133,7 @@ internal fun webWriteVector3Snapshot(objectId: Int, slot: WebVector3Slot, value:
     WebVector3Slot.SCALE -> scale3Snapshots[objectId] = value
     WebVector3Slot.VELOCITY -> velocity3Snapshots[objectId] = value
     WebVector3Slot.ROTATION_DEGREES -> rotationDegrees3Snapshots[objectId] = value
+    WebVector3Slot.TARGET_POSITION -> targetPosition3Snapshots[objectId] = value
   }
 }
 
@@ -367,6 +371,7 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   scale3Snapshots.remove(objectId)
   velocity3Snapshots.remove(objectId)
   rotationDegrees3Snapshots.remove(objectId)
+  targetPosition3Snapshots.remove(objectId)
   renderingMethodSnapshots.remove(objectId)
 }
 
