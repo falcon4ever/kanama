@@ -97,10 +97,12 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode == 65)
+        require(descriptor.opcode in setOf(65, 107, 109))
         commands.flush()
         when (descriptor.opcode) {
           65 -> immediateWebSetProgressRatio(receiver.webId(), value)
+          107 -> immediateWebSetProgressRatio3D(receiver.webId(), value)
+          109 -> immediateWebRotateY(receiver.webId(), value)
           else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")
         }
       }
@@ -117,9 +119,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 52)
+    require(descriptor.opcode in setOf(52, 115))
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
-      "Kanama Web SceneTree.quit exit code must fit Godot's int32 ABI"
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
     }
     commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)
   }
@@ -420,6 +422,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           receiver,
           immediateWebTweenLongRetObject(descriptor.opcode, receiver.webId(), value.toInt()),
         )
+      111 ->
+        registerReturnedBrowserObject(immediateWebSlideCollision(receiver.webId(), value.toInt()))
       else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")
     }
   }
@@ -441,6 +445,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           71 -> registerReturnedBrowserObject(token)
           73 -> registerReturnedNode(token)
           81 -> registerReturnedBrowserObject(token)
+          112 -> registerReturnedNode(token)
+          114 -> registerReturnedNode(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }
@@ -714,19 +720,32 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ): GodotVector3 {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    return when (descriptor.opcode) {
-      75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
-      77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
-      79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
-      89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
-      102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
-      else -> null
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ ->
+        when (descriptor.opcode) {
+          75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
+          77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
+          79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
+          89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
+          102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
+          else -> null
+        }
+          ?: error(
+            "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+              "object handle=${receiver.webId()}"
+          )
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode == 113)
+        commands.flush()
+        GodotVector3(
+          immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
+          immediateWebNoArgsVector3Y().toFloat(),
+          immediateWebNoArgsVector3Z().toFloat(),
+        )
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Vector3 return cannot use queued execution for opcode=${descriptor.opcode}")
     }
-      ?: error(
-        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-          "object handle=${receiver.webId()}"
-      )
   }
 
   override fun invokeVector3Arg(
@@ -823,6 +842,39 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       requireActiveWebScriptHandle(),
       first + "\u001f" + second,
     ) / 1000.0
+  }
+
+  override fun invokeVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 108)
+    commands.flush()
+    // Six Float32 components are packed into one query string (unit separator); the applier
+    // re-pushes the Node3D transform snapshot so rotation reads reflect the new orientation.
+    val packed =
+      listOf(first.x, first.y, first.z, second.x, second.y, second.z).joinToString("\u001f")
+    check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
+  }
+
+  override fun invokeLongArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 116)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value.toString())
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {

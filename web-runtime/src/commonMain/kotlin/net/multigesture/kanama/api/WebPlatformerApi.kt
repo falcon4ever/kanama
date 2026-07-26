@@ -3,6 +3,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.CharacterBody3DBackendContractProbe
+import net.multigesture.kanama.backend.DirectionalLight3DBackendContractProbe
 import net.multigesture.kanama.backend.EnvironmentBackendContractProbe
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
@@ -75,6 +76,27 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
   fun hide() {
     visible = false
   }
+
+  /**
+   * Position the node and orient -Z at [target]. Web bakes up/use_model_front to Godot's
+   * defaults (the only values the demos pass); the rotation snapshot is refreshed synchronously
+   * so a following rotation read sees the new orientation.
+   */
+  fun lookAtFromPosition(position: Vector3, target: Vector3, up: Vector3 = Vector3.UP) {
+    require(up == Vector3.UP) {
+      "Web look_at_from_position supports only the default up vector Vector3.UP"
+    }
+    Node3DBackendContractProbe(backendHandle)
+      .lookAtFromPosition(
+        GodotVector3(position.x.toFloat(), position.y.toFloat(), position.z.toFloat()),
+        GodotVector3(target.x.toFloat(), target.y.toFloat(), target.z.toFloat()),
+      )
+  }
+
+  /** Rotate around global Y; the rotation snapshot is refreshed synchronously. */
+  fun rotateY(angle: Double) {
+    Node3DBackendContractProbe(backendHandle).rotateY(angle)
+  }
 }
 
 class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
@@ -131,6 +153,15 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   fun moveAndSlide(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).moveAndSlide()
 
   fun isOnFloor(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnFloor()
+
+  fun getSlideCollisionCount(): Long =
+    CharacterBody3DBackendContractProbe(backendHandle).getSlideCollisionCount()
+
+  /** One collision record from the last move_and_slide; the caller closes it when done. */
+  fun getSlideCollision(index: Long): KinematicCollision3D? =
+    CharacterBody3DBackendContractProbe(backendHandle).getSlideCollision(index)?.let {
+      KinematicCollision3D(it)
+    }
 }
 
 /** 3D area monitor: emits body_entered when a physics body overlaps (coin/trigger pickups). */
@@ -165,6 +196,19 @@ class DirectionalLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
     set(value) {
       setParam(PARAM_SHADOW_OPACITY, value)
     }
+
+  /** Write-only on Web: squash splits the light into sky-only + light-only halves. */
+  var skyMode: Long
+    get() = unsupportedWebGameplayFamily("DirectionalLight3D.get_sky_mode")
+    set(value) {
+      DirectionalLight3DBackendContractProbe(backendHandle).setSkyMode(value)
+    }
+
+  companion object {
+    const val SKY_MODE_LIGHT_AND_SKY: Long = 0L
+    const val SKY_MODE_LIGHT_ONLY: Long = 1L
+    const val SKY_MODE_SKY_ONLY: Long = 2L
+  }
 }
 
 class Environment(godotObject: GodotHandle) : Resource(godotObject.toBackendHandle()) {
@@ -189,6 +233,12 @@ object OS {
 }
 
 object RenderingServer {
+  const val SHADOW_QUALITY_SOFT_HIGH: Long = 4L
+
   fun getCurrentRenderingMethod(): String =
     RenderingServerBackendContractProbe.getCurrentRenderingMethod()
+
+  fun directionalSoftShadowFilterSetQuality(quality: Long) {
+    RenderingServerBackendContractProbe.directionalSoftShadowFilterSetQuality(quality)
+  }
 }

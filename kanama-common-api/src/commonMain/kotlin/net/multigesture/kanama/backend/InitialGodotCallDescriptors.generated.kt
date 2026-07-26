@@ -1158,4 +1158,136 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val CANVASITEM_IS_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 106,
+      className = "CanvasItem",
+      methodName = "is_visible",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val PATHFOLLOW3D_SET_PROGRESS_RATIO =
+    GodotCallDescriptor(
+      opcode = 107,
+      className = "PathFollow3D",
+      methodName = "set_progress_ratio",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_LOOK_AT_FROM_POSITION =
+    GodotCallDescriptor(
+      opcode = 108,
+      className = "Node3D",
+      methodName = "look_at_from_position",
+      hash = 2086826090L,
+      shape = GodotCallShape.VECTOR3_VECTOR3_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_ROTATE_Y =
+    GodotCallDescriptor(
+      opcode = 109,
+      className = "Node3D",
+      methodName = "rotate_y",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_GET_SLIDE_COLLISION_COUNT =
+    GodotCallDescriptor(
+      opcode = 110,
+      className = "CharacterBody3D",
+      methodName = "get_slide_collision_count",
+      hash = 3905245786L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_GET_SLIDE_COLLISION =
+    GodotCallDescriptor(
+      opcode = 111,
+      className = "CharacterBody3D",
+      methodName = "get_slide_collision",
+      hash = 107003663L,
+      shape = GodotCallShape.LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val KINEMATICCOLLISION3D_GET_COLLIDER =
+    GodotCallDescriptor(
+      opcode = 112,
+      className = "KinematicCollision3D",
+      methodName = "get_collider",
+      hash = 2639523548L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val KINEMATICCOLLISION3D_GET_NORMAL =
+    GodotCallDescriptor(
+      opcode = 113,
+      className = "KinematicCollision3D",
+      methodName = "get_normal",
+      hash = 1914908202L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_DUPLICATE =
+    GodotCallDescriptor(
+      opcode = 114,
+      className = "Node",
+      methodName = "duplicate",
+      hash = 3511555459L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.OWNED,
+    )
+
+  val DIRECTIONALLIGHT3D_SET_SKY_MODE =
+    GodotCallDescriptor(
+      opcode = 115,
+      className = "DirectionalLight3D",
+      methodName = "set_sky_mode",
+      hash = 2691194817L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY =
+    GodotCallDescriptor(
+      opcode = 116,
+      className = "RenderingServer",
+      methodName = "directional_soft_shadow_filter_set_quality",
+      hash = 3613045266L,
+      shape = GodotCallShape.LONG_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENT_IS_ACTION_PRESSED =
+    GodotCallDescriptor(
+      opcode = 117,
+      className = "InputEvent",
+      methodName = "is_action_pressed",
+      hash = 1631499404L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

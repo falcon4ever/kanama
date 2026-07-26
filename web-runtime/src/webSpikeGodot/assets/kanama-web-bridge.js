@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 8;
+  const KANAMA_WEB_PROTOCOL_VERSION = 9;
 
   function commandWordCount(opcode) {
     if (
@@ -27,6 +27,7 @@
       opcode === 47 ||
       opcode === 52 ||
       opcode === 57 ||
+      opcode === 115 ||
       opcode === 66
     ) return 3;
     if (
@@ -120,6 +121,7 @@
     connectCallbacks: new Map(),
     objectQueryCallbacks: new Map(),
     noArgsVector2Callbacks: new Map(),
+    noArgsVector3Callbacks: new Map(),
     signalVector2iCallbacks: new Map(),
     tweenCallbacks: new Map(),
     handleOwners: new Map(),
@@ -143,6 +145,7 @@
     immediateConstructHandleResult: null,
     immediateLongResult: null,
     immediateVector2Result: null,
+    immediateVector3Result: null,
     browserHandleSlots: [{ generation: 0, kind: null, live: false }],
     freeBrowserHandleSlots: [],
     resourceLoads: 0,
@@ -221,6 +224,16 @@
     web3dSmokeQuitHandle: 0,
     platformerMainHandle: 0,
     platformerSmokeQuitHandle: 0,
+    squashMainHandle: 0,
+    squashSmokeQuitHandle: 0,
+    // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
+    // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
+    // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
+    // ordering violation. The rAF wrapper below stamps engine ticks.
+    rafTick: 0,
+    lastRafTimestamp: -1,
+    lastProcessRafTick: -1,
+    physicsAfterProcessSameTick: 0,
     match3FramePumps: 0,
     match3FrameContinuations: 0,
     match3ScaleMutations: 0,
@@ -336,13 +349,28 @@
         0,
       );
     },
+    unhandledInput(handle, eventHandle) {
+      return this.invoke(
+        handle,
+        "_unhandled_input",
+        "_unhandled_input",
+        () => this.api.kanamaWebUnhandledInput(handle, eventHandle),
+        0,
+      );
+    },
     frame(handle, delta) {
+      this.lastProcessRafTick = this.rafTick;
       if (this.mode === "bunnymark") {
         return this.process(handle, delta);
       }
       if (this.mode === "web3d") {
         // Minimal 3D render smoke: the single Node3D script runs its _process (spins a
         // child); no coroutine frame scheduler and no benchmark transport.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "squash") {
+        // squash-the-creeps is physics-driven; no script owns coroutines, so every
+        // script runs its plain _process/_physics_process dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "platformer") {
@@ -436,6 +464,7 @@
       return result;
     },
     process(handle, delta) {
+      this.lastProcessRafTick = this.rafTick;
       this.processCalls += 1;
       const started = performance.now();
       const result = this.invoke(
@@ -449,6 +478,7 @@
       return result;
     },
     physicsFrame(handle, delta) {
+      if (this.rafTick === this.lastProcessRafTick) this.physicsAfterProcessSameTick += 1;
       // Godot's fixed physics tick: run the script's _physics_process (character controllers
       // set velocity + move_and_slide here). Applies to every mode with a physics-body script.
       this.physicsProcessCalls = (this.physicsProcessCalls ?? 0) + 1;
@@ -676,7 +706,7 @@
       }
       return result;
     },
-    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i, tween) {
+    installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i, tween, noArgsVector3) {
       this.handleOwners.set(handle, handle);
       this.applyCallbacks.set(handle, apply);
       this.immediateCallbacks.set(handle, immediate);
@@ -693,6 +723,7 @@
       this.noArgsVector2Callbacks.set(handle, noArgsVector2);
       this.signalVector2iCallbacks.set(handle, signalVector2i);
       this.tweenCallbacks.set(handle, tween);
+      this.noArgsVector3Callbacks.set(handle, noArgsVector3);
     },
     clearProxyCallbacks(handle) {
       this.applyCallbacks.delete(handle);
@@ -710,6 +741,7 @@
       this.noArgsVector2Callbacks.delete(handle);
       this.signalVector2iCallbacks.delete(handle);
       this.tweenCallbacks.delete(handle);
+      this.noArgsVector3Callbacks.delete(handle);
       this.handleOwners.delete(handle);
     },
     ownerForHandle(handle) {
@@ -772,6 +804,11 @@
       return handle;
     },
     releaseTransientObjectHandle(handle) {
+      // The dispatched callback may have torn down the handle's owner (ui_accept retry
+      // reloads the scene, freeing every node and releasing the owner's handles — this
+      // transient among them). Already-released is fine; only release a live handle.
+      const slot = this.browserHandleSlot(handle);
+      if (!slot || slot.kind !== "Object") return;
       this.api.kanamaWebDiscardBrowserHandle(handle);
       this.releaseBrowserHandle(handle, "Object");
     },
@@ -1061,6 +1098,25 @@
       }
       return this.immediateResourceReleaseResult;
     },
+    releaseCollision(handle) {
+      // KinematicCollision3D records ride the same proxy release channel as resources
+      // (the applier erases the object from its handle dictionary), but the browser
+      // handle was allocated with the KinematicCollision3D kind.
+      const callback = this.callbackFor(
+        this.resourceReleaseCallbacks,
+        handle,
+        "Godot collision release",
+      );
+      this.immediateResourceReleaseResult = null;
+      callback(handle);
+      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
+        throw new Error("Godot collision release callback did not publish a result");
+      }
+      if (this.immediateResourceReleaseResult === 1) {
+        this.releaseBrowserHandle(handle, "KinematicCollision3D");
+      }
+      return this.immediateResourceReleaseResult;
+    },
     immediateNodeLookup(handle, path) {
       const owner = this.ownerForHandle(handle);
       const callback = this.callbackFor(this.nodeLookupCallbacks, handle, "Godot node lookup");
@@ -1157,6 +1213,12 @@
       // Node — same handle-kind rule as SpriteFrames (adopt as Object, or Kotlin's OBJECT use
       // trips a NODE-vs-OBJECT conflict).
       const isEnvironment = opcode === 81;
+      // opcode 112 = KinematicCollision3D.get_collider returns a live scene node that is
+      // usually already tracked (a scripted Mob resolves to its script handle; a looked-up
+      // Ground reuses its browser handle) — tolerate an existing live handle like a node
+      // lookup instead of requiring the proposed one. opcode 114 = Node.duplicate adopts a
+      // genuinely new node through the proposed handle.
+      const isCollider = opcode === 112;
       const isObjectResult = isTween || isSceneTree || isSpriteFrames || isEnvironment;
       const kind = isTween
         ? "Tween"
@@ -1174,7 +1236,12 @@
       callback(opcode, handle, resultHandle);
       const result = this.immediateObjectHandleResult;
       if (result !== 0 && result !== resultHandle) {
-        throw new Error("Godot no-args object callback published an invalid handle");
+        const liveScript = this.api.kanamaWebIsLive(result) === 1;
+        if (!isCollider || (!liveScript && this.isBrowserHandleLive(result) !== 1)) {
+          throw new Error("Godot no-args object callback published an invalid handle");
+        }
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, kind);
       }
       if (result === 0) {
         if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
@@ -1215,6 +1282,23 @@
         throw new Error("Godot Tweener long callback did not return its receiver");
       }
       return handle;
+    },
+    immediateSlideCollision(handle, index) {
+      const owner = this.ownerForHandle(handle);
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot slide collision");
+      const resultHandle = this.allocateBrowserHandle("KinematicCollision3D", owner);
+      this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(111, handle, resultHandle, index);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        throw new Error("Godot slide-collision callback published an invalid handle");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
+      }
+      return result;
     },
     immediateTweenPropertyVector2(opcode, tweenHandle, targetHandle, property, x, y, duration) {
       if (this.mode === "match3" && property === "position") {
@@ -1280,7 +1364,12 @@
       return 1;
     },
     immediateConnect(handle, signal, targetHandle, method, flags) {
-      const callback = this.callbackFor(this.connectCallbacks, targetHandle, "Godot connect");
+      // Route to the ACTIVE calling script's proxy: it minted both the source and target
+      // handles (instantiate/node-lookup), so its dictionary can resolve them. Routing by
+      // target broke cross-script connects whose source is foreign to the target's proxy
+      // (squash: Main connects mob.squashed -> ScoreLabel).
+      const router = this.activeOwnerHandle || targetHandle;
+      const callback = this.callbackFor(this.connectCallbacks, router, "Godot connect");
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags);
       if (!Number.isInteger(this.immediateConnectResult)) {
@@ -1294,7 +1383,8 @@
       return this.immediateConnectResult;
     },
     immediateConnectBound(handle, signal, targetHandle, method, boundValue, flags) {
-      const callback = this.callbackFor(this.connectCallbacks, targetHandle, "Godot bound connect");
+      const router = this.activeOwnerHandle || targetHandle;
+      const callback = this.callbackFor(this.connectCallbacks, router, "Godot bound connect");
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
@@ -1341,6 +1431,18 @@
       }
       return this.immediateLongResult;
     },
+    immediateDoubleQuery(opcode, handle, value) {
+      // Object-query channel carrying one double (PathFollow3D.set_progress_ratio,
+      // Node3D.rotate_y): the applier confirms application and re-pushes the transform
+      // snapshot so read-your-write reads reflect the move.
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot double query");
+      this.immediateLongResult = null;
+      callback(opcode, handle, value);
+      if (this.immediateLongResult !== 1) {
+        throw new Error("Godot double-query callback did not confirm application");
+      }
+      return this.immediateLongResult;
+    },
     immediateNoArgsVector2X(opcode, handle) {
       const callback = this.callbackFor(
         this.noArgsVector2Callbacks,
@@ -1375,6 +1477,39 @@
     },
     recordImmediateVector2(x, y) {
       this.immediateVector2Result = { x, y };
+    },
+    immediateNoArgsVector3X(opcode, handle) {
+      const callback = this.callbackFor(
+        this.noArgsVector3Callbacks,
+        handle,
+        "Godot no-args Vector3",
+      );
+      this.immediateVector3Result = null;
+      callback(opcode, handle);
+      if (
+        this.immediateVector3Result === null ||
+        !Number.isFinite(this.immediateVector3Result.x) ||
+        !Number.isFinite(this.immediateVector3Result.y) ||
+        !Number.isFinite(this.immediateVector3Result.z)
+      ) {
+        throw new Error("Godot Vector3 callback did not publish a finite result");
+      }
+      return this.immediateVector3Result.x;
+    },
+    immediateNoArgsVector3Y() {
+      if (this.immediateVector3Result === null) {
+        throw new Error("Godot Vector3 Y read without a preceding X read");
+      }
+      return this.immediateVector3Result.y;
+    },
+    immediateNoArgsVector3Z() {
+      if (this.immediateVector3Result === null) {
+        throw new Error("Godot Vector3 Z read without a preceding X read");
+      }
+      return this.immediateVector3Result.z;
+    },
+    recordImmediateVector3(x, y, z) {
+      this.immediateVector3Result = { x, y, z };
     },
     installBenchmarkCallback(callback) {
       this.benchmarkCallback = callback;
@@ -1625,6 +1760,14 @@
       }
       if (this.mode === "platformer" && scriptName.endsWith(".SmokeQuit")) {
         this.platformerSmokeQuitHandle = handle;
+      }
+      if (this.mode === "squash" && scriptName.endsWith(".Main")) {
+        this.squashMainHandle = handle;
+      }
+      if (this.mode === "squash" && scriptName.endsWith(".SmokeQuit")) {
+        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
+        // drain live handles to zero for the teardown assertion.
+        this.squashSmokeQuitHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);
@@ -1983,6 +2126,18 @@
     document.querySelector("#kanama-results").textContent = error?.stack ?? String(error);
     console.error("[kanama:web-spike] FATAL", error);
   };
+
+  // Stamp engine ticks for the physics/process ordering counter: one increment per
+  // animation-frame timestamp (Godot registers a single main-loop rAF callback).
+  const originalRequestAnimationFrame = globalThis.requestAnimationFrame.bind(globalThis);
+  globalThis.requestAnimationFrame = (callback) =>
+    originalRequestAnimationFrame((timestamp) => {
+      if (timestamp !== bridge.lastRafTimestamp) {
+        bridge.lastRafTimestamp = timestamp;
+        bridge.rafTick += 1;
+      }
+      return callback(timestamp);
+    });
 
   globalThis.bootstrapKanamaWeb = async (apiPromise) => {
     const api = await apiPromise;

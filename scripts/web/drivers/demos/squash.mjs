@@ -1,17 +1,17 @@
-// demos/platformer.mjs -- Starter-Kit-3D-Platformer play + teardown assertions.
+// demos/squash.mjs -- squash-the-creeps play + teardown assertions for the Web smoke.
 //
-// The platformer is self-driven for smoke purposes: without any synthesized input the
-// CharacterBody3D player still runs gravity + move_and_slide every physics tick, coins
-// spin, clouds bob, and the View camera follows -- so _physics_process and _process both
-// advance with their command mutations applied. This driver OBSERVES that both frame
-// pumps run (physics AND process), that commands flow, then triggers
-// SmokeQuit.smoke_teardown and polls the live-handle count to zero.
+// squash is self-driven: MobTimer autostarts and spawns a mob every 0.5s; each mob's
+// initialize runs look_at_from_position/rotate_y and reads its own rotation back, the
+// Player's _physics_process runs gravity + move_and_slide + the slide-collision query
+// loop every tick, and mobs queue_free themselves when they leave the screen. This
+// driver OBSERVES: mobs spawn (instantiate + add_child), physics advances, mobs free
+// themselves, then SmokeQuit.smoke_teardown drains every live handle to zero.
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const START = Date.now();
 const trace = (msg) => {
-  if (DEBUG) process.stderr.write(`[platformer ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
+  if (DEBUG) process.stderr.write(`[squash ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
 };
 
 async function snapshot(evaluate) {
@@ -26,14 +26,15 @@ async function snapshot(evaluate) {
       return {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
-        mainHandle: bridge.platformerMainHandle,
-        smokeQuitHandle: bridge.platformerSmokeQuitHandle,
+        mainHandle: bridge.squashMainHandle,
+        smokeQuitHandle: bridge.squashSmokeQuitHandle,
         readyCount: bridge.readyCount,
         mainReady: classCount(".Main"),
         playerReady: classCount(".Player"),
-        hudReady: classCount(".Hud"),
-        coinReady: classCount(".Coin"),
-        processCalls: bridge.processCalls,
+        scoreLabelReady: classCount(".ScoreLabel"),
+        mobReady: classCount(".Mob"),
+        mobInstantiations: bridge.match3PackedSceneInstantiations,
+        mobAddChildCommands: bridge.match3AddChildCommands,
         physicsCalls: bridge.physicsProcessCalls ?? 0,
         appliedCommands: bridge.appliedCommands,
         liveHandles: bridge.liveBrowserHandleCount,
@@ -53,20 +54,26 @@ async function snapshot(evaluate) {
 }
 
 async function observe(evaluate, seed, windowMs, deadline, predicate) {
-  const peak = { ...seed };
+  const peak = { mobFrees: 0, ...seed };
   let last = null;
+  let prevLive = seed.maxLiveHandles;
   const until = Math.min(deadline, Date.now() + windowMs);
   while (Date.now() < until) {
     const snap = await snapshot(evaluate);
     if (snap) {
-      peak.processCalls = Math.max(peak.processCalls, snap.processCalls);
+      peak.mobInstantiations = Math.max(peak.mobInstantiations, snap.mobInstantiations);
+      peak.mobAddChildCommands = Math.max(peak.mobAddChildCommands, snap.mobAddChildCommands);
       peak.physicsCalls = Math.max(peak.physicsCalls, snap.physicsCalls);
       peak.appliedCommands = Math.max(peak.appliedCommands, snap.appliedCommands);
       peak.maxLiveHandles = Math.max(peak.maxLiveHandles, snap.maxLiveHandles);
       peak.crossings = Math.max(peak.crossings, snap.crossings);
       peak.callbackErrors = Math.max(peak.callbackErrors, snap.callbackErrors);
+      // A drop in the live-handle count means a mob (walked off the level and past its
+      // VisibleOnScreenNotifier3D) freed itself and released its handles.
+      if (snap.liveHandles < prevLive) peak.mobFrees += 1;
+      prevLive = snap.liveHandles;
       last = snap;
-      trace(`process=${snap.processCalls} physics=${snap.physicsCalls} applied=${snap.appliedCommands} live=${snap.liveHandles} crossings=${snap.crossings} errs=${snap.callbackErrors}`);
+      trace(`mobs=${snap.mobInstantiations} physics=${snap.physicsCalls} live=${snap.liveHandles} frees=${peak.mobFrees} errs=${snap.callbackErrors}`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);
@@ -74,10 +81,10 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runPlatformer({ url, evaluate, navigate, deadline }) {
+export async function runSquash({ url, evaluate, navigate, deadline }) {
   const startupStart = Date.now();
   trace("navigate");
-  await navigate(`${url}?platformer=${Date.now()}`);
+  await navigate(`${url}?squash=${Date.now()}`);
 
   const readyDeadline = Math.min(deadline, Date.now() + 45_000);
   let ready = null;
@@ -85,12 +92,11 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
     const snap = await snapshot(evaluate);
     if (
       snap &&
-      snap.mode === "platformer" &&
+      snap.mode === "squash" &&
       snap.protocol > 0 &&
       snap.mainReady >= 1 &&
       snap.playerReady >= 1 &&
-      snap.hudReady >= 1 &&
-      snap.coinReady >= 1 &&
+      snap.scoreLabelReady >= 1 &&
       snap.mainHandle > 0 &&
       snap.smokeQuitHandle > 0
     ) {
@@ -99,58 +105,55 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
     }
     await delay(100);
   }
-  if (!ready) throw new Error("Kotlin/Wasm 3D platformer did not become ready");
+  if (!ready) throw new Error("Kotlin/Wasm squash-the-creeps did not become ready");
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: readyCount=${ready.readyCount} mainHandle=${ready.mainHandle} protocol=${ready.protocol}`);
 
-  // Observe the game running idle: the player's _physics_process (gravity +
-  // move_and_slide) advances physicsCalls and its velocity/position mutations advance
-  // appliedCommands; coins/clouds/view advance processCalls.
+  // Observe self-driven gameplay: MobTimer spawns mobs (instantiate + initialize with
+  // look_at_from_position/rotate_y + rotation read-back), the Player ticks physics with
+  // the slide-collision query loop, and the earliest mobs walk off and free themselves.
   const seed = {
-    processCalls: ready.processCalls,
+    mobInstantiations: 0,
+    mobAddChildCommands: 0,
     physicsCalls: ready.physicsCalls,
     appliedCommands: ready.appliedCommands,
-    maxLiveHandles: ready.maxLiveHandles,
+    maxLiveHandles: ready.liveHandles,
     crossings: ready.crossings,
     callbackErrors: 0,
   };
-  const gameplay = await observe(
-    evaluate,
-    seed,
-    8_000,
-    deadline,
-    (snap) =>
-      snap.physicsCalls >= ready.physicsCalls + 30 &&
-      snap.processCalls >= ready.processCalls + 30 &&
-      snap.appliedCommands >= ready.appliedCommands + 30,
+  const gameplay = await observe(evaluate, seed, 14_000, deadline, (snap, p) =>
+    p.mobInstantiations >= 4 && p.mobFrees >= 2,
   );
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
-  trace(`gameplay: process=${peak.processCalls} physics=${peak.physicsCalls} applied=${peak.appliedCommands} live=${atPeak.liveHandles}`);
+  trace(`gameplay: mobs=${peak.mobInstantiations} physics=${peak.physicsCalls} frees=${peak.mobFrees} live=${atPeak.liveHandles}`);
 
   // Full teardown: SmokeQuit.smoke_teardown (its only @RegisterFunction, method#1) frees
   // the scene root; every node exits the tree and releases its handles.
   trace("smoke_teardown");
   await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.platformerSmokeQuitHandle, 1); true",
+    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.squashSmokeQuitHandle, 1); true",
   );
   const teardown = await observe(evaluate, peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
-  trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);
+  trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
 
   const protocolVersion = ready.protocol;
   const checks = {
-    modePlatformer: ready.mode === "platformer",
+    modeSquash: ready.mode === "squash",
     protocol9: protocolVersion === 9,
     sceneScriptsReady:
-      ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1 && ready.coinReady >= 1,
-    // Both frame pumps ran: _physics_process (player gravity/move_and_slide) and
-    // _process (coins/clouds/camera) each advanced many frames.
-    physicsFramesAdvanced: peak.physicsCalls >= ready.physicsCalls + 30,
-    processFramesAdvanced: peak.processCalls >= ready.processCalls + 30,
-    gameplayCommandsApplied: peak.appliedCommands >= ready.appliedCommands + 30,
-    // move_and_slide/is_on_floor are immediate kotlin->godot crossings every physics tick.
+      ready.mainReady >= 1 && ready.playerReady >= 1 && ready.scoreLabelReady >= 1,
+    // MobTimer spawned mobs; each initialize ran the look_at/rotate/rotation-read chain.
+    mobsInstantiated: peak.mobInstantiations >= 4,
+    mobsAddedToTree: peak.mobAddChildCommands >= peak.mobInstantiations,
+    // The Player's _physics_process (gravity + move_and_slide + slide-collision loop) and
+    // every mob's move_and_slide advanced many ticks.
+    physicsFramesAdvanced: peak.physicsCalls >= ready.physicsCalls + 60,
+    handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
+    // Mobs left the level and released their handles, bounded by the peak — no leak.
+    mobsSpawnAndFree: peak.mobFrees >= 2 && atPeak.liveHandles <= peak.maxLiveHandles,
     fullTeardownToZero: settled.liveHandles === 0,
     // Godot runs every physics tick before the idle/_process pass inside one rAF
     // iteration; the bridge counts any same-tick physics-after-process dispatch.
@@ -165,8 +168,8 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   return {
     protocolVersion,
     startup: {
-      loaded: ready.mode === "platformer",
-      outcome: ready.mode === "platformer" ? "ready" : "failed",
+      loaded: ready.mode === "squash",
+      outcome: ready.mode === "squash" ? "ready" : "failed",
       durationMs: startupDurationMs,
     },
     checks,
@@ -177,8 +180,9 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
     },
     crossings: {
       kotlinToGodotCalls: peak.crossings,
-      processCalls: peak.processCalls,
       physicsProcessCalls: peak.physicsCalls,
+      mobInstantiations: peak.mobInstantiations,
+      mobAddChildCommands: peak.mobAddChildCommands,
       appliedCommands: peak.appliedCommands,
     },
     callbacks: {

@@ -159,6 +159,15 @@ fun kanamaWebInput(objectId: Int, eventHandle: Int): Int {
 }
 
 @JsExport
+fun kanamaWebUnhandledInput(objectId: Int, eventHandle: Int): Int {
+  return webCallbackBoundary(objectId, "_unhandled_input") { record ->
+    KanamaWebProjectRegistry.unhandledInput(record.scriptId, record.script, eventHandle)
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebProcess(objectId: Int, delta: Double): Int {
   return webCallbackBoundary(objectId, "_process") { record ->
     commands.clear()

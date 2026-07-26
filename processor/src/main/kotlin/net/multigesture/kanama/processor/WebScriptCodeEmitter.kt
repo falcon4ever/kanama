@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 8
+    const val PROTOCOL_VERSION = 9
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -226,6 +226,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendDrawDispatcher()
     appendExitTreeDispatcher()
     appendInputDispatcher()
+    appendUnhandledInputDispatcher()
     appendNoArgsMethodDispatcher()
     appendStringPropertyGetter()
     appendStringPropertySetter()
@@ -354,6 +355,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("    when (scriptId) {")
     scripts.forEachIndexed { index, input ->
       val virtual = input.model.virtuals.firstOrNull { it.virtualName == "_input" }
+      val argument = virtual?.args?.singleOrNull()
+      val wrapper = argument?.objectWrapperFqName
+      val body =
+        if (virtual == null || argument?.type != TypeMapping.OBJECT || wrapper == null) "Unit"
+        else
+          "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}($wrapper(GodotHandle.fromBackendToken(eventHandle.toLong())))"
+      appendLine("      ${index + 1} -> $body")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendUnhandledInputDispatcher() {
+    appendLine("  fun unhandledInput(scriptId: Int, script: KanamaWebScript, eventHandle: Int) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { index, input ->
+      val virtual = input.model.virtuals.firstOrNull { it.virtualName == "_unhandled_input" }
       val argument = virtual?.args?.singleOrNull()
       val wrapper = argument?.objectWrapperFqName
       val body =
@@ -705,6 +725,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_noargs_vector2_callback")
     appendLine("var _kanama_signal_vector2i_callback")
     appendLine("var _kanama_tween_callback")
+    appendLine("var _kanama_noargs_vector3_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
     appendLine("var _kanama_object_handles: Dictionary = {}")
     appendLine("var _kanama_tween_children: Dictionary = {}")
@@ -767,6 +788,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t_kanama_signal_vector2i_callback = JavaScriptBridge.create_callback(_kanama_signal_emit_vector2i)"
     )
     appendLine("\t_kanama_tween_callback = JavaScriptBridge.create_callback(_kanama_tween_call)")
+    appendLine(
+      "\t_kanama_noargs_vector3_callback = JavaScriptBridge.create_callback(_kanama_noargs_vector3)"
+    )
     appendLine("\t_kanama_bridge.installProxyCallbacks(")
     appendLine("\t\t_kanama_handle,")
     appendLine("\t\t_kanama_apply_callback,")
@@ -783,7 +807,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_object_query_callback,")
     appendLine("\t\t_kanama_noargs_vector2_callback,")
     appendLine("\t\t_kanama_signal_vector2i_callback,")
-    appendLine("\t\t_kanama_tween_callback)")
+    appendLine("\t\t_kanama_tween_callback,")
+    appendLine("\t\t_kanama_noargs_vector3_callback)")
     if (node2dAttachment) {
       appendLine("\tvar target: Node2D = self")
       appendLine(
@@ -795,10 +820,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine(
         "\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, target3d.position.x, target3d.position.y, target3d.position.z, target3d.rotation.x, target3d.rotation.y, target3d.rotation.z, target3d.scale.x, target3d.scale.y, target3d.scale.z)"
       )
-      appendLine(
-        "\t_kanama_bridge.refreshRenderingMethodSnapshot(_kanama_handle, RenderingServer.get_current_rendering_method())"
-      )
     }
+    // The renderer name is global and any script may branch on it at ready (squash's Main
+    // attaches to a plain Node), so every proxy seeds its per-script snapshot.
+    appendLine(
+      "\t_kanama_bridge.refreshRenderingMethodSnapshot(_kanama_handle, RenderingServer.get_current_rendering_method())"
+    )
     if (particlesAttachment) {
       appendLine("\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
     }
@@ -923,6 +950,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("\t\t_kanama_object_handles.erase(event_handle)")
       appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(event_handle)")
     }
+    if (model.virtuals.any { it.virtualName == "_unhandled_input" }) {
+      appendLine()
+      appendLine("func _unhandled_input(event: InputEvent) -> void:")
+      appendLine("\tif _kanama_handle != 0:")
+      appendLine(
+        "\t\tvar event_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+      )
+      appendLine("\t\t_kanama_object_handles[event_handle] = event")
+      appendLine("\t\t_kanama_bridge.unhandledInput(_kanama_handle, event_handle)")
+      appendLine("\t\t_kanama_object_handles.erase(event_handle)")
+      appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(event_handle)")
+    }
     appendLine()
     appendLine("func _draw() -> void:")
     appendLine("\tif _kanama_handle != 0:")
@@ -961,6 +1000,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_noargs_vector2_callback = null")
     appendLine("\t_kanama_signal_vector2i_callback = null")
     appendLine("\t_kanama_tween_callback = null")
+    appendLine("\t_kanama_noargs_vector3_callback = null")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
     appendLine(
@@ -1143,6 +1183,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 52 and target_object is SceneTree:")
     appendLine("\t\t\t(target_object as SceneTree).quit(bytes.decode_s32(offset + 8))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 115 and target_object is DirectionalLight3D:")
+    appendLine(
+      "\t\t\t(target_object as DirectionalLight3D).sky_mode = bytes.decode_s32(offset + 8)"
+    )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     if (node2dAttachment) {
@@ -1376,6 +1422,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\tscript_handle = int(value.call(\"_kanama_ensure_created\"))")
     appendLine("\tif script_handle != 0:")
+    appendLine("\t\t# Register locally too: any handle this proxy returns must be resolvable")
+    appendLine("\t\t# in this proxy's dictionary (cross-script signal connects resolve here).")
+    appendLine("\t\t_kanama_object_handles[script_handle] = value")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(script_handle)")
     appendLine("\t\treturn script_handle")
     appendLine("\tfor existing_handle in _kanama_object_handles:")
@@ -1430,7 +1479,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar receiver_handle := int(args[1])")
     appendLine("\tvar result_handle := int(args[2])")
     appendLine(
-      "\tvar receiver: Node = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle) as Node"
+      "\tvar receiver: Object = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle)"
     )
     appendLine("\tvar value: Object = null")
     appendLine("\tif opcode == 19 and receiver != null:")
@@ -1445,10 +1494,32 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.get_parent()")
     appendLine("\telif opcode == 81 and receiver is WorldEnvironment:")
     appendLine("\t\tvalue = (receiver as WorldEnvironment).environment")
+    appendLine("\telif opcode == 112 and receiver is KinematicCollision3D:")
+    appendLine("\t\tvalue = (receiver as KinematicCollision3D).get_collider()")
+    appendLine("\telif opcode == 114 and receiver is Node:")
+    appendLine("\t\tvalue = (receiver as Node).duplicate()")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
+    appendLine("\t# get_collider returns a live scene node: resolve to its existing script or")
+    appendLine("\t# browser handle (node-lookup rule) instead of registering a duplicate.")
+    appendLine("\tif opcode == 112:")
+    appendLine("\t\tif value.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\t\tvar collider_script_handle := int(value.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\t\tif collider_script_handle != 0:")
+    appendLine("\t\t\t\t_kanama_object_handles[collider_script_handle] = value")
+    appendLine("\t\t\t\t_kanama_bridge.recordImmediateObjectHandle(collider_script_handle)")
+    appendLine("\t\t\t\treturn collider_script_handle")
+    appendLine("\t\tfor existing_handle in _kanama_object_handles:")
+    appendLine("\t\t\tif is_same(_kanama_object_handles[existing_handle], value):")
+    appendLine("\t\t\t\t_kanama_bridge.recordImmediateObjectHandle(int(existing_handle))")
+    appendLine("\t\t\t\treturn int(existing_handle)")
     appendLine("\t_kanama_object_handles[result_handle] = value")
+    appendLine("\tif value is Node3D:")
+    appendLine("\t\tvar node_3d := value as Node3D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, node_3d.position.x, node_3d.position.y, node_3d.position.z, node_3d.rotation.x, node_3d.rotation.y, node_3d.rotation.z, node_3d.scale.x, node_3d.scale.y, node_3d.scale.z)"
+    )
     appendLine("\tif value is SpriteFrames:")
     appendLine(
       "\t\t_kanama_bridge.loadAnimationNames(result_handle, \"\\n\".join((value as SpriteFrames).get_animation_names()))"
@@ -1511,6 +1582,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\telif opcode == 42 and receiver is PropertyTweener:")
     appendLine("\t\t(receiver as PropertyTweener).set_ease(int(args[2]))")
     appendLine("\t\tresult_handle = receiver_handle")
+    appendLine("\telif opcode == 111:")
+    appendLine(
+      "\t\tvar slide_body: Object = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle)"
+    )
+    appendLine("\t\tif slide_body is CharacterBody3D:")
+    appendLine("\t\t\tvar proposed_collision_handle := int(args[2])")
+    appendLine(
+      "\t\t\tvar collision := (slide_body as CharacterBody3D).get_slide_collision(int(args[3]))"
+    )
+    appendLine("\t\t\tif collision != null:")
+    appendLine("\t\t\t\t_kanama_object_handles[proposed_collision_handle] = collision")
+    appendLine("\t\t\t\tresult_handle = proposed_collision_handle")
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn int(result_handle != 0)")
     appendLine()
@@ -1620,6 +1703,43 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t\t_kanama_bridge.refreshNode2DSnapshot(object_handle, follow.position.x, follow.position.y, follow.scale.x, follow.scale.y, follow.modulate.r, follow.modulate.g, follow.modulate.b, follow.modulate.a, follow.rotation)"
     )
     appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 106 and value is CanvasItem:")
+    appendLine("\t\t\tresult = int((value as CanvasItem).is_visible())")
+    appendLine("\t\telif opcode == 107 and value is PathFollow3D:")
+    appendLine("\t\t\tvar follow_3d := value as PathFollow3D")
+    appendLine("\t\t\tfollow_3d.progress_ratio = float(args[2])")
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode3DSnapshot(object_handle, follow_3d.position.x, follow_3d.position.y, follow_3d.position.z, follow_3d.rotation.x, follow_3d.rotation.y, follow_3d.rotation.z, follow_3d.scale.x, follow_3d.scale.y, follow_3d.scale.z)"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 108 and value is Node3D:")
+    appendLine("\t\t\tvar look_node := value as Node3D")
+    appendLine("\t\t\tvar look_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\tlook_node.look_at_from_position(Vector3(look_parts[0], look_parts[1], look_parts[2]), Vector3(look_parts[3], look_parts[4], look_parts[5]))"
+    )
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode3DSnapshot(object_handle, look_node.position.x, look_node.position.y, look_node.position.z, look_node.rotation.x, look_node.rotation.y, look_node.rotation.z, look_node.scale.x, look_node.scale.y, look_node.scale.z)"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 109 and value is Node3D:")
+    appendLine("\t\t\tvar rotate_node := value as Node3D")
+    appendLine("\t\t\trotate_node.rotate_y(float(args[2]))")
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode3DSnapshot(object_handle, rotate_node.position.x, rotate_node.position.y, rotate_node.position.z, rotate_node.rotation.x, rotate_node.rotation.y, rotate_node.rotation.z, rotate_node.scale.x, rotate_node.scale.y, rotate_node.scale.z)"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 110 and value is CharacterBody3D:")
+    appendLine("\t\t\tresult = (value as CharacterBody3D).get_slide_collision_count()")
+    appendLine("\t\telif opcode == 116:")
+    appendLine(
+      "\t\t\tRenderingServer.directional_soft_shadow_filter_set_quality(int(String(args[2])))"
+    )
+    appendLine("\t\t\tresult = 0")
+    appendLine("\t\telif opcode == 117 and value is InputEvent:")
+    appendLine(
+      "\t\t\tresult = int((value as InputEvent).is_action_pressed(StringName(String(args[2]))))"
+    )
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -1633,6 +1753,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif opcode == 27 and value is CanvasItem:")
     appendLine("\t\tresult = (value as CanvasItem).get_local_mouse_position()")
     appendLine("\t_kanama_bridge.recordImmediateVector2(result.x, result.y)")
+    appendLine("\treturn 1")
+    appendLine()
+    appendLine("func _kanama_noargs_vector3(args: Array) -> int:")
+    appendLine("\tvar opcode := int(args[0])")
+    appendLine("\tvar object_handle := int(args[1])")
+    appendLine(
+      "\tvar value: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
+    )
+    appendLine("\tvar result := Vector3.ZERO")
+    appendLine("\tif opcode == 113 and value is KinematicCollision3D:")
+    appendLine("\t\tresult = (value as KinematicCollision3D).get_normal()")
+    appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()
     appendLine("func _kanama_signal_emit_vector2i(args: Array) -> int:")

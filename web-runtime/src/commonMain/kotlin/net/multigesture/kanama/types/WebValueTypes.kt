@@ -67,6 +67,8 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
 
   fun length(): Double = sqrt(x * x + y * y + z * z)
 
+  fun dot(other: Vector3): Double = x * other.x + y * other.y + z * other.z
+
   fun withX(value: Number): Vector3 = Vector3(value.toDouble(), y, z)
 
   fun withY(value: Number): Vector3 = Vector3(x, value.toDouble(), z)
@@ -107,6 +109,7 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
     val ONE = Vector3(1.0, 1.0, 1.0)
     val UP = Vector3(0.0, 1.0, 0.0)
     val DOWN = Vector3(0.0, -1.0, 0.0)
+    val FORWARD = Vector3(0.0, 0.0, -1.0)
   }
 }
 

@@ -63,6 +63,8 @@ enum class GodotCallShape {
   STRINGNAME_ARG_SINGLETON,
   STRINGNAME_DOUBLE_ARG,
   STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON,
+  VECTOR3_VECTOR3_ARG,
+  LONG_ARG_SINGLETON,
 }
 
 @InternalKanamaBackendApi
@@ -456,6 +458,26 @@ interface GodotBackendSpi {
     first: String,
     second: String,
   ): Double {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Two-Vector3 void call: e.g. Node3D.look_at_from_position with baked up/use_model_front. */
+  fun invokeVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton Long-argument void call (no receiver): e.g. RenderingServer shadow tuning. */
+  fun invokeLongArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: Long,
+  ) {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -1047,6 +1069,30 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    requireShape(descriptor, GodotCallShape.VECTOR3_VECTOR3_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeVector3Vector3Arg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      first,
+      second,
+    )
+  }
+
+  fun invokeLongArgSingleton(descriptor: GodotCallDescriptor, value: Long) {
+    requireShape(descriptor, GodotCallShape.LONG_ARG_SINGLETON)
+    val selected = requireBackend()
+    selected.invokeLongArgSingleton(descriptor, resolve(selected, descriptor), value)
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -1205,6 +1251,9 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
   fun queueFree() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.NODE_QUEUE_FREE, handle)
   }
+
+  fun duplicate(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_DUPLICATE, handle)
 
   fun getTree(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_TREE, handle)
@@ -1418,6 +1467,9 @@ class CanvasItemBackendContractProbe(private val handle: GodotHandle) {
       visible,
     )
   }
+
+  fun isVisible(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(InitialGodotCallDescriptors.CANVASITEM_IS_VISIBLE, handle)
 }
 
 /** Typed AnimatedSprite2D slice used by dodge-the-creeps player/mob animation. */
@@ -1671,6 +1723,13 @@ class InputEventBackendContractProbe(private val handle: GodotHandle) {
       InitialGodotCallDescriptors.INPUTEVENT_IS_RELEASED,
       handle,
     )
+
+  fun isActionPressed(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBool(
+      InitialGodotCallDescriptors.INPUTEVENT_IS_ACTION_PRESSED,
+      handle,
+      action,
+    )
 }
 
 /** Typed mouse-button query used by Match3 tile input. */
@@ -1740,6 +1799,20 @@ class Node3DBackendContractProbe(val handle: GodotHandle) {
         value,
       )
     }
+
+  /** Position the node and orient -Z at [target] (up/use_model_front baked to Godot defaults). */
+  fun lookAtFromPosition(position: GodotVector3, target: GodotVector3) {
+    GodotBackendCalls.invokeVector3Vector3Arg(
+      InitialGodotCallDescriptors.NODE3D_LOOK_AT_FROM_POSITION,
+      handle,
+      position,
+      target,
+    )
+  }
+
+  fun rotateY(angle: Double) {
+    GodotBackendCalls.invokeDoubleArg(InitialGodotCallDescriptors.NODE3D_ROTATE_Y, handle, angle)
+  }
 }
 
 /** Typed CanvasLayer visibility slice used by the 3D platformer's mobile-control overlay. */
@@ -1837,6 +1910,63 @@ class CharacterBody3DBackendContractProbe(private val handle: GodotHandle) {
       InitialGodotCallDescriptors.CHARACTERBODY3D_IS_ON_FLOOR,
       handle,
     )
+
+  fun getSlideCollisionCount(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_GET_SLIDE_COLLISION_COUNT,
+      handle,
+    )
+
+  fun getSlideCollision(index: Long): GodotHandle? =
+    GodotBackendCalls.invokeLongRetHandle(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_GET_SLIDE_COLLISION,
+      handle,
+      index,
+    )
+}
+
+/**
+ * Typed KinematicCollision3D slice (squash bounce check). The record comes from
+ * CharacterBody3D.get_slide_collision; the collider/normal index is baked to Godot's default 0 (the
+ * deepest collision), the only value the demos pass.
+ */
+@InternalKanamaBackendApi
+class KinematicCollision3DBackendContractProbe(private val handle: GodotHandle) {
+  fun getCollider(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.KINEMATICCOLLISION3D_GET_COLLIDER,
+      handle,
+    )
+
+  fun getNormal(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.KINEMATICCOLLISION3D_GET_NORMAL,
+      handle,
+    )
+}
+
+/** Typed PathFollow3D slice used by the squash mob spawn path (PathFollow2D precedent). */
+@InternalKanamaBackendApi
+class PathFollow3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setProgressRatio(ratio: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.PATHFOLLOW3D_SET_PROGRESS_RATIO,
+      handle,
+      ratio,
+    )
+  }
+}
+
+/** Typed DirectionalLight3D slice used by the squash gl_compatibility light tuning. */
+@InternalKanamaBackendApi
+class DirectionalLight3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setSkyMode(mode: Long) {
+    GodotBackendCalls.invokeLongArg(
+      InitialGodotCallDescriptors.DIRECTIONALLIGHT3D_SET_SKY_MODE,
+      handle,
+      mode,
+    )
+  }
 }
 
 /** Typed RenderingServer singleton query used by the 3D platformer's renderer branch. */
@@ -1846,6 +1976,13 @@ object RenderingServerBackendContractProbe {
     GodotBackendCalls.invokeNoArgsRetStringSingleton(
       InitialGodotCallDescriptors.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD
     )
+
+  fun directionalSoftShadowFilterSetQuality(quality: Long) {
+    GodotBackendCalls.invokeLongArgSingleton(
+      InitialGodotCallDescriptors.RENDERINGSERVER_DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY,
+      quality,
+    )
+  }
 }
 
 /** Typed Input singleton action slice used by the 3D platformer's jump-button handlers. */
