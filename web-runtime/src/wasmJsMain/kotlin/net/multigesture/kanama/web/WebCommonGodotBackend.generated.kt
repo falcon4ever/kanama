@@ -197,10 +197,17 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         if (descriptor.opcode == 15) onWebQueueFree(objectId)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode == 37)
         commands.flush()
-        check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {
-          "Kanama Web Tween.kill failed for handle=$objectId"
+        when (descriptor.opcode) {
+          37 ->
+            check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {
+              "Kanama Web Tween.kill failed for handle=$objectId"
+            }
+          120 ->
+            check(immediateWebObjectQuery(120, objectId, "") == 1) {
+              "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+            }
+          else -> error("Unsupported Web immediate void opcode=${descriptor.opcode}")
         }
       }
       GodotExecutionMode.SNAPSHOT_READ ->
@@ -447,6 +454,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           81 -> registerReturnedBrowserObject(token)
           112 -> registerReturnedNode(token)
           114 -> registerReturnedNode(token)
+          122 -> registerReturnedNode(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }
@@ -728,6 +736,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
           89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
           102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
+          119 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.TARGET_POSITION)
           else -> null
         }
           ?: error(
@@ -735,7 +744,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
               "object handle=${receiver.webId()}"
           )
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode == 113)
+        require(descriptor.opcode in setOf(113, 123, 124))
         commands.flush()
         GodotVector3(
           immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
@@ -764,6 +773,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
       88 -> webWriteVector3Snapshot(objectId, WebVector3Slot.VELOCITY, value)
       101 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION_DEGREES, value)
+      118 -> webWriteVector3Snapshot(objectId, WebVector3Slot.TARGET_POSITION, value)
       else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
     }
   }

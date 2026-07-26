@@ -232,6 +232,54 @@ class GodotBackendContractTest {
       GodotCallShape.STRINGNAME_RET_BOOL,
       GodotExecutionMode.IMMEDIATE_RESULT,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_SET_TARGET_POSITION,
+      3_460_891_852L,
+      GodotCallShape.VECTOR3_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_TARGET_POSITION,
+      3_360_562_783L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.SNAPSHOT_READ,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_FORCE_RAYCAST_UPDATE,
+      3_218_959_716L,
+      GodotCallShape.NOARGS_VOID,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_IS_COLLIDING,
+      36_873_697L,
+      GodotCallShape.NOARGS_RET_BOOL,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_COLLIDER,
+      1_981_248_198L,
+      GodotCallShape.NOARGS_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_COLLISION_POINT,
+      3_360_562_783L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_COLLISION_NORMAL,
+      3_360_562_783L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_IS_ON_CEILING,
+      36_873_697L,
+      GodotCallShape.NOARGS_RET_BOOL,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
   }
 
   @Test

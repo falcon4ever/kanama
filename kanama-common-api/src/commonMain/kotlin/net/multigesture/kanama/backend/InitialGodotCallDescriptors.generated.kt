@@ -1290,4 +1290,92 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val RAYCAST3D_SET_TARGET_POSITION =
+    GodotCallDescriptor(
+      opcode = 118,
+      className = "RayCast3D",
+      methodName = "set_target_position",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RAYCAST3D_GET_TARGET_POSITION =
+    GodotCallDescriptor(
+      opcode = 119,
+      className = "RayCast3D",
+      methodName = "get_target_position",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.SNAPSHOT_READ,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RAYCAST3D_FORCE_RAYCAST_UPDATE =
+    GodotCallDescriptor(
+      opcode = 120,
+      className = "RayCast3D",
+      methodName = "force_raycast_update",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RAYCAST3D_IS_COLLIDING =
+    GodotCallDescriptor(
+      opcode = 121,
+      className = "RayCast3D",
+      methodName = "is_colliding",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RAYCAST3D_GET_COLLIDER =
+    GodotCallDescriptor(
+      opcode = 122,
+      className = "RayCast3D",
+      methodName = "get_collider",
+      hash = 1981248198L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RAYCAST3D_GET_COLLISION_POINT =
+    GodotCallDescriptor(
+      opcode = 123,
+      className = "RayCast3D",
+      methodName = "get_collision_point",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RAYCAST3D_GET_COLLISION_NORMAL =
+    GodotCallDescriptor(
+      opcode = 124,
+      className = "RayCast3D",
+      methodName = "get_collision_normal",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_IS_ON_CEILING =
+    GodotCallDescriptor(
+      opcode = 125,
+      className = "CharacterBody3D",
+      methodName = "is_on_ceiling",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

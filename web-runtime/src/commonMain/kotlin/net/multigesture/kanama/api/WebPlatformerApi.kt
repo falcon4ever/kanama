@@ -154,6 +154,8 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 
   fun isOnFloor(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnFloor()
 
+  fun isOnCeiling(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnCeiling()
+
   fun getSlideCollisionCount(): Long =
     CharacterBody3DBackendContractProbe(backendHandle).getSlideCollisionCount()
 

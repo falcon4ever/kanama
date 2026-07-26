@@ -40,6 +40,7 @@ _ROTATION3 = "WebVector3Slot.ROTATION"
 _SCALE3 = "WebVector3Slot.SCALE"
 _VELOCITY3 = "WebVector3Slot.VELOCITY"
 _ROTATION_DEGREES3 = "WebVector3Slot.ROTATION_DEGREES"
+_TARGET_POSITION3 = "WebVector3Slot.TARGET_POSITION"
 
 WEB_POLICY: dict[int, dict[str, object]] = {
     1: {},
@@ -159,6 +160,14 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     115: {},
     116: {},
     117: {},
+    118: {"vec3_slot": _TARGET_POSITION3},
+    119: {"vec3_slot": _TARGET_POSITION3},
+    120: {},
+    121: {},
+    122: {"ret": "node"},
+    123: {},
+    124: {},
+    125: {},
 }
 
 
@@ -504,13 +513,24 @@ def body_NOARGS_VOID(calls):
     if free_op is not None:
         lines.append(f"if (descriptor.opcode == {free_op}) onWebQueueFree(objectId)")
     lines.append("}")
-    kill_op = _only(immediate).opcode
+    lines += [f"{_IMMEDIATE} -> {{", "commands.flush()", "when (descriptor.opcode) {"]
+    for c in immediate:
+        if c.opcode == 37:
+            lines += [
+                "37 ->",
+                "check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {",
+                '"Kanama Web Tween.kill failed for handle=$objectId"',
+                "}",
+            ]
+        else:
+            lines += [
+                f"{c.opcode} ->",
+                f'check(immediateWebObjectQuery({c.opcode}, objectId, "") == 1) {{',
+                '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+                "}",
+            ]
     lines += [
-        f"{_IMMEDIATE} -> {{",
-        f"require(descriptor.opcode == {kill_op})",
-        "commands.flush()",
-        "check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {",
-        '"Kanama Web Tween.kill failed for handle=$objectId"',
+        'else -> error("Unsupported Web immediate void opcode=${descriptor.opcode}")',
         "}",
         "}",
         f"{_SNAPSHOT} ->",

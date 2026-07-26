@@ -1911,6 +1911,12 @@ class CharacterBody3DBackendContractProbe(private val handle: GodotHandle) {
       handle,
     )
 
+  fun isOnCeiling(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_IS_ON_CEILING,
+      handle,
+    )
+
   fun getSlideCollisionCount(): Long =
     GodotBackendCalls.invokeNoArgsRetLong(
       InitialGodotCallDescriptors.CHARACTERBODY3D_GET_SLIDE_COLLISION_COUNT,
@@ -1941,6 +1947,59 @@ class KinematicCollision3DBackendContractProbe(private val handle: GodotHandle) 
   fun getNormal(): GodotVector3 =
     GodotBackendCalls.invokeNoArgsRetVector3(
       InitialGodotCallDescriptors.KINEMATICCOLLISION3D_GET_NORMAL,
+      handle,
+    )
+}
+
+/**
+ * Typed RayCast3D query slice (Task 60e, FPS carrier): re-aim the ray, force a synchronous update,
+ * then read hit state/collider/point/normal — the node-level face of the space-state ray query the
+ * FPS demos drive.
+ */
+@InternalKanamaBackendApi
+class RayCast3DBackendContractProbe(private val handle: GodotHandle) {
+  var targetPosition: GodotVector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+        InitialGodotCallDescriptors.RAYCAST3D_GET_TARGET_POSITION,
+        handle,
+      )
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.RAYCAST3D_SET_TARGET_POSITION,
+        handle,
+        value,
+      )
+    }
+
+  fun forceRaycastUpdate() {
+    GodotBackendCalls.invokeNoArgsVoid(
+      InitialGodotCallDescriptors.RAYCAST3D_FORCE_RAYCAST_UPDATE,
+      handle,
+    )
+  }
+
+  fun isColliding(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.RAYCAST3D_IS_COLLIDING,
+      handle,
+    )
+
+  fun getCollider(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_COLLIDER,
+      handle,
+    )
+
+  fun getCollisionPoint(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_COLLISION_POINT,
+      handle,
+    )
+
+  fun getCollisionNormal(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.RAYCAST3D_GET_COLLISION_NORMAL,
       handle,
     )
 }

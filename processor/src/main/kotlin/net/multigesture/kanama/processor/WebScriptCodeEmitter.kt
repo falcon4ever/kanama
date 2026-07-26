@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 9
+    const val PROTOCOL_VERSION = 10
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -1185,6 +1185,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as SceneTree).quit(bytes.decode_s32(offset + 8))")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 118 and target_object is RayCast3D:")
+    appendLine(
+      "\t\t\t(target_object as RayCast3D).target_position = Vector3(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
     appendLine("\t\telif opcode == 115 and target_object is DirectionalLight3D:")
     appendLine(
       "\t\t\t(target_object as DirectionalLight3D).sky_mode = bytes.decode_s32(offset + 8)"
@@ -1442,6 +1448,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, node_3d.position.x, node_3d.position.y, node_3d.position.z, node_3d.rotation.x, node_3d.rotation.y, node_3d.rotation.z, node_3d.scale.x, node_3d.scale.y, node_3d.scale.z)"
     )
+    appendLine("\tif value is RayCast3D:")
+    appendLine("\t\tvar ray := value as RayCast3D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshRayTargetSnapshot(result_handle, ray.target_position.x, ray.target_position.y, ray.target_position.z)"
+    )
     appendLine("\t_kanama_bridge.recordImmediateObjectHandle(result_handle)")
     appendLine("\treturn result_handle")
     appendLine()
@@ -1498,12 +1509,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = (receiver as KinematicCollision3D).get_collider()")
     appendLine("\telif opcode == 114 and receiver is Node:")
     appendLine("\t\tvalue = (receiver as Node).duplicate()")
+    appendLine("\telif opcode == 122 and receiver is RayCast3D:")
+    appendLine("\t\tvalue = (receiver as RayCast3D).get_collider()")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
     appendLine("\t# get_collider returns a live scene node: resolve to its existing script or")
     appendLine("\t# browser handle (node-lookup rule) instead of registering a duplicate.")
-    appendLine("\tif opcode == 112:")
+    appendLine("\tif opcode == 112 or opcode == 122:")
     appendLine("\t\tif value.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\t\tvar collider_script_handle := int(value.call(\"_kanama_ensure_created\"))")
     appendLine("\t\t\tif collider_script_handle != 0:")
@@ -1740,6 +1753,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t\tresult = int((value as InputEvent).is_action_pressed(StringName(String(args[2]))))"
     )
+    appendLine("\t\telif opcode == 120 and value is RayCast3D:")
+    appendLine("\t\t\t(value as RayCast3D).force_raycast_update()")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 121 and value is RayCast3D:")
+    appendLine("\t\t\tresult = int((value as RayCast3D).is_colliding())")
+    appendLine("\t\telif opcode == 125 and value is CharacterBody3D:")
+    appendLine("\t\t\tresult = int((value as CharacterBody3D).is_on_ceiling())")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -1764,6 +1784,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar result := Vector3.ZERO")
     appendLine("\tif opcode == 113 and value is KinematicCollision3D:")
     appendLine("\t\tresult = (value as KinematicCollision3D).get_normal()")
+    appendLine("\telif opcode == 123 and value is RayCast3D:")
+    appendLine("\t\tresult = (value as RayCast3D).get_collision_point()")
+    appendLine("\telif opcode == 124 and value is RayCast3D:")
+    appendLine("\t\tresult = (value as RayCast3D).get_collision_normal()")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()
