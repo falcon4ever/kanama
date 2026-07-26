@@ -64,8 +64,12 @@ export function buildEnvelope({
   let lastWasWarning = false;
   for (const event of consoleEvents) {
     const isWarning =
-      event.type === "console.error" &&
-      (event.text.startsWith("WARNING:") || (lastWasWarning && /^\s*at: /.test(event.text)));
+      (event.type === "console.error" &&
+        (event.text.startsWith("WARNING:") || (lastWasWarning && /^\s*at: /.test(event.text)))) ||
+      // Headless browsers reject pointer lock without a user gesture/focus; Godot's
+      // mouse-capture request then surfaces as a WrongDocumentError (an async exception in
+      // Chrome, a console error in Firefox). Environmental, not a game fault.
+      /WrongDocumentError/.test(event.text);
     (isWarning ? consoleWarnings : consoleErrors).push(`${event.type}: ${event.text}`);
     lastWasWarning = isWarning;
   }

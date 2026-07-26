@@ -119,7 +119,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(52, 115))
+    require(descriptor.opcode in setOf(52, 115, 129, 140))
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
     }
@@ -354,6 +354,10 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
         value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
       }
+      130 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+      }
       else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
     }
     commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
@@ -368,7 +372,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(47, 57, 66))
+    require(descriptor.opcode in setOf(47, 57, 66, 128))
     commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
   }
 
@@ -424,13 +428,15 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       18 ->
         registerReturnedNode(immediateWebPackedSceneInstantiate(receiver.webId(), value.toInt()))
       41,
-      42 ->
+      42,
+      135 ->
         existingReturnedObject(
           receiver,
           immediateWebTweenLongRetObject(descriptor.opcode, receiver.webId(), value.toInt()),
         )
       111 ->
         registerReturnedBrowserObject(immediateWebSlideCollision(receiver.webId(), value.toInt()))
+      133 -> registerReturnedNode(immediateWebNodeChild(receiver.webId(), value.toInt()))
       else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")
     }
   }
@@ -744,7 +750,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
               "object handle=${receiver.webId()}"
           )
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode in setOf(113, 123, 124))
+        require(descriptor.opcode in setOf(113, 123, 124, 138))
         commands.flush()
         GodotVector3(
           immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
@@ -830,7 +836,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode == 103)
+    require(descriptor.opcode in setOf(103, 132))
     require(doubleValue.isFinite())
     commands.appendStringNameDoubleMutation(descriptor.opcode, receiver.webId(), value, doubleValue)
   }
@@ -881,10 +887,69 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    require(descriptor.opcode == 116)
+    require(descriptor.opcode in setOf(116, 126))
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
     commands.flush()
     immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value.toString())
+  }
+
+  override fun invokeObjectRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 134)
+    commands.flush()
+    return existingReturnedObject(
+      receiver,
+      immediateWebTweenObjectRetObject(descriptor.opcode, receiver.webId(), value.webId()),
+    )
+  }
+
+  override fun invokeObjectNodePathVector3DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector3,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyVector3(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue.x.toDouble(),
+        finalValue.y.toDouble(),
+        finalValue.z.toDouble(),
+        duration,
+      )
+    )
+  }
+
+  override fun invokeCallableRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 137)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenCallback(descriptor.opcode, receiver.webId(), target.webId(), method)
+    )
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {

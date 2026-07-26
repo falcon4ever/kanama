@@ -72,7 +72,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 10"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 11"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -104,7 +104,7 @@ class WebScriptCodeEmitterTest {
   fun emitsProxyWithLifecycleBatchAndImmediatePaths() {
     val emitter =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("FirstScript"), "res://FirstScript.kt")))
-    val proxy = emitter.proxySources().single()
+    val proxy = emitter.proxySources().single { it.sourceResourcePath.isNotEmpty() }
 
     assertEquals("res://FirstScript.kt", proxy.sourceResourcePath)
     assertEquals("res://kanama-web/generated/FirstScript.gd", proxy.proxyResourcePath)
@@ -167,7 +167,7 @@ class WebScriptCodeEmitterTest {
     val proxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(particle, "res://kotlin-src/Particles.kt")))
         .proxySources()
-        .single()
+        .single { it.sourceResourcePath.isNotEmpty() }
         .source
 
     assertTrue(proxy.contains("extends GPUParticles2D"))
@@ -186,7 +186,7 @@ class WebScriptCodeEmitterTest {
     val parentProxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
         .proxySources()
-        .single()
+        .single { it.sourceResourcePath.isNotEmpty() }
         .source
     assertTrue(parentProxy.contains("opcode == 43 and target_object is GPUParticles2D"))
   }
@@ -196,7 +196,7 @@ class WebScriptCodeEmitterTest {
     val proxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
         .proxySources()
-        .single()
+        .single { it.sourceResourcePath.isNotEmpty() }
         .source
 
     assertTrue(proxy.contains("opcode == 46 and target_object is AudioStreamPlayer"))
@@ -215,7 +215,7 @@ class WebScriptCodeEmitterTest {
     val proxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
         .proxySources()
-        .single()
+        .single { it.sourceResourcePath.isNotEmpty() }
         .source
 
     assertTrue(proxy.contains("opcode == 51 and receiver != null"))
@@ -410,7 +410,7 @@ class WebScriptCodeEmitterTest {
     )
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 10"))
+    assertTrue(protocol.contains("\"protocolVersion\": 11"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -421,7 +421,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=10\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=11\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))

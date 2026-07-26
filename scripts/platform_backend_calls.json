@@ -1920,6 +1920,252 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read the ceiling-contact state from the last move_and_slide synchronously (FPS zeroes upward velocity on head bumps).",
       "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 126,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "set_mouse_mode",
+      "hash": 2228490894,
+      "arguments": [
+        "enum::Input.MouseMode"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Set the mouse capture mode through the active script's proxy singleton (FPS captures the pointer).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 127,
+      "scope": "class",
+      "className": "InputEventMouseMotion",
+      "methodName": "get_relative",
+      "hash": 3341600327,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read a mouse-motion event's relative delta synchronously through the immediate no-args Vector2 channel (FPS look).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 128,
+      "scope": "class",
+      "className": "AnimatedSprite3D",
+      "methodName": "play",
+      "hash": 3269405555,
+      "arguments": [
+        "StringName",
+        "float",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue playing a named 3D sprite animation (custom_speed/from_end baked to Godot defaults, the only values the demos pass) \u2014 FPS muzzle flashes and impacts.",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 129,
+      "scope": "class",
+      "className": "AnimatedSprite3D",
+      "methodName": "set_frame",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue rewinding a 3D sprite to a frame (FPS restarts muzzle flashes at 0).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 130,
+      "scope": "class",
+      "className": "TextureRect",
+      "methodName": "set_texture",
+      "hash": 4051416890,
+      "arguments": [
+        "Texture2D"
+      ],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue assigning a texture resource to a TextureRect (FPS weapon crosshair swap).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 131,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "has_method",
+      "hash": 2619796661,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Ask any object whether it exposes a method (FPS duck-types damage on ray hits).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 132,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "call",
+      "hash": 3400424181,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "isVararg": true,
+      "typedVarargTail": [
+        "float"
+      ],
+      "semantics": "Queue a dynamic one-Float-argument method call (FPS damage(amount) on ray hits); the Variant return is discarded.",
+      "introducedBy": "60e-fps",
+      "descriptorName": "OBJECT_CALL_DOUBLE"
+    },
+    {
+      "opcode": 133,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_child",
+      "hash": 541253412,
+      "arguments": [
+        "int",
+        "bool"
+      ],
+      "returnType": "Node",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Return one child as an existing tracked handle (include_internal baked to Godot default false); with get_child_count this backs getChildren/findChildren walks (FPS weapon-model swap).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 134,
+      "scope": "class",
+      "className": "Tween",
+      "methodName": "bind_node",
+      "hash": 2946786331,
+      "arguments": [
+        "Node"
+      ],
+      "returnType": "Tween",
+      "shape": "OBJECT_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "Bind the tween's lifetime to a node; fluent self-return collapses to the receiver (FPS weapon-swap tween).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 135,
+      "scope": "class",
+      "className": "Tween",
+      "methodName": "set_ease",
+      "hash": 1208117252,
+      "arguments": [
+        "enum::Tween.EaseType"
+      ],
+      "returnType": "Tween",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "Set the tween's default ease; fluent self-return collapses to the receiver.",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 136,
+      "scope": "class",
+      "className": "Tween",
+      "methodName": "tween_property",
+      "hash": 4049770449,
+      "arguments": [
+        "Object",
+        "NodePath",
+        "Variant",
+        "float"
+      ],
+      "returnType": "PropertyTweener",
+      "shape": "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "Vector3 variant of the property tweener (FPS weapon container dip); the returned tweener registers as a tween child for release.",
+      "introducedBy": "60e-fps",
+      "descriptorName": "TWEEN_TWEEN_PROPERTY_VECTOR3"
+    },
+    {
+      "opcode": 137,
+      "scope": "class",
+      "className": "Tween",
+      "methodName": "tween_callback",
+      "hash": 1540176488,
+      "arguments": [
+        "Callable"
+      ],
+      "returnType": "CallbackTweener",
+      "shape": "CALLABLE_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "Chain a callback step (Callable to a registered method on a Kanama script); the returned tweener registers as a tween child for release (FPS change_weapon).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 138,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "get_global_position",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the node's global position synchronously through the immediate no-args Vector3 channel (FPS impact orientation targets the camera's world position).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 139,
+      "scope": "class",
+      "className": "Timer",
+      "methodName": "is_stopped",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read whether a Timer is stopped synchronously (FPS blaster cooldown gate).",
+      "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 140,
+      "scope": "class",
+      "className": "VisualInstance3D",
+      "methodName": "set_layer_mask",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a render-layer mask write (FPS weapon models render on the overlay camera's layer 2).",
+      "introducedBy": "60e-fps"
     }
   ],
   "compositions": [

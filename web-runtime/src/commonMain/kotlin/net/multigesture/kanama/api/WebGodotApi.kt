@@ -259,6 +259,8 @@ open class Resource internal constructor(backendHandle: BackendGodotHandle) :
 @ManualGodotLifetimeApi
 class Texture2D internal constructor(private var resourceHandle: BackendGodotHandle?) :
   Resource(checkNotNull(resourceHandle)) {
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
   internal fun requireOpenHandle(): BackendGodotHandle =
     checkNotNull(resourceHandle) { "Texture2D is closed" }
 
@@ -275,6 +277,9 @@ object ResourceLoader {
   @ManualGodotLifetimeApi
   fun loadTexture2D(path: String, cacheMode: Long = CACHE_MODE_REUSE): Texture2D? =
     ResourceLoaderBackendContractProbe.load(path, "Texture2D", cacheMode)?.let(::Texture2D)
+
+  fun loadPackedScene(path: String, cacheMode: Long = CACHE_MODE_REUSE): PackedScene? =
+    ResourceLoaderBackendContractProbe.load(path, "PackedScene", cacheMode)?.let(::PackedScene)
 }
 
 object GD {
@@ -294,9 +299,20 @@ object GD {
     require(from <= to)
     return from + (to - from) * randf()
   }
+
+  fun lerpf(from: Double, to: Double, weight: Double): Double = Mathf.lerp(from, to, weight)
+
+  fun clampf(value: Double, min: Double, max: Double): Double = Mathf.clamp(value, min, max)
+
+  fun lerpAngle(from: Double, to: Double, weight: Double): Double =
+    Mathf.lerpAngle(from, to, weight)
+
+  fun degToRad(degrees: Double): Double = degrees * kotlin.math.PI / 180.0
 }
 
 internal fun GodotHandle.toBackendHandle(): BackendGodotHandle =
   BackendGodotHandle.fromBackendToken(value.toLong())
 
 internal expect fun releaseWebResource(resourceHandle: Int)
+
+internal expect fun isWebBrowserHandleLive(handle: Int): Boolean

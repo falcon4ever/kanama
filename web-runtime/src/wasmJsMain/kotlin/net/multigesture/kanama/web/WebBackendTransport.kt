@@ -121,6 +121,33 @@ internal fun immediateWebRotateY(objectId: Int, angle: Double): Int =
 internal fun immediateWebSlideCollision(objectId: Int, index: Int): Int =
   js("globalThis.KanamaWebBridge.immediateSlideCollision(objectId, index)")
 
+internal fun immediateWebNodeChild(objectId: Int, index: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateNodeChild(objectId, index)")
+
+internal fun immediateWebTweenObjectRetObject(opcode: Int, objectId: Int, valueId: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateTweenObjectRetObject(opcode, objectId, valueId)")
+
+internal fun immediateWebTweenPropertyVector3(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  property: String,
+  x: Double,
+  y: Double,
+  z: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenPropertyVector3(opcode, tweenId, targetId, property, x, y, z, duration)"
+  )
+
+internal fun immediateWebTweenCallback(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  method: String,
+): Int = js("globalThis.KanamaWebBridge.immediateTweenCallback(opcode, tweenId, targetId, method)")
+
 internal fun immediateWebNoArgsVector3X(opcode: Int, objectId: Int): Double =
   js("globalThis.KanamaWebBridge.immediateNoArgsVector3X(opcode, objectId)")
 

@@ -244,6 +244,37 @@ fun kanamaWebSetStringProperty(objectId: Int, propertyId: Int, value: String): I
 }
 
 @JsExport
+fun kanamaWebSetDoubleProperty(objectId: Int, propertyId: Int, value: Double): Int {
+  require(value.isFinite()) { "Web double property must be finite" }
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setDoubleProperty(record.scriptId, propertyId, record.script, value)
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebSetVector2Property(objectId: Int, propertyId: Int, x: Double, y: Double): Int {
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setVector2Property(record.scriptId, propertyId, record.script, x, y)
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebSetVector3Property(
+  objectId: Int,
+  propertyId: Int,
+  x: Double,
+  y: Double,
+  z: Double,
+): Int {
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setVector3Property(record.scriptId, propertyId, record.script, x, y, z)
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebSetLongProperty(objectId: Int, propertyId: Int, value: Double): Int {
   require(value.isFinite() && value % 1.0 == 0.0) { "Web integer property must be integral" }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->

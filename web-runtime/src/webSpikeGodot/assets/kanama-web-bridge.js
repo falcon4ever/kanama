@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 10;
+  const KANAMA_WEB_PROTOCOL_VERSION = 11;
 
   function commandWordCount(opcode) {
     if (
@@ -28,6 +28,10 @@
       opcode === 52 ||
       opcode === 57 ||
       opcode === 115 ||
+      opcode === 128 ||
+      opcode === 129 ||
+      opcode === 130 ||
+      opcode === 140 ||
       opcode === 66
     ) return 3;
     if (
@@ -67,7 +71,8 @@
       opcode === 84 ||
       opcode === 88 ||
       opcode === 101 ||
-      opcode === 103
+      opcode === 103 ||
+      opcode === 132
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -227,6 +232,8 @@
     platformerSmokeQuitHandle: 0,
     squashMainHandle: 0,
     squashSmokeQuitHandle: 0,
+    fpsSmokeHandle: 0,
+    fpsPlayerHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
     // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
@@ -372,6 +379,10 @@
       if (this.mode === "squash") {
         // squash-the-creeps is physics-driven; no script owns coroutines, so every
         // script runs its plain _process/_physics_process dispatch.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "fps") {
+        // FPS scripts own no coroutines; every script runs its plain dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "platformer") {
@@ -525,6 +536,33 @@
         "property_set",
         `property#${propertyId}`,
         () => this.api.kanamaWebSetStringProperty(handle, propertyId, value),
+        0,
+      );
+    },
+    setDoubleProperty(handle, propertyId, value) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetDoubleProperty(handle, propertyId, value),
+        0,
+      );
+    },
+    setVector2Property(handle, propertyId, x, y) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetVector2Property(handle, propertyId, x, y),
+        0,
+      );
+    },
+    setVector3Property(handle, propertyId, x, y, z) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetVector3Property(handle, propertyId, x, y, z),
         0,
       );
     },
@@ -1170,7 +1208,11 @@
         resourceHandle,
         "Godot PackedScene",
       );
-      const proposedHandle = this.allocateBrowserHandle("Node", owner);
+      // Instantiated nodes belong to the SCRIPT that instantiated them (always inside an
+      // invoke boundary), not to the packed-scene resource's owner — a weapon model
+      // instantiated from a persistent Weapon resource must release with the Player.
+      const instantiatingOwner = this.activeOwnerHandle || owner;
+      const proposedHandle = this.allocateBrowserHandle("Node", instantiatingOwner);
       this.api.kanamaWebAdoptNodeHandle(proposedHandle);
       this.immediateObjectHandleResult = null;
       callback(resourceHandle, proposedHandle, editState);
@@ -1303,6 +1345,47 @@
         this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
       }
       return result;
+    },
+    immediateNodeChild(handle, index) {
+      // Node.get_child through the tween-callback channel with a proposed handle; the
+      // applier resolves an existing script/browser handle first (node-lookup rule).
+      const owner = this.ownerForHandle(handle);
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot child lookup");
+      const resultHandle = this.allocateBrowserHandle("Node", owner);
+      this.api.kanamaWebAdoptNodeHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(133, handle, resultHandle, index);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        const liveScript = this.api.kanamaWebIsLive(result) === 1;
+        if (!liveScript && this.isBrowserHandleLive(result) !== 1) {
+          throw new Error("Godot child lookup returned neither its proposed nor a live handle");
+        }
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+      }
+      return result;
+    },
+    immediateTweenObjectRetObject(opcode, handle, valueId) {
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween object");
+      this.immediateObjectHandleResult = null;
+      callback(opcode, handle, valueId);
+      if (this.immediateObjectHandleResult !== handle) {
+        throw new Error("Godot Tween object callback did not return its receiver");
+      }
+      return handle;
+    },
+    immediateTweenPropertyVector3(opcode, tweenHandle, targetHandle, property, x, y, z, duration) {
+      return this.immediateTweenProperty(opcode, tweenHandle, targetHandle, property, [x, y, z, duration]);
+    },
+    immediateTweenCallback(opcode, tweenHandle, targetHandle, method) {
+      // Rides the generic tween-property flow: the "property" slot carries the method name
+      // and the returned CallbackTweener registers as a tween child for release.
+      return this.immediateTweenProperty(opcode, tweenHandle, targetHandle, method, []);
     },
     immediateTweenPropertyVector2(opcode, tweenHandle, targetHandle, property, x, y, duration) {
       if (this.mode === "match3" && property === "position") {
@@ -1772,6 +1855,14 @@
         // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
         // drain live handles to zero for the teardown assertion.
         this.squashSmokeQuitHandle = handle;
+      }
+      if (this.mode === "fps" && scriptName.endsWith(".Smoke")) {
+        // The scene-root Smoke script's smoke_teardown (method#1) frees the Audio autoload
+        // and the scene root, draining live handles to zero.
+        this.fpsSmokeHandle = handle;
+      }
+      if (this.mode === "fps" && scriptName.endsWith(".Player")) {
+        this.fpsPlayerHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

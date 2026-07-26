@@ -81,6 +81,8 @@ class Timer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
     TimerBackendContractProbe(backendHandle).start(timeSec)
   }
 
+  fun isStopped(): Boolean = TimerBackendContractProbe(backendHandle).isStopped()
+
   fun stop() {
     TimerBackendContractProbe(backendHandle).stop()
   }

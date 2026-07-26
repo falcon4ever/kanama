@@ -280,6 +280,85 @@ class GodotBackendContractTest {
       GodotCallShape.NOARGS_RET_BOOL,
       GodotExecutionMode.IMMEDIATE_RESULT,
     )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUT_SET_MOUSE_MODE,
+      2_228_490_894L,
+      GodotCallShape.LONG_ARG_SINGLETON,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.INPUTEVENTMOUSEMOTION_GET_RELATIVE,
+      3_341_600_327L,
+      GodotCallShape.NOARGS_RET_VECTOR2,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE3D_PLAY,
+      3_269_405_555L,
+      GodotCallShape.STRINGNAME_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE3D_SET_FRAME,
+      1_286_410_249L,
+      GodotCallShape.LONG_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.TEXTURERECT_SET_TEXTURE,
+      4_051_416_890L,
+      GodotCallShape.OBJECT_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.OBJECT_HAS_METHOD,
+      2_619_796_661L,
+      GodotCallShape.STRINGNAME_RET_BOOL,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.OBJECT_CALL_DOUBLE,
+      3_400_424_181L,
+      GodotCallShape.STRINGNAME_DOUBLE_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE_GET_CHILD,
+      541_253_412L,
+      GodotCallShape.LONG_RET_HANDLE,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.NODE3D_GET_GLOBAL_POSITION,
+      3_360_562_783L,
+      GodotCallShape.NOARGS_RET_VECTOR3,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.TIMER_IS_STOPPED,
+      36_873_697L,
+      GodotCallShape.NOARGS_RET_BOOL,
+      GodotExecutionMode.IMMEDIATE_RESULT,
+    )
+    assertDescriptor(
+      InitialGodotCallDescriptors.VISUALINSTANCE3D_SET_LAYER_MASK,
+      1_286_410_249L,
+      GodotCallShape.LONG_ARG,
+      GodotExecutionMode.QUEUED_MUTATION,
+    )
+    // Tween fluent/tweener returns are retained RefCounted values.
+    listOf(
+        InitialGodotCallDescriptors.TWEEN_BIND_NODE to GodotCallShape.OBJECT_RET_HANDLE,
+        InitialGodotCallDescriptors.TWEEN_SET_EASE to GodotCallShape.LONG_RET_HANDLE,
+        InitialGodotCallDescriptors.TWEEN_TWEEN_PROPERTY_VECTOR3 to
+          GodotCallShape.OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE,
+        InitialGodotCallDescriptors.TWEEN_TWEEN_CALLBACK to GodotCallShape.CALLABLE_RET_HANDLE,
+      )
+      .forEach { (descriptor, shape) ->
+        assertEquals(shape, descriptor.shape)
+        assertEquals(GodotExecutionMode.IMMEDIATE_RESULT, descriptor.executionMode)
+        assertEquals(GodotReturnOwnership.RETAINED_REFCOUNTED, descriptor.returnOwnership)
+      }
   }
 
   @Test

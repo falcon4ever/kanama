@@ -236,6 +236,10 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHa
     AudioStreamPlayerBackendContractProbe(backendHandle).stop()
   }
 
+  object Signals {
+    const val finished = "finished"
+  }
+
   companion object {
     fun create(): AudioStreamPlayer {
       val handle =
@@ -248,6 +252,14 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHa
 }
 
 class PackedScene internal constructor(backendHandle: BackendGodotHandle) : Resource(backendHandle) {
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
+  /** Harness-grade release of the scene's browser handle (already-released is an error). */
+  @ManualGodotLifetimeApi
+  fun close() {
+    releaseWebResource(handle.value)
+  }
+
   fun instantiate(): GodotObject? =
     PackedSceneBackendContractProbe(backendHandle).instantiate()?.let(::GodotObject)
 }
@@ -258,6 +270,10 @@ class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObjec
   }
 
   fun kill() {
+    // Desktop parity: kill() on a tween that already finished (its handles released by the
+    // finished-signal cleanup) is a legal no-op — the FPS clears its weapon-swap tween on
+    // every swap and at exit_tree.
+    if (!isWebBrowserHandleLive(handle.value)) return
     TweenBackendContractProbe(backendHandle).kill()
     WebSignalCallbackRegistry.releaseSource(handle.value)
   }
@@ -302,10 +318,52 @@ class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObjec
         )
     }
 
+  fun bindNode(node: Node): Tween {
+    val returned = TweenBackendContractProbe(backendHandle).bindNode(node.backendHandle)
+    return wrapSelf(returned)
+  }
+
+  fun setEase(ease: Long): Tween {
+    val returned = TweenBackendContractProbe(backendHandle).setEase(ease)
+    return wrapSelf(returned)
+  }
+
+  fun tweenProperty(
+    target: GodotObject,
+    property: String,
+    finalValue: net.multigesture.kanama.types.Vector3,
+    duration: Double,
+  ): PropertyTweener? =
+    TweenBackendContractProbe(backendHandle)
+      .tweenProperty(
+        target.backendHandle,
+        property,
+        net.multigesture.kanama.backend.GodotVector3(
+          finalValue.x.toFloat(),
+          finalValue.y.toFloat(),
+          finalValue.z.toFloat(),
+        ),
+        duration,
+      )
+      ?.let(::PropertyTweener)
+
+  /** Chain a callback step to a registered method on a Kanama script (FPS change_weapon). */
+  fun tweenCallback(target: GodotObject, method: String) {
+    TweenBackendContractProbe(backendHandle).tweenCallback(target.backendHandle, method)
+  }
+
+  private fun wrapSelf(returned: net.multigesture.kanama.backend.GodotHandle?): Tween {
+    check(returned != null && returned.backendToken() == backendHandle.backendToken()) {
+      "Tween fluent call did not return its receiver"
+    }
+    return this
+  }
+
   companion object {
     const val TRANS_BACK = 10L
     const val TRANS_ELASTIC = 6L
     const val EASE_OUT = 1L
+    const val EASE_OUT_IN = 3L
   }
 }
 
@@ -363,6 +421,28 @@ object Input {
 
   fun actionRelease(action: String) {
     InputActionBackendContractProbe.actionRelease(action)
+  }
+
+  const val MOUSE_MODE_VISIBLE = 0L
+  const val MOUSE_MODE_CAPTURED = 2L
+
+  fun setMouseMode(mode: Long) {
+    InputActionBackendContractProbe.setMouseMode(mode)
+  }
+
+  /**
+   * Composed from two get_axis reads (deadzone-normalized identically for digital keys, the
+   * only inputs the Web demos drive), clamped to unit length like Godot's get_vector.
+   */
+  fun getVector(
+    negativeX: String,
+    positiveX: String,
+    negativeY: String,
+    positiveY: String,
+  ): Vector2 {
+    val vector = Vector2(getAxis(negativeX, positiveX), getAxis(negativeY, positiveY))
+    val length = vector.length()
+    return if (length > 1.0) vector / length else vector
   }
 
   fun getAxis(negativeAction: String, positiveAction: String): Double =

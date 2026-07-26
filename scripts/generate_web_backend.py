@@ -168,6 +168,21 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     123: {},
     124: {},
     125: {},
+    126: {},
+    127: {},
+    128: {},
+    129: {},
+    130: {},
+    131: {},
+    132: {},
+    133: {"ret": "child"},
+    134: {},
+    135: {"ret": "existing"},
+    136: {},
+    137: {},
+    138: {},
+    139: {},
+    140: {},
 }
 
 
@@ -643,6 +658,13 @@ def body_OBJECT_ARG(calls):
                 "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
                 "}",
             ]
+        elif op == 130:
+            lines += [
+                "130 -> {",
+                f"require(descriptor.executionMode == {_QUEUED})",
+                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+                "}",
+            ]
         else:
             raise GenerationError(f"OBJECT_ARG opcode {op} has no emitter arm")
     lines += [
@@ -702,6 +724,10 @@ def body_LONG_RET_HANDLE(calls):
         lines.append(
             "registerReturnedBrowserObject(immediateWebSlideCollision(receiver.webId(), value.toInt()))"
         )
+    child_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "child"]
+    for op in child_ops:
+        lines.append(f"{op} ->")
+        lines.append("registerReturnedNode(immediateWebNodeChild(receiver.webId(), value.toInt()))")
     lines.append('else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")')
     lines.append("}")
     return lines
@@ -783,6 +809,49 @@ def body_STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG(calls):
         "flags.toInt(),",
         ")",
         ".toLong()",
+    ]
+
+
+def body_OBJECT_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return existingReturnedObject(",
+        "receiver,",
+        "immediateWebTweenObjectRetObject(descriptor.opcode, receiver.webId(), value.webId()),",
+        ")",
+    ]
+
+
+def body_OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        "require(duration.isFinite() && duration >= 0.0)",
+        "commands.flush()",
+        "return registerReturnedBrowserObject(",
+        "immediateWebTweenPropertyVector3(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "target.webId(),",
+        "property,",
+        "finalValue.x.toDouble(),",
+        "finalValue.y.toDouble(),",
+        "finalValue.z.toDouble(),",
+        "duration,",
+        ")",
+        ")",
+    ]
+
+
+def body_CALLABLE_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return registerReturnedBrowserObject(",
+        "immediateWebTweenCallback(descriptor.opcode, receiver.webId(), target.webId(), method)",
+        ")",
     ]
 
 
@@ -989,6 +1058,21 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         "",
     ),
     "LONG_ARG_SINGLETON": (["value: Long"], ""),
+    "OBJECT_RET_HANDLE": (["receiver: GodotHandle", "value: GodotHandle"], "GodotHandle?"),
+    "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE": (
+        [
+            "receiver: GodotHandle",
+            "target: GodotHandle",
+            "property: String",
+            "finalValue: GodotVector3",
+            "duration: Double",
+        ],
+        "GodotHandle?",
+    ),
+    "CALLABLE_RET_HANDLE": (
+        ["receiver: GodotHandle", "target: GodotHandle", "method: String"],
+        "GodotHandle?",
+    ),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -1180,6 +1264,9 @@ EMIT_ORDER = [
     "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON",
     "VECTOR3_VECTOR3_ARG",
     "LONG_ARG_SINGLETON",
+    "OBJECT_RET_HANDLE",
+    "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE",
+    "CALLABLE_RET_HANDLE",
 ]
 
 

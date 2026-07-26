@@ -15,6 +15,9 @@ internal actual fun releaseWebResource(resourceHandle: Int) {
 private fun releaseWebResourceInterop(resourceHandle: Int): Int =
   js("globalThis.KanamaWebBridge.releaseResource(resourceHandle)")
 
+internal actual fun isWebBrowserHandleLive(handle: Int): Boolean =
+  net.multigesture.kanama.web.containsWebBrowserHandle(handle)
+
 internal actual fun releaseWebCollision(collisionHandle: Int) {
   val released = releaseWebCollisionInterop(collisionHandle)
   check(released == 1) { "Unknown or already released Kanama Web collision handle=$collisionHandle" }
