@@ -227,7 +227,7 @@ export async function runMatch3({ url, evaluate, navigate, pointer }) {
   const positionTweenDelta = afterSwap.positionTweenTargets - beforeSwap.positionTweenTargets;
 
   const checks = {
-    protocol10: firstRun.settled.protocol === 10 && secondRun.settled.protocol === 10,
+    protocol11: firstRun.settled.protocol === 11 && secondRun.settled.protocol === 11,
     exactOriginalBoard:
       firstRun.board.pass === true && firstRun.settled.tileGrid.length === 64 &&
       firstRun.settled.tileReady >= 64 && firstRun.settled.playersConstructed === 12,

@@ -302,7 +302,9 @@ internal fun loadWebNode3DSnapshot(
   scaleY: Double,
   scaleZ: Double,
 ) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+  // Any known handle may carry a Node3D snapshot: property pushes register node references
+  // under the RESOURCE kind before their transform seed arrives.
+  check(instances.isLive(objectId) || browserHandles.containsKey(objectId)) {
     "Cannot snapshot unknown Kanama Web Node3D handle=$objectId"
   }
   position3Snapshots[objectId] =

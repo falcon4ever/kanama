@@ -1378,4 +1378,169 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val INPUT_SET_MOUSE_MODE =
+    GodotCallDescriptor(
+      opcode = 126,
+      className = "Input",
+      methodName = "set_mouse_mode",
+      hash = 2228490894L,
+      shape = GodotCallShape.LONG_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTMOUSEMOTION_GET_RELATIVE =
+    GodotCallDescriptor(
+      opcode = 127,
+      className = "InputEventMouseMotion",
+      methodName = "get_relative",
+      hash = 3341600327L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR2,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE3D_PLAY =
+    GodotCallDescriptor(
+      opcode = 128,
+      className = "AnimatedSprite3D",
+      methodName = "play",
+      hash = 3269405555L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATEDSPRITE3D_SET_FRAME =
+    GodotCallDescriptor(
+      opcode = 129,
+      className = "AnimatedSprite3D",
+      methodName = "set_frame",
+      hash = 1286410249L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TEXTURERECT_SET_TEXTURE =
+    GodotCallDescriptor(
+      opcode = 130,
+      className = "TextureRect",
+      methodName = "set_texture",
+      hash = 4051416890L,
+      shape = GodotCallShape.OBJECT_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_HAS_METHOD =
+    GodotCallDescriptor(
+      opcode = 131,
+      className = "Object",
+      methodName = "has_method",
+      hash = 2619796661L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_CALL_DOUBLE =
+    GodotCallDescriptor(
+      opcode = 132,
+      className = "Object",
+      methodName = "call",
+      hash = 3400424181L,
+      shape = GodotCallShape.STRINGNAME_DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_GET_CHILD =
+    GodotCallDescriptor(
+      opcode = 133,
+      className = "Node",
+      methodName = "get_child",
+      hash = 541253412L,
+      shape = GodotCallShape.LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TWEEN_BIND_NODE =
+    GodotCallDescriptor(
+      opcode = 134,
+      className = "Tween",
+      methodName = "bind_node",
+      hash = 2946786331L,
+      shape = GodotCallShape.OBJECT_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val TWEEN_SET_EASE =
+    GodotCallDescriptor(
+      opcode = 135,
+      className = "Tween",
+      methodName = "set_ease",
+      hash = 1208117252L,
+      shape = GodotCallShape.LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val TWEEN_TWEEN_PROPERTY_VECTOR3 =
+    GodotCallDescriptor(
+      opcode = 136,
+      className = "Tween",
+      methodName = "tween_property",
+      hash = 4049770449L,
+      shape = GodotCallShape.OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val TWEEN_TWEEN_CALLBACK =
+    GodotCallDescriptor(
+      opcode = 137,
+      className = "Tween",
+      methodName = "tween_callback",
+      hash = 1540176488L,
+      shape = GodotCallShape.CALLABLE_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
+  val NODE3D_GET_GLOBAL_POSITION =
+    GodotCallDescriptor(
+      opcode = 138,
+      className = "Node3D",
+      methodName = "get_global_position",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val TIMER_IS_STOPPED =
+    GodotCallDescriptor(
+      opcode = 139,
+      className = "Timer",
+      methodName = "is_stopped",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val VISUALINSTANCE3D_SET_LAYER_MASK =
+    GodotCallDescriptor(
+      opcode = 140,
+      className = "VisualInstance3D",
+      methodName = "set_layer_mask",
+      hash = 1286410249L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

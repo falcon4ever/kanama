@@ -97,6 +97,13 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
   fun rotateY(angle: Double) {
     Node3DBackendContractProbe(backendHandle).rotateY(angle)
   }
+
+  /** The node's world-space position, read synchronously (parented nodes differ from local). */
+  val globalPosition: Vector3
+    get() =
+      Node3DBackendContractProbe(backendHandle).getGlobalPosition().let {
+        Vector3(it.x, it.y, it.z)
+      }
 }
 
 class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {

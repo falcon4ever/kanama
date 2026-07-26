@@ -26,6 +26,7 @@ val extraWebScriptSourceRoot: File? =
                     "web3d" -> "kanamaWebWeb3dProjectDir"
                     "platformer" -> "kanamaWebPlatformerProjectDir"
                     "squash" -> "kanamaWebSquashProjectDir"
+                    "fps" -> "kanamaWebFpsProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -123,6 +124,9 @@ val webPlatformerStaging = layout.buildDirectory.dir("web-platformer/godot-proje
 val webSquashSourceProject =
     providers.gradleProperty("kanamaWebSquashProjectDir").orNull?.let(rootProject::file)
 val webSquashStaging = layout.buildDirectory.dir("web-squash/godot-project")
+val webFpsSourceProject =
+    providers.gradleProperty("kanamaWebFpsProjectDir").orNull?.let(rootProject::file)
+val webFpsStaging = layout.buildDirectory.dir("web-fps/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -1335,6 +1339,153 @@ tasks.register("stageWebSquashProject") {
     }
 }
 
+tasks.register("stageWebFpsProject") {
+    group = "verification"
+    description = "Stages the Starter-Kit-FPS with generated Web proxies (Task 60e)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webFpsSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webFpsStaging)
+
+    doLast {
+        val sourceProject =
+            webFpsSourceProject
+                ?: error(
+                    "Pass -PkanamaWebFpsProjectDir=/absolute/path/to/kanama-demos/Starter-Kit-FPS"
+                )
+        check(sourceProject.resolve("scenes/main.tscn").isFile) {
+            "FPS project not found: $sourceProject"
+        }
+
+        val stagingDir = webFpsStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+                exclude("kotlin-src/**")
+                exclude("android/**")
+                exclude("screenshots/**")
+                exclude("addons/kanama_tools/**")
+                exclude("addons/kanama/**")
+                exclude("export_presets.cfg")
+            }
+            into(stagingDir)
+        }
+        // The demo ships Android/iOS presets; the Web export needs the canonical Web preset.
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        val expectedSources =
+            setOf("Audio", "Cloud", "Enemy", "Hud", "Impact", "Player", "Smoke", "Weapon")
+                .map { "res://kotlin-src/$it.kt" }
+                .toSet()
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { it.split('	').let { c -> c[0] to c[1] } }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "FPS Web proxy mappings incomplete: missing=${expectedSources - mappings.keys}"
+        }
+
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                var rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        text.replace(sourcePath, proxyPath)
+                    }
+                // Godot resolves Script ext_resources by UID before path; strip the UID from
+                // rewritten references so the text path wins (platformer precedent).
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+
+        // The demo targets Forward+ (with a mobile gl_compatibility override); the Web
+        // template only runs the Compatibility renderer, so pin it explicitly and turn off
+        // screen-space AA (match3/platformer/squash precedent).
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
+        val screenSpaceAa = "anti_aliasing/quality/screen_space_aa=1"
+        check(stagedProjectText.contains(forwardFeature)) {
+            "FPS renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(mobileRenderer)) {
+            "FPS mobile renderer setting changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(screenSpaceAa)) {
+            "FPS screen-space AA setting changed; update the Web staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    forwardFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    mobileRenderer,
+                    "renderer/rendering_method=\"gl_compatibility\"\n$mobileRenderer",
+                )
+                .replace(screenSpaceAa, "anti_aliasing/quality/screen_space_aa=0")
+        )
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        shell.writeText(
+            shell.readText()
+                .replace(pageStart, "$pageStart\n      globalThis.KanamaWebMode = \"fps\";")
+        )
+    }
+}
+
 tasks.register<Exec>("importWebMatch3Project") {
     group = "verification"
     description = "Runs a headless Godot import of the disposable Match3 Web-proxy project."
@@ -1554,9 +1705,10 @@ fun stageTaskFor(demo: String): String =
         "web3d" -> "stageWebWeb3dProject"
         "platformer" -> "stageWebPlatformerProject"
         "squash" -> "stageWebSquashProject"
+        "fps" -> "stageWebFpsProject"
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps)"
             )
     }
 
@@ -1568,9 +1720,10 @@ fun stagingDirFor(demo: String): File =
         "web3d" -> webWeb3dStaging.get().asFile
         "platformer" -> webPlatformerStaging.get().asFile
         "squash" -> webSquashStaging.get().asFile
+        "fps" -> webFpsStaging.get().asFile
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps)"
             )
     }
 

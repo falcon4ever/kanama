@@ -65,6 +65,9 @@ enum class GodotCallShape {
   STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON,
   VECTOR3_VECTOR3_ARG,
   LONG_ARG_SINGLETON,
+  OBJECT_RET_HANDLE,
+  OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE,
+  CALLABLE_RET_HANDLE,
 }
 
 @InternalKanamaBackendApi
@@ -478,6 +481,40 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     value: Long,
   ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Object-argument fluent call returning a handle: e.g. Tween.bind_node self-return. */
+  fun invokeObjectRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Vector3 property tweener (mirrors the Vector2/Color variants). */
+  fun invokeObjectNodePathVector3DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector3,
+    duration: Double,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Callable-argument fluent call: e.g. Tween.tween_callback(Callable(target, method)). */
+  fun invokeCallableRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+  ): GodotHandle? {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -1093,6 +1130,62 @@ object GodotBackendCalls {
     selected.invokeLongArgSingleton(descriptor, resolve(selected, descriptor), value)
   }
 
+  fun invokeObjectRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: GodotHandle,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.OBJECT_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeObjectRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
+  }
+
+  fun invokeObjectNodePathVector3DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector3,
+    duration: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeObjectNodePathVector3DoubleRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+  }
+
+  fun invokeCallableRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.CALLABLE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeCallableRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      method,
+    )
+  }
+
   private fun resolve(selected: GodotBackendSpi, descriptor: GodotCallDescriptor): GodotCallSite {
     require(descriptor.opcode <= MAX_INITIAL_OPCODE) {
       "Godot call opcode ${descriptor.opcode} exceeds the initial contract table"
@@ -1255,6 +1348,35 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
   fun duplicate(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_DUPLICATE, handle)
 
+  fun getChildCount(includeInternal: Boolean = false): Long =
+    GodotBackendCalls.invokeBoolRetInt(
+        InitialGodotCallDescriptors.NODE_GET_CHILD_COUNT,
+        handle,
+        includeInternal,
+      )
+      .toLong()
+
+  /** One child as an existing tracked handle (include_internal baked to Godot's default). */
+  fun getChild(index: Long): GodotHandle? =
+    GodotBackendCalls.invokeLongRetHandle(InitialGodotCallDescriptors.NODE_GET_CHILD, handle, index)
+
+  fun hasMethod(method: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBool(
+      InitialGodotCallDescriptors.OBJECT_HAS_METHOD,
+      handle,
+      method,
+    )
+
+  /** Dynamic one-Float-argument method call (FPS damage(amount) on ray hits). */
+  fun callDouble(method: String, value: Double) {
+    GodotBackendCalls.invokeStringNameDoubleArg(
+      InitialGodotCallDescriptors.OBJECT_CALL_DOUBLE,
+      handle,
+      method,
+      value,
+    )
+  }
+
   fun getTree(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_TREE, handle)
 
@@ -1327,6 +1449,39 @@ class TweenBackendContractProbe(private val handle: GodotHandle) {
       property,
       finalValue,
       duration,
+    )
+
+  fun tweenProperty(
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector3,
+    duration: Double,
+  ): GodotHandle? =
+    GodotBackendCalls.invokeObjectNodePathVector3DoubleRetHandle(
+      InitialGodotCallDescriptors.TWEEN_TWEEN_PROPERTY_VECTOR3,
+      handle,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+
+  fun bindNode(node: GodotHandle): GodotHandle? =
+    GodotBackendCalls.invokeObjectRetHandle(
+      InitialGodotCallDescriptors.TWEEN_BIND_NODE,
+      handle,
+      node,
+    )
+
+  fun setEase(ease: Long): GodotHandle? =
+    GodotBackendCalls.invokeLongRetHandle(InitialGodotCallDescriptors.TWEEN_SET_EASE, handle, ease)
+
+  fun tweenCallback(target: GodotHandle, method: String): GodotHandle? =
+    GodotBackendCalls.invokeCallableRetHandle(
+      InitialGodotCallDescriptors.TWEEN_TWEEN_CALLBACK,
+      handle,
+      target,
+      method,
     )
 }
 
@@ -1561,6 +1716,9 @@ class CollisionShape2DBackendContractProbe(private val handle: GodotHandle) {
 /** Typed Timer slice used by dodge-the-creeps score/mob/start timers. */
 @InternalKanamaBackendApi
 class TimerBackendContractProbe(private val handle: GodotHandle) {
+  fun isStopped(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(InitialGodotCallDescriptors.TIMER_IS_STOPPED, handle)
+
   fun start(timeSec: Double) {
     GodotBackendCalls.invokeDoubleArg(InitialGodotCallDescriptors.TIMER_START, handle, timeSec)
   }
@@ -1813,6 +1971,12 @@ class Node3DBackendContractProbe(val handle: GodotHandle) {
   fun rotateY(angle: Double) {
     GodotBackendCalls.invokeDoubleArg(InitialGodotCallDescriptors.NODE3D_ROTATE_Y, handle, angle)
   }
+
+  fun getGlobalPosition(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.NODE3D_GET_GLOBAL_POSITION,
+      handle,
+    )
 }
 
 /** Typed CanvasLayer visibility slice used by the 3D platformer's mobile-control overlay. */
@@ -2016,6 +2180,61 @@ class PathFollow3DBackendContractProbe(private val handle: GodotHandle) {
   }
 }
 
+/** Typed VisualInstance3D slice (FPS weapon overlay renders on the layer-2 camera). */
+@InternalKanamaBackendApi
+class VisualInstance3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setLayerMask(mask: Long) {
+    GodotBackendCalls.invokeLongArg(
+      InitialGodotCallDescriptors.VISUALINSTANCE3D_SET_LAYER_MASK,
+      handle,
+      mask,
+    )
+  }
+}
+
+/** Typed InputEventMouseMotion slice: the FPS mouse-look reads the event's relative delta. */
+@InternalKanamaBackendApi
+class InputEventMouseMotionBackendContractProbe(private val handle: GodotHandle) {
+  fun getRelative(): GodotVector2 =
+    GodotBackendCalls.invokeNoArgsRetVector2(
+      InitialGodotCallDescriptors.INPUTEVENTMOUSEMOTION_GET_RELATIVE,
+      handle,
+    )
+}
+
+/** Typed AnimatedSprite3D slice (FPS muzzle flashes and impact sprites). */
+@InternalKanamaBackendApi
+class AnimatedSprite3DBackendContractProbe(private val handle: GodotHandle) {
+  /** custom_speed/from_end are baked to Godot defaults, the only values the demos pass. */
+  fun play(animation: String) {
+    GodotBackendCalls.invokeStringNameArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE3D_PLAY,
+      handle,
+      animation,
+    )
+  }
+
+  fun setFrame(frame: Long) {
+    GodotBackendCalls.invokeLongArg(
+      InitialGodotCallDescriptors.ANIMATEDSPRITE3D_SET_FRAME,
+      handle,
+      frame,
+    )
+  }
+}
+
+/** Typed TextureRect slice (FPS crosshair swap). */
+@InternalKanamaBackendApi
+class TextureRectBackendContractProbe(private val handle: GodotHandle) {
+  fun setTexture(texture: GodotHandle?) {
+    GodotBackendCalls.invokeObjectArg(
+      InitialGodotCallDescriptors.TEXTURERECT_SET_TEXTURE,
+      handle,
+      texture,
+    )
+  }
+}
+
 /** Typed DirectionalLight3D slice used by the squash gl_compatibility light tuning. */
 @InternalKanamaBackendApi
 class DirectionalLight3DBackendContractProbe(private val handle: GodotHandle) {
@@ -2059,5 +2278,9 @@ object InputActionBackendContractProbe {
       InitialGodotCallDescriptors.INPUT_ACTION_RELEASE,
       action,
     )
+  }
+
+  fun setMouseMode(mode: Long) {
+    GodotBackendCalls.invokeLongArgSingleton(InitialGodotCallDescriptors.INPUT_SET_MOUSE_MODE, mode)
   }
 }
