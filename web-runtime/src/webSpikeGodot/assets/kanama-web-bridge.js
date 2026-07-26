@@ -1364,7 +1364,12 @@
       return 1;
     },
     immediateConnect(handle, signal, targetHandle, method, flags) {
-      const callback = this.callbackFor(this.connectCallbacks, targetHandle, "Godot connect");
+      // Route to the ACTIVE calling script's proxy: it minted both the source and target
+      // handles (instantiate/node-lookup), so its dictionary can resolve them. Routing by
+      // target broke cross-script connects whose source is foreign to the target's proxy
+      // (squash: Main connects mob.squashed -> ScoreLabel).
+      const router = this.activeOwnerHandle || targetHandle;
+      const callback = this.callbackFor(this.connectCallbacks, router, "Godot connect");
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags);
       if (!Number.isInteger(this.immediateConnectResult)) {
@@ -1378,7 +1383,8 @@
       return this.immediateConnectResult;
     },
     immediateConnectBound(handle, signal, targetHandle, method, boundValue, flags) {
-      const callback = this.callbackFor(this.connectCallbacks, targetHandle, "Godot bound connect");
+      const router = this.activeOwnerHandle || targetHandle;
+      const callback = this.callbackFor(this.connectCallbacks, router, "Godot bound connect");
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
