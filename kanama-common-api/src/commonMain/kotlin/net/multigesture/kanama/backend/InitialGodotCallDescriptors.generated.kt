@@ -1543,4 +1543,125 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE3D_GET_GLOBAL_ROTATION =
+    GodotCallDescriptor(
+      opcode = 141,
+      className = "Node3D",
+      methodName = "get_global_rotation",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_GLOBAL_POSITION =
+    GodotCallDescriptor(
+      opcode = 142,
+      className = "Node3D",
+      methodName = "set_global_position",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE3D_SET_GLOBAL_ROTATION =
+    GodotCallDescriptor(
+      opcode = 143,
+      className = "Node3D",
+      methodName = "set_global_rotation",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_SET_PHYSICS_PROCESS =
+    GodotCallDescriptor(
+      opcode = 144,
+      className = "Node",
+      methodName = "set_physics_process",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_GET_MOUSE_MODE =
+    GodotCallDescriptor(
+      opcode = 145,
+      className = "Input",
+      methodName = "get_mouse_mode",
+      hash = 965286182L,
+      shape = GodotCallShape.NOARGS_RET_LONG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER3D_PLAY =
+    GodotCallDescriptor(
+      opcode = 146,
+      className = "AudioStreamPlayer3D",
+      methodName = "play",
+      hash = 1958160172L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER3D_STOP =
+    GodotCallDescriptor(
+      opcode = 147,
+      className = "AudioStreamPlayer3D",
+      methodName = "stop",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_EMIT_SIGNAL_OBJECT =
+    GodotCallDescriptor(
+      opcode = 148,
+      className = "Object",
+      methodName = "emit_signal",
+      hash = 4047867050L,
+      shape = GodotCallShape.STRINGNAME_OBJECT_RET_INT,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_GET_OBJECT_PROPERTY =
+    GodotCallDescriptor(
+      opcode = 149,
+      className = "Object",
+      methodName = "get",
+      hash = 2760726917L,
+      shape = GodotCallShape.NODEPATH_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATIONNODESTATEMACHINEPLAYBACK_TRAVEL =
+    GodotCallDescriptor(
+      opcode = 150,
+      className = "AnimationNodeStateMachinePlayback",
+      methodName = "travel",
+      hash = 3823612587L,
+      shape = GodotCallShape.STRINGNAME_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_SET_INDEXED_DOUBLE =
+    GodotCallDescriptor(
+      opcode = 151,
+      className = "Object",
+      methodName = "set_indexed",
+      hash = 3500910842L,
+      shape = GodotCallShape.STRINGNAME_DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

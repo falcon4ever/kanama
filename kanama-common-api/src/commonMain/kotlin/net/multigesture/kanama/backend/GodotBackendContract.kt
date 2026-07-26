@@ -68,6 +68,8 @@ enum class GodotCallShape {
   OBJECT_RET_HANDLE,
   OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE,
   CALLABLE_RET_HANDLE,
+  NOARGS_RET_LONG_SINGLETON,
+  STRINGNAME_OBJECT_RET_INT,
 }
 
 @InternalKanamaBackendApi
@@ -515,6 +517,22 @@ interface GodotBackendSpi {
     target: GodotHandle,
     method: String,
   ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton no-args Long query (no receiver): e.g. Input.get_mouse_mode. */
+  fun invokeNoArgsRetLongSingleton(descriptor: GodotCallDescriptor, callSite: GodotCallSite): Long {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Signal emission carrying one Godot-object argument. */
+  fun invokeStringNameObjectRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotHandle,
+  ): Int {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -1130,6 +1148,30 @@ object GodotBackendCalls {
     selected.invokeLongArgSingleton(descriptor, resolve(selected, descriptor), value)
   }
 
+  fun invokeNoArgsRetLongSingleton(descriptor: GodotCallDescriptor): Long {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeNoArgsRetLongSingleton(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeStringNameObjectRetInt(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotHandle,
+  ): Int {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_OBJECT_RET_INT)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameObjectRetInt(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
+    )
+  }
+
   fun invokeObjectRetHandle(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
@@ -1367,6 +1409,14 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
       method,
     )
 
+  fun setPhysicsProcess(enabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.NODE_SET_PHYSICS_PROCESS,
+      handle,
+      enabled,
+    )
+  }
+
   /** Dynamic one-Float-argument method call (FPS damage(amount) on ray hits). */
   fun callDouble(method: String, value: Double) {
     GodotBackendCalls.invokeStringNameDoubleArg(
@@ -1526,6 +1576,22 @@ class GPUParticles2DBackendContractProbe(private val handle: GodotHandle) {
         InitialGodotCallDescriptors.GPUPARTICLES2D_GET_LIFETIME,
         handle,
       )
+}
+
+/** Positional 3D audio playback (character-controller footsteps/jump/land). */
+@InternalKanamaBackendApi
+class AudioStreamPlayer3DBackendContractProbe(private val handle: GodotHandle) {
+  fun play(fromPosition: Double = 0.0) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_PLAY,
+      handle,
+      fromPosition,
+    )
+  }
+
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_STOP, handle)
+  }
 }
 
 /** Typed AudioStreamPlayer configuration and playback slice used by Match3's Audio autoload. */
@@ -1850,6 +1916,14 @@ class SignalBackendContractProbe(private val handle: GodotHandle) {
       name,
     )
 
+  fun emitObject(name: String, value: GodotHandle): Int =
+    GodotBackendCalls.invokeStringNameObjectRetInt(
+      InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_OBJECT,
+      handle,
+      name,
+      value,
+    )
+
   fun emitVector2i(name: String, value: GodotVector2i): Int =
     GodotBackendCalls.invokeStringNameVector2iRetInt(
       InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_VECTOR2I,
@@ -1868,6 +1942,36 @@ class GodotObjectBackendContractProbe(private val handle: GodotHandle) {
       handle,
       className,
     )
+
+  /** Object.get restricted to object-valued properties; non-objects resolve to null. */
+  fun getObjectProperty(name: String): GodotHandle? =
+    GodotBackendCalls.invokeNodePathRetHandle(
+      InitialGodotCallDescriptors.OBJECT_GET_OBJECT_PROPERTY,
+      handle,
+      name,
+    )
+
+  /** Object.set_indexed restricted to double values (AnimationTree blend parameters). */
+  fun setIndexedDouble(path: String, value: Double) {
+    GodotBackendCalls.invokeStringNameDoubleArg(
+      InitialGodotCallDescriptors.OBJECT_SET_INDEXED_DOUBLE,
+      handle,
+      path,
+      value,
+    )
+  }
+}
+
+/** State-machine playback transitions driven through the AnimationTree parameter object. */
+@InternalKanamaBackendApi
+class AnimationStateMachinePlaybackBackendContractProbe(private val handle: GodotHandle) {
+  fun travel(state: String) {
+    GodotBackendCalls.invokeStringNameArg(
+      InitialGodotCallDescriptors.ANIMATIONNODESTATEMACHINEPLAYBACK_TRAVEL,
+      handle,
+      state,
+    )
+  }
 }
 
 /** Typed InputEvent state queries shared by the generated input handoff. */
@@ -1977,6 +2081,28 @@ class Node3DBackendContractProbe(val handle: GodotHandle) {
       InitialGodotCallDescriptors.NODE3D_GET_GLOBAL_POSITION,
       handle,
     )
+
+  fun getGlobalRotation(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.NODE3D_GET_GLOBAL_ROTATION,
+      handle,
+    )
+
+  fun setGlobalPosition(value: GodotVector3) {
+    GodotBackendCalls.invokeVector3Arg(
+      InitialGodotCallDescriptors.NODE3D_SET_GLOBAL_POSITION,
+      handle,
+      value,
+    )
+  }
+
+  fun setGlobalRotation(value: GodotVector3) {
+    GodotBackendCalls.invokeVector3Arg(
+      InitialGodotCallDescriptors.NODE3D_SET_GLOBAL_ROTATION,
+      handle,
+      value,
+    )
+  }
 }
 
 /** Typed CanvasLayer visibility slice used by the 3D platformer's mobile-control overlay. */
@@ -2283,4 +2409,7 @@ object InputActionBackendContractProbe {
   fun setMouseMode(mode: Long) {
     GodotBackendCalls.invokeLongArgSingleton(InitialGodotCallDescriptors.INPUT_SET_MOUSE_MODE, mode)
   }
+
+  fun getMouseMode(): Long =
+    GodotBackendCalls.invokeNoArgsRetLongSingleton(InitialGodotCallDescriptors.INPUT_GET_MOUSE_MODE)
 }

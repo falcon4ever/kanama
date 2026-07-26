@@ -29,9 +29,10 @@ import { runWeb3d } from "./demos/web3d.mjs";
 import { runPlatformer } from "./demos/platformer.mjs";
 import { runSquash } from "./demos/squash.mjs";
 import { runFps } from "./demos/fps.mjs";
+import { runCharactercontroller } from "./demos/charactercontroller.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller };
 
 function parseArgs(argv) {
   const args = {};
@@ -236,9 +237,24 @@ async function main() {
       await call("Input.dispatchMouseEvent", { type: "mouseReleased", x: release.x, y: release.y, button: "left", buttons: 0, clickCount: 1 });
     };
 
+    // Trusted keyboard input (CDP synthesis needs key: AND text: to reach Godot).
+    const keys = async (type, value) => {
+      const isSpace = value === " ";
+      const code = isSpace ? "Space" : `Key${value.toUpperCase()}`;
+      const vk = isSpace ? 32 : value.toUpperCase().charCodeAt(0);
+      await call("Input.dispatchKeyEvent", {
+        type: type === "down" ? "keyDown" : "keyUp",
+        key: value,
+        code,
+        windowsVirtualKeyCode: vk,
+        nativeVirtualKeyCode: vk,
+        ...(type === "down" ? { text: value } : {}),
+      });
+    };
+
     // Drive the demo. The demo module returns startup + assertion + lifecycle
     // facts; console/exception capture stays here where CDP delivers it.
-    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, deadline });
+    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, keys, deadline });
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);

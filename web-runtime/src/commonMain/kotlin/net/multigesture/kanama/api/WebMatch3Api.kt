@@ -56,7 +56,8 @@ internal object WebSignalCallbackRegistry {
     val ownerHandle: Int,
     val sourceHandle: Int,
     val oneShot: Boolean,
-    val callback: () -> Unit,
+    val callback: (() -> Unit)? = null,
+    val objectCallback: ((Int) -> Unit)? = null,
   )
 
   private var nextId = 1
@@ -73,7 +74,19 @@ internal object WebSignalCallbackRegistry {
   ): Int {
     check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
     val id = nextId++
-    entries[id] = Entry(ownerHandle, sourceHandle, oneShot, callback)
+    entries[id] = Entry(ownerHandle, sourceHandle, oneShot, callback = callback)
+    return id
+  }
+
+  fun registerObject(
+    ownerHandle: Int,
+    sourceHandle: Int,
+    oneShot: Boolean,
+    callback: (Int) -> Unit,
+  ): Int {
+    check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
+    val id = nextId++
+    entries[id] = Entry(ownerHandle, sourceHandle, oneShot, objectCallback = callback)
     return id
   }
 
@@ -90,12 +103,28 @@ internal object WebSignalCallbackRegistry {
   }
 
   fun dispatch(ownerHandle: Int, id: Int) {
+    val entry = requireEntry(ownerHandle, id)
+    val callback =
+      entry.callback ?: error("Kanama Web signal callback id=$id expects an emitted object")
+    if (entry.oneShot) entries.remove(id)
+    callback()
+  }
+
+  fun dispatchObject(ownerHandle: Int, id: Int, argHandle: Int) {
+    val entry = requireEntry(ownerHandle, id)
+    val callback =
+      entry.objectCallback
+        ?: error("Kanama Web signal callback id=$id does not accept an emitted object")
+    if (entry.oneShot) entries.remove(id)
+    callback(argHandle)
+  }
+
+  private fun requireEntry(ownerHandle: Int, id: Int): Entry {
     val entry = entries[id] ?: error("Stale Kanama Web signal callback id=$id")
     check(entry.ownerHandle == ownerHandle) {
       "Kanama Web signal callback id=$id belongs to handle=${entry.ownerHandle}, not $ownerHandle"
     }
-    if (entry.oneShot) entries.remove(id)
-    entry.callback()
+    return entry
   }
 }
 
@@ -134,8 +163,8 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     flags: Long = 0L,
     callback: () -> Unit,
   ): Long {
-    require(argumentCount == 0) {
-      "Kanama Web signal lambda callbacks currently support zero emitted arguments"
+    require(argumentCount in 0..1) {
+      "Kanama Web signal lambda callbacks currently support at most one emitted argument"
     }
     val callbackId =
       WebSignalCallbackRegistry.register(
@@ -144,12 +173,39 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
         oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
         callback,
       )
+    val dispatchMethod =
+      if (argumentCount == 0) "_kanama_web_signal_dispatch0" else "_kanama_web_signal_dispatch1"
+    val result =
+      SignalBackendContractProbe(owner.backendHandle)
+        .connectBound(target.backendHandle, name, dispatchMethod, callbackId.toLong(), flags)
+    if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
+    return result
+  }
+
+  /**
+   * Connects a one-argument object signal (e.g. body_entered). The emitted Godot object arrives
+   * wrapped as [GodotObject]; resolve a Kanama script via kotlinScriptInstance or re-type it with a
+   * wrapper constructor.
+   */
+  fun connectObject(
+    target: GodotObject,
+    flags: Long = 0L,
+    callback: (GodotObject) -> Unit,
+  ): Long {
+    val callbackId =
+      WebSignalCallbackRegistry.registerObject(
+        target.handle.value,
+        owner.handle.value,
+        oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
+      ) { argHandle ->
+        callback(GodotObject(WebObjectId(argHandle)))
+      }
     val result =
       SignalBackendContractProbe(owner.backendHandle)
         .connectBound(
           target.backendHandle,
           name,
-          "_kanama_web_signal_dispatch0",
+          "_kanama_web_signal_dispatch_object",
           callbackId.toLong(),
           flags,
         )
@@ -159,8 +215,8 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
 
   /** Suspends until this signal fires once (a one-shot connection resumes the coroutine). */
   suspend fun await(target: GodotObject, argumentCount: Int = 0) {
-    require(argumentCount == 0) {
-      "Kanama Web signal await currently supports zero emitted arguments"
+    require(argumentCount in 0..1) {
+      "Kanama Web signal await currently supports at most one emitted argument"
     }
     suspendCancellableCoroutine { continuation ->
       connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) {
@@ -430,6 +486,8 @@ object Input {
     InputActionBackendContractProbe.setMouseMode(mode)
   }
 
+  fun getMouseMode(): Long = InputActionBackendContractProbe.getMouseMode()
+
   /**
    * Composed from two get_axis reads (deadzone-normalized identically for digital keys, the
    * only inputs the Web demos drive), clamped to unit length like Godot's get_vector.
@@ -439,9 +497,16 @@ object Input {
     positiveX: String,
     negativeY: String,
     positiveY: String,
+    deadzone: Double = -1.0,
   ): Vector2 {
     val vector = Vector2(getAxis(negativeX, positiveX), getAxis(negativeY, positiveY))
     val length = vector.length()
+    if (deadzone >= 0.0) {
+      // Godot's deadzone remap: inside the deadzone reads zero, outside rescales to [0, 1].
+      if (length <= deadzone) return Vector2.ZERO
+      if (length > 1.0) return vector / length
+      return vector * ((length - deadzone) / (1.0 - deadzone) / length)
+    }
     return if (length > 1.0) vector / length else vector
   }
 

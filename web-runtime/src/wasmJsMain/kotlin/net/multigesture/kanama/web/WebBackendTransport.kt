@@ -31,6 +31,9 @@ internal fun immediateWebConstructObject(className: String): Int =
 internal fun immediateWebNodeLookup(objectId: Int, path: String): Int =
   js("globalThis.KanamaWebBridge.immediateNodeLookup(objectId, path)")
 
+internal fun immediateWebPropertyObjectQuery(objectId: Int, name: String): Int =
+  js("globalThis.KanamaWebBridge.immediatePropertyObjectQuery(objectId, name)")
+
 internal fun immediateWebPackedSceneInstantiate(resourceId: Int, editState: Int): Int =
   js("globalThis.KanamaWebBridge.immediatePackedSceneInstantiate(resourceId, editState)")
 

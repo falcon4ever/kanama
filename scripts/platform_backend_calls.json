@@ -2166,6 +2166,185 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a render-layer mask write (FPS weapon models render on the overlay camera's layer 2).",
       "introducedBy": "60e-fps"
+    },
+    {
+      "opcode": 141,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "get_global_rotation",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the node's world-space Euler rotation synchronously (a nested camera's global basis derives from it).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 142,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_global_position",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Write the node's world-space position synchronously and re-push its transform snapshot (character respawn).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 143,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "set_global_rotation",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Write the node's world-space Euler rotation synchronously and re-push its transform snapshot (skin facing).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 144,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "set_physics_process",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue toggling a node's _physics_process (the character controller freezes on flag reach).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 145,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "get_mouse_mode",
+      "hash": 965286182,
+      "arguments": [],
+      "returnType": "enum::Input.MouseMode",
+      "shape": "NOARGS_RET_LONG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the mouse capture mode through the active script's proxy singleton.",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 146,
+      "scope": "class",
+      "className": "AudioStreamPlayer3D",
+      "methodName": "play",
+      "hash": 1958160172,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue playing a positional 3D audio stream (from_position baked default).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 147,
+      "scope": "class",
+      "className": "AudioStreamPlayer3D",
+      "methodName": "stop",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue stopping a positional 3D audio stream.",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 148,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "emit_signal",
+      "hash": 4047867050,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_OBJECT_RET_INT",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "isVararg": true,
+      "typedVarargTail": [
+        "Object"
+      ],
+      "descriptorName": "OBJECT_EMIT_SIGNAL_OBJECT",
+      "semantics": "Emit a signal carrying one Godot-object argument (the tutorial's kill-plane event forwards the touching body).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 149,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "get",
+      "hash": 2760726917,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "NODEPATH_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read an object-valued property (the tutorial's AnimationTree state-machine playback); non-object values resolve to a null handle.",
+      "introducedBy": "60e-corpus",
+      "descriptorName": "OBJECT_GET_OBJECT_PROPERTY"
+    },
+    {
+      "opcode": 150,
+      "scope": "class",
+      "className": "AnimationNodeStateMachinePlayback",
+      "methodName": "travel",
+      "hash": 3823612587,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a state-machine transition to a named state (reset_on_teleport baked to Godot's default true).",
+      "introducedBy": "60e-corpus"
+    },
+    {
+      "opcode": 151,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "set_indexed",
+      "hash": 3500910842,
+      "arguments": [
+        "NodePath",
+        "Variant"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a double-valued indexed property write (AnimationTree blend parameters like the run tilt).",
+      "introducedBy": "60e-corpus",
+      "descriptorName": "OBJECT_SET_INDEXED_DOUBLE"
     }
   ],
   "compositions": [

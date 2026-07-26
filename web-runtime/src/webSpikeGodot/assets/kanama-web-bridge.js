@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 11;
+  const KANAMA_WEB_PROTOCOL_VERSION = 12;
 
   function commandWordCount(opcode) {
     if (
@@ -18,7 +18,8 @@
       opcode === 58 ||
       opcode === 59 ||
       opcode === 63 ||
-      opcode === 64
+      opcode === 64 ||
+      opcode === 147
     ) return 2;
     if (
       opcode === 14 ||
@@ -32,6 +33,7 @@
       opcode === 129 ||
       opcode === 130 ||
       opcode === 140 ||
+      opcode === 150 ||
       opcode === 66
     ) return 3;
     if (
@@ -60,6 +62,8 @@
       opcode === 97 ||
       opcode === 99 ||
       opcode === 105 ||
+      opcode === 144 ||
+      opcode === 146 ||
       opcode === 1000
     ) return 4;
     if (
@@ -72,7 +76,8 @@
       opcode === 88 ||
       opcode === 101 ||
       opcode === 103 ||
-      opcode === 132
+      opcode === 132 ||
+      opcode === 151
     ) return 5;
     if (opcode === 32) return 6;
     if (opcode === 6) return 9;
@@ -234,6 +239,8 @@
     squashSmokeQuitHandle: 0,
     fpsSmokeHandle: 0,
     fpsPlayerHandle: 0,
+    charSmokeQuitHandle: 0,
+    charPlayerHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
     // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
@@ -1159,6 +1166,22 @@
       }
       return this.immediateResourceReleaseResult;
     },
+    immediatePropertyObjectQuery(handle, name) {
+      // Object-valued property read (opcode 149): the proxy resolves receiver.get(name),
+      // registers the result under the proposed slot (or an existing/script handle), and
+      // publishes the winning handle through the object-query integer channel.
+      const owner = this.ownerForHandle(handle);
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
+      const resultHandle = this.allocateBrowserHandle("Object", owner);
+      this.immediateLongResult = null;
+      callback(149, handle, `${name}\u001f${resultHandle}`);
+      const result = this.immediateLongResult;
+      if (!Number.isInteger(result)) {
+        throw new Error("Godot property object query callback did not publish a result");
+      }
+      if (result !== resultHandle) this.releaseBrowserHandle(resultHandle, "Object");
+      return result;
+    },
     immediateNodeLookup(handle, path) {
       const owner = this.ownerForHandle(handle);
       const callback = this.callbackFor(this.nodeLookupCallbacks, handle, "Godot node lookup");
@@ -1486,6 +1509,15 @@
         }
       }
       return this.immediateConnectResult;
+    },
+    dispatchSignalObject(handle, callbackId, argHandle) {
+      return this.invoke(
+        handle,
+        "_kanama_web_signal_dispatch_object",
+        `callback#${callbackId}`,
+        () => this.api.kanamaWebDispatchSignalObject(handle, callbackId, argHandle),
+        0,
+      );
     },
     dispatchSignal0(handle, callbackId) {
       const result = this.invoke(
@@ -1863,6 +1895,14 @@
       }
       if (this.mode === "fps" && scriptName.endsWith(".Player")) {
         this.fpsPlayerHandle = handle;
+      }
+      if (this.mode === "charactercontroller" && scriptName.endsWith(".SmokeQuit")) {
+        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the Events autoload
+        // and the scene root, draining live handles to zero.
+        this.charSmokeQuitHandle = handle;
+      }
+      if (this.mode === "charactercontroller" && scriptName.endsWith(".Player3DTemplate")) {
+        this.charPlayerHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

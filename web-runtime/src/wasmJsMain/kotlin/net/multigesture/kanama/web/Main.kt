@@ -453,6 +453,14 @@ fun kanamaWebDispatchSignal0(objectId: Int, callbackId: Int): Int {
 }
 
 @JsExport
+fun kanamaWebDispatchSignalObject(objectId: Int, callbackId: Int, argHandle: Int): Int {
+  return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch_object") {
+    WebSignalCallbackRegistry.dispatchObject(objectId, callbackId, argHandle)
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebLoadPositionSnapshot(objectId: Int, x: Double, y: Double): Int {
   loadWebPositionSnapshot(objectId, x, y)
   return 1
