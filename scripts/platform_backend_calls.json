@@ -2345,6 +2345,116 @@
       "semantics": "Queue a double-valued indexed property write (AnimationTree blend parameters like the run tilt).",
       "introducedBy": "60e-corpus",
       "descriptorName": "OBJECT_SET_INDEXED_DOUBLE"
+    },
+    {
+      "opcode": 152,
+      "scope": "class",
+      "className": "RigidBody3D",
+      "methodName": "set_freeze_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue freezing/unfreezing a rigid body (destroyed-box shards wake by unfreezing).",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 153,
+      "scope": "class",
+      "className": "RigidBody3D",
+      "methodName": "set_sleeping",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue waking/sleeping a rigid body.",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 154,
+      "scope": "class",
+      "className": "RigidBody3D",
+      "methodName": "apply_force",
+      "hash": 2754756483,
+      "arguments": [
+        "Vector3",
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Apply a positioned continuous force (packed six-float immediate; shards fly).",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 155,
+      "scope": "class",
+      "className": "CollisionObject3D",
+      "methodName": "set_collision_mask_value",
+      "hash": 300928843,
+      "arguments": [
+        "int",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "LONG_BOOL_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle one collision-mask layer (packed layer/value immediate).",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 156,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "get_wall_normal",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Wall normal from the last move_and_slide (anti-stuck nudge).",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 157,
+      "scope": "class",
+      "className": "AnimationPlayer",
+      "methodName": "is_playing",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Whether an animation is currently playing (melee attack gate).",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 158,
+      "scope": "class",
+      "className": "AudioStreamPlayer3D",
+      "methodName": "set_pitch_scale",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a pitch-scale write (randomized footstep/destroy pitches).",
+      "introducedBy": "60f-third-person"
     }
   ],
   "compositions": [

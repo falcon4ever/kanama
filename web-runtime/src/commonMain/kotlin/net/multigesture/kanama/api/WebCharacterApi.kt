@@ -4,9 +4,14 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.AnimationStateMachinePlaybackBackendContractProbe
 import net.multigesture.kanama.backend.AudioStreamPlayer3DBackendContractProbe
+import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
+import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.InitialGodotCallDescriptors
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.NodeBackendContractProbe
+import net.multigesture.kanama.backend.RigidBody3DBackendContractProbe
+import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
 
 /**
@@ -52,6 +57,47 @@ class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   fun stop() {
     AudioStreamPlayer3DBackendContractProbe(backendHandle).stop()
+  }
+
+  fun setPitchScale(scale: Double) {
+    AudioStreamPlayer3DBackendContractProbe(backendHandle).setPitchScale(scale)
+  }
+
+  object Signals {
+    const val finished: String = "finished"
+  }
+}
+
+/** Dynamic rigid body (the third-person controller's destructible-box shards). */
+open class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
+  /** Write-only on Web: shards flip freeze off to enter simulation. */
+  var freeze: Boolean
+    get() = unsupportedWebGameplayFamily("RigidBody3D.is_freeze_enabled")
+    set(value) {
+      RigidBody3DBackendContractProbe(backendHandle).setFreezeEnabled(value)
+    }
+
+  /** Write-only on Web: shards clear sleeping so the force applies immediately. */
+  var sleeping: Boolean
+    get() = unsupportedWebGameplayFamily("RigidBody3D.is_sleeping")
+    set(value) {
+      RigidBody3DBackendContractProbe(backendHandle).setSleeping(value)
+    }
+
+  fun applyForce(force: Vector3, position: Vector3 = Vector3.ZERO) {
+    RigidBody3DBackendContractProbe(backendHandle)
+      .applyForce(
+        GodotVector3(force.x.toFloat(), force.y.toFloat(), force.z.toFloat()),
+        GodotVector3(position.x.toFloat(), position.y.toFloat(), position.z.toFloat()),
+      )
+  }
+
+  fun setCollisionMaskValue(layer: Long, value: Boolean) {
+    RigidBody3DBackendContractProbe(backendHandle).setCollisionMaskValue(layer, value)
+  }
+
+  fun show() {
+    visible = true
   }
 }
 

@@ -178,7 +178,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   const protocolVersion = ready.protocol;
   const checks = {
     modeCharactercontroller: ready.mode === "charactercontroller",
-    protocol12: protocolVersion === 12,
+    protocol13: protocolVersion === 13,
     sceneScriptsReady:
       ready.playerReady >= 1 &&
       ready.skinReady >= 1 &&

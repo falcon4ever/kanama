@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 12
+    const val PROTOCOL_VERSION = 13
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -1314,6 +1314,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as AudioStreamPlayer3D).stop()")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 152 and target_object is RigidBody3D:")
+    appendLine("\t\t\t(target_object as RigidBody3D).freeze = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 153 and target_object is RigidBody3D:")
+    appendLine("\t\t\t(target_object as RigidBody3D).sleeping = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 158 and target_object is AudioStreamPlayer3D:")
+    appendLine(
+      "\t\t\t(target_object as AudioStreamPlayer3D).pitch_scale = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 46 and target_object is AudioStreamPlayer:")
     appendLine("\t\t\tvar stream_handle := bytes.decode_s32(offset + 8)")
     appendLine(
@@ -2105,6 +2119,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tif result == 0:")
     appendLine("\t\t\t\t\tresult = int(get_parts[1])")
     appendLine("\t\t\t\t\t_kanama_object_handles[result] = got")
+    appendLine("\t\telif opcode == 154 and value is RigidBody3D:")
+    appendLine("\t\t\tvar force_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as RigidBody3D).apply_force(Vector3(force_parts[0], force_parts[1], force_parts[2]), Vector3(force_parts[3], force_parts[4], force_parts[5]))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 155 and value is CollisionObject3D:")
+    appendLine("\t\t\tvar mask_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as CollisionObject3D).set_collision_mask_value(int(mask_parts[0]), mask_parts[1] == \"1\")"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 157 and value is AnimationPlayer:")
+    appendLine("\t\t\tresult = int((value as AnimationPlayer).is_playing())")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -2139,6 +2167,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as Node3D).global_position")
     appendLine("\telif opcode == 141 and value is Node3D:")
     appendLine("\t\tresult = (value as Node3D).global_rotation")
+    appendLine("\telif opcode == 156 and value is CharacterBody3D:")
+    appendLine("\t\tresult = (value as CharacterBody3D).get_wall_normal()")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()

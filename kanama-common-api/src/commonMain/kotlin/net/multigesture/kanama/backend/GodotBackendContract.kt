@@ -50,6 +50,7 @@ enum class GodotCallShape {
   NOARGS_RET_STRING_ARRAY,
   STRINGNAME_ARG,
   STRINGNAME_BOOL_ARG,
+  LONG_BOOL_ARG,
   STRINGNAME_STRINGNAME_ARG,
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
@@ -350,6 +351,16 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     name: String,
+    value: Boolean,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  fun invokeLongBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    layer: Long,
     value: Boolean,
   ) {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
@@ -943,6 +954,18 @@ object GodotBackendCalls {
       name,
       value,
     )
+  }
+
+  fun invokeLongBoolArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    layer: Long,
+    value: Boolean,
+  ) {
+    requireShape(descriptor, GodotCallShape.LONG_BOOL_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeLongBoolArg(descriptor, resolve(selected, descriptor), receiver, layer, value)
   }
 
   fun invokeStringNameStringNameArg(
@@ -1592,6 +1615,52 @@ class AudioStreamPlayer3DBackendContractProbe(private val handle: GodotHandle) {
   fun stop() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_STOP, handle)
   }
+
+  fun setPitchScale(scale: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_SET_PITCH_SCALE,
+      handle,
+      scale,
+    )
+  }
+}
+
+/** Rigid-body dynamics slice (the third-person controller's destructible-box shards). */
+@InternalKanamaBackendApi
+class RigidBody3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setFreezeEnabled(frozen: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.RIGIDBODY3D_SET_FREEZE_ENABLED,
+      handle,
+      frozen,
+    )
+  }
+
+  fun setSleeping(sleeping: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.RIGIDBODY3D_SET_SLEEPING,
+      handle,
+      sleeping,
+    )
+  }
+
+  fun applyForce(force: GodotVector3, position: GodotVector3) {
+    GodotBackendCalls.invokeVector3Vector3Arg(
+      InitialGodotCallDescriptors.RIGIDBODY3D_APPLY_FORCE,
+      handle,
+      force,
+      position,
+    )
+  }
+
+  fun setCollisionMaskValue(layer: Long, value: Boolean) {
+    GodotBackendCalls.invokeLongBoolArg(
+      InitialGodotCallDescriptors.COLLISIONOBJECT3D_SET_COLLISION_MASK_VALUE,
+      handle,
+      layer,
+      value,
+    )
+  }
 }
 
 /** Typed AudioStreamPlayer configuration and playback slice used by Match3's Audio autoload. */
@@ -2175,6 +2244,12 @@ class Light3DBackendContractProbe(private val handle: GodotHandle) {
  */
 @InternalKanamaBackendApi
 class CharacterBody3DBackendContractProbe(private val handle: GodotHandle) {
+  fun getWallNormal(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_GET_WALL_NORMAL,
+      handle,
+    )
+
   var velocity: GodotVector3
     get() =
       GodotBackendCalls.invokeNoArgsRetVector3(

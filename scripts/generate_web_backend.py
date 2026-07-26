@@ -194,6 +194,13 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     149: {},
     150: {},
     151: {},
+    152: {},
+    153: {},
+    154: {},
+    155: {},
+    156: {},
+    157: {},
+    158: {},
 }
 
 
@@ -442,6 +449,24 @@ def body_STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON(calls):
         "// returned scaled by 1000 through the shared object-query transport.",
         'return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), '
         'first + "\\u001f" + second) / 1000.0',
+    ]
+
+
+def body_LONG_BOOL_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Layer number and flag packed into one query string (unit separator).",
+        "check(",
+        "immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'layer.toString() + "\u001f" + (if (value) "1" else "0"),',
+        ") == 1",
+        ") {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+        "}",
     ]
 
 
@@ -1216,6 +1241,10 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["receiver: GodotHandle", "name: String", "value: Boolean"],
         "",
     ),
+    "LONG_BOOL_ARG": (
+        ["receiver: GodotHandle", "layer: Long", "value: Boolean"],
+        "",
+    ),
     "STRINGNAME_STRINGNAME_ARG": (
         ["receiver: GodotHandle", "first: String", "second: String"],
         "",
@@ -1306,6 +1335,7 @@ EMIT_ORDER = [
     "OBJECT_ARG",
     "STRINGNAME_ARG",
     "STRINGNAME_BOOL_ARG",
+    "LONG_BOOL_ARG",
     "STRINGNAME_STRINGNAME_ARG",
     "NODEPATH_RET_HANDLE",
     "LONG_RET_HANDLE",

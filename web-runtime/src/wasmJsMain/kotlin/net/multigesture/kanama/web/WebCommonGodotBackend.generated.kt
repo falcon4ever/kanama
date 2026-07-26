@@ -72,7 +72,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80, 93, 94, 95, 96, 97, 144))
+    require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80, 93, 94, 95, 96, 97, 144, 152, 153))
     val objectId = receiver.webId()
     commands.appendBoolMutation(descriptor.opcode, objectId, value)
     when (descriptor.opcode) {
@@ -93,7 +93,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
     when (descriptor.executionMode) {
       GodotExecutionMode.QUEUED_MUTATION -> {
-        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99, 146))
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99, 146, 158))
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
@@ -387,6 +387,29 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     require(descriptor.opcode == 67)
     commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)
+  }
+
+  override fun invokeLongBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    layer: Long,
+    value: Boolean,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 155)
+    commands.flush()
+    // Layer number and flag packed into one query string (unit separator).
+    check(
+      immediateWebObjectQuery(
+        descriptor.opcode,
+        receiver.webId(),
+        layer.toString() + "" + (if (value) "1" else "0"),
+      ) == 1
+    ) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
   }
 
   override fun invokeStringNameStringNameArg(
@@ -754,7 +777,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
               "object handle=${receiver.webId()}"
           )
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode in setOf(113, 123, 124, 138, 141))
+        require(descriptor.opcode in setOf(113, 123, 124, 138, 141, 156))
         commands.flush()
         GodotVector3(
           immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
@@ -888,7 +911,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    require(descriptor.opcode == 108)
+    require(descriptor.opcode in setOf(108, 154))
     commands.flush()
     // Six Float32 components are packed into one query string (unit separator); the applier
     // re-pushes the Node3D transform snapshot so rotation reads reflect the new orientation.

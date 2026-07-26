@@ -1664,4 +1664,81 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val RIGIDBODY3D_SET_FREEZE_ENABLED =
+    GodotCallDescriptor(
+      opcode = 152,
+      className = "RigidBody3D",
+      methodName = "set_freeze_enabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RIGIDBODY3D_SET_SLEEPING =
+    GodotCallDescriptor(
+      opcode = 153,
+      className = "RigidBody3D",
+      methodName = "set_sleeping",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RIGIDBODY3D_APPLY_FORCE =
+    GodotCallDescriptor(
+      opcode = 154,
+      className = "RigidBody3D",
+      methodName = "apply_force",
+      hash = 2754756483L,
+      shape = GodotCallShape.VECTOR3_VECTOR3_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val COLLISIONOBJECT3D_SET_COLLISION_MASK_VALUE =
+    GodotCallDescriptor(
+      opcode = 155,
+      className = "CollisionObject3D",
+      methodName = "set_collision_mask_value",
+      hash = 300928843L,
+      shape = GodotCallShape.LONG_BOOL_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CHARACTERBODY3D_GET_WALL_NORMAL =
+    GodotCallDescriptor(
+      opcode = 156,
+      className = "CharacterBody3D",
+      methodName = "get_wall_normal",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ANIMATIONPLAYER_IS_PLAYING =
+    GodotCallDescriptor(
+      opcode = 157,
+      className = "AnimationPlayer",
+      methodName = "is_playing",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER3D_SET_PITCH_SCALE =
+    GodotCallDescriptor(
+      opcode = 158,
+      className = "AudioStreamPlayer3D",
+      methodName = "set_pitch_scale",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

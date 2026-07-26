@@ -151,6 +151,9 @@ class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHand
       customBlend,
     )
   }
+
+  fun isPlaying(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(D.ANIMATIONPLAYER_IS_PLAYING, backendHandle)
 }
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
@@ -177,6 +180,12 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   fun isOnFloor(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnFloor()
 
   fun isOnCeiling(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnCeiling()
+
+  /** Wall normal from the last move_and_slide (anti-stuck nudge). */
+  fun getWallNormal(): Vector3 =
+    CharacterBody3DBackendContractProbe(backendHandle).getWallNormal().let {
+      Vector3(it.x, it.y, it.z)
+    }
 
   fun getSlideCollisionCount(): Long =
     CharacterBody3DBackendContractProbe(backendHandle).getSlideCollisionCount()
