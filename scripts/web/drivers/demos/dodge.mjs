@@ -153,7 +153,7 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeDodge: ready.mode === "dodge",
-    protocol11: protocolVersion === 11,
+    protocol12: protocolVersion === 12,
     sceneScriptsReady: ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1,
     mobsInstantiated: peak.mobInstantiations >= 4,
     mobsAddedToTree: peak.mobAddChildCommands >= peak.mobInstantiations,

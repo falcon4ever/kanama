@@ -58,6 +58,11 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
       Node2DBackendContractProbe(backendHandle).emitSignal(signal, (args[0] as Long).toInt())
       return
     }
+    if (args.size == 1 && args[0] is GodotObject) {
+      SignalBackendContractProbe(backendHandle)
+        .emitObject(signal, (args[0] as GodotObject).backendHandle)
+      return
+    }
     if (args.size == 1 && args[0] is Vector2i) {
       val value = args[0] as Vector2i
       SignalBackendContractProbe(backendHandle)

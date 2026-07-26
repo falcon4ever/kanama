@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 11
+    const val PROTOCOL_VERSION = 12
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -626,6 +626,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (property.type == TypeMapping.INT && property.isMutable) {
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value"
+          )
+        }
+        // The proxy pushes exported bools through the long channel (1/0).
+        if (property.type == TypeMapping.BOOL && property.isMutable) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value != 0L"
           )
         }
       }
@@ -1294,6 +1300,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 144 and target_object is Node:")
+    appendLine(
+      "\t\t\t(target_object as Node).set_physics_process(bytes.decode_s32(offset + 8) != 0)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 146 and target_object is AudioStreamPlayer3D:")
+    appendLine("\t\t\t(target_object as AudioStreamPlayer3D).play(bytes.decode_double(offset + 8))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 147 and target_object is AudioStreamPlayer3D:")
+    appendLine("\t\t\t(target_object as AudioStreamPlayer3D).stop()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
     appendLine("\t\telif opcode == 46 and target_object is AudioStreamPlayer:")
     appendLine("\t\t\tvar stream_handle := bytes.decode_s32(offset + 8)")
     appendLine(
@@ -1525,6 +1545,26 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tvar anim_name := String(_kanama_bridge.resolveCommandStringName(anim_id))")
     appendLine(
       "\t\t\t(target_object as AnimationPlayer).play(StringName(anim_name), bytes.decode_double(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 150 and target_object is AnimationNodeStateMachinePlayback:")
+    appendLine("\t\t\tvar travel_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar travel_state := String(_kanama_bridge.resolveCommandStringName(travel_id))"
+    )
+    appendLine(
+      "\t\t\t(target_object as AnimationNodeStateMachinePlayback).travel(StringName(travel_state))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 151 and target_object != null:")
+    appendLine("\t\t\tvar indexed_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar indexed_path := String(_kanama_bridge.resolveCommandStringName(indexed_id))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.set_indexed(NodePath(indexed_path), bytes.decode_double(offset + 12))"
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 20")
@@ -1895,6 +1935,27 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("func _kanama_web_signal_dispatch0(callback_id: int) -> void:")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
     appendLine()
+    appendLine("func _kanama_web_signal_dispatch1(_arg: Variant, callback_id: int) -> void:")
+    appendLine("\t# One emitted argument, dropped by the Kotlin callback: rides the zero-arg path.")
+    appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
+    appendLine()
+    appendLine("func _kanama_web_signal_dispatch_object(arg: Variant, callback_id: int) -> void:")
+    appendLine("\tvar script_arg_handle := 0")
+    appendLine("\tif arg != null and arg.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\tscript_arg_handle = int(arg.call(\"_kanama_ensure_created\"))")
+    appendLine("\tif script_arg_handle != 0:")
+    appendLine(
+      "\t\t_kanama_bridge.dispatchSignalObject(_kanama_handle, callback_id, script_arg_handle)"
+    )
+    appendLine("\telse:")
+    appendLine(
+      "\t\tvar arg_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+    )
+    appendLine("\t\t_kanama_object_handles[arg_handle] = arg")
+    appendLine("\t\t_kanama_bridge.dispatchSignalObject(_kanama_handle, callback_id, arg_handle)")
+    appendLine("\t\t_kanama_object_handles.erase(arg_handle)")
+    appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(arg_handle)")
+    appendLine()
     appendLine("func _kanama_object_query(args: Array) -> int:")
     appendLine("\tvar opcode := int(args[0])")
     appendLine("\tvar object_handle := int(args[1])")
@@ -1994,6 +2055,56 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int(value.has_method(StringName(String(args[2]))))")
     appendLine("\t\telif opcode == 139 and value is Timer:")
     appendLine("\t\t\tresult = int((value as Timer).is_stopped())")
+    appendLine("\t\telif opcode == 142 and value is Node3D:")
+    appendLine("\t\t\tvar global_pos_node := value as Node3D")
+    appendLine("\t\t\tvar global_pos_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\tglobal_pos_node.global_position = Vector3(global_pos_parts[0], global_pos_parts[1], global_pos_parts[2])"
+    )
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode3DSnapshot(object_handle, global_pos_node.position.x, global_pos_node.position.y, global_pos_node.position.z, global_pos_node.rotation.x, global_pos_node.rotation.y, global_pos_node.rotation.z, global_pos_node.scale.x, global_pos_node.scale.y, global_pos_node.scale.z)"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 143 and value is Node3D:")
+    appendLine("\t\t\tvar global_rot_node := value as Node3D")
+    appendLine("\t\t\tvar global_rot_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\tglobal_rot_node.global_rotation = Vector3(global_rot_parts[0], global_rot_parts[1], global_rot_parts[2])"
+    )
+    appendLine(
+      "\t\t\t_kanama_bridge.refreshNode3DSnapshot(object_handle, global_rot_node.position.x, global_rot_node.position.y, global_rot_node.position.z, global_rot_node.rotation.x, global_rot_node.rotation.y, global_rot_node.rotation.z, global_rot_node.scale.x, global_rot_node.scale.y, global_rot_node.scale.z)"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 145:")
+    appendLine("\t\t\tresult = int(Input.mouse_mode)")
+    appendLine("\t\telif opcode == 148 and value != null:")
+    appendLine("\t\t\tvar emit_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tvar emit_arg_handle := int(emit_parts[1])")
+    appendLine(
+      "\t\t\tvar emit_arg: Object = self if emit_arg_handle == _kanama_handle else _kanama_object_handles.get(emit_arg_handle)"
+    )
+    appendLine("\t\t\tif emit_arg == null:")
+    appendLine(
+      "\t\t\t\tpush_error(\"Unknown Kanama Web signal argument handle: %d\" % emit_arg_handle)"
+    )
+    appendLine("\t\t\t\tresult = ERR_INVALID_PARAMETER")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\tresult = value.emit_signal(StringName(emit_parts[0]), emit_arg)")
+    appendLine("\t\telif opcode == 149 and value != null:")
+    appendLine("\t\t\tvar get_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tvar got_variant: Variant = value.get(get_parts[0])")
+    appendLine("\t\t\tvar got: Object = got_variant if got_variant is Object else null")
+    appendLine("\t\t\tif got == null:")
+    appendLine("\t\t\t\tresult = 0")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\tresult = 0")
+    appendLine("\t\t\t\tfor existing_handle in _kanama_object_handles:")
+    appendLine("\t\t\t\t\tif is_same(_kanama_object_handles[existing_handle], got):")
+    appendLine("\t\t\t\t\t\tresult = int(existing_handle)")
+    appendLine("\t\t\t\t\t\tbreak")
+    appendLine("\t\t\t\tif result == 0:")
+    appendLine("\t\t\t\t\tresult = int(get_parts[1])")
+    appendLine("\t\t\t\t\t_kanama_object_handles[result] = got")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -2026,6 +2137,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as RayCast3D).get_collision_normal()")
     appendLine("\telif opcode == 138 and value is Node3D:")
     appendLine("\t\tresult = (value as Node3D).global_position")
+    appendLine("\telif opcode == 141 and value is Node3D:")
+    appendLine("\t\tresult = (value as Node3D).global_rotation")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()

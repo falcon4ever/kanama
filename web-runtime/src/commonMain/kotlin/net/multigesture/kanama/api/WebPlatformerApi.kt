@@ -98,12 +98,27 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
     Node3DBackendContractProbe(backendHandle).rotateY(angle)
   }
 
-  /** The node's world-space position, read synchronously (parented nodes differ from local). */
-  val globalPosition: Vector3
+  /** The node's world-space position; reads and writes cross synchronously. */
+  var globalPosition: Vector3
     get() =
       Node3DBackendContractProbe(backendHandle).getGlobalPosition().let {
         Vector3(it.x, it.y, it.z)
       }
+    set(value) {
+      Node3DBackendContractProbe(backendHandle)
+        .setGlobalPosition(GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat()))
+    }
+
+  /** The node's world-space Euler rotation; reads and writes cross synchronously. */
+  var globalRotation: Vector3
+    get() =
+      Node3DBackendContractProbe(backendHandle).getGlobalRotation().let {
+        Vector3(it.x, it.y, it.z)
+      }
+    set(value) {
+      Node3DBackendContractProbe(backendHandle)
+        .setGlobalRotation(GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat()))
+    }
 }
 
 class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
@@ -174,7 +189,11 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 }
 
 /** 3D area monitor: emits body_entered when a physics body overlaps (coin/trigger pickups). */
-open class Area3D(godotObject: GodotHandle) : Node3D(godotObject)
+open class Area3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  object Signals {
+    const val bodyEntered: String = "body_entered"
+  }
+}
 
 open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject)
 

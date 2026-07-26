@@ -21,9 +21,10 @@ import { runWeb3d } from "./demos/web3d.mjs";
 import { runPlatformer } from "./demos/platformer.mjs";
 import { runSquash } from "./demos/squash.mjs";
 import { runFps } from "./demos/fps.mjs";
+import { runCharactercontroller } from "./demos/charactercontroller.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function parseArgs(argv) {

@@ -67,7 +67,26 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
 
   fun length(): Double = sqrt(x * x + y * y + z * z)
 
+  fun lengthSquared(): Double = x * x + y * y + z * z
+
   fun dot(other: Vector3): Double = x * other.x + y * other.y + z * other.z
+
+  fun cross(other: Vector3): Vector3 =
+    Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
+
+  /** Signed angle to [to] around [axis] (Godot's signed_angle_to). */
+  fun signedAngleTo(to: Vector3, axis: Vector3): Double {
+    val crossTo = cross(to)
+    val unsigned = atan2(crossTo.length(), dot(to))
+    return if (crossTo.dot(axis) < 0.0) -unsigned else unsigned
+  }
+
+  /** Move toward [to] by at most [delta] (Godot's move_toward). */
+  fun moveToward(to: Vector3, delta: Double): Vector3 {
+    val difference = to - this
+    val len = difference.length()
+    return if (len <= delta || len < 1e-8) to else this + difference / len * delta
+  }
 
   fun withX(value: Number): Vector3 = Vector3(value.toDouble(), y, z)
 
@@ -110,6 +129,9 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
     val UP = Vector3(0.0, 1.0, 0.0)
     val DOWN = Vector3(0.0, -1.0, 0.0)
     val FORWARD = Vector3(0.0, 0.0, -1.0)
+    val BACK = Vector3(0.0, 0.0, 1.0)
+    val LEFT = Vector3(-1.0, 0.0, 0.0)
+    val RIGHT = Vector3(1.0, 0.0, 0.0)
   }
 }
 

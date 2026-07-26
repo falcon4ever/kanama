@@ -22,9 +22,10 @@ import { runWeb3d } from "./demos/web3d.mjs";
 import { runPlatformer } from "./demos/platformer.mjs";
 import { runSquash } from "./demos/squash.mjs";
 import { runFps } from "./demos/fps.mjs";
+import { runCharactercontroller } from "./demos/charactercontroller.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller };
 const DEFAULT_FIREFOX = "/Applications/Firefox.app/Contents/MacOS/firefox";
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -199,7 +200,21 @@ async function main() {
         ],
       });
 
-    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, deadline });
+    // Trusted keyboard input: WebDriver key-source state persists across
+    // performActions calls, so a down-only action holds the key until keyUp.
+    const keys = (type, value) =>
+      command("input.performActions", {
+        context,
+        actions: [
+          {
+            type: "key",
+            id: "keyboard",
+            actions: [{ type: type === "down" ? "keyDown" : "keyUp", value }],
+          },
+        ],
+      });
+
+    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, keys, deadline });
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);

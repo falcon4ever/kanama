@@ -183,6 +183,17 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     138: {},
     139: {},
     140: {},
+    141: {},
+    142: {"immediate_vec3_query": True},
+    143: {"immediate_vec3_query": True},
+    144: {},
+    145: {},
+    146: {},
+    147: {},
+    148: {},
+    149: {},
+    150: {},
+    151: {},
 }
 
 
@@ -495,16 +506,39 @@ def body_LONG_DOUBLE_ARG(calls):
 
 
 def body_VECTOR3_ARG(calls):
+    queued = [c for c in calls if c.execution_mode.value == "QUEUED_MUTATION"]
+    immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
     lines = [
-        f"require(descriptor.executionMode == {_QUEUED})",
         "val objectId = receiver.webId()",
+        "when (descriptor.executionMode) {",
+        f"{_QUEUED} -> {{",
         "commands.appendVector3Mutation(descriptor.opcode, objectId, value.x, value.y, value.z)",
         "when (descriptor.opcode) {",
     ]
-    for c in calls:
+    for c in queued:
         lines.append(f"{c.opcode} -> webWriteVector3Snapshot(objectId, {_slot3(c.opcode)}, value)")
     lines.append('else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")')
     lines.append("}")
+    lines.append("}")
+    if immediate:
+        lines += [
+            f"{_IMMEDIATE} -> {{",
+            f"require({_opcode_guard(immediate)})",
+            "commands.flush()",
+            "// Three Float32 components packed into one query string (unit separator); the",
+            "// applier writes the global transform and re-pushes the node's snapshot.",
+            "val packed =",
+            'listOf(value.x, value.y, value.z).joinToString("\u001f")',
+            "check(immediateWebObjectQuery(descriptor.opcode, objectId, packed) == 1) {",
+            '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+            "}",
+            "}",
+        ]
+    lines += [
+        f"{_SNAPSHOT} ->",
+        'error("Vector3 argument cannot use snapshot execution for opcode=${descriptor.opcode}")',
+        "}",
+    ]
     return lines
 
 
@@ -680,7 +714,12 @@ def body_NODEPATH_RET_HANDLE(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         "commands.flush()",
-        "return registerReturnedNode(immediateWebNodeLookup(receiver.webId(), path))",
+        "return when (descriptor.opcode) {",
+        "17 -> registerReturnedNode(immediateWebNodeLookup(receiver.webId(), path))",
+        "149 ->",
+        "registerReturnedBrowserObject(immediateWebPropertyObjectQuery(receiver.webId(), path))",
+        'else -> error("Unsupported Web path-to-handle opcode=${descriptor.opcode}")',
+        "}",
     ]
 
 
@@ -851,6 +890,31 @@ def body_CALLABLE_RET_HANDLE(calls):
         "commands.flush()",
         "return registerReturnedBrowserObject(",
         "immediateWebTweenCallback(descriptor.opcode, receiver.webId(), target.webId(), method)",
+        ")",
+    ]
+
+
+def body_NOARGS_RET_LONG_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        'return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), "")',
+        ".toLong()",
+    ]
+
+
+def body_STRINGNAME_OBJECT_RET_INT(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Signal name and object handle packed into one query string (unit separator);",
+        "// the applier resolves the object from the shared handle dictionary and emits.",
+        "return immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'name + "\u001f" + value.webId().toString(),',
         ")",
     ]
 
@@ -1073,6 +1137,11 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["receiver: GodotHandle", "target: GodotHandle", "method: String"],
         "GodotHandle?",
     ),
+    "NOARGS_RET_LONG_SINGLETON": ([], "Long"),
+    "STRINGNAME_OBJECT_RET_INT": (
+        ["receiver: GodotHandle", "name: String", "value: GodotHandle"],
+        "Int",
+    ),
     "NOARGS_RET_RECT2": (["receiver: GodotHandle"], "GodotRect2"),
     "NOARGS_VOID": (["receiver: GodotHandle"], ""),
     "TEXTURE2D_VECTOR2_COLOR_ARGS": (
@@ -1267,6 +1336,8 @@ EMIT_ORDER = [
     "OBJECT_RET_HANDLE",
     "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE",
     "CALLABLE_RET_HANDLE",
+    "NOARGS_RET_LONG_SINGLETON",
+    "STRINGNAME_OBJECT_RET_INT",
 ]
 
 

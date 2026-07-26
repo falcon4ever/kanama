@@ -27,6 +27,7 @@ val extraWebScriptSourceRoot: File? =
                     "platformer" -> "kanamaWebPlatformerProjectDir"
                     "squash" -> "kanamaWebSquashProjectDir"
                     "fps" -> "kanamaWebFpsProjectDir"
+                    "charactercontroller" -> "kanamaWebCharactercontrollerProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -127,6 +128,10 @@ val webSquashStaging = layout.buildDirectory.dir("web-squash/godot-project")
 val webFpsSourceProject =
     providers.gradleProperty("kanamaWebFpsProjectDir").orNull?.let(rootProject::file)
 val webFpsStaging = layout.buildDirectory.dir("web-fps/godot-project")
+val webCharacterSourceProject =
+    providers.gradleProperty("kanamaWebCharactercontrollerProjectDir").orNull
+        ?.let(rootProject::file)
+val webCharacterStaging = layout.buildDirectory.dir("web-charactercontroller/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -1610,6 +1615,163 @@ tasks.register<Exec>("exportWebMatch3") {
 
 val webScriptsBundle = layout.buildDirectory.dir("web-scripts")
 val webExportRoot = layout.buildDirectory.dir("web-export")
+tasks.register("stageWebCharactercontrollerProject") {
+    group = "verification"
+    description = "Stages the 3D character-controller tutorial with generated Web proxies (60e)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webCharacterSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webCharacterStaging)
+
+    doLast {
+        val sourceProject =
+            webCharacterSourceProject
+                ?: error(
+                    "Pass -PkanamaWebCharactercontrollerProjectDir=" +
+                        "/absolute/path/to/kanama-demos/godot-4-3d-character-controller-tutorial"
+                )
+        check(sourceProject.resolve("game.tscn").isFile) {
+            "Character-controller project not found: $sourceProject"
+        }
+
+        val stagingDir = webCharacterStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+                exclude("kotlin-src/**")
+                exclude("android/**")
+                exclude("lesson_reference/*.kt")
+                exclude("addons/kanama_tools/**")
+                exclude("addons/kanama/**")
+                exclude("export_presets.cfg")
+            }
+            into(stagingDir)
+        }
+        // The demo ships Android/iOS presets; the Web export needs the canonical Web preset.
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        val expectedSources =
+            setOf(
+                    "Events",
+                    "Flag3D",
+                    "FlagReachedScreen",
+                    "FreelookCamera3D",
+                    "Game",
+                    "KillPlane3D",
+                    "Player3DTemplate",
+                    "SmokeQuit",
+                    "SophiaSkin",
+                )
+                .map { "res://kotlin-src/$it.kt" }
+                .toSet()
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { it.split('\t').let { c -> c[0] to c[1] } }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "Character-controller Web proxy mappings incomplete: " +
+                "missing=${expectedSources - mappings.keys}"
+        }
+
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                var rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        text.replace(sourcePath, proxyPath)
+                    }
+                // Godot resolves Script ext_resources by UID before path; strip the UID from
+                // rewritten references so the text path wins (platformer precedent).
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+
+        // The tutorial targets the Mobile renderer (with a mobile gl_compatibility override);
+        // the Web template only runs the Compatibility renderer, so pin it explicitly
+        // (FPS/squash precedent).
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val mobileFeature = "config/features=PackedStringArray(\"4.7\", \"Mobile\")"
+        val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
+        check(stagedProjectText.contains(mobileFeature)) {
+            "Character-controller renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(mobileRenderer)) {
+            "Character-controller mobile renderer setting changed; update the staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    mobileFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    mobileRenderer,
+                    "renderer/rendering_method=\"gl_compatibility\"\n$mobileRenderer",
+                )
+        )
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        shell.writeText(
+            shell.readText()
+                .replace(
+                    pageStart,
+                    "$pageStart\n      globalThis.KanamaWebMode = \"charactercontroller\";",
+                )
+        )
+    }
+}
+
 val webDemo = providers.gradleProperty("kanamaWebDemo").orElse("match3")
 
 // The single renderer/thread contract for the Kotlin/Wasm preview backend.
@@ -1706,9 +1868,10 @@ fun stageTaskFor(demo: String): String =
         "platformer" -> "stageWebPlatformerProject"
         "squash" -> "stageWebSquashProject"
         "fps" -> "stageWebFpsProject"
+        "charactercontroller" -> "stageWebCharactercontrollerProject"
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller)"
             )
     }
 
@@ -1721,9 +1884,10 @@ fun stagingDirFor(demo: String): File =
         "platformer" -> webPlatformerStaging.get().asFile
         "squash" -> webSquashStaging.get().asFile
         "fps" -> webFpsStaging.get().asFile
+        "charactercontroller" -> webCharacterStaging.get().asFile
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller)"
             )
     }
 
