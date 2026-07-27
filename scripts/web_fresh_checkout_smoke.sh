@@ -268,15 +268,23 @@ print(json.load(open(sys.argv[1])).get("protocolVersion", ""))
 ' "$export_dir/kanama-web/export-report.json")"
 
   # (3) The artifact runs: drive it with the harness from the fresh clone.
+  #
+  # The BUILD is what must be free of workstation state, not the browser: run the
+  # driver under the caller's real HOME so the browser behaves like a normal user
+  # session (its profile is a throwaway dir either way). Under the isolated HOME
+  # macOS pops a modal keychain dialog that silently blocks navigation.
   result_path=""
   driver_pass="null"
   if [[ "$SKIP_BROWSER" -eq 0 ]]; then
     result_path="$RESULT_DIR/$demo-$ENGINE.json"
-    if run "$KANAMA_DIR/scripts/web_export_smoke.sh" \
-      --engine "$ENGINE" \
-      --export-dir "$export_dir" \
-      --demo "$demo" \
-      --result "$result_path"; then
+    if (
+      export HOME="$CALLER_HOME"
+      run "$KANAMA_DIR/scripts/web_export_smoke.sh" \
+        --engine "$ENGINE" \
+        --export-dir "$export_dir" \
+        --demo "$demo" \
+        --result "$result_path"
+    ); then
       driver_pass="true"
     else
       echo "[web_fresh_checkout] $demo: export smoke FAILED on $ENGINE" >&2
