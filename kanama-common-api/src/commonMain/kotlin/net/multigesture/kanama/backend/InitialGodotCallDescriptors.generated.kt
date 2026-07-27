@@ -2126,4 +2126,15 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val VIEWPORT_GET_CAMERA_3D =
+    GodotCallDescriptor(
+      opcode = 194,
+      className = "Viewport",
+      methodName = "get_camera_3d",
+      hash = 2285090890L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

@@ -173,6 +173,11 @@ class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHand
       seconds,
     )
   }
+
+  /** AnimationPlayer is an AnimationMixer engine-side; rides the same family. */
+  fun getAnimation(name: String): Animation? =
+    GodotBackendCalls.invokeNodePathRetHandle(D.ANIMATIONMIXER_GET_ANIMATION, backendHandle, name)
+      ?.let { Animation(WebObjectId(it.backendToken().toInt())) }
 }
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
@@ -220,6 +225,7 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 open class Area3D(godotObject: GodotHandle) : Node3D(godotObject) {
   object Signals {
     const val bodyEntered: String = "body_entered"
+    const val bodyExited: String = "body_exited"
   }
 }
 

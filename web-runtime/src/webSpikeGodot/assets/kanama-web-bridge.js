@@ -257,6 +257,9 @@
     fpsPlayerHandle: 0,
     charSmokeQuitHandle: 0,
     charPlayerHandle: 0,
+    tpSmokeQuitHandle: 0,
+    tpPlayerHandle: 0,
+    tpDemoPageHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
     // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
@@ -1984,6 +1987,17 @@
       }
       if (this.mode === "charactercontroller" && scriptName.endsWith(".Player3DTemplate")) {
         this.charPlayerHandle = handle;
+      }
+      if (this.mode === "thirdperson" && scriptName.endsWith(".SmokeQuit")) {
+        // smoke_resume (method#1) presses through the boot pause; smoke_teardown (method#2)
+        // frees the scene root and drains live handles to zero.
+        this.tpSmokeQuitHandle = handle;
+      }
+      if (this.mode === "thirdperson" && scriptName.endsWith(".Player")) {
+        this.tpPlayerHandle = handle;
+      }
+      if (this.mode === "thirdperson" && scriptName.endsWith(".DemoPage")) {
+        this.tpDemoPageHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

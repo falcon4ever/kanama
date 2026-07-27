@@ -28,6 +28,7 @@ val extraWebScriptSourceRoot: File? =
                     "squash" -> "kanamaWebSquashProjectDir"
                     "fps" -> "kanamaWebFpsProjectDir"
                     "charactercontroller" -> "kanamaWebCharactercontrollerProjectDir"
+                    "thirdperson" -> "kanamaWebThirdpersonProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -132,6 +133,9 @@ val webCharacterSourceProject =
     providers.gradleProperty("kanamaWebCharactercontrollerProjectDir").orNull
         ?.let(rootProject::file)
 val webCharacterStaging = layout.buildDirectory.dir("web-charactercontroller/godot-project")
+val webThirdpersonSourceProject =
+    providers.gradleProperty("kanamaWebThirdpersonProjectDir").orNull?.let(rootProject::file)
+val webThirdpersonStaging = layout.buildDirectory.dir("web-thirdperson/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -1772,6 +1776,175 @@ tasks.register("stageWebCharactercontrollerProject") {
     }
 }
 
+tasks.register("stageWebThirdpersonProject") {
+    group = "verification"
+    description = "Stages the third-person controller with generated Web proxies (Task 60f)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webThirdpersonSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webThirdpersonStaging)
+
+    doLast {
+        val sourceProject =
+            webThirdpersonSourceProject
+                ?: error(
+                    "Pass -PkanamaWebThirdpersonProjectDir=" +
+                        "/absolute/path/to/kanama-demos/godot-4-3d-third-person-controller"
+                )
+        check(sourceProject.resolve("main.tscn").isFile) {
+            "Third-person project not found: $sourceProject"
+        }
+
+        val stagingDir = webThirdpersonStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+                exclude("kotlin-src/**")
+                exclude("android/**")
+                exclude("addons/kanama_tools/**")
+                exclude("addons/kanama/**")
+                exclude("export_presets.cfg")
+            }
+            into(stagingDir)
+        }
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        val expectedSources =
+            setOf(
+                    "BeeBot",
+                    "BeeRoot",
+                    "BeetleBot",
+                    "BeetlebotSkin",
+                    "Box",
+                    "Bullet",
+                    "CameraController",
+                    "CameraMode",
+                    "CharacterSkin",
+                    "Coin",
+                    "CoinModel",
+                    "CoinsContainer",
+                    "DeathPlane",
+                    "DemoPage",
+                    "DestroyedBox",
+                    "FullScreenHandler",
+                    "GrassScatter",
+                    "Grenade",
+                    "GrenadeLauncher",
+                    "Icone",
+                    "JumpingPad",
+                    "LinkButton",
+                    "MeleeAttackArea",
+                    "Player",
+                    "SmokePuff",
+                    "SmokeQuit",
+                    "WeaponUi",
+                )
+                .map { "res://kotlin-src/$it.kt" }
+                .toSet()
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { it.split('\t').let { c -> c[0] to c[1] } }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "Third-person Web proxy mappings incomplete: missing=${expectedSources - mappings.keys}"
+        }
+
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                var rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        text.replace(sourcePath, proxyPath)
+                    }
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+
+        // Forward+ project: pin the Compatibility renderer for the Web template (FPS precedent).
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val mobileRenderer = "renderer/rendering_method.mobile=\"mobile\""
+        check(stagedProjectText.contains(forwardFeature)) {
+            "Third-person renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(mobileRenderer)) {
+            "Third-person mobile renderer setting changed; update the staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    forwardFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    mobileRenderer,
+                    "renderer/rendering_method=\"gl_compatibility\"\n" +
+                        "renderer/rendering_method.mobile=\"gl_compatibility\"",
+                )
+        )
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        shell.writeText(
+            shell.readText()
+                .replace(
+                    pageStart,
+                    "$pageStart\n      globalThis.KanamaWebMode = \"thirdperson\";",
+                )
+        )
+    }
+}
+
 val webDemo = providers.gradleProperty("kanamaWebDemo").orElse("match3")
 
 // The single renderer/thread contract for the Kotlin/Wasm preview backend.
@@ -1869,9 +2042,10 @@ fun stageTaskFor(demo: String): String =
         "squash" -> "stageWebSquashProject"
         "fps" -> "stageWebFpsProject"
         "charactercontroller" -> "stageWebCharactercontrollerProject"
+        "thirdperson" -> "stageWebThirdpersonProject"
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson)"
             )
     }
 
@@ -1885,9 +2059,10 @@ fun stagingDirFor(demo: String): File =
         "squash" -> webSquashStaging.get().asFile
         "fps" -> webFpsStaging.get().asFile
         "charactercontroller" -> webCharacterStaging.get().asFile
+        "thirdperson" -> webThirdpersonStaging.get().asFile
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson)"
             )
     }
 

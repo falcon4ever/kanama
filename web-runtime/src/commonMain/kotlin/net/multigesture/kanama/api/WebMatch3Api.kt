@@ -274,6 +274,14 @@ inline fun <reified T : Any> GodotObject.kotlinScriptInstance(): T? =
 class Area2D(godotObject: GodotHandle) : Node2D(godotObject)
 
 class Viewport(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+  /** The active 3D camera as a tracked handle. */
+  fun getCamera3D(): Camera3D? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+        InitialGodotCallDescriptors.VIEWPORT_GET_CAMERA_3D,
+        backendHandle,
+      )
+      ?.let { Camera3D(WebObjectId(it.backendToken().toInt())) }
+
   fun getVisibleRect(): Rect2 =
     ViewportBackendContractProbe(backendHandle).visibleRect.let { rect ->
       Rect2(

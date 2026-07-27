@@ -1827,6 +1827,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.get_parent()")
     appendLine("\telif opcode == 81 and receiver is WorldEnvironment:")
     appendLine("\t\tvalue = (receiver as WorldEnvironment).environment")
+    appendLine("\telif opcode == 194 and receiver is Viewport:")
+    appendLine("\t\tvalue = (receiver as Viewport).get_camera_3d()")
     appendLine("\telif opcode == 112 and receiver is KinematicCollision3D:")
     appendLine("\t\tvalue = (receiver as KinematicCollision3D).get_collider()")
     appendLine("\telif opcode == 114 and receiver is Node:")

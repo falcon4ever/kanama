@@ -175,6 +175,10 @@ open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : 
     Node2DBackendContractProbe(backendHandle).queueRedraw()
   }
 
+  fun setVisible(value: Boolean) {
+    CanvasItemBackendContractProbe(backendHandle).setVisible(value)
+  }
+
   fun show() {
     CanvasItemBackendContractProbe(backendHandle).setVisible(true)
   }

@@ -3029,6 +3029,20 @@
       "returnType": "void",
       "returnOwnership": "BORROWED",
       "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 194,
+      "scope": "class",
+      "className": "Viewport",
+      "methodName": "get_camera_3d",
+      "hash": 2285090890,
+      "arguments": [],
+      "returnType": "Camera3D",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "The viewport's active 3D camera as a tracked handle (grenade aim tilt).",
+      "introducedBy": "60f-third-person"
     }
   ],
   "compositions": [

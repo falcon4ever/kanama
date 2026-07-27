@@ -236,6 +236,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     191: {},
     192: {},
     193: {},
+    194: {"ret": "node"},
 }
 
 
