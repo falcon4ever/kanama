@@ -16,7 +16,7 @@
 #   scripts/web_export_smoke.sh \
 #       --engine <chrome|firefox|safari> \
 #       --export-dir <dir> \
-#       --demo <bunnymark|match3|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing> \
+#       --demo <bunnymark|match3|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder> \
 #       --result <result.json> \
 #       [--browser-binary <path>] \
 #       [--timeout <seconds>] \

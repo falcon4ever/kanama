@@ -153,7 +153,12 @@ internal fun registerReturnedNode(token: Int): GodotHandle? =
   token
     .takeIf { it > 0 }
     ?.let {
-      if (!instances.isLive(it)) registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
+      // A handle already tracked under another kind keeps it: a node that was first
+      // property-pushed (RESOURCE by convention) may later return from a node lookup
+      // (City-Builder's view camera is both an exported property and a requireAs child).
+      if (!instances.isLive(it) && !containsWebBrowserHandle(it)) {
+        registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
+      }
       GodotHandle.fromBackendToken(it.toLong())
     }
 

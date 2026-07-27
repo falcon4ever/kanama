@@ -40,6 +40,8 @@
       opcode === 171 ||
       opcode === 185 ||
       opcode === 189 ||
+      opcode === 202 ||
+      opcode === 209 ||
       opcode === 66
     ) return 3;
     if (
@@ -156,6 +158,7 @@
     browserNodeHandlesByScript: new Map(),
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
+    viewportHandlesByOwner: new Map(),
     commandStringNamesByValue: new Map(),
     commandStringNamesById: new Map(),
     nextCommandStringNameId: 1,
@@ -264,6 +267,8 @@
     racingSmokeHandle: 0,
     racingVehicleHandle: 0,
     racingViewHandle: 0,
+    cbSmokeHandle: 0,
+    cbBuilderHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
     // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
@@ -413,6 +418,11 @@
       }
       if (this.mode === "fps") {
         // FPS scripts own no coroutines; every script runs its plain dispatch.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "citybuilder") {
+        // City-Builder scripts (Builder cursor/actions, View camera, Audio pool) own no
+        // coroutines; every script runs its plain _process dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "platformer") {
@@ -1301,7 +1311,10 @@
       // Object-valued property/animation read: the proxy resolves the named object,
       // registers the result under the proposed slot (or an existing/script handle), and
       // publishes the winning handle through the object-query integer channel.
-      const owner = this.ownerForHandle(handle);
+      // The result belongs to the SCRIPT that asked (always inside an invoke boundary),
+      // not to the receiver's owner: a scene-state property read off a cache-persistent
+      // Structure resource must release with the Builder that read it.
+      const owner = this.activeOwnerHandle || this.ownerForHandle(handle);
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
       const resultHandle = this.allocateBrowserHandle("Object", owner);
       this.immediateLongResult = null;
@@ -1389,7 +1402,11 @@
       return result;
     },
     immediateNoArgsObject(opcode, handle) {
-      const owner = this.ownerForHandle(handle);
+      // Returned objects belong to the SCRIPT that asked (always inside an invoke
+      // boundary), not to the receiver's owner — a SceneState/Mesh read off a
+      // cache-persistent resource must release with the reading script (the
+      // packed-scene-instantiate ownership rule).
+      const owner = this.activeOwnerHandle || this.ownerForHandle(handle);
       const isSceneTree = opcode === 51;
       if (isSceneTree) {
         const existing = this.sceneTreeHandlesByOwner.get(owner);
@@ -1398,6 +1415,16 @@
           return existing;
         }
         this.sceneTreeHandlesByOwner.delete(owner);
+      }
+      // Per-frame get_viewport (City-Builder's mouse-ray cursor) must not mint a handle
+      // per call: reuse the owner's viewport handle like the SceneTree above.
+      const isViewport = opcode === 19;
+      if (isViewport) {
+        const existing = this.viewportHandlesByOwner.get(owner);
+        if (existing !== undefined && this.browserHandleSlot(existing)?.kind === "Node") {
+          return existing;
+        }
+        this.viewportHandlesByOwner.delete(owner);
       }
       const callback = this.callbackFor(
         this.noArgsObjectCallbacks,
@@ -1463,6 +1490,8 @@
       } else if (isSceneTree) {
         this.sceneTreeHandlesByOwner.set(owner, resultHandle);
         this.match3SceneTreeHandlesCreated += 1;
+      } else if (isViewport && result === resultHandle) {
+        this.viewportHandlesByOwner.set(owner, resultHandle);
       }
       return result;
     },
@@ -2175,6 +2204,16 @@
         // The camera rig lerps toward the vehicle every tick: its root position is the
         // driver's movement evidence (the Vehicle ROOT node intentionally never moves).
         this.racingViewHandle = handle;
+      }
+      if (this.mode === "citybuilder" && scriptName.endsWith(".Smoke")) {
+        // smoke_teardown (method#1) frees the Audio autoload, releases hydrated structure
+        // assets, and frees the scene root for the teardown assertion.
+        this.cbSmokeHandle = handle;
+      }
+      if (this.mode === "citybuilder" && scriptName.endsWith(".Builder")) {
+        // The driver reads the gridmap/selector property handles off the Builder to
+        // observe placements and selector movement.
+        this.cbBuilderHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);
