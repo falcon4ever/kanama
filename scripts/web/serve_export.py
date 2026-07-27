@@ -17,8 +17,11 @@ Usage:
 from __future__ import annotations
 
 import http.server
+import os
 import socket
 import sys
+import threading
+import time
 from functools import partial
 
 
@@ -58,6 +61,19 @@ def main(argv: list[str]) -> int:
         port = probe.getsockname()[1]
 
     server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
+
+    # The smoke shell owns this server and stops it in its cleanup trap — but if
+    # the shell is SIGKILLed or its terminal goes away, nothing reaches us and
+    # this process holds its port forever. Watch for being reparented away from
+    # the shell that launched us and shut down.
+    def _exit_when_orphaned(launch_parent: int) -> None:
+        while os.getppid() == launch_parent:
+            time.sleep(1)
+        server.shutdown()
+
+    threading.Thread(
+        target=_exit_when_orphaned, args=(os.getppid(),), daemon=True
+    ).start()
     # Announce the resolved port on a single line the shell greps for, then flush
     # so the caller never blocks waiting on a buffered pipe.
     print(f"PORT={port}", flush=True)
