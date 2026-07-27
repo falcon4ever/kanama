@@ -5,21 +5,26 @@
 The Web backend is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable
 baseline. It compiles Kanama project scripts to **Kotlin/Wasm** and runs them
 against a Godot 4.7 Web export through a generated per-call proxy and a versioned
-JavaScript bridge (protocol 6). It is **not a Supported target**: two demos are
-validated (Starter-Kit-Match3 and Bunnymark) as production Web exports, the
-renderer is single-thread Compatibility only, and the corpus/browser matrix is
-still growing.
+JavaScript bridge (protocol 15). It is **not a Supported target**: the renderer is
+single-thread Compatibility only, the browser matrix and performance budgets are
+still being hardened, and there is no packaged install path yet.
 
-**Evidence.** Both demos pass the automated production export smoke in **Chrome**
-(the CI gate) and **Firefox**. In **Safari**, Bunnymark passes the automated gate
-and Match3 is verified running by hand (its runtime-selected swipe works and
-matches/collapses/refills); the automated SafariDriver gate cannot synthesize
-Match3's drag reliably, so that one cell is a manual local check — see Known
-Limitations.
+**Evidence.** The full twelve-demo corpus — Bunnymark, Starter-Kit-Match3, dodge,
+web3d, 3D-Platformer, squash, FPS, character-controller, third-person, Racing,
+City-Builder and tps-demo — passes the automated production export smoke in
+**Chrome** (the CI gate) and **Firefox**, each with a play-and-teardown driver
+run, zero console errors, and live handles draining to zero. Every corpus export
+is also proven to embed no build-machine paths in any served file, and to be
+reproducible from a clean clone (see [Fresh-Checkout Gate](#fresh-checkout-gate)).
 
-This page is the reproducible export workflow for those two validated demos. For
-the architecture — batching, snapshots, handle generations, the bridge protocol
-— see [Web Internals](../contributing/web-internals.md).
+**Safari** is not part of the gated matrix: as of the 57f validation Bunnymark
+passed the automated Safari gate and Match3 was verified by hand, but
+SafariDriver cannot reliably synthesize Match3's drag, so the wider corpus is not
+Safari-gated — see Known Limitations.
+
+This page is the reproducible export workflow. For the architecture — batching,
+snapshots, handle generations, the bridge protocol — see
+[Web Internals](../contributing/web-internals.md).
 
 ## How Web Differs
 
@@ -79,6 +84,18 @@ installs the Kotlin/Wasm runtime and bridge, cache-busts the entry scripts, and
 writes a self-contained served directory plus a release payload report. Point it
 at a **clean checkout** of the demo (never a shared working tree); the Web script
 root is auto-derived from `<project>/web`.
+
+Each demo is selected with `-PkanamaWebDemo=<key>` and given its checkout with
+the matching `-PkanamaWeb<Key>ProjectDir`:
+
+| Key | Demo project | Key | Demo project |
+|---|---|---|---|
+| `match3` | Starter-Kit-Match3 | `thirdperson` | godot-4-3d-third-person-controller |
+| `bunnymark` | Bunnymark | `charactercontroller` | godot-4-3d-character-controller-tutorial |
+| `dodge` | godot-demo-2d-dodge-the-creeps | `racing` | Starter-Kit-Racing |
+| `platformer` | Starter-Kit-3D-Platformer | `citybuilder` | Starter-Kit-City-Builder |
+| `squash` | godot-demo-3d-squash-the-creeps | `tpsdemo` | tps-demo-kanama |
+| `fps` | Starter-Kit-FPS | `web3d` | in-repo fixture (no checkout needed) |
 
 Match3:
 
@@ -140,6 +157,36 @@ release gates** run before a promotion. Each gate asserts gameplay deltas,
 crossing budgets, handle/callback/scheduler teardown to baseline, stale-handle
 rejection, console-error checks, and a protocol-version match.
 
+## Fresh-Checkout Gate
+
+`web_fresh_checkout_smoke.sh` answers a different question from the export smoke:
+not "does this export run?" but "can anyone reproduce it?". It clones Kanama (and
+kanama-demos, when the selected demo lives there) into a throwaway workspace with
+its own `HOME`, Gradle home and Maven-local, exports from that clone, and then
+asserts what a promotion review needs to see:
+
+1. **no build-machine path in any served file** — the whole export tree is
+   scanned byte-for-byte, not just `index.html`;
+2. **the demo source tree is untouched** — checksummed before and after, plus a
+   `git status` check on the demo checkout; and
+3. **the artifact really runs** — the export smoke drives it in a real browser
+   using the harness *from the fresh clone*, so the tooling is proven to ship.
+
+```sh
+scripts/web_fresh_checkout_smoke.sh \
+  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.stable/web_nothreads_release.zip" \
+  --demo web3d --demo match3 \
+  --evidence /tmp/web-fresh-checkout.json \
+  /absolute/path/to/godot
+```
+
+The default demo set is `web3d` (an in-repo fixture, so the Kanama clone alone is
+enough) plus `match3` (an external demo, exercising the demos checkout);
+`--demo all` runs the whole corpus. `--kanama-source` / `--demos-source` accept a
+local path for validating an unmerged branch, and `--skip-browser` reduces the
+run to the export and artifact checks. The `--evidence` JSON records the clone
+commits, per-demo checksums, payload sizes, protocol version and driver results.
+
 ## Browser Debugging
 
 - **Chrome** — the driver self-launches headless Chrome and drives it over the
@@ -175,8 +222,8 @@ rejection, console-error checks, and a protocol-version match.
 
 ## Known Limitations
 
-- Only **Starter-Kit-Match3** and **Bunnymark** are validated; the wider demo
-  corpus and 3D are not yet on Web.
+- **Safari is not in the gated matrix.** Chrome and Firefox gate every corpus
+  demo; Safari coverage stops at the 57f Bunnymark/Match3 validation below.
 - **Safari automated Match3 drag.** The Match3 export runs correctly in Safari by
   hand, but SafariDriver's synthesized pointer drag does not reliably trigger the
   swipe in the automated gate (coordinates and Godot picking are correct; the
