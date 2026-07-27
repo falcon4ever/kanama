@@ -569,7 +569,7 @@ elif [[ "$kanama_script_probe" -eq 1 ]]; then
 EOF
 elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   status_text="Waiting for Kanama iOS project script"
-  scene_header='[gd_scene load_steps=4 format=3]'
+  scene_header='[gd_scene load_steps=5 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kotlin-src/IosSmokeScript.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
   # @ScriptProperty end-to-end checks: the scene stores a NodePath plus task-39 narrow-scalar,
@@ -588,9 +588,11 @@ import net.multigesture.kanama.annotations.OnShortcutInput
 import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.OnUnhandledKeyInput
 import net.multigesture.kanama.annotations.OverrideVirtual
+import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.api.AudioStream
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.ClassDB
@@ -638,6 +640,20 @@ class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObje
 
     @ScriptProperty
     var probeTags: List<String> = emptyList()
+
+    // task 64 iOS mirror — an object-typed export (RESOURCE_TYPE hint). The
+    // class_name probe below asserts the engine-visible PropertyInfo carries
+    // class_name=AudioStream (not empty) through the new bridge + shim path.
+    @ScriptProperty
+    var smokeStream: AudioStream? = null
+
+    // Called by scripts/class_name_probe.gd with what GDScript saw in the
+    // engine-visible property list; println is the only channel that streams
+    // from a device build (Godot print()/printerr() do not).
+    @RegisterFunction("report_class_name")
+    fun reportClassName(streamClassName: String, viewEmpty: Boolean) {
+        println("[kanama][ios][kn] property class_name smoke_stream=$streamClassName view_empty=$viewEmpty")
+    }
 
     private var processedFrames = 0
     private var sawUnhandledInput = false
@@ -887,8 +903,29 @@ class ReplicationProbe(godotObject: MemorySegment) :
     }
 }
 EOF
-  probe_extra_resources=$'[ext_resource type="Script" path="res://kotlin-src/ProcessDisableProbe.kt" id="2_pdp"]\n[ext_resource type="Script" path="res://kotlin-src/ReplicationProbe.kt" id="3_rep"]'
-  probe_extra_nodes=$'[node name="ProcessDisableProbe" type="Node" parent="."]\nscript = ExtResource("2_pdp")\n\n[node name="ReplicationProbe" type="MultiplayerSynchronizer" parent="."]\nscript = ExtResource("3_rep")'
+  # task 64 iOS mirror — GDScript-side reader of the engine-visible PropertyInfo:
+  # asserts the object-typed export advertises class_name (empty before the shim
+  # cached real StringNames) while a value-typed export stays empty.
+  mkdir -p "$project_dir/scripts"
+  cat >"$project_dir/scripts/class_name_probe.gd" <<'EOF'
+extends Node
+
+func _ready() -> void:
+	var target := get_node("../Status")
+	var stream_class := ""
+	var view_class := "unset"
+	for p in target.get_property_list():
+		if p.name == "smoke_stream":
+			stream_class = str(p.get("class_name", ""))
+		elif p.name == "view":
+			view_class = str(p.get("class_name", ""))
+	# Godot-level print()/printerr() never reaches the devicectl console on a
+	# device build (only raw C/Kotlin writes stream), so hand the result to the
+	# Kotlin script and let it println — the channel every other probe uses.
+	target.call("report_class_name", stream_class, view_class == "")
+EOF
+  probe_extra_resources=$'[ext_resource type="Script" path="res://kotlin-src/ProcessDisableProbe.kt" id="2_pdp"]\n[ext_resource type="Script" path="res://kotlin-src/ReplicationProbe.kt" id="3_rep"]\n[ext_resource type="Script" path="res://scripts/class_name_probe.gd" id="4_cnp"]'
+  probe_extra_nodes=$'[node name="ProcessDisableProbe" type="Node" parent="."]\nscript = ExtResource("2_pdp")\n\n[node name="ReplicationProbe" type="MultiplayerSynchronizer" parent="."]\nscript = ExtResource("3_rep")\n\n[node name="ClassNameProbe" type="Node" parent="."]\nscript = ExtResource("4_cnp")'
 elif [[ "$godot_fps_probe" -eq 1 ]]; then
   status_text="Running pure Godot iOS FPS smoke"
   launch_sleep=12
@@ -2649,6 +2686,15 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] replication: MultiplayerSynchronizer @ScriptProperty read-back round-tripped"
   else
     echo "[ios_visual_smoke] replication probe failed: value-type @ScriptProperty read back wrong via engine" >&2
+    exit 1
+  fi
+  # task 64 iOS mirror — PropertyInfo.class_name on object-typed exports: GDScript reads the
+  # engine-visible property list and must see class_name=AudioStream on smoke_stream (the new
+  # bridge + shim StringName cache) while the value-typed `view` stays empty.
+  if rg -q 'property class_name smoke_stream=AudioStream view_empty=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] object-typed @ScriptProperty class_name delivered (task 64 iOS mirror)"
+  else
+    echo "[ios_visual_smoke] class_name probe failed: object-typed export missing PropertyInfo.class_name" >&2
     exit 1
   fi
 fi

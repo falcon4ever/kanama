@@ -252,6 +252,27 @@ internal object KanamaIosRuntime {
   fun scriptResourcePropertyUsage(handle: Long, propertyIndex: Int): Int =
     scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.usage ?: 6
 
+  // task 64 iOS mirror — PropertyInfo.class_name for object-typed exports.
+  // Same policy as the desktop generator (KanamaProcessor.scriptPropertyClassName):
+  // for OBJECT-typed properties with RESOURCE_TYPE(17)/NODE_TYPE(34) hints the
+  // hint string is exactly the class name. GDScript's analyzer types member
+  // accesses from class_name; empty degrades them to plain Object/Resource.
+  fun scriptResourcePropertyClassName(handle: Long, propertyIndex: Int): String {
+    val property =
+      scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex) ?: return ""
+    val objectVariantType = 24
+    val resourceTypeHint = 17
+    val nodeTypeHint = 34
+    return if (
+      property.variantType == objectVariantType &&
+        (property.hint == resourceTypeHint || property.hint == nodeTypeHint)
+    ) {
+      property.hintString
+    } else {
+      ""
+    }
+  }
+
   fun scriptResourceSignalCount(handle: Long): Int =
     scriptResources[handle]?.descriptor?.signals?.size ?: 0
 
@@ -701,6 +722,21 @@ fun kanamaIosRuntimeScriptResourcePropertyHintString(
 @CName("kanama_ios_runtime_script_resource_property_usage")
 fun kanamaIosRuntimeScriptResourcePropertyUsage(scriptHandle: Long, propertyIndex: Int): Int =
   KanamaIosRuntime.scriptResourcePropertyUsage(scriptHandle, propertyIndex)
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_class_name")
+fun kanamaIosRuntimeScriptResourcePropertyClassName(
+  scriptHandle: Long,
+  propertyIndex: Int,
+  buffer: CPointer<ByteVar>?,
+  bufferSize: Int,
+) {
+  writeCString(
+    KanamaIosRuntime.scriptResourcePropertyClassName(scriptHandle, propertyIndex),
+    buffer,
+    bufferSize,
+  )
+}
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_resource_signal_count")

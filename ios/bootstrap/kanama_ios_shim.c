@@ -62,6 +62,15 @@ extern int32_t kanama_ios_runtime_script_resource_property_usage(
     int64_t script_handle,
     int32_t property_index
 );
+/* task 64 iOS mirror — PropertyInfo.class_name for object-typed exports (empty
+ * for everything else). GDScript types member accesses from class_name; the
+ * Kotlin side applies the same RESOURCE_TYPE/NODE_TYPE policy as desktop. */
+extern void kanama_ios_runtime_script_resource_property_class_name(
+    int64_t script_handle,
+    int32_t property_index,
+    char *buffer,
+    int32_t buffer_size
+);
 extern int32_t kanama_ios_runtime_script_resource_signal_count(int64_t script_handle);
 extern void kanama_ios_runtime_script_resource_signal_name(
     int64_t script_handle,
@@ -228,6 +237,7 @@ typedef struct {
     int32_t *script_property_types;
     int32_t *script_property_hints;
     uint64_t *script_property_hint_strings;
+    uint64_t *script_property_class_names; /* StringName storage; task 64 iOS mirror */
     int32_t *script_property_usages;
     int32_t script_property_count;
     uint64_t *script_signal_names;
@@ -1316,20 +1326,24 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
         instance->script_property_types = calloc((size_t)property_count, sizeof(int32_t));
         instance->script_property_hints = calloc((size_t)property_count, sizeof(int32_t));
         instance->script_property_hint_strings = calloc((size_t)property_count, sizeof(uint64_t));
+        instance->script_property_class_names = calloc((size_t)property_count, sizeof(uint64_t));
         instance->script_property_usages = calloc((size_t)property_count, sizeof(int32_t));
         if (instance->script_property_names == NULL || instance->script_property_types == NULL ||
             instance->script_property_hints == NULL ||
             instance->script_property_hint_strings == NULL ||
+            instance->script_property_class_names == NULL ||
             instance->script_property_usages == NULL) {
             free(instance->script_property_names);
             free(instance->script_property_types);
             free(instance->script_property_hints);
             free(instance->script_property_hint_strings);
+            free(instance->script_property_class_names);
             free(instance->script_property_usages);
             instance->script_property_names = NULL;
             instance->script_property_types = NULL;
             instance->script_property_hints = NULL;
             instance->script_property_hint_strings = NULL;
+            instance->script_property_class_names = NULL;
             instance->script_property_usages = NULL;
             return;
         }
@@ -1358,6 +1372,20 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
             instance->script_property_usages[i] = kanama_ios_runtime_script_resource_property_usage(
                 instance->script_handle, i);
             kanama_ios_init_string(&instance->script_property_hint_strings[i], property_hint_string);
+            /* task 64 iOS mirror — non-empty only for object-typed exports
+             * (RESOURCE_TYPE/NODE_TYPE hints); StringName, unlike hint_string. */
+            char property_class_name[512];
+            property_class_name[0] = '\0';
+            kanama_ios_runtime_script_resource_property_class_name(
+                instance->script_handle,
+                i,
+                property_class_name,
+                (int32_t)sizeof(property_class_name)
+            );
+            if (property_class_name[0] != '\0') {
+                kanama_ios_init_string_name(
+                    &instance->script_property_class_names[i], property_class_name);
+            }
             if (property_name[0] == '\0') {
                 continue;
             }
@@ -1456,6 +1484,12 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
         }
         free(instance->script_property_hint_strings);
     }
+    if (instance->script_property_class_names != NULL) {
+        for (int32_t i = 0; i < instance->script_property_count; i++) {
+            kanama_ios_destroy_string_name(&instance->script_property_class_names[i]);
+        }
+        free(instance->script_property_class_names);
+    }
     free(instance->script_property_usages);
     if (instance->script_signal_names != NULL) {
         for (int32_t i = 0; i < instance->script_signal_count; i++) {
@@ -1483,6 +1517,7 @@ static void kanama_ios_script_resource_clear_metadata(KanamaIosExtensionInstance
     instance->script_property_types = NULL;
     instance->script_property_hints = NULL;
     instance->script_property_hint_strings = NULL;
+    instance->script_property_class_names = NULL;
     instance->script_property_usages = NULL;
     instance->script_property_count = 0;
     instance->script_signal_names = NULL;
@@ -7034,7 +7069,12 @@ static const GDExtensionPropertyInfo *kanama_ios_script_instance_get_property_li
     for (int32_t i = 0; i < n; i++) {
         list[i].type = (GDExtensionVariantType)instance->script->script_property_types[i];
         list[i].name = (GDExtensionStringNamePtr)&instance->script->script_property_names[i];
-        list[i].class_name = (GDExtensionStringNamePtr)&g_kanama_ios_empty_string_storage;
+        /* task 64 iOS mirror — real class_name for object-typed exports so typed
+         * GDScript resolves them as their class; zeroed slot = keep empty fallback. */
+        list[i].class_name = (instance->script->script_property_class_names != NULL
+                && instance->script->script_property_class_names[i] != 0)
+            ? (GDExtensionStringNamePtr)&instance->script->script_property_class_names[i]
+            : (GDExtensionStringNamePtr)&g_kanama_ios_empty_string_storage;
         list[i].hint = instance->script->script_property_hints != NULL
             ? (uint32_t)instance->script->script_property_hints[i]
             : 0;
