@@ -150,15 +150,16 @@ export async function runThirdperson({ url, evaluate, navigate, keys, deadline }
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`resumed: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
-  // Hold move_up: the camera-relative controller accelerates, the skin state machine
-  // travels, the detection areas light up as the player passes the first beetle.
+  // Hold move_up for a FIXED wall-time (no early exit: the tick rate races past any
+  // physics-count predicate before the first observe sample, cutting the hold short —
+  // played sessions with a fixed 3s hold consistently cover ~8 units).
   await keyDown();
   const gameplay = await observe(
     evaluate,
     { ...seedFrom(baseline), callbackErrors: 0 },
-    6_000,
+    3_000,
     deadline,
-    (snap, p) => p.physicsCalls >= baseline.physicsCalls + 150,
+    null,
   );
   await keyUp();
   const runPosition = await playerPosition(evaluate);
