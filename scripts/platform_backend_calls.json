@@ -3043,6 +3043,41 @@
       "returnOwnership": "BORROWED",
       "semantics": "The viewport's active 3D camera as a tracked handle (grenade aim tilt).",
       "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 195,
+      "scope": "class",
+      "className": "Node3D",
+      "methodName": "is_visible",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Node3D visibility read (the grenade launcher gates its aim tick on it).",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 196,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "emit_signal",
+      "hash": 4047867050,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_STRING_RET_INT",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "isVararg": true,
+      "typedVarargTail": [
+        "String"
+      ],
+      "descriptorName": "OBJECT_EMIT_SIGNAL_STRING",
+      "semantics": "Emit a signal carrying one String argument (weapon_switched -> WeaponUi).",
+      "introducedBy": "60f-third-person"
     }
   ],
   "compositions": [

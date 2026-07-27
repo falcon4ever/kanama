@@ -1861,6 +1861,7 @@ tasks.register("stageWebThirdpersonProject") {
                     "GrassScatter",
                     "Grenade",
                     "GrenadeLauncher",
+                    "GrenadeVisual",
                     "Icone",
                     "JumpingPad",
                     "LinkButton",

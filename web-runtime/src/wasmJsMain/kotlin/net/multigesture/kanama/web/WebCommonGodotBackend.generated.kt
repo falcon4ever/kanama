@@ -21,10 +21,10 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
  * Kotlin/Wasm backend dispatch: opcode routing, execution-mode guards, and JS-bridge codec calls.
  *
  * Generated from scripts/platform_backend_calls.json + the Web-local policy in
- * scripts/generate_web_backend.py. Web-only state (property snapshots, browser handle-kind tracking,
- * free-time cache clearing) lives hand-written in WebBackendBookkeeping.kt and is reached through its
- * hooks; the js(...) transport primitives live hand-written in WebBackendTransport.kt. See
- * docs/contributing/web-internals.md ("Backend-dispatch codegen").
+ * scripts/generate_web_backend.py. Web-only state (property snapshots, browser handle-kind
+ * tracking, free-time cache clearing) lives hand-written in WebBackendBookkeeping.kt and is reached
+ * through its hooks; the js(...) transport primitives live hand-written in WebBackendTransport.kt.
+ * See docs/contributing/web-internals.md ("Backend-dispatch codegen").
  */
 internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {
@@ -37,1143 +37,1163 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite =
     GodotCallSite.fromBackendToken(descriptor.opcode.toLong())
 
-override fun invokeBoolRetInt(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Boolean,
-): Int {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush() // explicit ordering barrier for mutations issued before this result
-return immediateWebChildCount(receiver.webId(), value)
-}
+  override fun invokeBoolRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush() // explicit ordering barrier for mutations issued before this result
+    return immediateWebChildCount(receiver.webId(), value)
+  }
 
-override fun invokeBoolRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Boolean,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return existingReturnedObject(
-receiver,
-immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),
-)
-}
+  override fun invokeBoolRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return existingReturnedObject(
+      receiver,
+      immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),
+    )
+  }
 
-override fun invokeBoolArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Boolean,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode in setOf(43, 54, 55, 56, 61, 80, 93, 94, 95, 96, 97, 144, 152, 153, 162, 168, 169, 180))
-val objectId = receiver.webId()
-commands.appendBoolMutation(descriptor.opcode, objectId, value)
-when (descriptor.opcode) {
-43 -> webWriteEmittingSnapshot(objectId, value)
-else -> {}
-}
-}
+  override fun invokeBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Boolean,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(
+      descriptor.opcode in
+        setOf(43, 54, 55, 56, 61, 80, 93, 94, 95, 96, 97, 144, 152, 153, 162, 168, 169, 180)
+    )
+    val objectId = receiver.webId()
+    commands.appendBoolMutation(descriptor.opcode, objectId, value)
+    when (descriptor.opcode) {
+      43 -> webWriteEmittingSnapshot(objectId, value)
+      else -> {}
+    }
+  }
 
-override fun invokeDoubleArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Double,
-) {
-requireOpcode(descriptor, callSite)
-require(value.isFinite()) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
-}
-when (descriptor.executionMode) {
-GodotExecutionMode.QUEUED_MUTATION -> {
-require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99, 146, 158, 161, 182, 183))
-commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
-}
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-require(descriptor.opcode in setOf(65, 107, 109))
-commands.flush()
-when (descriptor.opcode) {
-65 -> immediateWebSetProgressRatio(receiver.webId(), value)
-107 -> immediateWebSetProgressRatio3D(receiver.webId(), value)
-109 -> immediateWebRotateY(receiver.webId(), value)
-else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")
-}
-}
-GodotExecutionMode.SNAPSHOT_READ ->
-error("Double argument cannot use snapshot execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(value.isFinite()) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
+    }
+    when (descriptor.executionMode) {
+      GodotExecutionMode.QUEUED_MUTATION -> {
+        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99, 146, 158, 161, 182, 183))
+        commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode in setOf(65, 107, 109))
+        commands.flush()
+        when (descriptor.opcode) {
+          65 -> immediateWebSetProgressRatio(receiver.webId(), value)
+          107 -> immediateWebSetProgressRatio3D(receiver.webId(), value)
+          109 -> immediateWebRotateY(receiver.webId(), value)
+          else -> error("Unsupported Web immediate Double opcode=${descriptor.opcode}")
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ ->
+        error("Double argument cannot use snapshot execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeLongArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Long,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode in setOf(52, 115, 129, 140, 185, 189))
-require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
-}
-commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)
-}
+  override fun invokeLongArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode in setOf(52, 115, 129, 140, 185, 189))
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
+    }
+    commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)
+  }
 
-override fun invokeNoArgsRetVector2(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): GodotVector2 {
-requireOpcode(descriptor, callSite)
-return when (descriptor.executionMode) {
-GodotExecutionMode.SNAPSHOT_READ ->
-when (descriptor.opcode) {
-2 -> webVector2Snapshot(receiver.webId(), WebVector2Slot.POSITION)
-29 -> webVector2Snapshot(receiver.webId(), WebVector2Slot.SCALE)
-else -> null
-}
-?: error(
-"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-"object handle=${receiver.webId()}"
-)
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-commands.flush()
-GodotVector2(
-immediateWebNoArgsVector2X(descriptor.opcode, receiver.webId()).toFloat(),
-immediateWebNoArgsVector2Y().toFloat(),
-)
-}
-GodotExecutionMode.QUEUED_MUTATION ->
-error("Vector2 return cannot use queued execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeNoArgsRetVector2(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotVector2 {
+    requireOpcode(descriptor, callSite)
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ ->
+        when (descriptor.opcode) {
+          2 -> webVector2Snapshot(receiver.webId(), WebVector2Slot.POSITION)
+          29 -> webVector2Snapshot(receiver.webId(), WebVector2Slot.SCALE)
+          else -> null
+        }
+          ?: error(
+            "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+              "object handle=${receiver.webId()}"
+          )
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        GodotVector2(
+          immediateWebNoArgsVector2X(descriptor.opcode, receiver.webId()).toFloat(),
+          immediateWebNoArgsVector2Y().toFloat(),
+        )
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Vector2 return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeVector2Arg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: GodotVector2,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-val objectId = receiver.webId()
-commands.appendVector2Mutation(descriptor.opcode, objectId, value.x, value.y)
-when (descriptor.opcode) {
-3 -> webWriteVector2Snapshot(objectId, WebVector2Slot.POSITION, value)
-30 -> webWriteVector2Snapshot(objectId, WebVector2Slot.SCALE, value)
-60 -> {}
-else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeVector2Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector2,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    val objectId = receiver.webId()
+    commands.appendVector2Mutation(descriptor.opcode, objectId, value.x, value.y)
+    when (descriptor.opcode) {
+      3 -> webWriteVector2Snapshot(objectId, WebVector2Slot.POSITION, value)
+      30 -> webWriteVector2Snapshot(objectId, WebVector2Slot.SCALE, value)
+      60 -> {}
+      else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeNoArgsRetRect2(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): GodotRect2 {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-return webViewportRectSnapshot(receiver.webId())
-?: error("Missing Web viewport snapshot for object handle=${receiver.webId()}")
-}
+  override fun invokeNoArgsRetRect2(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotRect2 {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    return webViewportRectSnapshot(receiver.webId())
+      ?: error("Missing Web viewport snapshot for object handle=${receiver.webId()}")
+  }
 
-override fun invokeNoArgsVoid(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-) {
-requireOpcode(descriptor, callSite)
-val objectId = receiver.webId()
-when (descriptor.executionMode) {
-GodotExecutionMode.QUEUED_MUTATION -> {
-commands.appendNoArgsMutation(descriptor.opcode, objectId)
-if (descriptor.opcode == 15) onWebQueueFree(objectId)
-}
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-commands.flush()
-when (descriptor.opcode) {
-37 ->
-check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {
-"Kanama Web Tween.kill failed for handle=$objectId"
-}
-120 ->
-check(immediateWebObjectQuery(120, objectId, "") == 1) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
-}
-else -> error("Unsupported Web immediate void opcode=${descriptor.opcode}")
-}
-}
-GodotExecutionMode.SNAPSHOT_READ ->
-error("Void call cannot use snapshot execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeNoArgsVoid(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ) {
+    requireOpcode(descriptor, callSite)
+    val objectId = receiver.webId()
+    when (descriptor.executionMode) {
+      GodotExecutionMode.QUEUED_MUTATION -> {
+        commands.appendNoArgsMutation(descriptor.opcode, objectId)
+        if (descriptor.opcode == 15) onWebQueueFree(objectId)
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        when (descriptor.opcode) {
+          37 ->
+            check(immediateWebTweenNoArgs(descriptor.opcode, objectId) == 1) {
+              "Kanama Web Tween.kill failed for handle=$objectId"
+            }
+          120 ->
+            check(immediateWebObjectQuery(120, objectId, "") == 1) {
+              "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+            }
+          else -> error("Unsupported Web immediate void opcode=${descriptor.opcode}")
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ ->
+        error("Void call cannot use snapshot execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeTexture2DVector2ColorArgs(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-texture: GodotHandle,
-position: GodotVector2,
-modulate: GodotColor,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-requireWebBrowserHandle(texture.webId(), WebBrowserHandleKind.RESOURCE)
-drawCommands.appendDrawTexture(
-descriptor.opcode,
-receiver.webId(),
-texture.webId(),
-position.x,
-position.y,
-modulate.r,
-modulate.g,
-modulate.b,
-modulate.a,
-)
-}
+  override fun invokeTexture2DVector2ColorArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    texture: GodotHandle,
+    position: GodotVector2,
+    modulate: GodotColor,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    requireWebBrowserHandle(texture.webId(), WebBrowserHandleKind.RESOURCE)
+    drawCommands.appendDrawTexture(
+      descriptor.opcode,
+      receiver.webId(),
+      texture.webId(),
+      position.x,
+      position.y,
+      modulate.r,
+      modulate.g,
+      modulate.b,
+      modulate.a,
+    )
+  }
 
-override fun invokeStringStringLongRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-first: String,
-second: String,
-value: Long,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-commands.flush()
-return registerLoadedResource(immediateWebResourceLoad(first, second, value.toInt()))
-}
+  override fun invokeStringStringLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+    value: Long,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return registerLoadedResource(immediateWebResourceLoad(first, second, value.toInt()))
+  }
 
-override fun invokeUtilityNoArgsVoid(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-WebRandom.randomize()
-}
+  override fun invokeUtilityNoArgsVoid(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    WebRandom.randomize()
+  }
 
-override fun invokeUtilityNoArgsRetLong(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-): Long {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-return WebRandom.randi()
-}
+  override fun invokeUtilityNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    return WebRandom.randi()
+  }
 
-override fun invokeUtilityNoArgsRetDouble(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-): Double {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-return WebRandom.randf()
-}
+  override fun invokeUtilityNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    return WebRandom.randf()
+  }
 
-override fun invokeStringNameIntRetInt(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-name: String,
-value: Int,
-): Int {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return immediateWebEmitSignal(receiver.webId(), name, value)
-}
+  override fun invokeStringNameIntRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Int,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebEmitSignal(receiver.webId(), name, value)
+  }
 
-override fun invokeStringNameRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-value: String,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return registerConstructedNode(immediateWebConstructObject(value), value)
-}
+  override fun invokeStringNameRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return registerConstructedNode(immediateWebConstructObject(value), value)
+  }
 
-override fun invokeStringNameRetInt(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: String,
-): Int {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return immediateWebEmitSignalNoArgs(receiver.webId(), value)
-}
+  override fun invokeStringNameRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebEmitSignalNoArgs(receiver.webId(), value)
+  }
 
-override fun invokeObjectBoolLongArgs(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-objectValue: GodotHandle,
-boolValue: Boolean,
-longValue: Long,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-requireWebNodeHandle(objectValue.webId())
-commands.appendObjectBoolLongArgs(
-descriptor.opcode,
-receiver.webId(),
-objectValue.webId(),
-boolValue,
-longValue,
-)
-}
+  override fun invokeObjectBoolLongArgs(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    objectValue: GodotHandle,
+    boolValue: Boolean,
+    longValue: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    requireWebNodeHandle(objectValue.webId())
+    commands.appendObjectBoolLongArgs(
+      descriptor.opcode,
+      receiver.webId(),
+      objectValue.webId(),
+      boolValue,
+      longValue,
+    )
+  }
 
-override fun invokeObjectArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: GodotHandle?,
-) {
-requireOpcode(descriptor, callSite)
-when (descriptor.opcode) {
-14 -> {
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-requireWebNodeHandle(checkNotNull(value).webId())
-}
-16 -> {
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
-webWriteTextureSnapshot(receiver.webId(), value?.webId() ?: 0)
-}
-46 -> {
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
-}
-130 -> {
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
-}
-165 -> {
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-checkNotNull(value)
-}
-170 -> {
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-checkNotNull(value)
-}
-171 -> {
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-checkNotNull(value)
-}
-else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
-}
-commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
-if (descriptor.opcode == 46) commands.flush()
-}
+  override fun invokeObjectArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle?,
+  ) {
+    requireOpcode(descriptor, callSite)
+    when (descriptor.opcode) {
+      14 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        requireWebNodeHandle(checkNotNull(value).webId())
+      }
+      16 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+        webWriteTextureSnapshot(receiver.webId(), value?.webId() ?: 0)
+      }
+      46 -> {
+        require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+      }
+      130 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+      }
+      165 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        checkNotNull(value)
+      }
+      170 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        checkNotNull(value)
+      }
+      171 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        checkNotNull(value)
+      }
+      else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
+    }
+    commands.appendObjectArg(descriptor.opcode, receiver.webId(), value?.webId() ?: 0)
+    if (descriptor.opcode == 46) commands.flush()
+  }
 
-override fun invokeStringNameArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: String,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode in setOf(47, 57, 66, 128, 150))
-commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
-}
+  override fun invokeStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode in setOf(47, 57, 66, 128, 150))
+    commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
+  }
 
-override fun invokeStringNameBoolArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-name: String,
-value: Boolean,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode == 67)
-commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)
-}
+  override fun invokeStringNameBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: Boolean,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 67)
+    commands.appendStringNameBoolMutation(descriptor.opcode, receiver.webId(), name, value)
+  }
 
-override fun invokeLongBoolArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-layer: Long,
-value: Boolean,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode in setOf(155, 163, 164))
-commands.flush()
-// Layer number and flag packed into one query string (unit separator).
-check(
-immediateWebObjectQuery(
-descriptor.opcode,
-receiver.webId(),
-layer.toString() + "" + (if (value) "1" else "0"),
-) == 1
-) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
-}
-}
+  override fun invokeLongBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    layer: Long,
+    value: Boolean,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(155, 163, 164))
+    commands.flush()
+    // Layer number and flag packed into one query string (unit separator).
+    check(
+      immediateWebObjectQuery(
+        descriptor.opcode,
+        receiver.webId(),
+        layer.toString() + "" + (if (value) "1" else "0"),
+      ) == 1
+    ) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
+  }
 
-override fun invokeVector3RetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: GodotVector3,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 166)
-commands.flush()
-// Motion packed as three floats; the bridge allocates the collision slot and the
-// applier registers the KinematicCollision3D under it (null collision returns 0).
-return registerReturnedBrowserObject(
-immediateWebMoveAndCollide(
-descriptor.opcode,
-receiver.webId(),
-listOf(value.x, value.y, value.z).joinToString(""),
-)
-)
-}
+  override fun invokeVector3RetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 166)
+    commands.flush()
+    // Motion packed as three floats; the bridge allocates the collision slot and the
+    // applier registers the KinematicCollision3D under it (null collision returns 0).
+    return registerReturnedBrowserObject(
+      immediateWebMoveAndCollide(
+        descriptor.opcode,
+        receiver.webId(),
+        listOf(value.x, value.y, value.z).joinToString(""),
+      )
+    )
+  }
 
-override fun invokeNoArgsRetHandleList(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): List<GodotHandle> {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 167)
-commands.flush()
-// The applier packs the SCRIPT handles of scripted overlapping bodies (unit
-// separator); bodies without Kanama scripts are omitted by contract.
-return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")
-.split('')
-.filter { it.isNotEmpty() }
-.map { GodotHandle.fromBackendToken(it.toLong()) }
-}
+  override fun invokeNoArgsRetHandleList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<GodotHandle> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 167)
+    commands.flush()
+    // The applier packs the SCRIPT handles of scripted overlapping bodies (unit
+    // separator); bodies without Kanama scripts are omitted by contract.
+    return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")
+      .split('')
+      .filter { it.isNotEmpty() }
+      .map { GodotHandle.fromBackendToken(it.toLong()) }
+  }
 
-override fun invokeLongRetVector3(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Long,
-): GodotVector3 {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 173)
-require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-commands.flush()
-return GodotVector3(
-immediateWebIndexedVector3X(descriptor.opcode, receiver.webId(), value.toInt()).toFloat(),
-immediateWebNoArgsVector3Y().toFloat(),
-immediateWebNoArgsVector3Z().toFloat(),
-)
-}
+  override fun invokeLongRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotVector3 {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 173)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return GodotVector3(
+      immediateWebIndexedVector3X(descriptor.opcode, receiver.webId(), value.toInt()).toFloat(),
+      immediateWebNoArgsVector3Y().toFloat(),
+      immediateWebNoArgsVector3Z().toFloat(),
+    )
+  }
 
-override fun invokeStringNameRetDoubleSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-value: String,
-): Double {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode in setOf(186, 187))
-commands.flush()
-// Scaled by 1000 through the shared integer object-query transport.
-return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) /
-1000.0
-}
+  override fun invokeStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(186, 187))
+    commands.flush()
+    // Scaled by 1000 through the shared integer object-query transport.
+    return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) /
+      1000.0
+  }
 
-override fun invokeStringNameVector3Vector3Arg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-name: String,
-first: GodotVector3,
-second: GodotVector3,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode == 191)
-commands.appendStringNameVector3Vector3Mutation(
-descriptor.opcode,
-receiver.webId(),
-name,
-first,
-second,
-)
-}
+  override fun invokeStringNameVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 191)
+    commands.appendStringNameVector3Vector3Mutation(
+      descriptor.opcode,
+      receiver.webId(),
+      name,
+      first,
+      second,
+    )
+  }
 
-override fun invokeCallableDoubleRangeRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-target: GodotHandle,
-method: String,
-fromValue: Double,
-toValue: Double,
-duration: Double,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 192)
-commands.flush()
-return registerReturnedBrowserObject(
-immediateWebTweenMethod(
-descriptor.opcode,
-receiver.webId(),
-target.webId(),
-method,
-fromValue,
-toValue,
-duration,
-)
-)
-}
+  override fun invokeStringNameStringRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: String,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 196)
+    commands.flush()
+    // Signal name and String argument packed into one query (unit separator).
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), name + "" + value)
+  }
 
-override fun invokeStringNameStringNameArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-first: String,
-second: String,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode in setOf(68, 105))
-commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)
-}
+  override fun invokeCallableDoubleRangeRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+    fromValue: Double,
+    toValue: Double,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 192)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenMethod(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        method,
+        fromValue,
+        toValue,
+        duration,
+      )
+    )
+  }
 
-override fun invokeNodePathRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-path: String,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return when (descriptor.opcode) {
-17 -> registerReturnedNode(immediateWebNodeLookup(receiver.webId(), path))
-149,
-184 ->
-registerReturnedBrowserObject(
-immediateWebPropertyObjectQuery(descriptor.opcode, receiver.webId(), path)
-)
-else -> error("Unsupported Web path-to-handle opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeStringNameStringNameArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: String,
+    second: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode in setOf(68, 105))
+    commands.appendStringNameStringNameMutation(descriptor.opcode, receiver.webId(), first, second)
+  }
 
-override fun invokeLongRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: Long,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-commands.flush()
-return when (descriptor.opcode) {
-18 ->
-registerReturnedNode(immediateWebPackedSceneInstantiate(receiver.webId(), value.toInt()))
-41,
-42,
-135,
-174 ->
-existingReturnedObject(
-receiver,
-immediateWebTweenLongRetObject(descriptor.opcode, receiver.webId(), value.toInt()),
-)
-111 ->
-registerReturnedBrowserObject(immediateWebSlideCollision(receiver.webId(), value.toInt()))
-133 ->
-registerReturnedNode(immediateWebNodeChild(receiver.webId(), value.toInt()))
-else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeNodePathRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    path: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return when (descriptor.opcode) {
+      17 -> registerReturnedNode(immediateWebNodeLookup(receiver.webId(), path))
+      149,
+      184 ->
+        registerReturnedBrowserObject(
+          immediateWebPropertyObjectQuery(descriptor.opcode, receiver.webId(), path)
+        )
+      else -> error("Unsupported Web path-to-handle opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeNoArgsRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-return when (descriptor.executionMode) {
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-commands.flush()
-val token = immediateWebNoArgsObject(descriptor.opcode, receiver.webId())
-when (descriptor.opcode) {
-19 -> registerReturnedNode(token)
-36 -> registerReturnedBrowserObject(token)
-51 -> registerReturnedBrowserObject(token)
-71 -> registerReturnedBrowserObject(token)
-73 -> registerReturnedNode(token)
-81 -> registerReturnedBrowserObject(token)
-112 -> registerReturnedNode(token)
-114 -> registerReturnedNode(token)
-122 -> registerReturnedNode(token)
-194 -> registerReturnedNode(token)
-else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
-}
-}
-GodotExecutionMode.SNAPSHOT_READ -> {
-require(descriptor.opcode == 33)
-val objectId = receiver.webId()
-val textureId =
-webTextureSnapshot(objectId)
-?: error("Missing Web Sprite2D.get_texture snapshot for object handle=$objectId")
-textureId.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
-}
-GodotExecutionMode.QUEUED_MUTATION ->
-error("Handle return cannot use queued execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return when (descriptor.opcode) {
+      174 ->
+        registerReturnedNode(
+          immediateWebIndexedObjectLookup(descriptor.opcode, receiver.webId(), value.toInt())
+        )
+      18 ->
+        registerReturnedNode(immediateWebPackedSceneInstantiate(receiver.webId(), value.toInt()))
+      41,
+      42,
+      135 ->
+        existingReturnedObject(
+          receiver,
+          immediateWebTweenLongRetObject(descriptor.opcode, receiver.webId(), value.toInt()),
+        )
+      111 ->
+        registerReturnedBrowserObject(immediateWebSlideCollision(receiver.webId(), value.toInt()))
+      133 -> registerReturnedNode(immediateWebNodeChild(receiver.webId(), value.toInt()))
+      else -> error("Unsupported Web Long-return-handle opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeObjectLongVector2Args(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-objectValue: GodotHandle?,
-longValue: Long,
-vectorValue: GodotVector2,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
-commands.flush()
-immediateWebSetCustomMouseCursor(
-requireActiveWebScriptHandle(),
-objectValue?.webId() ?: 0,
-longValue.toInt(),
-vectorValue.x.toDouble(),
-vectorValue.y.toDouble(),
-)
-}
+  override fun invokeNoArgsRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        val token = immediateWebNoArgsObject(descriptor.opcode, receiver.webId())
+        when (descriptor.opcode) {
+          19 -> registerReturnedNode(token)
+          36 -> registerReturnedBrowserObject(token)
+          51 -> registerReturnedBrowserObject(token)
+          71 -> registerReturnedBrowserObject(token)
+          73 -> registerReturnedNode(token)
+          81 -> registerReturnedBrowserObject(token)
+          112 -> registerReturnedNode(token)
+          114 -> registerReturnedNode(token)
+          122 -> registerReturnedNode(token)
+          194 -> registerReturnedNode(token)
+          else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ -> {
+        require(descriptor.opcode == 33)
+        val objectId = receiver.webId()
+        val textureId =
+          webTextureSnapshot(objectId)
+            ?: error("Missing Web Sprite2D.get_texture snapshot for object handle=$objectId")
+        textureId.takeIf { it > 0 }?.let { GodotHandle.fromBackendToken(it.toLong()) }
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Handle return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeStringNameCallableLongRetLong(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-signal: String,
-target: GodotHandle,
-method: String,
-flags: Long,
-): Long {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-commands.flush()
-return immediateWebConnect(receiver.webId(), signal, target.webId(), method, flags.toInt())
-.toLong()
-}
+  override fun invokeObjectLongVector2Args(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    objectValue: GodotHandle?,
+    longValue: Long,
+    vectorValue: GodotVector2,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+    commands.flush()
+    immediateWebSetCustomMouseCursor(
+      requireActiveWebScriptHandle(),
+      objectValue?.webId() ?: 0,
+      longValue.toInt(),
+      vectorValue.x.toDouble(),
+      vectorValue.y.toDouble(),
+    )
+  }
 
-override fun invokeStringNameBoundCallableLongRetLong(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-signal: String,
-target: GodotHandle,
-method: String,
-boundValue: Long,
-flags: Long,
-): Long {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(boundValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-commands.flush()
-return when (descriptor.opcode) {
-34 ->
-immediateWebConnectBound(
-receiver.webId(),
-signal,
-target.webId(),
-method,
-boundValue.toInt(),
-flags.toInt(),
-)
-.toLong()
-193 ->
-immediateWebDisconnectBound(
-receiver.webId(),
-signal,
-target.webId(),
-method,
-boundValue.toInt(),
-)
-.toLong()
-else -> error("Unsupported Web bound-callable opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeStringNameCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    flags: Long,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return immediateWebConnect(receiver.webId(), signal, target.webId(), method, flags.toInt())
+      .toLong()
+  }
 
-override fun invokeStringNameRetBool(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: String,
-): Boolean {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value) != 0
-}
+  override fun invokeStringNameBoundCallableLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    signal: String,
+    target: GodotHandle,
+    method: String,
+    boundValue: Long,
+    flags: Long,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(boundValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return when (descriptor.opcode) {
+      34 ->
+        immediateWebConnectBound(
+            receiver.webId(),
+            signal,
+            target.webId(),
+            method,
+            boundValue.toInt(),
+            flags.toInt(),
+          )
+          .toLong()
+      193 ->
+        immediateWebDisconnectBound(
+            receiver.webId(),
+            signal,
+            target.webId(),
+            method,
+            boundValue.toInt(),
+          )
+          .toLong()
+      else -> error("Unsupported Web bound-callable opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeStringNameRetBoolSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-value: String,
-): Boolean {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) != 0
-}
+  override fun invokeStringNameRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value) != 0
+  }
 
-override fun invokeNoArgsRetBool(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): Boolean {
-requireOpcode(descriptor, callSite)
-return when (descriptor.executionMode) {
-GodotExecutionMode.SNAPSHOT_READ -> {
-require(descriptor.opcode == 44)
-webEmittingSnapshot(receiver.webId())
-?: error(
-"Missing Web GPUParticles2D.is_emitting snapshot for object handle=${receiver.webId()}"
-)
-}
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-commands.flush()
-immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") != 0
-}
-GodotExecutionMode.QUEUED_MUTATION ->
-error("Boolean return cannot use queued execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeStringNameRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) != 0
+  }
 
-override fun invokeNoArgsRetDouble(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): Double {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-return when (descriptor.opcode) {
-45 -> webLifetimeSnapshot(receiver.webId())
-70 -> webRotationSnapshot(receiver.webId())
-else -> null
-}
-?: error(
-"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-"object handle=${receiver.webId()}"
-)
-}
+  override fun invokeNoArgsRetBool(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ -> {
+        require(descriptor.opcode == 44)
+        webEmittingSnapshot(receiver.webId())
+          ?: error(
+            "Missing Web GPUParticles2D.is_emitting snapshot for object handle=${receiver.webId()}"
+          )
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        commands.flush()
+        immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") != 0
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Boolean return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeNoArgsRetLong(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): Long {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "").toLong()
-}
+  override fun invokeNoArgsRetDouble(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    return when (descriptor.opcode) {
+      45 -> webLifetimeSnapshot(receiver.webId())
+      70 -> webRotationSnapshot(receiver.webId())
+      else -> null
+    }
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
+      )
+  }
 
-override fun invokeNoArgsRetStringArray(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): List<String> {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-require(descriptor.opcode == 72)
-return webAnimationNamesSnapshot(receiver.webId())
-?: error(
-"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-"object handle=${receiver.webId()}"
-)
-}
+  override fun invokeNoArgsRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "").toLong()
+  }
 
-override fun invokeStringNameVector2iRetInt(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-name: String,
-value: GodotVector2i,
-): Int {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-commands.flush()
-return immediateWebEmitSignalVector2i(receiver.webId(), name, value.x, value.y)
-}
+  override fun invokeNoArgsRetStringArray(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<String> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 72)
+    return webAnimationNamesSnapshot(receiver.webId())
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "object handle=${receiver.webId()}"
+      )
+  }
 
-override fun invokeNoArgsRetColor(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): GodotColor {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-return webModulateSnapshot(receiver.webId())
-?: error("Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}")
-}
+  override fun invokeStringNameVector2iRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotVector2i,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return immediateWebEmitSignalVector2i(receiver.webId(), name, value.x, value.y)
+  }
 
-override fun invokeColorArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: GodotColor,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-commands.appendColorMutation(
-descriptor.opcode,
-receiver.webId(),
-value.r,
-value.g,
-value.b,
-value.a,
-)
-webWriteModulateSnapshot(receiver.webId(), value)
-}
+  override fun invokeNoArgsRetColor(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotColor {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    return webModulateSnapshot(receiver.webId())
+      ?: error("Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}")
+  }
 
-override fun invokeObjectNodePathVector2DoubleRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-target: GodotHandle,
-property: String,
-finalValue: GodotVector2,
-duration: Double,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(duration.isFinite() && duration >= 0.0)
-commands.flush()
-return registerReturnedBrowserObject(
-immediateWebTweenPropertyVector2(
-descriptor.opcode,
-receiver.webId(),
-target.webId(),
-property,
-finalValue.x.toDouble(),
-finalValue.y.toDouble(),
-duration,
-)
-)
-}
+  override fun invokeColorArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotColor,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    commands.appendColorMutation(
+      descriptor.opcode,
+      receiver.webId(),
+      value.r,
+      value.g,
+      value.b,
+      value.a,
+    )
+    webWriteModulateSnapshot(receiver.webId(), value)
+  }
 
-override fun invokeObjectNodePathColorDoubleRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-target: GodotHandle,
-property: String,
-finalValue: GodotColor,
-duration: Double,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(duration.isFinite() && duration >= 0.0)
-commands.flush()
-return registerReturnedBrowserObject(
-immediateWebTweenPropertyColor(
-descriptor.opcode,
-receiver.webId(),
-target.webId(),
-property,
-finalValue.r.toDouble(),
-finalValue.g.toDouble(),
-finalValue.b.toDouble(),
-finalValue.a.toDouble(),
-duration,
-)
-)
-}
+  override fun invokeObjectNodePathVector2DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector2,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyVector2(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue.x.toDouble(),
+        finalValue.y.toDouble(),
+        duration,
+      )
+    )
+  }
 
-override fun invokeNoArgsRetVector3(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-): GodotVector3 {
-requireOpcode(descriptor, callSite)
-return when (descriptor.executionMode) {
-GodotExecutionMode.SNAPSHOT_READ ->
-when (descriptor.opcode) {
-75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
-77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
-79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
-89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
-102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
-119 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.TARGET_POSITION)
-else -> null
-}
-?: error(
-"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-"object handle=${receiver.webId()}"
-)
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-require(descriptor.opcode in setOf(113, 123, 124, 138, 141, 156, 176, 178))
-commands.flush()
-GodotVector3(
-immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
-immediateWebNoArgsVector3Y().toFloat(),
-immediateWebNoArgsVector3Z().toFloat(),
-)
-}
-GodotExecutionMode.QUEUED_MUTATION ->
-error("Vector3 return cannot use queued execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeObjectNodePathColorDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotColor,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyColor(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue.r.toDouble(),
+        finalValue.g.toDouble(),
+        finalValue.b.toDouble(),
+        finalValue.a.toDouble(),
+        duration,
+      )
+    )
+  }
 
-override fun invokeVector3Arg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: GodotVector3,
-) {
-requireOpcode(descriptor, callSite)
-val objectId = receiver.webId()
-when (descriptor.executionMode) {
-GodotExecutionMode.QUEUED_MUTATION -> {
-commands.appendVector3Mutation(descriptor.opcode, objectId, value.x, value.y, value.z)
-when (descriptor.opcode) {
-74 -> webWriteVector3Snapshot(objectId, WebVector3Slot.POSITION, value)
-76 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION, value)
-78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
-88 -> webWriteVector3Snapshot(objectId, WebVector3Slot.VELOCITY, value)
-101 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION_DEGREES, value)
-118 -> webWriteVector3Snapshot(objectId, WebVector3Slot.TARGET_POSITION, value)
-else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
-}
-}
-GodotExecutionMode.IMMEDIATE_RESULT -> {
-require(descriptor.opcode in setOf(142, 143, 160, 175, 177))
-commands.flush()
-// Three Float32 components packed into one query string (unit separator); the
-// applier writes the global transform and re-pushes the node's snapshot.
-val packed =
-listOf(value.x, value.y, value.z).joinToString("")
-check(immediateWebObjectQuery(descriptor.opcode, objectId, packed) == 1) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
-}
-}
-GodotExecutionMode.SNAPSHOT_READ ->
-error("Vector3 argument cannot use snapshot execution for opcode=${descriptor.opcode}")
-}
-}
+  override fun invokeNoArgsRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): GodotVector3 {
+    requireOpcode(descriptor, callSite)
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ ->
+        when (descriptor.opcode) {
+          75 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.POSITION)
+          77 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION)
+          79 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.SCALE)
+          89 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.VELOCITY)
+          102 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.ROTATION_DEGREES)
+          119 -> webVector3Snapshot(receiver.webId(), WebVector3Slot.TARGET_POSITION)
+          else -> null
+        }
+          ?: error(
+            "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+              "object handle=${receiver.webId()}"
+          )
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode in setOf(113, 123, 124, 138, 141, 156, 176, 178))
+        commands.flush()
+        GodotVector3(
+          immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
+          immediateWebNoArgsVector3Y().toFloat(),
+          immediateWebNoArgsVector3Z().toFloat(),
+        )
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Vector3 return cannot use queued execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeLongDoubleArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-longValue: Long,
-doubleValue: Double,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode == 84)
-require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-require(doubleValue.isFinite()) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
-}
-commands.appendLongDoubleMutation(descriptor.opcode, receiver.webId(), longValue, doubleValue)
-}
+  override fun invokeVector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ) {
+    requireOpcode(descriptor, callSite)
+    val objectId = receiver.webId()
+    when (descriptor.executionMode) {
+      GodotExecutionMode.QUEUED_MUTATION -> {
+        commands.appendVector3Mutation(descriptor.opcode, objectId, value.x, value.y, value.z)
+        when (descriptor.opcode) {
+          74 -> webWriteVector3Snapshot(objectId, WebVector3Slot.POSITION, value)
+          76 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION, value)
+          78 -> webWriteVector3Snapshot(objectId, WebVector3Slot.SCALE, value)
+          88 -> webWriteVector3Snapshot(objectId, WebVector3Slot.VELOCITY, value)
+          101 -> webWriteVector3Snapshot(objectId, WebVector3Slot.ROTATION_DEGREES, value)
+          118 -> webWriteVector3Snapshot(objectId, WebVector3Slot.TARGET_POSITION, value)
+          else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")
+        }
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode in setOf(142, 143, 160, 175, 177))
+        commands.flush()
+        // Three Float32 components packed into one query string (unit separator); the
+        // applier writes the global transform and re-pushes the node's snapshot.
+        val packed = listOf(value.x, value.y, value.z).joinToString("")
+        check(immediateWebObjectQuery(descriptor.opcode, objectId, packed) == 1) {
+          "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+        }
+      }
+      GodotExecutionMode.SNAPSHOT_READ ->
+        error("Vector3 argument cannot use snapshot execution for opcode=${descriptor.opcode}")
+    }
+  }
 
-override fun invokeNoArgsRetStringSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-): String {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-require(descriptor.opcode == 85)
-return webRenderingMethodSnapshot(requireActiveWebScriptHandle())
-?: error(
-"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-"active script handle"
-)
-}
+  override fun invokeLongDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    doubleValue: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode == 84)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(doubleValue.isFinite()) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"
+    }
+    commands.appendLongDoubleMutation(descriptor.opcode, receiver.webId(), longValue, doubleValue)
+  }
 
-override fun invokeStringNameArgSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-value: String,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode in setOf(86, 87, 190))
-commands.flush()
-immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
-}
+  override fun invokeNoArgsRetStringSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): String {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
+    require(descriptor.opcode == 85)
+    return webRenderingMethodSnapshot(requireActiveWebScriptHandle())
+      ?: error(
+        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+          "active script handle"
+      )
+  }
 
-override fun invokeStringNameDoubleArg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: String,
-doubleValue: Double,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-require(descriptor.opcode in setOf(103, 132, 151))
-require(doubleValue.isFinite())
-commands.appendStringNameDoubleMutation(descriptor.opcode, receiver.webId(), value, doubleValue)
-}
+  override fun invokeStringNameArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(86, 87, 190))
+    commands.flush()
+    immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
+  }
 
-override fun invokeStringNameStringNameRetDoubleSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-first: String,
-second: String,
-): Double {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 104)
-commands.flush()
-// Two action names are packed into one query string (unit separator) and the axis is
-// returned scaled by 1000 through the shared object-query transport.
-return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), first + "\u001f" + second) / 1000.0
-}
+  override fun invokeStringNameDoubleArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+    doubleValue: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+    require(descriptor.opcode in setOf(103, 132, 151))
+    require(doubleValue.isFinite())
+    commands.appendStringNameDoubleMutation(descriptor.opcode, receiver.webId(), value, doubleValue)
+  }
 
-override fun invokeVector3Vector3Arg(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-first: GodotVector3,
-second: GodotVector3,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode in setOf(108, 154, 159))
-commands.flush()
-// Six Float32 components are packed into one query string (unit separator); the applier
-// re-pushes the Node3D transform snapshot so rotation reads reflect the new orientation.
-val packed =
-listOf(first.x, first.y, first.z, second.x, second.y, second.z).joinToString("\u001f")
-check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {
-"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
-}
-}
+  override fun invokeStringNameStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    first: String,
+    second: String,
+  ): Double {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 104)
+    commands.flush()
+    // Two action names are packed into one query string (unit separator) and the axis is
+    // returned scaled by 1000 through the shared object-query transport.
+    return immediateWebObjectQuery(
+      descriptor.opcode,
+      requireActiveWebScriptHandle(),
+      first + "\u001f" + second,
+    ) / 1000.0
+  }
 
-override fun invokeLongArgSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-value: Long,
-) {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode in setOf(116, 126))
-require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-commands.flush()
-immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value.toString())
-}
+  override fun invokeVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(108, 154, 159))
+    commands.flush()
+    // Six Float32 components are packed into one query string (unit separator); the applier
+    // re-pushes the Node3D transform snapshot so rotation reads reflect the new orientation.
+    val packed =
+      listOf(first.x, first.y, first.z, second.x, second.y, second.z).joinToString("\u001f")
+    check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
+  }
 
-override fun invokeObjectRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-value: GodotHandle,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 134)
-commands.flush()
-return existingReturnedObject(
-receiver,
-immediateWebTweenObjectRetObject(descriptor.opcode, receiver.webId(), value.webId()),
-)
-}
+  override fun invokeLongArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(116, 126))
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value.toString())
+  }
 
-override fun invokeObjectNodePathVector3DoubleRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-target: GodotHandle,
-property: String,
-finalValue: GodotVector3,
-duration: Double,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(duration.isFinite() && duration >= 0.0)
-commands.flush()
-return registerReturnedBrowserObject(
-immediateWebTweenPropertyVector3(
-descriptor.opcode,
-receiver.webId(),
-target.webId(),
-property,
-finalValue.x.toDouble(),
-finalValue.y.toDouble(),
-finalValue.z.toDouble(),
-duration,
-)
-)
-}
+  override fun invokeObjectRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotHandle,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 134)
+    commands.flush()
+    return existingReturnedObject(
+      receiver,
+      immediateWebTweenObjectRetObject(descriptor.opcode, receiver.webId(), value.webId()),
+    )
+  }
 
-override fun invokeCallableRetHandle(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-target: GodotHandle,
-method: String,
-): GodotHandle? {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 137)
-commands.flush()
-return registerReturnedBrowserObject(
-immediateWebTweenCallback(descriptor.opcode, receiver.webId(), target.webId(), method)
-)
-}
+  override fun invokeObjectNodePathVector3DoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: GodotVector3,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyVector3(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue.x.toDouble(),
+        finalValue.y.toDouble(),
+        finalValue.z.toDouble(),
+        duration,
+      )
+    )
+  }
 
-override fun invokeNoArgsRetLongSingleton(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-): Long {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 145)
-commands.flush()
-return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), "")
-.toLong()
-}
+  override fun invokeCallableRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 137)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenCallback(descriptor.opcode, receiver.webId(), target.webId(), method)
+    )
+  }
 
-override fun invokeStringNameObjectRetInt(
-descriptor: GodotCallDescriptor,
-callSite: GodotCallSite,
-receiver: GodotHandle,
-name: String,
-value: GodotHandle,
-): Int {
-requireOpcode(descriptor, callSite)
-require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-require(descriptor.opcode == 148)
-commands.flush()
-// Signal name and object handle packed into one query string (unit separator);
-// the applier resolves the object from the shared handle dictionary and emits.
-return immediateWebObjectQuery(
-descriptor.opcode,
-receiver.webId(),
-name + "" + value.webId().toString(),
-)
-}
+  override fun invokeNoArgsRetLongSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 145)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), "").toLong()
+  }
+
+  override fun invokeStringNameObjectRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: GodotHandle,
+  ): Int {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 148)
+    commands.flush()
+    // Signal name and object handle packed into one query string (unit separator);
+    // the applier resolves the object from the shared handle dictionary and emits.
+    return immediateWebObjectQuery(
+      descriptor.opcode,
+      receiver.webId(),
+      name + "" + value.webId().toString(),
+    )
+  }
+
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {
     require(callSite.backendToken() == descriptor.opcode.toLong()) {
       "Web Godot call-site opcode does not match ${descriptor.className}.${descriptor.methodName}"

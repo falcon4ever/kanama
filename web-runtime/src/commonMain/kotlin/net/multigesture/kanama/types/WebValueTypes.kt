@@ -248,6 +248,20 @@ class Basis internal constructor(internal val m: DoubleArray) {
       m[6] * v.x + m[7] * v.y + m[8] * v.z,
     )
 
+  /** Row-major matrix product (this applied after [other] in xform order). */
+  operator fun times(other: Basis): Basis {
+    val a = m
+    val b = other.m
+    val out = DoubleArray(9)
+    for (row in 0..2) {
+      for (col in 0..2) {
+        out[row * 3 + col] =
+          a[row * 3] * b[col] + a[row * 3 + 1] * b[3 + col] + a[row * 3 + 2] * b[6 + col]
+      }
+    }
+    return Basis(out)
+  }
+
   /** Rotation-only inverse: the transpose. */
   fun inverse(): Basis = transposed()
 
@@ -351,6 +365,27 @@ class Basis internal constructor(internal val m: DoubleArray) {
           -sy * cz + cy * sx * sz,
           sy * sz + cy * sx * cz,
           cy * cx,
+        )
+      )
+    }
+
+    /** Rodrigues rotation matrix about (unit) [axis] by [angle] radians. */
+    fun fromAxisAngle(axis: Vector3, angle: Double): Basis {
+      val a = axis.normalized()
+      val c = cos(angle)
+      val s = sin(angle)
+      val t = 1.0 - c
+      return Basis(
+        doubleArrayOf(
+          t * a.x * a.x + c,
+          t * a.x * a.y - s * a.z,
+          t * a.x * a.z + s * a.y,
+          t * a.x * a.y + s * a.z,
+          t * a.y * a.y + c,
+          t * a.y * a.z - s * a.x,
+          t * a.x * a.z - s * a.y,
+          t * a.y * a.z + s * a.x,
+          t * a.z * a.z + c,
         )
       )
     }

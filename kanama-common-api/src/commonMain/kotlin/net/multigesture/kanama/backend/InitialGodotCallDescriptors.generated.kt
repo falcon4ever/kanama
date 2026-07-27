@@ -2137,4 +2137,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val NODE3D_IS_VISIBLE =
+    GodotCallDescriptor(
+      opcode = 195,
+      className = "Node3D",
+      methodName = "is_visible",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_EMIT_SIGNAL_STRING =
+    GodotCallDescriptor(
+      opcode = 196,
+      className = "Object",
+      methodName = "emit_signal",
+      hash = 4047867050L,
+      shape = GodotCallShape.STRINGNAME_STRING_RET_INT,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

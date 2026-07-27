@@ -612,6 +612,15 @@
         0,
       );
     },
+    setStringArrayProperty(handle, propertyId, values) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetStringArrayProperty(handle, propertyId, String(values)),
+        0,
+      );
+    },
     setObjectArrayProperty(handle, propertyId, values) {
       const parsedValues =
         values === "" ? [] : String(values).split(",").map((value) => Number.parseInt(value, 10));
@@ -645,6 +654,15 @@
     recordDeferredReady(scriptName) {
       this.match3DeferredReadyByClass[scriptName] =
         (this.match3DeferredReadyByClass[scriptName] ?? 0) + 1;
+    },
+    callString(handle, methodId, value) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallString(handle, methodId, String(value)),
+        0,
+      );
     },
     callInt(handle, methodId, value) {
       return this.invoke(
@@ -1435,6 +1453,30 @@
         toValue,
         duration,
       ]);
+    },
+    immediateIndexedObjectLookup(opcode, handle, index) {
+      // Indexed hit lookup (shape-cast colliders): node-lookup validation — the applier may
+      // return the proposed slot, an existing tracked handle, or a script handle.
+      const owner = this.ownerForHandle(handle);
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot indexed lookup");
+      const resultHandle = this.allocateBrowserHandle("Node", owner);
+      this.api.kanamaWebAdoptNodeHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(opcode, handle, resultHandle, index);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        const scriptHandle = this.api.kanamaWebIsLive(result) === 1;
+        if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
+          throw new Error("Godot indexed lookup returned neither its proposed nor a live handle");
+        }
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "Node");
+      }
+      return result;
     },
     immediateSlideCollision(handle, index) {
       const owner = this.ownerForHandle(handle);

@@ -298,6 +298,20 @@ fun kanamaWebSetObjectProperty(objectId: Int, propertyId: Int, value: Int): Int 
 }
 
 @JsExport
+fun kanamaWebSetStringArrayProperty(objectId: Int, propertyId: Int, encodedValues: String): Int {
+  val values = encodedValues.takeIf { it.isNotEmpty() }?.split('\u001f') ?: emptyList()
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setStringArrayProperty(
+      record.scriptId,
+      propertyId,
+      record.script,
+      values,
+    )
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValues: String): Int {
   val values =
     encodedValues.takeIf { it.isNotEmpty() }?.split(',')?.map(String::toInt)?.toIntArray()
@@ -310,6 +324,15 @@ fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValue
       record.script,
       values,
     )
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebCallString(objectId: Int, methodId: Int, value: String): Int {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callString(record.scriptId, methodId, record.script, value)
+    commands.flush()
     1
   }
 }

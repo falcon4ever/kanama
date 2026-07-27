@@ -76,6 +76,7 @@ enum class GodotCallShape {
   LONG_RET_VECTOR3,
   STRINGNAME_RET_DOUBLE_SINGLETON,
   STRINGNAME_VECTOR3_VECTOR3_ARG,
+  STRINGNAME_STRING_RET_INT,
   CALLABLE_DOUBLE_RANGE_RET_HANDLE,
 }
 
@@ -614,6 +615,17 @@ interface GodotBackendSpi {
     toValue: Double,
     duration: Double,
   ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Signal emission carrying one String argument. */
+  fun invokeStringNameStringRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: String,
+  ): Int {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -1329,6 +1341,24 @@ object GodotBackendCalls {
       name,
       first,
       second,
+    )
+  }
+
+  fun invokeStringNameStringRetInt(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: String,
+  ): Int {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_STRING_RET_INT)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameStringRetInt(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
     )
   }
 
@@ -2149,6 +2179,14 @@ class SignalBackendContractProbe(private val handle: GodotHandle) {
   fun emitObject(name: String, value: GodotHandle): Int =
     GodotBackendCalls.invokeStringNameObjectRetInt(
       InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_OBJECT,
+      handle,
+      name,
+      value,
+    )
+
+  fun emitString(name: String, value: String): Int =
+    GodotBackendCalls.invokeStringNameStringRetInt(
+      InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_STRING,
       handle,
       name,
       value,

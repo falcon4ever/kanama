@@ -30,6 +30,9 @@ class AnimationNodeStateMachinePlayback internal constructor(godotObject: GodotH
   /** Queue a transition to a named state (reset_on_teleport baked to Godot's default). */
   fun travel(state: String) {
     lastTravelled = state
+    // Children free before parents during scene teardown: a dying skin's playback handle
+    // may already be released while its owner still forwards states (Tween.kill precedent).
+    if (!isWebBrowserHandleLive(handle.value)) return
     AnimationStateMachinePlaybackBackendContractProbe(backendHandle).travel(state)
   }
 

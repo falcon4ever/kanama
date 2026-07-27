@@ -253,8 +253,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendVector3PropertySetter()
     appendObjectPropertySetter()
     appendObjectArrayPropertySetter()
+    appendStringArrayPropertySetter()
     appendLongMethodDispatcher()
     appendLongVoidMethodDispatcher()
+    appendStringMethodDispatcher()
     appendVector2iMethodDispatcher()
     appendObjectMethodDispatcher()
     appendObjectObjectLongMethodDispatcher()
@@ -500,6 +502,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
   }
 
+  private fun StringBuilder.appendStringMethodDispatcher() {
+    appendLine(
+      "  fun callString(scriptId: Int, methodId: Int, script: KanamaWebScript, value: String) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (
+          method.returnType == null &&
+            method.args.size == 1 &&
+            method.args.single().type == TypeMapping.STRING
+        ) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(value)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
   private fun StringBuilder.appendLongVoidMethodDispatcher() {
     appendLine(
       "  fun callLongVoid(scriptId: Int, methodId: Int, script: KanamaWebScript, value: Long) {"
@@ -730,6 +759,31 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
               "$wrapper(checkNotNull(handle) { \"Property ${property.godotName} is not nullable\" })"
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $wrapped"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"property\", propertyId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendStringArrayPropertySetter() {
+    appendLine(
+      "  fun setStringArrayProperty(scriptId: Int, propertyId: Int, script: KanamaWebScript, values: List<String>) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
+      input.model.properties.forEachIndexed { propertyIndex, property ->
+        if (
+          property.type == TypeMapping.ARRAY && property.isMutable && property.arrayElementString
+        ) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values"
           )
         }
       }
@@ -986,6 +1040,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           )
         }
         TypeMapping.ARRAY -> {
+          if (property.arrayElementString) {
+            appendLine(
+              "\t_kanama_bridge.setStringArrayProperty(_kanama_handle, ${index + 1}, \"\\u001f\".join(${property.godotName}))"
+            )
+            return@forEachIndexed
+          }
           appendLine("\tvar property_handles_${index + 1}: String = \"\"")
           appendLine("\tfor property_value in ${property.godotName}:")
           appendLine("\t\tvar property_value_handle := 0")
@@ -1175,6 +1235,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("\t\t\tvar target: Node2D = self")
       appendLine("\t\t\ttarget.position = Vector2(float(last_value % 640), target.position.y)")
     }
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 1000 and target_object != null:")
+    appendLine("\t\t\t# Frame marker for a script processed under another owner's proxy")
+    appendLine("\t\t\t# (instantiated nodes flush through their creator): consume it.")
+    appendLine("\t\t\tlast_value = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 3 and target_object is Node2D:")
@@ -2363,6 +2429,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\telif opcode == 188 and value is AudioStreamPlayer3D:")
     appendLine("\t\t\tresult = int((value as AudioStreamPlayer3D).is_playing())")
+    appendLine("\t\telif opcode == 195 and value is Node3D:")
+    appendLine("\t\t\tresult = int((value as Node3D).is_visible())")
+    appendLine("\t\telif opcode == 196 and value != null:")
+    appendLine("\t\t\tvar emit_string_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = value.emit_signal(StringName(emit_string_parts[0]), emit_string_parts[1])"
+    )
     appendLine("\t\telif opcode == 190:")
     appendLine("\t\t\tresult = int(OS.shell_open(String(args[2])))")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
@@ -2460,6 +2533,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           method.args.single().type == TypeMapping.INT -> {
           val arg = method.args.single()
           appendLine("\t_kanama_bridge.callLongVoid(_kanama_handle, ${index + 1}, ${arg.name})")
+        }
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.STRING -> {
+          val arg = method.args.single()
+          appendLine("\t_kanama_bridge.callString(_kanama_handle, ${index + 1}, ${arg.name})")
         }
         method.returnType == null &&
           method.args.size == 1 &&

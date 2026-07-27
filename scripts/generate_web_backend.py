@@ -216,7 +216,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     171: {},
     172: {},
     173: {},
-    174: {"ret": "existing"},
+    174: {"ret": "indexed_node"},
     175: {},
     176: {},
     177: {},
@@ -237,6 +237,8 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     192: {},
     193: {},
     194: {"ret": "node"},
+    195: {},
+    196: {},
 }
 
 
@@ -541,6 +543,20 @@ def body_STRINGNAME_RET_DOUBLE_SINGLETON(calls):
         "// Scaled by 1000 through the shared integer object-query transport.",
         "return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) /",
         "1000.0",
+    ]
+
+
+def body_STRINGNAME_STRING_RET_INT(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Signal name and String argument packed into one query (unit separator).",
+        "return immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'name + "\u001f" + value,',
+        ")",
     ]
 
 
@@ -905,6 +921,16 @@ def body_LONG_RET_HANDLE(calls):
     node_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "node"]
     existing_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "existing"]
     collision_ops = [c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "collision"]
+    indexed_node_ops = [
+        c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "indexed_node"
+    ]
+    for op in indexed_node_ops:
+        lines.append(f"{op} ->")
+        lines.append(
+            "registerReturnedNode("
+            "immediateWebIndexedObjectLookup(descriptor.opcode, receiver.webId(), value.toInt())"
+            ")"
+        )
     for op in node_ops:
         lines.append(f"{op} ->")
         lines.append(
@@ -1403,6 +1429,10 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         "GodotVector3",
     ),
     "STRINGNAME_RET_DOUBLE_SINGLETON": (["value: String"], "Double"),
+    "STRINGNAME_STRING_RET_INT": (
+        ["receiver: GodotHandle", "name: String", "value: String"],
+        "Int",
+    ),
     "STRINGNAME_VECTOR3_VECTOR3_ARG": (
         [
             "receiver: GodotHandle",
@@ -1521,6 +1551,7 @@ EMIT_ORDER = [
     "LONG_RET_VECTOR3",
     "STRINGNAME_RET_DOUBLE_SINGLETON",
     "STRINGNAME_VECTOR3_VECTOR3_ARG",
+    "STRINGNAME_STRING_RET_INT",
     "CALLABLE_DOUBLE_RANGE_RET_HANDLE",
     "STRINGNAME_STRINGNAME_ARG",
     "NODEPATH_RET_HANDLE",

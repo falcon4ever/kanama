@@ -40,6 +40,9 @@ internal fun immediateWebMoveAndCollide(opcode: Int, objectId: Int, packed: Stri
 internal fun immediateWebStringQuery(opcode: Int, objectId: Int, value: String): String =
   js("globalThis.KanamaWebBridge.immediateStringQuery(opcode, objectId, value)")
 
+internal fun immediateWebIndexedObjectLookup(opcode: Int, objectId: Int, index: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateIndexedObjectLookup(opcode, objectId, index)")
+
 internal fun immediateWebIndexedVector3X(opcode: Int, objectId: Int, index: Int): Double =
   js("globalThis.KanamaWebBridge.immediateIndexedVector3X(opcode, objectId, index)")
 

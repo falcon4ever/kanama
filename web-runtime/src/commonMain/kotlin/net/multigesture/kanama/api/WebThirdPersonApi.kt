@@ -61,6 +61,15 @@ fun Node3D.lookAt(target: Vector3, up: Vector3 = Vector3.UP) {
   lookAtFromPosition(globalPosition, target, up)
 }
 
+/** Node3D visibility read (synchronous immediate). */
+fun Node3D.isVisible(): Boolean =
+  GodotBackendCalls.invokeNoArgsRetBool(D.NODE3D_IS_VISIBLE, backendHandle)
+
+/** Godot's rotate_object_local: right-multiply the local basis by an axis-angle rotation. */
+fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) {
+  basis = basis * Basis.fromAxisAngle(axis, angle)
+}
+
 private fun Vector3.toGodot(): GodotVector3 = GodotVector3(x.toFloat(), y.toFloat(), z.toFloat())
 
 private fun GodotVector3.toApi(): Vector3 = Vector3(x, y, z)
