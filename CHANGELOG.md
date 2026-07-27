@@ -9,6 +9,19 @@ versioning once public releases begin.
 
 ### Fixed
 
+- Object-typed Kotlin exports now carry `PropertyInfo.class_name` (task 64,
+  follow-up to issue #106): a `@ScriptProperty var x: SmokeResource?` (or an
+  engine wrapper slot like `AudioStream?`) previously reported an empty
+  `class_name`, so typed GDScript degraded `node.smoke_resource` to plain
+  `Object`/`Resource` (no safe static typing or completion). Both metadata
+  paths emit it now — the generated instance property list
+  (`ClassDB.PropertySpec` → `GDExtensionPropertyInfo`) and the script-level
+  dictionaries (`PropertyInfo.from_dict`). Also replaces the always-true
+  `_is_placeholder_fallback_enabled` stub with GDScript-parity semantics
+  (fallback only for a script that failed to bind), and documents why the
+  remaining constant-returning Script/ScriptLanguage virtuals are correct as
+  constants. Runtime smoke asserts `class_name` on both paths plus a statically
+  typed member read.
 - GDScript can now statically type against Kanama `@GlobalClass` script classes
   (issue #106): `@export var x: CustomResource` plus
   `var copy: CustomResource = x` no longer fails with "Cannot assign a value of

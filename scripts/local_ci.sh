@@ -348,7 +348,7 @@ if ! rg -q 'ClassDB\.PropertySpec\("Runtime", VariantType\.NIL, 0, "", 256\)' "$
   echo "[local_ci] generated script-property export subgroup is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_scene", VariantType\.OBJECT, 17, "PackedScene", 6\)' "$hello_script_registrar"; then
+if ! rg -q 'ClassDB\.PropertySpec\("smoke_scene", VariantType\.OBJECT, 17, "PackedScene", 6, "PackedScene"\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property PackedScene export metadata is missing" >&2
   exit 1
 fi
@@ -356,7 +356,7 @@ if ! rg -q 'ClassDB\.PropertySpec\("smoke_textures", VariantType\.ARRAY, 23, "24
   echo "[local_ci] generated script-property typed Texture2D array metadata is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6\)' "$hello_script_registrar"; then
+if ! rg -q 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property custom Resource metadata is missing" >&2
   exit 1
 fi
@@ -365,7 +365,7 @@ if ! rg -q 'ClassDB\.PropertySpec\("smoke_resources", VariantType\.ARRAY, 23, "2
   exit 1
 fi
 resource_owner_registrar="$(find_project_script_registrar "ResourceOwnerSmokeScriptRegistrar.kt")"
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6\)' "$resource_owner_registrar"; then
+if ! rg -q 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$resource_owner_registrar"; then
   echo "[local_ci] generated script-property custom Resource metadata is missing" >&2
   exit 1
 fi
