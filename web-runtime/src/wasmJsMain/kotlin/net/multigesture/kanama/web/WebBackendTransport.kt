@@ -154,6 +154,10 @@ internal fun immediateWebSetProgressRatio(objectId: Int, ratio: Double): Int =
 internal fun immediateWebSetProgressRatio3D(objectId: Int, ratio: Double): Int =
   js("globalThis.KanamaWebBridge.immediateDoubleQuery(107, objectId, ratio)")
 
+/** Generic Double-argument query channel (Noise.get_noise_1d; x1000 integer result). */
+internal fun immediateWebDoubleQuery(opcode: Int, objectId: Int, value: Double): Int =
+  js("globalThis.KanamaWebBridge.immediateDoubleQuery(opcode, objectId, value)")
+
 internal fun immediateWebRotateY(objectId: Int, angle: Double): Int =
   js("globalThis.KanamaWebBridge.immediateDoubleQuery(109, objectId, angle)")
 

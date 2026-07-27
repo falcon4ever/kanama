@@ -31,6 +31,7 @@ val extraWebScriptSourceRoot: File? =
                     "thirdperson" -> "kanamaWebThirdpersonProjectDir"
                     "racing" -> "kanamaWebRacingProjectDir"
                     "citybuilder" -> "kanamaWebCitybuilderProjectDir"
+                    "tpsdemo" -> "kanamaWebTpsdemoProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -144,6 +145,9 @@ val webRacingStaging = layout.buildDirectory.dir("web-racing/godot-project")
 val webCitybuilderSourceProject =
     providers.gradleProperty("kanamaWebCitybuilderProjectDir").orNull?.let(rootProject::file)
 val webCitybuilderStaging = layout.buildDirectory.dir("web-citybuilder/godot-project")
+val webTpsdemoSourceProject =
+    providers.gradleProperty("kanamaWebTpsdemoProjectDir").orNull?.let(rootProject::file)
+val webTpsdemoStaging = layout.buildDirectory.dir("web-tpsdemo/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -2058,6 +2062,173 @@ tasks.register("stageWebCitybuilderProject") {
     }
 }
 
+tasks.register("stageWebTpsdemoProject") {
+    group = "verification"
+    description = "Stages tps-demo-kanama with generated Web proxies (Task 60i)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webTpsdemoSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webTpsdemoStaging)
+
+    doLast {
+        val sourceProject =
+            webTpsdemoSourceProject
+                ?: error(
+                    "Pass -PkanamaWebTpsdemoProjectDir=" +
+                        "/absolute/path/to/kanama-demos/tps-demo-kanama"
+                )
+        check(sourceProject.resolve("main/main.tscn").isFile) {
+            "tps-demo project not found: $sourceProject"
+        }
+
+        val stagingDir = webTpsdemoStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+                exclude("kotlin-src/**")
+                exclude("android/**")
+                exclude("addons/kanama_tools/**")
+                exclude("addons/kanama/**")
+                exclude("export_presets.cfg")
+            }
+            into(stagingDir)
+        }
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        val expectedSources =
+            setOf(
+                    "Blast",
+                    "Bullet",
+                    "CameraNoiseShakeEffect",
+                    "DebugLabel",
+                    "Door",
+                    "FlyingForklift",
+                    "Level",
+                    "Main",
+                    "Menu",
+                    "Part",
+                    "PartDisappear",
+                    "Player",
+                    "PlayerInputSynchronizer",
+                    "RedRobot",
+                    "Settings",
+                )
+                .map { "res://kotlin-src/$it.kt" }
+                .toSet()
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { it.split('\t').let { c -> c[0] to c[1] } }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "tps-demo Web proxy mappings incomplete: missing=${expectedSources - mappings.keys}"
+        }
+
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                var rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        text.replace(sourcePath, proxyPath)
+                    }
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+
+        // Default (Forward+) project: pin the Compatibility renderer the Web template runs.
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val forwardFeature = "config/features=PackedStringArray(\"4.7\")"
+        val renderingSection = "[rendering]"
+        check(stagedProjectText.contains(forwardFeature)) {
+            "tps-demo renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(renderingSection)) {
+            "tps-demo rendering section changed; update the Web staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    forwardFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    renderingSection,
+                    "$renderingSection\n\nrenderer/rendering_method=\"gl_compatibility\"",
+                )
+        )
+
+        // The menu's FogVolume needs the volumetric-fog shader, which the Compatibility
+        // renderer this export runs has no implementation for (it logs "shader type fog not
+        // supported"). Drop the node from the staged scene rather than ship a broken effect.
+        val stagedMenu = stagingDir.resolve("menu/menu.tscn")
+        val menuText = stagedMenu.readText()
+        val fogHeader = "[node name=\"FogVolume\" type=\"FogVolume\" parent=\"WorldEnvironment\"]"
+        check(menuText.contains(fogHeader)) {
+            "tps-demo menu FogVolume changed; update the Web staging transform"
+        }
+        val fogStart = menuText.indexOf(fogHeader)
+        val fogEnd = menuText.indexOf("\n[", fogStart + fogHeader.length)
+        check(fogEnd > fogStart) { "tps-demo menu FogVolume block is not delimited as expected" }
+        stagedMenu.writeText(menuText.removeRange(fogStart, fogEnd + 1))
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        shell.writeText(
+            shell.readText()
+                .replace(pageStart, "$pageStart\n      globalThis.KanamaWebMode = \"tpsdemo\";")
+        )
+    }
+}
+
 tasks.register("stageWebThirdpersonProject") {
     group = "verification"
     description = "Stages the third-person controller with generated Web proxies (Task 60f)."
@@ -2328,9 +2499,10 @@ fun stageTaskFor(demo: String): String =
         "thirdperson" -> "stageWebThirdpersonProject"
         "racing" -> "stageWebRacingProject"
         "citybuilder" -> "stageWebCitybuilderProject"
+        "tpsdemo" -> "stageWebTpsdemoProject"
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder|tpsdemo)"
             )
     }
 
@@ -2347,9 +2519,10 @@ fun stagingDirFor(demo: String): File =
         "thirdperson" -> webThirdpersonStaging.get().asFile
         "racing" -> webRacingStaging.get().asFile
         "citybuilder" -> webCitybuilderStaging.get().asFile
+        "tpsdemo" -> webTpsdemoStaging.get().asFile
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder|tpsdemo)"
             )
     }
 

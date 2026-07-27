@@ -119,4 +119,5 @@ class Label(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle()
     }
 }
 
-class Button(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
+/** Push/toggle button; the settings menus drive its pressed, disabled, and group state. */
+class Button(godotObject: GodotHandle) : BaseButton(godotObject)

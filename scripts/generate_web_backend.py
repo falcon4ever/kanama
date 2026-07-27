@@ -268,6 +268,67 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     223: {},
     224: {},
     225: {"ret": "browser"},
+    226: {},
+    227: {},
+    228: {},
+    229: {},
+    230: {},
+    231: {},
+    232: {},
+    233: {},
+    234: {},
+    235: {},
+    236: {},
+    237: {},
+    238: {},
+    239: {},
+    240: {},
+    241: {},
+    242: {},
+    243: {"ret": "indexed_browser"},
+    244: {"ret": "indexed_browser"},
+    245: {},
+    246: {"ret": "browser"},
+    247: {},
+    248: {},
+    249: {},
+    250: {"ret": "node"},
+    251: {},
+    252: {},
+    253: {},
+    254: {},
+    255: {},
+    256: {},
+    257: {},
+    258: {},
+    259: {},
+    260: {},
+    261: {},
+    262: {},
+    263: {},
+    264: {},
+    265: {},
+    266: {},
+    267: {},
+    268: {},
+    269: {},
+    270: {},
+    271: {},
+    272: {},
+    273: {},
+    274: {},
+    275: {},
+    276: {},
+    277: {},
+    278: {},
+    279: {},
+    280: {},
+    281: {},
+    282: {},
+    283: {},
+    284: {},
+    285: {},
+    286: {},
 }
 
 
@@ -736,7 +797,14 @@ def body_VECTOR3_ARG(calls):
         "when (descriptor.opcode) {",
     ]
     for c in queued:
-        lines.append(f"{c.opcode} -> webWriteVector3Snapshot(objectId, {_slot3(c.opcode)}, value)")
+        # Opcodes without a mirrored slot are write-only on the Kotlin side: their reads (where
+        # the corpus has any) go through a synchronous immediate rather than a snapshot.
+        if WEB_POLICY[c.opcode].get("vec3_slot") is None:
+            lines.append(f"{c.opcode} -> {{}}")
+        else:
+            lines.append(
+                f"{c.opcode} -> webWriteVector3Snapshot(objectId, {_slot3(c.opcode)}, value)"
+            )
     lines.append('else -> error("Unsupported Web Vector3 mutation opcode=${descriptor.opcode}")')
     lines.append("}")
     lines.append("}")
@@ -935,6 +1003,30 @@ def body_OBJECT_ARG(calls):
                 "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }",
                 "}",
             ]
+        elif op == 247:
+            lines += [
+                "247 -> {",
+                f"require(descriptor.executionMode == {_QUEUED})",
+                "// Duplicated materials return through the browser-object channel.",
+                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }",
+                "}",
+            ]
+        elif op == 257:
+            lines += [
+                "257 -> {",
+                f"require(descriptor.executionMode == {_QUEUED})",
+                "// The ButtonGroup was constructed via ClassDB.instantiate (NODE kind).",
+                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }",
+                "}",
+            ]
+        elif op == 284:
+            lines += [
+                "284 -> {",
+                f"require(descriptor.executionMode == {_QUEUED})",
+                "// Baked lightmap data arrives through ResourceLoader.load (RESOURCE kind).",
+                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+                "}",
+            ]
         else:
             raise GenerationError(f"OBJECT_ARG opcode {op} has no emitter arm")
     lines += [
@@ -987,6 +1079,18 @@ def body_LONG_RET_HANDLE(calls):
     indexed_node_ops = [
         c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "indexed_node"
     ]
+    indexed_browser_ops = [
+        c.opcode for c in calls if WEB_POLICY[c.opcode].get("ret") == "indexed_browser"
+    ]
+    for op in indexed_browser_ops:
+        # Resource-valued indexed reads ride the property-object channel (which allocates an
+        # OBJECT-kind slot), not the node-shaped indexed lookup: a Material is never a Node.
+        lines.append(f"{op} ->")
+        lines.append(
+            "registerReturnedBrowserObject("
+            "immediateWebPropertyObjectQuery(descriptor.opcode, receiver.webId(), value.toString())"
+            ")"
+        )
     for op in indexed_node_ops:
         lines.append(f"{op} ->")
         lines.append(
@@ -1604,6 +1708,117 @@ def body_STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST(calls):
     ]
 
 
+def body_STRINGNAME_LONG_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit '
+        "Godot's int32 ABI\"",
+        "}",
+        "commands.appendStringNameLongMutation(descriptor.opcode, receiver.webId(), name, value)",
+    ]
+
+
+def body_STRINGNAME_VECTOR2_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameVector2Mutation(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "name,",
+        "value.x,",
+        "value.y,",
+        ")",
+    ]
+
+
+def body_STRINGNAME_OBJECT_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameObjectMutation(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "name,",
+        "value.webId(),",
+        ")",
+    ]
+
+
+def body_STRINGNAME_RET_VECTOR2(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Both components ride the shared string channel (unit separator); non-Vector2",
+        "// properties resolve to the zero vector applier-side.",
+        "val packed = immediateWebStringQuery(descriptor.opcode, receiver.webId(), name)",
+        "val parts = packed.split('\u001f')",
+        "require(parts.size == 2) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} returned $packed"',
+        "}",
+        "return GodotVector2(parts[0].toFloat(), parts[1].toFloat())",
+    ]
+
+
+def body_NOARGS_RET_STRING(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        'return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")',
+    ]
+
+
+def body_STRINGNAME_RET_STRING(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return immediateWebStringQuery(descriptor.opcode, receiver.webId(), name)",
+    ]
+
+
+def body_DOUBLE_RET_DOUBLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(value.isFinite()) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} requires a finite Double"',
+        "}",
+        "commands.flush()",
+        "// Scaled by 1000 through the shared integer double-query transport.",
+        "return immediateWebDoubleQuery(descriptor.opcode, receiver.webId(), value) / 1000.0",
+    ]
+
+
+def body_VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(collisionMask in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "// Ray endpoints, mask, and the optional exclusion handle ride one query string",
+        "// (unit separator). The applier resolves the receiver's world, builds the query",
+        "// parameters, and turns the exclusion handle into an RID on its own side.",
+        "val packed =",
+        "listOf(",
+        "from.x.toString(),",
+        "from.y.toString(),",
+        "from.z.toString(),",
+        "to.x.toString(),",
+        "to.y.toString(),",
+        "to.z.toString(),",
+        "collisionMask.toString(),",
+        "(exclude?.webId() ?: 0).toString(),",
+        ")",
+        '.joinToString("\u001f")',
+        "return immediateWebStringQuery(descriptor.opcode, receiver.webId(), packed)",
+    ]
+
+
 # Signature: (params-after-descriptor/callSite, return-type). `receiver` present unless noted.
 SIGNATURES: dict[str, tuple[list[str], str]] = {
     "BOOL_RET_INT": (["receiver: GodotHandle", "value: Boolean"], "Int"),
@@ -1822,6 +2037,29 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["resource: GodotHandle", "path: String", "flags: Long"],
         "Long",
     ),
+    "STRINGNAME_LONG_ARG": (["receiver: GodotHandle", "name: String", "value: Long"], ""),
+    "STRINGNAME_VECTOR2_ARG": (
+        ["receiver: GodotHandle", "name: String", "value: GodotVector2"],
+        "",
+    ),
+    "STRINGNAME_OBJECT_ARG": (
+        ["receiver: GodotHandle", "name: String", "value: GodotHandle"],
+        "",
+    ),
+    "STRINGNAME_RET_VECTOR2": (["receiver: GodotHandle", "name: String"], "GodotVector2"),
+    "NOARGS_RET_STRING": (["receiver: GodotHandle"], "String"),
+    "STRINGNAME_RET_STRING": (["receiver: GodotHandle", "name: String"], "String"),
+    "DOUBLE_RET_DOUBLE": (["receiver: GodotHandle", "value: Double"], "Double"),
+    "VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING": (
+        [
+            "receiver: GodotHandle",
+            "from: GodotVector3",
+            "to: GodotVector3",
+            "collisionMask: Long",
+            "exclude: GodotHandle?",
+        ],
+        "String",
+    ),
     "STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST": (
         [
             "receiver: GodotHandle",
@@ -1950,6 +2188,14 @@ EMIT_ORDER = [
     "VECTOR2_RET_VECTOR3",
     "OBJECT_STRING_RET_LONG_SINGLETON",
     "STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST",
+    "STRINGNAME_LONG_ARG",
+    "STRINGNAME_VECTOR2_ARG",
+    "STRINGNAME_OBJECT_ARG",
+    "STRINGNAME_RET_VECTOR2",
+    "NOARGS_RET_STRING",
+    "STRINGNAME_RET_STRING",
+    "DOUBLE_RET_DOUBLE",
+    "VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING",
 ]
 
 

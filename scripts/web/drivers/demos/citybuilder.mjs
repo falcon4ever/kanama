@@ -254,7 +254,7 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeCitybuilder: ready.mode === "citybuilder",
-    protocol14: protocolVersion === 14,
+    protocol15: protocolVersion === 15,
     sceneScriptsReady:
       ready.builderReady >= 1 && ready.viewReady >= 1 && ready.audioReady >= 1 && ready.smokeReady >= 1,
     // Injected build placed a structure on the grid at the mouse-ray cell.

@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 14
+    const val PROTOCOL_VERSION = 15
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -1860,6 +1860,235 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 226 and target_object is CharacterBody3D:")
+    appendLine(
+      "\t\t\t(target_object as CharacterBody3D).up_direction = Vector3(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 228 and target_object is RigidBody3D:")
+    appendLine(
+      "\t\t\t(target_object as RigidBody3D).linear_velocity = Vector3(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 230 and target_object != null:")
+    appendLine(
+      "\t\t\tvar indexed_string_path := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine(
+      "\t\t\tvar indexed_string_value := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 12)))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.set_indexed(NodePath(indexed_string_path), indexed_string_value)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 231 and target_object != null:")
+    appendLine(
+      "\t\t\tvar indexed_long_path := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.set_indexed(NodePath(indexed_long_path), bytes.decode_s32(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 232 and target_object != null:")
+    appendLine(
+      "\t\t\tvar indexed_vec2_path := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.set_indexed(NodePath(indexed_vec2_path), Vector2(bytes.decode_float(offset + 12), bytes.decode_float(offset + 16)))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 236 and target_object is CPUParticles3D:")
+    appendLine(
+      "\t\t\t(target_object as CPUParticles3D).emitting = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 237 and target_object is CPUParticles3D:")
+    appendLine("\t\t\t(target_object as CPUParticles3D).restart(bytes.decode_s32(offset + 8) != 0)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 238 and target_object is CPUParticles3D:")
+    appendLine(
+      "\t\t\t(target_object as CPUParticles3D).emission_box_extents = Vector3(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12), bytes.decode_float(offset + 16))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 241 and target_object is Light3D:")
+    appendLine(
+      "\t\t\t(target_object as Light3D).shadow_enabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 242 and target_object is Environment:")
+    appendLine(
+      "\t\t\t(target_object as Environment).glow_enabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 247 and target_object is Material:")
+    appendLine("\t\t\tvar next_pass_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\t(target_object as Material).next_pass = null if next_pass_handle == 0 else _kanama_object_handles.get(next_pass_handle) as Material"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 248 and target_object is ShaderMaterial:")
+    appendLine(
+      "\t\t\tvar shader_param_name := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine(
+      "\t\t\t(target_object as ShaderMaterial).set_shader_parameter(StringName(shader_param_name), bytes.decode_double(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 20")
+    appendLine("\t\telif opcode == 251 and target_object is Control:")
+    appendLine("\t\t\t(target_object as Control).grab_focus()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 254 and target_object is BaseButton:")
+    appendLine(
+      "\t\t\t(target_object as BaseButton).button_pressed = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 256 and target_object is BaseButton:")
+    appendLine("\t\t\t(target_object as BaseButton).disabled = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 257 and target_object is BaseButton:")
+    appendLine("\t\t\tvar button_group_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\t(target_object as BaseButton).button_group = null if button_group_handle == 0 else _kanama_object_handles.get(button_group_handle) as ButtonGroup"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 258 and target_object is Button:")
+    appendLine(
+      "\t\t\t(target_object as Button).text = String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 260 and target_object is LineEdit:")
+    appendLine(
+      "\t\t\t(target_object as LineEdit).text = String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 261 and target_object is LineEdit:")
+    appendLine("\t\t\t(target_object as LineEdit).editable = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 262 and target_object is Range:")
+    appendLine("\t\t\t(target_object as Range).value = bytes.decode_double(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 264 and target_object is ConfigFile:")
+    appendLine(
+      "\t\t\t(target_object as ConfigFile).load(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 265 and target_object is ConfigFile:")
+    appendLine(
+      "\t\t\t(target_object as ConfigFile).save(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 267 and target_object is ConfigFile:")
+    appendLine(
+      "\t\t\tvar config_parts := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))).split(\"\\u001f\")"
+    )
+    appendLine("\t\t\tvar config_tagged: String = config_parts[2]")
+    appendLine("\t\t\tvar config_value: Variant = null")
+    appendLine("\t\t\tif config_tagged.begins_with(\"i:\"):")
+    appendLine("\t\t\t\tconfig_value = int(config_tagged.substr(2))")
+    appendLine("\t\t\telif config_tagged.begins_with(\"f:\"):")
+    appendLine("\t\t\t\tconfig_value = float(config_tagged.substr(2))")
+    appendLine("\t\t\telif config_tagged.begins_with(\"b:\"):")
+    appendLine("\t\t\t\tconfig_value = config_tagged.substr(2) == \"true\"")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\tconfig_value = config_tagged.substr(2)")
+    appendLine(
+      "\t\t\t(target_object as ConfigFile).set_value(config_parts[0], config_parts[1], config_value)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 273 and target_object is FastNoiseLite:")
+    appendLine("\t\t\t(target_object as FastNoiseLite).seed = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 274 and target_object is FastNoiseLite:")
+    appendLine(
+      "\t\t\t(target_object as FastNoiseLite).fractal_octaves = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 275 and target_object is FastNoiseLite:")
+    appendLine(
+      "\t\t\t(target_object as FastNoiseLite).fractal_lacunarity = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 277 and target_object is Node:")
+    appendLine(
+      "\t\t\t(target_object as Node).name = StringName(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 279 and target_object is Node:")
+    appendLine(
+      "\t\t\tvar propagate_name := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine(
+      "\t\t\t(target_object as Node).propagate_call(\"set\", [propagate_name, bytes.decode_s32(offset + 12) != 0])"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 280 and target_object != null:")
+    appendLine(
+      "\t\t\ttarget_object.call_deferred(StringName(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 281 and target_object != null:")
+    appendLine(
+      "\t\t\tvar deferred_method := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
+    )
+    appendLine("\t\t\tvar deferred_arg_handle := bytes.decode_s32(offset + 12)")
+    appendLine(
+      "\t\t\tvar deferred_arg: Object = null if deferred_arg_handle == 0 else _kanama_object_handles.get(deferred_arg_handle)"
+    )
+    appendLine("\t\t\ttarget_object.call_deferred(StringName(deferred_method), deferred_arg)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 283 and target_object is Camera3D:")
+    appendLine("\t\t\t(target_object as Camera3D).make_current()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 284 and target_object is LightmapGI:")
+    appendLine("\t\t\tvar light_data_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\t(target_object as LightmapGI).light_data = null if light_data_handle == 0 else _kanama_object_handles.get(light_data_handle) as LightmapGIData"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 285 and target_object is CollisionObject3D:")
+    appendLine(
+      "\t\t\t(target_object as CollisionObject3D).collision_layer = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 286 and target_object is CollisionObject3D:")
+    appendLine(
+      "\t\t\t(target_object as CollisionObject3D).collision_mask = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
     appendLine("\t\telse:")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
@@ -1871,9 +2100,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("func _kanama_immediate_call(args: Array) -> int:")
     appendLine("\tvar object_handle := int(args[0])")
     appendLine("\tvar result := -1")
-    appendLine("\tvar self_object: Object = self")
-    appendLine("\tif object_handle == _kanama_handle and self_object is Node:")
-    appendLine("\t\tresult = (self_object as Node).get_child_count(bool(args[1]))")
+    appendLine("\t# Any tracked node can be counted, not just this proxy's own: a script may walk")
+    appendLine("\t# the children of a node it looked up (the tps level counts spawn points).")
+    appendLine(
+      "\tvar count_target: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
+    )
+    appendLine("\tif count_target is Node:")
+    appendLine("\t\tresult = (count_target as Node).get_child_count(bool(args[1]))")
     appendLine("\t_kanama_bridge.recordImmediateChildCount(result)")
     appendLine("\treturn result")
     appendLine()
@@ -1967,6 +2200,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, node_3d.position.x, node_3d.position.y, node_3d.position.z, node_3d.rotation.x, node_3d.rotation.y, node_3d.rotation.z, node_3d.scale.x, node_3d.scale.y, node_3d.scale.z)"
     )
+    appendLine("\tif value is Control:")
+    appendLine("\t\t# Controls are CanvasItems but not Node2Ds: seed the mirrored canvas snapshot")
+    appendLine("\t\t# so modulate reads (HUD fades) resolve without a prior write.")
+    appendLine("\t\tvar control := value as Control")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, control.position.x, control.position.y, control.scale.x, control.scale.y, control.modulate.r, control.modulate.g, control.modulate.b, control.modulate.a, control.rotation)"
+    )
     appendLine("\tif value is RayCast3D:")
     appendLine("\t\tvar ray := value as RayCast3D")
     appendLine(
@@ -2036,6 +2276,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = (receiver as Node).duplicate()")
     appendLine("\telif opcode == 122 and receiver is RayCast3D:")
     appendLine("\t\tvalue = (receiver as RayCast3D).get_collider()")
+    appendLine("\telif opcode == 246 and receiver is Material:")
+    appendLine("\t\tvalue = (receiver as Material).next_pass")
+    appendLine("\telif opcode == 250 and receiver is SceneTree:")
+    appendLine("\t\tvalue = (receiver as SceneTree).root")
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
@@ -2170,6 +2414,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tif result_handle == 0:")
     appendLine("\t\t\t\t\t_kanama_object_handles[proposed_child] = child_node")
     appendLine("\t\t\t\t\tresult_handle = proposed_child")
+    appendLine("\t\t\t\t# Seed the mirrored transform snapshots like a node lookup does: the")
+    appendLine("\t\t\t\t# caller may read the child's transform straight away (spawn points).")
+    appendLine("\t\t\t\tif child_node is Node2D:")
+    appendLine("\t\t\t\t\tvar child_2d := child_node as Node2D")
+    appendLine(
+      "\t\t\t\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, child_2d.position.x, child_2d.position.y, child_2d.scale.x, child_2d.scale.y, child_2d.modulate.r, child_2d.modulate.g, child_2d.modulate.b, child_2d.modulate.a, child_2d.rotation)"
+    )
+    appendLine("\t\t\t\tif child_node is Node3D:")
+    appendLine("\t\t\t\t\tvar child_3d := child_node as Node3D")
+    appendLine(
+      "\t\t\t\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, child_3d.position.x, child_3d.position.y, child_3d.position.z, child_3d.rotation.x, child_3d.rotation.y, child_3d.rotation.z, child_3d.scale.x, child_3d.scale.y, child_3d.scale.z)"
+    )
     appendLine("\telif opcode == 166:")
     appendLine(
       "\t\tvar sweep_body: Object = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle)"
@@ -2721,6 +2977,142 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tfound_handles.append(str(found_handle))")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(found_handles))")
     appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 229 and value is Node3D:")
+    appendLine("\t\t\tvar ray_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar ray_from := Vector3(float(ray_parts[0]), float(ray_parts[1]), float(ray_parts[2]))"
+    )
+    appendLine(
+      "\t\t\tvar ray_to := Vector3(float(ray_parts[3]), float(ray_parts[4]), float(ray_parts[5]))"
+    )
+    appendLine("\t\t\tvar ray_exclude_handle := int(ray_parts[7])")
+    appendLine(
+      "\t\t\tvar ray_query := PhysicsRayQueryParameters3D.create(ray_from, ray_to, int(ray_parts[6]))"
+    )
+    appendLine("\t\t\tif ray_exclude_handle != 0:")
+    appendLine(
+      "\t\t\t\tvar ray_excluded: Object = self if ray_exclude_handle == _kanama_handle else _kanama_object_handles.get(ray_exclude_handle)"
+    )
+    appendLine("\t\t\t\tif ray_excluded is CollisionObject3D:")
+    appendLine("\t\t\t\t\tray_query.exclude = [(ray_excluded as CollisionObject3D).get_rid()]")
+    appendLine("\t\t\tvar ray_space := (value as Node3D).get_world_3d().direct_space_state")
+    appendLine("\t\t\tvar ray_hit: Dictionary = ray_space.intersect_ray(ray_query)")
+    appendLine("\t\t\tvar ray_result := PackedStringArray()")
+    appendLine("\t\t\tif ray_hit.is_empty():")
+    appendLine("\t\t\t\tray_result.append(\"0\")")
+    appendLine("\t\t\t\tray_result.append_array([\"0\", \"0\", \"0\", \"0\"])")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\tvar ray_point: Vector3 = ray_hit[\"position\"]")
+    appendLine(
+      "\t\t\t\t# The collider only ever gets compared against an already-tracked handle, so an"
+    )
+    appendLine(
+      "\t\t\t\t# untracked engine body (level geometry) reports 0 rather than minting a handle."
+    )
+    appendLine("\t\t\t\tvar ray_collider_handle := 0")
+    appendLine("\t\t\t\tvar ray_collider: Object = ray_hit.get(\"collider\")")
+    appendLine("\t\t\t\tif ray_collider != null:")
+    appendLine("\t\t\t\t\tif ray_collider.has_method(\"_kanama_ensure_created\"):")
+    appendLine(
+      "\t\t\t\t\t\tray_collider_handle = int(ray_collider.call(\"_kanama_ensure_created\"))"
+    )
+    appendLine("\t\t\t\t\tif ray_collider_handle == 0:")
+    appendLine("\t\t\t\t\t\tfor ray_existing in _kanama_object_handles:")
+    appendLine("\t\t\t\t\t\t\tif is_same(_kanama_object_handles[ray_existing], ray_collider):")
+    appendLine("\t\t\t\t\t\t\t\tray_collider_handle = int(ray_existing)")
+    appendLine("\t\t\t\t\t\t\t\tbreak")
+    appendLine("\t\t\t\tray_result.append(\"1\")")
+    appendLine("\t\t\t\tray_result.append(str(ray_point.x))")
+    appendLine("\t\t\t\tray_result.append(str(ray_point.y))")
+    appendLine("\t\t\t\tray_result.append(str(ray_point.z))")
+    appendLine("\t\t\t\tray_result.append(str(ray_collider_handle))")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(ray_result))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 233:")
+    appendLine("\t\t\tvar property_variant: Variant = value.get(StringName(String(args[2])))")
+    appendLine(
+      "\t\t\tvar property_vector: Vector2 = property_variant if property_variant is Vector2 else Vector2.ZERO"
+    )
+    appendLine(
+      "\t\t\t_kanama_bridge.recordImmediateStringResult(\"%s\\u001f%s\" % [property_vector.x, property_vector.y])"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 240 and value is CPUParticles3D:")
+    appendLine("\t\t\tresult = int(round((value as CPUParticles3D).lifetime * 1000.0))")
+    appendLine("\t\telif opcode == 249 and value is Timer:")
+    appendLine("\t\t\tresult = int(round((value as Timer).time_left * 1000.0))")
+    appendLine("\t\telif opcode == 263 and value is Range:")
+    appendLine("\t\t\tresult = int(round((value as Range).value * 1000.0))")
+    appendLine("\t\telif opcode == 243 and value is MeshInstance3D:")
+    appendLine("\t\t\tvar override_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar override_material := (value as MeshInstance3D).get_surface_override_material(int(override_parts[0]))"
+    )
+    appendLine("\t\t\tif override_material != null:")
+    appendLine("\t\t\t\tresult = int(override_parts[1])")
+    appendLine("\t\t\t\t_kanama_object_handles[result] = override_material")
+    appendLine("\t\telif opcode == 244 and value is Mesh:")
+    appendLine("\t\t\tvar surface_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar surface_material := (value as Mesh).surface_get_material(int(surface_parts[0]))"
+    )
+    appendLine("\t\t\tif surface_material != null:")
+    appendLine("\t\t\t\tresult = int(surface_parts[1])")
+    appendLine("\t\t\t\t_kanama_object_handles[result] = surface_material")
+    appendLine("\t\telif opcode == 245 and value is Mesh:")
+    appendLine("\t\t\tvar set_surface_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tvar set_surface_handle := int(set_surface_parts[1])")
+    appendLine(
+      "\t\t\tvar set_surface_material: Material = null if set_surface_handle == 0 else _kanama_object_handles.get(set_surface_handle) as Material"
+    )
+    appendLine(
+      "\t\t\t(value as Mesh).surface_set_material(int(set_surface_parts[0]), set_surface_material)"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 255 and value is BaseButton:")
+    appendLine("\t\t\tresult = int((value as BaseButton).button_pressed)")
+    appendLine("\t\telif opcode == 259 and value is LineEdit:")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as LineEdit).text))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 266 and value is ConfigFile:")
+    appendLine("\t\t\tvar has_key_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = int((value as ConfigFile).has_section_key(has_key_parts[0], has_key_parts[1]))"
+    )
+    appendLine("\t\telif opcode == 268 and value is ConfigFile:")
+    appendLine("\t\t\tvar get_value_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar config_read: Variant = (value as ConfigFile).get_value(get_value_parts[0], get_value_parts[1])"
+    )
+    appendLine("\t\t\tvar config_read_tagged := \"n:\"")
+    appendLine("\t\t\tif config_read is bool:")
+    appendLine("\t\t\t\tconfig_read_tagged = \"b:true\" if config_read else \"b:false\"")
+    appendLine("\t\t\telif config_read is int:")
+    appendLine("\t\t\t\tconfig_read_tagged = \"i:%d\" % config_read")
+    appendLine("\t\t\telif config_read is float:")
+    appendLine("\t\t\t\tconfig_read_tagged = \"f:%s\" % config_read")
+    appendLine("\t\t\telif config_read != null:")
+    appendLine("\t\t\t\tconfig_read_tagged = \"s:%s\" % config_read")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(config_read_tagged)")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 269:")
+    appendLine("\t\t\tEngine.max_fps = int(String(args[2]))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 270:")
+    appendLine("\t\t\tresult = int(Engine.get_frames_per_second())")
+    appendLine("\t\telif opcode == 271:")
+    appendLine("\t\t\tresult = int(OS.get_static_memory_usage())")
+    appendLine("\t\telif opcode == 272:")
+    appendLine(
+      "\t\t\tresult = int(round(Input.get_action_strength(StringName(String(args[2]))) * 1000.0))"
+    )
+    appendLine("\t\telif opcode == 276 and value is Noise:")
+    appendLine("\t\t\tresult = int(round((value as Noise).get_noise_1d(float(args[2])) * 1000.0))")
+    appendLine("\t\telif opcode == 278 and value is Node:")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as Node).name))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 282:")
+    appendLine("\t\t\tresult = int(value.has_signal(StringName(String(args[2]))))")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -2737,6 +3129,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as InputEventMouseMotion).relative")
     appendLine("\telif opcode == 220 and value is Viewport:")
     appendLine("\t\tresult = (value as Viewport).get_mouse_position()")
+    appendLine("\telif opcode == 252 and value is Control:")
+    appendLine("\t\tresult = (value as Control).position")
+    appendLine("\telif opcode == 253 and value is Control:")
+    appendLine("\t\tresult = (value as Control).size")
     appendLine("\t_kanama_bridge.recordImmediateVector2(result.x, result.y)")
     appendLine("\treturn 1")
     appendLine()
@@ -2775,6 +3171,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\telif opcode == 197 and value is RigidBody3D:")
     appendLine("\t\tresult = (value as RigidBody3D).angular_velocity")
+    appendLine("\telif opcode == 227 and value is PhysicsBody3D:")
+    appendLine("\t\tresult = (value as PhysicsBody3D).get_gravity()")
+    appendLine("\telif opcode == 234 and value is AnimationMixer:")
+    appendLine("\t\tresult = (value as AnimationMixer).get_root_motion_position()")
+    appendLine("\telif opcode == 235 and value is AnimationMixer:")
+    appendLine(
+      "\t\t# Web adaptation: the Quaternion crosses as euler angles and the wrapper recomposes it."
+    )
+    appendLine("\t\tresult = (value as AnimationMixer).get_root_motion_rotation().get_euler()")
+    appendLine("\telif opcode == 239 and value is CPUParticles3D:")
+    appendLine("\t\tresult = (value as CPUParticles3D).emission_box_extents")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()

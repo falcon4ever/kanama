@@ -104,7 +104,7 @@ open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
 class TextureButton(godotObject: GodotHandle) : BaseButton(godotObject)
 
 /** Crosshair rect (FPS HUD): texture is write-only on Web. */
-class TextureRect(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle()) {
+class TextureRect(godotObject: GodotHandle) : Control(godotObject) {
   var texture: Texture2D?
     get() = unsupportedWebGameplayFamily("TextureRect.get_texture")
     set(value) {
