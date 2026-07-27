@@ -5,6 +5,39 @@ All notable user-facing changes will be recorded here.
 This project uses a Keep a Changelog-style format and follows semantic
 versioning once public releases begin.
 
+## Unreleased
+
+### Fixed
+
+- Object-typed Kotlin exports now carry `PropertyInfo.class_name` (task 64,
+  follow-up to issue #106): a `@ScriptProperty var x: SmokeResource?` (or an
+  engine wrapper slot like `AudioStream?`) previously reported an empty
+  `class_name`, so typed GDScript degraded `node.smoke_resource` to plain
+  `Object`/`Resource` (no safe static typing or completion). Both metadata
+  paths emit it now — the generated instance property list
+  (`ClassDB.PropertySpec` → `GDExtensionPropertyInfo`) and the script-level
+  dictionaries (`PropertyInfo.from_dict`). Also replaces the always-true
+  `_is_placeholder_fallback_enabled` stub with GDScript-parity semantics
+  (fallback only for a script that failed to bind), and documents why the
+  remaining constant-returning Script/ScriptLanguage virtuals are correct as
+  constants. Runtime smoke asserts `class_name` on both paths plus a statically
+  typed member read.
+- GDScript can now statically type against Kanama `@GlobalClass` script classes
+  (issue #106): `@export var x: CustomResource` plus
+  `var copy: CustomResource = x` no longer fails with "Cannot assign a value of
+  type res://CustomResource.kt … with specified type res://CustomResource.kt".
+  The `.kt` resource loader pre-set the script's path inside `_load`, which made
+  the engine's post-load `set_path()` early-return without registering the
+  script in ResourceCache — so every `load()` of the same `.kt` produced a
+  distinct Script object, and GDScript's analyzer (which compares script types
+  by identity) rejected the class as its own type. The loader now leaves path
+  assignment to ResourceLoader, and `KanamaScript` implements
+  `_inherits_script` (same script object, or same bound Kotlin class) instead
+  of always answering `false`, so typed containers such as
+  `Array[CustomResource]` also match. Runtime smoke now pins the reported
+  shape: typed member + typed local assignment, `is` check, load identity, and
+  a property round-trip.
+
 ## 0.4.0 - 2026-07-24
 
 ### Added

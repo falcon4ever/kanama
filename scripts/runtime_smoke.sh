@@ -154,6 +154,14 @@ check "kt script dictionary nullable_value null_preserved=true wrong_nulled=true
 # ClassDB pair (can_instantiate=true, instantiate=null: script classes aren't engine classes),
 # and the supported base-Resource + set_script construction recipe works.
 check "kt script classdb_parity kanama_can=true kanama_instantiate_null=true gdscript_can=true gdscript_instantiate_null=true recipe_works=true"
+# issue #106 — GDScript static typing against a Kanama @GlobalClass: same_load proves the
+# loaded .kt Script is ResourceCache-cached (one object per path), and the typed member/local
+# assignments plus `is` prove the analyzer and VM accept the class as its own type. The loader
+# must not pre-set the script path in _load; doing so regresses all five to a parse error.
+# task 64 — PropertyInfo.class_name on object-typed Kotlin exports, both metadata paths
+# (instance PropertySpec structs and script-level dictionaries), plus a statically typed
+# member read (`var m: SmokeResource = hs.smoke_resource` on a typed HelloScript var).
+check "kt script typed_global_class same_load=true member_null=true typed=true is_check=true roundtrip=true member_matches=true instance_class_name=true script_class_name=true"
 check "Mathf lerp=2\\.5 clamp=10 wrap=1 approx=true round=3 lerpf=2\\.5 clampf=10\\.0 sinf=0\\.0 sqrtf=3\\.0"
 check "Generated name constants ok=true"
 check "ProjectSettings string_list=alpha\\|beta"

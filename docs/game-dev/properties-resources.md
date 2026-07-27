@@ -339,7 +339,9 @@ class Weapon(val godotObject: MemorySegment) {
 
 `@GlobalClass` registers `Weapon` in the editor's global class list: it shows
 up in the Create New Resource dialog, its `.tres` instances match typed export
-slots, and another script can export `Weapon?` or `List<Weapon>` — Kanama
+slots, GDScript can statically type against it (`@export var w: Weapon`,
+`var copy: Weapon = w`, `w is Weapon`), and another script can export
+`Weapon?` or `List<Weapon>` — Kanama
 resolves the live Kotlin resource script instances when reading the property;
 values (including nested resource slots like `swingSound`) round-trip through
 `.tscn`/`.tres` storage.

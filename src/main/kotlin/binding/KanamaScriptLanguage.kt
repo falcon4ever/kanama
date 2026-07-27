@@ -561,6 +561,12 @@ object KanamaScriptLanguage {
       getCommentDelimitersNameValue -> commentDelimitersStub
       getDocCommentDelimitersNameValue -> docCommentDelimitersStub
       getStringDelimitersNameValue -> stringDelimitersStub
+      // task 64 — deliberately-constant language surfaces, not omissions: no
+      // script templates or GDScript-style public functions/annotations/
+      // constants to advertise (Kanama scripts are compiled Kotlin), no
+      // in-engine debugger locals/members/globals or profiler integration
+      // (empty dict / 0 rows = "nothing recorded"), and the external editor is
+      // not overridden (the kanama_tools plugin handles .kt editing flows).
       getBuiltInTemplatesNameValue,
       getPublicFunctionsNameValue,
       getPublicAnnotationsNameValue -> emptyArrayStub

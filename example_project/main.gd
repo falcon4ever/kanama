@@ -1,5 +1,10 @@
 extends Node
 
+# issue #106 — the exact reported shape: an exported member statically typed as a
+# Kanama @GlobalClass. Regressing the loader's ResourceCache registration makes
+# scripts like this fail to parse, which kills every check in this file.
+@export var typed_custom_res: SmokeResource = null
+
 var _kanama_smoke_reload_requested := false
 
 func _on_pinged(value: int) -> void:
@@ -70,6 +75,7 @@ func _ready() -> void:
 		_kanama_dictionary_nullable_value_smoke()
 		_kanama_malformed_property_matrix_smoke()
 		_kanama_classdb_script_class_smoke()
+		_kanama_typed_global_class_smoke()
 		var replace_smoke_scene = $ScriptNode.replace_smoke_scene()
 		print("[kanama:gd] kt script replace_smoke_scene = ", replace_smoke_scene)
 		if not replace_smoke_scene:
@@ -393,6 +399,50 @@ func _kanama_classdb_script_class_smoke() -> void:
 	if not (kanama_can and kanama_instantiate_null and gdscript_can \
 			and gdscript_instantiate_null and recipe_works):
 		push_error("Kanama ClassDB script-class parity failed")
+
+func _kanama_typed_global_class_smoke() -> void:
+	# issue #106 — GDScript static typing against a Kanama @GlobalClass. The loader must
+	# leave path assignment to ResourceLoader: pre-setting the path kept every load() of
+	# the same .kt out of ResourceCache, so the analyzer saw a distinct Script object per
+	# reference and rejected `var t: SmokeResource = value` ("Cannot assign a value of
+	# type res://SmokeResource.kt ... with specified type res://SmokeResource.kt").
+	var same_load := load("res://SmokeResource.kt") == load("res://SmokeResource.kt")
+	var member_copy: SmokeResource = typed_custom_res  # parse-time member shape (stays null)
+	var built = ClassDB.instantiate("Resource")
+	built.set_script(load("res://SmokeResource.kt"))
+	# Runtime typed assignment + `is` both walk the same script identity the analyzer uses.
+	var typed: SmokeResource = built
+	typed.payload = "issue106"
+	var is_check := built is SmokeResource
+	var roundtrip = typed.payload == "issue106"
+	# task 64 — PropertyInfo.class_name on Kotlin object-typed exports. Both metadata
+	# paths must carry it: the instance property list (generated PropertySpec ->
+	# GDExtensionPropertyInfo) and the script-level list (generated dictionaries ->
+	# PropertyInfo.from_dict). GDScript's analyzer types `hs.smoke_resource` from
+	# class_name; empty degraded it to plain Resource in typed GDScript.
+	var hs: HelloScript = $ScriptNode
+	hs.smoke_resource = typed
+	var typed_member: SmokeResource = hs.smoke_resource
+	var member_matches := typed_member == typed
+	hs.smoke_resource = null
+	var instance_class_name := ""
+	for p in ($ScriptNode as Node).get_property_list():
+		if p.name == "smoke_resource":
+			instance_class_name = str(p.get("class_name", ""))
+	var script_class_name := ""
+	for p in load("res://HelloScript.kt").get_script_property_list():
+		if p.name == "smoke_resource":
+			script_class_name = str(p.get("class_name", ""))
+	print("[kanama:gd] kt script typed_global_class same_load=", same_load,
+		" member_null=", member_copy == null, " typed=", typed != null,
+		" is_check=", is_check, " roundtrip=", roundtrip,
+		" member_matches=", member_matches,
+		" instance_class_name=", instance_class_name == "SmokeResource",
+		" script_class_name=", script_class_name == "SmokeResource")
+	if not (same_load and member_copy == null and typed != null and is_check and roundtrip \
+			and member_matches and instance_class_name == "SmokeResource" \
+			and script_class_name == "SmokeResource"):
+		push_error("Kanama typed global class smoke failed")
 
 func _kanama_dictionary_nullable_value_smoke() -> void:
 	$ScriptNode.smoke_nullable_scalar_map = {"a": null, "b": 2}

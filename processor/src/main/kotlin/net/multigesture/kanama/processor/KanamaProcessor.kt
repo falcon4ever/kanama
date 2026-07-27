@@ -2043,6 +2043,10 @@ private const val PROPERTY_USAGE_CATEGORY = 128
 private const val PROPERTY_USAGE_SUBGROUP = 256
 private const val PROPERTY_USAGE_EDITOR = 4
 private const val PROPERTY_HINT_TOOL_BUTTON = 39
+// task 64 — mirrored from the model-builder companion for the emitter scope;
+// the hints whose hint_string is exactly the property's class name.
+private const val PROPERTY_HINT_RESOURCE_TYPE = 17
+private const val PROPERTY_HINT_NODE_TYPE = 34
 
 private val kotlinStringLiteralPattern = "\"(?:\\\\.|[^\"\\\\])*\""
 
@@ -3659,8 +3663,26 @@ internal class ScriptCodeEmitter(
 
   private fun scriptPropertySpecExpression(p: ScriptPropertyModel): String {
     val declaredType = scriptPropertyDeclaredVariantType(p)
-    return "ClassDB.PropertySpec(\"${kotlinStringLiteral(p.godotName)}\", VariantType.$declaredType, ${p.hint}, \"${kotlinStringLiteral(p.hintString)}\", ${p.usage})"
+    val className = scriptPropertyClassName(p)
+    val classNameArg = if (className.isEmpty()) "" else ", \"${kotlinStringLiteral(className)}\""
+    return "ClassDB.PropertySpec(\"${kotlinStringLiteral(p.godotName)}\", VariantType.$declaredType, ${p.hint}, \"${kotlinStringLiteral(p.hintString)}\", ${p.usage}$classNameArg)"
   }
+
+  // task 64 — PropertyInfo.class_name for object-typed exports. GDScript's
+  // analyzer resolves a property's static type from class_name (hint_string is
+  // inspector-only); leaving it empty typed Kotlin-exported object properties
+  // as plain Object/Resource in typed GDScript. For RESOURCE_TYPE/NODE_TYPE
+  // hints the hint string is exactly the class name (engine wrapper class or
+  // @GlobalClass simple name), so reuse it.
+  private fun scriptPropertyClassName(p: ScriptPropertyModel): String =
+    if (
+      p.type == TypeMapping.OBJECT &&
+        (p.hint == PROPERTY_HINT_RESOURCE_TYPE || p.hint == PROPERTY_HINT_NODE_TYPE)
+    ) {
+      p.hintString
+    } else {
+      ""
+    }
 
   private fun toolButtonPropertySpecExpression(button: ToolButtonModel): String =
     "ClassDB.PropertySpec(\"${kotlinStringLiteral(button.propertyName)}\", VariantType.CALLABLE, $PROPERTY_HINT_TOOL_BUTTON, \"${kotlinStringLiteral(button.hintString)}\", $PROPERTY_USAGE_EDITOR)"
@@ -3670,7 +3692,10 @@ internal class ScriptCodeEmitter(
 
   private fun scriptPropertyDictionaryExpression(p: ScriptPropertyModel): String {
     val declaredType = scriptPropertyDeclaredVariantType(p)
-    return "mapOf(\"name\" to \"${kotlinStringLiteral(p.godotName)}\", \"type\" to VariantType.$declaredType.id, \"hint\" to ${p.hint}, \"hint_string\" to \"${kotlinStringLiteral(p.hintString)}\", \"usage\" to ${p.usage})"
+    val className = scriptPropertyClassName(p)
+    val classNameEntry =
+      if (className.isEmpty()) "" else ", \"class_name\" to \"${kotlinStringLiteral(className)}\""
+    return "mapOf(\"name\" to \"${kotlinStringLiteral(p.godotName)}\", \"type\" to VariantType.$declaredType.id, \"hint\" to ${p.hint}, \"hint_string\" to \"${kotlinStringLiteral(p.hintString)}\", \"usage\" to ${p.usage}$classNameEntry)"
   }
 
   private fun toolButtonPropertyDictionaryExpression(button: ToolButtonModel): String =

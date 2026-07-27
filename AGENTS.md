@@ -119,6 +119,17 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
 - Do not claim platform support unless the matching smoke path has passed.
 - Do not treat package zips as proof of exported-game support; desktop kits
   validate editor/runtime onboarding.
+- In GDExtension callbacks, never pre-empt work the engine performs after the
+  callback returns — path assignment, ResourceCache registration, ownership
+  transfer. Precedent: issue #106, where the `.kt` loader pre-set the script
+  path inside `_load`, the engine's registering `set_path()` early-returned,
+  and every load minted a distinct Script ("cannot assign X to X").
+- When adding an engine-facing surface (Script/ScriptLanguage virtual, property
+  metadata field, loader behavior), pair the Kanama fixture with the equivalent
+  GDScript construct in a smoke parity probe (the
+  `_kanama_classdb_script_class_smoke` / `_kanama_typed_global_class_smoke`
+  pattern), and never leave a virtual returning a constant without a comment
+  arguing why the constant is correct.
 
 ## Looks Wrong But Isn't
 

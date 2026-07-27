@@ -203,9 +203,9 @@ class KanamaScript(
     private lateinit var getMembersStub: MemorySegment
     private lateinit var instanceCreateStub: MemorySegment
     private lateinit var isToolStub: MemorySegment
-    private lateinit var boolTrueStub: MemorySegment
+    private lateinit var isPlaceholderFallbackEnabledStub: MemorySegment
     private lateinit var boolFalseStub:
-      MemorySegment // shared by is_tool / is_abstract / is_placeholder_fallback_enabled
+      MemorySegment // shared by _editor_can_reload_from_file / _is_abstract
     private lateinit var getDocClassNameStub: MemorySegment
     private lateinit var emptyArrayStub: MemorySegment
     private lateinit var emptyDictionaryStub: MemorySegment
@@ -279,6 +279,11 @@ class KanamaScript(
       val virtualDesc = FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS)
 
       isValidStub = Upcalls.stub(KanamaScript::class.java, "callIsValid", virtualType, virtualDesc)
+      // task 64 — always false is engine parity, not an omission: the Script base
+      // class hard-codes editor_can_reload_from_file() to false ("Reloading is
+      // handled in a special way", core script_language.h) because script reloads
+      // flow through the script language, not generic Resource reload-from-file.
+      // Kanama's reload path is the build/sync pipeline (see the hot-reload smokes).
       editorCanReloadFromFileStub =
         Upcalls.stub(KanamaScript::class.java, "callBoolFalse", virtualType, virtualDesc)
       canInstantiateStub =
@@ -292,7 +297,7 @@ class KanamaScript(
       getGlobalNameStub =
         Upcalls.stub(KanamaScript::class.java, "callGetGlobalName", virtualType, virtualDesc)
       inheritsScriptStub =
-        Upcalls.stub(KanamaScript::class.java, "callBoolFalse", virtualType, virtualDesc)
+        Upcalls.stub(KanamaScript::class.java, "callInheritsScript", virtualType, virtualDesc)
       instanceHasStub =
         Upcalls.stub(KanamaScript::class.java, "callInstanceHas", virtualType, virtualDesc)
       hasSourceCodeStub =
@@ -323,8 +328,13 @@ class KanamaScript(
       getMembersStub =
         Upcalls.stub(KanamaScript::class.java, "callGetMembers", virtualType, virtualDesc)
       isToolStub = Upcalls.stub(KanamaScript::class.java, "callIsTool", virtualType, virtualDesc)
-      boolTrueStub =
-        Upcalls.stub(KanamaScript::class.java, "callBoolTrue", virtualType, virtualDesc)
+      isPlaceholderFallbackEnabledStub =
+        Upcalls.stub(
+          KanamaScript::class.java,
+          "callIsPlaceholderFallbackEnabled",
+          virtualType,
+          virtualDesc,
+        )
       boolFalseStub =
         Upcalls.stub(KanamaScript::class.java, "callBoolFalse", virtualType, virtualDesc)
       getDocClassNameStub =
@@ -953,6 +963,9 @@ class KanamaScript(
         getMembersNameValue -> getMembersStub
         instanceCreateNameValue -> instanceCreateStub
         getDocClassNameNameValue -> getDocClassNameStub
+        // task 64 — optional editor metadata, empty by design: Kanama does not
+        // generate in-editor class documentation or per-class icons. The editor
+        // treats an empty doc array / icon path as "none" (no error path).
         getDocumentationNameValue -> emptyArrayStub
         getClassIconPathNameValue -> emptyStringStub
         hasMethodNameValue -> hasMethodStub
@@ -967,8 +980,12 @@ class KanamaScript(
         getScriptSignalListNameValue -> getScriptSignalListStub
         getMemberLineNameValue -> getMemberLineStub
         isToolNameValue -> isToolStub
+        // task 64 — Kanama has no abstract script classes (no annotation surface
+        // declares one), matching the is_abstract=false the language reports in
+        // its _get_global_class_name dictionary. Revisit both together if
+        // abstract @ScriptClass support is ever added.
         isAbstractNameValue -> boolFalseStub
-        isPlaceholderFallbackEnabledNameValue -> boolTrueStub
+        isPlaceholderFallbackEnabledNameValue -> isPlaceholderFallbackEnabledStub
         else -> MemorySegment.NULL
       }
     }
@@ -990,6 +1007,11 @@ class KanamaScript(
 
     @JvmStatic
     fun callGetBaseScript(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      // task 64 — always NULL by design: Kanama scripts have no script-to-script
+      // inheritance (a @ScriptClass attaches directly to an engine class, reported
+      // via _get_instance_base_type). The analyzer/VM walk get_base_script() when
+      // comparing script types, so a base chain must never be invented here;
+      // same-type equality is answered by _inherits_script (issue #106).
       rRet.reinterpret(8).set(ADDRESS, 0, MemorySegment.NULL)
     }
 
@@ -1013,6 +1035,30 @@ class KanamaScript(
       val script = ObjectRegistry.get(handle) as? KanamaScript
       val name = script?.globalName ?: ""
       GodotStrings.initStringName(rRet.reinterpret(8), name)
+    }
+
+    @JvmStatic
+    fun callInheritsScript(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      // issue #106 — _inherits_script(script: Script) -> bool. Kanama has no
+      // script-to-script inheritance, so the relation is "same script type":
+      // the same Script object, or another KanamaScript bound to the same
+      // Kotlin class. Typed containers (Array[X]) and the editor consult this.
+      val self = ObjectRegistry.get(instance.address()) as? KanamaScript
+      // Object* argument arrives as type-ptr (Object**); dereference twice.
+      val objectTypePtr = args.reinterpret(8).get(ADDRESS, 0)
+      val otherObject =
+        if (objectTypePtr.address() != 0L) {
+          objectTypePtr.reinterpret(8).get(ADDRESS, 0)
+        } else {
+          MemorySegment.NULL
+        }
+      val other = if (otherObject.address() != 0L) byObjectAddress(otherObject.address()) else null
+      val inherits =
+        self != null &&
+          other != null &&
+          (other === self ||
+            (self.kotlinClassName.isNotEmpty() && self.kotlinClassName == other.kotlinClassName))
+      rRet.reinterpret(1).set(JAVA_BYTE, 0, if (inherits) 1.toByte() else 0.toByte())
     }
 
     @JvmStatic
@@ -1324,8 +1370,23 @@ class KanamaScript(
     }
 
     @JvmStatic
-    fun callBoolTrue(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-      rRet.reinterpret(1).set(JAVA_BYTE, 0, 1.toByte())
+    fun callIsPlaceholderFallbackEnabled(
+      instance: MemorySegment,
+      args: MemorySegment,
+      rRet: MemorySegment,
+    ) {
+      // task 64 — mirror GDScript's semantics: placeholder fallback is the
+      // data-preservation mode for a *broken* script (GDScript enables it only
+      // when compilation fails), so report it exactly when this script failed to
+      // bind a Kotlin template (no factory). A healthy non-@Tool script in the
+      // editor still gets a normal placeholder with default-value behavior.
+      // Today the engine only consults this through its own
+      // PlaceHolderScriptInstance, which extension scripts never use (Kanama
+      // supplies its own placeholder via _placeholder_instance_create), so the
+      // value is inert — this keeps it honest if that ever changes.
+      val script = ObjectRegistry.get(instance.address()) as? KanamaScript
+      val broken = script?.factory == null
+      rRet.reinterpret(1).set(JAVA_BYTE, 0, if (broken) 1.toByte() else 0.toByte())
     }
 
     /**
