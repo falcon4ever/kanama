@@ -431,4 +431,110 @@ class WebScriptCodeEmitterTest {
     assertTrue(registry.contains("(script as Main).onTilePressed(Vector2i(x, y))"))
     assertTrue(registry.contains("(script as Tile).inputEvent("))
   }
+
+  // ---------- Task 66a: virtuals the Web backend does not dispatch ----------
+
+  private fun scriptWith(vararg virtuals: VirtualModel) =
+    ScriptModel(
+      simpleName = "Player",
+      fqName = "net.multigesture.kanama.web.Player",
+      attachTo = "CharacterBody3D",
+      isTool = false,
+      isGlobalClass = false,
+      properties = emptyList(),
+      toolButtons = emptyList(),
+      virtuals = virtuals.toList(),
+      methods = emptyList(),
+      signals = emptyList(),
+    )
+
+  private val webOptions = mapOf("kanamaRuntimeTarget" to "web")
+
+  @Test
+  fun rejectsEnterTreeOnAWebTargetNamingTheScriptAndTheFix() {
+    val model = scriptWith(VirtualModel("_enter_tree", "enterTree", "enterTree"))
+
+    val errors = WebScriptCodeEmitter.undispatchedVirtualErrors(model, webOptions)
+
+    assertEquals(1, errors.size, "expected exactly one error, got $errors")
+    val error = errors.single()
+    assertTrue(error.contains("Player.enterTree"), error)
+    assertTrue(error.contains("_enter_tree"), error)
+    assertTrue(error.contains("@OnReady"), error)
+  }
+
+  @Test
+  fun acceptsEnterTreeOnJvmAndIosTargets() {
+    val model = scriptWith(VirtualModel("_enter_tree", "callEnterTree", "enterTree"))
+
+    // JVM and iOS leave `kanamaRuntimeTarget` unset (only web-runtime sets it); an explicit
+    // non-web value must not trip the gate either.
+    assertTrue(WebScriptCodeEmitter.undispatchedVirtualErrors(model, emptyMap()).isEmpty())
+    assertTrue(
+      WebScriptCodeEmitter.undispatchedVirtualErrors(model, mapOf("kanamaRuntimeTarget" to "ios"))
+        .isEmpty()
+    )
+    assertFalse(WebScriptCodeEmitter.isWebTarget(emptyMap()))
+    assertFalse(WebScriptCodeEmitter.isWebTarget(mapOf("kanamaRuntimeTarget" to "ios")))
+    assertTrue(WebScriptCodeEmitter.isWebTarget(webOptions))
+  }
+
+  @Test
+  fun rejectsEveryOtherUndispatchedVirtualOnAWebTarget() {
+    val model =
+      scriptWith(
+        VirtualModel("_ready", "ready", "ready"),
+        VirtualModel(
+          "_shortcut_input",
+          "shortcutInput",
+          "shortcutInput",
+          args =
+            listOf(ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")),
+        ),
+      )
+
+    val errors = WebScriptCodeEmitter.undispatchedVirtualErrors(model, webOptions)
+
+    assertEquals(1, errors.size, "only the undispatched virtual may be rejected, got $errors")
+    assertTrue(errors.single().contains("Player.shortcutInput"), errors.single())
+    assertTrue(errors.single().contains("_shortcut_input"), errors.single())
+  }
+
+  @Test
+  fun everyDispatchedVirtualReachesTheGeneratedRegistry() {
+    val eventArg =
+      listOf(ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject"))
+    val deltaArg = listOf(ArgModel("delta", TypeMapping.FLOAT))
+    val model =
+      scriptWith(
+        VirtualModel("_ready", "ready", "onReady"),
+        VirtualModel("_process", "process", "onProcess", args = deltaArg),
+        VirtualModel("_physics_process", "physicsProcess", "onPhysicsProcess", args = deltaArg),
+        VirtualModel("_draw", "draw", "onDraw"),
+        VirtualModel("_exit_tree", "exitTree", "onExitTree"),
+        VirtualModel("_input", "input", "onInput", args = eventArg),
+        VirtualModel("_unhandled_input", "unhandledInput", "onUnhandledInput", args = eventArg),
+      )
+
+    // The claim behind the gate: everything in DISPATCHED_VIRTUALS really is crossed into
+    // Kotlin, so a virtual outside the set is the only silent drop.
+    assertTrue(
+      WebScriptCodeEmitter.undispatchedVirtualErrors(model, webOptions).isEmpty(),
+      "DISPATCHED_VIRTUALS must cover this fixture",
+    )
+    assertEquals(
+      WebScriptCodeEmitter.DISPATCHED_VIRTUALS,
+      model.virtuals.map { it.virtualName }.toSet(),
+      "fixture must exercise exactly the dispatched set",
+    )
+
+    val registry =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://Player.kt"))).registrySource()
+    for (virtual in model.virtuals) {
+      assertTrue(
+        registry.contains("(script as Player).${virtual.kotlinMethodName}("),
+        "${virtual.virtualName} is listed as dispatched but never reaches the script",
+      )
+    }
+  }
 }

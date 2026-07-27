@@ -182,6 +182,11 @@ rejection, console-error checks, and a protocol-version match.
   swipe in the automated gate (coordinates and Godot picking are correct; the
   drag-to-swipe is a WebDriver synthesis limitation). The automated Safari gate
   covers Bunnymark; Safari Match3 is a manual local check.
+- **Lifecycle virtuals are limited to what the proxy dispatches**: `_ready`,
+  `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
+  `_unhandled_input`. Anything else — `@OnEnterTree` in particular — is rejected
+  at build time with a KSP error naming the script and the function, rather than
+  compiling and then never running. Move the body into an `@OnReady` function.
 - Single-thread Compatibility renderer only; no threads, no cross-origin
   isolation.
 - No Web editor, no compiler, no hot reload, no Web GDExtension, and no TeaVM or
