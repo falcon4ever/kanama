@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 14;
+  const KANAMA_WEB_PROTOCOL_VERSION = 15;
 
   function commandWordCount(opcode) {
     if (
@@ -20,6 +20,8 @@
       opcode === 63 ||
       opcode === 64 ||
       opcode === 147 ||
+      opcode === 251 ||
+      opcode === 283 ||
       opcode === 181
     ) return 2;
     if (
@@ -42,6 +44,18 @@
       opcode === 189 ||
       opcode === 202 ||
       opcode === 209 ||
+      opcode === 247 ||
+      opcode === 257 ||
+      opcode === 258 ||
+      opcode === 260 ||
+      opcode === 264 ||
+      opcode === 265 ||
+      opcode === 267 ||
+      opcode === 273 ||
+      opcode === 274 ||
+      opcode === 277 ||
+      opcode === 280 ||
+      opcode === 284 ||
       opcode === 66
     ) return 3;
     if (
@@ -83,6 +97,19 @@
       opcode === 182 ||
       opcode === 183 ||
       opcode === 200 ||
+      opcode === 230 ||
+      opcode === 231 ||
+      opcode === 236 ||
+      opcode === 237 ||
+      opcode === 241 ||
+      opcode === 242 ||
+      opcode === 254 ||
+      opcode === 256 ||
+      opcode === 261 ||
+      opcode === 262 ||
+      opcode === 275 ||
+      opcode === 279 ||
+      opcode === 281 ||
       opcode === 1000
     ) return 4;
     if (
@@ -96,6 +123,11 @@
       opcode === 101 ||
       opcode === 103 ||
       opcode === 132 ||
+      opcode === 226 ||
+      opcode === 228 ||
+      opcode === 232 ||
+      opcode === 238 ||
+      opcode === 248 ||
       opcode === 151
     ) return 5;
     if (opcode === 32) return 6;
@@ -159,6 +191,7 @@
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
     viewportHandlesByOwner: new Map(),
+    rootHandlesByOwner: new Map(),
     commandStringNamesByValue: new Map(),
     commandStringNamesById: new Map(),
     nextCommandStringNameId: 1,
@@ -1426,6 +1459,16 @@
         }
         this.viewportHandlesByOwner.delete(owner);
       }
+      // Per-shot SceneTree.get_root (the robot laser parents its blast under the root)
+      // follows the same per-owner reuse rule as get_viewport.
+      const isRoot = opcode === 250;
+      if (isRoot) {
+        const existing = this.rootHandlesByOwner.get(owner);
+        if (existing !== undefined && this.browserHandleSlot(existing)?.kind === "Node") {
+          return existing;
+        }
+        this.rootHandlesByOwner.delete(owner);
+      }
       const callback = this.callbackFor(
         this.noArgsObjectCallbacks,
         handle,
@@ -1451,8 +1494,17 @@
       // follow the SpriteFrames/Environment handle-kind rule.
       const isSceneState = opcode === 212;
       const isMesh = opcode === 225;
+      // opcode 246 = Material.get_next_pass returns a Material Resource — same handle-kind
+      // rule as SpriteFrames/Environment/Mesh (adopt as Object, never as a Node).
+      const isMaterial = opcode === 246;
       const isObjectResult =
-        isTween || isSceneTree || isSpriteFrames || isEnvironment || isSceneState || isMesh;
+        isTween ||
+        isSceneTree ||
+        isSpriteFrames ||
+        isEnvironment ||
+        isSceneState ||
+        isMesh ||
+        isMaterial;
       const kind = isTween
         ? "Tween"
         : isSceneTree
@@ -1465,7 +1517,9 @@
                 ? "SceneState"
                 : isMesh
                   ? "Mesh"
-                  : "Node";
+                  : isMaterial
+                    ? "Material"
+                    : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
       if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
@@ -1492,6 +1546,8 @@
         this.match3SceneTreeHandlesCreated += 1;
       } else if (isViewport && result === resultHandle) {
         this.viewportHandlesByOwner.set(owner, resultHandle);
+      } else if (isRoot && result === resultHandle) {
+        this.rootHandlesByOwner.set(owner, resultHandle);
       }
       return result;
     },

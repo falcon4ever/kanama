@@ -3536,6 +3536,942 @@
       "scope": "class",
       "returnOwnership": "BORROWED",
       "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 226,
+      "scope": "class",
+      "className": "CharacterBody3D",
+      "methodName": "set_up_direction",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the floor-detection up vector before move_and_slide (tps player/robot).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 227,
+      "scope": "class",
+      "className": "PhysicsBody3D",
+      "methodName": "get_gravity",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Current gravity vector for the body (tps applies gravity manually each physics tick).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 228,
+      "scope": "class",
+      "className": "RigidBody3D",
+      "methodName": "set_linear_velocity",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a linear velocity write (tps robot death parts launch).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 229,
+      "scope": "class",
+      "className": "PhysicsDirectSpaceState3D",
+      "methodName": "intersect_ray",
+      "hash": 3957970750,
+      "arguments": [
+        "PhysicsRayQueryParameters3D"
+      ],
+      "returnType": "Dictionary",
+      "shape": "VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Space-state ray query adapted to the Web seam: receiver is a node in the target world, the applier builds the ray parameters engine-side (handles resolve to RIDs there), and the packed result carries hit/position/tracked-collider.",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 230,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "set_indexed",
+      "hash": 3500910842,
+      "arguments": [
+        "NodePath",
+        "Variant"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a String-valued property-path write (AnimationTree state transition requests).",
+      "introducedBy": "60i-tpsdemo",
+      "descriptorName": "OBJECT_SET_INDEXED_STRING"
+    },
+    {
+      "opcode": 231,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "set_indexed",
+      "hash": 3500910842,
+      "arguments": [
+        "NodePath",
+        "Variant"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue an int-valued property-path write (AnimationTree one-shot hit requests; typed proxy int properties like player_id).",
+      "introducedBy": "60i-tpsdemo",
+      "descriptorName": "OBJECT_SET_INDEXED_LONG"
+    },
+    {
+      "opcode": 232,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "set_indexed",
+      "hash": 3500910842,
+      "arguments": [
+        "NodePath",
+        "Variant"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_VECTOR2_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Vector2-valued property-path write (AnimationTree blend positions).",
+      "introducedBy": "60i-tpsdemo",
+      "descriptorName": "OBJECT_SET_INDEXED_VECTOR2"
+    },
+    {
+      "opcode": 233,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "get",
+      "hash": 2760726917,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_RET_VECTOR2",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Vector2-valued property read by name (AnimationTree aim blend position).",
+      "introducedBy": "60i-tpsdemo",
+      "descriptorName": "OBJECT_GET_PROPERTY_VECTOR2"
+    },
+    {
+      "opcode": 234,
+      "scope": "class",
+      "className": "AnimationMixer",
+      "methodName": "get_root_motion_position",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Root motion translation delta for the current frame (tps locomotion).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 235,
+      "scope": "class",
+      "className": "AnimationMixer",
+      "methodName": "get_root_motion_rotation",
+      "hash": 1222331677,
+      "arguments": [],
+      "returnType": "Quaternion",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Root motion rotation delta adapted to the Web seam as euler angles (the applier converts the Quaternion; the wrapper recomposes it).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 236,
+      "scope": "class",
+      "className": "CPUParticles3D",
+      "methodName": "set_emitting",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the CPU-particles emitting toggle (muzzle flash, death sparks, part disappearance).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 237,
+      "scope": "class",
+      "className": "CPUParticles3D",
+      "methodName": "restart",
+      "hash": 107499316,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a CPU-particles restart (keep_seed baked false; shoot particle retrigger).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 238,
+      "scope": "class",
+      "className": "CPUParticles3D",
+      "methodName": "set_emission_box_extents",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the emission box extents write (laser ember length follows the clipped beam).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 239,
+      "scope": "class",
+      "className": "CPUParticles3D",
+      "methodName": "get_emission_box_extents",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Emission box extents read (laser ember length update composes on the current value).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 240,
+      "scope": "class",
+      "className": "CPUParticles3D",
+      "methodName": "get_lifetime",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Particle lifetime read (part-disappear effect schedules its own free).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 241,
+      "scope": "class",
+      "className": "Light3D",
+      "methodName": "set_shadow",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a per-light shadow toggle (bullet omni light, forklift spotlight).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 242,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_glow_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the environment glow toggle (the only tps environment setting the compatibility renderer honors).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 243,
+      "scope": "class",
+      "className": "MeshInstance3D",
+      "methodName": "get_surface_override_material",
+      "hash": 2897466400,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Material",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Surface override material as a tracked browser handle (robot laser beam clip shader).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 244,
+      "scope": "class",
+      "className": "Mesh",
+      "methodName": "surface_get_material",
+      "hash": 2897466400,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Material",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Mesh surface material as a tracked browser handle (death-part fade material chain).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 245,
+      "scope": "class",
+      "className": "Mesh",
+      "methodName": "surface_set_material",
+      "hash": 3671737478,
+      "arguments": [
+        "int",
+        "Material"
+      ],
+      "returnType": "void",
+      "shape": "LONG_OBJECT_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Replace one mesh surface material (death parts swap in the duplicated fade chain).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 246,
+      "scope": "class",
+      "className": "Material",
+      "methodName": "get_next_pass",
+      "hash": 5934680,
+      "arguments": [],
+      "returnType": "Material",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Next-pass material as a tracked browser handle (death-part fade shader lives on the second pass).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 247,
+      "scope": "class",
+      "className": "Material",
+      "methodName": "set_next_pass",
+      "hash": 2757459619,
+      "arguments": [
+        "Material"
+      ],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a next-pass material assignment (duplicated fade chain wiring).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 248,
+      "scope": "class",
+      "className": "ShaderMaterial",
+      "methodName": "set_shader_parameter",
+      "hash": 3776071444,
+      "arguments": [
+        "StringName",
+        "Variant"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a double-valued shader parameter write (laser clip length, part fade cutout).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 249,
+      "scope": "class",
+      "className": "Timer",
+      "methodName": "get_time_left",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Remaining time on a Timer node (fire cooldown gate).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 250,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "get_root",
+      "hash": 1757182445,
+      "arguments": [],
+      "returnType": "Window",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Root window as a tracked node handle (blast camera lookup, robot blast parenting).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 251,
+      "scope": "class",
+      "className": "Control",
+      "methodName": "grab_focus",
+      "hash": 107499316,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue keyboard focus onto a control (menu navigation).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 252,
+      "scope": "class",
+      "className": "Control",
+      "methodName": "get_position",
+      "hash": 3341600327,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Control rect position read (crosshair center for the shoot ray).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 253,
+      "scope": "class",
+      "className": "Control",
+      "methodName": "get_size",
+      "hash": 3341600327,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Control rect size read (crosshair center for the shoot ray).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 254,
+      "scope": "class",
+      "className": "BaseButton",
+      "methodName": "set_pressed",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a toggle-button pressed state write (settings menu reflects the config).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 255,
+      "scope": "class",
+      "className": "BaseButton",
+      "methodName": "is_pressed",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle-button pressed state read (settings apply collects the selection).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 256,
+      "scope": "class",
+      "className": "BaseButton",
+      "methodName": "set_disabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a button disabled toggle (lobby buttons while connecting).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 257,
+      "scope": "class",
+      "className": "BaseButton",
+      "methodName": "set_button_group",
+      "hash": 1794463739,
+      "arguments": [
+        "ButtonGroup"
+      ],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a radio-group assignment (settings option rows share a ButtonGroup).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 258,
+      "scope": "class",
+      "className": "Button",
+      "methodName": "set_text",
+      "hash": 83702148,
+      "arguments": [
+        "String"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a button label write (host button toggles HOST GAME / START GAME).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 259,
+      "scope": "class",
+      "className": "LineEdit",
+      "methodName": "get_text",
+      "hash": 201670096,
+      "arguments": [],
+      "returnType": "String",
+      "shape": "NOARGS_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Line-edit text read (lobby address field).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 260,
+      "scope": "class",
+      "className": "LineEdit",
+      "methodName": "set_text",
+      "hash": 83702148,
+      "arguments": [
+        "String"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a line-edit text write (lobby address field reset).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 261,
+      "scope": "class",
+      "className": "LineEdit",
+      "methodName": "set_editable",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a line-edit editable toggle (lobby busy state).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 262,
+      "scope": "class",
+      "className": "Range",
+      "methodName": "set_value",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Range value write (loading progress bar, lobby port spin box).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 263,
+      "scope": "class",
+      "className": "Range",
+      "methodName": "get_value",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Range value read (lobby port spin box).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 264,
+      "scope": "class",
+      "className": "ConfigFile",
+      "methodName": "load",
+      "hash": 166001499,
+      "arguments": [
+        "String"
+      ],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a config load from user:// (result intentionally unchecked; missing files leave the defaults).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 265,
+      "scope": "class",
+      "className": "ConfigFile",
+      "methodName": "save",
+      "hash": 166001499,
+      "arguments": [
+        "String"
+      ],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a config save to user:// (result intentionally unchecked).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 266,
+      "scope": "class",
+      "className": "ConfigFile",
+      "methodName": "has_section_key",
+      "hash": 820780508,
+      "arguments": [
+        "String",
+        "String"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Section/key existence check; both names ride one query string (unit separator).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 267,
+      "scope": "class",
+      "className": "ConfigFile",
+      "methodName": "set_value",
+      "hash": 2504492430,
+      "arguments": [
+        "String",
+        "String",
+        "Variant"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a typed config write; section, key, and tagged value ride one interned string (unit separator, i:/f:/b: tags).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 268,
+      "scope": "class",
+      "className": "ConfigFile",
+      "methodName": "get_value",
+      "hash": 89809366,
+      "arguments": [
+        "String",
+        "String",
+        "Variant"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Typed config read; section and key ride one query string and the value returns tagged (i:/f:/b:).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 269,
+      "scope": "singleton",
+      "className": "Engine",
+      "methodName": "set_max_fps",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Frame-rate cap write (tps caps 60 in headless-style runs and via settings).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 270,
+      "scope": "singleton",
+      "className": "Engine",
+      "methodName": "get_frames_per_second",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_LONG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Whole-frames-per-second read (debug overlay).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 271,
+      "scope": "singleton",
+      "className": "OS",
+      "methodName": "get_static_memory_usage",
+      "hash": 3905245786,
+      "arguments": [],
+      "returnType": "int",
+      "shape": "NOARGS_RET_LONG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Static memory usage read (debug overlay).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 272,
+      "scope": "singleton",
+      "className": "Input",
+      "methodName": "get_action_strength",
+      "hash": 801543509,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "float",
+      "shape": "STRINGNAME_RET_DOUBLE_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Analog action strength read (tps movement and camera axes).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 273,
+      "scope": "class",
+      "className": "FastNoiseLite",
+      "methodName": "set_seed",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the noise seed write (camera shake channels re-seed per axis).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 274,
+      "scope": "class",
+      "className": "FastNoiseLite",
+      "methodName": "set_fractal_octaves",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the fractal octave count write (camera shake noise setup).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 275,
+      "scope": "class",
+      "className": "FastNoiseLite",
+      "methodName": "set_fractal_lacunarity",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the fractal lacunarity write (camera shake noise setup).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 276,
+      "scope": "class",
+      "className": "Noise",
+      "methodName": "get_noise_1d",
+      "hash": 3919130443,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "float",
+      "shape": "DOUBLE_RET_DOUBLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "1D noise sample (camera shake; x1000 integer transport, millis precision).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 277,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "set_name",
+      "hash": 3304788590,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a node rename (players are named by peer id before entering the tree).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 278,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_name",
+      "hash": 2002593661,
+      "arguments": [],
+      "returnType": "StringName",
+      "shape": "NOARGS_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Node name read (target checks and logging).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 279,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "propagate_call",
+      "hash": 1871007965,
+      "arguments": [
+        "StringName",
+        "Array",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a propagated bool property write: propagate_call(\"set\", [name, value]) (shadow_enabled sweep).",
+      "introducedBy": "60i-tpsdemo",
+      "descriptorName": "NODE_PROPAGATE_SET_BOOL"
+    },
+    {
+      "opcode": 280,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "call_deferred",
+      "hash": 3400424181,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a no-argument deferred call (lobby host/connect re-entry).",
+      "introducedBy": "60i-tpsdemo",
+      "isVararg": true,
+      "typedVarargTail": [],
+      "descriptorName": "OBJECT_CALL_DEFERRED_NOARGS"
+    },
+    {
+      "opcode": 281,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "call_deferred",
+      "hash": 3400424181,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a one-object deferred call (scene handoff into replace_main_scene).",
+      "introducedBy": "60i-tpsdemo",
+      "isVararg": true,
+      "typedVarargTail": [
+        "Object"
+      ],
+      "descriptorName": "OBJECT_CALL_DEFERRED_OBJECT"
+    },
+    {
+      "opcode": 282,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "has_signal",
+      "hash": 2619796661,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Signal existence check (main wires quit/replace_main_scene only when declared).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 283,
+      "scope": "class",
+      "className": "Camera3D",
+      "methodName": "make_current",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue making this camera current (player camera on spawn).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 284,
+      "scope": "class",
+      "className": "LightmapGI",
+      "methodName": "set_light_data",
+      "hash": 1790597277,
+      "arguments": [
+        "LightmapGIData"
+      ],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the baked lightmap data assignment (LightmapGI GI mode).",
+      "introducedBy": "60i-tpsdemo"
     }
   ],
   "compositions": [

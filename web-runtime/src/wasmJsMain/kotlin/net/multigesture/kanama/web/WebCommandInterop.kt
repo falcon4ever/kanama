@@ -143,6 +143,38 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 3] = if (value) 1 else 0
   }
 
+  fun appendStringNameLongMutation(opcode: Int, objectHandle: Int, name: String, value: Long) {
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(name)
+    words[offset + 3] = value.toInt()
+  }
+
+  fun appendStringNameObjectMutation(opcode: Int, objectHandle: Int, name: String, value: Int) {
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(name)
+    words[offset + 3] = value
+  }
+
+  fun appendStringNameVector2Mutation(
+    opcode: Int,
+    objectHandle: Int,
+    name: String,
+    x: Float,
+    y: Float,
+  ) {
+    val offset = reserve(WORDS_STRINGNAME_VECTOR2)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(name)
+    words[offset + 3] = x.toBits()
+    words[offset + 4] = y.toBits()
+  }
+
   fun appendStringNameStringNameMutation(
     opcode: Int,
     objectHandle: Int,
@@ -245,6 +277,7 @@ internal class WebCommandBuffer(capacity: Int) {
     const val WORDS_VECTOR3 = 5
     const val WORDS_LONG_DOUBLE = 5
     const val WORDS_STRINGNAME_DOUBLE = 5
+    const val WORDS_STRINGNAME_VECTOR2 = 5
     const val WORDS_COLOR = 6
     const val WORDS_STRINGNAME_VECTOR3_VECTOR3 = 9
     const val WORDS_DRAW_TEXTURE = 9
