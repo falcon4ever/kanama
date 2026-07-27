@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 13;
+  const KANAMA_WEB_PROTOCOL_VERSION = 14;
 
   function commandWordCount(opcode) {
     if (
@@ -596,6 +596,24 @@
         0,
       );
     },
+    setVector2iProperty(handle, propertyId, x, y) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetVector2iProperty(handle, propertyId, x, y),
+        0,
+      );
+    },
+    getPackedProperty(handle, propertyId) {
+      return this.invoke(
+        handle,
+        "property_get",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebGetPackedProperty(handle, propertyId),
+        "",
+      );
+    },
     setLongProperty(handle, propertyId, value) {
       this.recordMatch3Property(handle, propertyId, value);
       return this.invoke(
@@ -1069,7 +1087,14 @@
         this.immediateResourceHandleResult !== 0 &&
         this.immediateResourceHandleResult !== resourceHandle
       ) {
-        throw new Error("Godot resource callback published an invalid handle");
+        // A Kanama-scripted resource resolves to its live script handle instead of the
+        // proposed browser handle (node-lookup rule for loads).
+        if (this.api.kanamaWebIsLive(this.immediateResourceHandleResult) !== 1) {
+          throw new Error("Godot resource callback published an invalid handle");
+        }
+        this.releaseBrowserHandle(resourceHandle, "Resource");
+        this.resourceLoads += 1;
+        return this.immediateResourceHandleResult;
       }
       if (this.immediateResourceHandleResult === 0) {
         if (owner === this.match3AudioHandle) this.match3AudioResourceLoadFailures += 1;
@@ -1084,6 +1109,71 @@
       }
       this.resourceLoads += 1;
       return this.immediateResourceHandleResult;
+    },
+    instantiateScript(className) {
+      // Runtime factory crossing (reserved opcode 0 on the object-query channel): the
+      // active proxy instantiates the named Kanama scripted resource and returns the
+      // hydrated script handle (0 on failure).
+      const owner = this.activeOwnerHandle;
+      const callback = this.callbackFor(this.objectQueryCallbacks, owner, "Godot script instantiate");
+      this.immediateLongResult = null;
+      callback(0, owner, className);
+      const result = this.immediateLongResult;
+      if (!Number.isInteger(result)) {
+        throw new Error("Godot script instantiate callback did not publish a result");
+      }
+      if (result !== 0 && this.api.kanamaWebIsLive(result) !== 1) {
+        throw new Error("Godot script instantiate did not return a live script handle");
+      }
+      return result;
+    },
+    releaseScriptResource(handle) {
+      // Drop the proxies' dictionary reference to an owned scripted resource ("close what
+      // you create"): the target is a script handle, so no browser slot is retired.
+      if (this.api.kanamaWebIsLive(handle) !== 1) {
+        throw new Error(`Cannot release non-live Kanama script resource handle=${handle}`);
+      }
+      const callback = this.callbackFor(
+        this.resourceReleaseCallbacks,
+        handle,
+        "Godot script resource release",
+      );
+      this.immediateResourceReleaseResult = null;
+      callback(handle);
+      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
+        throw new Error("Godot script resource release callback did not publish a result");
+      }
+      return this.immediateResourceReleaseResult;
+    },
+    releaseConstructedObject(handle) {
+      // Release a ClassDB-constructed handle whose bridge kind is its class name (e.g. a
+      // constructed MeshLibrary Resource): the applier erases the dictionary reference and
+      // the slot retires under its recorded kind.
+      const slot = this.browserHandleSlot(handle);
+      if (!slot) {
+        throw new Error(`Stale Kanama Web constructed handle=${handle}`);
+      }
+      const callback = this.callbackFor(
+        this.resourceReleaseCallbacks,
+        handle,
+        "Godot constructed release",
+      );
+      this.immediateResourceReleaseResult = null;
+      callback(handle);
+      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
+        throw new Error("Godot constructed release callback did not publish a result");
+      }
+      if (this.immediateResourceReleaseResult === 1) {
+        this.releaseBrowserHandle(handle, slot.kind);
+      }
+      return this.immediateResourceReleaseResult;
+    },
+    allocateFoundNodeHandle(ownerHandle) {
+      // Node.find_children match without a script or existing handle: mint and adopt a
+      // tracked browser Node handle for the applier to register.
+      const handle = this.allocateBrowserHandle("Node", ownerHandle);
+      this.api.kanamaWebAdoptNodeHandle(handle);
+      return handle;
     },
     immediateConstructObject(className) {
       const owner = this.activeOwnerHandle;
@@ -1329,7 +1419,13 @@
       // lookup instead of requiring the proposed one. opcode 114 = Node.duplicate adopts a
       // genuinely new node through the proposed handle.
       const isCollider = opcode === 112 || opcode === 122;
-      const isObjectResult = isTween || isSceneTree || isSpriteFrames || isEnvironment;
+      // opcode 212 = PackedScene.get_state returns a SceneState, opcode 225 =
+      // MeshInstance3D.get_mesh returns a Mesh Resource — neither is a Node, so both
+      // follow the SpriteFrames/Environment handle-kind rule.
+      const isSceneState = opcode === 212;
+      const isMesh = opcode === 225;
+      const isObjectResult =
+        isTween || isSceneTree || isSpriteFrames || isEnvironment || isSceneState || isMesh;
       const kind = isTween
         ? "Tween"
         : isSceneTree
@@ -1338,7 +1434,11 @@
             ? "SpriteFrames"
             : isEnvironment
               ? "Environment"
-              : "Node";
+              : isSceneState
+                ? "SceneState"
+                : isMesh
+                  ? "Mesh"
+                  : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
       if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
@@ -1423,6 +1523,24 @@
     },
     recordImmediateStringResult(value) {
       this.immediateStringResult = String(value);
+    },
+    immediateVector2ArgVector3X(opcode, handle, x, y) {
+      // Vector2-argument Vector3 query (camera ray projection): rides the no-args
+      // Vector3 channel with the screen point in the extra argument slots.
+      const callback = this.callbackFor(
+        this.noArgsVector3Callbacks,
+        handle,
+        "Godot Vector2-arg Vector3",
+      );
+      this.immediateVector3Result = null;
+      callback(opcode, handle, x, y);
+      if (
+        this.immediateVector3Result === null ||
+        !Number.isFinite(this.immediateVector3Result.x)
+      ) {
+        throw new Error("Godot Vector2-arg Vector3 callback did not publish a finite result");
+      }
+      return this.immediateVector3Result.x;
     },
     immediateIndexedVector3X(opcode, handle, index) {
       const callback = this.callbackFor(

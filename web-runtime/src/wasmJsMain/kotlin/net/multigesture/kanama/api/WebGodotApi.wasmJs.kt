@@ -26,3 +26,26 @@ internal actual fun releaseWebCollision(collisionHandle: Int) {
 
 private fun releaseWebCollisionInterop(collisionHandle: Int): Int =
   js("globalThis.KanamaWebBridge.releaseCollision(collisionHandle)")
+
+internal actual fun instantiateWebScript(className: String): Int =
+  instantiateWebScriptInterop(className)
+
+private fun instantiateWebScriptInterop(className: String): Int =
+  js("globalThis.KanamaWebBridge.instantiateScript(className)")
+
+internal actual fun releaseWebScriptResource(handle: Int) {
+  val released = releaseWebScriptResourceInterop(handle)
+  check(released == 1) { "Unknown or already released Kanama Web script resource handle=$handle" }
+}
+
+private fun releaseWebScriptResourceInterop(handle: Int): Int =
+  js("globalThis.KanamaWebBridge.releaseScriptResource(handle)")
+
+internal actual fun releaseWebConstructedObject(handle: Int) {
+  val released = releaseWebConstructedObjectInterop(handle)
+  check(released == 1) { "Unknown or already released Kanama Web constructed handle=$handle" }
+  unregisterWebBrowserHandle(handle, WebBrowserHandleKind.NODE)
+}
+
+private fun releaseWebConstructedObjectInterop(handle: Int): Int =
+  js("globalThis.KanamaWebBridge.releaseConstructedObject(handle)")

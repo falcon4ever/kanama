@@ -137,7 +137,7 @@ export async function runFps({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeFps: ready.mode === "fps",
-    protocol13: protocolVersion === 13,
+    protocol14: protocolVersion === 14,
     sceneScriptsReady:
       ready.smokeReady >= 1 &&
       ready.playerReady >= 1 &&

@@ -244,6 +244,30 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     199: {},
     200: {},
     201: {},
+    202: {},
+    203: {},
+    204: {},
+    205: {},
+    206: {},
+    207: {},
+    208: {},
+    209: {},
+    210: {},
+    211: {},
+    212: {"ret": "browser"},
+    213: {},
+    214: {},
+    215: {},
+    216: {},
+    217: {"ret": "browser"},
+    218: {},
+    219: {},
+    220: {},
+    221: {},
+    222: {"ret": "browser"},
+    223: {},
+    224: {},
+    225: {"ret": "browser"},
 }
 
 
@@ -324,14 +348,39 @@ def body_BOOL_RET_INT(calls):
 
 
 def body_BOOL_RET_HANDLE(calls):
-    return [
+    tween = [c for c in calls if WEB_POLICY[c.opcode].get("ret") != "browser"]
+    browser = [c for c in calls if WEB_POLICY[c.opcode].get("ret") == "browser"]
+    lines = [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         "commands.flush()",
-        "return existingReturnedObject(",
-        "receiver,",
-        "immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),",
-        ")",
+        "return when (descriptor.opcode) {",
     ]
+    if tween:
+        lines.append(",\n".join(str(c.opcode) for c in tween) + " ->")
+        lines += [
+            "existingReturnedObject(",
+            "receiver,",
+            "immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),",
+            ")",
+        ]
+    for c in browser:
+        lines.append(f"{c.opcode} ->")
+        lines += [
+            "// The Boolean rides the property-object-query string; the bridge appends the",
+            "// proposed handle and the applier registers the duplicate under it.",
+            "registerReturnedBrowserObject(",
+            "immediateWebPropertyObjectQuery(",
+            "descriptor.opcode,",
+            "receiver.webId(),",
+            'if (value) "1" else "0",',
+            ")",
+            ")",
+        ]
+    lines += [
+        'else -> error("Unsupported Web Boolean-return-handle opcode=${descriptor.opcode}")',
+        "}",
+    ]
+    return lines
 
 
 def body_BOOL_ARG(calls):
@@ -877,6 +926,15 @@ def body_OBJECT_ARG(calls):
                 "checkNotNull(value)",
                 "}",
             ]
+        elif op == 202:
+            lines += [
+                "202 -> {",
+                f"require(descriptor.executionMode == {_QUEUED})",
+                "// The MeshLibrary was constructed via ClassDB.instantiate, so it is",
+                "// registered under the NODE kind like every constructed handle.",
+                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }",
+                "}",
+            ]
         else:
             raise GenerationError(f"OBJECT_ARG opcode {op} has no emitter arm")
     lines += [
@@ -1315,6 +1373,237 @@ def body_OBJECT_NODEPATH_COLOR_DOUBLE_RET_HANDLE(calls):
     ]
 
 
+def body_VECTOR3I_LONG_LONG_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(first in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "require(second in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "// Cell position plus item/orientation packed as five integers (unit separator).",
+        "val packed =",
+        'listOf(value.x, value.y, value.z, first.toInt(), second.toInt()).joinToString("\\u001f")',
+        "check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+        "}",
+    ]
+
+
+def body_VECTOR3I_RET_LONG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Cell position packed as three integers; the result (INVALID_CELL_ITEM = -1",
+        "// included) rides the shared integer object-query transport.",
+        "return immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'listOf(value.x, value.y, value.z).joinToString(""),',
+        ")",
+        ".toLong()",
+    ]
+
+
+def body_BASIS_RET_LONG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Nine Float32 components packed column-major (x, y, z axes; unit separator).",
+        "val packed =",
+        "listOf(",
+        "value.x.x,",
+        "value.x.y,",
+        "value.x.z,",
+        "value.y.x,",
+        "value.y.y,",
+        "value.y.z,",
+        "value.z.x,",
+        "value.z.y,",
+        "value.z.z,",
+        ")",
+        '.joinToString("")',
+        "return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed).toLong()",
+    ]
+
+
+def body_NOARGS_RET_VECTOR3I_LIST(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// The applier packs one comma-joined integer triple per cell (unit separator).",
+        'return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")',
+        ".split('')",
+        ".filter { it.isNotEmpty() }",
+        ".map { triple ->",
+        "val parts = triple.split(',')",
+        "GodotVector3i(parts[0].toInt(), parts[1].toInt(), parts[2].toInt())",
+        "}",
+    ]
+
+
+def body_LONG_OBJECT_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "requireWebBrowserHandle(objectValue.webId(), WebBrowserHandleKind.OBJECT)",
+        "commands.flush()",
+        "// Item index and object handle packed into one query string (unit separator).",
+        "check(",
+        "immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'longValue.toString() + "" + objectValue.webId().toString(),',
+        ") == 1",
+        ") {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+        "}",
+    ]
+
+
+def body_LONG_TRANSFORM3D_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "// Item index plus twelve Float32 transform components (basis columns then origin).",
+        "val packed =",
+        "listOf(",
+        "longValue.toInt().toFloat(),",
+        "value.basis.x.x,",
+        "value.basis.x.y,",
+        "value.basis.x.z,",
+        "value.basis.y.x,",
+        "value.basis.y.y,",
+        "value.basis.y.z,",
+        "value.basis.z.x,",
+        "value.basis.z.y,",
+        "value.basis.z.z,",
+        "value.origin.x,",
+        "value.origin.y,",
+        "value.origin.z,",
+        ")",
+        '.joinToString("")',
+        "check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
+        "}",
+    ]
+
+
+def body_LONG_RET_STRING(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "return immediateWebStringQuery(descriptor.opcode, receiver.webId(), value.toString())",
+    ]
+
+
+def body_LONG_RET_LONG(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value.toString())",
+        ".toLong()",
+    ]
+
+
+def body_LONG_LONG_RET_STRING(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(first in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "require(second in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "// Both indices packed into one query string (unit separator).",
+        "return immediateWebStringQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'first.toString() + "" + second.toString(),',
+        ")",
+    ]
+
+
+def body_LONG_LONG_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(first in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "require(second in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "// Both indices ride the property-object-query string; the bridge appends the",
+        "// proposed handle and non-object values resolve to a null handle.",
+        "return registerReturnedBrowserObject(",
+        "immediateWebPropertyObjectQuery(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'first.toString() + "" + second.toString(),',
+        ")",
+        ")",
+    ]
+
+
+def body_VECTOR2_RET_VECTOR3(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return GodotVector3(",
+        "immediateWebVector2ArgVector3X(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "value.x.toDouble(),",
+        "value.y.toDouble(),",
+        ")",
+        ".toFloat(),",
+        "immediateWebNoArgsVector3Y().toFloat(),",
+        "immediateWebNoArgsVector3Z().toFloat(),",
+        ")",
+    ]
+
+
+def body_OBJECT_STRING_RET_LONG_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "// Resource handle, destination path, and flags packed into one query string; the",
+        "// applier pulls current Kotlin property values into scripted resources first.",
+        "return immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "requireActiveWebScriptHandle(),",
+        'resource.webId().toString() + "" + path + "" + flags.toString(),',
+        ")",
+        ".toLong()",
+    ]
+
+
+def body_STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Pattern, type, and both flags packed into one query string; the applier packs the",
+        "// matches back as handles (scripted matches resolve to script handles, engine nodes",
+        "// get tracked browser handles).",
+        "val packed =",
+        'listOf(pattern, type, if (recursive) "1" else "0", if (owned) "1" else "0")',
+        '.joinToString("")',
+        "return immediateWebStringQuery(descriptor.opcode, receiver.webId(), packed)",
+        ".split('')",
+        ".filter { it.isNotEmpty() }",
+        ".map { GodotHandle.fromBackendToken(it.toLong()) }",
+    ]
+
+
 # Signature: (params-after-descriptor/callSite, return-type). `receiver` present unless noted.
 SIGNATURES: dict[str, tuple[list[str], str]] = {
     "BOOL_RET_INT": (["receiver: GodotHandle", "value: Boolean"], "Int"),
@@ -1503,6 +1792,46 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ],
         "GodotHandle?",
     ),
+    "VECTOR3I_LONG_LONG_ARG": (
+        ["receiver: GodotHandle", "value: GodotVector3i", "first: Long", "second: Long"],
+        "",
+    ),
+    "VECTOR3I_RET_LONG": (["receiver: GodotHandle", "value: GodotVector3i"], "Long"),
+    "BASIS_RET_LONG": (["receiver: GodotHandle", "value: GodotBasis"], "Long"),
+    "NOARGS_RET_VECTOR3I_LIST": (["receiver: GodotHandle"], "List<GodotVector3i>"),
+    "LONG_OBJECT_ARG": (
+        ["receiver: GodotHandle", "longValue: Long", "objectValue: GodotHandle"],
+        "",
+    ),
+    "LONG_TRANSFORM3D_ARG": (
+        ["receiver: GodotHandle", "longValue: Long", "value: GodotTransform3D"],
+        "",
+    ),
+    "LONG_RET_STRING": (["receiver: GodotHandle", "value: Long"], "String"),
+    "LONG_RET_LONG": (["receiver: GodotHandle", "value: Long"], "Long"),
+    "LONG_LONG_RET_STRING": (
+        ["receiver: GodotHandle", "first: Long", "second: Long"],
+        "String",
+    ),
+    "LONG_LONG_RET_HANDLE": (
+        ["receiver: GodotHandle", "first: Long", "second: Long"],
+        "GodotHandle?",
+    ),
+    "VECTOR2_RET_VECTOR3": (["receiver: GodotHandle", "value: GodotVector2"], "GodotVector3"),
+    "OBJECT_STRING_RET_LONG_SINGLETON": (
+        ["resource: GodotHandle", "path: String", "flags: Long"],
+        "Long",
+    ),
+    "STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST": (
+        [
+            "receiver: GodotHandle",
+            "pattern: String",
+            "type: String",
+            "recursive: Boolean",
+            "owned: Boolean",
+        ],
+        "List<GodotHandle>",
+    ),
 }
 
 
@@ -1522,6 +1851,9 @@ _WORD_CASE = {
     "VECTOR2": "Vector2",
     "VECTOR2I": "Vector2i",
     "VECTOR3": "Vector3",
+    "VECTOR3I": "Vector3i",
+    "BASIS": "Basis",
+    "TRANSFORM3D": "Transform3d",
     "STRING": "String",
     "STRINGNAME": "StringName",
     "NODEPATH": "NodePath",
@@ -1605,6 +1937,19 @@ EMIT_ORDER = [
     "CALLABLE_RET_HANDLE",
     "NOARGS_RET_LONG_SINGLETON",
     "STRINGNAME_OBJECT_RET_INT",
+    "VECTOR3I_LONG_LONG_ARG",
+    "VECTOR3I_RET_LONG",
+    "BASIS_RET_LONG",
+    "NOARGS_RET_VECTOR3I_LIST",
+    "LONG_OBJECT_ARG",
+    "LONG_TRANSFORM3D_ARG",
+    "LONG_RET_STRING",
+    "LONG_RET_LONG",
+    "LONG_LONG_RET_STRING",
+    "LONG_LONG_RET_HANDLE",
+    "VECTOR2_RET_VECTOR3",
+    "OBJECT_STRING_RET_LONG_SINGLETON",
+    "STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST",
 ]
 
 
@@ -1630,15 +1975,18 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalWasmJsInterop
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
+import net.multigesture.kanama.backend.GodotBasis
 import net.multigesture.kanama.backend.GodotCallDescriptor
 import net.multigesture.kanama.backend.GodotCallSite
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotExecutionMode
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
+import net.multigesture.kanama.backend.GodotTransform3D
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.GodotVector3i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 /**

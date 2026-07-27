@@ -150,6 +150,29 @@ data class Rect2(val position: Vector2, val size: Vector2)
 
 data class Color(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f)
 
+data class Vector3i(val x: Int, val y: Int, val z: Int) {
+  companion object {
+    val ZERO = Vector3i(0, 0, 0)
+  }
+}
+
+/** Godot's Plane in Hessian normal form: [normal] and signed distance [d] from the origin. */
+class Plane(val normal: Vector3, val d: Double) {
+  constructor(normal: Vector3, d: Number) : this(normal, d.toDouble())
+
+  /**
+   * Godot's intersects_ray: the intersection of the ray [from] + t * [dir] with this plane, or null
+   * when the ray is parallel to or points away from it.
+   */
+  fun intersectsRay(from: Vector3, dir: Vector3): Vector3? {
+    val den = normal.dot(dir)
+    if (kotlin.math.abs(den) < 1e-8) return null
+    val dist = (normal.dot(from) - d) / den
+    if (dist > 1e-5) return null
+    return from + dir * -dist
+  }
+}
+
 data class Vector2i(val x: Int, val y: Int) {
   companion object {
     val ZERO = Vector2i(0, 0)

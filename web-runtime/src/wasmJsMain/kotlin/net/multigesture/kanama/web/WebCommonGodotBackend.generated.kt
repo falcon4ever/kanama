@@ -6,15 +6,18 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalWasmJsInterop
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
+import net.multigesture.kanama.backend.GodotBasis
 import net.multigesture.kanama.backend.GodotCallDescriptor
 import net.multigesture.kanama.backend.GodotCallSite
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotExecutionMode
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
+import net.multigesture.kanama.backend.GodotTransform3D
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
 import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.GodotVector3i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 /**
@@ -58,10 +61,24 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     commands.flush()
-    return existingReturnedObject(
-      receiver,
-      immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),
-    )
+    return when (descriptor.opcode) {
+      38 ->
+        existingReturnedObject(
+          receiver,
+          immediateWebTweenBoolRetObject(descriptor.opcode, receiver.webId(), value),
+        )
+      222 ->
+        // The Boolean rides the property-object-query string; the bridge appends the
+        // proposed handle and the applier registers the duplicate under it.
+        registerReturnedBrowserObject(
+          immediateWebPropertyObjectQuery(
+            descriptor.opcode,
+            receiver.webId(),
+            if (value) "1" else "0",
+          )
+        )
+      else -> error("Unsupported Web Boolean-return-handle opcode=${descriptor.opcode}")
+    }
   }
 
   override fun invokeBoolArg(
@@ -124,7 +141,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(52, 115, 129, 140, 185, 189))
+    require(descriptor.opcode in setOf(52, 115, 129, 140, 185, 189, 209))
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
     }
@@ -210,6 +227,10 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
             }
           120 ->
             check(immediateWebObjectQuery(120, objectId, "") == 1) {
+              "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+            }
+          207 ->
+            check(immediateWebObjectQuery(207, objectId, "") == 1) {
               "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
             }
           else -> error("Unsupported Web immediate void opcode=${descriptor.opcode}")
@@ -374,6 +395,12 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       171 -> {
         require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
         checkNotNull(value)
+      }
+      202 -> {
+        require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
+        // The MeshLibrary was constructed via ClassDB.instantiate, so it is
+        // registered under the NODE kind like every constructed handle.
+        value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }
       }
       else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
     }
@@ -646,6 +673,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           114 -> registerReturnedNode(token)
           122 -> registerReturnedNode(token)
           194 -> registerReturnedNode(token)
+          212 -> registerReturnedBrowserObject(token)
+          225 -> registerReturnedBrowserObject(token)
           else -> error("Unsupported Web no-args-object opcode=${descriptor.opcode}")
         }
       }
@@ -1204,6 +1233,296 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       receiver.webId(),
       name + "" + value.webId().toString(),
     )
+  }
+
+  override fun invokeVector3iLongLongArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3i,
+    first: Long,
+    second: Long,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 203)
+    require(first in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(second in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    // Cell position plus item/orientation packed as five integers (unit separator).
+    val packed =
+      listOf(value.x, value.y, value.z, first.toInt(), second.toInt()).joinToString("\u001f")
+    check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
+  }
+
+  override fun invokeVector3iRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3i,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(204, 205))
+    commands.flush()
+    // Cell position packed as three integers; the result (INVALID_CELL_ITEM = -1
+    // included) rides the shared integer object-query transport.
+    return immediateWebObjectQuery(
+        descriptor.opcode,
+        receiver.webId(),
+        listOf(value.x, value.y, value.z).joinToString(""),
+      )
+      .toLong()
+  }
+
+  override fun invokeBasisRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotBasis,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 206)
+    commands.flush()
+    // Nine Float32 components packed column-major (x, y, z axes; unit separator).
+    val packed =
+      listOf(
+          value.x.x,
+          value.x.y,
+          value.x.z,
+          value.y.x,
+          value.y.y,
+          value.y.z,
+          value.z.x,
+          value.z.y,
+          value.z.z,
+        )
+        .joinToString("")
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed).toLong()
+  }
+
+  override fun invokeNoArgsRetVector3iList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<GodotVector3i> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 208)
+    commands.flush()
+    // The applier packs one comma-joined integer triple per cell (unit separator).
+    return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")
+      .split('')
+      .filter { it.isNotEmpty() }
+      .map { triple ->
+        val parts = triple.split(',')
+        GodotVector3i(parts[0].toInt(), parts[1].toInt(), parts[2].toInt())
+      }
+  }
+
+  override fun invokeLongObjectArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    objectValue: GodotHandle,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 210)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    requireWebBrowserHandle(objectValue.webId(), WebBrowserHandleKind.OBJECT)
+    commands.flush()
+    // Item index and object handle packed into one query string (unit separator).
+    check(
+      immediateWebObjectQuery(
+        descriptor.opcode,
+        receiver.webId(),
+        longValue.toString() + "" + objectValue.webId().toString(),
+      ) == 1
+    ) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
+  }
+
+  override fun invokeLongTransform3dArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    longValue: Long,
+    value: GodotTransform3D,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 211)
+    require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    // Item index plus twelve Float32 transform components (basis columns then origin).
+    val packed =
+      listOf(
+          longValue.toInt().toFloat(),
+          value.basis.x.x,
+          value.basis.x.y,
+          value.basis.x.z,
+          value.basis.y.x,
+          value.basis.y.y,
+          value.basis.y.z,
+          value.basis.z.x,
+          value.basis.z.y,
+          value.basis.z.z,
+          value.origin.x,
+          value.origin.y,
+          value.origin.z,
+        )
+        .joinToString("")
+    check(immediateWebObjectQuery(descriptor.opcode, receiver.webId(), packed) == 1) {
+      "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"
+    }
+  }
+
+  override fun invokeLongRetString(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): String {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 214)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return immediateWebStringQuery(descriptor.opcode, receiver.webId(), value.toString())
+  }
+
+  override fun invokeLongRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 215)
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value.toString()).toLong()
+  }
+
+  override fun invokeLongLongRetString(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: Long,
+    second: Long,
+  ): String {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 216)
+    require(first in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(second in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    // Both indices packed into one query string (unit separator).
+    return immediateWebStringQuery(
+      descriptor.opcode,
+      receiver.webId(),
+      first.toString() + "" + second.toString(),
+    )
+  }
+
+  override fun invokeLongLongRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    first: Long,
+    second: Long,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 217)
+    require(first in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(second in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    // Both indices ride the property-object-query string; the bridge appends the
+    // proposed handle and non-object values resolve to a null handle.
+    return registerReturnedBrowserObject(
+      immediateWebPropertyObjectQuery(
+        descriptor.opcode,
+        receiver.webId(),
+        first.toString() + "" + second.toString(),
+      )
+    )
+  }
+
+  override fun invokeVector2RetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector2,
+  ): GodotVector3 {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(218, 219))
+    commands.flush()
+    return GodotVector3(
+      immediateWebVector2ArgVector3X(
+          descriptor.opcode,
+          receiver.webId(),
+          value.x.toDouble(),
+          value.y.toDouble(),
+        )
+        .toFloat(),
+      immediateWebNoArgsVector3Y().toFloat(),
+      immediateWebNoArgsVector3Z().toFloat(),
+    )
+  }
+
+  override fun invokeObjectStringRetLongSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    resource: GodotHandle,
+    path: String,
+    flags: Long,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 223)
+    require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    commands.flush()
+    // Resource handle, destination path, and flags packed into one query string; the
+    // applier pulls current Kotlin property values into scripted resources first.
+    return immediateWebObjectQuery(
+        descriptor.opcode,
+        requireActiveWebScriptHandle(),
+        resource.webId().toString() + "" + path + "" + flags.toString(),
+      )
+      .toLong()
+  }
+
+  override fun invokeStringStringBoolBoolRetHandleList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    pattern: String,
+    type: String,
+    recursive: Boolean,
+    owned: Boolean,
+  ): List<GodotHandle> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 224)
+    commands.flush()
+    // Pattern, type, and both flags packed into one query string; the applier packs the
+    // matches back as handles (scripted matches resolve to script handles, engine nodes
+    // get tracked browser handles).
+    val packed =
+      listOf(pattern, type, if (recursive) "1" else "0", if (owned) "1" else "0").joinToString("")
+    return immediateWebStringQuery(descriptor.opcode, receiver.webId(), packed)
+      .split('')
+      .filter { it.isNotEmpty() }
+      .map { GodotHandle.fromBackendToken(it.toLong()) }
   }
 
   private fun requireOpcode(descriptor: GodotCallDescriptor, callSite: GodotCallSite) {

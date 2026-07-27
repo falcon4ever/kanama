@@ -187,6 +187,13 @@ internal fun immediateWebTweenCallback(
   method: String,
 ): Int = js("globalThis.KanamaWebBridge.immediateTweenCallback(opcode, tweenId, targetId, method)")
 
+internal fun immediateWebVector2ArgVector3X(
+  opcode: Int,
+  objectId: Int,
+  x: Double,
+  y: Double,
+): Double = js("globalThis.KanamaWebBridge.immediateVector2ArgVector3X(opcode, objectId, x, y)")
+
 internal fun immediateWebNoArgsVector3X(opcode: Int, objectId: Int): Double =
   js("globalThis.KanamaWebBridge.immediateNoArgsVector3X(opcode, objectId)")
 

@@ -155,6 +155,16 @@ object Mathf {
 
   fun max(a: Double, b: Double): Double = kotlin.math.max(a, b)
 
+  /** Godot's roundi: round half away from zero to the nearest integer. */
+  fun roundToInt(value: Double): Long = kotlin.math.round(value).toLong()
+
+  /** Godot's wrapi: wrap [value] into the half-open range [min, max). */
+  fun wrap(value: Long, min: Long, max: Long): Long {
+    val range = max - min
+    if (range == 0L) return min
+    return min + ((value - min) % range + range) % range
+  }
+
   fun isEqualApprox(a: Double, b: Double): Boolean = kotlin.math.abs(a - b) < 1e-6
 
   /** Godot's angle_lerp / lerp_angle: interpolate the shortest arc between two angles (radians). */
