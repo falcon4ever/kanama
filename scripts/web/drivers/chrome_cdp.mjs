@@ -153,6 +153,9 @@ async function main() {
       if (message.id) {
         const callback = pendingCalls.get(message.id);
         pendingCalls.delete(message.id);
+        // A reply can outlive its per-call timeout (which already rejected and
+        // removed the entry); a late response must not crash the driver.
+        if (!callback) return;
         if (message.error) callback.reject(new Error(JSON.stringify(message.error)));
         else callback.resolve(message.result);
         return;
