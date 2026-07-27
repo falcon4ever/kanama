@@ -60,6 +60,39 @@ async function main() {
     if (!driver.killed) driver.kill("SIGKILL");
   };
   process.on("exit", cleanup);
+  // Three ways this process can end without the browser being reaped, all of
+  // which have happened: a headless Firefox was found still playing demo audio
+  // TWO DAYS after its run. The browser must not outlive the driver.
+  //
+  // 1. A signal. Node's 'exit' does NOT fire on one, and macOS has no setsid,
+  //    so the smoke shell can only signal this process, never a group.
+  for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+    process.on(signal, () => {
+      cleanup();
+      process.exit(1);
+    });
+  }
+  // 2. The parent dies without signalling us at all (the shell is SIGKILLed, or
+  //    its terminal goes away). Nothing reaches this process, so watch for
+  //    being reparented away from the shell that launched us and self-reap.
+  const launchParentPid = process.ppid;
+  const orphanWatch = setInterval(() => {
+    if (process.ppid !== launchParentPid) {
+      console.error("driver: parent process is gone; reaping the browser");
+      cleanup();
+      process.exit(1);
+    }
+  }, 1000);
+  orphanWatch.unref();
+  // 3. The driver itself hangs past its own budget (a CDP/WebDriver call that
+  //    never returns leaves the browser held open). Hard stop, cleanup, exit.
+  const budgetMs = Number(args.timeout) * 1000;
+  const hardStop = setTimeout(() => {
+    console.error(`driver: exceeded its ${args.timeout}s budget; reaping the browser`);
+    cleanup();
+    process.exit(1);
+  }, budgetMs + 30_000);
+  hardStop.unref();
 
   const wd = async (method, endpoint, body) => {
     const response = await fetch(`${base}${endpoint}`, {
