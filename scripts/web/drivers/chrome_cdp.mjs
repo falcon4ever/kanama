@@ -30,9 +30,10 @@ import { runPlatformer } from "./demos/platformer.mjs";
 import { runSquash } from "./demos/squash.mjs";
 import { runFps } from "./demos/fps.mjs";
 import { runCharactercontroller } from "./demos/charactercontroller.mjs";
+import { runThirdperson } from "./demos/thirdperson.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson };
 
 function parseArgs(argv) {
   const args = {};
