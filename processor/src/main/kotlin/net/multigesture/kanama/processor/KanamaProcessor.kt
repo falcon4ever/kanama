@@ -66,7 +66,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
   private val emitJvmCode: Boolean =
     env.platforms.isEmpty() ||
       env.platforms.any { it.platformName.equals("JVM", ignoreCase = true) }
-  private val emitWebCode: Boolean = env.options["kanamaRuntimeTarget"] == "web"
+  private val emitWebCode: Boolean = WebScriptCodeEmitter.isWebTarget(env.options)
   private val emitIosCode: Boolean = !emitJvmCode && !emitWebCode
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -115,6 +115,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           env.logger.error("[kanama:ksp] ${e.message}", symbol)
           continue
         }
+      for (message in WebScriptCodeEmitter.undispatchedVirtualErrors(model, env.options)) {
+        env.logger.error("[kanama:ksp] $message", symbol)
+      }
       symbol.containingFile?.let {
         aggregatorSources += it
         scriptAggregatorSources += it

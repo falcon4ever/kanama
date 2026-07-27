@@ -10,6 +10,51 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   companion object {
     const val PROTOCOL_VERSION = 15
     const val PROTOCOL_SCHEMA_VERSION = 1
+
+    /**
+     * Godot virtuals the emitted proxy actually crosses into Kotlin. Keep in sync with the
+     * `append*Dispatcher()` functions below — a virtual outside this set is emitted into the script
+     * model, compiles cleanly, and is then never dispatched.
+     */
+    val DISPATCHED_VIRTUALS =
+      linkedSetOf(
+        "_ready",
+        "_process",
+        "_physics_process",
+        "_draw",
+        "_exit_tree",
+        "_input",
+        "_unhandled_input",
+      )
+
+    /** True when KSP is running for the Web (Kotlin/Wasm) target. */
+    fun isWebTarget(options: Map<String, String>): Boolean = options["kanamaRuntimeTarget"] == "web"
+
+    /**
+     * Errors for virtuals a Web build would silently drop (task 66).
+     *
+     * `@OnEnterTree` and friends compile for a Web target and are then never called, so the body
+     * just disappears — in the tps-demo port that cost a long debugging detour for what should have
+     * been a build failure. Fail the build instead, naming the script and the function. Empty on
+     * every non-Web target, where the same virtuals are dispatched normally.
+     */
+    fun undispatchedVirtualErrors(model: ScriptModel, options: Map<String, String>): List<String> {
+      if (!isWebTarget(options)) return emptyList()
+      return model.virtuals
+        .filter { it.virtualName !in DISPATCHED_VIRTUALS }
+        .map { virtual ->
+          val where = "${model.simpleName}.${virtual.kotlinMethodName}"
+          val advice =
+            if (virtual.virtualName == "_enter_tree")
+              "move its body into an @OnReady function — the Web backend dispatches script " +
+                "lifecycle from _ready"
+            else
+              "move the work into a dispatched virtual " +
+                "(${DISPATCHED_VIRTUALS.joinToString(", ")})"
+          "$where: ${virtual.virtualName} is not dispatched by the Kanama Web backend, so this " +
+            "function would never run in a Web build; $advice."
+        }
+    }
   }
 
   data class ProxySource(
