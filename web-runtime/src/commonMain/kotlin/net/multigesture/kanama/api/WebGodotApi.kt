@@ -370,4 +370,7 @@ internal expect fun releaseWebScriptResource(handle: Int)
 
 internal expect fun releaseWebConstructedObject(handle: Int)
 
+/** Release a tracked OBJECT-kind handle (a duplicated resource the script owns). */
+internal expect fun releaseWebTrackedObject(handle: Int)
+
 internal expect fun isWebBrowserHandleLive(handle: Int): Boolean

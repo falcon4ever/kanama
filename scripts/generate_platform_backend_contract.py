@@ -77,6 +77,13 @@ def render() -> str:
         )
     if lines[-1] == "":
         lines.pop()
+    lines.extend(
+        [
+            "",
+            "  /** Highest opcode in the shared contract; sizes the call-site resolution cache. */",
+            f"  const val MAX_OPCODE = {max(policy.opcode for policy in INITIAL_BACKEND_CALLS)}",
+        ]
+    )
     lines.append("}")
     lines.append("")
     return "\n".join(lines)

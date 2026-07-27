@@ -235,7 +235,7 @@ open class Material internal constructor(godotObject: GodotHandle) :
 
   /** Release this material's tracked browser handle (duplicates are Kotlin-owned). */
   fun close() {
-    releaseWebConstructedObject(handle.value)
+    releaseWebTrackedObject(handle.value)
   }
 
   companion object {

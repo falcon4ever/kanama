@@ -899,7 +899,9 @@ interface GodotBackendSpi {
 @InternalKanamaBackendApi
 @OptIn(InternalKanamaBackendApi::class)
 object GodotBackendCalls {
-  private const val MAX_INITIAL_OPCODE = 255
+  // Derived from the shared contract so the cache cannot silently fall behind the
+  // opcode table (task 60i grew it past the previous hardcoded bound).
+  private val MAX_INITIAL_OPCODE = InitialGodotCallDescriptors.MAX_OPCODE
   private val resolved = arrayOfNulls<GodotCallSite>(MAX_INITIAL_OPCODE + 1)
   private var backend: GodotBackendSpi? = null
 

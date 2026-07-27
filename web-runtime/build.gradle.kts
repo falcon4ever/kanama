@@ -2206,6 +2206,20 @@ tasks.register("stageWebTpsdemoProject") {
                 )
         )
 
+        // The menu's FogVolume needs the volumetric-fog shader, which the Compatibility
+        // renderer this export runs has no implementation for (it logs "shader type fog not
+        // supported"). Drop the node from the staged scene rather than ship a broken effect.
+        val stagedMenu = stagingDir.resolve("menu/menu.tscn")
+        val menuText = stagedMenu.readText()
+        val fogHeader = "[node name=\"FogVolume\" type=\"FogVolume\" parent=\"WorldEnvironment\"]"
+        check(menuText.contains(fogHeader)) {
+            "tps-demo menu FogVolume changed; update the Web staging transform"
+        }
+        val fogStart = menuText.indexOf(fogHeader)
+        val fogEnd = menuText.indexOf("\n[", fogStart + fogHeader.length)
+        check(fogEnd > fogStart) { "tps-demo menu FogVolume block is not delimited as expected" }
+        stagedMenu.writeText(menuText.removeRange(fogStart, fogEnd + 1))
+
         val shell = stagingDir.resolve("kanama-web/shell.html")
         val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
         shell.writeText(

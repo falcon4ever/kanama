@@ -3149,4 +3149,7 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
+  const val MAX_OPCODE = 286
 }

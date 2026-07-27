@@ -49,3 +49,11 @@ internal actual fun releaseWebConstructedObject(handle: Int) {
 
 private fun releaseWebConstructedObjectInterop(handle: Int): Int =
   js("globalThis.KanamaWebBridge.releaseConstructedObject(handle)")
+
+internal actual fun releaseWebTrackedObject(handle: Int) {
+  // Same bridge release as a constructed handle (the slot retires under its recorded kind);
+  // returned resources such as a duplicated Material are tracked as OBJECT, not NODE.
+  val released = releaseWebConstructedObjectInterop(handle)
+  check(released == 1) { "Unknown or already released Kanama Web object handle=$handle" }
+  unregisterWebBrowserHandle(handle, WebBrowserHandleKind.OBJECT)
+}
