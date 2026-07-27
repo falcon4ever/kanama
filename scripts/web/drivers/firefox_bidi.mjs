@@ -121,6 +121,17 @@ async function main() {
     }
   };
   process.on("exit", cleanup);
+  // 'exit' does NOT fire when node is killed by a signal, and macOS has no
+  // setsid — so the smoke shell's timeout/abort path can only signal this
+  // process, not a group. Without these handlers an interrupted run leaves the
+  // browser ALIVE: still rendering, still playing the demo's audio, still
+  // holding its profile dir. Reap it on the way out.
+  for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+    process.on(signal, () => {
+      cleanup();
+      process.exit(1);
+    });
+  }
 
   try {
     // Poll-connect to the BiDi session endpoint until Firefox is listening.
