@@ -97,6 +97,13 @@ async function main() {
       "--no-first-run",
       "--no-default-browser-check",
       "--disable-extensions",
+      // Never touch the OS credential store. Without these, a Chrome launched
+      // under an unfamiliar HOME (the fresh-checkout gate's isolated workspace)
+      // pops a MODAL "Keychain Not Found" dialog on macOS, which blocks
+      // navigation until a human dismisses it — the driver just sees
+      // Page.navigate hang until its timeout.
+      "--use-mock-keychain",
+      "--password-store=basic",
       "--hide-scrollbars",
       "--force-device-scale-factor=1",
       `--user-data-dir=${profileDir}`,

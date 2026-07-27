@@ -103,25 +103,9 @@ fi
 
 # --- source-tree immutability: checksum the served tree before the run. -------
 tree_checksum() {
-  # Deterministic checksum over sorted (relative-path, sha256) pairs. Portable
-  # across macOS (shasum) and Linux CI (sha256sum) via python3.
-  python3 - "$1" <<'PY'
-import hashlib, os, sys
-root = sys.argv[1]
-digest = hashlib.sha256()
-for dirpath, dirnames, filenames in os.walk(root):
-    dirnames.sort()
-    for name in sorted(filenames):
-        path = os.path.join(dirpath, name)
-        rel = os.path.relpath(path, root)
-        digest.update(rel.encode("utf-8"))
-        digest.update(b"\0")
-        with open(path, "rb") as handle:
-            for chunk in iter(lambda: handle.read(65536), b""):
-                digest.update(chunk)
-        digest.update(b"\0")
-print(digest.hexdigest())
-PY
+  # Deterministic checksum over sorted (relative-path, contents) pairs, shared
+  # with the fresh-checkout gate so the two agree byte-for-byte (task 60g).
+  python3 "$WEB_DIR/tree_checksum.py" "$1"
 }
 
 CHECKSUM_BEFORE="$(tree_checksum "$EXPORT_DIR")"

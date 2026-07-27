@@ -295,5 +295,10 @@ Before a release tag, prefer an isolated clone gate:
 ./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-stable
 ```
 
+The Web analog is `scripts/web_fresh_checkout_smoke.sh`: it exports from a clean
+clone in an isolated workspace, proves no build-machine path reaches a served
+file and that the demo source tree is untouched, then drives the artifact in a
+browser with the harness from that clone. See `docs/exporting/web.md`.
+
 Use demo-repo smoke tasks when a change affects real gameplay ports, wrappers
 used by demos, package onboarding, or Android exports.

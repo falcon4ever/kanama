@@ -69,6 +69,10 @@ example_project/addons/kanama/kanama_bootstrap.*
 example_project/addons/kanama/kanama.jar
 example_project/addons/kanama/kanama-scripts.jar
 example_project/hs_err_pid*.log
+# A JVM crash (seen once: a C2 JIT SIGSEGV during a Gradle build) drops these
+# in whatever directory it ran from; they must never reach a commit.
+hs_err_pid*.log
+replay_pid*.log
 
 # --- Android spike outputs ---
 android/godot-plugin/plugin/.cxx/
