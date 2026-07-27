@@ -144,6 +144,19 @@ object Mathf {
 
   fun lerp(from: Double, to: Double, weight: Double): Double = from + (to - from) * weight
 
+  fun inverseLerp(from: Double, to: Double, value: Double): Double =
+    if (to == from) 0.0 else (value - from) / (to - from)
+
+  fun sqrt(value: Double): Double = kotlin.math.sqrt(value)
+
+  fun min(a: Double, b: Double): Double = kotlin.math.min(a, b)
+
+  fun min(a: Long, b: Long): Long = kotlin.math.min(a, b)
+
+  fun max(a: Double, b: Double): Double = kotlin.math.max(a, b)
+
+  fun isEqualApprox(a: Double, b: Double): Boolean = kotlin.math.abs(a - b) < 1e-6
+
   /** Godot's angle_lerp / lerp_angle: interpolate the shortest arc between two angles (radians). */
   fun lerpAngle(from: Double, to: Double, weight: Double): Double {
     val difference = (to - from) % TAU
@@ -191,7 +204,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     target: GodotObject,
     flags: Long = 0L,
     callback: (GodotObject) -> Unit,
-  ): Long {
+  ): SignalConnection? {
     val callbackId =
       WebSignalCallbackRegistry.registerObject(
         target.handle.value,
@@ -209,8 +222,11 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
           callbackId.toLong(),
           flags,
         )
-    if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
-    return result
+    if (result != 0L) {
+      WebSignalCallbackRegistry.unregister(callbackId)
+      return null
+    }
+    return SignalConnection(owner, name, target, callbackId)
   }
 
   /** Suspends until this signal fires once (a one-shot connection resumes the coroutine). */
@@ -223,6 +239,32 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
         if (continuation.isActive) continuation.resume(Unit)
       }
     }
+  }
+}
+
+/** A live bound connection; [close] disconnects and releases the Kotlin callback. */
+class SignalConnection
+internal constructor(
+  private val source: GodotObject,
+  private val name: String,
+  private val target: GodotObject,
+  private val callbackId: Int,
+) {
+  private var closed = false
+
+  fun close() {
+    if (closed) return
+    closed = true
+    GodotBackendCalls.invokeStringNameBoundCallableLongRetLong(
+      InitialGodotCallDescriptors.OBJECT_DISCONNECT,
+      source.backendHandle,
+      name,
+      target.backendHandle,
+      "_kanama_web_signal_dispatch_object",
+      callbackId.toLong(),
+      -1L,
+    )
+    WebSignalCallbackRegistry.unregister(callbackId)
   }
 }
 
@@ -408,6 +450,19 @@ class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObjec
     TweenBackendContractProbe(backendHandle).tweenCallback(target.backendHandle, method)
   }
 
+  /** Tween a registered method with an interpolated double (the Callable binds proxy-side). */
+  fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double) {
+    GodotBackendCalls.invokeCallableDoubleRangeRetHandle(
+      InitialGodotCallDescriptors.TWEEN_TWEEN_METHOD,
+      backendHandle,
+      target.backendHandle,
+      method,
+      from,
+      to,
+      duration,
+    )
+  }
+
   private fun wrapSelf(returned: net.multigesture.kanama.backend.GodotHandle?): Tween {
     check(returned != null && returned.backendToken() == backendHandle.backendToken()) {
       "Tween fluent call did not return its receiver"
@@ -510,6 +565,13 @@ object Input {
     return if (length > 1.0) vector / length else vector
   }
 
+  /** exact_match baked false; x1000 integer transport. */
+  fun getActionRawStrength(action: String): Double =
+    GodotBackendCalls.invokeStringNameRetDoubleSingleton(
+      InitialGodotCallDescriptors.INPUT_GET_ACTION_RAW_STRENGTH,
+      action,
+    )
+
   fun getAxis(negativeAction: String, positiveAction: String): Double =
     GodotBackendCalls.invokeStringNameStringNameRetDoubleSingleton(
       InitialGodotCallDescriptors.INPUT_GET_AXIS,
@@ -525,6 +587,14 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
 
   fun callGroup(group: String, method: String) {
     SceneTreeBackendContractProbe(backendHandle).callGroup(group, method)
+  }
+
+  fun setPaused(paused: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.SCENETREE_SET_PAUSE,
+      backendHandle,
+      paused,
+    )
   }
 
   fun reloadCurrentScene() {

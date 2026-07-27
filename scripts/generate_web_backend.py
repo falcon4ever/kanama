@@ -201,6 +201,41 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     156: {},
     157: {},
     158: {},
+    159: {},
+    160: {},
+    161: {},
+    162: {},
+    163: {},
+    164: {},
+    165: {},
+    166: {},
+    167: {},
+    168: {},
+    169: {},
+    170: {},
+    171: {},
+    172: {},
+    173: {},
+    174: {"ret": "existing"},
+    175: {},
+    176: {},
+    177: {},
+    178: {},
+    179: {},
+    180: {},
+    181: {},
+    182: {},
+    183: {},
+    184: {},
+    185: {},
+    186: {},
+    187: {},
+    188: {},
+    189: {},
+    190: {},
+    191: {},
+    192: {},
+    193: {},
 }
 
 
@@ -449,6 +484,95 @@ def body_STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON(calls):
         "// returned scaled by 1000 through the shared object-query transport.",
         'return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), '
         'first + "\\u001f" + second) / 1000.0',
+    ]
+
+
+def body_VECTOR3_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Motion packed as three floats; the bridge allocates the collision slot and the",
+        "// applier registers the KinematicCollision3D under it (null collision returns 0).",
+        "return registerReturnedBrowserObject(",
+        "immediateWebMoveAndCollide(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        'listOf(value.x, value.y, value.z).joinToString("\u001f"),',
+        ")",
+        ")",
+    ]
+
+
+def body_NOARGS_RET_HANDLE_LIST(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// The applier packs the SCRIPT handles of scripted overlapping bodies (unit",
+        "// separator); bodies without Kanama scripts are omitted by contract.",
+        'return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")',
+        ".split('\u001f')",
+        ".filter { it.isNotEmpty() }",
+        ".map { GodotHandle.fromBackendToken(it.toLong()) }",
+    ]
+
+
+def body_LONG_RET_VECTOR3(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "commands.flush()",
+        "return GodotVector3(",
+        "immediateWebIndexedVector3X(descriptor.opcode, receiver.webId(), value.toInt()).toFloat(),",
+        "immediateWebNoArgsVector3Y().toFloat(),",
+        "immediateWebNoArgsVector3Z().toFloat(),",
+        ")",
+    ]
+
+
+def body_STRINGNAME_RET_DOUBLE_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Scaled by 1000 through the shared integer object-query transport.",
+        "return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) /",
+        "1000.0",
+    ]
+
+
+def body_STRINGNAME_VECTOR3_VECTOR3_ARG(calls):
+    return [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+        "commands.appendStringNameVector3Vector3Mutation(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "name,",
+        "first,",
+        "second,",
+        ")",
+    ]
+
+
+def body_CALLABLE_DOUBLE_RANGE_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return registerReturnedBrowserObject(",
+        "immediateWebTweenMethod(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "target.webId(),",
+        "method,",
+        "fromValue,",
+        "toValue,",
+        "duration,",
+        ")",
+        ")",
     ]
 
 
@@ -724,6 +848,13 @@ def body_OBJECT_ARG(calls):
                 "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
                 "}",
             ]
+        elif op in (165, 170, 171):
+            lines += [
+                f"{op} -> {{",
+                f"require(descriptor.executionMode == {_QUEUED})",
+                "checkNotNull(value)",
+                "}",
+            ]
         else:
             raise GenerationError(f"OBJECT_ARG opcode {op} has no emitter arm")
     lines += [
@@ -741,8 +872,11 @@ def body_NODEPATH_RET_HANDLE(calls):
         "commands.flush()",
         "return when (descriptor.opcode) {",
         "17 -> registerReturnedNode(immediateWebNodeLookup(receiver.webId(), path))",
-        "149 ->",
-        "registerReturnedBrowserObject(immediateWebPropertyObjectQuery(receiver.webId(), path))",
+        "149,",
+        "184 ->",
+        "registerReturnedBrowserObject(",
+        "immediateWebPropertyObjectQuery(descriptor.opcode, receiver.webId(), path)",
+        ")",
         'else -> error("Unsupported Web path-to-handle opcode=${descriptor.opcode}")',
         "}",
     ]
@@ -864,7 +998,9 @@ def body_STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG(calls):
         "require(boundValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
         "require(flags in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
         "commands.flush()",
-        "return immediateWebConnectBound(",
+        "return when (descriptor.opcode) {",
+        "34 ->",
+        "immediateWebConnectBound(",
         "receiver.webId(),",
         "signal,",
         "target.webId(),",
@@ -873,6 +1009,17 @@ def body_STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG(calls):
         "flags.toInt(),",
         ")",
         ".toLong()",
+        "193 ->",
+        "immediateWebDisconnectBound(",
+        "receiver.webId(),",
+        "signal,",
+        "target.webId(),",
+        "method,",
+        "boundValue.toInt(),",
+        ")",
+        ".toLong()",
+        'else -> error("Unsupported Web bound-callable opcode=${descriptor.opcode}")',
+        "}",
     ]
 
 
@@ -1245,6 +1392,36 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["receiver: GodotHandle", "layer: Long", "value: Boolean"],
         "",
     ),
+    "VECTOR3_RET_HANDLE": (
+        ["receiver: GodotHandle", "value: GodotVector3"],
+        "GodotHandle?",
+    ),
+    "NOARGS_RET_HANDLE_LIST": (["receiver: GodotHandle"], "List<GodotHandle>"),
+    "LONG_RET_VECTOR3": (
+        ["receiver: GodotHandle", "value: Long"],
+        "GodotVector3",
+    ),
+    "STRINGNAME_RET_DOUBLE_SINGLETON": (["value: String"], "Double"),
+    "STRINGNAME_VECTOR3_VECTOR3_ARG": (
+        [
+            "receiver: GodotHandle",
+            "name: String",
+            "first: GodotVector3",
+            "second: GodotVector3",
+        ],
+        "",
+    ),
+    "CALLABLE_DOUBLE_RANGE_RET_HANDLE": (
+        [
+            "receiver: GodotHandle",
+            "target: GodotHandle",
+            "method: String",
+            "fromValue: Double",
+            "toValue: Double",
+            "duration: Double",
+        ],
+        "GodotHandle?",
+    ),
     "STRINGNAME_STRINGNAME_ARG": (
         ["receiver: GodotHandle", "first: String", "second: String"],
         "",
@@ -1304,6 +1481,8 @@ _WORD_CASE = {
     "BOUND": "Bound",
     "SINGLETON": "Singleton",
     "ARRAY": "Array",
+    "LIST": "List",
+    "RANGE": "Range",
 }
 
 
@@ -1336,6 +1515,12 @@ EMIT_ORDER = [
     "STRINGNAME_ARG",
     "STRINGNAME_BOOL_ARG",
     "LONG_BOOL_ARG",
+    "VECTOR3_RET_HANDLE",
+    "NOARGS_RET_HANDLE_LIST",
+    "LONG_RET_VECTOR3",
+    "STRINGNAME_RET_DOUBLE_SINGLETON",
+    "STRINGNAME_VECTOR3_VECTOR3_ARG",
+    "CALLABLE_DOUBLE_RANGE_RET_HANDLE",
     "STRINGNAME_STRINGNAME_ARG",
     "NODEPATH_RET_HANDLE",
     "LONG_RET_HANDLE",

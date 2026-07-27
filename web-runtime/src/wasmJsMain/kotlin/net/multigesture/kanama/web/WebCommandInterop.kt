@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalWasmJsInterop::class)
+@file:OptIn(
+  ExperimentalWasmJsInterop::class,
+  net.multigesture.kanama.backend.InternalKanamaBackendApi::class,
+)
 
 package net.multigesture.kanama.web
 
@@ -113,6 +116,25 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 2] = internWebCommandStringName(value)
   }
 
+  fun appendStringNameVector3Vector3Mutation(
+    opcode: Int,
+    objectHandle: Int,
+    name: String,
+    first: net.multigesture.kanama.backend.GodotVector3,
+    second: net.multigesture.kanama.backend.GodotVector3,
+  ) {
+    val offset = reserve(WORDS_STRINGNAME_VECTOR3_VECTOR3)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(name)
+    words[offset + 3] = first.x.toBits()
+    words[offset + 4] = first.y.toBits()
+    words[offset + 5] = first.z.toBits()
+    words[offset + 6] = second.x.toBits()
+    words[offset + 7] = second.y.toBits()
+    words[offset + 8] = second.z.toBits()
+  }
+
   fun appendStringNameBoolMutation(opcode: Int, objectHandle: Int, name: String, value: Boolean) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = opcode
@@ -224,6 +246,7 @@ internal class WebCommandBuffer(capacity: Int) {
     const val WORDS_LONG_DOUBLE = 5
     const val WORDS_STRINGNAME_DOUBLE = 5
     const val WORDS_COLOR = 6
+    const val WORDS_STRINGNAME_VECTOR3_VECTOR3 = 9
     const val WORDS_DRAW_TEXTURE = 9
     const val MAX_WORDS_PER_COMMAND = WORDS_DRAW_TEXTURE
     // The benchmark contributes 10,000 data mutations plus one phase-control mutation (redraw).

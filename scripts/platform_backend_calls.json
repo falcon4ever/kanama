@@ -2455,6 +2455,580 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a pitch-scale write (randomized footstep/destroy pitches).",
       "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 159,
+      "className": "RigidBody3D",
+      "methodName": "apply_impulse",
+      "hash": 2754756483,
+      "arguments": [
+        "Vector3",
+        "Vector3"
+      ],
+      "shape": "VECTOR3_VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Apply a positioned impulse (packed six-float immediate; bot knockback).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 160,
+      "className": "RigidBody3D",
+      "methodName": "apply_central_impulse",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "shape": "VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Apply a central impulse (packed three-float immediate; coin launch).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 161,
+      "className": "RigidBody3D",
+      "methodName": "set_gravity_scale",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue a gravity-scale write (defeated bots start falling).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 162,
+      "className": "RigidBody3D",
+      "methodName": "set_lock_rotation_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue unlocking rotation (defeated beetle-bot tumbles).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 163,
+      "className": "PhysicsBody3D",
+      "methodName": "set_axis_lock",
+      "hash": 1787895195,
+      "arguments": [
+        "enum::PhysicsServer3D.BodyAxis",
+        "bool"
+      ],
+      "shape": "LONG_BOOL_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Toggle one body-axis lock (packed axis/value immediate).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 164,
+      "className": "CollisionObject3D",
+      "methodName": "set_collision_layer_value",
+      "hash": 300928843,
+      "arguments": [
+        "int",
+        "bool"
+      ],
+      "shape": "LONG_BOOL_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Toggle one collision-layer bit (packed layer/value immediate; coin pickup delay).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 165,
+      "className": "PhysicsBody3D",
+      "methodName": "add_collision_exception_with",
+      "hash": 1078189570,
+      "arguments": [
+        "Node"
+      ],
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue a pairwise collision exception (coin follows its collector; grenade skips the thrower).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 166,
+      "className": "PhysicsBody3D",
+      "methodName": "move_and_collide",
+      "hash": 3208792678,
+      "arguments": [
+        "Vector3",
+        "bool",
+        "float",
+        "bool",
+        "int"
+      ],
+      "returnType": "KinematicCollision3D",
+      "shape": "VECTOR3_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Move by a motion vector and return the first collision as a closeable handle (trailing arguments baked to Godot defaults).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 167,
+      "className": "Area3D",
+      "methodName": "get_overlapping_bodies",
+      "hash": 3995934104,
+      "arguments": [],
+      "returnType": "typedarray::Node3D",
+      "shape": "NOARGS_RET_HANDLE_LIST",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Overlapping physics bodies as script handles (bodies without Kanama scripts are omitted; the explosion filters to scripted damageables).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 168,
+      "className": "SceneTree",
+      "methodName": "set_pause",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue pausing/unpausing the tree (the demo boots paused behind its menu).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 169,
+      "className": "Node",
+      "methodName": "set_process",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue toggling idle processing (bullet pool parks recycled bullets).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 170,
+      "className": "SpringArm3D",
+      "methodName": "add_excluded_object",
+      "hash": 2722037293,
+      "arguments": [
+        "RID"
+      ],
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue excluding a collision object from the spring-arm probe; the RID never crosses the boundary \u2014 the applier derives it from the passed object handle.",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 171,
+      "className": "RayCast3D",
+      "methodName": "add_exception",
+      "hash": 1976431078,
+      "arguments": [
+        "CollisionObject3D"
+      ],
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue excluding a collision object from the ray (camera aim skips its anchor).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 172,
+      "className": "ShapeCast3D",
+      "methodName": "get_collision_count",
+      "hash": 3905245786,
+      "arguments": [],
+      "returnType": "int",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Number of shape-cast hits this tick (ground-height probe).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 173,
+      "className": "ShapeCast3D",
+      "methodName": "get_collision_point",
+      "hash": 711720468,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Vector3",
+      "shape": "LONG_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "World-space hit point by index through the indexed Vector3 query.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 174,
+      "className": "ShapeCast3D",
+      "methodName": "get_collider",
+      "hash": 3332903315,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "Object",
+      "shape": "LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "The indexed hit object as an existing tracked handle (script-or-known, node-lookup rule).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 175,
+      "className": "ShapeCast3D",
+      "methodName": "set_target_position",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "shape": "VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Aim the cast (packed three-float immediate; the launcher re-aims per tick and reads back).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 176,
+      "className": "ShapeCast3D",
+      "methodName": "get_target_position",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "The cast's local target vector (synchronous read-after-write).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 177,
+      "className": "NavigationAgent3D",
+      "methodName": "set_target_position",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "shape": "VECTOR3_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Set the navigation goal (packed three-float immediate before the path query).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 178,
+      "className": "NavigationAgent3D",
+      "methodName": "get_next_path_position",
+      "hash": 3783033775,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Next path waypoint (beetle-bot steering).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 179,
+      "className": "NavigationAgent3D",
+      "methodName": "is_target_reached",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Whether the agent finished its path.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 180,
+      "className": "AnimationMixer",
+      "methodName": "set_active",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue activating the mixer (skins enable their AnimationTree on ready).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 181,
+      "className": "AnimationPlayer",
+      "methodName": "stop",
+      "hash": 107499316,
+      "arguments": [
+        "bool"
+      ],
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue stopping playback (keep_state baked to Godot's default false).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 182,
+      "className": "AnimationPlayer",
+      "methodName": "seek",
+      "hash": 1807872683,
+      "arguments": [
+        "float",
+        "bool",
+        "bool"
+      ],
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue seeking to a time with update baked true (bot flight rewind).",
+      "descriptorName": "ANIMATIONPLAYER_SEEK",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 183,
+      "className": "AnimationPlayer",
+      "methodName": "set_default_blend_time",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue the default cross-animation blend time.",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 184,
+      "className": "AnimationMixer",
+      "methodName": "get_animation",
+      "hash": 2933122410,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Animation",
+      "shape": "NODEPATH_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Resolve a named Animation resource to a tracked handle (loop-mode forcing).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 185,
+      "className": "Animation",
+      "methodName": "set_loop_mode",
+      "hash": 3155355575,
+      "arguments": [
+        "enum::Animation.LoopMode"
+      ],
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue a loop-mode write on a resolved Animation resource.",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 186,
+      "scope": "singleton",
+      "className": "Input",
+      "methodName": "get_action_raw_strength",
+      "hash": 801543509,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "float",
+      "shape": "STRINGNAME_RET_DOUBLE_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Raw action strength scaled by 1000 through the object-query transport (exact_match baked false).",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 187,
+      "scope": "singleton",
+      "className": "ProjectSettings",
+      "methodName": "get_setting",
+      "hash": 223050753,
+      "arguments": [
+        "String",
+        "Variant"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_RET_DOUBLE_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Float-valued project setting scaled by 1000 (default-gravity read).",
+      "descriptorName": "PROJECTSETTINGS_GET_SETTING_DOUBLE",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 188,
+      "className": "AudioStreamPlayer3D",
+      "methodName": "is_playing",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Whether the positional stream is playing (bullet recycle stop guard).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 189,
+      "className": "MeshInstance3D",
+      "methodName": "set_surface_override_material",
+      "hash": 3671737478,
+      "arguments": [
+        "int",
+        "Material"
+      ],
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue clearing one surface override (material baked null \u2014 bee-bot teardown).",
+      "descriptorName": "MESHINSTANCE3D_CLEAR_SURFACE_OVERRIDE_MATERIAL",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 190,
+      "scope": "singleton",
+      "className": "OS",
+      "methodName": "shell_open",
+      "hash": 166001499,
+      "arguments": [
+        "String"
+      ],
+      "returnType": "enum::Error",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Open a URL (the browser opens a new tab; menu link buttons).",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 191,
+      "className": "Object",
+      "methodName": "call",
+      "hash": 3400424181,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "Variant",
+      "shape": "STRINGNAME_VECTOR3_VECTOR3_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "isVararg": true,
+      "typedVarargTail": [
+        "Vector3",
+        "Vector3"
+      ],
+      "semantics": "Queue a dynamic damage(impact, force) dispatch (interned method + six doubles; the Variant return is discarded).",
+      "descriptorName": "OBJECT_CALL_VECTOR3_VECTOR3",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 192,
+      "className": "Tween",
+      "methodName": "tween_method",
+      "hash": 2337877153,
+      "arguments": [
+        "Callable",
+        "Variant",
+        "Variant",
+        "float"
+      ],
+      "returnType": "MethodTweener",
+      "shape": "CALLABLE_DOUBLE_RANGE_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "Tween a registered method with an interpolated double (coin follow); the Callable binds to the owning script's proxy method.",
+      "scope": "class",
+      "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 193,
+      "className": "Object",
+      "methodName": "disconnect",
+      "hash": 1874754934,
+      "arguments": [
+        "StringName",
+        "Callable"
+      ],
+      "shape": "STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Disconnect a bound signal-dispatch callable (bots drop their detection hooks on defeat).",
+      "descriptorName": "OBJECT_DISCONNECT",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60f-third-person"
     }
   ],
   "compositions": [

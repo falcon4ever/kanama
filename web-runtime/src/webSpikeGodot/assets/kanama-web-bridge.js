@@ -19,7 +19,8 @@
       opcode === 59 ||
       opcode === 63 ||
       opcode === 64 ||
-      opcode === 147
+      opcode === 147 ||
+      opcode === 181
     ) return 2;
     if (
       opcode === 14 ||
@@ -34,6 +35,11 @@
       opcode === 130 ||
       opcode === 140 ||
       opcode === 150 ||
+      opcode === 165 ||
+      opcode === 170 ||
+      opcode === 171 ||
+      opcode === 185 ||
+      opcode === 189 ||
       opcode === 66
     ) return 3;
     if (
@@ -67,6 +73,13 @@
       opcode === 152 ||
       opcode === 153 ||
       opcode === 158 ||
+      opcode === 161 ||
+      opcode === 162 ||
+      opcode === 168 ||
+      opcode === 169 ||
+      opcode === 180 ||
+      opcode === 182 ||
+      opcode === 183 ||
       opcode === 1000
     ) return 4;
     if (
@@ -83,7 +96,7 @@
       opcode === 151
     ) return 5;
     if (opcode === 32) return 6;
-    if (opcode === 6) return 9;
+    if (opcode === 6 || opcode === 191) return 9;
     throw new Error(`Unknown Kanama Web command opcode=${opcode}`);
   }
 
@@ -1169,15 +1182,15 @@
       }
       return this.immediateResourceReleaseResult;
     },
-    immediatePropertyObjectQuery(handle, name) {
-      // Object-valued property read (opcode 149): the proxy resolves receiver.get(name),
+    immediatePropertyObjectQuery(opcode, handle, name) {
+      // Object-valued property/animation read: the proxy resolves the named object,
       // registers the result under the proposed slot (or an existing/script handle), and
       // publishes the winning handle through the object-query integer channel.
       const owner = this.ownerForHandle(handle);
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
       const resultHandle = this.allocateBrowserHandle("Object", owner);
       this.immediateLongResult = null;
-      callback(149, handle, `${name}\u001f${resultHandle}`);
+      callback(opcode, handle, `${name}\u001f${resultHandle}`);
       const result = this.immediateLongResult;
       if (!Number.isInteger(result)) {
         throw new Error("Godot property object query callback did not publish a result");
@@ -1354,6 +1367,71 @@
         throw new Error("Godot Tweener long callback did not return its receiver");
       }
       return handle;
+    },
+    immediateMoveAndCollide(opcode, handle, packed) {
+      // Mirrors immediateSlideCollision: the applier registers the KinematicCollision3D
+      // under the proposed slot (0 when the sweep hit nothing).
+      const owner = this.ownerForHandle(handle);
+      const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot move-and-collide");
+      const resultHandle = this.allocateBrowserHandle("KinematicCollision3D", owner);
+      this.api.kanamaWebAdoptObjectHandle(resultHandle);
+      this.immediateObjectHandleResult = null;
+      callback(opcode, handle, resultHandle, packed);
+      const result = this.immediateObjectHandleResult;
+      if (result !== 0 && result !== resultHandle) {
+        throw new Error("Godot move-and-collide callback published an invalid handle");
+      }
+      if (result === 0) {
+        this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
+      }
+      return result;
+    },
+    immediateStringQuery(opcode, handle, value) {
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
+      this.immediateStringResult = null;
+      callback(opcode, handle, value);
+      if (typeof this.immediateStringResult !== "string") {
+        throw new Error("Godot string query callback did not publish a string result");
+      }
+      return this.immediateStringResult;
+    },
+    recordImmediateStringResult(value) {
+      this.immediateStringResult = String(value);
+    },
+    immediateIndexedVector3X(opcode, handle, index) {
+      const callback = this.callbackFor(
+        this.noArgsVector3Callbacks,
+        handle,
+        "Godot indexed Vector3",
+      );
+      this.immediateVector3Result = null;
+      callback(opcode, handle, index);
+      if (
+        this.immediateVector3Result === null ||
+        !Number.isFinite(this.immediateVector3Result.x)
+      ) {
+        throw new Error("Godot indexed Vector3 callback did not publish a finite result");
+      }
+      return this.immediateVector3Result.x;
+    },
+    immediateDisconnectBound(handle, signal, targetHandle, method, boundValue) {
+      const router = this.activeOwnerHandle || targetHandle;
+      const callback = this.callbackFor(this.connectCallbacks, router, "Godot bound disconnect");
+      this.immediateConnectResult = null;
+      // flags slot carries -1 to select the disconnect arm in the shared connect callback.
+      callback(handle, signal, targetHandle, method, -1, boundValue);
+      if (!Number.isInteger(this.immediateConnectResult)) {
+        throw new Error("Godot bound disconnect callback did not publish a result");
+      }
+      return this.immediateConnectResult;
+    },
+    immediateTweenMethod(opcode, tweenHandle, targetHandle, method, fromValue, toValue, duration) {
+      return this.immediateTweenProperty(opcode, tweenHandle, targetHandle, method, [
+        fromValue,
+        toValue,
+        duration,
+      ]);
     },
     immediateSlideCollision(handle, index) {
       const owner = this.ownerForHandle(handle);

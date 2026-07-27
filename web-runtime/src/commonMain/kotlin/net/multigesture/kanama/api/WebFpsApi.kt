@@ -3,6 +3,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.AnimatedSprite3DBackendContractProbe
+import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InputEventMouseMotionBackendContractProbe
@@ -11,6 +12,7 @@ import net.multigesture.kanama.backend.NodeBackendContractProbe
 import net.multigesture.kanama.backend.RayCast3DBackendContractProbe
 import net.multigesture.kanama.backend.TextureRectBackendContractProbe
 import net.multigesture.kanama.backend.VisualInstance3DBackendContractProbe
+import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
@@ -79,7 +81,27 @@ class MeshInstance3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
   fun setLayerMask(mask: Long) {
     VisualInstance3DBackendContractProbe(backendHandle).setLayerMask(mask)
   }
+
+  /** Web supports only clearing an override (material baked null in the family). */
+  fun setSurfaceOverrideMaterial(surface: Long, material: Nothing?) {
+    NodeBackendContractProbe(backendHandle) // keep receiver-liveness semantics uniform
+    GodotBackendCalls.invokeLongArg(
+      net.multigesture.kanama.backend.InitialGodotCallDescriptors
+        .MESHINSTANCE3D_CLEAR_SURFACE_OVERRIDE_MATERIAL,
+      backendHandle,
+      surface,
+    )
+  }
 }
+
+/** Button base tier for the demo menu; pressed rides the shared connect flow. */
+open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
+  object Signals {
+    const val pressed: String = "pressed"
+  }
+}
+
+class TextureButton(godotObject: GodotHandle) : BaseButton(godotObject)
 
 /** Crosshair rect (FPS HUD): texture is write-only on Web. */
 class TextureRect(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle()) {
@@ -108,49 +130,9 @@ class InputEventMouseMotion private constructor(godotObject: GodotHandle) :
   }
 }
 
-/** Godot-order (YXZ) rotation basis derived from Euler angles — enough for the FPS's
- * camera-relative movement on scale-1 bodies; not a general Transform3D. */
-class Basis private constructor(private val rows: Array<DoubleArray>) {
-  operator fun times(v: Vector3): Vector3 =
-    Vector3(
-      rows[0][0] * v.x + rows[0][1] * v.y + rows[0][2] * v.z,
-      rows[1][0] * v.x + rows[1][1] * v.y + rows[1][2] * v.z,
-      rows[2][0] * v.x + rows[2][1] * v.y + rows[2][2] * v.z,
-    )
+/** The FPS-era pure-Kotlin Basis now lives with the value types; same YXZ math. */
 
-  /** Rotation-only basis: the inverse is the transpose. */
-  fun inverse(): Basis =
-    Basis(
-      arrayOf(
-        doubleArrayOf(rows[0][0], rows[1][0], rows[2][0]),
-        doubleArrayOf(rows[0][1], rows[1][1], rows[2][1]),
-        doubleArrayOf(rows[0][2], rows[1][2], rows[2][2]),
-      )
-    )
 
-  companion object {
-    /** Godot's default Euler order YXZ: R = Ry * Rx * Rz. */
-    fun fromEuler(euler: Vector3): Basis {
-      val cx = kotlin.math.cos(euler.x)
-      val sx = kotlin.math.sin(euler.x)
-      val cy = kotlin.math.cos(euler.y)
-      val sy = kotlin.math.sin(euler.y)
-      val cz = kotlin.math.cos(euler.z)
-      val sz = kotlin.math.sin(euler.z)
-      return Basis(
-        arrayOf(
-          doubleArrayOf(cy * cz + sy * sx * sz, -cy * sz + sy * sx * cz, sy * cx),
-          doubleArrayOf(cx * sz, cx * cz, -sx),
-          doubleArrayOf(-sy * cz + cy * sx * sz, sy * sz + cy * sx * cz, cy * cx),
-        )
-      )
-    }
-  }
-}
-
-/** The node's rotation basis derived from the mirrored rotation snapshot (scale-1 bodies). */
-val Node3D.basis: Basis
-  get() = Basis.fromEuler(rotation)
 
 /** get_children/find_children walks backed by get_child_count + get_child. */
 fun Node.getChildren(): List<GodotObject> {

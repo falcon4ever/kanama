@@ -71,6 +71,12 @@ enum class GodotCallShape {
   CALLABLE_RET_HANDLE,
   NOARGS_RET_LONG_SINGLETON,
   STRINGNAME_OBJECT_RET_INT,
+  VECTOR3_RET_HANDLE,
+  NOARGS_RET_HANDLE_LIST,
+  LONG_RET_VECTOR3,
+  STRINGNAME_RET_DOUBLE_SINGLETON,
+  STRINGNAME_VECTOR3_VECTOR3_ARG,
+  CALLABLE_DOUBLE_RANGE_RET_HANDLE,
 }
 
 @InternalKanamaBackendApi
@@ -544,6 +550,70 @@ interface GodotBackendSpi {
     name: String,
     value: GodotHandle,
   ): Int {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Motion sweep returning the first collision as a closeable handle. */
+  fun invokeVector3RetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Handle-list query (overlapping scripted bodies). */
+  fun invokeNoArgsRetHandleList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<GodotHandle> {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Indexed Vector3 query (shape-cast collision points). */
+  fun invokeLongRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotVector3 {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton double query keyed by one name (raw strength, float settings). */
+  fun invokeStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Double {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Dynamic method dispatch carrying two Vector3 arguments. */
+  fun invokeStringNameVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Method tween over an interpolated double range. */
+  fun invokeCallableDoubleRangeRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+    fromValue: Double,
+    toValue: Double,
+    duration: Double,
+  ): GodotHandle? {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 }
@@ -1192,6 +1262,97 @@ object GodotBackendCalls {
       receiver,
       name,
       value,
+    )
+  }
+
+  fun invokeVector3RetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.VECTOR3_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeVector3RetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
+  }
+
+  fun invokeNoArgsRetHandleList(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+  ): List<GodotHandle> {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_HANDLE_LIST)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetHandleList(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeLongRetVector3(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotVector3 {
+    requireShape(descriptor, GodotCallShape.LONG_RET_VECTOR3)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeLongRetVector3(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeStringNameRetDoubleSingleton(descriptor: GodotCallDescriptor, value: String): Double {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_DOUBLE_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeStringNameRetDoubleSingleton(
+      descriptor,
+      resolve(selected, descriptor),
+      value,
+    )
+  }
+
+  fun invokeStringNameVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_VECTOR3_VECTOR3_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameVector3Vector3Arg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      first,
+      second,
+    )
+  }
+
+  fun invokeCallableDoubleRangeRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+    fromValue: Double,
+    toValue: Double,
+    duration: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.CALLABLE_DOUBLE_RANGE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeCallableDoubleRangeRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      method,
+      fromValue,
+      toValue,
+      duration,
     )
   }
 
