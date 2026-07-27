@@ -333,6 +333,12 @@ object GD {
 
   fun lerpf(from: Double, to: Double, weight: Double): Double = Mathf.lerp(from, to, weight)
 
+  fun signf(value: Double): Double = if (value > 0.0) 1.0 else if (value < 0.0) -1.0 else 0.0
+
+  /** Godot's remap: linear map of [value] from [istart, istop] onto [ostart, ostop]. */
+  fun remap(value: Double, istart: Double, istop: Double, ostart: Double, ostop: Double): Double =
+    ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
+
   fun clampf(value: Double, min: Double, max: Double): Double = Mathf.clamp(value, min, max)
 
   fun lerpAngle(from: Double, to: Double, weight: Double): Double =

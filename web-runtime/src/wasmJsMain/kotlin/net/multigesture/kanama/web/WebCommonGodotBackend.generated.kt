@@ -96,7 +96,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
     when (descriptor.executionMode) {
       GodotExecutionMode.QUEUED_MUTATION -> {
-        require(descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99, 146, 158, 161, 182, 183))
+        require(
+          descriptor.opcode in setOf(48, 49, 50, 53, 62, 82, 99, 146, 158, 161, 182, 183, 200)
+        )
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
@@ -789,16 +791,26 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     receiver: GodotHandle,
   ): Double {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    return when (descriptor.opcode) {
-      45 -> webLifetimeSnapshot(receiver.webId())
-      70 -> webRotationSnapshot(receiver.webId())
-      else -> null
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ ->
+        when (descriptor.opcode) {
+          45 -> webLifetimeSnapshot(receiver.webId())
+          70 -> webRotationSnapshot(receiver.webId())
+          else -> null
+        }
+          ?: error(
+            "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+              "object handle=${receiver.webId()}"
+          )
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode in setOf(199, 201))
+        commands.flush()
+        // Scaled by 1000 through the shared integer object-query transport.
+        immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") / 1000.0
+      }
+      GodotExecutionMode.QUEUED_MUTATION ->
+        error("Double return cannot use queued execution for opcode=${descriptor.opcode}")
     }
-      ?: error(
-        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-          "object handle=${receiver.webId()}"
-      )
   }
 
   override fun invokeNoArgsRetLong(
@@ -946,7 +958,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
               "object handle=${receiver.webId()}"
           )
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode in setOf(113, 123, 124, 138, 141, 156, 176, 178))
+        require(descriptor.opcode in setOf(113, 123, 124, 138, 141, 156, 176, 178, 197))
         commands.flush()
         GodotVector3(
           immediateWebNoArgsVector3X(descriptor.opcode, receiver.webId()).toFloat(),
@@ -981,7 +993,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         }
       }
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode in setOf(142, 143, 160, 175, 177))
+        require(descriptor.opcode in setOf(142, 143, 160, 175, 177, 198))
         commands.flush()
         // Three Float32 components packed into one query string (unit separator); the
         // applier writes the global transform and re-pushes the node's snapshot.

@@ -3078,6 +3078,80 @@
       "descriptorName": "OBJECT_EMIT_SIGNAL_STRING",
       "semantics": "Emit a signal carrying one String argument (weapon_switched -> WeaponUi).",
       "introducedBy": "60f-third-person"
+    },
+    {
+      "opcode": 197,
+      "className": "RigidBody3D",
+      "methodName": "get_angular_velocity",
+      "hash": 3360562783,
+      "arguments": [],
+      "returnType": "Vector3",
+      "shape": "NOARGS_RET_VECTOR3",
+      "semantics": "Fresh angular velocity of a physics-driven body (sphere-racer drive train).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "executionMode": "IMMEDIATE_RESULT",
+      "introducedBy": "60g-racing"
+    },
+    {
+      "opcode": 198,
+      "className": "RigidBody3D",
+      "methodName": "set_angular_velocity",
+      "hash": 3460891852,
+      "arguments": [
+        "Vector3"
+      ],
+      "shape": "VECTOR3_ARG",
+      "semantics": "Write the sphere's angular velocity (packed three-float immediate).",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "executionMode": "IMMEDIATE_RESULT",
+      "introducedBy": "60g-racing"
+    },
+    {
+      "opcode": 199,
+      "className": "AudioStreamPlayer3D",
+      "methodName": "get_volume_db",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "semantics": "Current positional volume (engine-lerped audio effects read-modify-write).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "executionMode": "IMMEDIATE_RESULT",
+      "introducedBy": "60g-racing"
+    },
+    {
+      "opcode": 200,
+      "className": "AudioStreamPlayer3D",
+      "methodName": "set_volume_db",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Queue a positional volume write.",
+      "scope": "class",
+      "returnType": "void",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60g-racing"
+    },
+    {
+      "opcode": 201,
+      "className": "AudioStreamPlayer3D",
+      "methodName": "get_pitch_scale",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "semantics": "Current pitch scale (engine-lerped audio effects read-modify-write).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "executionMode": "IMMEDIATE_RESULT",
+      "introducedBy": "60g-racing"
     }
   ],
   "compositions": [

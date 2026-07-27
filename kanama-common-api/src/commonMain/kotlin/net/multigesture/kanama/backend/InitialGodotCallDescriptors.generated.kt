@@ -2159,4 +2159,59 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val RIGIDBODY3D_GET_ANGULAR_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 197,
+      className = "RigidBody3D",
+      methodName = "get_angular_velocity",
+      hash = 3360562783L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RIGIDBODY3D_SET_ANGULAR_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 198,
+      className = "RigidBody3D",
+      methodName = "set_angular_velocity",
+      hash = 3460891852L,
+      shape = GodotCallShape.VECTOR3_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER3D_GET_VOLUME_DB =
+    GodotCallDescriptor(
+      opcode = 199,
+      className = "AudioStreamPlayer3D",
+      methodName = "get_volume_db",
+      hash = 1740695150L,
+      shape = GodotCallShape.NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER3D_SET_VOLUME_DB =
+    GodotCallDescriptor(
+      opcode = 200,
+      className = "AudioStreamPlayer3D",
+      methodName = "set_volume_db",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val AUDIOSTREAMPLAYER3D_GET_PITCH_SCALE =
+    GodotCallDescriptor(
+      opcode = 201,
+      className = "AudioStreamPlayer3D",
+      methodName = "get_pitch_scale",
+      hash = 1740695150L,
+      shape = GodotCallShape.NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }
