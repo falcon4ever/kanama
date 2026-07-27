@@ -4472,6 +4472,38 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue the baked lightmap data assignment (LightmapGI GI mode).",
       "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 285,
+      "scope": "class",
+      "className": "CollisionObject3D",
+      "methodName": "set_collision_layer",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a whole collision-layer mask write (robot/part death clears every layer at once).",
+      "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 286,
+      "scope": "class",
+      "className": "CollisionObject3D",
+      "methodName": "set_collision_mask",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a whole collision-mask write (robot/part death clears every mask bit at once).",
+      "introducedBy": "60i-tpsdemo"
     }
   ],
   "compositions": [

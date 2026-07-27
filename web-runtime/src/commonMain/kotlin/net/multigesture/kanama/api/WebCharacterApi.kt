@@ -44,7 +44,7 @@ class AnimationNodeStateMachinePlayback internal constructor(godotObject: GodotH
 }
 
 /** AnimationPlayer/AnimationTree base: the tutorial drives an AnimationTree state machine. */
-class AnimationMixer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
+open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
   /** Resolve the playback object behind a `parameters/.../playback` property. */
   fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
     GodotObjectBackendContractProbe(backendHandle).getObjectProperty(path)?.let { handle ->

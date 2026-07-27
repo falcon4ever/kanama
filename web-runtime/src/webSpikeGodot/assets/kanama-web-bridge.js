@@ -56,6 +56,8 @@
       opcode === 277 ||
       opcode === 280 ||
       opcode === 284 ||
+      opcode === 285 ||
+      opcode === 286 ||
       opcode === 66
     ) return 3;
     if (
@@ -297,6 +299,10 @@
     tpSmokeQuitHandle: 0,
     tpPlayerHandle: 0,
     tpDemoPageHandle: 0,
+    tpsMainHandle: 0,
+    tpsMenuHandle: 0,
+    tpsLevelHandle: 0,
+    tpsPlayerHandle: 0,
     racingSmokeHandle: 0,
     racingVehicleHandle: 0,
     racingViewHandle: 0,
@@ -451,6 +457,24 @@
       }
       if (this.mode === "fps") {
         // FPS scripts own no coroutines; every script runs its plain dispatch.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "tpsdemo") {
+        // Main is the persistent scene root (it survives the menu/level swap), so it pumps the
+        // shared coroutine frame scheduler for every coroutine owner in the demo (Level robot
+        // respawns, Part fade timers, Blast/PartDisappear lifetimes). Every other script runs
+        // its plain _process dispatch; nothing here takes the spike benchmark transport.
+        if (handle === this.tpsMainHandle) {
+          const executed = this.invoke(
+            handle,
+            "frame_scheduler",
+            "frame scheduler",
+            () => this.api.kanamaWebFrame(handle, delta),
+            0,
+          );
+          this.processCalls += 1;
+          return executed;
+        }
         return this.process(handle, delta);
       }
       if (this.mode === "citybuilder") {
@@ -2260,6 +2284,22 @@
         // The camera rig lerps toward the vehicle every tick: its root position is the
         // driver's movement evidence (the Vehicle ROOT node intentionally never moves).
         this.racingViewHandle = handle;
+      }
+      if (this.mode === "tpsdemo" && scriptName.endsWith(".Main")) {
+        // The scene root pumps the frame scheduler and hosts the harness entry points:
+        // smoke_start_game (method#1) presses Play, smoke_teardown (method#2) releases the
+        // cached scenes plus the settings ConfigFile and frees the root.
+        this.tpsMainHandle = handle;
+      }
+      if (this.mode === "tpsdemo" && scriptName.endsWith(".Menu")) {
+        this.tpsMenuHandle = handle;
+      }
+      if (this.mode === "tpsdemo" && scriptName.endsWith(".Level")) {
+        this.tpsLevelHandle = handle;
+      }
+      if (this.mode === "tpsdemo" && scriptName.endsWith(".Player")) {
+        // The player body is the driver's movement evidence (opcode 138 on this handle).
+        this.tpsPlayerHandle = handle;
       }
       if (this.mode === "citybuilder" && scriptName.endsWith(".Smoke")) {
         // smoke_teardown (method#1) frees the Audio autoload, releases hydrated structure

@@ -3127,4 +3127,26 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.QUEUED_MUTATION,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val COLLISIONOBJECT3D_SET_COLLISION_LAYER =
+    GodotCallDescriptor(
+      opcode = 285,
+      className = "CollisionObject3D",
+      methodName = "set_collision_layer",
+      hash = 1286410249L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val COLLISIONOBJECT3D_SET_COLLISION_MASK =
+    GodotCallDescriptor(
+      opcode = 286,
+      className = "CollisionObject3D",
+      methodName = "set_collision_mask",
+      hash = 1286410249L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

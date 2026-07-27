@@ -3,6 +3,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.math.ln
+import kotlin.math.pow
 import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -148,6 +149,10 @@ object Mathf {
     if (to == from) 0.0 else (value - from) / (to - from)
 
   fun sqrt(value: Double): Double = kotlin.math.sqrt(value)
+
+  fun pow(value: Double, exponent: Double): Double = value.pow(exponent)
+
+  fun atan2(y: Double, x: Double): Double = kotlin.math.atan2(y, x)
 
   fun min(a: Double, b: Double): Double = kotlin.math.min(a, b)
 
@@ -299,6 +304,24 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
         Vector2(rect.size.x.toDouble(), rect.size.y.toDouble()),
       )
     }
+
+  /**
+   * Scaling/anti-aliasing enum values (tps's graphics menu records them in its config file). The
+   * Web canvas fixes its own scaling, so writing them back through the Window facade is inert.
+   */
+  companion object {
+    const val SCALING_3D_MODE_BILINEAR: Long = 0L
+    const val SCALING_3D_MODE_FSR: Long = 1L
+    const val SCALING_3D_MODE_FSR2: Long = 2L
+    const val SCALING_3D_MODE_METALFX_SPATIAL: Long = 3L
+    const val SCALING_3D_MODE_METALFX_TEMPORAL: Long = 4L
+    const val MSAA_DISABLED: Long = 0L
+    const val MSAA_2X: Long = 1L
+    const val MSAA_4X: Long = 2L
+    const val MSAA_8X: Long = 3L
+    const val SCREEN_SPACE_AA_DISABLED: Long = 0L
+    const val SCREEN_SPACE_AA_FXAA: Long = 1L
+  }
 }
 
 class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {

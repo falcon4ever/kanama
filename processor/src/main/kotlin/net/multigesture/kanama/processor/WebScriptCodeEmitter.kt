@@ -2081,6 +2081,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\\t\\t\\tapplied += 1")
     appendLine("\\t\\t\\toffset += 12")
+    appendLine("\t\telif opcode == 285 and target_object is CollisionObject3D:")
+    appendLine(
+      "\t\t\t(target_object as CollisionObject3D).collision_layer = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 286 and target_object is CollisionObject3D:")
+    appendLine(
+      "\t\t\t(target_object as CollisionObject3D).collision_mask = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
     appendLine("\t\telse:")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
