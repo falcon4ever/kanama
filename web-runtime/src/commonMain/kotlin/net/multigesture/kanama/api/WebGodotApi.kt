@@ -269,7 +269,14 @@ abstract class KanamaScript<T : GodotObject>(
 }
 
 open class Resource internal constructor(backendHandle: BackendGodotHandle) :
-  GodotObject(backendHandle)
+  GodotObject(backendHandle) {
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
+  companion object {
+    /** Re-types any Godot object as a Resource (the Web bridge carries no class metadata). */
+    fun fromObject(value: GodotObject?): Resource? = value?.let { Resource(it.backendHandle) }
+  }
+}
 
 @ManualGodotLifetimeApi
 class Texture2D internal constructor(private var resourceHandle: BackendGodotHandle?) :
@@ -345,11 +352,22 @@ object GD {
     Mathf.lerpAngle(from, to, weight)
 
   fun degToRad(degrees: Double): Double = degrees * kotlin.math.PI / 180.0
+
+  /** Web adaptation: Godot's print lands on the browser console via Wasm stdout. */
+  fun print(message: Any?) {
+    println(message)
+  }
 }
 
 internal fun GodotHandle.toBackendHandle(): BackendGodotHandle =
   BackendGodotHandle.fromBackendToken(value.toLong())
 
 internal expect fun releaseWebResource(resourceHandle: Int)
+
+internal expect fun instantiateWebScript(className: String): Int
+
+internal expect fun releaseWebScriptResource(handle: Int)
+
+internal expect fun releaseWebConstructedObject(handle: Int)
 
 internal expect fun isWebBrowserHandleLive(handle: Int): Boolean

@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 13;
+  const KANAMA_WEB_PROTOCOL_VERSION = 14;
 
   function commandWordCount(opcode) {
     if (
@@ -40,6 +40,8 @@
       opcode === 171 ||
       opcode === 185 ||
       opcode === 189 ||
+      opcode === 202 ||
+      opcode === 209 ||
       opcode === 66
     ) return 3;
     if (
@@ -156,6 +158,7 @@
     browserNodeHandlesByScript: new Map(),
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
+    viewportHandlesByOwner: new Map(),
     commandStringNamesByValue: new Map(),
     commandStringNamesById: new Map(),
     nextCommandStringNameId: 1,
@@ -264,6 +267,8 @@
     racingSmokeHandle: 0,
     racingVehicleHandle: 0,
     racingViewHandle: 0,
+    cbSmokeHandle: 0,
+    cbBuilderHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
     // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
@@ -413,6 +418,11 @@
       }
       if (this.mode === "fps") {
         // FPS scripts own no coroutines; every script runs its plain dispatch.
+        return this.process(handle, delta);
+      }
+      if (this.mode === "citybuilder") {
+        // City-Builder scripts (Builder cursor/actions, View camera, Audio pool) own no
+        // coroutines; every script runs its plain _process dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "platformer") {
@@ -594,6 +604,24 @@
         `property#${propertyId}`,
         () => this.api.kanamaWebSetVector3Property(handle, propertyId, x, y, z),
         0,
+      );
+    },
+    setVector2iProperty(handle, propertyId, x, y) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetVector2iProperty(handle, propertyId, x, y),
+        0,
+      );
+    },
+    getPackedProperty(handle, propertyId) {
+      return this.invoke(
+        handle,
+        "property_get",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebGetPackedProperty(handle, propertyId),
+        "",
       );
     },
     setLongProperty(handle, propertyId, value) {
@@ -1069,7 +1097,14 @@
         this.immediateResourceHandleResult !== 0 &&
         this.immediateResourceHandleResult !== resourceHandle
       ) {
-        throw new Error("Godot resource callback published an invalid handle");
+        // A Kanama-scripted resource resolves to its live script handle instead of the
+        // proposed browser handle (node-lookup rule for loads).
+        if (this.api.kanamaWebIsLive(this.immediateResourceHandleResult) !== 1) {
+          throw new Error("Godot resource callback published an invalid handle");
+        }
+        this.releaseBrowserHandle(resourceHandle, "Resource");
+        this.resourceLoads += 1;
+        return this.immediateResourceHandleResult;
       }
       if (this.immediateResourceHandleResult === 0) {
         if (owner === this.match3AudioHandle) this.match3AudioResourceLoadFailures += 1;
@@ -1084,6 +1119,71 @@
       }
       this.resourceLoads += 1;
       return this.immediateResourceHandleResult;
+    },
+    instantiateScript(className) {
+      // Runtime factory crossing (reserved opcode 0 on the object-query channel): the
+      // active proxy instantiates the named Kanama scripted resource and returns the
+      // hydrated script handle (0 on failure).
+      const owner = this.activeOwnerHandle;
+      const callback = this.callbackFor(this.objectQueryCallbacks, owner, "Godot script instantiate");
+      this.immediateLongResult = null;
+      callback(0, owner, className);
+      const result = this.immediateLongResult;
+      if (!Number.isInteger(result)) {
+        throw new Error("Godot script instantiate callback did not publish a result");
+      }
+      if (result !== 0 && this.api.kanamaWebIsLive(result) !== 1) {
+        throw new Error("Godot script instantiate did not return a live script handle");
+      }
+      return result;
+    },
+    releaseScriptResource(handle) {
+      // Drop the proxies' dictionary reference to an owned scripted resource ("close what
+      // you create"): the target is a script handle, so no browser slot is retired.
+      if (this.api.kanamaWebIsLive(handle) !== 1) {
+        throw new Error(`Cannot release non-live Kanama script resource handle=${handle}`);
+      }
+      const callback = this.callbackFor(
+        this.resourceReleaseCallbacks,
+        handle,
+        "Godot script resource release",
+      );
+      this.immediateResourceReleaseResult = null;
+      callback(handle);
+      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
+        throw new Error("Godot script resource release callback did not publish a result");
+      }
+      return this.immediateResourceReleaseResult;
+    },
+    releaseConstructedObject(handle) {
+      // Release a ClassDB-constructed handle whose bridge kind is its class name (e.g. a
+      // constructed MeshLibrary Resource): the applier erases the dictionary reference and
+      // the slot retires under its recorded kind.
+      const slot = this.browserHandleSlot(handle);
+      if (!slot) {
+        throw new Error(`Stale Kanama Web constructed handle=${handle}`);
+      }
+      const callback = this.callbackFor(
+        this.resourceReleaseCallbacks,
+        handle,
+        "Godot constructed release",
+      );
+      this.immediateResourceReleaseResult = null;
+      callback(handle);
+      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
+        throw new Error("Godot constructed release callback did not publish a result");
+      }
+      if (this.immediateResourceReleaseResult === 1) {
+        this.releaseBrowserHandle(handle, slot.kind);
+      }
+      return this.immediateResourceReleaseResult;
+    },
+    allocateFoundNodeHandle(ownerHandle) {
+      // Node.find_children match without a script or existing handle: mint and adopt a
+      // tracked browser Node handle for the applier to register.
+      const handle = this.allocateBrowserHandle("Node", ownerHandle);
+      this.api.kanamaWebAdoptNodeHandle(handle);
+      return handle;
     },
     immediateConstructObject(className) {
       const owner = this.activeOwnerHandle;
@@ -1211,7 +1311,10 @@
       // Object-valued property/animation read: the proxy resolves the named object,
       // registers the result under the proposed slot (or an existing/script handle), and
       // publishes the winning handle through the object-query integer channel.
-      const owner = this.ownerForHandle(handle);
+      // The result belongs to the SCRIPT that asked (always inside an invoke boundary),
+      // not to the receiver's owner: a scene-state property read off a cache-persistent
+      // Structure resource must release with the Builder that read it.
+      const owner = this.activeOwnerHandle || this.ownerForHandle(handle);
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
       const resultHandle = this.allocateBrowserHandle("Object", owner);
       this.immediateLongResult = null;
@@ -1299,7 +1402,11 @@
       return result;
     },
     immediateNoArgsObject(opcode, handle) {
-      const owner = this.ownerForHandle(handle);
+      // Returned objects belong to the SCRIPT that asked (always inside an invoke
+      // boundary), not to the receiver's owner — a SceneState/Mesh read off a
+      // cache-persistent resource must release with the reading script (the
+      // packed-scene-instantiate ownership rule).
+      const owner = this.activeOwnerHandle || this.ownerForHandle(handle);
       const isSceneTree = opcode === 51;
       if (isSceneTree) {
         const existing = this.sceneTreeHandlesByOwner.get(owner);
@@ -1308,6 +1415,16 @@
           return existing;
         }
         this.sceneTreeHandlesByOwner.delete(owner);
+      }
+      // Per-frame get_viewport (City-Builder's mouse-ray cursor) must not mint a handle
+      // per call: reuse the owner's viewport handle like the SceneTree above.
+      const isViewport = opcode === 19;
+      if (isViewport) {
+        const existing = this.viewportHandlesByOwner.get(owner);
+        if (existing !== undefined && this.browserHandleSlot(existing)?.kind === "Node") {
+          return existing;
+        }
+        this.viewportHandlesByOwner.delete(owner);
       }
       const callback = this.callbackFor(
         this.noArgsObjectCallbacks,
@@ -1329,7 +1446,13 @@
       // lookup instead of requiring the proposed one. opcode 114 = Node.duplicate adopts a
       // genuinely new node through the proposed handle.
       const isCollider = opcode === 112 || opcode === 122;
-      const isObjectResult = isTween || isSceneTree || isSpriteFrames || isEnvironment;
+      // opcode 212 = PackedScene.get_state returns a SceneState, opcode 225 =
+      // MeshInstance3D.get_mesh returns a Mesh Resource — neither is a Node, so both
+      // follow the SpriteFrames/Environment handle-kind rule.
+      const isSceneState = opcode === 212;
+      const isMesh = opcode === 225;
+      const isObjectResult =
+        isTween || isSceneTree || isSpriteFrames || isEnvironment || isSceneState || isMesh;
       const kind = isTween
         ? "Tween"
         : isSceneTree
@@ -1338,7 +1461,11 @@
             ? "SpriteFrames"
             : isEnvironment
               ? "Environment"
-              : "Node";
+              : isSceneState
+                ? "SceneState"
+                : isMesh
+                  ? "Mesh"
+                  : "Node";
       const resultHandle = this.allocateBrowserHandle(kind, owner);
       if (isObjectResult) this.api.kanamaWebAdoptObjectHandle(resultHandle);
       else this.api.kanamaWebAdoptNodeHandle(resultHandle);
@@ -1363,6 +1490,8 @@
       } else if (isSceneTree) {
         this.sceneTreeHandlesByOwner.set(owner, resultHandle);
         this.match3SceneTreeHandlesCreated += 1;
+      } else if (isViewport && result === resultHandle) {
+        this.viewportHandlesByOwner.set(owner, resultHandle);
       }
       return result;
     },
@@ -1423,6 +1552,24 @@
     },
     recordImmediateStringResult(value) {
       this.immediateStringResult = String(value);
+    },
+    immediateVector2ArgVector3X(opcode, handle, x, y) {
+      // Vector2-argument Vector3 query (camera ray projection): rides the no-args
+      // Vector3 channel with the screen point in the extra argument slots.
+      const callback = this.callbackFor(
+        this.noArgsVector3Callbacks,
+        handle,
+        "Godot Vector2-arg Vector3",
+      );
+      this.immediateVector3Result = null;
+      callback(opcode, handle, x, y);
+      if (
+        this.immediateVector3Result === null ||
+        !Number.isFinite(this.immediateVector3Result.x)
+      ) {
+        throw new Error("Godot Vector2-arg Vector3 callback did not publish a finite result");
+      }
+      return this.immediateVector3Result.x;
     },
     immediateIndexedVector3X(opcode, handle, index) {
       const callback = this.callbackFor(
@@ -2057,6 +2204,16 @@
         // The camera rig lerps toward the vehicle every tick: its root position is the
         // driver's movement evidence (the Vehicle ROOT node intentionally never moves).
         this.racingViewHandle = handle;
+      }
+      if (this.mode === "citybuilder" && scriptName.endsWith(".Smoke")) {
+        // smoke_teardown (method#1) frees the Audio autoload, releases hydrated structure
+        // assets, and frees the scene root for the teardown assertion.
+        this.cbSmokeHandle = handle;
+      }
+      if (this.mode === "citybuilder" && scriptName.endsWith(".Builder")) {
+        // The driver reads the gridmap/selector property handles off the Builder to
+        // observe placements and selector movement.
+        this.cbBuilderHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

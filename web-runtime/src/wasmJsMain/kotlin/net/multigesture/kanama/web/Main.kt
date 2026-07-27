@@ -261,6 +261,21 @@ fun kanamaWebSetVector2Property(objectId: Int, propertyId: Int, x: Double, y: Do
 }
 
 @JsExport
+fun kanamaWebSetVector2iProperty(objectId: Int, propertyId: Int, x: Int, y: Int): Int {
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setVector2iProperty(record.scriptId, propertyId, record.script, x, y)
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebGetPackedProperty(objectId: Int, propertyId: Int): String {
+  return webCallbackBoundary(objectId, "property_get", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.getPackedProperty(record.scriptId, propertyId, record.script)
+  }
+}
+
+@JsExport
 fun kanamaWebSetVector3Property(
   objectId: Int,
   propertyId: Int,

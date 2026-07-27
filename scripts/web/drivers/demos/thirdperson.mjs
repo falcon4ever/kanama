@@ -183,7 +183,7 @@ export async function runThirdperson({ url, evaluate, navigate, keys, deadline }
   const protocolVersion = ready.protocol;
   const checks = {
     modeThirdperson: ready.mode === "thirdperson",
-    protocol13: protocolVersion === 13,
+    protocol14: protocolVersion === 14,
     sceneScriptsReady:
       ready.playerReady >= 1 &&
       ready.demoPageReady >= 1 &&

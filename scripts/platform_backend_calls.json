@@ -3152,6 +3152,390 @@
       "returnOwnership": "BORROWED",
       "executionMode": "IMMEDIATE_RESULT",
       "introducedBy": "60g-racing"
+    },
+    {
+      "opcode": 202,
+      "className": "GridMap",
+      "methodName": "set_mesh_library",
+      "hash": 1488083439,
+      "arguments": [
+        "MeshLibrary"
+      ],
+      "returnType": "void",
+      "shape": "OBJECT_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Assign (or clear with null) the grid's MeshLibrary; the builder wires its runtime-built library at ready.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 203,
+      "className": "GridMap",
+      "methodName": "set_cell_item",
+      "hash": 3449088946,
+      "arguments": [
+        "Vector3i",
+        "int",
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR3I_LONG_LONG_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Place or clear one grid cell (position, item, orientation) \u2014 the build/demolish core loop.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 204,
+      "className": "GridMap",
+      "methodName": "get_cell_item",
+      "hash": 3724960147,
+      "arguments": [
+        "Vector3i"
+      ],
+      "returnType": "int",
+      "shape": "VECTOR3I_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Read the item index at a cell (INVALID_CELL_ITEM = -1 round-trips through the integer query).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 205,
+      "className": "GridMap",
+      "methodName": "get_cell_item_orientation",
+      "hash": 3724960147,
+      "arguments": [
+        "Vector3i"
+      ],
+      "returnType": "int",
+      "shape": "VECTOR3I_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Read the orthogonal orientation index at a cell (map serialization).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 206,
+      "className": "GridMap",
+      "methodName": "get_orthogonal_index_from_basis",
+      "hash": 4210359952,
+      "arguments": [
+        "Basis"
+      ],
+      "returnType": "int",
+      "shape": "BASIS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Map a rotation basis to one of the 24 grid orientations (selector rotation applied on placement).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 207,
+      "className": "GridMap",
+      "methodName": "clear",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Remove every cell (map load resets the grid before repopulating).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 208,
+      "className": "GridMap",
+      "methodName": "get_used_cells",
+      "hash": 3995934104,
+      "arguments": [],
+      "returnType": "typedarray::Vector3i",
+      "shape": "NOARGS_RET_VECTOR3I_LIST",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "All occupied cells as packed integer triples (map save + smoke evidence).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 209,
+      "className": "MeshLibrary",
+      "methodName": "create_item",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "semantics": "Create an empty library item slot for a structure index.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 210,
+      "className": "MeshLibrary",
+      "methodName": "set_item_mesh",
+      "hash": 969122797,
+      "arguments": [
+        "int",
+        "Mesh"
+      ],
+      "returnType": "void",
+      "shape": "LONG_OBJECT_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Assign a mesh (extracted from the structure's PackedScene state) to a library item.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 211,
+      "className": "MeshLibrary",
+      "methodName": "set_item_mesh_transform",
+      "hash": 3616898986,
+      "arguments": [
+        "int",
+        "Transform3D"
+      ],
+      "returnType": "void",
+      "shape": "LONG_TRANSFORM3D_ARG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Set a library item's mesh transform (the builder pins identity).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 212,
+      "className": "PackedScene",
+      "methodName": "get_state",
+      "hash": 3479783971,
+      "arguments": [],
+      "returnType": "SceneState",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "The scene's borrowed SceneState as a browser handle (mesh extraction without instantiating).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 213,
+      "className": "SceneState",
+      "methodName": "get_node_count",
+      "hash": 3905245786,
+      "arguments": [],
+      "returnType": "int",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Number of nodes recorded in the scene state.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 214,
+      "className": "SceneState",
+      "methodName": "get_node_type",
+      "hash": 659327637,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "StringName",
+      "shape": "LONG_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Recorded type name of a node by index (MeshInstance3D scan).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 215,
+      "className": "SceneState",
+      "methodName": "get_node_property_count",
+      "hash": 923996154,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "int",
+      "shape": "LONG_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Number of recorded properties for a node by index.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 216,
+      "className": "SceneState",
+      "methodName": "get_node_property_name",
+      "hash": 351665558,
+      "arguments": [
+        "int",
+        "int"
+      ],
+      "returnType": "StringName",
+      "shape": "LONG_LONG_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Recorded property name by node/property index (mesh property scan).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 217,
+      "className": "SceneState",
+      "methodName": "get_node_property_value",
+      "hash": 678354945,
+      "arguments": [
+        "int",
+        "int"
+      ],
+      "returnType": "Variant",
+      "shape": "LONG_LONG_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Recorded property value by node/property index; object values register as browser handles, non-objects resolve null.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 218,
+      "className": "Camera3D",
+      "methodName": "project_ray_origin",
+      "hash": 1718073306,
+      "arguments": [
+        "Vector2"
+      ],
+      "returnType": "Vector3",
+      "shape": "VECTOR2_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "World-space origin of the picking ray through a screen point (grid cursor).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 219,
+      "className": "Camera3D",
+      "methodName": "project_ray_normal",
+      "hash": 1718073306,
+      "arguments": [
+        "Vector2"
+      ],
+      "returnType": "Vector3",
+      "shape": "VECTOR2_RET_VECTOR3",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "World-space direction of the picking ray through a screen point (grid cursor).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 220,
+      "className": "Viewport",
+      "methodName": "get_mouse_position",
+      "hash": 3341600327,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Fresh viewport-space mouse position (per-frame grid cursor; no snapshot mirrors pointer state).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 221,
+      "className": "Input",
+      "methodName": "is_action_just_released",
+      "hash": 1558498928,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Query whether an input action was just released this frame (camera zoom steps), via the active script proxy singleton.",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 222,
+      "className": "Resource",
+      "methodName": "duplicate",
+      "hash": 482882304,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "Resource",
+      "shape": "BOOL_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Duplicate a resource (the builder copies scene-state meshes so the library owns independent copies).",
+      "scope": "class",
+      "returnOwnership": "OWNED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 223,
+      "className": "ResourceSaver",
+      "methodName": "save",
+      "hash": 2983274697,
+      "arguments": [
+        "Resource",
+        "String",
+        "bitfield::ResourceSaver.SaverFlags"
+      ],
+      "returnType": "enum::Error",
+      "shape": "OBJECT_STRING_RET_LONG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Persist a resource to a path via the active script proxy singleton; scripted resources pull current Kotlin property values before serializing (map save).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 224,
+      "className": "Node",
+      "methodName": "find_children",
+      "hash": 2560337219,
+      "arguments": [
+        "String",
+        "String",
+        "bool",
+        "bool"
+      ],
+      "returnType": "typedarray::Node",
+      "shape": "STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "Find descendant nodes by pattern/type; scripted matches resolve to script handles, engine nodes get tracked browser handles (preview-model mesh pruning).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
+    },
+    {
+      "opcode": 225,
+      "className": "MeshInstance3D",
+      "methodName": "get_mesh",
+      "hash": 1808005922,
+      "arguments": [],
+      "returnType": "Mesh",
+      "shape": "NOARGS_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "semantics": "The instance's borrowed Mesh as a browser handle (null resolves to a null handle; the builder prunes empty preview MeshInstance3Ds).",
+      "scope": "class",
+      "returnOwnership": "BORROWED",
+      "introducedBy": "60h-citybuilder"
     }
   ],
   "compositions": [

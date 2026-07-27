@@ -2214,4 +2214,268 @@ object InitialGodotCallDescriptors {
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
+
+  val GRIDMAP_SET_MESH_LIBRARY =
+    GodotCallDescriptor(
+      opcode = 202,
+      className = "GridMap",
+      methodName = "set_mesh_library",
+      hash = 1488083439L,
+      shape = GodotCallShape.OBJECT_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GRIDMAP_SET_CELL_ITEM =
+    GodotCallDescriptor(
+      opcode = 203,
+      className = "GridMap",
+      methodName = "set_cell_item",
+      hash = 3449088946L,
+      shape = GodotCallShape.VECTOR3I_LONG_LONG_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GRIDMAP_GET_CELL_ITEM =
+    GodotCallDescriptor(
+      opcode = 204,
+      className = "GridMap",
+      methodName = "get_cell_item",
+      hash = 3724960147L,
+      shape = GodotCallShape.VECTOR3I_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GRIDMAP_GET_CELL_ITEM_ORIENTATION =
+    GodotCallDescriptor(
+      opcode = 205,
+      className = "GridMap",
+      methodName = "get_cell_item_orientation",
+      hash = 3724960147L,
+      shape = GodotCallShape.VECTOR3I_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GRIDMAP_GET_ORTHOGONAL_INDEX_FROM_BASIS =
+    GodotCallDescriptor(
+      opcode = 206,
+      className = "GridMap",
+      methodName = "get_orthogonal_index_from_basis",
+      hash = 4210359952L,
+      shape = GodotCallShape.BASIS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GRIDMAP_CLEAR =
+    GodotCallDescriptor(
+      opcode = 207,
+      className = "GridMap",
+      methodName = "clear",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val GRIDMAP_GET_USED_CELLS =
+    GodotCallDescriptor(
+      opcode = 208,
+      className = "GridMap",
+      methodName = "get_used_cells",
+      hash = 3995934104L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR3I_LIST,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val MESHLIBRARY_CREATE_ITEM =
+    GodotCallDescriptor(
+      opcode = 209,
+      className = "MeshLibrary",
+      methodName = "create_item",
+      hash = 1286410249L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val MESHLIBRARY_SET_ITEM_MESH =
+    GodotCallDescriptor(
+      opcode = 210,
+      className = "MeshLibrary",
+      methodName = "set_item_mesh",
+      hash = 969122797L,
+      shape = GodotCallShape.LONG_OBJECT_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val MESHLIBRARY_SET_ITEM_MESH_TRANSFORM =
+    GodotCallDescriptor(
+      opcode = 211,
+      className = "MeshLibrary",
+      methodName = "set_item_mesh_transform",
+      hash = 3616898986L,
+      shape = GodotCallShape.LONG_TRANSFORM3D_ARG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val PACKEDSCENE_GET_STATE =
+    GodotCallDescriptor(
+      opcode = 212,
+      className = "PackedScene",
+      methodName = "get_state",
+      hash = 3479783971L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENESTATE_GET_NODE_COUNT =
+    GodotCallDescriptor(
+      opcode = 213,
+      className = "SceneState",
+      methodName = "get_node_count",
+      hash = 3905245786L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENESTATE_GET_NODE_TYPE =
+    GodotCallDescriptor(
+      opcode = 214,
+      className = "SceneState",
+      methodName = "get_node_type",
+      hash = 659327637L,
+      shape = GodotCallShape.LONG_RET_STRING,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENESTATE_GET_NODE_PROPERTY_COUNT =
+    GodotCallDescriptor(
+      opcode = 215,
+      className = "SceneState",
+      methodName = "get_node_property_count",
+      hash = 923996154L,
+      shape = GodotCallShape.LONG_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENESTATE_GET_NODE_PROPERTY_NAME =
+    GodotCallDescriptor(
+      opcode = 216,
+      className = "SceneState",
+      methodName = "get_node_property_name",
+      hash = 351665558L,
+      shape = GodotCallShape.LONG_LONG_RET_STRING,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENESTATE_GET_NODE_PROPERTY_VALUE =
+    GodotCallDescriptor(
+      opcode = 217,
+      className = "SceneState",
+      methodName = "get_node_property_value",
+      hash = 678354945L,
+      shape = GodotCallShape.LONG_LONG_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CAMERA3D_PROJECT_RAY_ORIGIN =
+    GodotCallDescriptor(
+      opcode = 218,
+      className = "Camera3D",
+      methodName = "project_ray_origin",
+      hash = 1718073306L,
+      shape = GodotCallShape.VECTOR2_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CAMERA3D_PROJECT_RAY_NORMAL =
+    GodotCallDescriptor(
+      opcode = 219,
+      className = "Camera3D",
+      methodName = "project_ray_normal",
+      hash = 1718073306L,
+      shape = GodotCallShape.VECTOR2_RET_VECTOR3,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val VIEWPORT_GET_MOUSE_POSITION =
+    GodotCallDescriptor(
+      opcode = 220,
+      className = "Viewport",
+      methodName = "get_mouse_position",
+      hash = 3341600327L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR2,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_IS_ACTION_JUST_RELEASED =
+    GodotCallDescriptor(
+      opcode = 221,
+      className = "Input",
+      methodName = "is_action_just_released",
+      hash = 1558498928L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RESOURCE_DUPLICATE =
+    GodotCallDescriptor(
+      opcode = 222,
+      className = "Resource",
+      methodName = "duplicate",
+      hash = 482882304L,
+      shape = GodotCallShape.BOOL_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.OWNED,
+    )
+
+  val RESOURCESAVER_SAVE =
+    GodotCallDescriptor(
+      opcode = 223,
+      className = "ResourceSaver",
+      methodName = "save",
+      hash = 2983274697L,
+      shape = GodotCallShape.OBJECT_STRING_RET_LONG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_FIND_CHILDREN =
+    GodotCallDescriptor(
+      opcode = 224,
+      className = "Node",
+      methodName = "find_children",
+      hash = 2560337219L,
+      shape = GodotCallShape.STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val MESHINSTANCE3D_GET_MESH =
+    GodotCallDescriptor(
+      opcode = 225,
+      className = "MeshInstance3D",
+      methodName = "get_mesh",
+      hash = 1808005922L,
+      shape = GodotCallShape.NOARGS_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
 }

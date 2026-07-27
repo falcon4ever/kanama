@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 13
+    const val PROTOCOL_VERSION = 14
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -48,6 +48,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("# One handle dictionary shared by every Kanama Web proxy: a handle")
             appendLine("# minted by any proxy resolves in all of them.")
             appendLine("static var handles: Dictionary = {}")
+            appendLine()
+            appendLine("# Proxy script path per Kanama script class (simple name), so a proxy can")
+            appendLine("# instantiate a scripted resource for the runtime factory crossing.")
+            appendLine("static var proxy_paths: Dictionary = {")
+            scripts.forEach { input ->
+              appendLine(
+                "\t${quote(input.model.simpleName)}: ${quote("res://kanama-web/generated/${input.model.simpleName}.gd")},"
+              )
+            }
+            appendLine("}")
           },
       )
 
@@ -250,8 +260,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLongPropertySetter()
     appendDoublePropertySetter()
     appendVector2PropertySetter()
+    appendVector2iPropertySetter()
     appendVector3PropertySetter()
     appendObjectPropertySetter()
+    appendPackedPropertyGetter()
     appendObjectArrayPropertySetter()
     appendStringArrayPropertySetter()
     appendLongMethodDispatcher()
@@ -719,6 +731,78 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
   }
 
+  private fun StringBuilder.appendVector2iPropertySetter() {
+    appendLine(
+      "  fun setVector2iProperty(scriptId: Int, propertyId: Int, script: KanamaWebScript, x: Int, y: Int) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
+      input.model.properties.forEachIndexed { propertyIndex, property ->
+        if (property.type == TypeMapping.VECTOR2I && property.isMutable) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = Vector2i(x, y)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"property\", propertyId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  /**
+   * Current Kotlin property value packed as one string, per declared type (save-time pull). Object
+   * values pack their backend handle, script arrays comma-join element handles, string arrays join
+   * with the unit separator; the proxy parses per its declared type.
+   */
+  private fun StringBuilder.appendPackedPropertyGetter() {
+    appendLine(
+      "  fun getPackedProperty(scriptId: Int, propertyId: Int, script: KanamaWebScript): String ="
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
+      input.model.properties.forEachIndexed { propertyIndex, property ->
+        val access = "(script as ${input.model.simpleName}).${property.kotlinName}"
+        val expression =
+          when {
+            property.type == TypeMapping.STRING -> access
+            property.type == TypeMapping.INT -> "$access.toString()"
+            property.type == TypeMapping.FLOAT -> "$access.toString()"
+            property.type == TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
+            property.type == TypeMapping.VECTOR2 -> "$access.let { \"\${it.x},\${it.y}\" }"
+            property.type == TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
+            property.type == TypeMapping.VECTOR3 -> "$access.let { \"\${it.x},\${it.y},\${it.z}\" }"
+            property.type == TypeMapping.OBJECT && property.customScriptFqName != null ->
+              if (property.nullable) "($access?.objectId?.value ?: 0).toString()"
+              else "$access.objectId.value.toString()"
+            property.type == TypeMapping.OBJECT ->
+              if (property.nullable) "($access?.handle?.value ?: 0).toString()"
+              else "$access.handle.value.toString()"
+            property.type == TypeMapping.ARRAY && property.arrayElementString ->
+              "$access.joinToString(\"\\u001f\")"
+            property.type == TypeMapping.ARRAY && property.arrayElementCustomScriptFqName != null ->
+              "$access.joinToString(\",\") { it.objectId.value.toString() }"
+            property.type == TypeMapping.ARRAY && property.arrayElementWrapperFqName != null ->
+              "$access.joinToString(\",\") { it.handle.value.toString() }"
+            else -> null
+          }
+        if (expression != null) {
+          appendLine("        ${propertyIndex + 1} -> $expression")
+        }
+      }
+      appendLine("        else -> unknown(\"property\", propertyId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine()
+  }
+
   private fun StringBuilder.appendVector3PropertySetter() {
     appendLine(
       "  fun setVector3Property(scriptId: Int, propertyId: Int, script: KanamaWebScript, x: Double, y: Double, z: Double) {"
@@ -892,6 +976,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_tween_callback")
     appendLine("var _kanama_noargs_vector3_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
+    appendLine("var _kanama_pulling: bool = false")
     appendLine("var _kanama_object_handles: Dictionary = KanamaWebHandles.handles")
     appendLine("var _kanama_tween_children: Dictionary = {}")
     appendLine("var _kanama_tween_targets: Dictionary = {}")
@@ -1020,6 +1105,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine(
             "\t_kanama_bridge.setVector3Property(_kanama_handle, ${index + 1}, ${property.godotName}.x, ${property.godotName}.y, ${property.godotName}.z)"
           )
+        TypeMapping.VECTOR2I ->
+          appendLine(
+            "\t_kanama_bridge.setVector2iProperty(_kanama_handle, ${index + 1}, ${property.godotName}.x, ${property.godotName}.y)"
+          )
         TypeMapping.OBJECT -> {
           appendLine("\tvar property_handle_${index + 1}: int = 0")
           appendLine("\tif ${property.godotName} != null:")
@@ -1086,6 +1175,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
     appendLine("\treturn _kanama_handle")
     appendLine()
+    appendPullProperties(model)
     appendLine("func _ready() -> void:")
     appendLine("\tif _kanama_ensure_created() == 0 or _kanama_ready_dispatched:")
     appendLine("\t\treturn")
@@ -1563,6 +1653,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 202 and target_object is GridMap:")
+    appendLine("\t\t\tvar library_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\t(target_object as GridMap).mesh_library = null if library_handle == 0 else _kanama_object_handles.get(library_handle) as MeshLibrary"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 209 and target_object is MeshLibrary:")
+    appendLine("\t\t\t(target_object as MeshLibrary).create_item(bytes.decode_s32(offset + 8))")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 132 and target_object != null:")
     appendLine(
       "\t\t\tvar damage_method := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
@@ -1785,6 +1886,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif resource == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateResourceHandle(0)")
     appendLine("\t\treturn 0")
+    appendLine("\t# A Kanama-scripted resource resolves to its script handle so the Kotlin side")
+    appendLine("\t# can reach the hydrated instance (node-lookup rule for loads).")
+    appendLine("\tif resource.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\tvar loaded_script_handle := int(resource.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\tif loaded_script_handle != 0:")
+    appendLine("\t\t\t_kanama_object_handles[loaded_script_handle] = resource")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateResourceHandle(loaded_script_handle)")
+    appendLine("\t\t\treturn loaded_script_handle")
     appendLine("\t_kanama_object_handles[resource_handle] = resource")
     appendLine("\t_kanama_bridge.recordImmediateResourceHandle(resource_handle)")
     appendLine("\treturn resource_handle")
@@ -1813,7 +1922,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar object_handle := int(args[0])")
     appendLine("\tvar requested_class := String(args[1])")
     appendLine("\tvar value: Object = ClassDB.instantiate(requested_class)")
-    appendLine("\tif value == null or not value is Node:")
+    appendLine("\t# Nodes and Resources both construct here (MeshLibrary is a Resource); only a")
+    appendLine("\t# failed instantiation refuses the proposed handle.")
+    appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateConstructHandle(0)")
     appendLine("\t\treturn 0")
     appendLine("\t_kanama_object_handles[object_handle] = value")
@@ -1915,6 +2026,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = (receiver as WorldEnvironment).environment")
     appendLine("\telif opcode == 194 and receiver is Viewport:")
     appendLine("\t\tvalue = (receiver as Viewport).get_camera_3d()")
+    appendLine("\telif opcode == 212 and receiver is PackedScene:")
+    appendLine("\t\tvalue = (receiver as PackedScene).get_state()")
+    appendLine("\telif opcode == 225 and receiver is MeshInstance3D:")
+    appendLine("\t\tvalue = (receiver as MeshInstance3D).mesh")
     appendLine("\telif opcode == 112 and receiver is KinematicCollision3D:")
     appendLine("\t\tvalue = (receiver as KinematicCollision3D).get_collider()")
     appendLine("\telif opcode == 114 and receiver is Node:")
@@ -2468,6 +2583,144 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int(round((value as AudioStreamPlayer3D).pitch_scale * 1000.0))")
     appendLine("\t\telif opcode == 190:")
     appendLine("\t\t\tresult = int(OS.shell_open(String(args[2])))")
+    appendLine("\t\telif opcode == 0:")
+    appendLine("\t\t\t# Reserved runtime crossing (not a contract opcode): instantiate a Kanama")
+    appendLine("\t\t\t# scripted resource by class simple name and hydrate its Kotlin instance.")
+    appendLine(
+      "\t\t\tvar instantiate_path: String = KanamaWebHandles.proxy_paths.get(String(args[2]), \"\")"
+    )
+    appendLine("\t\t\tif instantiate_path != \"\":")
+    appendLine("\t\t\t\tvar instantiate_script = load(instantiate_path)")
+    appendLine(
+      "\t\t\t\tvar created = instantiate_script.new() if instantiate_script != null else null"
+    )
+    appendLine("\t\t\t\tif created != null and created.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\t\t\t\tresult = int(created.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\t\t\t\tif result != 0:")
+    appendLine("\t\t\t\t\t\t_kanama_object_handles[result] = created")
+    appendLine("\t\telif opcode == 203 and value is GridMap:")
+    appendLine("\t\t\tvar cell_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as GridMap).set_cell_item(Vector3i(int(cell_parts[0]), int(cell_parts[1]), int(cell_parts[2])), int(cell_parts[3]), int(cell_parts[4]))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 204 and value is GridMap:")
+    appendLine("\t\t\tvar get_cell_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = (value as GridMap).get_cell_item(Vector3i(int(get_cell_parts[0]), int(get_cell_parts[1]), int(get_cell_parts[2])))"
+    )
+    appendLine("\t\telif opcode == 205 and value is GridMap:")
+    appendLine("\t\t\tvar orient_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = (value as GridMap).get_cell_item_orientation(Vector3i(int(orient_parts[0]), int(orient_parts[1]), int(orient_parts[2])))"
+    )
+    appendLine("\t\telif opcode == 206 and value is GridMap:")
+    appendLine("\t\t\tvar basis_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = (value as GridMap).get_orthogonal_index_from_basis(Basis(Vector3(basis_parts[0], basis_parts[1], basis_parts[2]), Vector3(basis_parts[3], basis_parts[4], basis_parts[5]), Vector3(basis_parts[6], basis_parts[7], basis_parts[8])))"
+    )
+    appendLine("\t\telif opcode == 207 and value is GridMap:")
+    appendLine("\t\t\t(value as GridMap).clear()")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 208 and value is GridMap:")
+    appendLine("\t\t\tvar used_cells := (value as GridMap).get_used_cells()")
+    appendLine("\t\t\tvar packed_cells := PackedStringArray()")
+    appendLine("\t\t\tfor used_cell in used_cells:")
+    appendLine(
+      "\t\t\t\tpacked_cells.append(\"%d,%d,%d\" % [used_cell.x, used_cell.y, used_cell.z])"
+    )
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(packed_cells))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 210 and value is MeshLibrary:")
+    appendLine("\t\t\tvar item_mesh_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar item_mesh: Mesh = _kanama_object_handles.get(int(item_mesh_parts[1])) as Mesh"
+    )
+    appendLine("\t\t\tif item_mesh != null:")
+    appendLine("\t\t\t\t(value as MeshLibrary).set_item_mesh(int(item_mesh_parts[0]), item_mesh)")
+    appendLine("\t\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 211 and value is MeshLibrary:")
+    appendLine("\t\t\tvar item_transform_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar item_basis := Basis(Vector3(item_transform_parts[1], item_transform_parts[2], item_transform_parts[3]), Vector3(item_transform_parts[4], item_transform_parts[5], item_transform_parts[6]), Vector3(item_transform_parts[7], item_transform_parts[8], item_transform_parts[9]))"
+    )
+    appendLine(
+      "\t\t\t(value as MeshLibrary).set_item_mesh_transform(int(item_transform_parts[0]), Transform3D(item_basis, Vector3(item_transform_parts[10], item_transform_parts[11], item_transform_parts[12])))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 213 and value is SceneState:")
+    appendLine("\t\t\tresult = (value as SceneState).get_node_count()")
+    appendLine("\t\telif opcode == 214 and value is SceneState:")
+    appendLine(
+      "\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as SceneState).get_node_type(int(String(args[2])))))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 215 and value is SceneState:")
+    appendLine("\t\t\tresult = (value as SceneState).get_node_property_count(int(String(args[2])))")
+    appendLine("\t\telif opcode == 216 and value is SceneState:")
+    appendLine("\t\t\tvar prop_name_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as SceneState).get_node_property_name(int(prop_name_parts[0]), int(prop_name_parts[1]))))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 217 and value is SceneState:")
+    appendLine("\t\t\tvar prop_value_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar prop_variant: Variant = (value as SceneState).get_node_property_value(int(prop_value_parts[0]), int(prop_value_parts[1]))"
+    )
+    appendLine("\t\t\tvar prop_object: Object = prop_variant if prop_variant is Object else null")
+    appendLine("\t\t\tif prop_object != null:")
+    appendLine("\t\t\t\tresult = int(prop_value_parts[2])")
+    appendLine("\t\t\t\t_kanama_object_handles[result] = prop_object")
+    appendLine("\t\telif opcode == 221:")
+    appendLine("\t\t\tresult = int(Input.is_action_just_released(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 222 and value is Resource:")
+    appendLine("\t\t\tvar duplicate_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar duplicated: Resource = (value as Resource).duplicate(duplicate_parts[0] == \"1\")"
+    )
+    appendLine("\t\t\tif duplicated != null:")
+    appendLine("\t\t\t\tresult = int(duplicate_parts[1])")
+    appendLine("\t\t\t\t_kanama_object_handles[result] = duplicated")
+    appendLine("\t\telif opcode == 223:")
+    appendLine("\t\t\tvar save_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tvar save_handle := int(save_parts[0])")
+    appendLine(
+      "\t\t\tvar save_target: Object = self if save_handle == _kanama_handle else _kanama_object_handles.get(save_handle)"
+    )
+    appendLine("\t\t\tif save_target == null or not (save_target is Resource):")
+    appendLine("\t\t\t\tresult = ERR_INVALID_PARAMETER")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\t# Property flow is engine-to-Kotlin at hydration; pull the current Kotlin")
+    appendLine("\t\t\t\t# values into the scripted resource graph before serializing.")
+    appendLine("\t\t\t\tif save_target.has_method(\"_kanama_pull_properties\"):")
+    appendLine("\t\t\t\t\tsave_target.call(\"_kanama_pull_properties\")")
+    appendLine(
+      "\t\t\t\tresult = ResourceSaver.save(save_target as Resource, save_parts[1], int(save_parts[2]))"
+    )
+    appendLine("\t\telif opcode == 224 and value is Node:")
+    appendLine("\t\t\tvar find_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar found := (value as Node).find_children(find_parts[0], find_parts[1], find_parts[2] == \"1\", find_parts[3] == \"1\")"
+    )
+    appendLine("\t\t\tvar found_handles := PackedStringArray()")
+    appendLine("\t\t\tfor found_node in found:")
+    appendLine("\t\t\t\tvar found_handle := 0")
+    appendLine("\t\t\t\tif found_node.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\t\t\t\tfound_handle = int(found_node.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\t\t\tif found_handle == 0:")
+    appendLine("\t\t\t\t\tfor existing_found in _kanama_object_handles:")
+    appendLine("\t\t\t\t\t\tif is_same(_kanama_object_handles[existing_found], found_node):")
+    appendLine("\t\t\t\t\t\t\tfound_handle = int(existing_found)")
+    appendLine("\t\t\t\t\t\t\tbreak")
+    appendLine("\t\t\t\tif found_handle == 0:")
+    appendLine(
+      "\t\t\t\t\tfound_handle = int(_kanama_bridge.allocateFoundNodeHandle(_kanama_handle))"
+    )
+    appendLine("\t\t\t\t_kanama_object_handles[found_handle] = found_node")
+    appendLine("\t\t\t\tfound_handles.append(str(found_handle))")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(found_handles))")
+    appendLine("\t\t\tresult = 1")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -2482,6 +2735,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as CanvasItem).get_local_mouse_position()")
     appendLine("\telif opcode == 127 and value is InputEventMouseMotion:")
     appendLine("\t\tresult = (value as InputEventMouseMotion).relative")
+    appendLine("\telif opcode == 220 and value is Viewport:")
+    appendLine("\t\tresult = (value as Viewport).get_mouse_position()")
     appendLine("\t_kanama_bridge.recordImmediateVector2(result.x, result.y)")
     appendLine("\treturn 1")
     appendLine()
@@ -2510,6 +2765,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as ShapeCast3D).target_position")
     appendLine("\telif opcode == 178 and value is NavigationAgent3D:")
     appendLine("\t\tresult = (value as NavigationAgent3D).get_next_path_position()")
+    appendLine("\telif opcode == 218 and value is Camera3D:")
+    appendLine(
+      "\t\tresult = (value as Camera3D).project_ray_origin(Vector2(float(args[2]), float(args[3])))"
+    )
+    appendLine("\telif opcode == 219 and value is Camera3D:")
+    appendLine(
+      "\t\tresult = (value as Camera3D).project_ray_normal(Vector2(float(args[2]), float(args[3])))"
+    )
     appendLine("\telif opcode == 197 and value is RigidBody3D:")
     appendLine("\t\tresult = (value as RigidBody3D).angular_velocity")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
@@ -2681,6 +2944,101 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
 
   private fun gdType(arg: ArgModel): String =
     arg.objectWrapperFqName?.let(::gdObjectType) ?: gdType(arg.type)
+
+  /**
+   * Engine-side pull of the current Kotlin property values (save-time sync). Property flow is
+   * normally engine-to-Kotlin at hydration; ResourceSaver.save must serialize what the Kotlin
+   * instance holds NOW, so the save applier calls this before saving. Recurses into scripted
+   * object/array elements; the reentry flag guards resource cycles.
+   */
+  private fun StringBuilder.appendPullProperties(model: ScriptModel) {
+    appendLine("func _kanama_pull_properties() -> void:")
+    appendLine("\tif _kanama_handle == 0 or _kanama_pulling:")
+    appendLine("\t\treturn")
+    appendLine("\t_kanama_pulling = true")
+    model.properties.forEachIndexed { index, property ->
+      val id = index + 1
+      val name = property.godotName
+      val packed = "_kanama_packed_$id"
+      val supported =
+        when (property.type) {
+          TypeMapping.STRING,
+          TypeMapping.INT,
+          TypeMapping.FLOAT,
+          TypeMapping.BOOL,
+          TypeMapping.VECTOR2,
+          TypeMapping.VECTOR2I,
+          TypeMapping.VECTOR3 -> true
+          TypeMapping.OBJECT ->
+            property.customScriptFqName != null || property.objectWrapperFqName != null
+          TypeMapping.ARRAY ->
+            property.arrayElementString ||
+              property.arrayElementCustomScriptFqName != null ||
+              property.arrayElementWrapperFqName != null
+          else -> false
+        }
+      if (!supported) {
+        appendLine("\t# ${property.godotName}: unsupported pull type, left as-is")
+        return@forEachIndexed
+      }
+      appendLine("\tvar $packed := String(_kanama_bridge.getPackedProperty(_kanama_handle, $id))")
+      when {
+        property.type == TypeMapping.STRING -> appendLine("\t$name = $packed")
+        property.type == TypeMapping.INT -> appendLine("\t$name = int($packed)")
+        property.type == TypeMapping.FLOAT -> appendLine("\t$name = float($packed)")
+        property.type == TypeMapping.BOOL -> appendLine("\t$name = $packed == \"1\"")
+        property.type == TypeMapping.VECTOR2 -> {
+          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine("\t$name = Vector2(_kanama_parts_$id[0], _kanama_parts_$id[1])")
+        }
+        property.type == TypeMapping.VECTOR2I -> {
+          appendLine("\tvar _kanama_parts_$id := $packed.split(\",\")")
+          appendLine("\t$name = Vector2i(int(_kanama_parts_$id[0]), int(_kanama_parts_$id[1]))")
+        }
+        property.type == TypeMapping.VECTOR3 -> {
+          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine(
+            "\t$name = Vector3(_kanama_parts_$id[0], _kanama_parts_$id[1], _kanama_parts_$id[2])"
+          )
+        }
+        property.type == TypeMapping.OBJECT -> {
+          appendLine("\tvar _kanama_pull_handle_$id := int($packed)")
+          appendLine("\tvar _kanama_pull_value_$id: Object = null")
+          appendLine("\tif _kanama_pull_handle_$id != 0:")
+          appendLine(
+            "\t\t_kanama_pull_value_$id = self if _kanama_pull_handle_$id == _kanama_handle else _kanama_object_handles.get(_kanama_pull_handle_$id)"
+          )
+          appendLine(
+            "\tif _kanama_pull_value_$id != null and _kanama_pull_value_$id.has_method(\"_kanama_pull_properties\"):"
+          )
+          appendLine("\t\t_kanama_pull_value_$id.call(\"_kanama_pull_properties\")")
+          appendLine("\t$name = _kanama_pull_value_$id as ${gdType(property)}")
+        }
+        property.type == TypeMapping.ARRAY && property.arrayElementString -> {
+          appendLine("\tif $packed == \"\":")
+          appendLine("\t\t$name.assign([])")
+          appendLine("\telse:")
+          appendLine("\t\t$name.assign($packed.split(\"\\u001f\"))")
+        }
+        property.type == TypeMapping.ARRAY -> {
+          appendLine("\tvar _kanama_rebuilt_$id: Array = []")
+          appendLine("\tfor _kanama_part in $packed.split(\",\"):")
+          appendLine("\t\tif _kanama_part == \"\":")
+          appendLine("\t\t\tcontinue")
+          appendLine("\t\tvar _kanama_element = _kanama_object_handles.get(int(_kanama_part))")
+          appendLine("\t\tif _kanama_element == null:")
+          appendLine("\t\t\tcontinue")
+          appendLine("\t\tif _kanama_element.has_method(\"_kanama_pull_properties\"):")
+          appendLine("\t\t\t_kanama_element.call(\"_kanama_pull_properties\")")
+          appendLine("\t\t_kanama_rebuilt_$id.append(_kanama_element)")
+          appendLine("\t$name.assign(_kanama_rebuilt_$id)")
+        }
+        else -> error("unreachable pull arm for ${property.godotName}")
+      }
+    }
+    appendLine("\t_kanama_pulling = false")
+    appendLine()
+  }
 
   private fun gdType(property: ScriptPropertyModel): String =
     when {
