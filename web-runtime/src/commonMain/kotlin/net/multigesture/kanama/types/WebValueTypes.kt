@@ -49,6 +49,8 @@ data class Vector2(val x: Double, val y: Double) {
   companion object {
     val ZERO = Vector2(0.0, 0.0)
     val ONE = Vector2(1.0, 1.0)
+    val RIGHT = Vector2(1.0, 0.0)
+    val DOWN = Vector2(0.0, 1.0)
   }
 }
 
@@ -68,6 +70,15 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
   fun length(): Double = sqrt(x * x + y * y + z * z)
 
   fun lengthSquared(): Double = x * x + y * y + z * z
+
+  operator fun unaryMinus(): Vector3 = Vector3(-x, -y, -z)
+
+  fun distanceTo(other: Vector3): Double = (other - this).length()
+
+  fun distanceSquaredTo(other: Vector3): Double = (other - this).lengthSquared()
+
+  /** Godot's bounce: reflect off the plane with (unit) normal [normal]. */
+  fun bounce(normal: Vector3): Vector3 = this - normal * (2.0 * dot(normal))
 
   fun dot(other: Vector3): Double = x * other.x + y * other.y + z * other.z
 
@@ -142,5 +153,274 @@ data class Color(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f)
 data class Vector2i(val x: Int, val y: Int) {
   companion object {
     val ZERO = Vector2i(0, 0)
+  }
+}
+
+/** Rotation quaternion backing Basis decomposition and slerp (Godot layout: x, y, z, w). */
+data class Quaternion(val x: Double, val y: Double, val z: Double, val w: Double) {
+  fun normalized(): Quaternion {
+    val len = sqrt(x * x + y * y + z * z + w * w)
+    return if (len > 0.0) Quaternion(x / len, y / len, z / len, w / len) else IDENTITY
+  }
+
+  /** Spherical interpolation along the shortest arc (Godot's slerp). */
+  fun slerp(to: Quaternion, weight: Double): Quaternion {
+    var cosom = x * to.x + y * to.y + z * to.z + w * to.w
+    var target = to
+    if (cosom < 0.0) {
+      cosom = -cosom
+      target = Quaternion(-to.x, -to.y, -to.z, -to.w)
+    }
+    val scale0: Double
+    val scale1: Double
+    if (1.0 - cosom > 1e-6) {
+      val omega = kotlin.math.acos(cosom)
+      val sinom = sin(omega)
+      scale0 = sin((1.0 - weight) * omega) / sinom
+      scale1 = sin(weight * omega) / sinom
+    } else {
+      scale0 = 1.0 - weight
+      scale1 = weight
+    }
+    return Quaternion(
+      scale0 * x + scale1 * target.x,
+      scale0 * y + scale1 * target.y,
+      scale0 * z + scale1 * target.z,
+      scale0 * w + scale1 * target.w,
+    )
+  }
+
+  companion object {
+    val IDENTITY = Quaternion(0.0, 0.0, 0.0, 1.0)
+  }
+}
+
+/**
+ * 3x3 basis over row-major storage (rows match Godot's internal layout: xform(v) dots rows with v;
+ * the x/y/z axes are COLUMNS). Pure Kotlin — composes from the mirrored rotation/scale snapshots
+ * without an engine crossing.
+ */
+class Basis internal constructor(internal val m: DoubleArray) {
+  init {
+    require(m.size == 9)
+  }
+
+  /** Godot's axis constructor: [xAxis]/[yAxis]/[zAxis] are the matrix COLUMNS. */
+  constructor(
+    xAxis: Vector3,
+    yAxis: Vector3,
+    zAxis: Vector3,
+  ) : this(
+    doubleArrayOf(xAxis.x, yAxis.x, zAxis.x, xAxis.y, yAxis.y, zAxis.y, xAxis.z, yAxis.z, zAxis.z)
+  )
+
+  constructor(
+    quaternion: Quaternion
+  ) : this(
+    quaternion.normalized().let { q ->
+      val xx = q.x * q.x
+      val yy = q.y * q.y
+      val zz = q.z * q.z
+      val xy = q.x * q.y
+      val xz = q.x * q.z
+      val yz = q.y * q.z
+      val wx = q.w * q.x
+      val wy = q.w * q.y
+      val wz = q.w * q.z
+      doubleArrayOf(
+        1.0 - 2.0 * (yy + zz),
+        2.0 * (xy - wz),
+        2.0 * (xz + wy),
+        2.0 * (xy + wz),
+        1.0 - 2.0 * (xx + zz),
+        2.0 * (yz - wx),
+        2.0 * (xz - wy),
+        2.0 * (yz + wx),
+        1.0 - 2.0 * (xx + yy),
+      )
+    }
+  )
+
+  operator fun times(v: Vector3): Vector3 =
+    Vector3(
+      m[0] * v.x + m[1] * v.y + m[2] * v.z,
+      m[3] * v.x + m[4] * v.y + m[5] * v.z,
+      m[6] * v.x + m[7] * v.y + m[8] * v.z,
+    )
+
+  /** Row-major matrix product (this applied after [other] in xform order). */
+  operator fun times(other: Basis): Basis {
+    val a = m
+    val b = other.m
+    val out = DoubleArray(9)
+    for (row in 0..2) {
+      for (col in 0..2) {
+        out[row * 3 + col] =
+          a[row * 3] * b[col] + a[row * 3 + 1] * b[3 + col] + a[row * 3 + 2] * b[6 + col]
+      }
+    }
+    return Basis(out)
+  }
+
+  /** Rotation-only inverse: the transpose. */
+  fun inverse(): Basis = transposed()
+
+  fun transposed(): Basis =
+    Basis(doubleArrayOf(m[0], m[3], m[6], m[1], m[4], m[7], m[2], m[5], m[8]))
+
+  fun getColumn(index: Int): Vector3 = Vector3(m[index], m[3 + index], m[6 + index])
+
+  /** Column lengths signed by the determinant (Godot's get_scale). */
+  fun getScale(): Vector3 {
+    val detSign = if (determinant() < 0.0) -1.0 else 1.0
+    return Vector3(
+      detSign * getColumn(0).length(),
+      detSign * getColumn(1).length(),
+      detSign * getColumn(2).length(),
+    )
+  }
+
+  fun determinant(): Double =
+    m[0] * (m[4] * m[8] - m[5] * m[7]) - m[1] * (m[3] * m[8] - m[5] * m[6]) +
+      m[2] * (m[3] * m[7] - m[4] * m[6])
+
+  /** Godot's scaled(): rows scaled componentwise (scale applied on the left). */
+  fun scaled(scale: Vector3): Basis =
+    Basis(
+      doubleArrayOf(
+        m[0] * scale.x,
+        m[1] * scale.x,
+        m[2] * scale.x,
+        m[3] * scale.y,
+        m[4] * scale.y,
+        m[5] * scale.y,
+        m[6] * scale.z,
+        m[7] * scale.z,
+        m[8] * scale.z,
+      )
+    )
+
+  /** Columns normalized (drops scale; assumes no shear — node transforms in these demos). */
+  fun orthonormalized(): Basis {
+    val x = getColumn(0).normalized()
+    val y = getColumn(1).normalized()
+    val z = getColumn(2).normalized()
+    return Basis(x, y, z)
+  }
+
+  /** Rotation quaternion of the orthonormalized basis (Shepperd's method). */
+  fun getRotationQuaternion(): Quaternion {
+    val ortho = orthonormalized()
+    val r = (if (ortho.determinant() < 0.0) ortho.scaled(Vector3(-1, -1, -1)) else ortho).m
+    val trace = r[0] + r[4] + r[8]
+    val raw =
+      if (trace > 0.0) {
+        val s = sqrt(trace + 1.0) * 2.0
+        Quaternion((r[7] - r[5]) / s, (r[2] - r[6]) / s, (r[3] - r[1]) / s, 0.25 * s)
+      } else if (r[0] > r[4] && r[0] > r[8]) {
+        val s = sqrt(1.0 + r[0] - r[4] - r[8]) * 2.0
+        Quaternion(0.25 * s, (r[1] + r[3]) / s, (r[2] + r[6]) / s, (r[7] - r[5]) / s)
+      } else if (r[4] > r[8]) {
+        val s = sqrt(1.0 + r[4] - r[0] - r[8]) * 2.0
+        Quaternion((r[1] + r[3]) / s, 0.25 * s, (r[5] + r[7]) / s, (r[2] - r[6]) / s)
+      } else {
+        val s = sqrt(1.0 + r[8] - r[0] - r[4]) * 2.0
+        Quaternion((r[2] + r[6]) / s, (r[5] + r[7]) / s, 0.25 * s, (r[3] - r[1]) / s)
+      }
+    return raw.normalized()
+  }
+
+  /** Euler angles in Godot's default YXZ order (inverse of [fromEuler]). */
+  fun getEuler(): Vector3 {
+    val r = orthonormalized().m
+    val sx = -r[5]
+    return if (sx > 0.999999) {
+      Vector3(kotlin.math.PI / 2.0, atan2(r[3], r[0]), 0.0)
+    } else if (sx < -0.999999) {
+      Vector3(-kotlin.math.PI / 2.0, atan2(r[3], r[0]), 0.0)
+    } else {
+      Vector3(kotlin.math.asin(sx), atan2(r[2], r[8]), atan2(r[3], r[4]))
+    }
+  }
+
+  companion object {
+    val IDENTITY = Basis(doubleArrayOf(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0))
+
+    /** Godot's default Euler order YXZ: R = Ry * Rx * Rz. */
+    fun fromEuler(euler: Vector3): Basis {
+      val cx = cos(euler.x)
+      val sx = sin(euler.x)
+      val cy = cos(euler.y)
+      val sy = sin(euler.y)
+      val cz = cos(euler.z)
+      val sz = sin(euler.z)
+      return Basis(
+        doubleArrayOf(
+          cy * cz + sy * sx * sz,
+          -cy * sz + sy * sx * cz,
+          sy * cx,
+          cx * sz,
+          cx * cz,
+          -sx,
+          -sy * cz + cy * sx * sz,
+          sy * sz + cy * sx * cz,
+          cy * cx,
+        )
+      )
+    }
+
+    /** Rodrigues rotation matrix about (unit) [axis] by [angle] radians. */
+    fun fromAxisAngle(axis: Vector3, angle: Double): Basis {
+      val a = axis.normalized()
+      val c = cos(angle)
+      val s = sin(angle)
+      val t = 1.0 - c
+      return Basis(
+        doubleArrayOf(
+          t * a.x * a.x + c,
+          t * a.x * a.y - s * a.z,
+          t * a.x * a.z + s * a.y,
+          t * a.x * a.y + s * a.z,
+          t * a.y * a.y + c,
+          t * a.y * a.z - s * a.x,
+          t * a.x * a.z - s * a.y,
+          t * a.y * a.z + s * a.x,
+          t * a.z * a.z + c,
+        )
+      )
+    }
+
+    /** Godot's looking_at basis: -Z oriented at [direction], [up] as the vertical hint. */
+    fun lookingAt(direction: Vector3, up: Vector3 = Vector3.UP): Basis {
+      val z = -direction.normalized()
+      val x = up.cross(z).normalized()
+      val y = z.cross(x)
+      return Basis(x, y, z)
+    }
+  }
+}
+
+/** Basis + origin. Pure Kotlin — the engine side sees only the decomposed writes. */
+data class Transform3D(val basis: Basis, val origin: Vector3) {
+  /** Godot's xform: rotate/scale then translate. */
+  operator fun times(v: Vector3): Vector3 = basis * v + origin
+
+  fun withBasis(newBasis: Basis): Transform3D = Transform3D(newBasis, origin)
+
+  fun withOrigin(newOrigin: Vector3): Transform3D = Transform3D(basis, newOrigin)
+
+  /** Keeps the origin; orients -Z at [target] (Godot's looking_at). */
+  fun lookingAt(target: Vector3, up: Vector3 = Vector3.UP): Transform3D =
+    Transform3D(Basis.lookingAt(target - origin, up), origin)
+
+  /** Godot's interpolate_with: slerp rotation, lerp scale and origin. */
+  fun interpolateWith(other: Transform3D, weight: Double): Transform3D {
+    val rotation = basis.getRotationQuaternion().slerp(other.basis.getRotationQuaternion(), weight)
+    val scale = basis.getScale().lerp(other.basis.getScale(), weight)
+    return Transform3D(Basis(rotation).scaled(scale), origin.lerp(other.origin, weight))
+  }
+
+  companion object {
+    val IDENTITY = Transform3D(Basis.IDENTITY, Vector3.ZERO)
   }
 }

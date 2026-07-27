@@ -50,6 +50,7 @@ enum class GodotCallShape {
   NOARGS_RET_STRING_ARRAY,
   STRINGNAME_ARG,
   STRINGNAME_BOOL_ARG,
+  LONG_BOOL_ARG,
   STRINGNAME_STRINGNAME_ARG,
   STRINGNAME_VECTOR2I_RET_INT,
   NOARGS_RET_COLOR,
@@ -70,6 +71,13 @@ enum class GodotCallShape {
   CALLABLE_RET_HANDLE,
   NOARGS_RET_LONG_SINGLETON,
   STRINGNAME_OBJECT_RET_INT,
+  VECTOR3_RET_HANDLE,
+  NOARGS_RET_HANDLE_LIST,
+  LONG_RET_VECTOR3,
+  STRINGNAME_RET_DOUBLE_SINGLETON,
+  STRINGNAME_VECTOR3_VECTOR3_ARG,
+  STRINGNAME_STRING_RET_INT,
+  CALLABLE_DOUBLE_RANGE_RET_HANDLE,
 }
 
 @InternalKanamaBackendApi
@@ -355,6 +363,16 @@ interface GodotBackendSpi {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
 
+  fun invokeLongBoolArg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    layer: Long,
+    value: Boolean,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
   fun invokeStringNameStringNameArg(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -532,6 +550,81 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: GodotHandle,
+  ): Int {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Motion sweep returning the first collision as a closeable handle. */
+  fun invokeVector3RetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Handle-list query (overlapping scripted bodies). */
+  fun invokeNoArgsRetHandleList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+  ): List<GodotHandle> {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Indexed Vector3 query (shape-cast collision points). */
+  fun invokeLongRetVector3(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotVector3 {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Singleton double query keyed by one name (raw strength, float settings). */
+  fun invokeStringNameRetDoubleSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Double {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Dynamic method dispatch carrying two Vector3 arguments. */
+  fun invokeStringNameVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Method tween over an interpolated double range. */
+  fun invokeCallableDoubleRangeRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+    fromValue: Double,
+    toValue: Double,
+    duration: Double,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /** Signal emission carrying one String argument. */
+  fun invokeStringNameStringRetInt(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    name: String,
+    value: String,
   ): Int {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
@@ -945,6 +1038,18 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeLongBoolArg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    layer: Long,
+    value: Boolean,
+  ) {
+    requireShape(descriptor, GodotCallShape.LONG_BOOL_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeLongBoolArg(descriptor, resolve(selected, descriptor), receiver, layer, value)
+  }
+
   fun invokeStringNameStringNameArg(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
@@ -1169,6 +1274,115 @@ object GodotBackendCalls {
       receiver,
       name,
       value,
+    )
+  }
+
+  fun invokeVector3RetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: GodotVector3,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.VECTOR3_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeVector3RetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
+  }
+
+  fun invokeNoArgsRetHandleList(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+  ): List<GodotHandle> {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_HANDLE_LIST)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeNoArgsRetHandleList(descriptor, resolve(selected, descriptor), receiver)
+  }
+
+  fun invokeLongRetVector3(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: Long,
+  ): GodotVector3 {
+    requireShape(descriptor, GodotCallShape.LONG_RET_VECTOR3)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeLongRetVector3(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
+  fun invokeStringNameRetDoubleSingleton(descriptor: GodotCallDescriptor, value: String): Double {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_DOUBLE_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeStringNameRetDoubleSingleton(
+      descriptor,
+      resolve(selected, descriptor),
+      value,
+    )
+  }
+
+  fun invokeStringNameVector3Vector3Arg(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    first: GodotVector3,
+    second: GodotVector3,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_VECTOR3_VECTOR3_ARG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    selected.invokeStringNameVector3Vector3Arg(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      first,
+      second,
+    )
+  }
+
+  fun invokeStringNameStringRetInt(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    name: String,
+    value: String,
+  ): Int {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_STRING_RET_INT)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameStringRetInt(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      name,
+      value,
+    )
+  }
+
+  fun invokeCallableDoubleRangeRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    method: String,
+    fromValue: Double,
+    toValue: Double,
+    duration: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.CALLABLE_DOUBLE_RANGE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeCallableDoubleRangeRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      method,
+      fromValue,
+      toValue,
+      duration,
     )
   }
 
@@ -1592,6 +1806,52 @@ class AudioStreamPlayer3DBackendContractProbe(private val handle: GodotHandle) {
   fun stop() {
     GodotBackendCalls.invokeNoArgsVoid(InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_STOP, handle)
   }
+
+  fun setPitchScale(scale: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_SET_PITCH_SCALE,
+      handle,
+      scale,
+    )
+  }
+}
+
+/** Rigid-body dynamics slice (the third-person controller's destructible-box shards). */
+@InternalKanamaBackendApi
+class RigidBody3DBackendContractProbe(private val handle: GodotHandle) {
+  fun setFreezeEnabled(frozen: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.RIGIDBODY3D_SET_FREEZE_ENABLED,
+      handle,
+      frozen,
+    )
+  }
+
+  fun setSleeping(sleeping: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      InitialGodotCallDescriptors.RIGIDBODY3D_SET_SLEEPING,
+      handle,
+      sleeping,
+    )
+  }
+
+  fun applyForce(force: GodotVector3, position: GodotVector3) {
+    GodotBackendCalls.invokeVector3Vector3Arg(
+      InitialGodotCallDescriptors.RIGIDBODY3D_APPLY_FORCE,
+      handle,
+      force,
+      position,
+    )
+  }
+
+  fun setCollisionMaskValue(layer: Long, value: Boolean) {
+    GodotBackendCalls.invokeLongBoolArg(
+      InitialGodotCallDescriptors.COLLISIONOBJECT3D_SET_COLLISION_MASK_VALUE,
+      handle,
+      layer,
+      value,
+    )
+  }
 }
 
 /** Typed AudioStreamPlayer configuration and playback slice used by Match3's Audio autoload. */
@@ -1924,6 +2184,14 @@ class SignalBackendContractProbe(private val handle: GodotHandle) {
       value,
     )
 
+  fun emitString(name: String, value: String): Int =
+    GodotBackendCalls.invokeStringNameStringRetInt(
+      InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_STRING,
+      handle,
+      name,
+      value,
+    )
+
   fun emitVector2i(name: String, value: GodotVector2i): Int =
     GodotBackendCalls.invokeStringNameVector2iRetInt(
       InitialGodotCallDescriptors.OBJECT_EMIT_SIGNAL_VECTOR2I,
@@ -2175,6 +2443,12 @@ class Light3DBackendContractProbe(private val handle: GodotHandle) {
  */
 @InternalKanamaBackendApi
 class CharacterBody3DBackendContractProbe(private val handle: GodotHandle) {
+  fun getWallNormal(): GodotVector3 =
+    GodotBackendCalls.invokeNoArgsRetVector3(
+      InitialGodotCallDescriptors.CHARACTERBODY3D_GET_WALL_NORMAL,
+      handle,
+    )
+
   var velocity: GodotVector3
     get() =
       GodotBackendCalls.invokeNoArgsRetVector3(

@@ -151,6 +151,33 @@ class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHand
       customBlend,
     )
   }
+
+  fun isPlaying(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(D.ANIMATIONPLAYER_IS_PLAYING, backendHandle)
+
+  /** keep_state baked to Godot's default false. */
+  fun stop() {
+    GodotBackendCalls.invokeNoArgsVoid(D.ANIMATIONPLAYER_STOP, backendHandle)
+  }
+
+  /** update baked true (the only value the corpus passes). */
+  fun seek(seconds: Double, update: Boolean = true) {
+    require(update) { "Web AnimationPlayer.seek bakes update=true" }
+    GodotBackendCalls.invokeDoubleArg(D.ANIMATIONPLAYER_SEEK, backendHandle, seconds)
+  }
+
+  fun setDefaultBlendTime(seconds: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      D.ANIMATIONPLAYER_SET_DEFAULT_BLEND_TIME,
+      backendHandle,
+      seconds,
+    )
+  }
+
+  /** AnimationPlayer is an AnimationMixer engine-side; rides the same family. */
+  fun getAnimation(name: String): Animation? =
+    GodotBackendCalls.invokeNodePathRetHandle(D.ANIMATIONMIXER_GET_ANIMATION, backendHandle, name)
+      ?.let { Animation(WebObjectId(it.backendToken().toInt())) }
 }
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
@@ -178,6 +205,12 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 
   fun isOnCeiling(): Boolean = CharacterBody3DBackendContractProbe(backendHandle).isOnCeiling()
 
+  /** Wall normal from the last move_and_slide (anti-stuck nudge). */
+  fun getWallNormal(): Vector3 =
+    CharacterBody3DBackendContractProbe(backendHandle).getWallNormal().let {
+      Vector3(it.x, it.y, it.z)
+    }
+
   fun getSlideCollisionCount(): Long =
     CharacterBody3DBackendContractProbe(backendHandle).getSlideCollisionCount()
 
@@ -192,6 +225,7 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 open class Area3D(godotObject: GodotHandle) : Node3D(godotObject) {
   object Signals {
     const val bodyEntered: String = "body_entered"
+    const val bodyExited: String = "body_exited"
   }
 }
 
@@ -258,6 +292,13 @@ class WorldEnvironment(godotObject: GodotHandle) : Node(godotObject.toBackendHan
 
 object OS {
   fun hasFeature(tagName: String): Boolean = OSBackendContractProbe.hasFeature(tagName)
+
+  /** Web ships the release template; debug-gated tooling stays off. */
+  fun isDebugBuild(): Boolean = false
+
+  fun shellOpen(url: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(D.OS_SHELL_OPEN, url)
+  }
 }
 
 object RenderingServer {

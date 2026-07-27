@@ -25,6 +25,7 @@ import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.web.KanamaWebScript
 import net.multigesture.kanama.web.WebObjectId
+import net.multigesture.kanama.web.webScriptInstance
 
 @RequiresOptIn(
   level = RequiresOptIn.Level.WARNING,
@@ -56,6 +57,11 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
     }
     if (args.size == 1 && args[0] is Long) {
       Node2DBackendContractProbe(backendHandle).emitSignal(signal, (args[0] as Long).toInt())
+      return
+    }
+    if (args.size == 1 && args[0] is String) {
+      SignalBackendContractProbe(backendHandle)
+        .emitString(signal, args[0] as String)
       return
     }
     if (args.size == 1 && args[0] is GodotObject) {
@@ -172,6 +178,10 @@ open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : 
 
   fun queueRedraw() {
     Node2DBackendContractProbe(backendHandle).queueRedraw()
+  }
+
+  fun setVisible(value: Boolean) {
+    CanvasItemBackendContractProbe(backendHandle).setVisible(value)
   }
 
   fun show() {
@@ -298,6 +308,22 @@ object GD {
     require(from <= to)
     val range = to - from + 1
     return from + (randi().toULong() % range.toULong()).toLong()
+  }
+
+  /** Normally-distributed random (Box-Muller over the engine-seeded randf). */
+  fun randfn(mean: Double, deviation: Double): Double {
+    val u1 = randf().coerceAtLeast(1e-12)
+    val u2 = randf()
+    val gaussian =
+      kotlin.math.sqrt(-2.0 * kotlin.math.ln(u1)) * kotlin.math.cos(2.0 * kotlin.math.PI * u2)
+    return mean + deviation * gaussian
+  }
+
+  /** Web adaptation: liveness of the tracked script/browser handle. */
+  fun isInstanceValid(instance: GodotObject?): Boolean {
+    if (instance == null) return false
+    val handle = instance.handle.value
+    return webScriptInstance(handle) != null || isWebBrowserHandleLive(handle)
   }
 
   fun randfRange(from: Double, to: Double): Double {

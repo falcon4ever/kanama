@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 12
+    const val PROTOCOL_VERSION = 13
     const val PROTOCOL_SCHEMA_VERSION = 1
   }
 
@@ -253,8 +253,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendVector3PropertySetter()
     appendObjectPropertySetter()
     appendObjectArrayPropertySetter()
+    appendStringArrayPropertySetter()
     appendLongMethodDispatcher()
     appendLongVoidMethodDispatcher()
+    appendStringMethodDispatcher()
     appendVector2iMethodDispatcher()
     appendObjectMethodDispatcher()
     appendObjectObjectLongMethodDispatcher()
@@ -500,6 +502,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
   }
 
+  private fun StringBuilder.appendStringMethodDispatcher() {
+    appendLine(
+      "  fun callString(scriptId: Int, methodId: Int, script: KanamaWebScript, value: String) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (
+          method.returnType == null &&
+            method.args.size == 1 &&
+            method.args.single().type == TypeMapping.STRING
+        ) {
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(value)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
   private fun StringBuilder.appendLongVoidMethodDispatcher() {
     appendLine(
       "  fun callLongVoid(scriptId: Int, methodId: Int, script: KanamaWebScript, value: Long) {"
@@ -730,6 +759,31 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
               "$wrapper(checkNotNull(handle) { \"Property ${property.godotName} is not nullable\" })"
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $wrapped"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"property\", propertyId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendStringArrayPropertySetter() {
+    appendLine(
+      "  fun setStringArrayProperty(scriptId: Int, propertyId: Int, script: KanamaWebScript, values: List<String>) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
+      input.model.properties.forEachIndexed { propertyIndex, property ->
+        if (
+          property.type == TypeMapping.ARRAY && property.isMutable && property.arrayElementString
+        ) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values"
           )
         }
       }
@@ -986,6 +1040,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           )
         }
         TypeMapping.ARRAY -> {
+          if (property.arrayElementString) {
+            appendLine(
+              "\t_kanama_bridge.setStringArrayProperty(_kanama_handle, ${index + 1}, \"\\u001f\".join(${property.godotName}))"
+            )
+            return@forEachIndexed
+          }
           appendLine("\tvar property_handles_${index + 1}: String = \"\"")
           appendLine("\tfor property_value in ${property.godotName}:")
           appendLine("\t\tvar property_value_handle := 0")
@@ -1177,6 +1237,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 1000 and target_object != null:")
+    appendLine("\t\t\t# Frame marker for a script processed under another owner's proxy")
+    appendLine("\t\t\t# (instantiated nodes flush through their creator): consume it.")
+    appendLine("\t\t\tlast_value = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 3 and target_object is Node2D:")
     appendLine("\t\t\tvar target := target_object as Node2D")
     appendLine("\t\t\tvar position_x := bytes.decode_float(offset + 8)")
@@ -1314,6 +1380,111 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as AudioStreamPlayer3D).stop()")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 152 and target_object is RigidBody3D:")
+    appendLine("\t\t\t(target_object as RigidBody3D).freeze = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 153 and target_object is RigidBody3D:")
+    appendLine("\t\t\t(target_object as RigidBody3D).sleeping = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 158 and target_object is AudioStreamPlayer3D:")
+    appendLine(
+      "\t\t\t(target_object as AudioStreamPlayer3D).pitch_scale = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 161 and target_object is RigidBody3D:")
+    appendLine(
+      "\t\t\t(target_object as RigidBody3D).gravity_scale = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 162 and target_object is RigidBody3D:")
+    appendLine(
+      "\t\t\t(target_object as RigidBody3D).lock_rotation = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 165 and target_object is PhysicsBody3D:")
+    appendLine("\t\t\tvar exception_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar exception_node: Node = _kanama_object_handles.get(exception_handle) as Node"
+    )
+    appendLine("\t\t\tif exception_node != null:")
+    appendLine(
+      "\t\t\t\t(target_object as PhysicsBody3D).add_collision_exception_with(exception_node)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 168 and target_object is SceneTree:")
+    appendLine("\t\t\t(target_object as SceneTree).paused = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 169 and target_object is Node:")
+    appendLine("\t\t\t(target_object as Node).set_process(bytes.decode_s32(offset + 8) != 0)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 170 and target_object is SpringArm3D:")
+    appendLine("\t\t\tvar excluded_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar excluded: CollisionObject3D = _kanama_object_handles.get(excluded_handle) as CollisionObject3D"
+    )
+    appendLine("\t\t\tif excluded != null:")
+    appendLine("\t\t\t\t# The RID never crosses the boundary; it is derived applier-side.")
+    appendLine("\t\t\t\t(target_object as SpringArm3D).add_excluded_object(excluded.get_rid())")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 171 and target_object is RayCast3D:")
+    appendLine("\t\t\tvar ray_exception_handle := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar ray_exception: CollisionObject3D = _kanama_object_handles.get(ray_exception_handle) as CollisionObject3D"
+    )
+    appendLine("\t\t\tif ray_exception != null:")
+    appendLine("\t\t\t\t(target_object as RayCast3D).add_exception(ray_exception)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 180 and target_object is AnimationMixer:")
+    appendLine("\t\t\t(target_object as AnimationMixer).active = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 181 and target_object is AnimationPlayer:")
+    appendLine("\t\t\t(target_object as AnimationPlayer).stop()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 182 and target_object is AnimationPlayer:")
+    appendLine(
+      "\t\t\t(target_object as AnimationPlayer).seek(bytes.decode_double(offset + 8), true)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 183 and target_object is AnimationPlayer:")
+    appendLine(
+      "\t\t\t(target_object as AnimationPlayer).playback_default_blend_time = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 185 and target_object is Animation:")
+    appendLine("\t\t\t(target_object as Animation).loop_mode = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 189 and target_object is MeshInstance3D:")
+    appendLine("\t\t\t# Material baked null: this family only clears surface overrides.")
+    appendLine(
+      "\t\t\t(target_object as MeshInstance3D).set_surface_override_material(bytes.decode_s32(offset + 8), null)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 191 and target_object != null:")
+    appendLine("\t\t\tvar dyn_method_id := bytes.decode_s32(offset + 8)")
+    appendLine(
+      "\t\t\tvar dyn_method := String(_kanama_bridge.resolveCommandStringName(dyn_method_id))"
+    )
+    appendLine(
+      "\t\t\ttarget_object.call(StringName(dyn_method), Vector3(bytes.decode_float(offset + 12), bytes.decode_float(offset + 16), bytes.decode_float(offset + 20)), Vector3(bytes.decode_float(offset + 24), bytes.decode_float(offset + 28), bytes.decode_float(offset + 32)))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 36")
     appendLine("\t\telif opcode == 46 and target_object is AudioStreamPlayer:")
     appendLine("\t\t\tvar stream_handle := bytes.decode_s32(offset + 8)")
     appendLine(
@@ -1722,6 +1893,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalue = receiver.get_parent()")
     appendLine("\telif opcode == 81 and receiver is WorldEnvironment:")
     appendLine("\t\tvalue = (receiver as WorldEnvironment).environment")
+    appendLine("\telif opcode == 194 and receiver is Viewport:")
+    appendLine("\t\tvalue = (receiver as Viewport).get_camera_3d()")
     appendLine("\telif opcode == 112 and receiver is KinematicCollision3D:")
     appendLine("\t\tvalue = (receiver as KinematicCollision3D).get_collider()")
     appendLine("\telif opcode == 114 and receiver is Node:")
@@ -1862,6 +2035,63 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tif result_handle == 0:")
     appendLine("\t\t\t\t\t_kanama_object_handles[proposed_child] = child_node")
     appendLine("\t\t\t\t\tresult_handle = proposed_child")
+    appendLine("\telif opcode == 166:")
+    appendLine(
+      "\t\tvar sweep_body: Object = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle)"
+    )
+    appendLine("\t\tif sweep_body is PhysicsBody3D:")
+    appendLine("\t\t\tvar proposed_sweep_handle := int(args[2])")
+    appendLine("\t\t\tvar motion_parts := String(args[3]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar sweep := (sweep_body as PhysicsBody3D).move_and_collide(Vector3(motion_parts[0], motion_parts[1], motion_parts[2]))"
+    )
+    appendLine("\t\t\tif sweep != null:")
+    appendLine("\t\t\t\t_kanama_object_handles[proposed_sweep_handle] = sweep")
+    appendLine("\t\t\t\tresult_handle = proposed_sweep_handle")
+    appendLine("\t\t\tif sweep_body is Node3D:")
+    appendLine("\t\t\t\tvar swept := sweep_body as Node3D")
+    appendLine(
+      "\t\t\t\t_kanama_bridge.refreshNode3DSnapshot(receiver_handle, swept.position.x, swept.position.y, swept.position.z, swept.rotation.x, swept.rotation.y, swept.rotation.z, swept.scale.x, swept.scale.y, swept.scale.z)"
+    )
+    appendLine("\telif opcode == 174:")
+    appendLine(
+      "\t\tvar shape_cast: Object = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle)"
+    )
+    appendLine("\t\tif shape_cast is ShapeCast3D:")
+    appendLine(
+      "\t\t\tvar shape_hit: Object = (shape_cast as ShapeCast3D).get_collider(int(args[3]))"
+    )
+    appendLine("\t\t\tif shape_hit != null:")
+    appendLine("\t\t\t\tif shape_hit.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\t\t\t\tvar shape_hit_script := int(shape_hit.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\t\t\t\tif shape_hit_script != 0:")
+    appendLine("\t\t\t\t\t\t_kanama_object_handles[shape_hit_script] = shape_hit")
+    appendLine("\t\t\t\t\t\tresult_handle = shape_hit_script")
+    appendLine("\t\t\t\tif result_handle == 0:")
+    appendLine("\t\t\t\t\tfor existing_hit_handle in _kanama_object_handles:")
+    appendLine("\t\t\t\t\t\tif is_same(_kanama_object_handles[existing_hit_handle], shape_hit):")
+    appendLine("\t\t\t\t\t\t\tresult_handle = int(existing_hit_handle)")
+    appendLine("\t\t\t\t\t\t\tbreak")
+    appendLine("\t\t\t\tif result_handle == 0:")
+    appendLine("\t\t\t\t\t_kanama_object_handles[int(args[2])] = shape_hit")
+    appendLine("\t\t\t\t\tresult_handle = int(args[2])")
+    appendLine("\telif opcode == 192 and receiver is Tween:")
+    appendLine("\t\tvar method_proposed := int(args[2])")
+    appendLine(
+      "\t\tvar method_target: Object = self if int(args[3]) == _kanama_handle else _kanama_object_handles.get(int(args[3]))"
+    )
+    appendLine("\t\tif method_target != null:")
+    appendLine(
+      "\t\t\tvar method_tweener := (receiver as Tween).tween_method(Callable(method_target, StringName(String(args[4]))), float(args[5]), float(args[6]), float(args[7]))"
+    )
+    appendLine("\t\t\tif method_tweener != null:")
+    appendLine("\t\t\t\t_kanama_object_handles[method_proposed] = method_tweener")
+    appendLine(
+      "\t\t\t\tvar method_children: Array = _kanama_tween_children.get(receiver_handle, [])"
+    )
+    appendLine("\t\t\t\tmethod_children.append(method_proposed)")
+    appendLine("\t\t\t\t_kanama_tween_children[receiver_handle] = method_children")
+    appendLine("\t\t\t\tresult_handle = method_proposed")
     appendLine("\telif opcode == 111:")
     appendLine(
       "\t\tvar slide_body: Object = self if receiver_handle == _kanama_handle else _kanama_object_handles.get(receiver_handle)"
@@ -1928,7 +2158,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvar callable := Callable(target, StringName(String(args[3])))")
     appendLine("\t\tif args.size() > 5:")
     appendLine("\t\t\tcallable = callable.bind(int(args[5]))")
-    appendLine("\t\tresult = source.connect(StringName(String(args[1])), callable, int(args[4]))")
+    appendLine("\t\tif int(args[4]) == -1:")
+    appendLine("\t\t\t# flags -1 selects disconnect for the same bound callable shape.")
+    appendLine("\t\t\tsource.disconnect(StringName(String(args[1])), callable)")
+    appendLine("\t\t\tresult = OK")
+    appendLine("\t\telse:")
+    appendLine("\t\t\tresult = source.connect(StringName(String(args[1])), callable, int(args[4]))")
     appendLine("\t_kanama_bridge.recordImmediateConnectResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -2105,6 +2340,104 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tif result == 0:")
     appendLine("\t\t\t\t\tresult = int(get_parts[1])")
     appendLine("\t\t\t\t\t_kanama_object_handles[result] = got")
+    appendLine("\t\telif opcode == 184 and value is AnimationMixer:")
+    appendLine("\t\t\tvar anim_get_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tvar named_animation: Animation = (value as AnimationMixer).get_animation(StringName(anim_get_parts[0]))"
+    )
+    appendLine("\t\t\tif named_animation == null:")
+    appendLine("\t\t\t\tresult = 0")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\tresult = 0")
+    appendLine("\t\t\t\tfor existing_anim_handle in _kanama_object_handles:")
+    appendLine(
+      "\t\t\t\t\tif is_same(_kanama_object_handles[existing_anim_handle], named_animation):"
+    )
+    appendLine("\t\t\t\t\t\tresult = int(existing_anim_handle)")
+    appendLine("\t\t\t\t\t\tbreak")
+    appendLine("\t\t\t\tif result == 0:")
+    appendLine("\t\t\t\t\tresult = int(anim_get_parts[1])")
+    appendLine("\t\t\t\t\t_kanama_object_handles[result] = named_animation")
+    appendLine("\t\telif opcode == 154 and value is RigidBody3D:")
+    appendLine("\t\t\tvar force_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as RigidBody3D).apply_force(Vector3(force_parts[0], force_parts[1], force_parts[2]), Vector3(force_parts[3], force_parts[4], force_parts[5]))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 155 and value is CollisionObject3D:")
+    appendLine("\t\t\tvar mask_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as CollisionObject3D).set_collision_mask_value(int(mask_parts[0]), mask_parts[1] == \"1\")"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 157 and value is AnimationPlayer:")
+    appendLine("\t\t\tresult = int((value as AnimationPlayer).is_playing())")
+    appendLine("\t\telif opcode == 160 and value is RigidBody3D:")
+    appendLine("\t\t\tvar central_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as RigidBody3D).apply_central_impulse(Vector3(central_parts[0], central_parts[1], central_parts[2]))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 163 and value is PhysicsBody3D:")
+    appendLine("\t\t\tvar axis_lock_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as PhysicsBody3D).set_axis_lock(int(axis_lock_parts[0]), axis_lock_parts[1] == \"1\")"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 164 and value is CollisionObject3D:")
+    appendLine("\t\t\tvar layer_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as CollisionObject3D).set_collision_layer_value(int(layer_parts[0]), layer_parts[1] == \"1\")"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 167 and value is Area3D:")
+    appendLine("\t\t\tvar overlapping := (value as Area3D).get_overlapping_bodies()")
+    appendLine("\t\t\tvar packed_handles := PackedStringArray()")
+    appendLine("\t\t\tfor overlapping_body in overlapping:")
+    appendLine("\t\t\t\tif overlapping_body.has_method(\"_kanama_ensure_created\"):")
+    appendLine(
+      "\t\t\t\t\tvar overlap_script := int(overlapping_body.call(\"_kanama_ensure_created\"))"
+    )
+    appendLine("\t\t\t\t\tif overlap_script != 0:")
+    appendLine("\t\t\t\t\t\t_kanama_object_handles[overlap_script] = overlapping_body")
+    appendLine("\t\t\t\t\t\tpacked_handles.append(str(overlap_script))")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(packed_handles))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 172 and value is ShapeCast3D:")
+    appendLine("\t\t\tresult = (value as ShapeCast3D).get_collision_count()")
+    appendLine("\t\telif opcode == 175 and value is ShapeCast3D:")
+    appendLine("\t\t\tvar cast_target_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as ShapeCast3D).target_position = Vector3(cast_target_parts[0], cast_target_parts[1], cast_target_parts[2])"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 177 and value is NavigationAgent3D:")
+    appendLine("\t\t\tvar nav_target_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as NavigationAgent3D).target_position = Vector3(nav_target_parts[0], nav_target_parts[1], nav_target_parts[2])"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 179 and value is NavigationAgent3D:")
+    appendLine("\t\t\tresult = int((value as NavigationAgent3D).is_target_reached())")
+    appendLine("\t\telif opcode == 186:")
+    appendLine(
+      "\t\t\tresult = int(round(Input.get_action_raw_strength(StringName(String(args[2]))) * 1000.0))"
+    )
+    appendLine("\t\telif opcode == 187:")
+    appendLine(
+      "\t\t\tresult = int(round(float(ProjectSettings.get_setting(String(args[2]), 0.0)) * 1000.0))"
+    )
+    appendLine("\t\telif opcode == 188 and value is AudioStreamPlayer3D:")
+    appendLine("\t\t\tresult = int((value as AudioStreamPlayer3D).is_playing())")
+    appendLine("\t\telif opcode == 195 and value is Node3D:")
+    appendLine("\t\t\tresult = int((value as Node3D).is_visible())")
+    appendLine("\t\telif opcode == 196 and value != null:")
+    appendLine("\t\t\tvar emit_string_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine(
+      "\t\t\tresult = value.emit_signal(StringName(emit_string_parts[0]), emit_string_parts[1])"
+    )
+    appendLine("\t\telif opcode == 190:")
+    appendLine("\t\t\tresult = int(OS.shell_open(String(args[2])))")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -2139,6 +2472,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as Node3D).global_position")
     appendLine("\telif opcode == 141 and value is Node3D:")
     appendLine("\t\tresult = (value as Node3D).global_rotation")
+    appendLine("\telif opcode == 156 and value is CharacterBody3D:")
+    appendLine("\t\tresult = (value as CharacterBody3D).get_wall_normal()")
+    appendLine("\telif opcode == 173 and value is ShapeCast3D:")
+    appendLine("\t\tresult = (value as ShapeCast3D).get_collision_point(int(args[2]))")
+    appendLine("\telif opcode == 176 and value is ShapeCast3D:")
+    appendLine("\t\tresult = (value as ShapeCast3D).target_position")
+    appendLine("\telif opcode == 178 and value is NavigationAgent3D:")
+    appendLine("\t\tresult = (value as NavigationAgent3D).get_next_path_position()")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()
@@ -2192,6 +2533,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           method.args.single().type == TypeMapping.INT -> {
           val arg = method.args.single()
           appendLine("\t_kanama_bridge.callLongVoid(_kanama_handle, ${index + 1}, ${arg.name})")
+        }
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.STRING -> {
+          val arg = method.args.single()
+          appendLine("\t_kanama_bridge.callString(_kanama_handle, ${index + 1}, ${arg.name})")
         }
         method.returnType == null &&
           method.args.size == 1 &&

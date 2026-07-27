@@ -31,8 +31,44 @@ internal fun immediateWebConstructObject(className: String): Int =
 internal fun immediateWebNodeLookup(objectId: Int, path: String): Int =
   js("globalThis.KanamaWebBridge.immediateNodeLookup(objectId, path)")
 
-internal fun immediateWebPropertyObjectQuery(objectId: Int, name: String): Int =
-  js("globalThis.KanamaWebBridge.immediatePropertyObjectQuery(objectId, name)")
+internal fun immediateWebPropertyObjectQuery(opcode: Int, objectId: Int, name: String): Int =
+  js("globalThis.KanamaWebBridge.immediatePropertyObjectQuery(opcode, objectId, name)")
+
+internal fun immediateWebMoveAndCollide(opcode: Int, objectId: Int, packed: String): Int =
+  js("globalThis.KanamaWebBridge.immediateMoveAndCollide(opcode, objectId, packed)")
+
+internal fun immediateWebStringQuery(opcode: Int, objectId: Int, value: String): String =
+  js("globalThis.KanamaWebBridge.immediateStringQuery(opcode, objectId, value)")
+
+internal fun immediateWebIndexedObjectLookup(opcode: Int, objectId: Int, index: Int): Int =
+  js("globalThis.KanamaWebBridge.immediateIndexedObjectLookup(opcode, objectId, index)")
+
+internal fun immediateWebIndexedVector3X(opcode: Int, objectId: Int, index: Int): Double =
+  js("globalThis.KanamaWebBridge.immediateIndexedVector3X(opcode, objectId, index)")
+
+internal fun immediateWebDisconnectBound(
+  objectId: Int,
+  signal: String,
+  targetId: Int,
+  method: String,
+  boundValue: Int,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateDisconnectBound(objectId, signal, targetId, method, boundValue)"
+  )
+
+internal fun immediateWebTweenMethod(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  method: String,
+  fromValue: Double,
+  toValue: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenMethod(opcode, tweenId, targetId, method, fromValue, toValue, duration)"
+  )
 
 internal fun immediateWebPackedSceneInstantiate(resourceId: Int, editState: Int): Int =
   js("globalThis.KanamaWebBridge.immediatePackedSceneInstantiate(resourceId, editState)")
