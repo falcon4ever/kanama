@@ -9,6 +9,16 @@ versioning once public releases begin.
 
 ### Fixed
 
+- iOS now mirrors the object-typed export `class_name` fix (task 64 follow-up):
+  the script property descriptor bridge gained a
+  `kanama_ios_runtime_script_resource_property_class_name` entry (same
+  RESOURCE_TYPE/NODE_TYPE policy as desktop) and the shim caches per-property
+  StringNames and emits them in the instance property list, so GDScript on an
+  iOS export sees e.g. `class_name=AudioStream` instead of empty. Validated on
+  an iPhone 15 Pro via the user-script visual smoke, which now asserts the
+  engine-visible `class_name` from GDScript (reported through a Kotlin
+  `@RegisterFunction`, since Godot-level `print()` does not reach the device
+  console) and doubles as a GDScript→Kotlin String/bool call-dispatch check.
 - Object-typed Kotlin exports now carry `PropertyInfo.class_name` (task 64,
   follow-up to issue #106): a `@ScriptProperty var x: SmokeResource?` (or an
   engine wrapper slot like `AudioStream?`) previously reported an empty
