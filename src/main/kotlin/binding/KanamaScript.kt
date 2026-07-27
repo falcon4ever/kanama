@@ -292,7 +292,7 @@ class KanamaScript(
       getGlobalNameStub =
         Upcalls.stub(KanamaScript::class.java, "callGetGlobalName", virtualType, virtualDesc)
       inheritsScriptStub =
-        Upcalls.stub(KanamaScript::class.java, "callBoolFalse", virtualType, virtualDesc)
+        Upcalls.stub(KanamaScript::class.java, "callInheritsScript", virtualType, virtualDesc)
       instanceHasStub =
         Upcalls.stub(KanamaScript::class.java, "callInstanceHas", virtualType, virtualDesc)
       hasSourceCodeStub =
@@ -1013,6 +1013,30 @@ class KanamaScript(
       val script = ObjectRegistry.get(handle) as? KanamaScript
       val name = script?.globalName ?: ""
       GodotStrings.initStringName(rRet.reinterpret(8), name)
+    }
+
+    @JvmStatic
+    fun callInheritsScript(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      // issue #106 — _inherits_script(script: Script) -> bool. Kanama has no
+      // script-to-script inheritance, so the relation is "same script type":
+      // the same Script object, or another KanamaScript bound to the same
+      // Kotlin class. Typed containers (Array[X]) and the editor consult this.
+      val self = ObjectRegistry.get(instance.address()) as? KanamaScript
+      // Object* argument arrives as type-ptr (Object**); dereference twice.
+      val objectTypePtr = args.reinterpret(8).get(ADDRESS, 0)
+      val otherObject =
+        if (objectTypePtr.address() != 0L) {
+          objectTypePtr.reinterpret(8).get(ADDRESS, 0)
+        } else {
+          MemorySegment.NULL
+        }
+      val other = if (otherObject.address() != 0L) byObjectAddress(otherObject.address()) else null
+      val inherits =
+        self != null &&
+          other != null &&
+          (other === self ||
+            (self.kotlinClassName.isNotEmpty() && self.kotlinClassName == other.kotlinClassName))
+      rRet.reinterpret(1).set(JAVA_BYTE, 0, if (inherits) 1.toByte() else 0.toByte())
     }
 
     @JvmStatic

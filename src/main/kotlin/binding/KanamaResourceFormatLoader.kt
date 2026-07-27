@@ -44,10 +44,6 @@ object KanamaResourceFormatLoader {
   private const val RESOURCELOADER_ADD_LOADER_HASH = 2896595483L
   private const val RESOURCELOADER_REMOVE_LOADER_HASH = 405397102L
   private const val PROJECTSETTINGS_GLOBALIZE_PATH_HASH = 3135753539L
-  private const val RESOURCE_SET_PATH_CACHE_HASH = 83702148L
-  private const val RESOURCE_SET_PATH_HASH = 83702148L
-  private const val RESOURCE_TAKE_OVER_PATH_HASH = 83702148L
-  private const val RESOURCE_GET_PATH_HASH = 201670096L
 
   fun register(library: MemorySegment) {
     getRecognizedExtensionsNameValue = GodotStrings.stringNameStorage("_get_recognized_extensions")
@@ -266,22 +262,13 @@ object KanamaResourceFormatLoader {
     System.err.println("[kanama:kt] ResourceFormatLoader._load path=$path")
 
     val scriptObj = KanamaScript.constructUnbound()
-    // Make this behave like a true external script resource in editor UI.
-    val setPathCacheBind =
-      ObjectCalls.getMethodBind("Resource", "set_path_cache", RESOURCE_SET_PATH_CACHE_HASH)
-    val setPathBind = ObjectCalls.getMethodBind("Resource", "set_path", RESOURCE_SET_PATH_HASH)
-    val takeOverPathBind =
-      ObjectCalls.getMethodBind("Resource", "take_over_path", RESOURCE_TAKE_OVER_PATH_HASH)
-    if (setPathCacheBind.address() != 0L)
-      ObjectCalls.ptrcallWithStringArg(setPathCacheBind, scriptObj, path)
-    if (setPathBind.address() != 0L) ObjectCalls.ptrcallWithStringArg(setPathBind, scriptObj, path)
-    if (takeOverPathBind.address() != 0L)
-      ObjectCalls.ptrcallWithStringArg(takeOverPathBind, scriptObj, path)
-    val getPathBind = ObjectCalls.getMethodBind("Resource", "get_path", RESOURCE_GET_PATH_HASH)
-    if (getPathBind.address() != 0L) {
-      val resolvedPath = ObjectCalls.ptrcallNoArgsRetString(getPathBind, scriptObj)
-      System.err.println("[kanama:kt] ResourceFormatLoader._load script path=$resolvedPath")
-    }
+    // issue #106 — do not set the script's path here. ResourceLoader assigns the
+    // path itself right after _load returns, and that engine-side set_path() is
+    // what registers the script in ResourceCache (it also honors cache_mode).
+    // Pre-setting the path made Resource::set_path() early-return without
+    // registering, so every load of the same .kt minted a distinct Script and
+    // GDScript's analyzer (which compares script types by identity) rejected
+    // assignments of a custom class to its own type.
     val script = KanamaScript.byObjectAddress(scriptObj.address())
     if (script != null) {
       script.sourceCode = readScriptSource(path) ?: "class $basename"
