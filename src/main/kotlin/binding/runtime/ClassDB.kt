@@ -232,6 +232,10 @@ object ClassDB {
     val hint: Int = 0,
     val hintString: String = "",
     val usage: Int = PROPERTY_USAGE_DEFAULT,
+    // task 64 — the property's class for OBJECT-typed slots (RESOURCE_TYPE/
+    // NODE_TYPE hints). GDScript's analyzer types the property from this, not
+    // from hint_string; empty means "plain Object" in typed GDScript.
+    val className: String = "",
   )
 
   /**
@@ -246,7 +250,15 @@ object ClassDB {
     val arr = GodotFFI.arena.allocate(propertyInfo, specs.size.toLong())
     specs.forEachIndexed { i, spec ->
       val slot = arr.asSlice(i * propertyInfo.byteSize(), propertyInfo)
-      fillPropertyInfo(slot, spec.name, spec.type, spec.hint, spec.hintString, spec.usage)
+      fillPropertyInfo(
+        slot,
+        spec.name,
+        spec.type,
+        spec.hint,
+        spec.hintString,
+        spec.usage,
+        spec.className,
+      )
     }
     return arr
   }
@@ -293,14 +305,18 @@ object ClassDB {
     hint: Int = 0,
     hintString: String = "",
     usage: Int = PROPERTY_USAGE_DEFAULT,
+    className: String = "",
   ) {
     val nameSegment =
       if (name.isEmpty()) GodotStrings.emptyStringName else GodotStrings.makeStringName(name)
     val hintStringSegment =
       if (hintString.isEmpty()) GodotStrings.emptyString else GodotStrings.makeString(hintString)
+    val classNameSegment =
+      if (className.isEmpty()) GodotStrings.emptyStringName
+      else GodotStrings.makeStringName(className)
     slot.set(JAVA_INT, pTypeOff, type.id)
     slot.set(ADDRESS, pNameOff, nameSegment)
-    slot.set(ADDRESS, pClassNameOff, GodotStrings.emptyStringName)
+    slot.set(ADDRESS, pClassNameOff, classNameSegment)
     slot.set(JAVA_INT, pHintOff, hint)
     slot.set(ADDRESS, pHintStringOff, hintStringSegment)
     slot.set(JAVA_INT, pUsageOff, usage)

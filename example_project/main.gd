@@ -415,10 +415,33 @@ func _kanama_typed_global_class_smoke() -> void:
 	typed.payload = "issue106"
 	var is_check := built is SmokeResource
 	var roundtrip = typed.payload == "issue106"
+	# task 64 — PropertyInfo.class_name on Kotlin object-typed exports. Both metadata
+	# paths must carry it: the instance property list (generated PropertySpec ->
+	# GDExtensionPropertyInfo) and the script-level list (generated dictionaries ->
+	# PropertyInfo.from_dict). GDScript's analyzer types `hs.smoke_resource` from
+	# class_name; empty degraded it to plain Resource in typed GDScript.
+	var hs: HelloScript = $ScriptNode
+	hs.smoke_resource = typed
+	var typed_member: SmokeResource = hs.smoke_resource
+	var member_matches := typed_member == typed
+	hs.smoke_resource = null
+	var instance_class_name := ""
+	for p in ($ScriptNode as Node).get_property_list():
+		if p.name == "smoke_resource":
+			instance_class_name = str(p.get("class_name", ""))
+	var script_class_name := ""
+	for p in load("res://HelloScript.kt").get_script_property_list():
+		if p.name == "smoke_resource":
+			script_class_name = str(p.get("class_name", ""))
 	print("[kanama:gd] kt script typed_global_class same_load=", same_load,
 		" member_null=", member_copy == null, " typed=", typed != null,
-		" is_check=", is_check, " roundtrip=", roundtrip)
-	if not (same_load and member_copy == null and typed != null and is_check and roundtrip):
+		" is_check=", is_check, " roundtrip=", roundtrip,
+		" member_matches=", member_matches,
+		" instance_class_name=", instance_class_name == "SmokeResource",
+		" script_class_name=", script_class_name == "SmokeResource")
+	if not (same_load and member_copy == null and typed != null and is_check and roundtrip \
+			and member_matches and instance_class_name == "SmokeResource" \
+			and script_class_name == "SmokeResource"):
 		push_error("Kanama typed global class smoke failed")
 
 func _kanama_dictionary_nullable_value_smoke() -> void:
