@@ -752,11 +752,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
       input.model.properties.forEachIndexed { propertyIndex, property ->
         val wrapper = property.objectWrapperFqName
+        val customScript = property.customScriptFqName
         if (property.type == TypeMapping.OBJECT && property.isMutable && wrapper != null) {
           val wrapped =
             if (property.nullable) "handle?.let { $wrapper(it) }"
             else
               "$wrapper(checkNotNull(handle) { \"Property ${property.godotName} is not nullable\" })"
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $wrapped"
+          )
+        } else if (
+          property.type == TypeMapping.OBJECT && property.isMutable && customScript != null
+        ) {
+          // Custom-script node exports resolve to the hydrated Kotlin instance.
+          val resolved =
+            "handle?.let { net.multigesture.kanama.web.webScriptInstance(it.value) as? $customScript }"
+          val wrapped =
+            if (property.nullable) resolved
+            else
+              "checkNotNull($resolved) { \"Property ${property.godotName} is not a hydrated $customScript\" }"
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $wrapped"
           )
@@ -1391,6 +1405,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif opcode == 158 and target_object is AudioStreamPlayer3D:")
     appendLine(
       "\t\t\t(target_object as AudioStreamPlayer3D).pitch_scale = bytes.decode_double(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 200 and target_object is AudioStreamPlayer3D:")
+    appendLine(
+      "\t\t\t(target_object as AudioStreamPlayer3D).volume_db = bytes.decode_double(offset + 8)"
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
@@ -2436,6 +2456,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t\tresult = value.emit_signal(StringName(emit_string_parts[0]), emit_string_parts[1])"
     )
+    appendLine("\t\telif opcode == 198 and value is RigidBody3D:")
+    appendLine("\t\t\tvar angular_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as RigidBody3D).angular_velocity = Vector3(angular_parts[0], angular_parts[1], angular_parts[2])"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 199 and value is AudioStreamPlayer3D:")
+    appendLine("\t\t\tresult = int(round((value as AudioStreamPlayer3D).volume_db * 1000.0))")
+    appendLine("\t\telif opcode == 201 and value is AudioStreamPlayer3D:")
+    appendLine("\t\t\tresult = int(round((value as AudioStreamPlayer3D).pitch_scale * 1000.0))")
     appendLine("\t\telif opcode == 190:")
     appendLine("\t\t\tresult = int(OS.shell_open(String(args[2])))")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
@@ -2480,6 +2510,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult = (value as ShapeCast3D).target_position")
     appendLine("\telif opcode == 178 and value is NavigationAgent3D:")
     appendLine("\t\tresult = (value as NavigationAgent3D).get_next_path_position()")
+    appendLine("\telif opcode == 197 and value is RigidBody3D:")
+    appendLine("\t\tresult = (value as RigidBody3D).angular_velocity")
     appendLine("\t_kanama_bridge.recordImmediateVector3(result.x, result.y, result.z)")
     appendLine("\treturn 1")
     appendLine()

@@ -239,6 +239,11 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     194: {"ret": "node"},
     195: {},
     196: {},
+    197: {},
+    198: {},
+    199: {},
+    200: {},
+    201: {},
 }
 
 
@@ -1161,11 +1166,12 @@ _DOUBLE_SNAPSHOT_HOOK = {"lifetime": "webLifetimeSnapshot", "rotation": "webRota
 
 
 def body_NOARGS_RET_DOUBLE(calls):
-    lines = [
-        f"require(descriptor.executionMode == {_SNAPSHOT})",
-        "return when (descriptor.opcode) {",
-    ]
-    for c in calls:
+    snapshot = [c for c in calls if c.execution_mode.value == "SNAPSHOT_READ"]
+    immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
+    lines = ["return when (descriptor.executionMode) {"]
+    lines.append(f"{_SNAPSHOT} ->")
+    lines.append("when (descriptor.opcode) {")
+    for c in snapshot:
         hook = _DOUBLE_SNAPSHOT_HOOK[WEB_POLICY[c.opcode]["double_snapshot"]]
         lines.append(f"{c.opcode} -> {hook}(receiver.webId())")
     lines += [
@@ -1175,6 +1181,20 @@ def body_NOARGS_RET_DOUBLE(calls):
         '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
         '"object handle=${receiver.webId()}"',
         ")",
+    ]
+    if immediate:
+        lines += [
+            f"{_IMMEDIATE} -> {{",
+            f"require({_opcode_guard(immediate)})",
+            "commands.flush()",
+            "// Scaled by 1000 through the shared integer object-query transport.",
+            'immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") / 1000.0',
+            "}",
+        ]
+    lines += [
+        f"{_QUEUED} ->",
+        'error("Double return cannot use queued execution for opcode=${descriptor.opcode}")',
+        "}",
     ]
     return lines
 

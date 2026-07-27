@@ -80,6 +80,7 @@
       opcode === 180 ||
       opcode === 182 ||
       opcode === 183 ||
+      opcode === 200 ||
       opcode === 1000
     ) return 4;
     if (
@@ -260,6 +261,9 @@
     tpSmokeQuitHandle: 0,
     tpPlayerHandle: 0,
     tpDemoPageHandle: 0,
+    racingSmokeHandle: 0,
+    racingVehicleHandle: 0,
+    racingViewHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
     // so a physics dispatch AFTER a process dispatch within the same rAF tick would be an
@@ -2040,6 +2044,19 @@
       }
       if (this.mode === "thirdperson" && scriptName.endsWith(".DemoPage")) {
         this.tpDemoPageHandle = handle;
+      }
+      if (this.mode === "racing" && scriptName.endsWith(".Smoke")) {
+        // smoke_teardown (method#1) frees the scene root for the teardown assertion.
+        this.racingSmokeHandle = handle;
+      }
+      if (this.mode === "racing" && scriptName.endsWith(".Vehicle")) {
+        // The player vehicle uses the base class (trucks/motorcycle variants subclass it).
+        this.racingVehicleHandle = handle;
+      }
+      if (this.mode === "racing" && scriptName.endsWith(".View")) {
+        // The camera rig lerps toward the vehicle every tick: its root position is the
+        // driver's movement evidence (the Vehicle ROOT node intentionally never moves).
+        this.racingViewHandle = handle;
       }
       if (this.mode === "match3") {
         this.match3ScriptNamesByHandle.set(handle, scriptName);

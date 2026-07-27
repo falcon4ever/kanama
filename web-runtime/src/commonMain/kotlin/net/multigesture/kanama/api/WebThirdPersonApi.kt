@@ -235,6 +235,9 @@ object ProjectSettings {
     )
 }
 
+/** Web adaptation: the corpus runs the default 60 Hz fixed physics tick. */
+fun Node.getPhysicsProcessDeltaTime(): Double = 1.0 / 60.0
+
 object Time {
   private val origin = kotlin.time.TimeSource.Monotonic.markNow()
 

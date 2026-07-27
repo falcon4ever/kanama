@@ -103,6 +103,26 @@ class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
       backendHandle,
     )
 
+  fun getVolumeDb(): Double =
+    GodotBackendCalls.invokeNoArgsRetDouble(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_GET_VOLUME_DB,
+      backendHandle,
+    )
+
+  fun setVolumeDb(volumeDb: Double) {
+    GodotBackendCalls.invokeDoubleArg(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_SET_VOLUME_DB,
+      backendHandle,
+      volumeDb,
+    )
+  }
+
+  fun getPitchScale(): Double =
+    GodotBackendCalls.invokeNoArgsRetDouble(
+      InitialGodotCallDescriptors.AUDIOSTREAMPLAYER3D_GET_PITCH_SCALE,
+      backendHandle,
+    )
+
   object Signals {
     const val finished: String = "finished"
   }
@@ -178,6 +198,22 @@ open class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   fun show() {
     visible = true
   }
+
+  /** Fresh engine-side angular velocity (the sphere racer's drive train). */
+  var angularVelocity: Vector3
+    get() =
+      GodotBackendCalls.invokeNoArgsRetVector3(
+          InitialGodotCallDescriptors.RIGIDBODY3D_GET_ANGULAR_VELOCITY,
+          backendHandle,
+        )
+        .let { Vector3(it.x, it.y, it.z) }
+    set(value) {
+      GodotBackendCalls.invokeVector3Arg(
+        InitialGodotCallDescriptors.RIGIDBODY3D_SET_ANGULAR_VELOCITY,
+        backendHandle,
+        GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat()),
+      )
+    }
 }
 
 /** Enable or disable the node's physics processing (the tutorial pauses the player on win). */

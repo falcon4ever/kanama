@@ -29,6 +29,7 @@ val extraWebScriptSourceRoot: File? =
                     "fps" -> "kanamaWebFpsProjectDir"
                     "charactercontroller" -> "kanamaWebCharactercontrollerProjectDir"
                     "thirdperson" -> "kanamaWebThirdpersonProjectDir"
+                    "racing" -> "kanamaWebRacingProjectDir"
                     else -> null
                 }
             projectDirProperty
@@ -136,6 +137,9 @@ val webCharacterStaging = layout.buildDirectory.dir("web-charactercontroller/god
 val webThirdpersonSourceProject =
     providers.gradleProperty("kanamaWebThirdpersonProjectDir").orNull?.let(rootProject::file)
 val webThirdpersonStaging = layout.buildDirectory.dir("web-thirdperson/godot-project")
+val webRacingSourceProject =
+    providers.gradleProperty("kanamaWebRacingProjectDir").orNull?.let(rootProject::file)
+val webRacingStaging = layout.buildDirectory.dir("web-racing/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
@@ -1776,6 +1780,142 @@ tasks.register("stageWebCharactercontrollerProject") {
     }
 }
 
+tasks.register("stageWebRacingProject") {
+    group = "verification"
+    description = "Stages Starter-Kit-Racing with generated Web proxies (Task 60g)."
+    dependsOn("kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webRacingSourceProject?.let(inputs::dir)
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webRacingStaging)
+
+    doLast {
+        val sourceProject =
+            webRacingSourceProject
+                ?: error(
+                    "Pass -PkanamaWebRacingProjectDir=/absolute/path/to/kanama-demos/Starter-Kit-Racing"
+                )
+        check(sourceProject.resolve("scenes/main.tscn").isFile) {
+            "Racing project not found: $sourceProject"
+        }
+
+        val stagingDir = webRacingStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) {
+                exclude(".git/**")
+                exclude(".godot/**")
+                exclude(".gradle/**")
+                exclude(".kotlin/**")
+                exclude("build/**")
+                exclude("web/**")
+                exclude("kotlin-src/**")
+                exclude("android/**")
+                exclude("addons/kanama_tools/**")
+                exclude("addons/kanama/**")
+                exclude("export_presets.cfg")
+            }
+            into(stagingDir)
+        }
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        val expectedSources =
+            setOf("Smoke", "Vehicle", "VehicleMotorcycle", "View")
+                .map { "res://kotlin-src/$it.kt" }
+                .toSet()
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { it.split('\t').let { c -> c[0] to c[1] } }
+                .filter { (sourcePath, _) -> sourcePath in expectedSources }
+                .toMap()
+        check(mappings.keys == expectedSources) {
+            "Racing Web proxy mappings incomplete: missing=${expectedSources - mappings.keys}"
+        }
+
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                var rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        text.replace(sourcePath, proxyPath)
+                    }
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+
+        // Forward+ project with a gl_compatibility mobile override: pin Compatibility.
+        val stagedProject = stagingDir.resolve("project.godot")
+        val stagedProjectText = stagedProject.readText()
+        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
+        check(stagedProjectText.contains(forwardFeature)) {
+            "Racing renderer feature changed; update the Web staging transform"
+        }
+        check(stagedProjectText.contains(mobileRenderer)) {
+            "Racing mobile renderer setting changed; update the staging transform"
+        }
+        stagedProject.writeText(
+            stagedProjectText
+                .replace(
+                    forwardFeature,
+                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                )
+                .replace(
+                    mobileRenderer,
+                    "renderer/rendering_method=\"gl_compatibility\"\n$mobileRenderer",
+                )
+        )
+
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        shell.writeText(
+            shell.readText()
+                .replace(pageStart, "$pageStart\n      globalThis.KanamaWebMode = \"racing\";")
+        )
+    }
+}
+
 tasks.register("stageWebThirdpersonProject") {
     group = "verification"
     description = "Stages the third-person controller with generated Web proxies (Task 60f)."
@@ -2044,9 +2184,10 @@ fun stageTaskFor(demo: String): String =
         "fps" -> "stageWebFpsProject"
         "charactercontroller" -> "stageWebCharactercontrollerProject"
         "thirdperson" -> "stageWebThirdpersonProject"
+        "racing" -> "stageWebRacingProject"
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing)"
             )
     }
 
@@ -2061,9 +2202,10 @@ fun stagingDirFor(demo: String): File =
         "fps" -> webFpsStaging.get().asFile
         "charactercontroller" -> webCharacterStaging.get().asFile
         "thirdperson" -> webThirdpersonStaging.get().asFile
+        "racing" -> webRacingStaging.get().asFile
         else ->
             error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson)"
+                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing)"
             )
     }
 

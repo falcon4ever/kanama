@@ -24,9 +24,10 @@ import { runSquash } from "./demos/squash.mjs";
 import { runFps } from "./demos/fps.mjs";
 import { runCharactercontroller } from "./demos/charactercontroller.mjs";
 import { runThirdperson } from "./demos/thirdperson.mjs";
+import { runRacing } from "./demos/racing.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing };
 const DEFAULT_FIREFOX = "/Applications/Firefox.app/Contents/MacOS/firefox";
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

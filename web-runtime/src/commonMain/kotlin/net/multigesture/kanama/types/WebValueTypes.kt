@@ -270,6 +270,30 @@ class Basis internal constructor(internal val m: DoubleArray) {
 
   fun getColumn(index: Int): Vector3 = Vector3(m[index], m[3 + index], m[6 + index])
 
+  /** Godot's basis.x/y/z axis properties (matrix COLUMNS). */
+  val x: Vector3
+    get() = getColumn(0)
+
+  val y: Vector3
+    get() = getColumn(1)
+
+  val z: Vector3
+    get() = getColumn(2)
+
+  fun withX(axis: Vector3): Basis = withColumn(0, axis)
+
+  fun withY(axis: Vector3): Basis = withColumn(1, axis)
+
+  fun withZ(axis: Vector3): Basis = withColumn(2, axis)
+
+  private fun withColumn(index: Int, axis: Vector3): Basis {
+    val out = m.copyOf()
+    out[index] = axis.x
+    out[3 + index] = axis.y
+    out[6 + index] = axis.z
+    return Basis(out)
+  }
+
   /** Column lengths signed by the determinant (Godot's get_scale). */
   fun getScale(): Vector3 {
     val detSign = if (determinant() < 0.0) -1.0 else 1.0
@@ -408,6 +432,8 @@ data class Transform3D(val basis: Basis, val origin: Vector3) {
   fun withBasis(newBasis: Basis): Transform3D = Transform3D(newBasis, origin)
 
   fun withOrigin(newOrigin: Vector3): Transform3D = Transform3D(basis, newOrigin)
+
+  fun orthonormalized(): Transform3D = Transform3D(basis.orthonormalized(), origin)
 
   /** Keeps the origin; orients -Z at [target] (Godot's looking_at). */
   fun lookingAt(target: Vector3, up: Vector3 = Vector3.UP): Transform3D =
