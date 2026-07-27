@@ -5,6 +5,26 @@ All notable user-facing changes will be recorded here.
 This project uses a Keep a Changelog-style format and follows semantic
 versioning once public releases begin.
 
+## Unreleased
+
+### Fixed
+
+- GDScript can now statically type against Kanama `@GlobalClass` script classes
+  (issue #106): `@export var x: CustomResource` plus
+  `var copy: CustomResource = x` no longer fails with "Cannot assign a value of
+  type res://CustomResource.kt … with specified type res://CustomResource.kt".
+  The `.kt` resource loader pre-set the script's path inside `_load`, which made
+  the engine's post-load `set_path()` early-return without registering the
+  script in ResourceCache — so every `load()` of the same `.kt` produced a
+  distinct Script object, and GDScript's analyzer (which compares script types
+  by identity) rejected the class as its own type. The loader now leaves path
+  assignment to ResourceLoader, and `KanamaScript` implements
+  `_inherits_script` (same script object, or same bound Kotlin class) instead
+  of always answering `false`, so typed containers such as
+  `Array[CustomResource]` also match. Runtime smoke now pins the reported
+  shape: typed member + typed local assignment, `is` check, load identity, and
+  a property round-trip.
+
 ## 0.4.0 - 2026-07-24
 
 ### Added
