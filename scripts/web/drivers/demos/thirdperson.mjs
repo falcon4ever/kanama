@@ -93,9 +93,20 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runThirdperson({ url, evaluate, navigate, keys, deadline }) {
-  const keyDown = keys ? () => keys("down", "w") : () => { throw new Error("thirdperson needs the keys transport"); };
-  const keyUp = keys ? () => keys("up", "w") : () => {};
+export async function runThirdperson({ url, evaluate, navigate, deadline }) {
+  // Engine-level action injection (ops 86/87) on the player's own handle, the
+  // same path racing and tpsdemo already use. Player.kt reads movement through
+  // Input.get_vector("move_left", "move_right", "move_up", "move_down"), and
+  // action_press bakes strength 1.0, so pressing move_up is what holding W
+  // expresses. This was the last driver still requiring a browser `keys`
+  // transport, which SafariDriver does not provide -- and browser key synthesis
+  // stalls headless Firefox anyway, so one injected path serves all engines.
+  const action = (opcode) =>
+    evaluate(
+      `globalThis.KanamaWebBridge.immediateObjectQuery(${opcode}, globalThis.KanamaWebBridge.tpPlayerHandle, "move_up"); true`,
+    );
+  const keyDown = () => action(86);
+  const keyUp = () => action(87);
 
   const startupStart = Date.now();
   trace("navigate");
