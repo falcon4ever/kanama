@@ -34,9 +34,10 @@ import { runThirdperson } from "./demos/thirdperson.mjs";
 import { runRacing } from "./demos/racing.mjs";
 import { runCitybuilder } from "./demos/citybuilder.mjs";
 import { runTpsdemo } from "./demos/tpsdemo.mjs";
+import { runSoak } from "./demos/soak.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak };
 
 function parseArgs(argv) {
   const args = {};
@@ -51,8 +52,27 @@ function parseArgs(argv) {
   return args;
 }
 
-const DEFAULT_CHROME =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+// Where to look when --browser-binary is not given. macOS first (the workstation
+// gate), then the usual Linux install paths (the CI matrix cell, Task 60h).
+// Nothing here is a fallback in disguise: if none exists the driver fails loudly
+// rather than driving some other browser.
+const CHROME_CANDIDATES = [
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+  "/snap/bin/chromium",
+];
+
+function resolveBrowser(explicit, candidates, engine) {
+  if (explicit) return explicit;
+  const found = candidates.find((candidate) => fs.existsSync(candidate));
+  if (found) return found;
+  throw new Error(
+    `${engine}: no browser found; pass --browser-binary (looked in: ${candidates.join(", ")})`,
+  );
+}
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -81,7 +101,7 @@ async function main() {
     throw new Error(`chrome_cdp: unknown demo '${args.demo}' (expected ${Object.keys(DEMOS).join("|")})`);
   }
 
-  const chromeBinary = args["browser-binary"] ?? DEFAULT_CHROME;
+  const chromeBinary = resolveBrowser(args["browser-binary"], CHROME_CANDIDATES, "chrome_cdp");
   const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "kanama-chrome-"));
   const debugPort = 0; // let Chrome choose; we read the chosen port from DevToolsActivePort
 

@@ -1,5 +1,7 @@
 package net.multigesture.kanama.web
 
+import net.multigesture.kanama.api.WebFrameScheduler
+
 internal data class WebScriptRecord(val scriptId: Int, val script: KanamaWebScript)
 
 /**
@@ -23,7 +25,14 @@ internal class WebInstanceRegistry(
     val slot = slots[slotIndex]
     slot.generation = nextGeneration(slot.generation)
     val handle = encode(slotIndex, slot.generation)
-    slot.record = WebScriptRecord(scriptId, createScript(scriptId, handle))
+    // Construct the script inside its own owner scope. A script's property initializers run here,
+    // and `override val kanamaScope = KanamaScope()` is one of them: the scope must bind to the
+    // script being built, not to whichever callback happened to trigger the construction.
+    slot.record =
+      WebScriptRecord(
+        scriptId,
+        WebFrameScheduler.withOwner(handle) { createScript(scriptId, handle) },
+      )
     return handle
   }
 

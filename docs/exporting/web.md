@@ -12,18 +12,35 @@ still being hardened, and there is no packaged install path yet.
 **Evidence.** The full twelve-demo corpus — Bunnymark, Starter-Kit-Match3, dodge,
 web3d, 3D-Platformer, squash, FPS, character-controller, third-person, Racing,
 City-Builder and tps-demo — passes the automated production export smoke in
-**Chrome** (the CI gate), **Firefox**, and **Safari**, each with a
+**Chrome** and **Firefox** (both CI cells) and **Safari** (a local gate — it has
+no headless mode), each with a
 play-and-teardown driver run, zero console errors, and live handles draining to
 zero. Every corpus export is also proven to embed no build-machine paths in any
 served file, and to be reproducible from a clean clone (see
 [Fresh-Checkout Gate](#fresh-checkout-gate)).
 
-**Validated browser versions** (2026-07-27, protocol 15): Chrome 150 (headless),
-Firefox 153 (headless), and **Safari 26.5 / WebKit 605.1.15 on macOS 26.5.1**.
-These are the versions the corpus has actually been driven on, not a tested
-lower bound — no older release has been validated. **iOS and iPadOS have not
-been validated at all**; `safaridriver` drives desktop Safari only, so no
-mobile-WebKit claim is made here.
+**Browser version floors.** The declared floors live in one machine-readable
+file, `scripts/web/browser_floors.json`, and every smoke run is checked against
+them — a run on an older browser fails the gate instead of printing the same
+`PASS` line as a declared one.
+
+| Browser | Floor | Basis | Corpus validated at |
+|---|---|---|---|
+| Chrome | **130** | tested | 150 (headless) |
+| Firefox | **141** | tested | 152–153 (headless) |
+| Safari | **26.5** | validated-at | 26.5 / WebKit 605.1.15, macOS 26.5.1 |
+
+"Tested" means the gate was run on that version *and* on the one below it
+(2026-07-28, macOS arm64, protocol-15 export). Chrome 129 never boots the
+Kotlin/Wasm module; 130 runs it — that is where WebAssembly JS String Builtins
+shipped. The Firefox number is a **harness** bound, not an engine verdict: 141,
+143 and 145 all pass, while 140 ESR and older never expose a reachable WebDriver
+BiDi endpoint to the driver's launch recipe, so they cannot be judged either way.
+Safari is "validated-at" only: it ships with the OS and cannot be installed side
+by side, so no lower bound is testable at all.
+
+**iOS and iPadOS have not been validated**; `safaridriver` drives desktop Safari
+only, so no mobile-WebKit claim is made here.
 
 This page is the reproducible export workflow. For the architecture — batching,
 snapshots, handle generations, the bridge protocol — see
@@ -155,10 +172,107 @@ scripts/web_export_smoke.sh \
   --result /tmp/match3-chrome.json
 ```
 
-**Chrome is the intended CI gate.** Firefox and Safari are explicit **local
-release gates** run before a promotion. Each gate asserts gameplay deltas,
-crossing budgets, handle/callback/scheduler teardown to baseline, stale-handle
-rejection, console-error checks, and a protocol-version match.
+Each gate asserts gameplay deltas, crossing budgets, handle/callback/scheduler
+teardown to baseline, stale-handle rejection, console-error checks, and a
+protocol-version match.
+
+Read the harness's own `web_export_smoke: PASS` line, not a driver's check count.
+The driver's checks and the envelope schema are two different gates: a demo can
+pass 13/13 of its own checks and still be rejected by the schema (which is what
+enforces `liveAfterTeardown === 0`), and that is exactly how one demo stayed
+un-gated on every engine for weeks.
+
+## Browser Matrix
+
+`web_ci_matrix.sh` is the corpus-wide gate: it exports each demo and drives it in
+each requested browser through `web_export_smoke.sh`, then aggregates every cell
+into one evidence JSON plus a Markdown summary.
+
+```sh
+scripts/web_ci_matrix.sh \
+  --godot /absolute/path/to/godot \
+  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.stable/web_nothreads_release.zip" \
+  --demos-dir /absolute/path/to/kanama-demos \
+  --demo-set full \
+  --engine chrome --engine firefox \
+  --evidence /tmp/web-matrix.json
+```
+
+Every cell runs even after an earlier one fails, so a red run reports the whole
+picture. `--demo-set pr` is the per-PR subset (`match3`, `web3d`, `dodge` — a
+pointer-drag demo, a 3D demo needing no demos checkout, and a full-lifecycle
+demo); `--demo-set full` is the 12-demo corpus. Per-demo budgets live in
+`scripts/web/demos.sh`; scale them for a slower host with `--timeout-scale`
+rather than editing them, so local and CI numbers stay comparable.
+
+**Chrome and Firefox are the CI cells** (`.github/workflows/web.yml`): the PR
+subset on every Web-relevant pull request, the full corpus on push to `main` and
+nightly. **Safari is a local pre-promotion gate, not a CI cell** — see Known
+Limitations. Run it with the same script, `--engine safari`, one run at a time.
+
+### Regression Cadence
+
+Which gate runs when, and where. A gate that is not on this list runs nowhere.
+
+| Gate | Cadence | Where |
+|---|---|---|
+| PR subset × Chrome + Firefox | every Web-relevant pull request | CI (`web` workflow) |
+| Full 12-demo corpus × Chrome + Firefox | push to `main`, and nightly | CI |
+| Soak (10 min, `--demo soak`) | nightly | CI |
+| Full corpus on **Safari** | before a release tag, and before any promotion decision | local (no headless mode) |
+| Fresh-checkout gate | before a release tag | local |
+| Browser floor re-bisect | when a floor is claimed to move, or a browser major ships that breaks a cell | local |
+| Everything above | **on a Godot baseline bump** — the export template, generated proxy and bridge protocol all move together | local + CI |
+
+The nightly run matters because two of the inputs change without anyone touching
+the repository: the browsers on the runner image, and the runner itself. A red
+nightly on an unchanged tree is a browser-side regression, which is exactly the
+class of failure a per-PR gate can never see.
+
+### Soak Gate
+
+```sh
+KANAMA_WEB_SOAK_SECONDS=600 scripts/web_ci_matrix.sh \
+  --godot /absolute/path/to/godot --template <web_nothreads_release.zip> \
+  --demos-dir /absolute/path/to/kanama-demos --demo soak --engine chrome
+```
+
+The soak driver runs against the **dodge** export for ten minutes, restarting the
+round every sixty seconds. Dodge is the choice on purpose: leak detection wants
+churn, not polygons — a mob is instantiated every half second and frees itself on
+leaving the screen, so a ten-minute run is hundreds of full node create/free
+cycles through the handle registry, the signal-connection table and the
+deferred-free path.
+
+It splits its samples in half and compares high-water marks, so it fails on a
+*trend* rather than on a threshold: live handles, pending signal callbacks and
+registered coroutine jobs must not be higher in the second half than the first
+(plus a few handles of sampling slack), gameplay must still be running at the
+end, and teardown must still drain to zero after a long run rather than only
+after a short one.
+
+### Quarantined Cells
+
+A known-failing `demo:engine` pair can be **quarantined** in
+`scripts/web/demos.sh` with a reason that names a task. A quarantined cell still
+exports, still runs and still reports — it just does not fail the build. Deleting
+the demo from the matrix instead would be the trap this gate exists to close: the
+corpus would look green because nobody was looking.
+
+A quarantined cell that **passes** is reported just as loudly, with an explicit
+"lift the quarantine" line, because a stale quarantine is worse than none.
+Lifting one is a one-line deletion.
+
+Currently quarantined: `dodge:firefox` (task 71 — mobs never free on a Linux
+host; it passes on macOS Chrome and Firefox, and on CI Chrome).
+
+### Bumping The Demos Pin
+
+The workflow checks out `kanama-demos` at the `DEMOS_REF` commit pinned in
+`.github/workflows/web.yml`. This is deliberate: an unpinned checkout lets an
+unrelated demo-repo commit redden every Kanama pull request. When a demo port
+lands in `kanama-demos`, bump `DEMOS_REF` in the same pass — a Kanama change that
+needs new demo code is not green until both sides are pinned together.
 
 ## Fresh-Checkout Gate
 

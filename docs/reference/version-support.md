@@ -133,18 +133,26 @@ handles. Gameplay coverage reports zero blocking calls;
 `GodotObject.emit_signal_typed` remains visible as one explicit nonblocking
 unsupported family rather than being pattern-hidden.
 
-Browser versions validated, all at protocol 15 on 2026-07-27:
+Browser floors and the versions the corpus is driven on (protocol 15). The
+floors are declared once, machine-readably, in `scripts/web/browser_floors.json`,
+and `web_export_smoke.sh` fails any run below them:
 
-| Browser | Version | Notes |
-|---|---|---|
-| Chrome | 150 (headless) | the CI gate |
-| Firefox | 153 (headless) | local gate |
-| Safari | 26.5 / WebKit 605.1.15, macOS 26.5.1 | local gate; **no headless mode**, so it needs a logged-in GUI session |
+| Browser | Floor | Basis | Corpus validated at | Notes |
+|---|---|---|---|---|
+| Chrome | 130 | tested (2026-07-28) | 150 (headless) | CI cell |
+| Firefox | 141 | tested (2026-07-28) | 152–153 (headless) | CI cell |
+| Safari | 26.5 | validated-at (2026-07-27) | 26.5 / WebKit 605.1.15, macOS 26.5.1 | local gate; **no headless mode**, so it needs a logged-in GUI session |
 
-These are the versions actually driven, **not tested lower bounds** — no older
-release has been validated, so treat each as "validated at", not "supported
-from". **iOS and iPadOS are unvalidated**: `safaridriver` drives desktop Safari
-only, and no mobile-WebKit floor is claimed.
+**"Tested" and "validated-at" are different claims.** Tested means the gate was
+run on the floor version and on the one below it: Chrome 129 never boots the
+Kotlin/Wasm module and 130 does. Firefox's number is a limit of the **harness**
+rather than of the engine — 141, 143 and 145 all pass, while 140 ESR and older
+never expose a reachable WebDriver BiDi endpoint to the driver, so they are
+untestable, not known-bad. Safari cannot be installed side by side with itself,
+so its number is only the oldest version ever driven.
+
+**iOS and iPadOS are unvalidated**: `safaridriver` drives desktop Safari only,
+and no mobile-WebKit floor is claimed.
 
 ### Explicit non-support limitations
 

@@ -47,6 +47,20 @@ async function snapshot(evaluate) {
         pending: bridge.api.kanamaWebPendingCoroutineCount(),
         jobs: bridge.api.kanamaWebRegisteredCoroutineJobCount(),
         failure: globalThis.KanamaWebFailure?.stack ?? globalThis.KanamaWebFailure?.message ?? null,
+        // Diagnostics for a cell that runs but never frees a mob: the canvas the
+        // engine sizes its viewport from, and the latest mirrored transform the
+        // bridge saw (proof that something is actually moving in the scene).
+        canvasW: document.querySelector("canvas")?.clientWidth ?? 0,
+        canvasH: document.querySelector("canvas")?.clientHeight ?? 0,
+        snapX: Math.round(bridge.latestSnapshotX ?? 0),
+        snapY: Math.round(bridge.latestSnapshotY ?? 0),
+        // Engine truth, not bridge bookkeeping: Node.get_child_count (opcode 1) on
+        // Main. Mobs are added as its children and queue_free themselves off screen,
+        // so this rises with every spawn and falls with every real free -- which
+        // separates "the mobs never left the screen" from "they did, and the handle
+        // release did not follow".
+        frames: bridge.processCalls ?? 0,
+        simSeconds: Math.round((bridge.simSeconds ?? 0) * 10) / 10,
       };
     })()`);
   } catch {
@@ -86,10 +100,12 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
       // A drop in the live-handle count means a mob (and its child nodes) was freed —
       // dodge mobs queue_free themselves when a VisibleOnScreenNotifier2D reports they
       // left the screen. Counting drops proves the free/release path works during play.
+      // It UNDERCOUNTS when a spawn lands in the same sample as a free, which is why the
+      // window below is a generous ceiling rather than a fixed duration.
       if (snap.liveHandles < prevLive) peak.mobFrees += 1;
       prevLive = snap.liveHandles;
       last = snap;
-      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors}`);
+      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);
@@ -135,7 +151,11 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   // Play long enough for several mobs to spawn AND for the earliest ones to fly across
   // and leave the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D
   // screen_exited). Run the full window so the spawn+free lifecycle is exercised.
-  const gameplay = await observe(evaluate, seedPeak, 11_000, deadline, (snap, p) => p.mobFrees >= 2);
+  // The window is a CEILING, not a duration: the predicate ends it as soon as two mobs
+  // have actually been freed, which on a workstation is a few seconds. It is generous
+  // because a software-GL host simulates less game time per wall-clock second, and the
+  // assertion should wait for the evidence rather than be graded on the host's speed.
+  const gameplay = await observe(evaluate, seedPeak, 45_000, deadline, (snap, p) => p.mobFrees >= 2);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
   trace(`gameplay: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);

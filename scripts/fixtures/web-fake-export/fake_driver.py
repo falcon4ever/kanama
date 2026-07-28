@@ -26,7 +26,17 @@ import sys
 import time
 
 
-def _envelope(demo: str, checksum: str, *, passing: bool) -> dict:
+# A user-agent deliberately far above any floor this project could declare, so
+# the fixture keeps satisfying the browser-floor gate without becoming a second
+# place a floor number is pinned. `below-floor` mode uses a long-unsupported
+# version to prove the gate actually fires.
+MODERN_USER_AGENT = "Mozilla/5.0 (fake-fixture) HeadlessChrome/999.0.0.0 Safari/537.36"
+ANCIENT_USER_AGENT = "Mozilla/5.0 (fake-fixture) HeadlessChrome/100.0.0.0 Safari/537.36"
+
+
+def _envelope(
+    demo: str, checksum: str, *, passing: bool, user_agent: str = MODERN_USER_AGENT
+) -> dict:
     failed = 0 if passing else 1
     checks = {"fakeStartup": True, "fakeGameplay": passing, "fakeTeardown": True}
     passed = sum(1 for value in checks.values() if value)
@@ -46,7 +56,7 @@ def _envelope(demo: str, checksum: str, *, passing: bool) -> dict:
             "totalBytes": 672,
             "sourceTreeChecksum": checksum,
         },
-        "browser": {"engine": "chrome", "name": "fake-fixture", "version": "0"},
+        "browser": {"engine": "chrome", "name": "fake-fixture", "version": user_agent},
         "startup": {"loaded": True, "outcome": "ready", "durationMs": 5},
         "assertions": {
             "summary": {"total": total, "passed": passed, "failed": failed, "skipped": 0},
@@ -107,7 +117,8 @@ def main(argv: list[str]) -> int:
 
     passing = args.mode != "fail"
     checksum = "deadbeef" if args.mode == "wrong-checksum" else args.source_checksum
-    envelope = _envelope(args.demo, checksum, passing=passing)
+    user_agent = ANCIENT_USER_AGENT if args.mode == "below-floor" else MODERN_USER_AGENT
+    envelope = _envelope(args.demo, checksum, passing=passing, user_agent=user_agent)
     with open(args.result, "w", encoding="utf-8") as handle:
         json.dump(envelope, handle, indent=2)
     return 0

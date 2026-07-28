@@ -44,46 +44,13 @@ GODOT_BIN=""
 DEMOS=()
 CREATED_WORK_DIR=0
 
-ALL_DEMOS=(match3 bunnymark dodge web3d platformer squash fps charactercontroller thirdperson racing citybuilder tpsdemo)
-
-# demo key -> kanama-demos project directory. `web3d` is an in-repo fixture and
-# needs no demos checkout; its project dir is resolved by the build itself.
-demo_project_dir() {
-  case "$1" in
-    match3) echo "Starter-Kit-Match3" ;;
-    bunnymark) echo "Bunnymark" ;;
-    dodge) echo "godot-demo-2d-dodge-the-creeps" ;;
-    web3d) echo "" ;;
-    platformer) echo "Starter-Kit-3D-Platformer" ;;
-    squash) echo "godot-demo-3d-squash-the-creeps" ;;
-    fps) echo "Starter-Kit-FPS" ;;
-    charactercontroller) echo "godot-4-3d-character-controller-tutorial" ;;
-    thirdperson) echo "godot-4-3d-third-person-controller" ;;
-    racing) echo "Starter-Kit-Racing" ;;
-    citybuilder) echo "Starter-Kit-City-Builder" ;;
-    tpsdemo) echo "tps-demo-kanama" ;;
-    *) return 1 ;;
-  esac
-}
-
-# demo key -> the -PkanamaWeb<Key>ProjectDir gradle property the build reads.
-demo_project_property() {
-  case "$1" in
-    match3) echo "kanamaWebMatch3ProjectDir" ;;
-    bunnymark) echo "kanamaWebBunnymarkProjectDir" ;;
-    dodge) echo "kanamaWebDodgeProjectDir" ;;
-    web3d) echo "" ;;
-    platformer) echo "kanamaWebPlatformerProjectDir" ;;
-    squash) echo "kanamaWebSquashProjectDir" ;;
-    fps) echo "kanamaWebFpsProjectDir" ;;
-    charactercontroller) echo "kanamaWebCharactercontrollerProjectDir" ;;
-    thirdperson) echo "kanamaWebThirdpersonProjectDir" ;;
-    racing) echo "kanamaWebRacingProjectDir" ;;
-    citybuilder) echo "kanamaWebCitybuilderProjectDir" ;;
-    tpsdemo) echo "kanamaWebTpsdemoProjectDir" ;;
-    *) return 1 ;;
-  esac
-}
+# The corpus registry (demo key -> project dir -> gradle property) is shared with
+# the CI matrix gate so the two can never disagree about what the corpus is.
+# shellcheck source=scripts/web/demos.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/web/demos.sh"
+ALL_DEMOS=("${KANAMA_WEB_ALL_DEMOS[@]}")
+demo_project_dir() { kanama_web_demo_project_dir "$@"; }
+demo_project_property() { kanama_web_demo_project_property "$@"; }
 
 die() {
   echo "[web_fresh_checkout] $*" >&2
@@ -222,10 +189,9 @@ for demo in "${DEMOS[@]}"; do
     gradle_args+=("-P$project_property=$project_dir")
     source_before="$(checksum "$project_dir" --exclude .git --exclude .godot)"
   fi
-  # Bunnymark's validated Web configuration is the 256-sprite V1Sprites variant.
-  if [[ "$demo" == "bunnymark" ]]; then
-    gradle_args+=("-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites")
-  fi
+  while IFS= read -r extra; do
+    [[ -n "$extra" ]] && gradle_args+=("$extra")
+  done < <(kanama_web_demo_export_args "$demo")
 
   run "$KANAMA_DIR/gradlew" -p "$KANAMA_DIR" "${gradle_args[@]}"
 

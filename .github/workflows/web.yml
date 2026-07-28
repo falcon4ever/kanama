@@ -1,0 +1,280 @@
+name: web
+
+# Web browser matrix (Task 60h, promotion criterion W4).
+#
+# Exports demos to Web and drives each one in a real browser through
+# `scripts/web_ci_matrix.sh`, which routes every cell through
+# `web_export_smoke.sh` so the versioned result envelope -- not a driver's own
+# check count -- decides green.
+#
+# Cadence:
+#   - pull_request  -> the PR subset (match3, web3d, dodge) x Chrome + Firefox.
+#   - push to main  -> the full 12-demo corpus x Chrome + Firefox.
+#   - nightly       -> the full corpus, to catch browser-side regressions on a
+#                      tree that has not changed.
+#
+# Safari is NOT a cell here and cannot become one: it has no headless mode, needs
+# a logged-in GUI session with an unoccluded window, and two concurrent Safari
+# gates defeat the driver's PID-diff browser reaping. It is a documented local
+# pre-promotion gate -- see docs/exporting/web.md.
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  schedule:
+    # 04:20 UTC daily; off the hour to avoid the scheduler's peak queue.
+    - cron: "20 4 * * *"
+  workflow_dispatch:
+    inputs:
+      demo_set:
+        description: "Which corpus slice to run"
+        type: choice
+        default: full
+        options: [pr, full]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin).
+  GODOT_VERSION: 4.7-stable
+  # The kanama-demos commit the matrix runs against. Pinned on purpose: an
+  # unpinned demos checkout means an unrelated demo-repo commit can redden every
+  # Kanama PR. Bump it deliberately when a demo port lands (see
+  # docs/exporting/web.md, "Bumping the demos pin").
+  DEMOS_REF: 535082f3a7b806ab9def598207ee1bd21498f415
+
+jobs:
+  # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
+  # reports "skipped", which satisfies a required status check.
+  changes:
+    name: detect changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect Web-relevant changes
+        id: filter
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+            echo "non-PR event -> running the Web matrix"
+            exit 0
+          fi
+          changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}'...HEAD)"
+          echo "changed files:"; echo "$changed"
+          # web-runtime and the shared contract are obvious; processor/ emits the
+          # per-proxy GDScript, kanama-common-api carries the opcode table, and
+          # scripts/web + the two smoke shells are the harness itself.
+          if printf '%s\n' "$changed" | grep -qE '^(web-runtime/|kanama-common-api/|processor/|annotations/|scripts/web/|scripts/web_.*\.sh|scripts/generate_web_backend\.py|scripts/platform_backend_calls\.json|gradle/|build\.gradle\.kts|settings\.gradle\.kts|gradle\.properties|\.github/workflows/web\.yml)'; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "web=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  matrix:
+    name: web matrix (chrome + firefox)
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-24.04
+    # The full corpus is 12 Kotlin/Wasm exports plus 24 driven browser sessions
+    # on a software GL; the PR subset is a small fraction of that.
+    timeout-minutes: ${{ github.event_name == 'pull_request' && 90 || 300 }}
+    steps:
+      - name: Checkout Kanama
+        uses: actions/checkout@v6
+
+      - name: Checkout kanama-demos (pinned)
+        uses: actions/checkout@v6
+        with:
+          repository: falcon4ever/kanama-demos
+          ref: ${{ env.DEMOS_REF }}
+          path: kanama-demos
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Install CLI dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ripgrep
+
+      - name: Report browser versions
+        shell: bash
+        run: |
+          google-chrome --version
+          firefox --version
+
+      - name: Cache Godot binary and Web export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Web export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          # The export templates ship as one archive; the Web export needs only
+          # the nothreads release template, which is the configuration Kanama
+          # exports (single-thread Compatibility).
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      - name: Run the Web matrix
+        shell: bash
+        env:
+          DEMO_SET: ${{ github.event.inputs.demo_set || (github.event_name == 'pull_request' && 'pr' || 'full') }}
+          # Per-sample driver tracing into the uploaded driver logs. A red cell on a
+          # host nobody can log into is only as debuggable as what it recorded.
+          KANAMA_WEB_SMOKE_DEBUG: "1"
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          # A GitHub-hosted runner is slower than the workstation these budgets
+          # were measured on, and its GL is software-only: scale, do not edit the
+          # per-demo budgets, so local and CI numbers stay comparable.
+          scripts/web_ci_matrix.sh \
+            --godot "$godot_bin" \
+            --template "$HOME/godot/web_nothreads_release.zip" \
+            --demos-dir "$GITHUB_WORKSPACE/kanama-demos" \
+            --demo-set "$DEMO_SET" \
+            --engine chrome \
+            --engine firefox \
+            --timeout-scale 2 \
+            --result-dir "$RUNNER_TEMP/web-matrix" \
+            --evidence "$RUNNER_TEMP/web-matrix/evidence.json" \
+            --summary-md "$RUNNER_TEMP/web-matrix/summary.md"
+
+      - name: Publish matrix summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "$RUNNER_TEMP/web-matrix/summary.md" ]; then
+            cat "$RUNNER_TEMP/web-matrix/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload matrix evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: web-matrix-evidence-${{ github.run_attempt }}
+          # Result envelopes, driver logs and server logs -- everything needed to
+          # triage a red cell without re-running it.
+          path: |
+            ${{ runner.temp }}/web-matrix/*.json
+            ${{ runner.temp }}/web-matrix/*.log
+            ${{ runner.temp }}/web-matrix/runs/*.json
+          if-no-files-found: warn
+
+  # The long-run leak gate. Nightly only: it costs ten minutes of wall clock and
+  # answers a question a per-PR run cannot ask -- does the handle registry still
+  # sit at a fixed working set after hundreds of node create/free cycles?
+  soak:
+    name: soak (leak gate, chrome)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Kanama
+        uses: actions/checkout@v6
+
+      - name: Checkout kanama-demos (pinned)
+        uses: actions/checkout@v6
+        with:
+          repository: falcon4ever/kanama-demos
+          ref: ${{ env.DEMOS_REF }}
+          path: kanama-demos
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Cache Godot binary and Web export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Web export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      - name: Run the soak gate
+        shell: bash
+        env:
+          KANAMA_WEB_SOAK_SECONDS: "600"
+          KANAMA_WEB_SMOKE_DEBUG: "1"
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          scripts/web_ci_matrix.sh \
+            --godot "$godot_bin" \
+            --template "$HOME/godot/web_nothreads_release.zip" \
+            --demos-dir "$GITHUB_WORKSPACE/kanama-demos" \
+            --demo soak \
+            --engine chrome \
+            --result-dir "$RUNNER_TEMP/web-soak" \
+            --evidence "$RUNNER_TEMP/web-soak/evidence.json" \
+            --summary-md "$RUNNER_TEMP/web-soak/summary.md"
+
+      - name: Publish soak summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "$RUNNER_TEMP/web-soak/summary.md" ]; then
+            cat "$RUNNER_TEMP/web-soak/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload soak evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: web-soak-evidence-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/web-soak/*.json
+            ${{ runner.temp }}/web-soak/*.log
+            ${{ runner.temp }}/web-soak/runs/*.json
+          if-no-files-found: warn

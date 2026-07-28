@@ -62,6 +62,8 @@ internal class WebFrameSchedulerState {
     currentOwnerHandle.takeIf { it > 0 }
       ?: error("Kanama Web frame work was scheduled outside a script callback")
 
+  fun currentOwnerOrZero(): Int = currentOwnerHandle
+
   fun scheduleNextFrame(ownerHandle: Int, job: Job?, action: () -> Unit): Long =
     schedule(ownerHandle, frame + 1L, elapsedSeconds, job, action)
 
@@ -191,8 +193,21 @@ internal object WebFrameScheduler {
 
   fun requireCurrentOwner(): Int = state.requireCurrentOwner()
 
-  fun dispatch(job: Job?, block: Runnable) {
-    val ownerHandle = requireCurrentOwner()
+  /** The owner of the running callback, or 0 when no script callback is on the stack. */
+  fun currentOwnerOrZero(): Int = state.currentOwnerOrZero()
+
+  /**
+   * Schedules a coroutine continuation.
+   *
+   * [scopeOwnerHandle] is the script that owns the scope the coroutine was launched from, when it
+   * is known. It must win over the ambient owner: `launch` frequently runs inside SOMEONE ELSE's
+   * callback -- `Main.game_over` calling `hud.showGameOver()` launches on the HUD's scope while the
+   * HUD is nowhere on the stack -- and attributing the job to the caller registers it under the
+   * wrong owner. The next resume, arriving through the owning script's own signal, then trips the
+   * one-job-one-owner check and kills the run.
+   */
+  fun dispatch(job: Job?, block: Runnable, scopeOwnerHandle: Int = 0) {
+    val ownerHandle = scopeOwnerHandle.takeIf { it > 0 } ?: requireCurrentOwner()
     if (job?.isActive == false) {
       // Coroutine cancellation dispatches a final bookkeeping continuation. Running that cleanup
       // immediately keeps cancellation deterministic and prevents inactive work from surviving

@@ -27,10 +27,29 @@ import { runThirdperson } from "./demos/thirdperson.mjs";
 import { runRacing } from "./demos/racing.mjs";
 import { runCitybuilder } from "./demos/citybuilder.mjs";
 import { runTpsdemo } from "./demos/tpsdemo.mjs";
+import { runSoak } from "./demos/soak.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo };
-const DEFAULT_FIREFOX = "/Applications/Firefox.app/Contents/MacOS/firefox";
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak };
+// macOS workstation path first, then the usual Linux install paths (the CI
+// matrix cell, Task 60h). Missing everywhere is a loud failure, never a silent
+// substitution of some other browser.
+const FIREFOX_CANDIDATES = [
+  "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "/usr/bin/firefox",
+  "/usr/local/bin/firefox",
+  "/snap/bin/firefox",
+];
+
+function resolveBrowser(explicit, candidates, engine) {
+  if (explicit) return explicit;
+  const found = candidates.find((candidate) => fs.existsSync(candidate));
+  if (found) return found;
+  throw new Error(
+    `${engine}: no browser found; pass --browser-binary (looked in: ${candidates.join(", ")})`,
+  );
+}
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function parseArgs(argv) {
@@ -85,7 +104,7 @@ async function main() {
   const runDemo = DEMOS[args.demo];
   if (!runDemo) throw new Error(`firefox_bidi: unknown demo '${args.demo}'`);
 
-  const firefoxBinary = args["browser-binary"] ?? DEFAULT_FIREFOX;
+  const firefoxBinary = resolveBrowser(args["browser-binary"], FIREFOX_CANDIDATES, "firefox_bidi");
   const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "kanama-firefox-"));
   // Headless Firefox needs software WebGL for Godot's Compatibility renderer.
   fs.writeFileSync(
@@ -102,7 +121,18 @@ async function main() {
   const port = 9300 + Math.floor(Math.random() * 500);
   const firefox = spawn(
     firefoxBinary,
-    ["--headless", "--no-remote", `--profile`, profileDir, `--remote-debugging-port=${port}`, "about:blank"],
+    [
+      "--headless",
+      "--no-remote",
+      // Headless Firefox IGNORES this; the viewport is really pinned through
+      // browsingContext.setViewport below. Kept because it costs nothing and is
+      // what a reader expects to find next to --headless.
+      "--window-size=1280,900",
+      `--profile`,
+      profileDir,
+      `--remote-debugging-port=${port}`,
+      "about:blank",
+    ],
     { stdio: ["ignore", "pipe", "pipe"] },
   );
 
@@ -201,6 +231,18 @@ async function main() {
     const tree = await command("browsingContext.getTree", { maxDepth: 1 });
     const context = tree.contexts[0]?.context;
     if (!context) throw new Error("Firefox exposed no browsing context");
+
+    // Pin the viewport to the same 1280x900 the Chrome and Safari drivers use.
+    // Firefox IGNORES --window-size in headless mode -- it kept reporting its own
+    // 1366x682 default -- and Godot sizes its viewport from the canvas, so an
+    // unpinned Firefox judges "left the screen" against different geometry than
+    // the other two engines. This is a gate comparing engines; the geometry has to
+    // be the constant.
+    await command("browsingContext.setViewport", {
+      context,
+      viewport: { width: 1280, height: 900 },
+      devicePixelRatio: 1,
+    });
 
     const evaluate = async (expression) => {
       const result = await command("script.evaluate", {

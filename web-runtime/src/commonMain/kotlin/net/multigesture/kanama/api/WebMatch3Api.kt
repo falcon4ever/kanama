@@ -669,13 +669,39 @@ internal object WebFrameCoroutineDispatcher : CoroutineDispatcher() {
     get() = WebFrameScheduler.pendingCount
 
   override fun dispatch(context: kotlin.coroutines.CoroutineContext, block: Runnable) {
-    WebFrameScheduler.dispatch(context[Job], block)
+    WebFrameScheduler.dispatch(
+      context[Job],
+      block,
+      scopeOwnerHandle = context[WebScopeOwner]?.ownerHandle ?: 0,
+    )
   }
 }
 
-class KanamaScope : CoroutineScope {
+/**
+ * Carries the script that owns a [KanamaScope] through the coroutine context.
+ *
+ * Without it, a coroutine's owner is whoever happened to be on the stack at `launch`, which is
+ * routinely the wrong script: one script calling another's method (`Main.game_over` ->
+ * `hud.showGameOver()`) launches on the callee's scope from the caller's callback.
+ */
+internal class WebScopeOwner(val ownerHandle: Int) :
+  kotlin.coroutines.AbstractCoroutineContextElement(Key) {
+  companion object Key : kotlin.coroutines.CoroutineContext.Key<WebScopeOwner>
+}
+
+/**
+ * A script's coroutine scope.
+ *
+ * The owner defaults to the script being constructed: script instances are built inside their own
+ * owner scope, so `override val kanamaScope = KanamaScope()` binds to the right script with no
+ * ceremony at the call site. A scope built outside any script callback (handle 0) keeps the old
+ * behaviour and is attributed to the ambient callback at dispatch time.
+ */
+class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.currentOwnerOrZero()) :
+  CoroutineScope {
   private val job = SupervisorJob()
-  override val coroutineContext = WebFrameCoroutineDispatcher + job
+  override val coroutineContext =
+    WebFrameCoroutineDispatcher + job + WebScopeOwner(ownerHandle)
 
   fun cancel() {
     job.cancel()

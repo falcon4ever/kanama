@@ -85,13 +85,34 @@ private fun <T> webCallbackBoundary(
       withActiveWebScriptHandle(objectId) { block(record) }
     }
   } catch (error: Throwable) {
-    val causeDetail = error.message ?: error::class.simpleName ?: "unknown error"
     throw IllegalStateException(
       "Kanama Web callback failed: script=$scriptName handle=$objectId callback=$callback " +
-        "member=$memberName cause=$causeDetail",
+        "member=$memberName cause=${describeCauseChain(error)}",
       error,
     )
   }
+}
+
+/**
+ * Renders a throwable and its causes as one line.
+ *
+ * The reason this is not just `error.message`: a failure inside a coroutine arrives wrapped by
+ * kotlinx.coroutines ("Coroutine dispatcher ... threw an exception"), whose own message names the
+ * dispatcher and says nothing about what actually went wrong. Reporting only the outermost message
+ * is reliably one layer short of the answer, and a Wasm stack trace cannot make up the difference.
+ */
+private fun describeCauseChain(error: Throwable, limit: Int = 5): String = buildString {
+  var current: Throwable? = error
+  var depth = 0
+  while (current != null && depth < limit) {
+    val throwable = current
+    if (depth > 0) append(" <- ")
+    append(throwable::class.simpleName ?: "Throwable")
+    throwable.message?.let { append(": ").append(it) }
+    current = throwable.cause.takeIf { it !== throwable }
+    depth += 1
+  }
+  if (current != null) append(" <- ...")
 }
 
 @JsExport fun kanamaWebProtocolVersion(): Int = KanamaWebProjectRegistry.PROTOCOL_VERSION
