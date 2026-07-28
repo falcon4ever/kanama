@@ -54,6 +54,13 @@ async function snapshot(evaluate) {
         canvasH: document.querySelector("canvas")?.clientHeight ?? 0,
         snapX: Math.round(bridge.latestSnapshotX ?? 0),
         snapY: Math.round(bridge.latestSnapshotY ?? 0),
+        // Engine truth, not bridge bookkeeping: Node.get_child_count (opcode 1) on
+        // Main. Mobs are added as its children and queue_free themselves off screen,
+        // so this rises with every spawn and falls with every real free -- which
+        // separates "the mobs never left the screen" from "they did, and the handle
+        // release did not follow".
+        frames: bridge.processCalls ?? 0,
+        simSeconds: Math.round((bridge.simSeconds ?? 0) * 10) / 10,
       };
     })()`);
   } catch {
@@ -98,7 +105,7 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
       if (snap.liveHandles < prevLive) peak.mobFrees += 1;
       prevLive = snap.liveHandles;
       last = snap;
-      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} snap=${snap.snapX},${snap.snapY}`);
+      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);

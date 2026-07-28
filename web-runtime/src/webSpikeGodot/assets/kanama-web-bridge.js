@@ -225,6 +225,12 @@
     objectHandleGenerationAdvanced: false,
     signalEmits: 0,
     processCalls: 0,
+    // Accumulated engine delta. Wall-clock time is not the game's time: Godot caps
+    // how much simulation one frame may advance, so a slow host runs the SCENE in
+    // slow motion while frames keep ticking. A gate that waits a fixed number of
+    // wall seconds is really waiting for an unknown amount of gameplay, and this
+    // is the number that says which.
+    simSeconds: 0,
     noArgCalls: 0,
     addBunnyCalls: 0,
     removeBunnyCalls: 0,
@@ -485,6 +491,7 @@
             0,
           );
           this.processCalls += 1;
+        this.simSeconds += delta;
           return executed;
         }
         return this.process(handle, delta);
@@ -506,6 +513,7 @@
             0,
           );
           this.processCalls += 1;
+        this.simSeconds += delta;
           return executed;
         }
         return this.process(handle, delta);
@@ -532,6 +540,7 @@
         );
         this.match3FrameContinuations += executed;
         this.processCalls += 1;
+        this.simSeconds += delta;
         return executed;
       }
       if (this.mode === "dodge") {
@@ -549,6 +558,7 @@
             0,
           );
           this.processCalls += 1;
+        this.simSeconds += delta;
           return executed;
         }
         return this.process(handle, delta);
@@ -587,6 +597,7 @@
     process(handle, delta) {
       this.lastProcessRafTick = this.rafTick;
       this.processCalls += 1;
+        this.simSeconds += delta;
       const started = performance.now();
       const result = this.invoke(
         handle,
