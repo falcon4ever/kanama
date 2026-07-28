@@ -217,7 +217,8 @@ Which gate runs when, and where. A gate that is not on this list runs nowhere.
 | Gate | Cadence | Where |
 |---|---|---|
 | PR subset × Chrome + Firefox | every Web-relevant pull request | CI (`web` workflow) |
-| Full 12-demo corpus × Chrome + Firefox | push to `main`, and nightly | CI |
+| `ci` corpus × Chrome + Firefox (everything a runner can build) | push to `main`, and nightly | CI |
+| **tps-demo** | before a release tag | local (OOM-killed on a hosted runner) |
 | Soak (10 min, `--demo soak`) | nightly | CI |
 | Full corpus on **Safari** | before a release tag, and before any promotion decision | local (no headless mode) |
 | Fresh-checkout gate | before a release tag | local |
@@ -251,6 +252,24 @@ registered coroutine jobs must not be higher in the second half than the first
 end, and teardown must still drain to zero after a long run rather than only
 after a short one.
 
+### What CI Runs, And What Stays Local
+
+Not everything can or should run on a hosted runner, and the two reasons are
+different:
+
+- **Local-only** — CI *structurally cannot* do it, and no fix changes that.
+  **Safari** (no headless mode; it needs a logged-in GUI session) and
+  **tps-demo** (its Kotlin/Wasm compile is OOM-killed on a 16 GB GitHub runner)
+  are both in this tier. They are release gates a maintainer runs by hand, and
+  they pass there.
+- **Quarantined** — a real defect, temporary, tied to a task. See below.
+
+`--demo-set ci` is the corpus minus the local-only demos and is what the workflow
+runs; `--demo-set full` always means the full corpus, so a local run is never
+quietly narrowed. Skipped demos are **announced and written into the evidence
+JSON** with their reason, because a corpus that silently shrinks is how "the
+corpus is green" stops meaning anything.
+
 ### Quarantined Cells
 
 A known-failing `demo:engine` pair can be **quarantined** in
@@ -263,8 +282,9 @@ A quarantined cell that **passes** is reported just as loudly, with an explicit
 "lift the quarantine" line, because a stale quarantine is worse than none.
 Lifting one is a one-line deletion.
 
-Currently quarantined: `dodge:firefox` (task 71 — mobs never free on a Linux
-host; it passes on macOS Chrome and Firefox, and on CI Chrome).
+Currently quarantined: `dodge:firefox`, `squash:chrome` and `squash:firefox` —
+task 71, spawned mobs never free on a Linux host. Both demos pass on macOS, and
+`dodge:chrome` passes on Linux, so it is neither a browser nor a demo property.
 
 ### Bumping The Demos Pin
 

@@ -27,14 +27,16 @@
 #       --godot <godot-binary> \
 #       --template <web_nothreads_release.zip> \
 #       [--demos-dir <kanama-demos checkout>] \
-#       [--demo-set pr|full] [--demo <key> ...] \
+#       [--demo-set pr|full|ci] [--demo <key> ...] \
 #       [--engine chrome] [--engine firefox] \
 #       [--chrome-binary <path>] [--firefox-binary <path>] \
 #       [--result-dir <dir>] [--evidence <path>] [--summary-md <path>] \
 #       [--timeout-scale <n>] [--skip-export] [--keep-exports]
 #
-# `--demo-set pr` is the per-PR subset, `full` the whole corpus (see
-# scripts/web/demos.sh for both lists and the per-demo budgets).
+# `--demo-set pr` is the per-PR subset, `full` the whole corpus, and `ci` the
+# corpus minus the demos a hosted runner structurally cannot build (see
+# scripts/web/demos.sh). `full` always means FULL -- a local run is never quietly
+# narrowed.
 
 set -euo pipefail
 
@@ -94,11 +96,25 @@ done
 # reported as a missing export template.
 [[ "$TIMEOUT_SCALE" =~ ^[0-9]+([.][0-9]+)?$ ]] || die "--timeout-scale must be a positive number"
 
+SKIPPED_DEMOS=()
 case "${DEMO_SET:-}" in
   "") ;;
   pr) DEMOS+=("${KANAMA_WEB_PR_DEMOS[@]}") ;;
   full) DEMOS+=("${KANAMA_WEB_ALL_DEMOS[@]}") ;;
-  *) die "unknown --demo-set: $DEMO_SET (expected pr|full)" ;;
+  ci)
+    # The corpus minus what a hosted runner cannot build. Skipped demos are
+    # ANNOUNCED and recorded in the evidence; they are never silently dropped.
+    for demo in "${KANAMA_WEB_ALL_DEMOS[@]}"; do
+      reason="$(kanama_web_demo_local_only_reason "$demo")"
+      if [[ -n "$reason" ]]; then
+        echo "[web_ci_matrix] SKIPPING $demo -- $reason"
+        SKIPPED_DEMOS+=("$demo|$reason")
+      else
+        DEMOS+=("$demo")
+      fi
+    done
+    ;;
+  *) die "unknown --demo-set: $DEMO_SET (expected pr|full|ci)" ;;
 esac
 [[ "${#DEMOS[@]}" -gt 0 ]] || DEMOS=("${KANAMA_WEB_PR_DEMOS[@]}")
 for demo in "${DEMOS[@]}"; do
@@ -351,11 +367,20 @@ with open(out, "w") as handle:
   fi
 done
 
+printf '%s\n' "${SKIPPED_DEMOS[@]+"${SKIPPED_DEMOS[@]}"}" >"$RESULT_DIR/skipped.txt"
 python3 - "$EVIDENCE" "$ROOT_DIR" "$GODOT_BIN" "$TEMPLATE" "$FAILED" "$RUNS_DIR" \
-  "${DEMOS_DIR:-}" "${SUMMARY_MD:-}" "${DEMO_SET:-custom}" <<'PY'
+  "${DEMOS_DIR:-}" "${SUMMARY_MD:-}" "${DEMO_SET:-custom}" "$RESULT_DIR/skipped.txt" <<'PY'
 import datetime, glob, json, os, subprocess, sys
 
-(path, root, godot, template, failed, runs_dir, demos_dir, summary_md, demo_set) = sys.argv[1:]
+(path, root, godot, template, failed, runs_dir, demos_dir, summary_md, demo_set,
+ skipped_path) = sys.argv[1:]
+skipped = []
+if os.path.exists(skipped_path):
+    for line in open(skipped_path):
+        line = line.strip()
+        if line:
+            demo, _, reason = line.partition("|")
+            skipped.append({"demo": demo, "reason": reason})
 runs = [json.load(open(name)) for name in sorted(glob.glob(os.path.join(runs_dir, "*.json")))]
 
 
@@ -384,6 +409,9 @@ evidence = {
     "godot": {"binary": godot, "version": godot_version[-1] if godot_version else None},
     "template": template or None,
     "runs": runs,
+    # Demos a hosted runner cannot build. Recorded, not omitted: a corpus that
+    # quietly shrinks is how "the corpus is green" stops meaning anything.
+    "skipped": skipped,
     "pass": failed == "0",
 }
 with open(path, "w") as handle:
@@ -412,6 +440,10 @@ for run in runs:
             protocol=run.get("protocolVersion") or "-",
         )
     )
+if skipped:
+    lines.append("")
+    for entry in skipped:
+        lines.append(f"> **skipped** `{entry['demo']}` — {entry['reason']}")
 table = "\n".join(lines)
 print(table)
 if summary_md:

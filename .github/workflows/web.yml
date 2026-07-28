@@ -9,9 +9,13 @@ name: web
 #
 # Cadence:
 #   - pull_request  -> the PR subset (match3, web3d, dodge) x Chrome + Firefox.
-#   - push to main  -> the full 12-demo corpus x Chrome + Firefox.
-#   - nightly       -> the full corpus, to catch browser-side regressions on a
-#                      tree that has not changed.
+#   - push to main  -> the `ci` corpus x Chrome + Firefox: every demo a hosted
+#                      runner can actually build. tpsdemo is excluded because its
+#                      Kotlin/Wasm compile is OOM-killed on a 16 GB runner -- that
+#                      is a runner limit, not a defect, and it stays a LOCAL gate.
+#                      Skipped demos are announced and recorded in the evidence.
+#   - nightly       -> the same, to catch browser-side regressions on a tree that
+#                      has not changed.
 #
 # Safari is NOT a cell here and cannot become one: it has no headless mode, needs
 # a logged-in GUI session with an unoccluded window, and two concurrent Safari
@@ -29,8 +33,8 @@ on:
       demo_set:
         description: "Which corpus slice to run"
         type: choice
-        default: full
-        options: [pr, full]
+        default: ci
+        options: [pr, ci, full]
 
 permissions:
   contents: read
@@ -150,7 +154,7 @@ jobs:
       - name: Run the Web matrix
         shell: bash
         env:
-          DEMO_SET: ${{ github.event.inputs.demo_set || (github.event_name == 'pull_request' && 'pr' || 'full') }}
+          DEMO_SET: ${{ github.event.inputs.demo_set || (github.event_name == 'pull_request' && 'pr' || 'ci') }}
           # Per-sample driver tracing into the uploaded driver logs. A red cell on a
           # host nobody can log into is only as debuggable as what it recorded.
           KANAMA_WEB_SMOKE_DEBUG: "1"
