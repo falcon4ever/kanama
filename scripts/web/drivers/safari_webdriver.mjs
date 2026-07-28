@@ -11,7 +11,7 @@
 // Args match the other drivers: --url --result --demo --timeout --source-checksum
 // --export-dir [--browser-binary(unused)].
 
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import fs from "node:fs";
 
 import { runMatch3 } from "./demos/match3.mjs";
@@ -51,6 +51,28 @@ async function main() {
   const runDemo = DEMOS[args.demo];
   if (!runDemo) throw new Error(`safari_webdriver: unknown demo '${args.demo}'`);
 
+  // Killing safaridriver does NOT reap the Safari it drives: the automation
+  // Safari is not its child, so it survives and keeps its window, its port and
+  // its share of the GPU. Leftovers measurably degrade later runs (a Match3
+  // board that settles in 1s against a clean machine took over 400s with
+  // orphans present), which reads exactly like a flaky gate. Safari also has no
+  // headless mode, so there is no run without a window to leak.
+  //
+  // Attribute by difference: whatever automation Safari appears after we spawn
+  // safaridriver is ours. A concurrent Safari gate starting inside this window
+  // could be misattributed, so the drivers are not safe to run two-at-a-time on
+  // one machine -- which is already true of a gate that needs an unoccluded
+  // window.
+  const automationSafariPids = () => {
+    try {
+      return execFileSync("pgrep", ["-f", "Safari.*--automation"], { encoding: "utf8" })
+        .trim().split("\n").filter(Boolean);
+    } catch {
+      return []; // pgrep exits non-zero when nothing matches
+    }
+  };
+  const preexistingSafari = new Set(automationSafariPids());
+
   const port = 9500 + Math.floor(Math.random() * 400);
   const driver = spawn("safaridriver", ["-p", String(port)], { stdio: ["ignore", "pipe", "pipe"] });
   const base = `http://127.0.0.1:${port}`;
@@ -58,6 +80,14 @@ async function main() {
 
   const cleanup = () => {
     if (!driver.killed) driver.kill("SIGKILL");
+    for (const pid of automationSafariPids()) {
+      if (preexistingSafari.has(pid)) continue;
+      try {
+        process.kill(Number(pid), "SIGKILL");
+      } catch {
+        // already gone
+      }
+    }
   };
   process.on("exit", cleanup);
   // Three ways this process can end without the browser being reaped, all of

@@ -119,16 +119,23 @@ function findLegalSwap(tileGrid) {
 
 async function drag(pointer, evaluate, { x, y, dx, dy }) {
   // Board -> CSS client-pixel geometry is browser-agnostic; each driver's
-  // pointer() handles the protocol (and any device-pixel-ratio adjustment).
+  // pointer() handles the protocol.
+  //
+  // Godot's coordinate space here is CSS pixels, NOT the canvas backing store.
+  // Main.center_grid_on_screen() centres the board on get_viewport().
+  // get_visible_rect(), whose size is the canvas's CSS size, and the engine
+  // reports mouse positions in those same units (verified against
+  // CanvasItem.get_local_mouse_position: a click at CSS 538,186 reads back as
+  // 538,186 at devicePixelRatio 2). Deriving the board origin from
+  // canvas.width instead only agrees at devicePixelRatio 1 -- which is why this
+  // worked in headless Chrome/Firefox and put Safari's press two tiles off the
+  // intended cell with half the intended drag distance (task 69).
   const geometry = await evaluate(`(() => {
     const canvas = document.querySelector("canvas");
     const rect = canvas.getBoundingClientRect();
-    const boardX = canvas.width / 2 - ((${BOARD} - 1) * ${OFFSET}) / 2;
-    const boardY = canvas.height / 2 - ((${BOARD} - 1) * ${OFFSET}) / 2;
-    const toClient = (gx, gy) => ({
-      x: rect.left + gx * rect.width / canvas.width,
-      y: rect.top + gy * rect.height / canvas.height,
-    });
+    const boardX = rect.width / 2 - ((${BOARD} - 1) * ${OFFSET}) / 2;
+    const boardY = rect.height / 2 - ((${BOARD} - 1) * ${OFFSET}) / 2;
+    const toClient = (gx, gy) => ({ x: rect.left + gx, y: rect.top + gy });
     return {
       press: toClient(boardX + ${x} * ${OFFSET}, boardY + ${y} * ${OFFSET}),
       release: toClient(boardX + (${x} + ${dx}) * ${OFFSET}, boardY + (${y} + ${dy}) * ${OFFSET}),
