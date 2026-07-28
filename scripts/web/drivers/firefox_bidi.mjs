@@ -111,6 +111,13 @@ async function main() {
     path.join(profileDir, "user.js"),
     [
       'user_pref("remote.active-protocols", 2);',
+      // Pin the refresh driver to 60Hz. With no vsync to pace it, headless Firefox
+      // ran requestAnimationFrame at ~500Hz, and Godot's main loop advanced a fixed
+      // step per iteration -- so the scene ran roughly EIGHT TIMES real time (392
+      // simulated seconds in 45 wall seconds on a CI runner). No real browser does
+      // that, and a gate driving the engine at 8x is not measuring the engine users
+      // get.
+      'user_pref("layout.frame_rate", 60);',
       'user_pref("webgl.force-enabled", true);',
       'user_pref("webgl.disabled", false);',
       'user_pref("gfx.webrender.software", true);',
