@@ -12,15 +12,18 @@ still being hardened, and there is no packaged install path yet.
 **Evidence.** The full twelve-demo corpus — Bunnymark, Starter-Kit-Match3, dodge,
 web3d, 3D-Platformer, squash, FPS, character-controller, third-person, Racing,
 City-Builder and tps-demo — passes the automated production export smoke in
-**Chrome** (the CI gate) and **Firefox**, each with a play-and-teardown driver
-run, zero console errors, and live handles draining to zero. Every corpus export
-is also proven to embed no build-machine paths in any served file, and to be
-reproducible from a clean clone (see [Fresh-Checkout Gate](#fresh-checkout-gate)).
+**Chrome** (the CI gate), **Firefox**, and **Safari**, each with a
+play-and-teardown driver run, zero console errors, and live handles draining to
+zero. Every corpus export is also proven to embed no build-machine paths in any
+served file, and to be reproducible from a clean clone (see
+[Fresh-Checkout Gate](#fresh-checkout-gate)).
 
-**Safari** is not part of the gated matrix: as of the 57f validation Bunnymark
-passed the automated Safari gate and Match3 was verified by hand, but
-SafariDriver cannot reliably synthesize Match3's drag, so the wider corpus is not
-Safari-gated — see Known Limitations.
+**Validated browser versions** (2026-07-27, protocol 15): Chrome 150 (headless),
+Firefox 153 (headless), and **Safari 26.5 / WebKit 605.1.15 on macOS 26.5.1**.
+These are the versions the corpus has actually been driven on, not a tested
+lower bound — no older release has been validated. **iOS and iPadOS have not
+been validated at all**; `safaridriver` drives desktop Safari only, so no
+mobile-WebKit claim is made here.
 
 This page is the reproducible export workflow. For the architecture — batching,
 snapshots, handle generations, the bridge protocol — see
@@ -196,10 +199,24 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   `--disable-gpu`, which disables it. It collects console/exception events.
 - **Firefox** — driven over WebDriver BiDi; console errors via
   `log.entryAdded`.
-- **Safari** — driven over WebDriver. SafariDriver exposes no browser-log
-  endpoint, so the Safari gate asserts bridge callback/telemetry plus every
-  gameplay and teardown invariant, and needs device-pixel-ratio-aware pointer
-  coordinates.
+- **Safari** — driven over classic W3C WebDriver; needs a one-time
+  `safaridriver --enable` and "Allow Remote Automation" in the Develop menu.
+  SafariDriver exposes no browser-log endpoint, so the Safari gate asserts bridge
+  callback/telemetry plus every gameplay and teardown invariant. Three traps,
+  all of which have cost real debugging time:
+    - **Retina coordinates.** Pointer coordinates are CSS client pixels (W3C),
+      and Godot's own coordinate space is CSS pixels too. A driver that derives
+      screen geometry from `canvas.width` — the `devicePixelRatio`-scaled
+      backing store — is correct only at DPR 1, so it passes headless
+      Chrome/Firefox and silently misses on a Retina Safari. Use
+      `getBoundingClientRect()`.
+    - **One `POST /actions` per gesture.** SafariDriver dispatches a pointer
+      sequence on the trailing `DELETE /actions`, and does not carry pointer
+      position across requests — a press sent in its own request lands at
+      `0,0`. Put the whole press/move/release in a single request.
+    - **The browser outlives its driver.** The automation Safari is not a child
+      of `safaridriver`, so killing the driver leaks it; the driver reaps it by
+      PID instead.
 
 ## Renderer And Thread Constraints
 
@@ -222,13 +239,13 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
 
 ## Known Limitations
 
-- **Safari is not in the gated matrix.** Chrome and Firefox gate every corpus
-  demo; Safari coverage stops at the 57f Bunnymark/Match3 validation below.
-- **Safari automated Match3 drag.** The Match3 export runs correctly in Safari by
-  hand, but SafariDriver's synthesized pointer drag does not reliably trigger the
-  swipe in the automated gate (coordinates and Godot picking are correct; the
-  drag-to-swipe is a WebDriver synthesis limitation). The automated Safari gate
-  covers Bunnymark; Safari Match3 is a manual local check.
+- **Safari cannot run headless.** Chrome and Firefox gate the corpus headless, so
+  they run unattended; `safaridriver` drives a real Safari window on a logged-in
+  GUI session. The Safari gate is therefore a **local** gate, not a CI cell, and
+  two Safari runs must not be started concurrently on one machine.
+- **Safari on iOS/iPadOS is unvalidated.** Every iOS browser is WebKit, but
+  `safaridriver` covers desktop Safari only. No mobile-WebKit version floor is
+  claimed.
 - **Lifecycle virtuals are limited to what the proxy dispatches**: `_ready`,
   `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
   `_unhandled_input`. Anything else — `@OnEnterTree` in particular — is rejected

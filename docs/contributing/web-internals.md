@@ -31,15 +31,19 @@ crossings, mirrors state in snapshots, and tracks handles by generation.
 
 ## What Works
 
-Two production Godot 4.7 Web exports pass an automated, assertion-driven play
-sequence (not a page-load check) in headless **Chrome 150**, **Firefox 153**,
-and **Safari 26.5**:
+A twelve-demo corpus of production Godot 4.7 Web exports passes an automated,
+assertion-driven play sequence (not a page-load check) in headless
+**Chrome 150**, headless **Firefox 153**, and **Safari 26.5** (WebKit 605.1.15;
+Safari has no headless mode, so it runs windowed on a GUI session). Two
+representative members:
 
 - **Bunnymark** — 256 sprites, one bounded position batch, and deterministic
   257-to-zero handle teardown.
 - **Match3** (`Starter-Kit-Match3`) — original board, a runtime-selected legal
   swap, match/collapse/refill, particles, audio, restart, and two full
   zero-state teardowns.
+
+The full list is in [Exporting → Web](../exporting/web.md).
 
 Each run asserts gameplay deltas, crossing budgets, and handle/callback/scheduler
 teardown to baseline, and fails on stale-handle use.
@@ -192,9 +196,12 @@ error checks, and protocol-version match.
 
 Browser-specific notes:
 
-- **Safari** WebDriver input needs device-pixel-ratio-aware conversion from
-  Godot's logical canvas to trusted pointer coordinates, or the Retina backing
-  store targets the wrong tile. SafariDriver does not expose the legacy browser
+- **Safari** exposes Retina coordinate bugs the other engines hide. Godot's
+  coordinate space and W3C pointer coordinates are both **CSS pixels**, so a
+  driver must derive on-screen geometry from `getBoundingClientRect()`. Deriving
+  it from `canvas.width` — the `devicePixelRatio`-scaled backing store — happens
+  to agree at DPR 1, so it passes headless Chrome/Firefox and targets the wrong
+  tile on a Retina Safari. SafariDriver also does not expose the legacy browser
   log endpoint, so the Safari gate asserts bridge callback/failure telemetry
   plus every gameplay and teardown invariant.
 - **Firefox** collects console errors through BiDi `log.entryAdded`.
