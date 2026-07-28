@@ -249,27 +249,54 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
 
   return {
     protocolVersion,
+    // The envelope schema (scripts/web/result_schema.py) requires startup
+    // {loaded, outcome, durationMs} plus the handles/crossings/callbacks/
+    // connections/scheduler/teardown sections. tpsdemo shipped a flat `metrics`
+    // bag instead, so web_export_smoke.sh rejected its result on EVERY engine
+    // and the demo never passed the wrapper gate -- only its own 13 driver
+    // checks, which is exactly the distinction the kickoff warns about. Same
+    // facts, reported in the shape the other eleven modules use.
     startup: {
-      startupDurationMs,
-      readyCount: level.readyCount,
       loaded: menu.mode === "tpsdemo",
+      outcome: menu.mode === "tpsdemo" ? "ready" : "failed",
+      durationMs: startupDurationMs,
+      readyCount: level.readyCount,
     },
     checks,
-    boundaryErrors,
-    metrics: {
-      startupDurationMs,
-      displacement,
-      processCalls: peak.processCalls,
-      physicsCalls: peak.physicsCalls,
-      appliedCommands: peak.appliedCommands,
-      maxLiveHandles: peak.maxLiveHandles,
-      crossings: peak.crossings,
+    handles: {
+      liveAfterGameplay: peak.maxLiveHandles,
       liveAfterTeardown: torndown.liveHandles,
-      pendingCallbacks: torndown.callbacks,
-      pendingCoroutines: torndown.pending,
-      registeredJobs: torndown.jobs,
+      // tpsdemo has no stale-handle probe; teardown-to-zero is its invariant.
+      staleRejected: 0,
+    },
+    crossings: {
+      kotlinToGodotCalls: peak.crossings,
+      physicsProcessCalls: peak.physicsCalls,
+      processCalls: peak.processCalls,
+      appliedCommands: peak.appliedCommands,
+      playerDisplacement: Number(displacement.toFixed(3)),
       robotsSpawned: level.robotReady,
       deathPartsSpawned: level.partReady,
     },
+    callbacks: {
+      pendingSignalCallbacks: torndown.callbacks,
+    },
+    connections: {
+      afterTeardownLiveHandles: torndown.liveHandles,
+    },
+    scheduler: {
+      pendingCoroutines: torndown.pending,
+      registeredJobs: torndown.jobs,
+    },
+    teardown: {
+      outcome:
+        checks.fullTeardownToZero && torndown.callbackErrors === 0 && torndown.failure === null
+          ? "clean"
+          : "incomplete",
+      ownerRegistriesToBaseline:
+        torndown.liveHandles === 0 && torndown.callbacks === 0 &&
+        torndown.pending === 0 && torndown.jobs === 0,
+    },
+    boundaryErrors,
   };
 }
