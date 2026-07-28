@@ -107,6 +107,25 @@ kanama_web_demo_is_known() {
   kanama_web_demo_project_dir "$1" >/dev/null 2>&1
 }
 
+# Demos CI structurally cannot run -> the reason. This is NOT quarantine: nothing
+# here is a defect and nothing here gets fixed. Safari is the existing example of
+# the same idea at the engine level (no headless mode, so it is a local gate), and
+# tpsdemo is the demo-level one: its Kotlin/Wasm compile is killed by the OOM
+# killer on a 16 GB GitHub-hosted runner, which is a property of the runner.
+#
+# These still run LOCALLY, where they pass, and the matrix records them as
+# explicitly skipped-with-a-reason rather than quietly leaving them out -- a demo
+# that silently disappears from a corpus is how a green run stops meaning
+# anything.
+kanama_web_demo_local_only_reason() {
+  case "$1" in
+    tpsdemo)
+      echo "the Kotlin/Wasm compile exceeds a GitHub-hosted runner (OOM in compileProductionExecutableKotlinWasmJs); local gate only"
+      ;;
+    *) : ;;
+  esac
+}
+
 # Quarantined cells: "demo:engine" -> the reason, which must name a task.
 #
 # A quarantined cell still EXPORTS, still RUNS, and still reports its result --
@@ -118,8 +137,8 @@ kanama_web_demo_is_known() {
 # Lifting one is a one-line deletion here.
 kanama_web_quarantine_reason() {
   case "$1" in
-    dodge:firefox)
-      echo "task 71 — mobs never free on a Linux host; passes on macOS Chrome/Firefox and on CI Chrome"
+    dodge:firefox|squash:chrome|squash:firefox)
+      echo "task 71 — spawned mobs never free on a Linux host; both demos pass on macOS"
       ;;
     *) : ;;
   esac
