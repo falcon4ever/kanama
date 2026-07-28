@@ -47,6 +47,13 @@ async function snapshot(evaluate) {
         pending: bridge.api.kanamaWebPendingCoroutineCount(),
         jobs: bridge.api.kanamaWebRegisteredCoroutineJobCount(),
         failure: globalThis.KanamaWebFailure?.stack ?? globalThis.KanamaWebFailure?.message ?? null,
+        // Diagnostics for a cell that runs but never frees a mob: the canvas the
+        // engine sizes its viewport from, and the latest mirrored transform the
+        // bridge saw (proof that something is actually moving in the scene).
+        canvasW: document.querySelector("canvas")?.clientWidth ?? 0,
+        canvasH: document.querySelector("canvas")?.clientHeight ?? 0,
+        snapX: Math.round(bridge.latestSnapshotX ?? 0),
+        snapY: Math.round(bridge.latestSnapshotY ?? 0),
       };
     })()`);
   } catch {
@@ -91,7 +98,7 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
       if (snap.liveHandles < prevLive) peak.mobFrees += 1;
       prevLive = snap.liveHandles;
       last = snap;
-      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors}`);
+      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} snap=${snap.snapX},${snap.snapY}`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);
