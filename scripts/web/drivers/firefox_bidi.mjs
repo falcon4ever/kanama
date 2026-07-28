@@ -111,13 +111,6 @@ async function main() {
     path.join(profileDir, "user.js"),
     [
       'user_pref("remote.active-protocols", 2);',
-      // Pin the refresh driver to 60Hz. With no vsync to pace it, headless Firefox
-      // ran requestAnimationFrame at ~500Hz, and Godot's main loop advanced a fixed
-      // step per iteration -- so the scene ran roughly EIGHT TIMES real time (392
-      // simulated seconds in 45 wall seconds on a CI runner). No real browser does
-      // that, and a gate driving the engine at 8x is not measuring the engine users
-      // get.
-      'user_pref("layout.frame_rate", 60);',
       'user_pref("webgl.force-enabled", true);',
       'user_pref("webgl.disabled", false);',
       'user_pref("gfx.webrender.software", true);',
@@ -131,11 +124,9 @@ async function main() {
     [
       "--headless",
       "--no-remote",
-      // Pin the window, as the Chrome and Safari drivers already do. Godot sizes
-      // its viewport from the canvas, so an unpinned window makes the VIEWPORT --
-      // and therefore what "left the screen" means -- depend on the host's default
-      // window size. That is what made dodge's mobs never exit on a Linux runner
-      // while the same build passed on a macOS Firefox.
+      // Headless Firefox IGNORES this; the viewport is really pinned through
+      // browsingContext.setViewport below. Kept because it costs nothing and is
+      // what a reader expects to find next to --headless.
       "--window-size=1280,900",
       `--profile`,
       profileDir,
