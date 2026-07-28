@@ -24,10 +24,24 @@ KANAMA_WEB_ALL_DEMOS=(
 # The full corpus runs on push to main and on the nightly schedule.
 KANAMA_WEB_PR_DEMOS=(match3 web3d dodge)
 
+# The soak gate (Task 60h) is a DRIVER, not a thirteenth demo: it drives the
+# DODGE export for a long window and asserts no slow leak. It is deliberately
+# absent from both lists above -- it is opt-in (`--demo soak`), because it costs
+# ten minutes, and it must never silently pad a "corpus is green" claim.
+#
+# demo key -> the export/build key it runs against. Everything but soak is itself.
+kanama_web_demo_export_key() {
+  case "$1" in
+    soak) echo "dodge" ;;
+    *) echo "$1" ;;
+  esac
+}
+
 # demo key -> kanama-demos project directory ("" for the in-repo fixture).
 kanama_web_demo_project_dir() {
   case "$1" in
     match3) echo "Starter-Kit-Match3" ;;
+    soak) echo "godot-demo-2d-dodge-the-creeps" ;;
     bunnymark) echo "Bunnymark" ;;
     dodge) echo "godot-demo-2d-dodge-the-creeps" ;;
     web3d) echo "" ;;
@@ -47,6 +61,7 @@ kanama_web_demo_project_dir() {
 kanama_web_demo_project_property() {
   case "$1" in
     match3) echo "kanamaWebMatch3ProjectDir" ;;
+    soak) echo "kanamaWebDodgeProjectDir" ;;
     bunnymark) echo "kanamaWebBunnymarkProjectDir" ;;
     dodge) echo "kanamaWebDodgeProjectDir" ;;
     web3d) echo "" ;;
@@ -81,6 +96,9 @@ kanama_web_demo_timeout() {
     match3|bunnymark|dodge|web3d) echo 300 ;;
     platformer|squash|fps) echo 480 ;;
     charactercontroller|thirdperson|racing|citybuilder|tpsdemo) echo 600 ;;
+    # The soak budget is derived from its own duration, never guessed: the driver
+    # runs for KANAMA_WEB_SOAK_SECONDS and then still has to tear down.
+    soak) echo $(( ${KANAMA_WEB_SOAK_SECONDS:-600} + 240 )) ;;
     *) echo 300 ;;
   esac
 }

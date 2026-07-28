@@ -210,6 +210,47 @@ subset on every Web-relevant pull request, the full corpus on push to `main` and
 nightly. **Safari is a local pre-promotion gate, not a CI cell** — see Known
 Limitations. Run it with the same script, `--engine safari`, one run at a time.
 
+### Regression Cadence
+
+Which gate runs when, and where. A gate that is not on this list runs nowhere.
+
+| Gate | Cadence | Where |
+|---|---|---|
+| PR subset × Chrome + Firefox | every Web-relevant pull request | CI (`web` workflow) |
+| Full 12-demo corpus × Chrome + Firefox | push to `main`, and nightly | CI |
+| Soak (10 min, `--demo soak`) | nightly | CI |
+| Full corpus on **Safari** | before a release tag, and before any promotion decision | local (no headless mode) |
+| Fresh-checkout gate | before a release tag | local |
+| Browser floor re-bisect | when a floor is claimed to move, or a browser major ships that breaks a cell | local |
+| Everything above | **on a Godot baseline bump** — the export template, generated proxy and bridge protocol all move together | local + CI |
+
+The nightly run matters because two of the inputs change without anyone touching
+the repository: the browsers on the runner image, and the runner itself. A red
+nightly on an unchanged tree is a browser-side regression, which is exactly the
+class of failure a per-PR gate can never see.
+
+### Soak Gate
+
+```sh
+KANAMA_WEB_SOAK_SECONDS=600 scripts/web_ci_matrix.sh \
+  --godot /absolute/path/to/godot --template <web_nothreads_release.zip> \
+  --demos-dir /absolute/path/to/kanama-demos --demo soak --engine chrome
+```
+
+The soak driver runs against the **dodge** export for ten minutes, restarting the
+round every sixty seconds. Dodge is the choice on purpose: leak detection wants
+churn, not polygons — a mob is instantiated every half second and frees itself on
+leaving the screen, so a ten-minute run is hundreds of full node create/free
+cycles through the handle registry, the signal-connection table and the
+deferred-free path.
+
+It splits its samples in half and compares high-water marks, so it fails on a
+*trend* rather than on a threshold: live handles, pending signal callbacks and
+registered coroutine jobs must not be higher in the second half than the first
+(plus a few handles of sampling slack), gameplay must still be running at the
+end, and teardown must still drain to zero after a long run rather than only
+after a short one.
+
 ### Bumping The Demos Pin
 
 The workflow checks out `kanama-demos` at the `DEMOS_REF` commit pinned in

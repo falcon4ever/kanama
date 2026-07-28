@@ -168,7 +168,10 @@ RUN_INDEX=0
 
 for demo in "${DEMOS[@]}"; do
   echo "[web_ci_matrix] === $demo ==="
-  export_dir="$ROOT_DIR/web-runtime/build/web-export/$demo"
+  # The build key can differ from the driver key: the soak gate drives the dodge
+  # export. Everything else exports under its own name.
+  export_key="$(kanama_web_demo_export_key "$demo")"
+  export_dir="$ROOT_DIR/web-runtime/build/web-export/$export_key"
 
   if [[ "$SKIP_EXPORT" -eq 0 ]]; then
     # Always export from a clean directory: a stale export silently re-runs an
@@ -178,19 +181,19 @@ for demo in "${DEMOS[@]}"; do
       --no-daemon
       -Pkotlin.compiler.execution.strategy=in-process
       :web-runtime:exportWeb
-      "-PkanamaWebDemo=$demo"
+      "-PkanamaWebDemo=$export_key"
       "-PkanamaGodotExecutable=$GODOT_BIN"
       "-PkanamaWebTemplateRelease=$TEMPLATE"
     )
-    project_subdir="$(kanama_web_demo_project_dir "$demo")"
+    project_subdir="$(kanama_web_demo_project_dir "$export_key")"
     if [[ -n "$project_subdir" ]]; then
       project_dir="$DEMOS_DIR/$project_subdir"
       [[ -d "$project_dir" ]] || die "$demo: demo project not found: $project_dir"
-      gradle_args+=("-P$(kanama_web_demo_project_property "$demo")=$project_dir")
+      gradle_args+=("-P$(kanama_web_demo_project_property "$export_key")=$project_dir")
     fi
     while IFS= read -r extra; do
       [[ -n "$extra" ]] && gradle_args+=("$extra")
-    done < <(kanama_web_demo_export_args "$demo")
+    done < <(kanama_web_demo_export_args "$export_key")
 
     if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${gradle_args[@]}"; then
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2

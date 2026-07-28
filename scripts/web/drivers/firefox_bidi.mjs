@@ -27,9 +27,10 @@ import { runThirdperson } from "./demos/thirdperson.mjs";
 import { runRacing } from "./demos/racing.mjs";
 import { runCitybuilder } from "./demos/citybuilder.mjs";
 import { runTpsdemo } from "./demos/tpsdemo.mjs";
+import { runSoak } from "./demos/soak.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak };
 // macOS workstation path first, then the usual Linux install paths (the CI
 // matrix cell, Task 60h). Missing everywhere is a loud failure, never a silent
 // substitution of some other browser.

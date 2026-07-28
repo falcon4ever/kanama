@@ -128,6 +128,14 @@ mkdocs build --strict
 ./scripts/local_ci.sh /absolute/path/to/new_godot_binary
 ```
 
+A Godot bump also **invalidates the Web evidence**: the export template, the
+generated proxy and the bridge protocol all move with it, and CI's Web matrix
+only covers Chrome and Firefox. Re-run the full corpus on all three browsers,
+including the Safari local gate, and re-run the fresh-checkout gate against a
+clone built on the new pin — see
+[Regression cadence](../exporting/web.md#regression-cadence) for exactly which
+gate runs when.
+
 ## Dry Run
 
 The pipeline can be exercised against the **current** pin as a no-op bump:

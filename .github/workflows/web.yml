@@ -181,11 +181,96 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: web-matrix-evidence
+          name: web-matrix-evidence-${{ github.run_attempt }}
           # Result envelopes, driver logs and server logs -- everything needed to
           # triage a red cell without re-running it.
           path: |
             ${{ runner.temp }}/web-matrix/*.json
             ${{ runner.temp }}/web-matrix/*.log
             ${{ runner.temp }}/web-matrix/runs/*.json
+          if-no-files-found: warn
+
+  # The long-run leak gate. Nightly only: it costs ten minutes of wall clock and
+  # answers a question a per-PR run cannot ask -- does the handle registry still
+  # sit at a fixed working set after hundreds of node create/free cycles?
+  soak:
+    name: soak (leak gate, chrome)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Kanama
+        uses: actions/checkout@v6
+
+      - name: Checkout kanama-demos (pinned)
+        uses: actions/checkout@v6
+        with:
+          repository: falcon4ever/kanama-demos
+          ref: ${{ env.DEMOS_REF }}
+          path: kanama-demos
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Cache Godot binary and Web export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Web export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      - name: Run the soak gate
+        shell: bash
+        env:
+          KANAMA_WEB_SOAK_SECONDS: "600"
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          scripts/web_ci_matrix.sh \
+            --godot "$godot_bin" \
+            --template "$HOME/godot/web_nothreads_release.zip" \
+            --demos-dir "$GITHUB_WORKSPACE/kanama-demos" \
+            --demo soak \
+            --engine chrome \
+            --result-dir "$RUNNER_TEMP/web-soak" \
+            --evidence "$RUNNER_TEMP/web-soak/evidence.json" \
+            --summary-md "$RUNNER_TEMP/web-soak/summary.md"
+
+      - name: Publish soak summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "$RUNNER_TEMP/web-soak/summary.md" ]; then
+            cat "$RUNNER_TEMP/web-soak/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload soak evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: web-soak-evidence-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/web-soak/*.json
+            ${{ runner.temp }}/web-soak/*.log
+            ${{ runner.temp }}/web-soak/runs/*.json
           if-no-files-found: warn
