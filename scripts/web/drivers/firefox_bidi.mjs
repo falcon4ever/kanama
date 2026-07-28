@@ -121,7 +121,20 @@ async function main() {
   const port = 9300 + Math.floor(Math.random() * 500);
   const firefox = spawn(
     firefoxBinary,
-    ["--headless", "--no-remote", `--profile`, profileDir, `--remote-debugging-port=${port}`, "about:blank"],
+    [
+      "--headless",
+      "--no-remote",
+      // Pin the window, as the Chrome and Safari drivers already do. Godot sizes
+      // its viewport from the canvas, so an unpinned window makes the VIEWPORT --
+      // and therefore what "left the screen" means -- depend on the host's default
+      // window size. That is what made dodge's mobs never exit on a Linux runner
+      // while the same build passed on a macOS Firefox.
+      "--window-size=1280,900",
+      `--profile`,
+      profileDir,
+      `--remote-debugging-port=${port}`,
+      "about:blank",
+    ],
     { stdio: ["ignore", "pipe", "pipe"] },
   );
 

@@ -163,6 +163,42 @@ echo "[web_ci_matrix] demos:   ${DEMOS[*]}"
 echo "[web_ci_matrix] engines: ${ENGINES[*]}"
 echo "[web_ci_matrix] results: $RESULT_DIR"
 
+# Record a failed cell per engine for a demo that never got as far as a driver
+# run. Without this a missing or failed export makes the demo VANISH from the
+# summary table -- the run reports FAIL with no row explaining which demo, which
+# is the same "absence of evidence reads as evidence" trap this gate exists to
+# close.
+record_unrun_demo() {
+  local demo="$1" reason="$2"
+  local engine
+  for engine in "${ENGINES[@]}"; do
+    RUN_INDEX=$((RUN_INDEX + 1))
+    python3 -c '
+import json, sys
+out, demo, engine, reason = sys.argv[1:]
+with open(out, "w") as handle:
+    json.dump(
+        {
+            "demo": demo,
+            "engine": engine,
+            "pass": False,
+            "wallSeconds": 0,
+            "failureReason": reason,
+            "exportPayloadBytes": None,
+            "protocolVersion": None,
+            "resultPath": None,
+            "browser": None,
+            "durationMs": None,
+            "assertions": None,
+            "liveAfterTeardown": None,
+        },
+        handle,
+        indent=2,
+    )
+' "$RUNS_DIR/$(printf '%03d' "$RUN_INDEX")-$demo-$engine.json" "$demo" "$engine" "$reason"
+  done
+}
+
 FAILED=0
 RUN_INDEX=0
 
@@ -198,6 +234,7 @@ for demo in "${DEMOS[@]}"; do
     if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${gradle_args[@]}"; then
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2
       FAILED=1
+      record_unrun_demo "$demo" "export failed"
       continue
     fi
   fi
@@ -205,6 +242,7 @@ for demo in "${DEMOS[@]}"; do
   if [[ ! -f "$export_dir/index.html" ]]; then
     echo "[web_ci_matrix] $demo: no export at $export_dir" >&2
     FAILED=1
+    record_unrun_demo "$demo" "no export at $export_dir"
     continue
   fi
 
@@ -350,7 +388,7 @@ lines = [
 ]
 for run in runs:
     browser = run.get("browser") or {}
-    version = browser.get("parsedVersion") or "?"
+    version = browser.get("parsedVersion") or run.get("failureReason") or "?"
     lines.append(
         "| {demo} | {engine} | {verdict} | {wall}s | {name} {version} | {protocol} |".format(
             demo=run["demo"],
