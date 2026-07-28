@@ -30,7 +30,25 @@ import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { buildEnvelope, collectPayload } from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo };
-const DEFAULT_FIREFOX = "/Applications/Firefox.app/Contents/MacOS/firefox";
+// macOS workstation path first, then the usual Linux install paths (the CI
+// matrix cell, Task 60h). Missing everywhere is a loud failure, never a silent
+// substitution of some other browser.
+const FIREFOX_CANDIDATES = [
+  "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "/usr/bin/firefox",
+  "/usr/local/bin/firefox",
+  "/snap/bin/firefox",
+];
+
+function resolveBrowser(explicit, candidates, engine) {
+  if (explicit) return explicit;
+  const found = candidates.find((candidate) => fs.existsSync(candidate));
+  if (found) return found;
+  throw new Error(
+    `${engine}: no browser found; pass --browser-binary (looked in: ${candidates.join(", ")})`,
+  );
+}
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function parseArgs(argv) {
@@ -85,7 +103,7 @@ async function main() {
   const runDemo = DEMOS[args.demo];
   if (!runDemo) throw new Error(`firefox_bidi: unknown demo '${args.demo}'`);
 
-  const firefoxBinary = args["browser-binary"] ?? DEFAULT_FIREFOX;
+  const firefoxBinary = resolveBrowser(args["browser-binary"], FIREFOX_CANDIDATES, "firefox_bidi");
   const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "kanama-firefox-"));
   // Headless Firefox needs software WebGL for Godot's Compatibility renderer.
   fs.writeFileSync(

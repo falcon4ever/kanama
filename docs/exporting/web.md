@@ -12,7 +12,8 @@ still being hardened, and there is no packaged install path yet.
 **Evidence.** The full twelve-demo corpus — Bunnymark, Starter-Kit-Match3, dodge,
 web3d, 3D-Platformer, squash, FPS, character-controller, third-person, Racing,
 City-Builder and tps-demo — passes the automated production export smoke in
-**Chrome** (the CI gate), **Firefox**, and **Safari**, each with a
+**Chrome** and **Firefox** (both CI cells) and **Safari** (a local gate — it has
+no headless mode), each with a
 play-and-teardown driver run, zero console errors, and live handles draining to
 zero. Every corpus export is also proven to embed no build-machine paths in any
 served file, and to be reproducible from a clean clone (see
@@ -155,10 +156,51 @@ scripts/web_export_smoke.sh \
   --result /tmp/match3-chrome.json
 ```
 
-**Chrome is the intended CI gate.** Firefox and Safari are explicit **local
-release gates** run before a promotion. Each gate asserts gameplay deltas,
-crossing budgets, handle/callback/scheduler teardown to baseline, stale-handle
-rejection, console-error checks, and a protocol-version match.
+Each gate asserts gameplay deltas, crossing budgets, handle/callback/scheduler
+teardown to baseline, stale-handle rejection, console-error checks, and a
+protocol-version match.
+
+Read the harness's own `web_export_smoke: PASS` line, not a driver's check count.
+The driver's checks and the envelope schema are two different gates: a demo can
+pass 13/13 of its own checks and still be rejected by the schema (which is what
+enforces `liveAfterTeardown === 0`), and that is exactly how one demo stayed
+un-gated on every engine for weeks.
+
+## Browser Matrix
+
+`web_ci_matrix.sh` is the corpus-wide gate: it exports each demo and drives it in
+each requested browser through `web_export_smoke.sh`, then aggregates every cell
+into one evidence JSON plus a Markdown summary.
+
+```sh
+scripts/web_ci_matrix.sh \
+  --godot /absolute/path/to/godot \
+  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.stable/web_nothreads_release.zip" \
+  --demos-dir /absolute/path/to/kanama-demos \
+  --demo-set full \
+  --engine chrome --engine firefox \
+  --evidence /tmp/web-matrix.json
+```
+
+Every cell runs even after an earlier one fails, so a red run reports the whole
+picture. `--demo-set pr` is the per-PR subset (`match3`, `web3d`, `dodge` — a
+pointer-drag demo, a 3D demo needing no demos checkout, and a full-lifecycle
+demo); `--demo-set full` is the 12-demo corpus. Per-demo budgets live in
+`scripts/web/demos.sh`; scale them for a slower host with `--timeout-scale`
+rather than editing them, so local and CI numbers stay comparable.
+
+**Chrome and Firefox are the CI cells** (`.github/workflows/web.yml`): the PR
+subset on every Web-relevant pull request, the full corpus on push to `main` and
+nightly. **Safari is a local pre-promotion gate, not a CI cell** — see Known
+Limitations. Run it with the same script, `--engine safari`, one run at a time.
+
+### Bumping The Demos Pin
+
+The workflow checks out `kanama-demos` at the `DEMOS_REF` commit pinned in
+`.github/workflows/web.yml`. This is deliberate: an unpinned checkout lets an
+unrelated demo-repo commit redden every Kanama pull request. When a demo port
+lands in `kanama-demos`, bump `DEMOS_REF` in the same pass — a Kanama change that
+needs new demo code is not green until both sides are pinned together.
 
 ## Fresh-Checkout Gate
 
