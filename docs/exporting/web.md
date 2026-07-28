@@ -157,6 +157,22 @@ python3 scripts/web/serve_export.py web-runtime/build/web-export/match3
 # prints PORT=<n>; open http://127.0.0.1:<n>/
 ```
 
+### Testing On A Phone Or Tablet
+
+Loopback is the default so an export server is never reachable from the network
+unless asked for. `--lan` binds every interface and prints the address to open on
+the device:
+
+```sh
+python3 scripts/web/serve_export.py --lan web-runtime/build/web-export/match3
+# prints PORT=<n> and LAN=http://<this-machine>:<n>/
+```
+
+This is the **only** way to exercise iOS or iPadOS: `safaridriver` drives desktop
+Safari only, so mobile WebKit cannot be automated and has to be hand-checked on a
+real device with the phone on the same network. Nothing on mobile WebKit is
+validated today — see Known Limitations.
+
 ## Run The Export Smoke
 
 `web_export_smoke.sh` serves an already-built export, drives the demo in a real

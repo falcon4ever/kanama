@@ -40,6 +40,24 @@ class _QuietHandler(http.server.SimpleHTTPRequestHandler):
         # logging would only add noise to the preserved diagnostics.
         return
 
+    # In --lan mode, report the first request from each remote device with its
+    # user-agent. A hand-validation pass has to record WHAT it ran on, and asking
+    # a human to transcribe an iOS build number is how evidence goes wrong; the
+    # device announces it on every request anyway.
+    seen_remotes: set = set()
+    announce_remotes: bool = False
+
+    def handle_one_request(self) -> None:
+        super().handle_one_request()
+        if not self.announce_remotes:
+            return
+        remote = self.client_address[0]
+        if remote in ("127.0.0.1", "::1") or remote in self.seen_remotes:
+            return
+        self.seen_remotes.add(remote)
+        agent = self.headers.get("User-Agent", "(no user-agent)")
+        print(f"DEVICE={remote} {agent}", flush=True)
+
     def end_headers(self) -> None:
         # No-store keeps re-runs from serving a stale export out of a browser
         # cache; cache-busting query strings are a belt-and-braces second layer.
@@ -47,20 +65,44 @@ class _QuietHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 
+def _lan_address() -> str | None:
+    """Best-effort LAN address of this machine, for the --lan banner."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+            # No packet is sent; connect() on UDP just picks the outbound route,
+            # which is the interface a phone on the same network would reach.
+            probe.connect(("192.0.2.1", 9))  # TEST-NET-1, deliberately unroutable
+            return probe.getsockname()[0]
+    except OSError:
+        return None
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) != 1:
-        print("usage: serve_export.py <export-dir>", file=sys.stderr)
+    lan = False
+    args = [arg for arg in argv if arg != "--lan"]
+    if len(args) != len(argv):
+        lan = True
+    if len(args) != 1:
+        print("usage: serve_export.py [--lan] <export-dir>", file=sys.stderr)
         return 2
 
-    export_dir = argv[0]
+    export_dir = args[0]
     handler = partial(_QuietHandler, directory=export_dir)
+    _QuietHandler.announce_remotes = lan
+
+    # Loopback by default: the automated gates drive a browser on this machine,
+    # and an export server should not be reachable from the network unless it was
+    # asked for. --lan binds every interface so a phone or tablet on the same
+    # network can load the export -- the only way to hand-validate iOS/iPadOS
+    # WebKit, which safaridriver cannot reach (task 70).
+    host = "0.0.0.0" if lan else "127.0.0.1"
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
         probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        probe.bind(("127.0.0.1", 0))
+        probe.bind((host, 0))
         port = probe.getsockname()[1]
 
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
+    server = http.server.ThreadingHTTPServer((host, port), handler)
 
     # The smoke shell owns this server and stops it in its cleanup trap — but if
     # the shell is SIGKILLed or its terminal goes away, nothing reaches us and
@@ -77,6 +119,11 @@ def main(argv: list[str]) -> int:
     # Announce the resolved port on a single line the shell greps for, then flush
     # so the caller never blocks waiting on a buffered pipe.
     print(f"PORT={port}", flush=True)
+    if lan:
+        address = _lan_address()
+        where = f"http://{address}:{port}/" if address else f"http://<this-machine>:{port}/"
+        print(f"LAN={where}", flush=True)
+        print(f"serve_export: open {where} on the device", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
