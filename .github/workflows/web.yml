@@ -151,6 +151,9 @@ jobs:
         shell: bash
         env:
           DEMO_SET: ${{ github.event.inputs.demo_set || (github.event_name == 'pull_request' && 'pr' || 'full') }}
+          # Per-sample driver tracing into the uploaded driver logs. A red cell on a
+          # host nobody can log into is only as debuggable as what it recorded.
+          KANAMA_WEB_SMOKE_DEBUG: "1"
         run: |
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
@@ -243,6 +246,7 @@ jobs:
         shell: bash
         env:
           KANAMA_WEB_SOAK_SECONDS: "600"
+          KANAMA_WEB_SMOKE_DEBUG: "1"
         run: |
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
