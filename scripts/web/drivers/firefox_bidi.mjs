@@ -234,6 +234,18 @@ async function main() {
     const context = tree.contexts[0]?.context;
     if (!context) throw new Error("Firefox exposed no browsing context");
 
+    // Pin the viewport to the same 1280x900 the Chrome and Safari drivers use.
+    // Firefox IGNORES --window-size in headless mode -- it kept reporting its own
+    // 1366x682 default -- and Godot sizes its viewport from the canvas, so an
+    // unpinned Firefox judges "left the screen" against different geometry than
+    // the other two engines. This is a gate comparing engines; the geometry has to
+    // be the constant.
+    await command("browsingContext.setViewport", {
+      context,
+      viewport: { width: 1280, height: 900 },
+      devicePixelRatio: 1,
+    });
+
     const evaluate = async (expression) => {
       const result = await command("script.evaluate", {
         expression,
