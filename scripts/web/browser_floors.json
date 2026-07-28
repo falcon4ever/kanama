@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-07-28",
+  "note": "Declared Web browser version floors (Task 60h). `basis` says what the number is worth: 'tested' means the gate was actually run on that version and on the one below it; 'validated-at' means it is only the oldest version ever driven, with nothing older tried. check_browser_floor.py fails a smoke run whose browser is below `minimum`, so this file is the single place a floor claim is made -- docs quote it, they do not restate it.",
+  "engines": {
+    "chrome": {
+      "minimum": "130",
+      "basis": "tested",
+      "evidence": "2026-07-28, macOS arm64, Chrome for Testing against a protocol-15 web3d export: 130.0.6723.116 PASSES the gate, 129.0.6668.100 never boots the Kotlin/Wasm module ('did not become ready'). Bisected 119/128/129/130/131/133/137. Chrome 130 is where WebAssembly JS String Builtins shipped, which the Kotlin/Wasm output uses.",
+      "validatedAt": ["150"]
+    },
+    "firefox": {
+      "minimum": "141",
+      "basis": "tested",
+      "evidence": "2026-07-28, macOS arm64, same export: 141.0, 143.0 and 145.0 all PASS the full gate (every check, zero console errors). Below that the limit is the HARNESS, not the engine -- 140.0esr, 134.0 and 131.0 never expose a reachable WebDriver BiDi endpoint to our launch recipe (140.0esr and 134.0 announce only the CDP endpoint), so the page is never driven and no engine verdict is possible. Read 141 as 'the oldest Firefox this harness can drive', not as 'Firefox 140 is broken'.",
+      "validatedAt": ["152", "153"]
+    },
+    "safari": {
+      "minimum": "26.5",
+      "basis": "validated-at",
+      "evidence": "2026-07-27: Safari 26.5 / WebKit 605.1.15 on macOS 26.5.1, the full corpus. Safari ships with the OS and cannot be installed side by side, so no lower bound is testable on the workstation at all -- this is the only version ever driven, not a tested minimum.",
+      "validatedAt": ["26.5"]
+    }
+  }
+}

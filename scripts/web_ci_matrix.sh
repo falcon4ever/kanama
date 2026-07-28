@@ -127,11 +127,14 @@ if [[ "$SKIP_EXPORT" -eq 0 ]]; then
   TEMPLATE="$(cd "$(dirname "$TEMPLATE")" && pwd)/$(basename "$TEMPLATE")"
 fi
 
-# A demos checkout is only needed when a selected demo actually lives there.
+# A demos checkout is only needed to EXPORT a demo that lives there; driving an
+# already-built export needs nothing but the export directory.
 NEEDS_DEMOS_DIR=0
-for demo in "${DEMOS[@]}"; do
-  [[ -n "$(kanama_web_demo_project_dir "$demo")" ]] && NEEDS_DEMOS_DIR=1
-done
+if [[ "$SKIP_EXPORT" -eq 0 ]]; then
+  for demo in "${DEMOS[@]}"; do
+    [[ -n "$(kanama_web_demo_project_dir "$demo")" ]] && NEEDS_DEMOS_DIR=1
+  done
+fi
 if [[ "$NEEDS_DEMOS_DIR" -eq 1 ]]; then
   [[ -n "$DEMOS_DIR" ]] || die "--demos-dir is required for the selected demos"
   [[ -d "$DEMOS_DIR" ]] || die "demos checkout not found: $DEMOS_DIR"

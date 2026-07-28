@@ -230,6 +230,13 @@ if ! python3 "$WEB_DIR/result_schema.py" "$RESULT"; then
   fail "result schema validation failed for $RESULT"
 fi
 
+# --- the run must be on a browser we have actually declared. ------------------
+# A green run says nothing beyond the browser it ran on; without this, a run on
+# an older, never-validated browser prints the same PASS line as a declared one.
+if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then
+  fail "browser version floor check failed for $RESULT"
+fi
+
 # --- prove the served tree was not mutated by serving/driving. ----------------
 CHECKSUM_AFTER="$(tree_checksum "$EXPORT_DIR")"
 if [[ "$CHECKSUM_BEFORE" != "$CHECKSUM_AFTER" ]]; then

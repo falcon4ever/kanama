@@ -259,6 +259,10 @@
     match3Properties: new Map(),
     match3ReadyByClass: {},
     match3DeferredReadyByClass: {},
+    // handle -> script class name, recorded at ready. Purely diagnostic: a
+    // boundary failure otherwise reports a bare handle number, which tells a CI
+    // log reader nothing about which script actually threw.
+    scriptNameByHandle: {},
     match3PackedSceneInstantiations: 0,
     match3AddChildCommands: 0,
     match3TextureAssignments: 0,
@@ -383,9 +387,17 @@
       try {
         return action();
       } catch (error) {
-        const detail = error?.stack ?? error?.message ?? String(error);
+        // Chrome's `stack` starts with the message; Firefox's does not. Taking
+        // the stack alone therefore reports a Firefox-only boundary failure as
+        // a wall of wasm frames with no reason attached -- which is exactly the
+        // shape a CI-only failure arrives in.
+        const message = error?.message ?? String(error);
+        const stack = error?.stack ?? "";
+        const detail = stack.startsWith(message) ? stack : `${message}\n${stack}`.trimEnd();
+        const script = this.scriptNameByHandle[handle];
         const contextual = new Error(
-          `Kanama Web boundary failure: handle=${handle} callback=${callback} member=${member}\n${detail}`,
+          `Kanama Web boundary failure: handle=${handle}${script ? ` (${script})` : ""} ` +
+            `callback=${callback} member=${member}\n${detail}`,
         );
         this.callbackErrors += 1;
         this.lastCallbackError = contextual.message;
@@ -2213,6 +2225,7 @@
     },
     recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;
+      this.scriptNameByHandle[handle] = scriptName;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
       if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
         // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit

@@ -19,12 +19,28 @@ zero. Every corpus export is also proven to embed no build-machine paths in any
 served file, and to be reproducible from a clean clone (see
 [Fresh-Checkout Gate](#fresh-checkout-gate)).
 
-**Validated browser versions** (2026-07-27, protocol 15): Chrome 150 (headless),
-Firefox 153 (headless), and **Safari 26.5 / WebKit 605.1.15 on macOS 26.5.1**.
-These are the versions the corpus has actually been driven on, not a tested
-lower bound — no older release has been validated. **iOS and iPadOS have not
-been validated at all**; `safaridriver` drives desktop Safari only, so no
-mobile-WebKit claim is made here.
+**Browser version floors.** The declared floors live in one machine-readable
+file, `scripts/web/browser_floors.json`, and every smoke run is checked against
+them — a run on an older browser fails the gate instead of printing the same
+`PASS` line as a declared one.
+
+| Browser | Floor | Basis | Corpus validated at |
+|---|---|---|---|
+| Chrome | **130** | tested | 150 (headless) |
+| Firefox | **141** | tested | 152–153 (headless) |
+| Safari | **26.5** | validated-at | 26.5 / WebKit 605.1.15, macOS 26.5.1 |
+
+"Tested" means the gate was run on that version *and* on the one below it
+(2026-07-28, macOS arm64, protocol-15 export). Chrome 129 never boots the
+Kotlin/Wasm module; 130 runs it — that is where WebAssembly JS String Builtins
+shipped. The Firefox number is a **harness** bound, not an engine verdict: 141,
+143 and 145 all pass, while 140 ESR and older never expose a reachable WebDriver
+BiDi endpoint to the driver's launch recipe, so they cannot be judged either way.
+Safari is "validated-at" only: it ships with the OS and cannot be installed side
+by side, so no lower bound is testable at all.
+
+**iOS and iPadOS have not been validated**; `safaridriver` drives desktop Safari
+only, so no mobile-WebKit claim is made here.
 
 This page is the reproducible export workflow. For the architecture — batching,
 snapshots, handle generations, the bridge protocol — see
