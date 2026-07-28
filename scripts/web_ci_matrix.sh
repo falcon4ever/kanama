@@ -279,11 +279,19 @@ print(json.load(open(sys.argv[1])).get("protocolVersion", ""))
       firefox) [[ -n "$FIREFOX_BINARY" ]] && smoke_args+=(--browser-binary "$FIREFOX_BINARY") ;;
     esac
 
-    echo "[web_ci_matrix] --- $demo on $engine (budget ${budget}s) ---"
+    quarantine="$(kanama_web_quarantine_reason "$demo:$engine")"
+    echo "[web_ci_matrix] --- $demo on $engine (budget ${budget}s)${quarantine:+ [QUARANTINED]} ---"
     started="$(date +%s)"
     cell_pass="false"
     if "$ROOT_DIR/scripts/web_export_smoke.sh" "${smoke_args[@]}"; then
       cell_pass="true"
+      if [[ -n "$quarantine" ]]; then
+        # A stale quarantine is worse than no quarantine: say so every single run.
+        echo "[web_ci_matrix] $demo on $engine PASSED while quarantined ($quarantine)."
+        echo "[web_ci_matrix] If this holds, LIFT the quarantine in scripts/web/demos.sh."
+      fi
+    elif [[ -n "$quarantine" ]]; then
+      echo "[web_ci_matrix] $demo on $engine: FAILED but QUARANTINED -- $quarantine" >&2
     else
       echo "[web_ci_matrix] $demo on $engine: FAILED" >&2
       FAILED=1
@@ -292,7 +300,7 @@ print(json.load(open(sys.argv[1])).get("protocolVersion", ""))
 
     python3 -c '
 import json, os, sys
-(out, demo, engine, passed, elapsed, payload, protocol, result_path, web_dir) = sys.argv[1:]
+(out, demo, engine, passed, elapsed, payload, protocol, result_path, web_dir, quarantine) = sys.argv[1:]
 sys.path.insert(0, web_dir)
 from browser_version import parse_version
 record = {
@@ -303,6 +311,7 @@ record = {
     "exportPayloadBytes": int(payload) if payload else None,
     "protocolVersion": int(protocol) if protocol else None,
     "resultPath": result_path,
+    "quarantine": quarantine or None,
     "browser": None,
     "durationMs": None,
     "assertions": None,
@@ -332,7 +341,7 @@ with open(out, "w") as handle:
     json.dump(record, handle, indent=2)
 ' "$RUNS_DIR/$(printf '%03d' "$RUN_INDEX")-$demo-$engine.json" \
       "$demo" "$engine" "$cell_pass" "$elapsed" "$payload_bytes" "$protocol" "$result_path" \
-      "$WEB_DIR"
+      "$WEB_DIR" "$quarantine"
   done
 
   if [[ "$KEEP_EXPORTS" -eq 0 && "$SKIP_EXPORT" -eq 0 ]]; then
@@ -393,7 +402,10 @@ for run in runs:
         "| {demo} | {engine} | {verdict} | {wall}s | {name} {version} | {protocol} |".format(
             demo=run["demo"],
             engine=run["engine"],
-            verdict="PASS" if run["pass"] else "**FAIL**",
+            verdict=(
+                ("PASS" if run["pass"] else "**FAIL**")
+                + (" _(quarantined)_" if run.get("quarantine") else "")
+            ),
             wall=run["wallSeconds"],
             name=browser.get("name") or run["engine"],
             version=version,

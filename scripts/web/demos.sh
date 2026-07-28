@@ -106,3 +106,21 @@ kanama_web_demo_timeout() {
 kanama_web_demo_is_known() {
   kanama_web_demo_project_dir "$1" >/dev/null 2>&1
 }
+
+# Quarantined cells: "demo:engine" -> the reason, which must name a task.
+#
+# A quarantined cell still EXPORTS, still RUNS, and still reports its result --
+# it simply does not fail the build. Deleting a demo from the matrix instead
+# would be the exact trap this gate exists to close: the corpus would look green
+# because nobody was looking. A quarantined cell that PASSES is reported just as
+# loudly, because a stale quarantine is worse than none.
+#
+# Lifting one is a one-line deletion here.
+kanama_web_quarantine_reason() {
+  case "$1" in
+    dodge:firefox)
+      echo "task 71 — mobs never free on a Linux host; passes on macOS Chrome/Firefox and on CI Chrome"
+      ;;
+    *) : ;;
+  esac
+}

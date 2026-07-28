@@ -251,6 +251,21 @@ registered coroutine jobs must not be higher in the second half than the first
 end, and teardown must still drain to zero after a long run rather than only
 after a short one.
 
+### Quarantined Cells
+
+A known-failing `demo:engine` pair can be **quarantined** in
+`scripts/web/demos.sh` with a reason that names a task. A quarantined cell still
+exports, still runs and still reports — it just does not fail the build. Deleting
+the demo from the matrix instead would be the trap this gate exists to close: the
+corpus would look green because nobody was looking.
+
+A quarantined cell that **passes** is reported just as loudly, with an explicit
+"lift the quarantine" line, because a stale quarantine is worse than none.
+Lifting one is a one-line deletion.
+
+Currently quarantined: `dodge:firefox` (task 71 — mobs never free on a Linux
+host; it passes on macOS Chrome and Firefox, and on CI Chrome).
+
 ### Bumping The Demos Pin
 
 The workflow checks out `kanama-demos` at the `DEMOS_REF` commit pinned in
