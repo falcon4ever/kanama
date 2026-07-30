@@ -221,7 +221,13 @@ Use `NodePath` only when the original script intentionally exposed a path value:
 var viewPath: NodePath = NodePath("../View")
 ```
 
-## Resource Ownership
+## Releasing Resources You Create
+
+The one rule, and the categories it produces, live in
+[Godot API → Resource Ownership](godot-api.md#resource-ownership):
+**`close()` releases your reference, it does not destroy the object.** This
+section covers the case you hit most while writing gameplay — a resource you
+created yourself — and why the JVM cannot clean it up for you.
 
 Godot `Resource` and `RefCounted` wrappers returned by Kanama APIs are
 closeable Kotlin handles. When you load a temporary resource and hand it to a

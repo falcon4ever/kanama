@@ -56,6 +56,13 @@ rather than the public ptrcall wrapper surface.
 
 ## RefCounted Return Ownership
 
+> This section is the **ABI** truth, for contributors. The rule a *game
+> developer* needs — and the owned / borrowed / engine-owned / node categories it
+> produces — lives in
+> [Godot API → Resource Ownership](../game-dev/godot-api.md#resource-ownership).
+> Keep the two in step: this page explains **why** the `+1` exists, that page
+> explains **what to do about it**.
+
 Engine methods whose return type derives from `RefCounted` hand the ptrcall
 caller a **+1 reference through the return slot**. This holds for every such
 method: Godot's `PtrToArg<Ref<T>>::encode` copy-assigns into the slot and
