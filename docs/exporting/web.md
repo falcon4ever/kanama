@@ -302,6 +302,14 @@ scripts/web_ci_matrix.sh --godot <godot> --skip-export --demo-set full --engine 
 python3 scripts/web/check_budgets.py /tmp/budgets/<demo>-chrome.json --report
 ```
 
+**One demo is exempt from the ratio, with its reason recorded.** `match3` is
+input-driven — the driver spends its run on pointer gestures and settle waits, so
+the script layer is dispatched only ~20–50 times per run (53 locally, 23 on a CI
+Chrome). A ratio whose denominator swings 2× with host speed is not a
+measurement, and failing on it would grade the runner. Its payload and startup
+budgets still apply, and an exemption without a stated reason is a hard error in
+the checker rather than a quiet pass.
+
 **One demo is over any sane budget and says so**: tps-demo serves **638 MB**, of
 which 570 MB is upstream demo assets in `index.pck`. It runs, but nobody would
 download it. The budget file records that as a known exception rather than

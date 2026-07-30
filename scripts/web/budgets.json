@@ -84,7 +84,7 @@
     "match3": {
       "maxPayloadBytes": 48000000,
       "maxStartupMs": 10000,
-      "maxCrossingsPerTick": 11.5,
+      "maxCrossingsPerTick": null,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
       "measured": {
@@ -92,7 +92,8 @@
         "startupMs": 3257,
         "crossingsPerTick": 5.77,
         "ticksObserved": 53
-      }
+      },
+      "tickRatioNotApplicable": "Input-driven: the driver spends its run on pointer gestures and settle waits, so the script layer is dispatched only ~20-50 times per run (53 locally, 23 on a CI Chrome, ~30+ on a CI Firefox). A ratio whose denominator swings by 2x with host speed is not a measurement, and failing on it would grade the runner -- exactly what these budgets exist to avoid. Payload and startup are still enforced."
     },
     "platformer": {
       "maxPayloadBytes": 57000000,

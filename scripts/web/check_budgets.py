@@ -97,7 +97,17 @@ def check(demo: str, measured: dict, budgets: dict) -> list[str]:
 
     per_tick = measured["crossingsPerTick"]
     ticks = measured["ticksObserved"]
-    if per_tick is None or ticks is None:
+    if limits.get("maxCrossingsPerTick") is None:
+        # An exempt demo must SAY WHY. A null budget with no reason is an
+        # unbudgeted demo wearing a budget's clothes, so it is a hard error.
+        reason = limits.get("tickRatioNotApplicable")
+        if not reason:
+            raise BudgetError(
+                f"{demo}: maxCrossingsPerTick is null with no `tickRatioNotApplicable` "
+                f"reason. An exemption without a stated reason is not an exemption."
+            )
+        print(f"web_export_smoke: {demo} crossings/tick not applicable -- {reason}")
+    elif per_tick is None or ticks is None:
         # Not measured is never silently fine: the whole point of the budget is
         # that the number exists.
         violations.append(
@@ -132,10 +142,14 @@ def main(argv: list[str]) -> int:
 
     if args.print_budgets:
         for demo, limits in budgets["demos"].items():
+            ratio = (
+                f"crossings/tick <= {limits['maxCrossingsPerTick']}"
+                if limits.get("maxCrossingsPerTick") is not None
+                else "crossings/tick EXEMPT"
+            )
             print(
                 f"{demo}: payload <= {limits['maxPayloadBytes'] / 1e6:.0f} MB, "
-                f"startup <= {limits['maxStartupMs']} ms, "
-                f"crossings/tick <= {limits['maxCrossingsPerTick']}"
+                f"startup <= {limits['maxStartupMs']} ms, {ratio}"
             )
         return 0
 
@@ -175,11 +189,16 @@ def main(argv: list[str]) -> int:
             print(f"  - {violation}", file=sys.stderr)
         return 1
 
+    limits = (budgets.get("demos") or {}).get(demo) or (budgets.get("fixtures") or {}).get(demo) or {}
+    ratio = (
+        f"{measured['crossingsPerTick']} crossings/tick"
+        if limits.get("maxCrossingsPerTick") is not None
+        else "crossings/tick exempt"
+    )
     print(
         f"web_export_smoke: {demo} within budget "
         f"(payload {measured['payloadBytes'] / 1e6:.1f}MB, "
-        f"startup {measured['startupMs']}ms, "
-        f"{measured['crossingsPerTick']} crossings/tick)"
+        f"startup {measured['startupMs']}ms, {ratio})"
     )
     return 0
 
