@@ -268,6 +268,54 @@ registered coroutine jobs must not be higher in the second half than the first
 end, and teardown must still drain to zero after a long run rather than only
 after a short one.
 
+## Performance Budgets
+
+Every smoke run is checked against a per-demo budget declared in
+`scripts/web/budgets.json`, so a demo cannot quietly grow a payload, stop
+starting, or start doing per-frame work at the module boundary.
+
+| Budget | Unit | Why |
+|---|---|---|
+| Payload | bytes | Host-independent by construction |
+| Startup | ms | Wall-clock, so deliberately loose — it catches a demo that stopped booting, not a slow runner |
+| **Crossings per engine tick** | ratio | The real invariant: what batching and snapshots exist to bound |
+
+**Why the headline budget is per tick rather than per second.** Godot's Web main
+loop is paced by `requestAnimationFrame` and advances a fixed step per iteration,
+so the same build runs at very different rates depending on the host — measured
+between roughly **2× and 8.7× real time** across four hosts on one day. A budget
+denominated in wall-clock seconds would grade the machine rather than the
+backend. Crossings per tick means the same thing everywhere.
+
+A **tick** is one engine dispatch into the script layer, counting **both**
+`_process` and `_physics_process`. Counting render frames alone reported *zero*
+ticks for a third of the corpus, because the character-controller, racing and
+third-person demos do all their work in the physics tick.
+
+Every number in `budgets.json` was measured, and each demo records the run it
+came from in its `measured` block. Re-baseline by running the corpus and
+regenerating, never by nudging a number until a run passes:
+
+```sh
+scripts/web_ci_matrix.sh --godot <godot> --skip-export --demo-set full --engine chrome \
+  --result-dir /tmp/budgets
+python3 scripts/web/check_budgets.py /tmp/budgets/<demo>-chrome.json --report
+```
+
+**One demo is exempt from the ratio, with its reason recorded.** `match3` is
+input-driven — the driver spends its run on pointer gestures and settle waits, so
+the script layer is dispatched only ~20–50 times per run (53 locally, 23 on a CI
+Chrome). A ratio whose denominator swings 2× with host speed is not a
+measurement, and failing on it would grade the runner. Its payload and startup
+budgets still apply, and an exemption without a stated reason is a hard error in
+the checker rather than a quiet pass.
+
+**One demo is over any sane budget and says so**: tps-demo serves **638 MB**, of
+which 570 MB is upstream demo assets in `index.pck`. It runs, but nobody would
+download it. The budget file records that as a known exception rather than
+blessing it — fixing it is asset work in the demo, which 60f puts out of scope,
+because budgets are not met by editing gameplay or scene content.
+
 ### What CI Runs, And What Stays Local
 
 Not everything can or should run on a hosted runner, and the two reasons are

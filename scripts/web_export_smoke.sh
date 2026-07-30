@@ -237,6 +237,13 @@ if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then
   fail "browser version floor check failed for $RESULT"
 fi
 
+# --- performance budgets (Task 60f). ------------------------------------------
+# "It runs" says nothing about whether it still fits in a payload anyone will
+# download, still starts, or still keeps per-tick work off the cross-module path.
+if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then
+  fail "performance budget check failed for $RESULT"
+fi
+
 # --- prove the served tree was not mutated by serving/driving. ----------------
 CHECKSUM_AFTER="$(tree_checksum "$EXPORT_DIR")"
 if [[ "$CHECKSUM_BEFORE" != "$CHECKSUM_AFTER" ]]; then

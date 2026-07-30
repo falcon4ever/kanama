@@ -29,6 +29,50 @@ export function collectPayload(exportDir, url, sourceChecksum) {
   return { url, files, totalBytes, sourceTreeChecksum: sourceChecksum };
 }
 
+/**
+ * Reads the bridge's own performance counters at the end of a run.
+ *
+ * Deliberately generic: every demo gets these numbers without its module knowing
+ * anything about budgets, so a new demo cannot silently arrive unmeasured.
+ *
+ * The metric that matters for budgets is **crossings per engine tick**, not
+ * anything per wall-clock second. The engine's loop is paced by requestAnimationFrame and
+ * Godot advances a fixed step per iteration, so the same build runs at ~2x real
+ * time on one host and ~8.7x on another (measured, CI Chrome vs CI Firefox). A
+ * wall-clock budget would grade the host; crossings per frame is a property of
+ * the backend.
+ */
+export async function collectPerformance(evaluate) {
+  try {
+    return await evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      if (!bridge) return null;
+      // A tick is one engine dispatch into the script layer. Both kinds count:
+      // physics-driven demos (character controllers, racing, third-person) do all
+      // their work in _physics_process and never touch _process, so counting render
+      // frames alone reported ZERO ticks for a third of the corpus.
+      const processTicks = bridge.processCalls ?? 0;
+      const physicsTicks = bridge.physicsProcessCalls ?? 0;
+      const ticks = processTicks + physicsTicks;
+      const crossings = bridge.kotlinToGodotCalls ?? 0;
+      return {
+        ticksObserved: ticks,
+        processTicks,
+        physicsTicks,
+        simSeconds: Math.round((bridge.simSeconds ?? 0) * 100) / 100,
+        kotlinToGodotCalls: crossings,
+        appliedCommands: bridge.appliedCommands ?? 0,
+        // Rounded to two decimals: this is a budget input, not a benchmark.
+        crossingsPerTick: ticks > 0 ? Math.round((crossings / ticks) * 100) / 100 : 0,
+      };
+    })()`);
+  } catch {
+    // A demo that tore the page down before we could ask is not a budget failure;
+    // the budget checker treats a missing section as "not measured" and says so.
+    return null;
+  }
+}
+
 // demoResult contract (produced by each demo module):
 //   protocolVersion : number
 //   startup         : { loaded, outcome, durationMs }
@@ -47,6 +91,7 @@ export function buildEnvelope({
   durationMs,
   consoleEvents,
   demoResult,
+  performance = null,
 }) {
   const checks = demoResult.checks;
   const checkNames = Object.keys(checks);
@@ -98,5 +143,9 @@ export function buildEnvelope({
     scheduler: demoResult.scheduler,
     console: { errors: consoleErrors, warnings: consoleWarnings, boundaryErrors },
     teardown: demoResult.teardown,
+    // Optional: absent when the page could not be asked. The schema validates it
+    // when present, and the budget gate reports "not measured" rather than
+    // quietly passing.
+    ...(performance ? { performance } : {}),
   };
 }

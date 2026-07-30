@@ -87,6 +87,9 @@ run_case tree-mutation     1 mutate
 # A schema-valid, fully passing run on a browser below the declared floor is
 # still not evidence: the floor gate must reject it (Task 60h).
 run_case below-floor       1 below-floor
+# Schema-valid, fully passing, and doing 9999 crossings per engine tick: the
+# budget gate must reject it (Task 60f).
+run_case over-budget       1 over-budget
 
 # Success case must yield a schema-valid result on disk.
 if [[ -f "$WORK/success/result.json" ]] \
