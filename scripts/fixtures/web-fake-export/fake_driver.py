@@ -16,6 +16,8 @@ Modes:
   crash            write nothing and exit non-zero
   timeout          sleep past the shell's deadline (never writes a result)
   mutate           write into --mutate-path (in the served tree) then succeed
+  below-floor      a passing envelope from a browser below the declared floor
+  over-budget      a passing envelope whose per-tick crossings blow the budget
 """
 
 from __future__ import annotations
@@ -35,7 +37,12 @@ ANCIENT_USER_AGENT = "Mozilla/5.0 (fake-fixture) HeadlessChrome/100.0.0.0 Safari
 
 
 def _envelope(
-    demo: str, checksum: str, *, passing: bool, user_agent: str = MODERN_USER_AGENT
+    demo: str,
+    checksum: str,
+    *,
+    passing: bool,
+    user_agent: str = MODERN_USER_AGENT,
+    crossings_per_tick: float = 2.0,
 ) -> dict:
     failed = 0 if passing else 1
     checks = {"fakeStartup": True, "fakeGameplay": passing, "fakeTeardown": True}
@@ -68,6 +75,17 @@ def _envelope(
         "connections": {"open": 0},
         "scheduler": {"pendingCoroutines": 0},
         "console": {"errors": [], "warnings": [], "boundaryErrors": []},
+        # The optional performance section (Task 60f). Present so the fixture
+        # exercises the budget gate rather than tripping its "not measured" arm.
+        "performance": {
+            "ticksObserved": 120,
+            "processTicks": 120,
+            "physicsTicks": 0,
+            "simSeconds": 2.0,
+            "kotlinToGodotCalls": 240,
+            "appliedCommands": 240,
+            "crossingsPerTick": crossings_per_tick,
+        },
         "teardown": {"outcome": "clean", "ownerRegistriesToBaseline": True},
     }
 
@@ -118,7 +136,13 @@ def main(argv: list[str]) -> int:
     passing = args.mode != "fail"
     checksum = "deadbeef" if args.mode == "wrong-checksum" else args.source_checksum
     user_agent = ANCIENT_USER_AGENT if args.mode == "below-floor" else MODERN_USER_AGENT
-    envelope = _envelope(args.demo, checksum, passing=passing, user_agent=user_agent)
+    # Far past any budget: a run can be schema-valid and fully passing and still
+    # be doing far too much per-tick work at the module boundary.
+    crossings_per_tick = 9999.0 if args.mode == "over-budget" else 2.0
+    envelope = _envelope(
+        args.demo, checksum, passing=passing, user_agent=user_agent,
+        crossings_per_tick=crossings_per_tick,
+    )
     with open(args.result, "w", encoding="utf-8") as handle:
         json.dump(envelope, handle, indent=2)
     return 0

@@ -28,7 +28,7 @@ import { runRacing } from "./demos/racing.mjs";
 import { runCitybuilder } from "./demos/citybuilder.mjs";
 import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { runSoak } from "./demos/soak.mjs";
-import { buildEnvelope, collectPayload } from "./envelope.mjs";
+import { buildEnvelope, collectPayload, collectPerformance } from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak };
 // macOS workstation path first, then the usual Linux install paths (the CI
@@ -297,6 +297,7 @@ async function main() {
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
+    const performance = await collectPerformance(evaluate);
     const consoleEvents = logEntries
       .filter((entry) => entry.level === "error")
       .map((entry) => ({ type: "console.error", text: entry.text ?? "error" }));
@@ -308,6 +309,7 @@ async function main() {
       durationMs: Date.now() - startedAt,
       consoleEvents,
       demoResult,
+      performance,
     });
 
     fs.writeFileSync(args.result, `${JSON.stringify(envelope, null, 2)}\n`);

@@ -37,7 +37,10 @@ const trace = (msg) => {
 const SOAK_SECONDS = Number(process.env.KANAMA_WEB_SOAK_SECONDS ?? 600);
 // One "cycle" is a full round of dodge: new_game, mobs spawn and free, repeat.
 // Restarting is the point -- a leak of per-round state only shows across rounds.
-const CYCLE_SECONDS = 60;
+// Configurable so a run can isolate WHICH path leaks: set it longer than the soak
+// duration for a single-cycle run, and any growth then belongs to ordinary
+// gameplay rather than to the restart path.
+const CYCLE_SECONDS = Number(process.env.KANAMA_WEB_SOAK_CYCLE_SECONDS ?? 60);
 const SAMPLE_MS = 2000;
 // Slack on the half-over-half comparison. The high-water mark is sampled, not
 // exact, and mob count varies with the RNG, so a couple of handles of noise must
@@ -64,6 +67,20 @@ async function snapshot(evaluate) {
         pending: bridge.api.kanamaWebPendingCoroutineCount(),
         jobs: bridge.api.kanamaWebRegisteredCoroutineJobCount(),
         failure: globalThis.KanamaWebFailure?.stack ?? globalThis.KanamaWebFailure?.message ?? null,
+        // What is live, by handle kind. A leak count alone says "something grew";
+        // this says WHICH kind grew, which turns a hunt into a lookup.
+        liveByKind: (() => {
+          const counts = {};
+          for (const slot of bridge.browserHandleSlots ?? []) {
+            if (!slot || !slot.live) continue;
+            const kind = slot.kind ?? "(null-kind)";
+            counts[kind] = (counts[kind] ?? 0) + 1;
+          }
+          return Object.entries(counts)
+            .sort((a, b) => b[1] - a[1])
+            .map((entry) => entry[0] + ":" + entry[1])
+            .join(" ");
+        })(),
       };
     })()`);
   } catch {
@@ -115,12 +132,16 @@ export async function runSoak({ url, evaluate, navigate, deadline }) {
       await callMain(evaluate, "new_game");
       cycles += 1;
       nextCycleAt = Date.now() + CYCLE_SECONDS * 1000;
-      trace(`cycle ${cycles}`);
+      trace(`cycle ${cycles} (live=${last.liveHandles} before restart)`);
     }
     const snap = await snapshot(evaluate);
     if (snap) {
       last = snap;
       samples.push({ t: Date.now() - START, ...snap });
+      // Per-sample trace: when this gate fails, the SHAPE of the growth is the
+      // whole diagnosis (a step at each restart means the restart path leaks; a
+      // steady climb means ordinary gameplay does).
+      trace(`live=${snap.liveHandles} max=${snap.maxLiveHandles} mobs=${snap.mobInstantiations} callbacks=${snap.callbacks} jobs=${snap.jobs} | ${snap.liveByKind}`);
       if (snap.callbackErrors > 0 && observedError === null) {
         observedError = `callbackErrors=${snap.callbackErrors}`;
       }

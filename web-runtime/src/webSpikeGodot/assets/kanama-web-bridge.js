@@ -614,6 +614,10 @@
       // Godot's fixed physics tick: run the script's _physics_process (character controllers
       // set velocity + move_and_slide here). Applies to every mode with a physics-body script.
       this.physicsProcessCalls = (this.physicsProcessCalls ?? 0) + 1;
+      // Physics-driven demos (character controllers, racing, third-person) run their
+      // script work here and never touch _process, so simulated time must accumulate
+      // on this path too or those demos report zero.
+      this.simSeconds += delta;
       return this.invoke(
         handle,
         "_physics_process",

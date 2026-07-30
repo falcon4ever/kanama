@@ -156,6 +156,22 @@ def _validate_console(console: Any) -> None:
     _check_type(boundary, list, f"{path}.boundaryErrors")
 
 
+def _validate_performance(performance: Any) -> None:
+    """Validate the optional performance section (Task 60f).
+
+    Optional on purpose: a driver that could not ask the page (it had already torn
+    down) must not fail the schema for it. The budget gate reports an absent
+    section as "not measured" rather than passing it silently, which is the only
+    treatment that keeps a missing measurement from looking like a good one.
+    """
+    path = "performance"
+    for key in ("ticksObserved", "processTicks", "physicsTicks", "kotlinToGodotCalls",
+                "appliedCommands"):
+        _non_negative(_get(performance, key, path), f"{path}.{key}")
+    for key in ("simSeconds", "crossingsPerTick"):
+        _non_negative(_get(performance, key, path), f"{path}.{key}")
+
+
 def _validate_teardown(teardown: Any) -> None:
     path = "teardown"
     _check_type(_get(teardown, "outcome", path), str, f"{path}.outcome")
@@ -209,6 +225,10 @@ def validate(envelope: Any) -> None:
     _require(isinstance(crossings, dict) and len(crossings) > 0, "crossings must be a non-empty object")
     for name, value in crossings.items():
         _non_negative(value, f"crossings.{name}")
+
+    # Optional sections are validated when present and never required.
+    if "performance" in envelope and envelope["performance"] is not None:
+        _validate_performance(envelope["performance"])
 
     for group in ("callbacks", "connections", "scheduler"):
         mapping = _get(envelope, group, "envelope")

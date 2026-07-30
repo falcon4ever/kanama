@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-07-30",
+  "note": "Web performance budgets (Task 60f). Every number was MEASURED, not chosen -- each demo's  block records the run it came from. The headline budget is crossings per ENGINE TICK (_process + _physics_process), because it is the only one of the three independent of how fast a host runs the loop: the same build was measured between ~2x and ~8.7x real time across four hosts. Payload is bytes. Startup is wall-clock and therefore the weakest, budgeted loosely on purpose -- it catches a demo that stopped booting, it does not grade a runner.",
+  "headroom": "payload +15% (asset growth, not a texture reimport); startup 3x with an 8s floor; crossings/tick 2x with a 2.0 floor -- the ratio is diluted by tick count, so 2x absorbs host variation while a real regression (per-frame work reaching the cross-module path) multiplies it several times over.",
+  "knownExceptions": {
+    "tpsdemo": "638 MB served payload, 570 MB of it upstream demo assets in index.pck. It RUNS, but nobody would download it: this is far outside any sane web budget, and the number below records reality rather than blessing it. Fixing it is asset work in the demo (texture compression, trimming), which 60f explicitly puts out of scope -- budgets are not met by editing gameplay or scene content."
+  },
+  "fixtures": {
+    "fake": {
+      "maxPayloadBytes": 10000000,
+      "maxStartupMs": 60000,
+      "maxCrossingsPerTick": 1000.0,
+      "minTicksForVerdict": 0,
+      "measuredOn": "n/a -- the scaffold self-test's static fixture, not a real demo"
+    }
+  },
+  "demos": {
+    "bunnymark": {
+      "maxPayloadBytes": 47000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 4.4,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 40291424,
+        "startupMs": 1162,
+        "crossingsPerTick": 2.22,
+        "ticksObserved": 209
+      }
+    },
+    "charactercontroller": {
+      "maxPayloadBytes": 97000000,
+      "maxStartupMs": 9000,
+      "maxCrossingsPerTick": 9.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 83998154,
+        "startupMs": 2670,
+        "crossingsPerTick": 4.5,
+        "ticksObserved": 211
+      }
+    },
+    "citybuilder": {
+      "maxPayloadBytes": 49000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 2.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 42261263,
+        "startupMs": 1908,
+        "crossingsPerTick": 0.84,
+        "ticksObserved": 724
+      }
+    },
+    "dodge": {
+      "maxPayloadBytes": 49000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 2.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 42189632,
+        "startupMs": 1344,
+        "crossingsPerTick": 0.19,
+        "ticksObserved": 2096
+      }
+    },
+    "fps": {
+      "maxPayloadBytes": 58000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 2.2,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 50028808,
+        "startupMs": 1777,
+        "crossingsPerTick": 1.1,
+        "ticksObserved": 209
+      }
+    },
+    "match3": {
+      "maxPayloadBytes": 48000000,
+      "maxStartupMs": 10000,
+      "maxCrossingsPerTick": 11.5,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 41222778,
+        "startupMs": 3257,
+        "crossingsPerTick": 5.77,
+        "ticksObserved": 53
+      }
+    },
+    "platformer": {
+      "maxPayloadBytes": 57000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 2.1,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 49555561,
+        "startupMs": 2087,
+        "crossingsPerTick": 1.05,
+        "ticksObserved": 263
+      }
+    },
+    "racing": {
+      "maxPayloadBytes": 49000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 5.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 42091193,
+        "startupMs": 1582,
+        "crossingsPerTick": 2.51,
+        "ticksObserved": 474
+      }
+    },
+    "squash": {
+      "maxPayloadBytes": 49000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 2.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 42258165,
+        "startupMs": 1776,
+        "crossingsPerTick": 0.58,
+        "ticksObserved": 2794
+      }
+    },
+    "thirdperson": {
+      "maxPayloadBytes": 122000000,
+      "maxStartupMs": 14000,
+      "maxCrossingsPerTick": 2.3,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 105819088,
+        "startupMs": 4412,
+        "crossingsPerTick": 1.15,
+        "ticksObserved": 657
+      }
+    },
+    "tpsdemo": {
+      "maxPayloadBytes": 734000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 3.5,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 637809413,
+        "startupMs": 2368,
+        "crossingsPerTick": 1.74,
+        "ticksObserved": 555
+      }
+    },
+    "web3d": {
+      "maxPayloadBytes": 47000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 2.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measured": {
+        "payloadBytes": 40435072,
+        "startupMs": 1504,
+        "crossingsPerTick": 0.83,
+        "ticksObserved": 96
+      }
+    }
+  }
+}
