@@ -286,6 +286,12 @@ keep it in `kanamaScope`; if it only touches global engine state such as
 
 ## Godot-Owned Resources
 
+This is the **exception** to the ownership rule in
+[Godot API → Resource Ownership](godot-api.md#resource-ownership), not a
+contradiction of it. Closing is safe when another owner still holds a reference;
+the cases below are the ones where you may be the **last** owner, so releasing
+your reference destroys a live object.
+
 Do not call `close()` on a Godot object that the scene tree still needs. In
 particular, `createTween()` returns a live Godot `Tween`; after scheduling
 work with `tweenProperty`, `tweenMethod`, or `tweenCallback`, let Godot own the

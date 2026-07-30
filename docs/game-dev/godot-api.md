@@ -140,8 +140,80 @@ Object/Resource conversions.
 
 ## Resource Ownership
 
-Godot `Resource` and `RefCounted` wrappers returned by Kanama APIs are
-closeable Kotlin handles. When you load a temporary resource and hand it to a
+**`close()` means "release my reference", never "destroy this object".** It calls
+Godot's `unreference()` and destroys the object **only** if that dropped the
+count to zero. Every rule below falls out of that one sentence: closing is safe
+exactly when someone else still holds a reference, and destructive only when you
+are the last owner.
+
+Reading a resource off a node and closing it:
+
+```kotlin
+val mesh = meshInstance.getMesh()   // refcount 2 — the +1 is yours
+mesh?.close()                       // refcount 1 — mesh alive, the node unaffected
+```
+
+`getMesh()` does **not** create a new mesh; it hands you the same object with one
+more reference. Never closing it is the leak — the count stays at 2 forever and
+Godot reports `Leaked instance: ArrayMesh` at shutdown.
+
+Compare a resource you created and never handed off:
+
+```kotlin
+val material = StandardMaterial3D.create()   // refcount 1 — you are the ONLY owner
+material.close()                             // refcount 0 — destroyed; later use is a crash
+```
+
+Same call, different outcome, because the number of other owners differs.
+
+### Which category is it?
+
+| Category | What it covers | What to do |
+|---|---|---|
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, and `@ScriptProperty` reads of resource-typed fields and collections | `close()` it, or `use { }` |
+| **Borrowed view** | A wrapper *you* mint around a handle you already have: `Resource.fromHandle(...)`, `Resource.fromObject(...)`, a script-class constructor wrapping an existing handle | **Never** `close()` — it releases a reference you never took |
+| **Engine-owned, live** | A `createTween()` still running, anything assigned into the scene tree, a resource handed to a sink that took its own reference | Use the Godot lifecycle (`kill()`, `queueFree()`), not `close()` |
+| **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
+
+The awkward-looking case — a getter you must close — is the common one, and it is
+safe precisely because the node still holds its own reference.
+
+`@ScriptProperty` reads are **owned**: the generated registrar takes its own
+reference when it reads a resource out of a property, an `Array`, or a
+`Dictionary`, and releases it when Godot frees the script instance. You do not
+need to close a property field you keep; you do close a temporary you read out
+of one and discard.
+
+### Two cleanups in one function
+
+Nodes are **not** reference-counted, so `close()` does not apply to them at all.
+Saving part of a scene therefore needs two different cleanups in the same
+function — one per category:
+
+```kotlin
+val scene = PackedScene.create()   // refcount 1 — you are the only owner
+scene.pack(someNode)               // serializes someNode and its OWNED sub-nodes
+ResourceSaver.save(scene, "user://thing.tscn")
+scene.close()                      // refcount 0 — released; the file is already written
+someNode.queueFree()               // a Node: no refcount, free it through Godot
+```
+
+`ResourceSaver.save` does not take ownership of the scene — the wrapper is still
+live after it returns, which is what makes `close()` yours to call (and what
+issue #81 got wrong; `scripts/runtime_smoke.sh` asserts the refcount and liveness
+after `save` precisely to keep that fixed).
+
+Two traps worth knowing:
+
+- **`pack()` serializes only *owned* sub-nodes.** A node you built and parented
+  but never gave an owner (`child.setOwner(root)`) saves as a bare root with
+  nothing under it.
+- **`queueFree()` is the only exposed free path** for nodes — `Object.free()` is
+  not wrapped, deliberately.
+
+### Temporaries handed to a node
+
+When you load a temporary resource and hand it to a
 Godot node, release the temporary wrapper with `use` or `close` after the node
 has accepted the value:
 
@@ -180,9 +252,9 @@ return closeable wrappers. If you only need to inspect the value, close the
 temporary wrapper immediately:
 
 ```kotlin
-val current = crosshair.texture
+val current = crosshair.texture   // refcount 2 — the +1 is yours
 check(current != null)
-current?.close()
+current?.close()                  // refcount 1 — the node keeps its own
 ```
 
 For gameplay animation, prefer `node.createTween()` over
