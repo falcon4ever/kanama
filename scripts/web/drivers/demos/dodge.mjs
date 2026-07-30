@@ -45,6 +45,31 @@ async function snapshot(evaluate) {
         // handle per mob is as visible across seven mobs as across seven hundred.
         // Task 72 leaked exactly that and still took a ten-minute nightly soak to
         // surface, because the absolute growth is what needs time, not the ratio.
+        // Are the mobs MOVING? (task 71). The mob proxy has no get_position arm,
+        // but it does have opcode 27, CanvasItem.get_local_mouse_position, which is
+        // the pointer expressed in the node's local space. The pointer never moves
+        // in a driven run, so this value changes exactly as the NODE moves -- a
+        // motion probe that needs no protocol change.
+        //
+        // It splits task 71 in half: if these sweep while frees stays 0, the mobs
+        // move and VisibleOnScreenNotifier2D is not reporting them off-screen; if
+        // they are frozen, it is physics or the velocity write.
+        mobPositions: (() => {
+          const out = [];
+          for (const [key, name] of Object.entries(bridge.scriptNameByHandle ?? {})) {
+            if (!String(name).endsWith(".Mob") || out.length >= 3) continue;
+            const handle = Number(key);
+            try {
+              if (bridge.api.kanamaWebIsLive(handle) !== 1) continue;
+              const x = bridge.immediateNoArgsVector2X(27, handle);
+              const y = bridge.immediateNoArgsVector2Y();
+              out.push(handle + ":" + Math.round(x) + "," + Math.round(y));
+            } catch (e) {
+              out.push(handle + ":err");
+            }
+          }
+          return out.join(" ");
+        })(),
         liveByKind: (() => {
           const counts = {};
           for (const slot of bridge.browserHandleSlots ?? []) {
@@ -118,7 +143,7 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
       if (snap.liveHandles < prevLive) peak.mobFrees += 1;
       prevLive = snap.liveHandles;
       last = snap;
-      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s`);
+      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s mobs@ ${snap.mobPositions}`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);
