@@ -172,6 +172,20 @@
         "crossingsPerTick": 0.83,
         "ticksObserved": 96
       }
+    },
+    "soak": {
+      "maxPayloadBytes": 49000000,
+      "maxStartupMs": 8000,
+      "maxCrossingsPerTick": 1.0,
+      "minTicksForVerdict": 1000,
+      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15, 270s run",
+      "note": "The soak gate drives the dodge export, so its payload budget is dodge's. Its crossings/tick is the most trustworthy ratio in the file -- ~95k ticks, so the fixed startup cost is fully amortised -- which is why its floor for a verdict is 1000 ticks rather than 30.",
+      "measured": {
+        "payloadBytes": 42190629,
+        "startupMs": 1278,
+        "crossingsPerTick": 0.22,
+        "ticksObserved": 94701
+      }
     }
   }
 }

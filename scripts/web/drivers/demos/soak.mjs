@@ -69,6 +69,8 @@ async function snapshot(evaluate) {
         failure: globalThis.KanamaWebFailure?.stack ?? globalThis.KanamaWebFailure?.message ?? null,
         // What is live, by handle kind. A leak count alone says "something grew";
         // this says WHICH kind grew, which turns a hunt into a lookup.
+        readyDebug: (bridge.readyDebug ?? []).join(" "),
+        sfWho: (bridge.sfWho ?? []).join(" "),
         liveByKind: (() => {
           const counts = {};
           for (const slot of bridge.browserHandleSlots ?? []) {
@@ -141,7 +143,7 @@ export async function runSoak({ url, evaluate, navigate, deadline }) {
       // Per-sample trace: when this gate fails, the SHAPE of the growth is the
       // whole diagnosis (a step at each restart means the restart path leaks; a
       // steady climb means ordinary gameplay does).
-      trace(`live=${snap.liveHandles} max=${snap.maxLiveHandles} mobs=${snap.mobInstantiations} callbacks=${snap.callbacks} jobs=${snap.jobs} | ${snap.liveByKind}`);
+      trace(`live=${snap.liveHandles} max=${snap.maxLiveHandles} mobs=${snap.mobInstantiations} callbacks=${snap.callbacks} jobs=${snap.jobs} | ${snap.liveByKind}\n   READY ${snap.readyDebug}\n   SFWHO ${snap.sfWho}`);
       if (snap.callbackErrors > 0 && observedError === null) {
         observedError = `callbackErrors=${snap.callbackErrors}`;
       }

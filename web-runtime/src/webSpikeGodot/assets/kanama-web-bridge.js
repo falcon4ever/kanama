@@ -389,7 +389,19 @@
 
     invoke(handle, callback, member, action, fallback) {
       const previousOwner = this.activeOwnerHandle;
-      if (handle > 0) this.activeOwnerHandle = this.ownerForHandle(handle);
+      // A script with its own proxy owns its OWN lifetime, whatever the routing map
+      // says. Those are two different questions and `handleOwners` answers both:
+      // the PackedScene instantiate path deliberately re-points a spawned root at
+      // the proxy that instantiated it, so calls route through the spawner. Reading
+      // that as the LIFETIME owner meant everything a spawned script acquired was
+      // billed to its spawner -- dodge's mobs charged their SpriteFrames and node
+      // lookups to the scene root, which outlives them, so nothing was released
+      // until full teardown (task 72: one handle leaked per mob, forever).
+      if (handle > 0) {
+        this.activeOwnerHandle = this.applyCallbacks.has(handle)
+          ? handle
+          : this.ownerForHandle(handle);
+      }
       try {
         return action();
       } catch (error) {
