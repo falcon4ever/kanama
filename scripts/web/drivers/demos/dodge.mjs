@@ -40,6 +40,19 @@ async function snapshot(evaluate) {
         mobInstantiations: bridge.match3PackedSceneInstantiations,
         mobAddChildCommands: bridge.match3AddChildCommands,
         liveHandles: bridge.liveBrowserHandleCount,
+        // Live handles broken down by kind. A per-entity leak is a RATIO -- handles
+        // retained per entity created -- and a ratio needs no long window: one
+        // handle per mob is as visible across seven mobs as across seven hundred.
+        // Task 72 leaked exactly that and still took a ten-minute nightly soak to
+        // surface, because the absolute growth is what needs time, not the ratio.
+        liveByKind: (() => {
+          const counts = {};
+          for (const slot of bridge.browserHandleSlots ?? []) {
+            if (!slot || !slot.live) continue;
+            counts[slot.kind ?? "(null-kind)"] = (counts[slot.kind ?? "(null-kind)"] ?? 0) + 1;
+          }
+          return counts;
+        })(),
         maxLiveHandles: bridge.maxLiveBrowserHandles,
         crossings: bridge.kotlinToGodotCalls,
         callbackErrors: bridge.callbackErrors,
@@ -146,8 +159,19 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   // new_game starts StartTimer (2s), then MobTimer spawns a mob every 0.5s and ScoreTimer
   // ticks. Observe until several mobs have spawned (the gameplay peak).
   const seedPeak = { mobInstantiations: 0, mobAddChildCommands: 0, maxLiveHandles: ready.liveHandles, crossings: ready.crossings, callbackErrors: 0 };
+  // Baseline before any mob exists: everything alive here belongs to the scene.
+  const baselineByKind = ready.liveByKind ?? {};
   trace("new_game");
   await callMain(evaluate, "new_game");
+  // Round baseline: sampled after new_game has done its own work (HUD score/message
+  // lookups, music) but before StartTimer's 2s has elapsed, so no mob exists yet.
+  // Comparing the post-restart trough against THIS rather than against the
+  // pre-game scene keeps a fixed per-round cost out of a per-mob ratio -- otherwise
+  // three HUD handles over seven mobs reads as 0.43 retention and the threshold is
+  // measuring the mob count.
+  await delay(1_200);
+  const roundBaselineByKind = (await snapshot(evaluate))?.liveByKind ?? baselineByKind;
+  trace(`round baseline: ${JSON.stringify(roundBaselineByKind)}`);
   // Play long enough for several mobs to spawn AND for the earliest ones to fly across
   // and leave the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D
   // screen_exited). Run the full window so the spawn+free lifecycle is exercised.
@@ -164,6 +188,46 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   // releases its handles. Poll until the live-handle count drains to zero (the smoke
   // wrapper's schema requires liveAfterTeardown === 0). The wasm/JS stays readable after
   // the loop stops, so the snapshot still resolves.
+  // Per-entity retention, measured at the one moment dodge makes unambiguous:
+  // just after a restart. `new_game` queue_frees the whole mobs group, so every
+  // mob instantiated so far is gone and the next one has not spawned yet (a 2s
+  // StartTimer). Anything still held above the scene baseline at that trough was
+  // retained by mobs that no longer exist.
+  //
+  // Measuring during play cannot work: mobs alive on screen hold their handles
+  // legitimately, and in a short run they have no time to die -- which is exactly
+  // why task 72's one-handle-per-mob leak needed a ten-minute soak to show as
+  // absolute growth. As a RATIO at the trough it needs seconds.
+  trace("restart to measure retention");
+  const mobsBeforeRestart = peak.mobInstantiations;
+  await callMain(evaluate, "new_game");
+  const troughByKind = {};
+  const troughUntil = Math.min(deadline, Date.now() + 4_000);
+  while (Date.now() < troughUntil) {
+    const snap = await snapshot(evaluate);
+    if (snap?.liveByKind) {
+      for (const [kind, count] of Object.entries(snap.liveByKind)) {
+        const above = count - (roundBaselineByKind[kind] ?? 0);
+        troughByKind[kind] = Math.min(troughByKind[kind] ?? Number.POSITIVE_INFINITY, above);
+      }
+    }
+    await delay(150);
+  }
+  const retention = {};
+  let worstRetention = 0;
+  let worstRetentionKind = "none";
+  if (mobsBeforeRestart > 0) {
+    for (const [kind, above] of Object.entries(troughByKind)) {
+      const perMob = Math.round((Math.max(above, 0) / mobsBeforeRestart) * 100) / 100;
+      retention[kind] = perMob;
+      if (perMob > worstRetention) {
+        worstRetention = perMob;
+        worstRetentionKind = kind;
+      }
+    }
+  }
+  trace(`retention per mob after restart (${mobsBeforeRestart} mobs): ${JSON.stringify(retention)} worst=${worstRetentionKind}:${worstRetention}`);
+
   trace("smoke_teardown");
   await callTeardown(evaluate);
   const teardown = await observe(evaluate, { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
@@ -184,6 +248,11 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     mobsSpawnAndFree: peak.mobFrees >= 2 && atPeak.liveHandles <= peak.maxLiveHandles,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
+    // No handle kind is retained per spawned mob, measured at the post-restart
+    // trough where every earlier mob is provably gone. A real per-spawn leak sits
+    // at 1.0 (task 72 measured exactly that); a healthy run sits near 0. This is
+    // the SHORT-run form of what the soak gate needs ten minutes to see.
+    noPerMobHandleRetention: worstRetention <= 0.5,
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
 
@@ -209,6 +278,10 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
       kotlinToGodotCalls: peak.crossings,
       mobInstantiations: peak.mobInstantiations,
       mobAddChildCommands: peak.mobAddChildCommands,
+      // Worst per-mob handle retention, x100 so the envelope stays integer-friendly
+      // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
+      // handle per spawn.
+      worstHandleRetentionPerMobX100: Math.round(worstRetention * 100),
     },
     callbacks: {
       pendingSignalCallbacks: last.callbacks,
