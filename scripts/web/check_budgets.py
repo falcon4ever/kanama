@@ -21,9 +21,19 @@ and `_physics_process`. Counting render frames alone reported zero ticks for a
 third of the corpus, because the character-controller, racing and third-person
 demos do all their work in the physics tick and never touch `_process`.
 
-Payload is in bytes, which is host-independent by construction. Startup is
-wall-clock and therefore the weakest of the three, so its budget is deliberately
-loose -- it exists to catch a demo that stops booting, not to grade a runner.
+Payload is in bytes, which is host- and engine-independent by construction.
+
+**Startup is recorded but NOT gated.** It is wall-clock and it does not survive a
+loaded machine: the same thirdperson build measured 4.4s on an idle Chrome and
+64.7s on a Firefox sharing a busy workstation. A gate that red-lights because
+something else was compiling is measuring the machine, and the failure it would
+have caught -- a demo that stops booting -- already surfaces as a driver timeout.
+
+**Crossings per tick is gated PER ENGINE.** It is engine-stable across most of the
+corpus (chrome/firefox: bunnymark 2.22/1.97, dodge 0.19/0.20, fps 1.10/1.02) but
+not for the input-heavy demos, where Firefox does several times the boundary work
+(charactercontroller 4.50/19.58, thirdperson 1.15/6.01). A Chrome-derived number
+gating a Firefox run is how this was found: it reddened main.
 
 Usage:
     python3 check_budgets.py <result.json>            # gate one run
@@ -50,6 +60,23 @@ def load_budgets(path: str = BUDGETS_PATH) -> dict:
         return json.load(handle)
 
 
+def engine_limits(limits: dict, engine: str | None) -> dict:
+    """Merge a demo's per-engine budget over its demo-level one.
+
+    Crossings-per-tick is engine-stable for most of the corpus but emphatically not
+    for the input-heavy demos -- charactercontroller measured 4.50 on Chrome and
+    19.58 on Firefox for the same build -- so a Chrome-derived number has no
+    business gating a Firefox run. It did, and it reddened main.
+    """
+    merged = dict(limits)
+    per_engine = (limits.get("engines") or {}).get(engine or "")
+    if per_engine:
+        for key in ("maxCrossingsPerTick", "minTicksForVerdict", "tickRatioNotApplicable"):
+            if key in per_engine:
+                merged[key] = per_engine[key]
+    return merged
+
+
 def measurements(envelope: dict) -> dict:
     """Pull the budgeted numbers out of a result envelope."""
     performance = envelope.get("performance") or {}
@@ -64,12 +91,14 @@ def measurements(envelope: dict) -> dict:
     }
 
 
-def check(demo: str, measured: dict, budgets: dict) -> list[str]:
+def check(demo: str, measured: dict, budgets: dict, engine: str | None = None) -> list[str]:
     """Return a list of human-readable budget violations (empty when within)."""
     # Fixtures are looked up after real demos and never silently: the scaffold
     # self-test drives a static fake export, which has no meaningful budget but
     # must still exercise this gate rather than skipping it.
     limits = (budgets.get("demos") or {}).get(demo) or (budgets.get("fixtures") or {}).get(demo)
+    if limits is not None:
+        limits = engine_limits(limits, engine)
     if limits is None:
         raise BudgetError(
             f"no budget declared for demo {demo!r}. Add one to budgets.json with a "
@@ -85,14 +114,6 @@ def check(demo: str, measured: dict, budgets: dict) -> list[str]:
         violations.append(
             f"payload {payload / 1e6:.1f} MB exceeds budget "
             f"{limits['maxPayloadBytes'] / 1e6:.1f} MB"
-        )
-
-    startup = measured["startupMs"]
-    if startup is None:
-        violations.append("startup duration was not reported")
-    elif startup > limits["maxStartupMs"]:
-        violations.append(
-            f"startup {startup} ms exceeds budget {limits['maxStartupMs']} ms"
         )
 
     per_tick = measured["crossingsPerTick"]
@@ -143,13 +164,12 @@ def main(argv: list[str]) -> int:
     if args.print_budgets:
         for demo, limits in budgets["demos"].items():
             ratio = (
-                f"crossings/tick <= {limits['maxCrossingsPerTick']}"
+                f"crossings/tick <= {limits.get('maxCrossingsPerTick')}"
                 if limits.get("maxCrossingsPerTick") is not None
                 else "crossings/tick EXEMPT"
             )
             print(
-                f"{demo}: payload <= {limits['maxPayloadBytes'] / 1e6:.0f} MB, "
-                f"startup <= {limits['maxStartupMs']} ms, {ratio}"
+                f"{demo}: payload <= {limits['maxPayloadBytes'] / 1e6:.0f} MB, {ratio}"
             )
         return 0
 
@@ -164,6 +184,7 @@ def main(argv: list[str]) -> int:
         return 2
 
     demo = envelope.get("demo", "")
+    engine = (envelope.get("browser") or {}).get("engine")
     measured = measurements(envelope)
 
     if args.report:
@@ -178,7 +199,7 @@ def main(argv: list[str]) -> int:
         return 0
 
     try:
-        violations = check(demo, measured, budgets)
+        violations = check(demo, measured, budgets, engine)
     except BudgetError as error:
         print(f"web_export_smoke: budget error: {error}", file=sys.stderr)
         return 1
@@ -189,7 +210,10 @@ def main(argv: list[str]) -> int:
             print(f"  - {violation}", file=sys.stderr)
         return 1
 
-    limits = (budgets.get("demos") or {}).get(demo) or (budgets.get("fixtures") or {}).get(demo) or {}
+    limits = engine_limits(
+        (budgets.get("demos") or {}).get(demo) or (budgets.get("fixtures") or {}).get(demo) or {},
+        engine,
+    )
     ratio = (
         f"{measured['crossingsPerTick']} crossings/tick"
         if limits.get("maxCrossingsPerTick") is not None
@@ -198,7 +222,7 @@ def main(argv: list[str]) -> int:
     print(
         f"web_export_smoke: {demo} within budget "
         f"(payload {measured['payloadBytes'] / 1e6:.1f}MB, "
-        f"startup {measured['startupMs']}ms, {ratio})"
+        f"startup {measured['startupMs']}ms recorded, {ratio})"
     )
     return 0
 

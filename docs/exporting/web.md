@@ -280,6 +280,13 @@ starting, or start doing per-frame work at the module boundary.
 | Startup | ms | Wall-clock, so deliberately loose — it catches a demo that stopped booting, not a slow runner |
 | **Crossings per engine tick** | ratio | The real invariant: what batching and snapshots exist to bound |
 
+**Why per engine.** The ratio is engine-stable across most of the corpus — Chrome
+vs Firefox: bunnymark 2.22/1.97, dodge 0.19/0.20, fps 1.10/1.02 — but *not* for
+the input-heavy demos, where Firefox does several times the boundary work
+(charactercontroller 4.50/**19.58**, thirdperson 1.15/**6.01**). Budgets are
+therefore measured and declared per engine. That asymmetry is itself an open
+question, not a settled property.
+
 **Why the headline budget is per tick rather than per second.** Godot's Web main
 loop is paced by `requestAnimationFrame` and advances a fixed step per iteration,
 so the same build runs at very different rates depending on the host — measured

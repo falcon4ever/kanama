@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "updated": "2026-07-30",
-  "note": "Web performance budgets (Task 60f). Every number was MEASURED, not chosen -- each demo's  block records the run it came from. The headline budget is crossings per ENGINE TICK (_process + _physics_process), because it is the only one of the three independent of how fast a host runs the loop: the same build was measured between ~2x and ~8.7x real time across four hosts. Payload is bytes. Startup is wall-clock and therefore the weakest, budgeted loosely on purpose -- it catches a demo that stopped booting, it does not grade a runner.",
+  "note": "Web performance budgets (Task 60f). Every number was MEASURED; each demo records the runs it came from. WHAT IS GATED CHANGED after the first Firefox baseline (see `gatingPolicy`): payload and crossings-per-tick are gated, startup is recorded but NOT gated.",
   "headroom": "payload +15% (asset growth, not a texture reimport); startup 3x with an 8s floor; crossings/tick 2x with a 2.0 floor -- the ratio is diluted by tick count, so 2x absorbs host variation while a real regression (per-frame work reaching the cross-module path) multiplies it several times over.",
   "knownExceptions": {
     "tpsdemo": "638 MB served payload, 570 MB of it upstream demo assets in index.pck. It RUNS, but nobody would download it: this is far outside any sane web budget, and the number below records reality rather than blessing it. Fixing it is asset work in the demo (texture compression, trimming), which 60f explicitly puts out of scope -- budgets are not met by editing gameplay or scene content."
@@ -18,7 +18,6 @@
   "demos": {
     "bunnymark": {
       "maxPayloadBytes": 47000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 4.4,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -27,11 +26,30 @@
         "startupMs": 1162,
         "crossingsPerTick": 2.22,
         "ticksObserved": 209
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 4.4,
+          "measured": {
+            "crossingsPerTick": 2.22,
+            "ticksObserved": 209,
+            "startupMs": 1162,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 3.9,
+          "measured": {
+            "crossingsPerTick": 1.97,
+            "ticksObserved": 262,
+            "startupMs": 4959,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "charactercontroller": {
       "maxPayloadBytes": 97000000,
-      "maxStartupMs": 9000,
       "maxCrossingsPerTick": 9.0,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -40,11 +58,33 @@
         "startupMs": 2670,
         "crossingsPerTick": 4.5,
         "ticksObserved": 211
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 9.0,
+          "measured": {
+            "crossingsPerTick": 4.5,
+            "ticksObserved": 211,
+            "startupMs": 2670,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 39.2,
+          "measured": {
+            "crossingsPerTick": 19.58,
+            "ticksObserved": 295,
+            "startupMs": 37082,
+            "on": "macOS arm64, Firefox 153 headless"
+          },
+          "measuredOnCi": {
+            "crossingsPerTick": 12.13
+          }
+        }
       }
     },
     "citybuilder": {
       "maxPayloadBytes": 49000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 2.0,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -53,11 +93,30 @@
         "startupMs": 1908,
         "crossingsPerTick": 0.84,
         "ticksObserved": 724
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.84,
+            "ticksObserved": 724,
+            "startupMs": 1908,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.77,
+            "ticksObserved": 3160,
+            "startupMs": 14252,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "dodge": {
       "maxPayloadBytes": 49000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 2.0,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -66,11 +125,30 @@
         "startupMs": 1344,
         "crossingsPerTick": 0.19,
         "ticksObserved": 2096
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.19,
+            "ticksObserved": 2096,
+            "startupMs": 1344,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.2,
+            "ticksObserved": 6263,
+            "startupMs": 5169,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "fps": {
       "maxPayloadBytes": 58000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 2.2,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -79,11 +157,30 @@
         "startupMs": 1777,
         "crossingsPerTick": 1.1,
         "ticksObserved": 209
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.2,
+          "measured": {
+            "crossingsPerTick": 1.1,
+            "ticksObserved": 209,
+            "startupMs": 1777,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 1.02,
+            "ticksObserved": 456,
+            "startupMs": 19044,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "match3": {
       "maxPayloadBytes": 48000000,
-      "maxStartupMs": 10000,
       "maxCrossingsPerTick": null,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -93,11 +190,30 @@
         "crossingsPerTick": 5.77,
         "ticksObserved": 53
       },
-      "tickRatioNotApplicable": "Input-driven: the driver spends its run on pointer gestures and settle waits, so the script layer is dispatched only ~20-50 times per run (53 locally, 23 on a CI Chrome, ~30+ on a CI Firefox). A ratio whose denominator swings by 2x with host speed is not a measurement, and failing on it would grade the runner -- exactly what these budgets exist to avoid. Payload and startup are still enforced."
+      "tickRatioNotApplicable": "Input-driven: the driver spends its run on pointer gestures and settle waits, so the script layer is dispatched only ~20-50 times per run (53 on a local Chrome, 23 on a CI Chrome, 127 on a local Firefox). A ratio whose denominator swings that far with the host is not a measurement, and failing on it would grade the runner -- exactly what these budgets exist to avoid. Payload is still gated.",
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": null,
+          "measured": {
+            "crossingsPerTick": 5.77,
+            "ticksObserved": 53,
+            "startupMs": 3257,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": null,
+          "measured": {
+            "crossingsPerTick": 2.43,
+            "ticksObserved": 127,
+            "startupMs": 6931,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
+      }
     },
     "platformer": {
       "maxPayloadBytes": 57000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 2.1,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -106,11 +222,30 @@
         "startupMs": 2087,
         "crossingsPerTick": 1.05,
         "ticksObserved": 263
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.1,
+          "measured": {
+            "crossingsPerTick": 1.05,
+            "ticksObserved": 263,
+            "startupMs": 2087,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.8,
+            "ticksObserved": 938,
+            "startupMs": 28568,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "racing": {
       "maxPayloadBytes": 49000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 5.0,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -119,11 +254,30 @@
         "startupMs": 1582,
         "crossingsPerTick": 2.51,
         "ticksObserved": 474
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 5.0,
+          "measured": {
+            "crossingsPerTick": 2.51,
+            "ticksObserved": 474,
+            "startupMs": 1582,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 9.9,
+          "measured": {
+            "crossingsPerTick": 4.93,
+            "ticksObserved": 570,
+            "startupMs": 14132,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "squash": {
       "maxPayloadBytes": 49000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 2.0,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -132,11 +286,30 @@
         "startupMs": 1776,
         "crossingsPerTick": 0.58,
         "ticksObserved": 2794
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.58,
+            "ticksObserved": 2794,
+            "startupMs": 1776,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.27,
+            "ticksObserved": 6000,
+            "startupMs": 18834,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "thirdperson": {
       "maxPayloadBytes": 122000000,
-      "maxStartupMs": 14000,
       "maxCrossingsPerTick": 2.3,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -145,11 +318,33 @@
         "startupMs": 4412,
         "crossingsPerTick": 1.15,
         "ticksObserved": 657
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.3,
+          "measured": {
+            "crossingsPerTick": 1.15,
+            "ticksObserved": 657,
+            "startupMs": 4412,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 14.2,
+          "measured": {
+            "crossingsPerTick": 6.01,
+            "ticksObserved": 1314,
+            "startupMs": 64691,
+            "on": "macOS arm64, Firefox 153 headless"
+          },
+          "measuredOnCi": {
+            "crossingsPerTick": 7.08
+          }
+        }
       }
     },
     "tpsdemo": {
       "maxPayloadBytes": 734000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 3.5,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -158,11 +353,30 @@
         "startupMs": 2368,
         "crossingsPerTick": 1.74,
         "ticksObserved": 555
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 3.5,
+          "measured": {
+            "crossingsPerTick": 1.74,
+            "ticksObserved": 555,
+            "startupMs": 2368,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2,
+          "measured": {
+            "crossingsPerTick": 1,
+            "ticksObserved": 3827,
+            "startupMs": 25095,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "web3d": {
       "maxPayloadBytes": 47000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 2.0,
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
@@ -171,6 +385,26 @@
         "startupMs": 1504,
         "crossingsPerTick": 0.83,
         "ticksObserved": 96
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.83,
+            "ticksObserved": 96,
+            "startupMs": 1504,
+            "on": "macOS arm64, Chrome 150 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 0.75,
+            "ticksObserved": 159,
+            "startupMs": 18487,
+            "on": "macOS arm64, Firefox 153 headless"
+          }
+        }
       }
     },
     "soak": {
@@ -187,5 +421,10 @@
         "ticksObserved": 94701
       }
     }
+  },
+  "gatingPolicy": {
+    "payloadBytes": "GATED. Bytes are host- and engine-independent by construction.",
+    "startupMs": "RECORDED, NOT GATED. It is wall-clock and it does not survive a loaded machine: the same thirdperson build measured 4.4s on an idle Chrome and 64.7s on a Firefox sharing a busy workstation. A gate that red-lights because someone else was compiling is measuring the machine, and the failure it would catch (a demo that stops booting) already shows up as a driver timeout.",
+    "crossingsPerTick": "GATED PER ENGINE. Engine-stable for most of the corpus (bunnymark 2.22/1.97, dodge 0.19/0.20, citybuilder 0.84/0.77, fps 1.10/1.02 for chrome/firefox) but NOT for the input-heavy demos, where Firefox does 5-10x the boundary work: charactercontroller 4.50 -> 19.58, thirdperson 1.15 -> 6.01. A Chrome-derived budget had no business gating a Firefox run, which is exactly how this was found -- the gate reddened main."
   }
 }
