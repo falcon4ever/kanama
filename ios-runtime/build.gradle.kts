@@ -33,6 +33,8 @@ val kanamaPrecision = providers.gradleProperty("kanamaPrecision").orElse("single
 kotlin {
     iosArm64()
     iosSimulatorArm64()
+    // SPIKE (task 75): desktop Kotlin/Native probe. Reuses the iosMain source set verbatim.
+    macosArm64()
 
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().configureEach {
         compilations.getByName("main") {
@@ -47,6 +49,30 @@ kotlin {
         binaries {
             staticLib {
                 baseName = "kanama_ios_runtime"
+            }
+        }
+
+        // SPIKE (task 75): desktop GDExtension needs a SHARED library, and only
+        // Kotlin/Native's own linker invocation knows the platform framework set its
+        // platform.darwin/posix caches need. So we let K/N link the dylib and feed it the
+        // pre-compiled C shim object, instead of hand-linking the static lib with clang.
+        if (konanTarget.name == "macos_arm64") {
+            binaries {
+                sharedLib {
+                    baseName = "kanama_macos_kn"
+                    // Match the shim's optimization level to the K/N build type, so a release
+                    // measurement is not silently contaminated by an -O0 shim.
+                    val shimObject =
+                        rootProject.layout.projectDirectory
+                            .file("spike-macos-kn/build/kanama_shim_${buildType.name.lowercase()}.o")
+                            .asFile
+                    if (shimObject.exists()) {
+                        linkerOpts(shimObject.absolutePath)
+                    }
+                    // kanama_entry is referenced by nothing inside the K/N graph; force it in
+                    // and keep it exported.
+                    linkerOpts("-u", "_kanama_entry")
+                }
             }
         }
     }
@@ -67,6 +93,11 @@ kotlin {
             iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
         }
         val iosSimulatorArm64Main by getting {
+            dependsOn(iosMain)
+            iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
+        }
+        // SPIKE (task 75)
+        val macosArm64Main by getting {
             dependsOn(iosMain)
             iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
         }
@@ -91,6 +122,8 @@ tasks.configureEach {
 dependencies {
     add("kspIosArm64", project(":processor"))
     add("kspIosSimulatorArm64", project(":processor"))
+    // SPIKE (task 75)
+    add("kspMacosArm64", project(":processor"))
 }
 
 ksp {

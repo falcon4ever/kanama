@@ -1,0 +1,9 @@
+[configuration]
+
+entry_symbol = "kanama_entry"
+compatibility_minimum = "4.7"
+
+[libraries]
+
+macos.debug = "res://addons/kanama/libkanama_macos_kn.dylib"
+macos.release = "res://addons/kanama/libkanama_macos_kn.dylib"
