@@ -243,9 +243,17 @@ jobs:
             "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
           unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
           rm -f "$tpz"
+
+      # Must run even on a cache hit: the cache holds ~/godot, but a plain Godot
+      # export reads templates from the user template dir. Folding this into the
+      # download step meant a warm cache skipped it and the export failed.
+      - name: Install the Web export template
+        shell: bash
+        run: |
           mkdir -p "$HOME/.local/share/godot/export_templates/4.7.stable"
           cp "$HOME/godot/web_nothreads_release.zip" \
             "$HOME/.local/share/godot/export_templates/4.7.stable/"
+          ls -la "$HOME/.local/share/godot/export_templates/4.7.stable/"
 
       - name: Export the plain-GDScript probe
         shell: bash
