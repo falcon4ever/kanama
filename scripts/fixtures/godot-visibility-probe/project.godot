@@ -1,0 +1,20 @@
+; Plain-GDScript control for task 71. NO Kanama: no addon, no bridge, no proxies.
+; It answers one question — does VisibleOnScreenNotifier2D.screen_exited fire in a
+; Godot 4.7 Web export on a given host/browser? — so a failure can be attributed
+; to Godot-on-that-host rather than to the Kanama backend.
+
+config_version=5
+
+[application]
+config/name="GodotVisibilityProbe"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+window/size/viewport_width=480
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

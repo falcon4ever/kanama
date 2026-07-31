@@ -197,6 +197,82 @@ jobs:
             ${{ runner.temp }}/web-matrix/runs/*.json
           if-no-files-found: warn
 
+  # Task 71 control: a PLAIN GDSCRIPT export (no Kanama at all) asking whether
+  # VisibleOnScreenNotifier2D.screen_exited fires on this runner. dodge's mobs move
+  # thousands of pixels off screen there and are never freed, and that signal is
+  # their only free path -- but two Linux boxes with Firefox on llvmpipe despawn
+  # correctly, so the cause is unknown. This attributes it: if the control also
+  # fails here, the behaviour is Godot-on-this-host and not ours.
+  #
+  # Never blocking: it is an experiment, not a gate.
+  visibility-control:
+    name: task 71 control (plain GDScript notifier)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Report browser versions
+        shell: bash
+        run: |
+          google-chrome --version
+          firefox --version
+
+      - name: Cache Godot binary and Web export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Web export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.stable"
+          cp "$HOME/godot/web_nothreads_release.zip" \
+            "$HOME/.local/share/godot/export_templates/4.7.stable/"
+
+      - name: Export the plain-GDScript probe
+        shell: bash
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          mkdir -p build/visibility-probe
+          "$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import || true
+          "$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe \
+            --export-release "Web" ../../../build/visibility-probe/index.html
+          ls -la build/visibility-probe/
+
+      - name: Run the control on both engines
+        shell: bash
+        run: |
+          for engine in chrome firefox; do
+            case "$engine" in
+              chrome) bin="$(command -v google-chrome)" ;;
+              firefox) bin="$(command -v firefox)" ;;
+            esac
+            echo "::group::visibility control — $engine"
+            python3 scripts/web/visibility_probe.py \
+              --export-dir build/visibility-probe --engine "$engine" \
+              --browser "$bin" --timeout 90 || echo "control on $engine did NOT fire"
+            echo "::endgroup::"
+          done
+
   # The long-run leak gate. Nightly only: it costs ten minutes of wall clock and
   # answers a question a per-PR run cannot ask -- does the handle registry still
   # sit at a fixed working set after hundreds of node create/free cycles?
