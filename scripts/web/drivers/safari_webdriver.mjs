@@ -27,9 +27,10 @@ import { runRacing } from "./demos/racing.mjs";
 import { runCitybuilder } from "./demos/citybuilder.mjs";
 import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { runSoak } from "./demos/soak.mjs";
+import { runVisibilityprobe } from "./demos/visibilityprobe.mjs";
 import { buildEnvelope, collectPayload, collectPerformance } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function parseArgs(argv) {
