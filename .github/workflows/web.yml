@@ -275,9 +275,17 @@ jobs:
               firefox) bin="$(command -v firefox)" ;;
             esac
             echo "::group::visibility control — $engine"
+            set +e
             python3 scripts/web/visibility_probe.py \
               --export-dir build/visibility-probe --engine "$engine" \
-              --browser "$bin" --timeout 90 || echo "control on $engine did NOT fire"
+              --browser "$bin" --timeout 90
+            status=$?
+            set -e
+            case "$status" in
+              0) echo "RESULT $engine: screen_exited FIRED" ;;
+              1) echo "RESULT $engine: screen_exited NEVER FIRED (this is the finding)" ;;
+              *) echo "RESULT $engine: INCONCLUSIVE -- the probe never ran; says nothing about the notifier" ;;
+            esac
             echo "::endgroup::"
           done
 

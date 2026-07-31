@@ -90,12 +90,22 @@ def main(argv: list[str]) -> int:
             f"--user-data-dir={profile}", url,
         ]
     else:
+        # The full pref set the Firefox smoke driver uses. An earlier version set
+        # only two of these and the page never booted on a CI runner -- zero
+        # beacons, which is INCONCLUSIVE, not a negative result.
         with open(os.path.join(profile, "user.js"), "w", encoding="utf-8") as handle:
             handle.write('user_pref("webgl.force-enabled", true);\n')
+            handle.write('user_pref("webgl.disabled", false);\n')
             handle.write('user_pref("gfx.webrender.software", true);\n')
+            handle.write('user_pref("dom.webgl.software.render", true);\n')
         cmd = [args.browser, "--headless", "--no-remote", "--profile", profile, url]
 
-    browser = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # Keep the browser's own output: when nothing is reported, its stderr is the
+    # only thing that says whether the browser or the page was at fault.
+    browser_log = tempfile.NamedTemporaryFile(  # noqa: SIM115 - lives for the run
+        prefix="kanama-probe-browser-", suffix=".log", delete=False, mode="w+"
+    )
+    browser = subprocess.Popen(cmd, stdout=browser_log, stderr=subprocess.STDOUT)
     deadline = time.monotonic() + args.timeout
     verdict = None
     try:
@@ -124,8 +134,19 @@ def main(argv: list[str]) -> int:
         print(f"  {at:6.1f}s  {message}")
 
     if verdict is None:
-        print("visibility_probe: INCONCLUSIVE — the page never reported anything. "
-              "The export did not run (check the browser, not the notifier).", file=sys.stderr)
+        print("visibility_probe: INCONCLUSIVE -- the page reported nothing, so the "
+              "export never ran. This says NOTHING about the notifier; the browser "
+              "or the page is at fault.", file=sys.stderr)
+        browser_log.flush()
+        try:
+            with open(browser_log.name, encoding="utf-8", errors="replace") as handle:
+                tail = handle.read()[-2000:]
+            if tail.strip():
+                print("visibility_probe: browser output tail:", file=sys.stderr)
+                print(tail, file=sys.stderr)
+        except OSError:
+            pass
+        print(f"visibility_probe: browser exit code {browser.returncode}", file=sys.stderr)
         return 2
     label, message = verdict
     print(f"visibility_probe: screen_exited {label} ({message})")
