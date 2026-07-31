@@ -60,6 +60,16 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--browser", required=True, help="browser binary to launch")
     parser.add_argument("--engine", default="chrome", choices=["chrome", "firefox"])
     parser.add_argument("--timeout", type=int, default=60)
+    parser.add_argument(
+        "--driver",
+        help=(
+            "Drive the page with this engine driver instead of launching the browser "
+            "directly. The page stays plain GDScript -- only the LAUNCH is borrowed, "
+            "because a raw headless Firefox would not run the page on a CI runner. "
+            "The driver also captures console output, which is what explains a page "
+            "that never boots."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if not os.path.isfile(os.path.join(args.export_dir, "index.html")):
@@ -105,6 +115,16 @@ def main(argv: list[str]) -> int:
     browser_log = tempfile.NamedTemporaryFile(  # noqa: SIM115 - lives for the run
         prefix="kanama-probe-browser-", suffix=".log", delete=False, mode="w+"
     )
+    result_path = None
+    if args.driver:
+        result_path = os.path.join(tempfile.mkdtemp(prefix="kanama-probe-result-"), "r.json")
+        cmd = [
+            "node", args.driver, "--url", url, "--result", result_path,
+            "--demo", "visibilityprobe", "--timeout", str(args.timeout),
+            "--source-checksum", "control", "--export-dir", args.export_dir,
+            "--browser-binary", args.browser,
+        ]
+        print(f"visibility_probe: driving via {os.path.basename(args.driver)}")
     browser = subprocess.Popen(cmd, stdout=browser_log, stderr=subprocess.STDOUT)
     deadline = time.monotonic() + args.timeout
     verdict = None
@@ -128,6 +148,21 @@ def main(argv: list[str]) -> int:
             browser.kill()
         server.shutdown()
         shutil.rmtree(profile, ignore_errors=True)
+
+    # The driver's envelope carries the console, which is the only witness when the
+    # page never reported anything.
+    if result_path and os.path.exists(result_path):
+        try:
+            import json
+            envelope = json.load(open(result_path, encoding="utf-8"))
+            console = envelope.get("console") or {}
+            for kind in ("errors", "warnings"):
+                for line in (console.get(kind) or [])[:6]:
+                    print(f"visibility_probe: page {kind[:-1]}: {str(line)[:300]}")
+            print(f"visibility_probe: driver saw boot={envelope.get('probeBoot')}")
+            print(f"visibility_probe: driver saw beacons=[{envelope.get('probeBeacons')}]")
+        except (OSError, ValueError) as error:
+            print(f"visibility_probe: could not read driver result: {error}", file=sys.stderr)
 
     print(f"visibility_probe: {len(BEACONS)} beacon(s) on {args.engine}")
     for at, message in BEACONS:

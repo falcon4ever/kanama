@@ -271,14 +271,14 @@ jobs:
         run: |
           for engine in chrome firefox; do
             case "$engine" in
-              chrome) bin="$(command -v google-chrome)" ;;
-              firefox) bin="$(command -v firefox)" ;;
+              chrome) bin="$(command -v google-chrome)"; driver=scripts/web/drivers/chrome_cdp.mjs ;;
+              firefox) bin="$(command -v firefox)"; driver=scripts/web/drivers/firefox_bidi.mjs ;;
             esac
             echo "::group::visibility control — $engine"
             set +e
-            python3 scripts/web/visibility_probe.py \
+            KANAMA_WEB_SMOKE_DEBUG=1 python3 scripts/web/visibility_probe.py \
               --export-dir build/visibility-probe --engine "$engine" \
-              --browser "$bin" --timeout 90
+              --browser "$bin" --driver "$driver" --timeout 90
             status=$?
             set -e
             case "$status" in

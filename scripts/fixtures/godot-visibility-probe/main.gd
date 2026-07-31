@@ -88,4 +88,12 @@ func _slug(value: String) -> String:
 	return out.substr(0, 40)
 
 func _beacon(what: String) -> void:
+	# Two independent channels on purpose. The fetch reaches the serving process
+	# (works without any browser automation); the global lets a driver read the
+	# same timeline, which is what tells us anything when the network path or the
+	# boot itself is what failed.
 	JavaScriptBridge.eval("fetch('/probe/" + what + "')", true)
+	JavaScriptBridge.eval(
+		"globalThis.__kanamaProbe = (globalThis.__kanamaProbe || []).concat(['" + what + "'])",
+		true
+	)
