@@ -14,36 +14,97 @@ val webScriptSourceRoot =
 // otherwise it is derived from the selected demo's checkout as <projectDir>/web,
 // where the committed web/kotlin-src/*.kt live. This keeps exportWeb free of any
 // second workstation path -- pointing at the demo checkout is enough.
-val extraWebScriptSourceRoot: File? =
+val webDemoKey: String = providers.gradleProperty("kanamaWebDemo").orElse("match3").get()
+val webDemoProjectDir: File? =
+    when (webDemoKey) {
+        "match3" -> "kanamaWebMatch3ProjectDir"
+        "bunnymark" -> "kanamaWebBunnymarkProjectDir"
+        "dodge" -> "kanamaWebDodgeProjectDir"
+        "web3d" -> "kanamaWebWeb3dProjectDir"
+        "platformer" -> "kanamaWebPlatformerProjectDir"
+        "squash" -> "kanamaWebSquashProjectDir"
+        "fps" -> "kanamaWebFpsProjectDir"
+        "charactercontroller" -> "kanamaWebCharactercontrollerProjectDir"
+        "thirdperson" -> "kanamaWebThirdpersonProjectDir"
+        "racing" -> "kanamaWebRacingProjectDir"
+        "citybuilder" -> "kanamaWebCitybuilderProjectDir"
+        "tpsdemo" -> "kanamaWebTpsdemoProjectDir"
+        else -> null
+    }
+        ?.let { providers.gradleProperty(it).orNull }
+        ?.let(rootProject::file)
+val explicitWebScriptSourceRoot: File? =
     providers.gradleProperty("kanamaWebExtraScriptSourceDir").orNull?.let(rootProject::file)
-        ?: run {
-            val demo = providers.gradleProperty("kanamaWebDemo").orElse("match3").get()
-            val projectDirProperty =
-                when (demo) {
-                    "match3" -> "kanamaWebMatch3ProjectDir"
-                    "bunnymark" -> "kanamaWebBunnymarkProjectDir"
-                    "dodge" -> "kanamaWebDodgeProjectDir"
-                    "web3d" -> "kanamaWebWeb3dProjectDir"
-                    "platformer" -> "kanamaWebPlatformerProjectDir"
-                    "squash" -> "kanamaWebSquashProjectDir"
-                    "fps" -> "kanamaWebFpsProjectDir"
-                    "charactercontroller" -> "kanamaWebCharactercontrollerProjectDir"
-                    "thirdperson" -> "kanamaWebThirdpersonProjectDir"
-                    "racing" -> "kanamaWebRacingProjectDir"
-                    "citybuilder" -> "kanamaWebCitybuilderProjectDir"
-                    "tpsdemo" -> "kanamaWebTpsdemoProjectDir"
-                    else -> null
+val extraWebScriptSourceRoot: File? =
+    explicitWebScriptSourceRoot
+        ?: webDemoProjectDir?.resolve("web")?.takeIf { it.resolve("kotlin-src").isDirectory }
+        ?: layout.projectDirectory
+            .dir("src/web3dSmoke/web")
+            .asFile
+            .takeIf { webDemoKey == "web3d" && it.resolve("kotlin-src").isDirectory }
+
+// Task 64 (single-source scripts): when the demo checkout also has the shared
+// desktop script root <projectDir>/kotlin-src, the Wasm build compiles a MERGED
+// view instead of web/kotlin-src alone -- the shared root is copied first and
+// web/kotlin-src is overlaid on top, so a file present in both resolves to the
+// web copy (per-target override) and a file present only in the shared root
+// reaches the Web build unchanged. A demo with no shared root, or an explicit
+// -PkanamaWebExtraScriptSourceDir, keeps the single-root behavior unchanged.
+// Desktop-only scripts that must stay at their res://kotlin-src/ paths (e.g.
+// Bunnymark's benchmark variants, selected by path at runtime) are listed in
+// <projectDir>/web/kotlin-src-excludes.txt, one kotlin-src-relative path per
+// line; the merge skips them and fails loudly on a stale or contradictory
+// entry. The merged layout keeps the kotlin-src/ prefix so the processor
+// derives the same res://kotlin-src/*.kt resource paths as before.
+val sharedWebScriptSourceRoot: File? =
+    if (explicitWebScriptSourceRoot != null) null
+    else webDemoProjectDir?.resolve("kotlin-src")?.takeIf { it.isDirectory }
+val mergedWebScriptRoot = layout.buildDirectory.dir("web-merged-scripts/$webDemoKey")
+val mergeWebGameplayScripts: TaskProvider<Task>? =
+    if (sharedWebScriptSourceRoot != null && extraWebScriptSourceRoot != null) {
+        tasks.register("mergeWebGameplayScripts") {
+            group = "build"
+            description =
+                "Merges the shared kotlin-src with web/kotlin-src overrides (Task 64)."
+            val excludesFile = extraWebScriptSourceRoot.resolve("kotlin-src-excludes.txt")
+            inputs.dir(sharedWebScriptSourceRoot)
+            inputs.dir(extraWebScriptSourceRoot)
+            outputs.dir(mergedWebScriptRoot)
+            doLast {
+                val webOverrideDir = extraWebScriptSourceRoot.resolve("kotlin-src")
+                val excludes: List<String> =
+                    if (excludesFile.isFile) {
+                        excludesFile
+                            .readLines()
+                            .map { it.trim() }
+                            .filter { it.isNotEmpty() && !it.startsWith("#") }
+                    } else emptyList()
+                excludes.forEach { entry ->
+                    check(sharedWebScriptSourceRoot.resolve(entry).isFile) {
+                        "kotlin-src-excludes.txt lists '$entry' but kotlin-src/$entry does not exist"
+                    }
+                    check(!webOverrideDir.resolve(entry).isFile) {
+                        "kotlin-src-excludes.txt lists '$entry' but web/kotlin-src/$entry exists too -- " +
+                            "an excluded file cannot also be overridden"
+                    }
                 }
-            projectDirProperty
-                ?.let { providers.gradleProperty(it).orNull }
-                ?.let(rootProject::file)
-                ?.resolve("web")
-                ?.takeIf { it.resolve("kotlin-src").isDirectory }
-                ?: layout.projectDirectory
-                    .dir("src/web3dSmoke/web")
-                    .asFile
-                    .takeIf { demo == "web3d" && it.resolve("kotlin-src").isDirectory }
+                val out = mergedWebScriptRoot.get().asFile
+                out.deleteRecursively()
+                val target = out.resolve("kotlin-src")
+                copy {
+                    from(sharedWebScriptSourceRoot) {
+                        include("**/*.kt")
+                        excludes.forEach { exclude(it) }
+                    }
+                    into(target)
+                }
+                copy {
+                    from(webOverrideDir) { include("**/*.kt") }
+                    into(target)
+                }
+            }
         }
+    } else null
 
 kotlin {
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
@@ -70,7 +131,11 @@ kotlin {
             }
         }
         val wasmJsMain by getting {
-            extraWebScriptSourceRoot?.let(kotlin::srcDir)
+            if (mergeWebGameplayScripts != null) {
+                kotlin.srcDir(files(mergedWebScriptRoot).builtBy(mergeWebGameplayScripts))
+            } else {
+                extraWebScriptSourceRoot?.let(kotlin::srcDir)
+            }
         }
     }
 }
@@ -80,11 +145,20 @@ dependencies {
 }
 
 ksp {
+    val gameplayScriptRoot =
+        if (mergeWebGameplayScripts != null) mergedWebScriptRoot.get().asFile
+        else extraWebScriptSourceRoot
     val scriptRoots =
-        listOfNotNull(webScriptSourceRoot.asFile, extraWebScriptSourceRoot)
+        listOfNotNull(webScriptSourceRoot.asFile, gameplayScriptRoot)
             .joinToString(System.getProperty("path.separator")) { it.absolutePath }
     arg("kanamaScriptRoots", scriptRoots)
     arg("kanamaRuntimeTarget", "web")
+}
+
+// The KSP task consumes the merged gameplay sources; the srcDir's builtBy covers the
+// Kotlin compilation, this covers KSP's own source snapshot.
+mergeWebGameplayScripts?.let { merge ->
+    tasks.matching { it.name == "kspKotlinWasmJs" }.configureEach { dependsOn(merge) }
 }
 
 val webSpikeSourceProject = layout.projectDirectory.dir("src/webSpikeGodot/project")
