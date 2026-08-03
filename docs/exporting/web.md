@@ -70,18 +70,31 @@ typed commands over a JavaScript bridge rather than as direct FFI.
 
 ## Web-Compatible Project Scripts
 
-A project's JVM/desktop scripts are **not** directly Wasm-compatible: they take a
-`java.lang.foreign.MemorySegment` script-constructor handle and may use JVM-only
-pointer APIs. The Web export therefore uses a Wasm-compatible source set kept
-next to the JVM sources at **`<project>/web/kotlin-src/`**:
+The Web export compiles gameplay from a **merged view** of two directories in
+the project checkout:
 
-- the script constructor takes a neutral `GodotHandle` instead of
-  `MemorySegment`;
-- raw pointer identity (`handle.address()`) is replaced by `isSameInstance()`.
+1. **`<project>/kotlin-src/`** — the shared script root, the same files the
+   desktop build compiles. A script is directly Wasm-compatible when written
+   portably: the constructor takes `GodotHandle` (a typealias for
+   `MemorySegment` on the JVM, so desktop semantics are unchanged); numeric
+   reads of vector fields go through `.toDouble()` where the value is passed
+   as a parameter (desktop fields are single-precision `real_t`, Web's are
+   `Double` — mixed arithmetic widens automatically, bare parameter passes do
+   not); raw pointer identity (`handle.address()`) is replaced by
+   `isSameInstance()`; and no JVM-only APIs are used.
+2. **`<project>/web/kotlin-src/`** — per-file overrides. A file here replaces
+   the same-named shared file in the Web build. Use it for scripts that are
+   genuinely platform-different (a smoke hook, a capability stub), not for
+   copies.
 
-The `web/` directory is the export's Kotlin script root, so files under
-`web/kotlin-src/` resolve to `res://kotlin-src/*.kt` and match the scene script
-attachments. (Single-sourcing JVM and Web scripts is planned future work.)
+A desktop-only script that must keep its `res://kotlin-src/` path (for example
+one selected by path at runtime, like Bunnymark's benchmark variants) is listed
+in `<project>/web/kotlin-src-excludes.txt`, one kotlin-src-relative path per
+line; the merge skips it and fails loudly on a stale or contradictory entry.
+Anything a shared script calls that the Web API surface does not model yet
+fails the Web compile — that is the fail-loud coverage gate working as
+intended. Files under the merged root resolve to `res://kotlin-src/*.kt` and
+match the scene script attachments on both platforms.
 
 ## Build The Web Scripts
 
