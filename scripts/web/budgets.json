@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "updated": "2026-07-30",
-  "note": "Web performance budgets (Task 60f). Every number was MEASURED; each demo records the runs it came from. WHAT IS GATED CHANGED after the first Firefox baseline (see `gatingPolicy`): payload and crossings-per-tick are gated, startup is recorded but NOT gated.",
+  "note": "Web performance budgets (Task 60f). Every number was MEASURED; each demo records the runs it came from. WHAT IS GATED CHANGED after the first Firefox baseline (see `gatingPolicy`): payload and crossings-per-tick are gated, startup is recorded but NOT gated. Firefox's higher crossings-per-tick on _process-heavy demos is a SETTLED headless-environment artifact, not an engine defect (task 74, 2026-08-03): nothing paces requestAnimationFrame in headless Firefox, so render-frame-driven command emission multiplies while physics-driven work tracks the wall-capped physics step; a display-paced Firefox sits near Chrome. Per-engine budgets bound regressions within each environment's own baseline.",
   "headroom": "payload +15% (asset growth, not a texture reimport); startup 3x with an 8s floor; crossings/tick 2x with a 2.0 floor -- the ratio is diluted by tick count, so 2x absorbs host variation while a real regression (per-frame work reaching the cross-module path) multiplies it several times over.",
   "knownExceptions": {
     "tpsdemo": "638 MB served payload, 570 MB of it upstream demo assets in index.pck. It RUNS, but nobody would download it: this is far outside any sane web budget, and the number below records reality rather than blessing it. Fixing it is asset work in the demo (texture compression, trimming), which 60f explicitly puts out of scope -- budgets are not met by editing gameplay or scene content."
