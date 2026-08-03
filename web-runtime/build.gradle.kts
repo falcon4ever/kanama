@@ -43,37 +43,45 @@ val extraWebScriptSourceRoot: File? =
             .asFile
             .takeIf { webDemoKey == "web3d" && it.resolve("kotlin-src").isDirectory }
 
-// Task 64 (single-source scripts): when the demo checkout also has the shared
+// Task 64 (single-source scripts): when the demo checkout has the shared
 // desktop script root <projectDir>/kotlin-src, the Wasm build compiles a MERGED
-// view instead of web/kotlin-src alone -- the shared root is copied first and
-// web/kotlin-src is overlaid on top, so a file present in both resolves to the
-// web copy (per-target override) and a file present only in the shared root
-// reaches the Web build unchanged. A demo with no shared root, or an explicit
-// -PkanamaWebExtraScriptSourceDir, keeps the single-root behavior unchanged.
-// Desktop-only scripts that must stay at their res://kotlin-src/ paths (e.g.
-// Bunnymark's benchmark variants, selected by path at runtime) are listed in
-// <projectDir>/web/kotlin-src-excludes.txt, one kotlin-src-relative path per
-// line; the merge skips them and fails loudly on a stale or contradictory
-// entry. The merged layout keeps the kotlin-src/ prefix so the processor
-// derives the same res://kotlin-src/*.kt resource paths as before.
+// view -- the shared root is copied first and web/kotlin-src (IF present) is
+// overlaid on top, so a file present in both resolves to the web copy
+// (per-target override) and a file present only in the shared root reaches the
+// Web build unchanged. A fully-converged demo may have NO web/kotlin-src left
+// at all (git prunes the emptied directory); the merge activates on the shared
+// root alone, so convergence can never turn the script root off. A demo with
+// no shared root, or an explicit -PkanamaWebExtraScriptSourceDir, keeps the
+// single-root behavior unchanged. Desktop-only scripts that must stay at their
+// res://kotlin-src/ paths (e.g. Bunnymark's benchmark variants, selected by
+// path at runtime) are listed in <projectDir>/web/kotlin-src-excludes.txt, one
+// kotlin-src-relative path per line; the merge skips them and fails loudly on
+// a stale or contradictory entry. The merged layout keeps the kotlin-src/
+// prefix so the processor derives the same res://kotlin-src/*.kt resource
+// paths as before.
 val sharedWebScriptSourceRoot: File? =
     if (explicitWebScriptSourceRoot != null) null
     else webDemoProjectDir?.resolve("kotlin-src")?.takeIf { it.isDirectory }
+val webOverrideParentDir: File? =
+    if (explicitWebScriptSourceRoot != null) null else webDemoProjectDir?.resolve("web")
 val mergedWebScriptRoot = layout.buildDirectory.dir("web-merged-scripts/$webDemoKey")
 val mergeWebGameplayScripts: TaskProvider<Task>? =
-    if (sharedWebScriptSourceRoot != null && extraWebScriptSourceRoot != null) {
+    if (sharedWebScriptSourceRoot != null) {
         tasks.register("mergeWebGameplayScripts") {
             group = "build"
             description =
                 "Merges the shared kotlin-src with web/kotlin-src overrides (Task 64)."
-            val excludesFile = extraWebScriptSourceRoot.resolve("kotlin-src-excludes.txt")
+            val overrideDir = webOverrideParentDir?.resolve("kotlin-src")
+            val excludesFile = webOverrideParentDir?.resolve("kotlin-src-excludes.txt")
             inputs.dir(sharedWebScriptSourceRoot)
-            inputs.dir(extraWebScriptSourceRoot)
+            // files() tolerates absent paths, so an override-less or
+            // excludes-less demo still has a stable, content-tracked input set.
+            inputs.files(listOfNotNull(overrideDir, excludesFile))
             outputs.dir(mergedWebScriptRoot)
             doLast {
-                val webOverrideDir = extraWebScriptSourceRoot.resolve("kotlin-src")
+                val overrideActive = overrideDir?.isDirectory == true
                 val excludes: List<String> =
-                    if (excludesFile.isFile) {
+                    if (excludesFile?.isFile == true) {
                         excludesFile
                             .readLines()
                             .map { it.trim() }
@@ -83,7 +91,7 @@ val mergeWebGameplayScripts: TaskProvider<Task>? =
                     check(sharedWebScriptSourceRoot.resolve(entry).isFile) {
                         "kotlin-src-excludes.txt lists '$entry' but kotlin-src/$entry does not exist"
                     }
-                    check(!webOverrideDir.resolve(entry).isFile) {
+                    check(!overrideActive || !overrideDir!!.resolve(entry).isFile) {
                         "kotlin-src-excludes.txt lists '$entry' but web/kotlin-src/$entry exists too -- " +
                             "an excluded file cannot also be overridden"
                     }
@@ -98,9 +106,14 @@ val mergeWebGameplayScripts: TaskProvider<Task>? =
                     }
                     into(target)
                 }
-                copy {
-                    from(webOverrideDir) { include("**/*.kt") }
-                    into(target)
+                if (overrideActive) {
+                    copy {
+                        from(overrideDir) { include("**/*.kt") }
+                        into(target)
+                    }
+                }
+                check(target.isDirectory && target.listFiles()?.any { it.extension == "kt" } == true) {
+                    "merged web script root is empty -- no gameplay scripts would be compiled"
                 }
             }
         }
@@ -132,7 +145,12 @@ kotlin {
         }
         val wasmJsMain by getting {
             if (mergeWebGameplayScripts != null) {
-                kotlin.srcDir(files(mergedWebScriptRoot).builtBy(mergeWebGameplayScripts))
+                // A plain directory srcDir (not a files().builtBy() wrapper): KSP
+                // snapshots source-set dirs by content, and the wrapper form was
+                // measured to drop the gameplay sources from the KSP task's inputs
+                // entirely -- proxies then came out of the build cache without any
+                // demo scripts. Task dependencies are declared explicitly below.
+                kotlin.srcDir(mergedWebScriptRoot)
             } else {
                 extraWebScriptSourceRoot?.let(kotlin::srcDir)
             }
@@ -155,10 +173,15 @@ ksp {
     arg("kanamaRuntimeTarget", "web")
 }
 
-// The KSP task consumes the merged gameplay sources; the srcDir's builtBy covers the
-// Kotlin compilation, this covers KSP's own source snapshot.
+// Both consumers of the merged gameplay sources need the explicit dependency:
+// the srcDir above is a plain directory (deliberately -- see the comment there),
+// so nothing else orders the merge before KSP or the Kotlin compilation.
 mergeWebGameplayScripts?.let { merge ->
-    tasks.matching { it.name == "kspKotlinWasmJs" }.configureEach { dependsOn(merge) }
+    tasks.configureEach {
+        if (name == "kspKotlinWasmJs" || name == "compileKotlinWasmJs") {
+            dependsOn(merge)
+        }
+    }
 }
 
 val webSpikeSourceProject = layout.projectDirectory.dir("src/webSpikeGodot/project")

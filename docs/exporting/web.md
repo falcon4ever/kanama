@@ -39,8 +39,8 @@ BiDi endpoint to the driver's launch recipe, so they cannot be judged either way
 Safari is "validated-at" only: it ships with the OS and cannot be installed side
 by side, so no lower bound is testable at all.
 
-**iOS and iPadOS have not been validated**; `safaridriver` drives desktop Safari
-only, so no mobile-WebKit claim is made here.
+**iOS and iPadOS are hand-checked only, not gated** — no mobile-WebKit claim is
+made here (see Known Limitations and Testing On A Phone Or Tablet).
 
 This page is the reproducible export workflow. For the architecture — batching,
 snapshots, handle generations, the bridge protocol — see
