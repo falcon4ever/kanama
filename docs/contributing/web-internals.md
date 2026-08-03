@@ -114,13 +114,16 @@ ktfmt reflow but catches any changed arm, opcode, extern, or guard.
 Android, and iOS also consume (via the generated `InitialGodotCallDescriptors`).
 Those backends call Godot in-process and do none of Web's caching; folding Web-only
 snapshot/handle rules into the shared file would stop it being neutral and over-fit
-it to the two-demo corpus. Option A keeps the shared model clean.
+it to the Web demo corpus. Option A keeps the shared model clean.
 
 **When to reconsider Option B:** if the hand-written bookkeeping companion grows
-faster than the generated dispatch as the corpus expands (60b–60e) — i.e. if
-"admitting a family" routinely means non-trivial new hand-written state rather than
-a near-mechanical hook wiring — revisit encoding a Web-side (not shared-model)
-policy layer so more of the bookkeeping generates. Record any such change here.
+faster than the generated dispatch — i.e. if "admitting a family" routinely means
+non-trivial new hand-written state rather than a near-mechanical hook wiring —
+revisit encoding a Web-side (not shared-model) policy layer so more of the
+bookkeeping generates. Through the full twelve-demo corpus (protocol 15, 286
+opcodes) that did not happen: the largest single admission (tps-demo) brought in
+61 opcodes with exactly one new extern, so Option A stands. Record any change
+here.
 
 ### Batching, snapshots, and handle generations
 
@@ -188,11 +191,16 @@ is released).
 
 ## Validation Fixtures
 
-The current fixtures are per-browser driver scripts plus machine-readable JSON
-results (Bunnymark and Match3, one file per browser) with matching screenshots.
-A run is not green from page load alone — it must satisfy gameplay assertions,
-final state, the crossing budget, handle/callback/scheduler teardown, console
-error checks, and protocol-version match.
+The current fixtures are per-demo driver scripts
+(`scripts/web/drivers/demos/*.mjs`, one per corpus demo, shared by the
+Chrome/Firefox/Safari engine drivers) plus machine-readable JSON results, one
+per demo × browser cell, validated against a versioned envelope schema by
+`web_export_smoke.sh`; `web_ci_matrix.sh` aggregates the cells into a single
+evidence JSON. A run is not green from page load alone — it must satisfy
+gameplay assertions, final state, the crossing budget,
+handle/callback/scheduler teardown, console error checks, and protocol-version
+match, and the harness's own `web_export_smoke: PASS` line (not a driver's
+check count) is what decides green.
 
 Browser-specific notes:
 

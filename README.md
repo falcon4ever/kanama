@@ -63,11 +63,16 @@ project scripts needs the Kanama checkout), and there is no mobile hot reload �
 see the [iOS export guide](docs/exporting/ios.md) and
 [Version Support](docs/reference/version-support.md).
 
-A **Kotlin/Wasm Web backend is Experimental (preview)**. It runs Bunnymark and
-Match3 as production Godot Web exports across Chrome, Firefox, and Safari through
-a generated proxy and a versioned JavaScript bridge, with no on-device JVM. It is
-**not a Supported target**: single-thread Compatibility renderer only, a
-source-checkout export (no packaged addon), and a two-demo corpus. See the
+A **Kotlin/Wasm Web backend is Experimental (preview)**. The full twelve-demo
+corpus — Bunnymark and Match3 through FPS, Racing, City-Builder, and tps-demo —
+runs as production Godot Web exports through a generated proxy and a versioned
+JavaScript bridge, with no on-device JVM. Chrome and Firefox gate the corpus in
+CI (Linux; full corpus plus a ten-minute leak soak nightly) against tested
+browser floors and measured per-engine performance budgets, and Safari passes
+the same gate as a local pre-release check (it has no headless mode). It is
+still **not a Supported target**: single-thread Compatibility renderer only, a
+source-checkout export (no packaged addon), and desktop browsers only
+(iOS/iPadOS WebKit unvalidated). See the
 [Web export guide](docs/exporting/web.md) and
 [Web Internals](docs/contributing/web-internals.md) for the architecture.
 

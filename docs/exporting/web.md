@@ -462,5 +462,15 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   Kotlin/JS production path.
 - A packaged/addon install path (exporting without the Kanama checkout) is not
   yet available; the current workflow is a source-checkout export.
+- **One defect is unexplained, not solved (task 71).** On one Linux CI host,
+  spawned mobs in two demos travel far off screen yet
+  `VisibleOnScreenNotifier2D.screen_exited` never fires, so they are never
+  freed and live handles plateau. Five hypotheses have been eliminated by
+  measurement across three hosts, and a plain-GDScript control shows the
+  notifier itself firing on that host under Chrome — nothing measured
+  implicates the Kanama backend, but "not our bug" has not been earned either.
+  The affected cells are quarantined, not hidden (see Quarantined Cells above).
+  If enemies accumulate without despawning in a Web export, check that task
+  before assuming a project bug.
 - Not a Supported target: no support claim, and the corpus/browser matrix and
   budgets are still being hardened.
