@@ -14,8 +14,9 @@
  *
  * libjvm is dlopen'd at runtime (rather than linked at build time)
  * so the bootstrap library doesn't bake in an absolute path to a
- * specific Java install. JAVA_HOME is consulted first; platform-specific
- * fallbacks are best-effort only.
+ * specific Java install. An app-relative bundled `runtime/` image
+ * (exported games, task 63 / issue #102) is probed first, then
+ * JAVA_HOME; platform-specific fallbacks are best-effort only.
  */
 
 #if defined(__linux__) && !defined(_GNU_SOURCE)
@@ -116,6 +117,8 @@ static void print_missing_jvm_diagnostic(void) {
 #ifndef __ANDROID__
     const char *java_home = getenv("JAVA_HOME");
     fprintf(stderr, "[kanama] error: libjvm not found. Kanama desktop runtime requires a JDK 25+ install.\n");
+    fprintf(stderr, "[kanama] no bundled runtime%s%s found next to the Kanama bootstrap library.\n",
+            PATH_SEP, jvm_relative_lib_path());
     if (java_home && *java_home) {
         char expected[1024];
         build_java_home_jvm_path(expected, sizeof expected, java_home);
@@ -128,8 +131,99 @@ static void print_missing_jvm_diagnostic(void) {
 #endif
 }
 
+/* Directory containing this bootstrap library. Anchor on the library, not
+ * the executable: kanama.gdextension already anchors everything on it, and
+ * Godot decides where the executable lives per platform. */
+static int find_self_library_dir(char *out, size_t out_size) {
+#ifdef _WIN32
+    HMODULE module = NULL;
+    if (!GetModuleHandleExA(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            (LPCSTR)find_self_library_dir,
+            &module
+        )) {
+        return -1;
+    }
+    char lib_path[1024];
+    DWORD len = GetModuleFileNameA(module, lib_path, sizeof lib_path);
+    if (len == 0 || len >= sizeof lib_path) {
+        return -1;
+    }
+#else
+    Dl_info info;
+    if (dladdr((void *)find_self_library_dir, &info) == 0 || info.dli_fname == NULL) {
+        return -1;
+    }
+    char lib_path[1024];
+    strncpy(lib_path, info.dli_fname, sizeof lib_path - 1);
+    lib_path[sizeof lib_path - 1] = '\0';
+#endif
+    path_parent_in_place(lib_path);
+    int n = snprintf(out, out_size, "%s", lib_path);
+    if (n < 0 || (size_t)n >= out_size) {
+        return -1;
+    }
+    return 0;
+}
+
+/* Task 63 (issue #102): exported games ship a jlink-trimmed `runtime/` image
+ * that the bootstrap finds app-relative, so players never install a JDK.
+ * Probe `runtime/<platform jvm layout>` in the bootstrap library's own
+ * directory and up to two parents (mirroring the kanama.jar walk), plus a
+ * `Resources/` subdirectory at each level, BEFORE the JAVA_HOME/dev-fallback
+ * chain: a bundled runtime, when present, always wins; with none present the
+ * dev workflow is unchanged. Expected layouts:
+ *   windows: <dir>\runtime\bin\server\jvm.dll
+ *   linux:   <dir>/runtime/lib/server/libjvm.so
+ *   macOS:   <dir>/runtime/lib/server/libjvm.dylib
+ *            (exported .app: the dylib is in Contents/Frameworks and the
+ *            payload in Contents/Resources/ next to the .pck — the parent
+ *            walk's Resources probe finds it there. codesign seals
+ *            Resources/ by hash but rejects jars/loose runtime files as
+ *            "nested code" under Frameworks/ or Contents/, so Resources is
+ *            the only .app location that stays re-sealable after assembly.)
+ */
+static const char *find_bundled_runtime_jvm(void) {
+    static char path[2048];
+    char search_dir[1024];
+    if (find_self_library_dir(search_dir, sizeof search_dir) != 0) {
+        return NULL;
+    }
+    for (int depth = 0; depth < 3; depth++) {
+        int n = snprintf(path, sizeof path, "%s%sruntime%s%s",
+                         search_dir, PATH_SEP, PATH_SEP, jvm_relative_lib_path());
+        if (n < 0 || (size_t)n >= sizeof path) {
+            return NULL;
+        }
+        if (access(path, F_OK) == 0) {
+            return path;
+        }
+        n = snprintf(path, sizeof path, "%s%sResources%sruntime%s%s",
+                     search_dir, PATH_SEP, PATH_SEP, PATH_SEP, jvm_relative_lib_path());
+        if (n < 0 || (size_t)n >= sizeof path) {
+            return NULL;
+        }
+        if (access(path, F_OK) == 0) {
+            return path;
+        }
+        char before_parent[1024];
+        strncpy(before_parent, search_dir, sizeof before_parent - 1);
+        before_parent[sizeof before_parent - 1] = '\0';
+        path_parent_in_place(search_dir);
+        if (strcmp(search_dir, before_parent) == 0 || search_dir[0] == '\0') {
+            break;
+        }
+    }
+    return NULL;
+}
+
 static const char *find_jvm_lib(void) {
     static char path[1024];
+    const char *bundled = find_bundled_runtime_jvm();
+    if (bundled) {
+        fprintf(stderr, "[kanama] bundled runtime: %s\n", bundled);
+        return bundled;
+    }
     const char *java_home = getenv("JAVA_HOME");
     if (java_home && *java_home) {
         build_java_home_jvm_path(path, sizeof path, java_home);
@@ -174,40 +268,25 @@ static const char *find_jvm_lib(void) {
     return NULL;
 }
 
-/* Find kanama.jar next to our own native library or in the addon root. */
+/* Find kanama.jar next to our own native library or in the addon root.
+ * Mirrors find_bundled_runtime_jvm's walk: each level is probed directly and
+ * through a `Resources/` subdirectory (exported macOS .app payload location,
+ * see the task 63 comment above). */
 static int find_jar_next_to_self(char *out, size_t out_size) {
-#ifdef _WIN32
-    HMODULE module = NULL;
-    if (!GetModuleHandleExA(
-            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-            (LPCSTR)find_jar_next_to_self,
-            &module
-        )) {
-        return -1;
-    }
-    char dll_path[1024];
-    DWORD len = GetModuleFileNameA(module, dll_path, sizeof dll_path);
-    if (len == 0 || len >= sizeof dll_path) {
-        return -1;
-    }
-    char *dir = path_parent_in_place(dll_path);
-#else
-    Dl_info info;
-    if (dladdr((void *)find_jar_next_to_self, &info) == 0 || info.dli_fname == NULL) {
-        return -1;
-    }
-    char dylib_path[1024];
-    strncpy(dylib_path, info.dli_fname, sizeof dylib_path - 1);
-    dylib_path[sizeof dylib_path - 1] = '\0';
-    char *dir = path_parent_in_place(dylib_path);
-#endif
-
     char search_dir[1024];
-    strncpy(search_dir, dir, sizeof search_dir - 1);
-    search_dir[sizeof search_dir - 1] = '\0';
+    if (find_self_library_dir(search_dir, sizeof search_dir) != 0) {
+        return -1;
+    }
 
     for (int depth = 0; depth < 3; depth++) {
         int n = snprintf(out, out_size, "%s%skanama.jar", search_dir, PATH_SEP);
+        if (n < 0 || (size_t)n >= out_size) {
+            return -1;
+        }
+        if (access(out, F_OK) == 0) {
+            return 0;
+        }
+        n = snprintf(out, out_size, "%s%sResources%skanama.jar", search_dir, PATH_SEP, PATH_SEP);
         if (n < 0 || (size_t)n >= out_size) {
             return -1;
         }
