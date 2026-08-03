@@ -303,10 +303,17 @@ starting, or start doing per-frame work at the module boundary.
 
 **Why per engine.** The ratio is engine-stable across most of the corpus — Chrome
 vs Firefox: bunnymark 2.22/1.97, dodge 0.19/0.20, fps 1.10/1.02 — but *not* for
-the input-heavy demos, where Firefox does several times the boundary work
+the input-heavy demos, where Firefox reports several times the boundary work
 (charactercontroller 4.50/**19.58**, thirdperson 1.15/**6.01**). Budgets are
-therefore measured and declared per engine. That asymmetry is itself an open
-question, not a settled property.
+therefore measured and declared per engine. The asymmetry itself is settled
+(task 74): nothing paces `requestAnimationFrame` in headless Firefox, so
+render-frame-driven (`_process`) command emission multiplies freely while
+physics-driven work tracks the wall-capped physics step — a per-opcode
+histogram shows the multiplier concentrated in per-render-frame emissions,
+with physics-driven calls at exactly the tick ratio on both engines. The
+number is a property of the headless environment, not of Firefox as users run
+it (display-paced, it sits near Chrome); per-engine budgets bound regressions
+within each environment's own baseline.
 
 **Why the headline budget is per tick rather than per second.** Godot's Web main
 loop is paced by `requestAnimationFrame` and advances a fixed step per iteration,
