@@ -173,18 +173,26 @@ python3 scripts/web/serve_export.py web-runtime/build/web-export/match3
 ### Testing On A Phone Or Tablet
 
 Loopback is the default so an export server is never reachable from the network
-unless asked for. `--lan` binds every interface and prints the address to open on
-the device:
+unless asked for. `--lan` binds every interface — and **must be combined with
+`--https`**, because Godot's Web export requires a secure context: `127.0.0.1`
+is one, but a LAN address over plain HTTP is not, and the engine never starts
+on the device (measured: a fatal error in audio-worklet init right after
+"starting Godot…"; the page now refuses up front instead). `--https` serves
+with a cached self-signed certificate — accept the device's one-time warning
+(iOS Safari: Show Details → visit this website):
 
 ```sh
-python3 scripts/web/serve_export.py --lan web-runtime/build/web-export/match3
-# prints PORT=<n> and LAN=http://<this-machine>:<n>/
+python3 scripts/web/serve_export.py --lan --https web-runtime/build/web-export/match3
+# prints PORT=<n> and LAN=https://<this-machine>:<n>/
 ```
 
-This is the **only** way to exercise iOS or iPadOS: `safaridriver` drives desktop
-Safari only, so mobile WebKit cannot be automated and has to be hand-checked on a
-real device with the phone on the same network. Nothing on mobile WebKit is
-validated today — see Known Limitations.
+Hand-checking on a device on the same network is the standard recipe. Safari on
+a USB-connected iPhone or iPad can additionally be driven over WebDriver:
+enable Settings → Safari → Advanced → Remote Automation on the device, keep it
+unlocked, and create a `safaridriver` session with `platformName: iOS`, the
+device UDID (`xcrun xctrace list devices`), and `acceptInsecureCerts: true` —
+one session per device at a time. No automated iOS gate exists yet, and mobile
+WebKit remains hand-validated, not gated — see Known Limitations.
 
 ## Run The Export Smoke
 
@@ -461,9 +469,11 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   they run unattended; `safaridriver` drives a real Safari window on a logged-in
   GUI session. The Safari gate is therefore a **local** gate, not a CI cell, and
   two Safari runs must not be started concurrently on one machine.
-- **Safari on iOS/iPadOS is unvalidated.** Every iOS browser is WebKit, but
-  `safaridriver` covers desktop Safari only. No mobile-WebKit version floor is
-  claimed.
+- **Safari on iOS/iPadOS is hand-checked only, and no mobile-WebKit version
+  floor is claimed.** Every iOS browser is WebKit. `safaridriver` can drive
+  Safari on a USB-connected device (see Testing On A Phone Or Tablet), but no
+  automated iOS gate exists and mobile WebKit is not part of the validated
+  claim.
 - **Lifecycle virtuals are limited to what the proxy dispatches**: `_ready`,
   `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
   `_unhandled_input`. Anything else — `@OnEnterTree` in particular — is rejected

@@ -60,11 +60,40 @@
     <script src="kanama-web-spike.js"></script>
     <script src="kanama-web-bridge.js"></script>
     <script>
-      const engine = new Engine($GODOT_CONFIG);
-      globalThis
-        .bootstrapKanamaWeb(globalThis["web-runtime"])
-        .then(() => engine.startGame())
-        .catch((error) => globalThis.failKanamaWeb(error));
+      const kanamaBootStatus = document.getElementById("kanama-status");
+      if (!window.isSecureContext) {
+        // Godot's Web export requires a secure context; starting it here dies
+        // inside engine init (audio-worklet setup) with an unreadable wasm
+        // stack. 127.0.0.1 is always secure; a LAN address over plain HTTP is
+        // not. Refuse up front the way stock Godot's loader does (task 70).
+        document.body.dataset.status = "fail";
+        kanamaBootStatus.dataset.kind = "fail";
+        kanamaBootStatus.textContent =
+          "Not a secure context: Godot Web exports cannot start on " +
+          location.origin +
+          ". Serve over HTTPS (scripts/web/serve_export.py --lan --https) " +
+          "or open via 127.0.0.1.";
+      } else {
+        const config = $GODOT_CONFIG;
+        const megabytes = (bytes) => (bytes / (1024 * 1024)).toFixed(1);
+        config.onProgress = (current, total) => {
+          // Narrate the engine download/instantiate phase; Godot stops
+          // reporting once it starts and the bridge owns the line after that.
+          // Without this a large pck reads as a silent hang (task 70).
+          if (!total || document.body.dataset.status !== "loading") return;
+          kanamaBootStatus.textContent =
+            "Kotlin/Wasm ready; starting Godot… " +
+            megabytes(current) +
+            " / " +
+            megabytes(total) +
+            " MB";
+        };
+        const engine = new Engine(config);
+        globalThis
+          .bootstrapKanamaWeb(globalThis["web-runtime"])
+          .then(() => engine.startGame())
+          .catch((error) => globalThis.failKanamaWeb(error));
+      }
     </script>
   </body>
 </html>
