@@ -72,7 +72,7 @@ browser floors and measured per-engine performance budgets, and Safari passes
 the same gate as a local pre-release check (it has no headless mode). It is
 still **not a Supported target**: single-thread Compatibility renderer only, a
 source-checkout export (no packaged addon), and desktop browsers only
-(iOS/iPadOS WebKit unvalidated). See the
+(iOS/iPadOS hand-checked on device, not gated). See the
 [Web export guide](docs/exporting/web.md) and
 [Web Internals](docs/contributing/web-internals.md) for the architecture.
 

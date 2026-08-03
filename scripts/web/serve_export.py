@@ -11,7 +11,12 @@ NOT sent: the preview backend is the single-thread Compatibility renderer, which
 does not require cross-origin isolation.
 
 Usage:
-    python3 serve_export.py <export-dir>
+    python3 serve_export.py [--lan] [--https] <export-dir>
+
+``--https`` serves over TLS with a cached self-signed certificate. It exists
+for phone testing: Godot's Web export requires a secure context, ``127.0.0.1``
+is one but a LAN address over plain HTTP is not, so ``--lan`` without
+``--https`` cannot start the engine on a device (task 70).
 """
 
 from __future__ import annotations
@@ -19,6 +24,8 @@ from __future__ import annotations
 import http.server
 import os
 import socket
+import ssl
+import subprocess
 import sys
 import threading
 import time
@@ -77,13 +84,52 @@ def _lan_address() -> str | None:
         return None
 
 
+def _ensure_self_signed_cert(address: str) -> tuple[str, str]:
+    """Return (cert, key) paths for ``address``, generating them if missing.
+
+    Certificates are cached per address under ~/.cache/kanama-web-serve so a
+    device that accepted the certificate once does not see a fresh warning on
+    every run. Self-signed is the point: Godot's Web export requires a secure
+    context (task 70 — over plain LAN HTTP it never starts), and a tap-through
+    warning on the device is the cheap way to get one on a LAN.
+    """
+    cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "kanama-web-serve")
+    os.makedirs(cache_dir, exist_ok=True)
+    cert = os.path.join(cache_dir, f"cert-{address}.pem")
+    key = os.path.join(cache_dir, f"key-{address}.pem")
+    if os.path.isfile(cert) and os.path.isfile(key):
+        return cert, key
+    san = f"subjectAltName=IP:{address},IP:127.0.0.1,DNS:localhost"
+    try:
+        subprocess.run(
+            [
+                "openssl", "req", "-x509", "-newkey", "rsa:2048",
+                "-keyout", key, "-out", cert, "-days", "30", "-nodes",
+                "-subj", f"/CN={address}", "-addext", san,
+            ],
+            check=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        print(
+            "serve_export: --https needs the openssl CLI to generate a"
+            " self-signed certificate and it was not found on PATH",
+            file=sys.stderr,
+        )
+        raise SystemExit(2) from None
+    except subprocess.CalledProcessError as error:
+        stderr = error.stderr.decode(errors="replace") if error.stderr else ""
+        print(f"serve_export: certificate generation failed:\n{stderr}", file=sys.stderr)
+        raise SystemExit(2) from None
+    return cert, key
+
+
 def main(argv: list[str]) -> int:
-    lan = False
-    args = [arg for arg in argv if arg != "--lan"]
-    if len(args) != len(argv):
-        lan = True
+    lan = "--lan" in argv
+    https = "--https" in argv
+    args = [arg for arg in argv if arg not in ("--lan", "--https")]
     if len(args) != 1:
-        print("usage: serve_export.py [--lan] <export-dir>", file=sys.stderr)
+        print("usage: serve_export.py [--lan] [--https] <export-dir>", file=sys.stderr)
         return 2
 
     export_dir = args[0]
@@ -104,6 +150,19 @@ def main(argv: list[str]) -> int:
 
     server = http.server.ThreadingHTTPServer((host, port), handler)
 
+    scheme = "http"
+    if https:
+        # A phone can only run the export over a secure context (Godot refuses,
+        # or dies in audio-worklet init, without one — task 70), and a LAN IP is
+        # never one over plain HTTP. 127.0.0.1 is always secure, so --https is
+        # only *required* together with --lan; it works alone for parity.
+        cert_address = (_lan_address() or "127.0.0.1") if lan else "127.0.0.1"
+        cert, key = _ensure_self_signed_cert(cert_address)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(cert, key)
+        server.socket = context.wrap_socket(server.socket, server_side=True)
+        scheme = "https"
+
     # The smoke shell owns this server and stops it in its cleanup trap — but if
     # the shell is SIGKILLed or its terminal goes away, nothing reaches us and
     # this process holds its port forever. Watch for being reparented away from
@@ -121,9 +180,27 @@ def main(argv: list[str]) -> int:
     print(f"PORT={port}", flush=True)
     if lan:
         address = _lan_address()
-        where = f"http://{address}:{port}/" if address else f"http://<this-machine>:{port}/"
+        where = (
+            f"{scheme}://{address}:{port}/"
+            if address
+            else f"{scheme}://<this-machine>:{port}/"
+        )
         print(f"LAN={where}", flush=True)
         print(f"serve_export: open {where} on the device", flush=True)
+        if https:
+            print(
+                "serve_export: the certificate is self-signed -- accept the"
+                " device's one-time warning (iOS Safari: Show Details -> visit"
+                " this website)",
+                flush=True,
+            )
+        else:
+            print(
+                "serve_export: NOTE plain HTTP is not a secure context on a"
+                " LAN address; Godot Web exports will not start on the device."
+                " Pass --https for phone testing (task 70).",
+                flush=True,
+            )
     try:
         server.serve_forever()
     except KeyboardInterrupt:
