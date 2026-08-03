@@ -13,7 +13,7 @@ page records the platforms and engine versions validated for it.
 | Linux x86_64 | Supported (4.7 stable) | Full local CI, native bootstrap preflight, strict docs, all 11 demo builds, the nine-demo desktop smoke matrix, TPS checked smoke, distribution packaging, and desktop-kit/store-addon install smokes passed on Ubuntu 25.04 with Godot `4.7.stable.official.5b4e0cb0f` and OpenJDK 25.0.2 (2026-07-13/14). The resource-loader/saver teardown fix is required. Packaged desktop exports remain a separate release-readiness track. |
 | Windows x86_64 | Supported (4.7 stable) | Full local revalidation on the 4.7 stable console binary (2026-07-13): demo audits, script builds, imports, the nine-demo desktop runtime smoke, the TPS smoke, and the packaged desktop-kit + store-addon install smokes all passed. Gradle commands that build the native bootstrap run from a VS 2022 developer environment (VsDevCmd); Git Bash runs the smoke scripts. |
 | iOS (Kotlin/Native backend) | Supported (4.7 stable) | Promoted from Experimental 2026-07-14 (§7 mobile promotion bar B1–B4 MET). The iOS backend runs full Kanama project scripts via a C shim + Kotlin/Native static `.xcframework`, using the same wrapper generator as desktop/Android (no JVM on device). Full device gate (9-demo matrix + fresh-project install path) passed on two models: **iPhone 12** (iOS 26.5, 2026-06-25; 0 guardrail failures) + **iPhone 15 Pro** (iOS 26.5, 2026-07-10, full-breadth wrapper runtime), both on 4.7 stable iOS templates. Packaged `.xcframework` addon is runtime-only (compiling project scripts needs the Kanama checkout; ~199.5 MB debug / ~87.6 MB release static `.a`). No mobile hot reload. One FPS Audio autoload follow-up + task-26 multiplayer UI polish tracked as non-blocking — see [exporting/ios.md](../exporting/ios.md). |
-| Web | Experimental (4.7 stable) | Kotlin/Wasm backend (no on-device JVM); runs a twelve-demo production-export corpus in Chrome/Firefox/Safari through a generated proxy + versioned JS bridge, with a reproducible source-checkout export workflow ([guide](../exporting/web.md)). **Not a Supported target: source-checkout export only (no packaged addon), single-thread Compatibility renderer, desktop browsers only (iOS/iPadOS WebKit unvalidated).** See §Web below. |
+| Web | Experimental (4.7 stable) | Kotlin/Wasm backend (no on-device JVM); runs a twelve-demo production-export corpus in Chrome/Firefox/Safari through a generated proxy + versioned JS bridge, with a reproducible source-checkout export workflow ([guide](../exporting/web.md)). **Not a Supported target: source-checkout export only (no packaged addon), single-thread Compatibility renderer, desktop browsers only (iOS/iPadOS hand-checked on device, not gated).** See §Web below. |
 
 Validated support is only claimed after the matching smoke path passes.
 Use the
@@ -151,8 +151,15 @@ never expose a reachable WebDriver BiDi endpoint to the driver, so they are
 untestable, not known-bad. Safari cannot be installed side by side with itself,
 so its number is only the oldest version ever driven.
 
-**iOS and iPadOS are unvalidated**: `safaridriver` drives desktop Safari only,
-and no mobile-WebKit floor is claimed.
+**iOS and iPadOS are hand-checked, not gated, and no mobile-WebKit floor is
+claimed.** A device pass (2026-08-03, iPhone 15 Pro, Safari/WebKit
+26.5.2/605.1.15, served over HTTPS — Godot Web exports require a secure
+context) had 11 of the 12 corpus demos boot and render with zero console
+errors; dodge and match3 were hand-played with working audio and lock/unlock
+resume, and tps-demo exceeds the per-tab memory budget during load.
+`safaridriver` can drive Safari on a USB-connected device (Remote Automation),
+but no automated iOS gate exists, so none of this is "tested" in the sense
+above — mobile WebKit stays outside the validated claim.
 
 ### Explicit non-support limitations
 
@@ -162,7 +169,7 @@ and no mobile-WebKit floor is claimed.
 - Godot **Compatibility renderer, single-thread** only.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather
-  than a CI cell; iOS/iPadOS WebKit is unvalidated.
+  than a CI cell; iOS/iPadOS WebKit is hand-checked only, not gated.
 - One defect is tracked openly rather than solved: on one Linux CI host,
   spawned mobs never receive `VisibleOnScreenNotifier2D.screen_exited` and are
   never freed (task 71; the affected matrix cells are quarantined, not hidden).
