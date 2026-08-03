@@ -163,6 +163,11 @@ and no mobile-WebKit floor is claimed.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather
   than a CI cell; iOS/iPadOS WebKit is unvalidated.
+- One defect is tracked openly rather than solved: on one Linux CI host,
+  spawned mobs never receive `VisibleOnScreenNotifier2D.screen_exited` and are
+  never freed (task 71; the affected matrix cells are quarantined, not hidden).
+  Nothing measured implicates the Kanama backend, but it has not been ruled
+  out — see [Exporting → Web](../exporting/web.md) Known Limitations.
 - Reproducible export builds currently require
   `--no-daemon -Pkotlin.compiler.execution.strategy=in-process` (Kotlin daemon
   builds exhausted memory).
