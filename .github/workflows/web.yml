@@ -50,7 +50,7 @@ env:
   # unpinned demos checkout means an unrelated demo-repo commit can redden every
   # Kanama PR. Bump it deliberately when a demo port lands (see
   # docs/exporting/web.md, "Bumping the demos pin").
-  DEMOS_REF: 34856ffc2d48f44143f9f138a94e44f8978bc5dd
+  DEMOS_REF: 6f8ba32a935ac6dee5a2f0e60f6ab33aedb5c503
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
