@@ -82,6 +82,14 @@ class MeshInstance3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
     VisualInstance3DBackendContractProbe(backendHandle).setLayerMask(mask)
   }
 
+  /** The instance's Mesh resource as a tracked handle. */
+  fun getMesh(): Mesh? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+        net.multigesture.kanama.backend.InitialGodotCallDescriptors.MESHINSTANCE3D_GET_MESH,
+        backendHandle,
+      )
+      ?.let { Mesh(WebObjectId(it.backendToken().toInt())) }
+
   /** Web supports only clearing an override (material baked null in the family). */
   fun setSurfaceOverrideMaterial(surface: Long, material: Nothing?) {
     NodeBackendContractProbe(backendHandle) // keep receiver-liveness semantics uniform
@@ -134,35 +142,20 @@ class InputEventMouseMotion private constructor(godotObject: GodotHandle) :
 
 
 
-/** get_children/find_children walks backed by get_child_count + get_child. */
-fun Node.getChildren(): List<GodotObject> {
-  val probe = NodeBackendContractProbe(backendHandle)
-  return (0 until probe.getChildCount()).mapNotNull { index ->
-    probe.getChild(index)?.let { GodotObject(WebObjectId(it.backendToken().toInt())) }
-  }
-}
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+fun Node.getChildren(): List<GodotObject> = getChildren(includeInternal = false)
 
 /**
- * Recursive class-filtered child walk (pattern is baked to "*", the only value the FPS
- * passes): returns every descendant whose Godot class matches [type].
+ * Import-compat alias for shared demo sources; delegates to the engine-backed [Node] member
+ * (task 64), which supersedes the first-port manual class-filtered walk.
  */
-fun Node.findChildren(pattern: String, type: String): List<GodotObject> {
-  require(pattern == "*") { "Web find_children supports only the \"*\" pattern" }
-  val found = mutableListOf<GodotObject>()
-  fun walk(node: GodotObject) {
-    Node(node.handle).getChildren().forEach { child ->
-      if (GodotObjectBackendContractProbe(child.backendHandle).isClass(type)) found.add(child)
-      walk(child)
-    }
-  }
-  walk(GodotObject(handle))
-  return found
-}
+fun Node.findChildren(pattern: String, type: String): List<GodotObject> =
+  findChildren(pattern, type, recursive = true, owned = true)
 
-fun Node.hasMethod(method: String): Boolean =
-  NodeBackendContractProbe(backendHandle).hasMethod(method)
+/** Import-compat alias for shared demo sources; delegates to the [GodotObject] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.hasMethod(method: String): Boolean = hasMethod(method)
 
-/** Dynamic one-Double-argument method call (FPS damage(amount) on ray hits). */
-fun Node.call(method: String, value: Double) {
-  NodeBackendContractProbe(backendHandle).callDouble(method, value)
-}
+/** Import-compat alias for shared demo sources; delegates to the [GodotObject] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.call(method: String, value: Double) = call(method, value)

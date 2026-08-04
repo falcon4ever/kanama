@@ -22,56 +22,42 @@ import net.multigesture.kanama.web.WebObjectId
 /** FPS-era alias: the pure-Kotlin Basis moved in with the value types. */
 typealias Basis = net.multigesture.kanama.types.Basis
 
-private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
-  val rotationBasis = Basis.fromEuler(rotation)
-  // Node basis = R * S: columns scaled (Godot composes scale on the right of rotation).
-  return Basis(
-    rotationBasis.getColumn(0) * scale.x,
-    rotationBasis.getColumn(1) * scale.y,
-    rotationBasis.getColumn(2) * scale.z,
-  )
-}
-
-/** The node's local rotation+scale basis; writes decompose to the two snapshot families. */
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.basis: Basis
-  get() = composeBasis(rotation, scale)
+  get() = basis
   set(value) {
-    rotation = value.getEuler()
-    scale = value.getScale()
+    basis = value
   }
 
-/** The node's local transform (basis + origin over the mirrored snapshots). */
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.transform: Transform3D
-  get() = Transform3D(basis, position)
+  get() = transform
   set(value) {
-    position = value.origin
-    basis = value.basis
+    transform = value
   }
 
-/** The node's world transform; rotation/origin cross synchronously, global scale assumed 1. */
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.globalTransform: Transform3D
-  get() = Transform3D(Basis.fromEuler(globalRotation), globalPosition)
+  get() = globalTransform
   set(value) {
-    globalPosition = value.origin
-    globalRotation = value.basis.getEuler()
+    globalTransform = value
   }
 
-/**
- * Orient the forward axis at [target] from the current position — -Z by default, +Z when
- * [useModelFront] (the desktop signature; rides look_at_from_position, task 64).
- */
-fun Node3D.lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
-  lookAtFromPosition(globalPosition, target, up, useModelFront)
-}
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node3D.lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) =
+  lookAt(target, up, useModelFront)
 
-/** Node3D visibility read (synchronous immediate). */
-fun Node3D.isVisible(): Boolean =
-  GodotBackendCalls.invokeNoArgsRetBool(D.NODE3D_IS_VISIBLE, backendHandle)
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node3D.isVisible(): Boolean = isVisible()
 
-/** Godot's rotate_object_local: right-multiply the local basis by an axis-angle rotation. */
-fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) {
-  basis = basis * Basis.fromAxisAngle(axis, angle)
-}
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(axis, angle)
 
 private fun Vector3.toGodot(): GodotVector3 = GodotVector3(x.toFloat(), y.toFloat(), z.toFloat())
 
@@ -209,25 +195,22 @@ fun Area3D.getOverlappingBodies(): List<GodotObject> =
     GodotObject(WebObjectId(it.backendToken().toInt()))
   }
 
-/** Dynamic two-Vector3 dispatch (the corpus's damage(impact, force) convention). */
-fun GodotObject.call(method: String, first: Vector3, second: Vector3) {
-  GodotBackendCalls.invokeStringNameVector3Vector3Arg(
-    D.OBJECT_CALL_VECTOR3_VECTOR3,
-    backendHandle,
-    method,
-    first.toGodot(),
-    second.toGodot(),
-  )
-}
+/** Import-compat alias for shared demo sources; delegates to the [GodotObject] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun GodotObject.call(method: String, first: Vector3, second: Vector3) =
+  call(method, first, second)
 
-fun Node.setProcess(enable: Boolean) {
-  GodotBackendCalls.invokeBoolArg(D.NODE_SET_PROCESS, backendHandle, enable)
-}
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.setProcess(enable: Boolean) = setProcess(enable)
 
-/** Web no-ops: generated proxies dispatch input only to scripts that declare handlers. */
-fun Node.setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.setProcessInput(enable: Boolean) = setProcessInput(enable)
 
-fun Node.setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.setProcessUnhandledInput(enable: Boolean) = setProcessUnhandledInput(enable)
 
 object ProjectSettings {
   /** Float-valued setting read (x1000 integer transport; millis precision). */
@@ -238,8 +221,9 @@ object ProjectSettings {
     )
 }
 
-/** Web adaptation: the corpus runs the default 60 Hz fixed physics tick. */
-fun Node.getPhysicsProcessDeltaTime(): Double = 1.0 / 60.0
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.getPhysicsProcessDeltaTime(): Double = getPhysicsProcessDeltaTime()
 
 object Time {
   private val origin = kotlin.time.TimeSource.Monotonic.markNow()
