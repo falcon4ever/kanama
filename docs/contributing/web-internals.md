@@ -65,7 +65,7 @@ Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently **14**); startup rejects a mismatch
+`KANAMA_WEB_PROTOCOL_VERSION` (currently **16**); startup rejects a mismatch
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 

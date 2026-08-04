@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 15;
+  const KANAMA_WEB_PROTOCOL_VERSION = 16;
 
   function commandWordCount(opcode) {
     if (
@@ -203,6 +203,7 @@
     firstHandle: 0,
     freedHandle: 0,
     readyCount: 0,
+    enterTreeCalls: 0,
     immediateResult: null,
     immediateChildCountResult: null,
     immediateResourceHandleResult: null,
@@ -450,6 +451,18 @@
     },
     ready(handle) {
       return this.invoke(handle, "_ready", "_ready", () => this.api.kanamaWebReady(handle), 0);
+    },
+    enterTree(handle) {
+      // Dispatched by proxies whose script declares @OnEnterTree; fires on every tree
+      // entry (before _ready on the first one), mirroring Godot's _enter_tree.
+      this.enterTreeCalls += 1;
+      return this.invoke(
+        handle,
+        "_enter_tree",
+        "_enter_tree",
+        () => this.api.kanamaWebEnterTree(handle),
+        0,
+      );
     },
     input(handle, eventHandle) {
       if (this.mode === "match3") this.match3InputEvents += 1;

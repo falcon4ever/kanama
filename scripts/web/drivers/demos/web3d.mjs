@@ -28,6 +28,7 @@ async function snapshot(evaluate) {
         mainHandle: bridge.web3dMainHandle,
         smokeQuitHandle: bridge.web3dSmokeQuitHandle,
         readyCount: bridge.readyCount,
+        enterTreeCalls: bridge.enterTreeCalls,
         mainReady: classCount(".Main"),
         processCalls: bridge.processCalls,
         appliedCommands: bridge.appliedCommands,
@@ -93,6 +94,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: readyCount=${ready.readyCount} mainHandle=${ready.mainHandle} protocol=${ready.protocol}`);
 
+  // Task 66b enter-tree proof: Main.enter_tree_probe (method#3, Int->Int) returns a mask —
+  // bit 1 = @OnEnterTree dispatched, bit 2 = the scene-exported @ScriptProperty value
+  // ("web3d-enter-tree", never the default) was visible inside it, bit 4 = it ran before
+  // @OnReady. A healthy protocol-16 run returns exactly 7.
+  const enterTreeProbe = Number(
+    await evaluate(
+      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 3, 0)",
+    ),
+  );
+  trace(`enterTreeProbe: mask=${enterTreeProbe} enterTreeCalls=${ready.enterTreeCalls}`);
+
   // Observe the render running: the spinner's _process advances processCalls and its
   // Node3D.rotation mutations advance appliedCommands each frame.
   const seed = {
@@ -121,8 +133,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeWeb3d: ready.mode === "web3d",
-    protocol15: protocolVersion === 15,
+    protocol16: protocolVersion === 16,
     sceneReady: ready.mainReady >= 1,
+    // 66b: the bridge crossing fired and the Kotlin @OnEnterTree body observed it.
+    enterTreeDispatched: ready.enterTreeCalls >= 1 && (enterTreeProbe & 1) === 1,
+    // 66b: exported property visible at _enter_tree (bit 2) AND it ran before _ready (bit 4).
+    enterTreePropertyOrdering: enterTreeProbe === 7,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
     renderFramesAdvanced: peak.processCalls >= ready.processCalls + 10,
     transformCommandsApplied: peak.appliedCommands >= ready.appliedCommands + 10,
