@@ -36,6 +36,20 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 3] = 0
   }
 
+  /**
+   * EXPERIMENTAL (task 76 spike): queued generic void call — `callv(method, args)` on the applier
+   * side. Rides the ordinary command buffer as two interned strings (method name + packed args).
+   * Note the intern table never evicts, so a hot loop with distinct packed-arg strings grows it; a
+   * shipping version needs either an eviction policy or a non-interned string lane.
+   */
+  fun appendGenericVoidCall(objectHandle: Int, method: String, packedArgs: String) {
+    val offset = reserve(WORDS_SCALAR_OR_VECTOR)
+    words[offset] = OPCODE_GENERIC_QUEUED_VOID_CALL
+    words[offset + 1] = objectHandle
+    words[offset + 2] = internWebCommandStringName(method)
+    words[offset + 3] = internWebCommandStringName(packedArgs)
+  }
+
   fun appendVector2Mutation(opcode: Int, objectHandle: Int, x: Float, y: Float) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = opcode
@@ -270,6 +284,11 @@ internal class WebCommandBuffer(capacity: Int) {
 
   companion object {
     const val OPCODE_SCALAR_MUTATION = 1000
+    // EXPERIMENTAL (task 76 spike): generic reflective calls. Like opcode 1000, these live
+    // OUTSIDE platform_backend_calls.json (a generic call has no engine hash to validate)
+    // and outside the generated dispatch; the hand-written companions carry them.
+    const val OPCODE_GENERIC_QUEUED_VOID_CALL = 1001
+    const val OPCODE_GENERIC_IMMEDIATE_CALL = 1002
     const val WORDS_NOARGS = 2
     const val WORDS_OBJECT_ARG = 3
     const val WORDS_SCALAR_OR_VECTOR = 4

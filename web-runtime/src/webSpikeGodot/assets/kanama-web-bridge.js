@@ -112,7 +112,10 @@
       opcode === 275 ||
       opcode === 279 ||
       opcode === 281 ||
-      opcode === 1000
+      opcode === 1000 ||
+      // EXPERIMENTAL (task 76 spike): queued generic void call
+      // (opcode, handle, method string id, packed-args string id).
+      opcode === 1001
     ) return 4;
     if (
       opcode === 13 ||
