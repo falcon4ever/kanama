@@ -23,6 +23,7 @@ import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.lookAt
 import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.web.WebExperimentalGenericCall
 
 /**
  * Kanama Web 3D rendering-foundation smoke (Task 60c).
@@ -155,6 +156,69 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
     if (enterTreeSawExportedValue) mask = mask or 2L
     if (enterTreeBeforeReady) mask = mask or 4L
     return mask
+  }
+
+  /**
+   * Task-76 generic-callv probe (driver method #6): exercises the generic fallback end to end.
+   * The browser driver triggers this and reads the published JSON report.
+   *
+   * All probed methods (`set_meta`/`get_meta`/`add_to_group`/`get_node`/`get_window`) are
+   * OUTSIDE the admitted typed opcodes; `is_in_group`/`get_parent` have typed twins,
+   * which makes them the cost comparator and the tracked-object-return probe.
+   */
+  @RegisterFunction("generic_probe")
+  fun genericProbe() {
+    val generic = WebExperimentalGenericCall
+
+    // (a) Queued generic mutations on methods with no typed opcode.
+    generic.queueVoidCall(spinner, "set_meta", listOf("kanama_generic_probe", 42))
+    generic.queueVoidCall(spinner, "add_to_group", listOf("kanama_generic_smoke"))
+
+    // (b) Immediate generic read-back proving (a) applied through the queued channel
+    // (callImmediate flushes the command buffer first, like every typed immediate family).
+    val meta = generic.callImmediate(spinner, "get_meta", listOf("kanama_generic_probe"))
+    val inGroup = generic.callImmediate(spinner, "is_in_group", listOf("kanama_generic_smoke"))
+
+    // (c) Object returns: a script-backed node (this Main), an already-tracked engine node
+    // (the spinner), and an untracked engine object (the root Window).
+    val parent = generic.callImmediate(spinner, "get_parent")
+    val child = generic.callImmediate(self, "get_node", listOf("Spinner"))
+    val window = generic.callImmediate(self, "get_window")
+
+    // Cost: N generic immediate crossings vs N typed immediate crossings of the SAME call
+    // (Node.is_in_group) on the same receiver, timed around the whole loop.
+    val iterations = 500
+    var genericHits = 0
+    val genericStart = generic.nowMillis()
+    repeat(iterations) {
+      if (generic.callImmediate(spinner, "is_in_group", listOf("kanama_generic_smoke")).asBoolean())
+        genericHits += 1
+    }
+    val genericMs = generic.nowMillis() - genericStart
+    var typedHits = 0
+    val typedStart = generic.nowMillis()
+    repeat(iterations) { if (spinner.isInGroup("kanama_generic_smoke")) typedHits += 1 }
+    val typedMs = generic.nowMillis() - typedStart
+
+    // Report defensively (bad tags become -1) so a policy regression fails the driver's
+    // assertions with evidence instead of faulting the callback.
+    fun handleOf(result: net.multigesture.kanama.web.WebGenericCallResult): Int =
+      if (result.tag == "o" || result.tag == "object-untracked") result.asObjectHandle() else -1
+    generic.publishProbeReport(
+      "{" +
+        "\"metaTag\":\"${meta.tag}\",\"metaValue\":${if (meta.tag == "i") meta.asLong() else -1}," +
+        "\"groupTag\":\"${inGroup.tag}\"," +
+        "\"groupValue\":${inGroup.tag == "b" && inGroup.asBoolean()}," +
+        "\"parentTag\":\"${parent.tag}\",\"parentHandle\":${handleOf(parent)}," +
+        "\"mainHandle\":${self.handle.value}," +
+        "\"childTag\":\"${child.tag}\",\"childHandle\":${handleOf(child)}," +
+        "\"spinnerHandle\":${spinner.handle.value}," +
+        "\"windowTag\":\"${window.tag}\",\"windowHandle\":${handleOf(window)}," +
+        "\"iterations\":$iterations," +
+        "\"genericHits\":$genericHits,\"typedHits\":$typedHits," +
+        "\"genericMs\":$genericMs,\"typedMs\":$typedMs" +
+        "}"
+    )
   }
 
   private companion object {
