@@ -26,6 +26,7 @@ class WebScriptCodeEmitterTest {
       toolButtons = emptyList(),
       virtuals =
         listOf(
+          VirtualModel("_enter_tree", "callEnterTree", "enterTree"),
           VirtualModel("_ready", "callReady", "ready"),
           VirtualModel(
             "_process",
@@ -72,12 +73,14 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 15"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 16"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
     assertTrue(source.contains("(script as FirstScript).process(delta)"))
     assertTrue(source.contains("fun draw(scriptId: Int, script: KanamaWebScript)"))
+    assertTrue(source.contains("fun enterTree(scriptId: Int, script: KanamaWebScript)"))
+    assertTrue(source.contains("(script as FirstScript).enterTree()"))
     assertTrue(source.contains("fun exitTree(scriptId: Int, script: KanamaWebScript)"))
     assertTrue(source.contains("(script as FirstScript).exitTree()"))
     assertTrue(source.contains("(script as FirstScript).echo(value)"))
@@ -140,6 +143,8 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("if _kanama_handle == 0:"))
     assertTrue(proxy.source.contains("_kanama_clear_callbacks()"))
     assertTrue(proxy.source.contains("recordImmediateChildCount(result)"))
+    assertTrue(proxy.source.contains("func _enter_tree()"))
+    assertTrue(proxy.source.contains("_kanama_bridge.enterTree(_kanama_handle)"))
     assertTrue(proxy.source.contains("func _process(delta: float)"))
     assertTrue(proxy.source.contains("func _draw()"))
     assertTrue(proxy.source.contains("_kanama_bridge.draw(_kanama_handle)"))
@@ -409,8 +414,13 @@ class WebScriptCodeEmitterTest {
       tileProxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 1, \"set_tile_type\")")
     )
 
+    // Neither match3 script declares _enter_tree, so neither proxy may emit the crossing:
+    // the enter-tree path is opt-in per script, not another unconditional lifecycle hook.
+    assertFalse(mainProxy.contains("func _enter_tree()"), "Main must not emit _enter_tree")
+    assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
+
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 15"))
+    assertTrue(protocol.contains("\"protocolVersion\": 16"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -421,7 +431,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=15\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=16\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -451,16 +461,14 @@ class WebScriptCodeEmitterTest {
   private val webOptions = mapOf("kanamaRuntimeTarget" to "web")
 
   @Test
-  fun rejectsEnterTreeOnAWebTargetNamingTheScriptAndTheFix() {
+  fun acceptsEnterTreeOnAWebTargetNowThatItIsDispatched() {
+    // Task 66b: _enter_tree joined DISPATCHED_VIRTUALS (proxy crossing + registry dispatcher),
+    // so the 66a build-time rejection must no longer fire for it — while still firing for every
+    // other undispatched virtual (covered below).
     val model = scriptWith(VirtualModel("_enter_tree", "enterTree", "enterTree"))
 
-    val errors = WebScriptCodeEmitter.undispatchedVirtualErrors(model, webOptions)
-
-    assertEquals(1, errors.size, "expected exactly one error, got $errors")
-    val error = errors.single()
-    assertTrue(error.contains("Player.enterTree"), error)
-    assertTrue(error.contains("_enter_tree"), error)
-    assertTrue(error.contains("@OnReady"), error)
+    assertTrue(WebScriptCodeEmitter.undispatchedVirtualErrors(model, webOptions).isEmpty())
+    assertTrue("_enter_tree" in WebScriptCodeEmitter.DISPATCHED_VIRTUALS)
   }
 
   @Test
@@ -507,6 +515,7 @@ class WebScriptCodeEmitterTest {
     val deltaArg = listOf(ArgModel("delta", TypeMapping.FLOAT))
     val model =
       scriptWith(
+        VirtualModel("_enter_tree", "enterTree", "onEnterTree"),
         VirtualModel("_ready", "ready", "onReady"),
         VirtualModel("_process", "process", "onProcess", args = deltaArg),
         VirtualModel("_physics_process", "physicsProcess", "onPhysicsProcess", args = deltaArg),

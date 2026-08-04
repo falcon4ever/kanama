@@ -192,7 +192,7 @@ export async function runRacing({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeRacing: ready.mode === "racing",
-    protocol15: protocolVersion === 15,
+    protocol16: protocolVersion === 16,
     sceneScriptsReady:
       ready.vehicleReady >= 1 && ready.viewReady >= 1 && ready.smokeReady >= 1,
     // Held forward drove the sphere racer; the camera rig followed it.

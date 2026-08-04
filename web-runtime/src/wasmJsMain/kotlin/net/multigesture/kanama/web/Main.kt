@@ -163,6 +163,15 @@ fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
   if (discardWebBrowserHandle(objectHandle)) 1 else 0
 
 @JsExport
+fun kanamaWebEnterTree(objectId: Int): Int {
+  return webCallbackBoundary(objectId, "_enter_tree") { record ->
+    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
 fun kanamaWebReady(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_ready") { record ->
     KanamaWebProjectRegistry.ready(record.scriptId, record.script)

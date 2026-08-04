@@ -5,7 +5,7 @@
 The Web backend is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable
 baseline. It compiles Kanama project scripts to **Kotlin/Wasm** and runs them
 against a Godot 4.7 Web export through a generated per-call proxy and a versioned
-JavaScript bridge (protocol 15). It is **not a Supported target**: the renderer is
+JavaScript bridge (protocol 16). It is **not a Supported target**: the renderer is
 single-thread Compatibility only, the browser matrix and performance budgets are
 still being hardened, and there is no packaged install path yet.
 
@@ -481,11 +481,11 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   Safari on a USB-connected device (see Testing On A Phone Or Tablet), but no
   automated iOS gate exists and mobile WebKit is not part of the validated
   claim.
-- **Lifecycle virtuals are limited to what the proxy dispatches**: `_ready`,
-  `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
-  `_unhandled_input`. Anything else — `@OnEnterTree` in particular — is rejected
-  at build time with a KSP error naming the script and the function, rather than
-  compiling and then never running. Move the body into an `@OnReady` function.
+- **Lifecycle virtuals are limited to what the proxy dispatches**: `_enter_tree`,
+  `_ready`, `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
+  `_unhandled_input`. Anything else is rejected at build time with a KSP error
+  naming the script and the function, rather than compiling and then never
+  running. Move the work into one of the dispatched virtuals.
 - Single-thread Compatibility renderer only; no threads, no cross-origin
   isolation.
 - No Web editor, no compiler, no hot reload, no Web GDExtension, and no TeaVM or

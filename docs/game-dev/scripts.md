@@ -99,9 +99,9 @@ GDScript uses overridable virtual methods. Kanama uses annotations:
 The function name is up to you — the annotation is what wires it up. Drop the
 leading underscore; `fun ready()` is the convention.
 
-`@OnEnterTree` is not dispatched by the experimental Web backend; a Web build
-rejects it at build time and asks you to move the body into `@OnReady`. See
-`docs/exporting/web.md`.
+On the experimental Web backend, lifecycle dispatch covers `@OnEnterTree` too
+(protocol 16); a virtual the Web proxy does not dispatch is rejected at build
+time rather than silently never running. See `docs/exporting/web.md`.
 
 ## Overriding Engine Virtuals
 
