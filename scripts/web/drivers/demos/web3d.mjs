@@ -148,6 +148,19 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const HALF_PI = Math.PI / 2;
   const angleNear = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 1e-3;
 
+  // Task 76: generic callv fallback. Main.generic_probe (method#6) runs queued generic
+  // mutations, immediate generic read-backs, the object-return shapes under the minting
+  // policy, and the generic-vs-typed crossing-cost timing, then publishes a JSON report
+  // for these assertions.
+  trace("generic_probe");
+  await evaluate(
+    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 6); true",
+  );
+  const generic = JSON.parse(
+    await evaluate("globalThis.KanamaWebBridge.api.kanamaWebGenericCallProbeReport()"),
+  );
+  trace(`generic: ${JSON.stringify(generic)}`);
+
   // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the scene root, draining handles.
   trace("smoke_teardown");
   await evaluate(
@@ -174,6 +187,52 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     parityDefaultLook: angleNear(defaultYaw, -HALF_PI),
     parityModelFrontLook: angleNear(modelFrontYaw, HALF_PI),
     parityModelFrontFlip: angleNear(modelFrontYaw - defaultYaw, Math.PI),
+    // Task 76 (generic callv fallback). (a) A queued generic mutation on a method
+    // outside the admitted typed opcodes (set_meta) applied...
+    genericQueuedMutationApplied: generic.metaTag === "i" && generic.metaValue === 42,
+    // ...(b) proven by an immediate generic call reading a primitive back (is_in_group
+    // after a queued generic add_to_group).
+    genericImmediatePrimitiveReadback: generic.groupTag === "b" && generic.groupValue === true,
+    // Escaping: a string full of separators / colons / percent look-alikes round-trips
+    // through queued args and the string-return payload unchanged.
+    genericHostileStringRoundTrip: generic.hostileRoundTrip === true,
+    // (c) Object returns resolve to ALREADY-TRACKED handles first: a script-backed node
+    // (spinner.get_parent() -> Main, kind "script") and a tracked engine node
+    // (main.get_node("Spinner"), kind "tracked" via the is_same scan).
+    genericObjectReturnsTrackedHandles:
+      generic.parentTag === "o" &&
+      generic.parentKind === "script" &&
+      generic.parentHandle === ready.mainHandle &&
+      generic.parentHandle === generic.mainHandle &&
+      generic.childTag === "o" &&
+      generic.childKind === "tracked" &&
+      generic.childHandle > 0 &&
+      generic.childHandle === generic.spinnerHandle,
+    // Minting policy: an untracked engine Node (get_window) mints a NODE-kind handle —
+    // deliberately left unclosed, so fullTeardownToZero below proves owner teardown
+    // drains minted handles.
+    genericMintsNodeHandle: generic.windowKind === "node" && generic.windowHandle > 0,
+    // An untracked RefCounted non-Resource (get_multiplayer) mints a plain OBJECT-kind
+    // handle, closed through the OBJECT release lane.
+    genericMintsObjectHandleAndCloses:
+      generic.multiplayerKind === "object" &&
+      generic.multiplayerHandle > 0 &&
+      generic.closedObjectOk === true,
+    // An untracked Resource (Environment.duplicate) mints a RESOURCE-kind handle.
+    genericMintsResourceHandle: generic.dupKind === "resource" && generic.dupHandle > 0,
+    // Task-61 handoff-then-close: the minted resource is handed to the engine (queued
+    // generic set_environment), is then discoverable as "tracked" under OUR handle,
+    // survives our close() via the engine's own reference, and its meta tag reads back
+    // through a re-minted handle.
+    genericHandoffThenCloseSurvives:
+      generic.handoffTrackedOk === true && generic.handoffSurvivedClose === true,
+    // The generic-vs-typed crossing cost was measured over N iterations of the same call.
+    genericCostMeasured:
+      generic.iterations === 500 &&
+      generic.genericHits === 500 &&
+      generic.typedHits === 500 &&
+      generic.genericMs > 0 &&
+      generic.typedMs > 0,
     fullTeardownToZero: settled.liveHandles === 0,
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
@@ -199,6 +258,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
       kotlinToGodotCalls: peak.crossings,
       processCalls: peak.processCalls,
       appliedCommands: peak.appliedCommands,
+      // Task 76 spike cost measurement (schema requires non-negative numbers, so the
+      // millisecond totals ride x1000 and the generic/typed ratio rides x100).
+      genericProbeIterations: generic.iterations,
+      genericImmediateMsX1000: Math.max(0, Math.round(generic.genericMs * 1000)),
+      typedImmediateMsX1000: Math.max(0, Math.round(generic.typedMs * 1000)),
+      genericVsTypedRatioX100:
+        generic.typedMs > 0 ? Math.max(0, Math.round((generic.genericMs / generic.typedMs) * 100)) : 0,
     },
     callbacks: {
       pendingSignalCallbacks: settled.callbacks,
