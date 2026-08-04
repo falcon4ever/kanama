@@ -1420,12 +1420,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 1001 and target_object != null:")
-    appendLine("\t\t\t# EXPERIMENTAL (task 76 spike): queued generic void call — callv by name.")
+    appendLine("\t\t\t# Task 76: queued generic void call — callv by name. The packed-args")
+    appendLine("\t\t\t# string is one-shot staged (consumed + evicted here), not interned.")
     appendLine(
       "\t\t\tvar generic_method := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
     )
     appendLine(
-      "\t\t\tvar generic_packed := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 12)))"
+      "\t\t\tvar generic_packed := String(_kanama_bridge.takeStagedGenericArgs(bytes.decode_s32(offset + 12)))"
     )
     appendLine("\t\t\tvar generic_queued_args: Array = []")
     appendLine("\t\t\tif generic_packed != \"\":")
@@ -3235,7 +3236,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif generic_arg_tag == \"d\":")
     appendLine("\t\treturn float(generic_arg_payload)")
     appendLine("\tif generic_arg_tag == \"s\":")
-    appendLine("\t\treturn generic_arg_payload")
+    appendLine("\t\t# Unescape (reverse of the Kotlin encoder): %1F -> unit separator, %25 -> %.")
+    appendLine(
+      "\t\treturn generic_arg_payload.replace(\"%1F\", \"\\u001f\").replace(\"%25\", \"%\")"
+    )
     appendLine("\tif generic_arg_tag == \"h\":")
     appendLine("\t\tvar generic_arg_handle := int(generic_arg_payload)")
     appendLine(
@@ -3247,10 +3251,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\treturn null")
     appendLine()
     appendLine("func _kanama_generic_encode_result(generic_value: Variant) -> String:")
-    appendLine("\t# EXPERIMENTAL (task 76 spike): variant-tagged generic-call return. Object")
-    appendLine("\t# returns follow the ray-query arm's CONSERVATIVE policy: resolve to an")
-    appendLine("\t# already-tracked handle; an untracked engine object reports handle 0 and")
-    appendLine("\t# tag object-untracked rather than minting a handle.")
+    appendLine("\t# Task 76: variant-tagged generic-call return. Object returns resolve to an")
+    appendLine("\t# already-tracked handle first (script-backed via _kanama_ensure_created,")
+    appendLine("\t# then the is_same scan); an untracked engine object is classified at")
+    appendLine("\t# runtime (Node / Resource / plain Object) and a tracked handle of that")
+    appendLine("\t# kind is MINTED, owned by the calling script per the task-61 close-what-")
+    appendLine("\t# you-create contract (released via close() or at owner teardown).")
     appendLine("\tif generic_value == null:")
     appendLine("\t\treturn \"n\"")
     appendLine("\tif generic_value is bool:")
@@ -3260,7 +3266,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif generic_value is float:")
     appendLine("\t\treturn \"f\\u001f%s\" % generic_value")
     appendLine("\tif generic_value is String or generic_value is StringName:")
-    appendLine("\t\treturn \"s\\u001f%s\" % generic_value")
+    appendLine("\t\t# Escape so payload separators survive the packed transport: % first.")
+    appendLine(
+      "\t\treturn \"s\\u001f%s\" % String(generic_value).replace(\"%\", \"%25\").replace(\"\\u001f\", \"%1F\")"
+    )
     appendLine("\tif generic_value is Vector2:")
     appendLine("\t\tvar generic_v2 := generic_value as Vector2")
     appendLine("\t\treturn \"v2\\u001f%s\\u001f%s\" % [generic_v2.x, generic_v2.y]")
@@ -3271,17 +3280,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\tif generic_value is Object:")
     appendLine("\t\tvar generic_object := generic_value as Object")
-    appendLine("\t\tvar generic_handle := 0")
     appendLine("\t\tif generic_object.has_method(\"_kanama_ensure_created\"):")
-    appendLine("\t\t\tgeneric_handle = int(generic_object.call(\"_kanama_ensure_created\"))")
-    appendLine("\t\tif generic_handle == 0:")
-    appendLine("\t\t\tfor generic_existing in _kanama_object_handles:")
-    appendLine("\t\t\t\tif is_same(_kanama_object_handles[generic_existing], generic_object):")
-    appendLine("\t\t\t\t\tgeneric_handle = int(generic_existing)")
-    appendLine("\t\t\t\t\tbreak")
-    appendLine("\t\tif generic_handle == 0:")
-    appendLine("\t\t\treturn \"object-untracked\\u001f0\"")
-    appendLine("\t\treturn \"o\\u001f%d\" % generic_handle")
+    appendLine(
+      "\t\t\tvar generic_script_handle := int(generic_object.call(\"_kanama_ensure_created\"))"
+    )
+    appendLine("\t\t\tif generic_script_handle != 0:")
+    appendLine("\t\t\t\treturn \"o\\u001f%d\\u001fscript\" % generic_script_handle")
+    appendLine("\t\tfor generic_existing in _kanama_object_handles:")
+    appendLine("\t\t\tif is_same(_kanama_object_handles[generic_existing], generic_object):")
+    appendLine("\t\t\t\treturn \"o\\u001f%d\\u001ftracked\" % int(generic_existing)")
+    appendLine("\t\tvar generic_kind := \"object\"")
+    appendLine("\t\tif generic_object is Node:")
+    appendLine("\t\t\tgeneric_kind = \"node\"")
+    appendLine("\t\telif generic_object is Resource:")
+    appendLine("\t\t\tgeneric_kind = \"resource\"")
+    appendLine(
+      "\t\tvar generic_minted := int(_kanama_bridge.mintGenericHandle(_kanama_handle, generic_kind))"
+    )
+    appendLine("\t\t_kanama_object_handles[generic_minted] = generic_object")
+    appendLine("\t\treturn \"o\\u001f%d\\u001f%s\" % [generic_minted, generic_kind]")
     appendLine("\treturn \"unsupported\\u001f%s\" % type_string(typeof(generic_value))")
     appendLine()
     appendLine("func _kanama_noargs_vector2(args: Array) -> int:")

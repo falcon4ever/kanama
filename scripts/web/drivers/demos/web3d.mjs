@@ -193,20 +193,39 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     // ...(b) proven by an immediate generic call reading a primitive back (is_in_group
     // after a queued generic add_to_group).
     genericImmediatePrimitiveReadback: generic.groupTag === "b" && generic.groupValue === true,
-    // (c) Immediate generic calls returning objects resolve to ALREADY-TRACKED handles:
-    // a script-backed node (spinner.get_parent() -> Main) and a tracked engine node
-    // (main.get_node("Spinner")).
+    // Escaping: a string full of separators / colons / percent look-alikes round-trips
+    // through queued args and the string-return payload unchanged.
+    genericHostileStringRoundTrip: generic.hostileRoundTrip === true,
+    // (c) Object returns resolve to ALREADY-TRACKED handles first: a script-backed node
+    // (spinner.get_parent() -> Main, kind "script") and a tracked engine node
+    // (main.get_node("Spinner"), kind "tracked" via the is_same scan).
     genericObjectReturnsTrackedHandles:
       generic.parentTag === "o" &&
+      generic.parentKind === "script" &&
       generic.parentHandle === ready.mainHandle &&
       generic.parentHandle === generic.mainHandle &&
       generic.childTag === "o" &&
+      generic.childKind === "tracked" &&
       generic.childHandle > 0 &&
       generic.childHandle === generic.spinnerHandle,
-    // Untracked engine object return (get_window): behavior is asserted via the report's
-    // window fields (minting policy checks are appended by the shipping slice below).
-    genericUntrackedReturnsConservativeZero:
-      generic.windowTag === "object-untracked" && generic.windowHandle === 0,
+    // Minting policy: an untracked engine Node (get_window) mints a NODE-kind handle —
+    // deliberately left unclosed, so fullTeardownToZero below proves owner teardown
+    // drains minted handles.
+    genericMintsNodeHandle: generic.windowKind === "node" && generic.windowHandle > 0,
+    // An untracked RefCounted non-Resource (get_multiplayer) mints a plain OBJECT-kind
+    // handle, closed through the OBJECT release lane.
+    genericMintsObjectHandleAndCloses:
+      generic.multiplayerKind === "object" &&
+      generic.multiplayerHandle > 0 &&
+      generic.closedObjectOk === true,
+    // An untracked Resource (Environment.duplicate) mints a RESOURCE-kind handle.
+    genericMintsResourceHandle: generic.dupKind === "resource" && generic.dupHandle > 0,
+    // Task-61 handoff-then-close: the minted resource is handed to the engine (queued
+    // generic set_environment), is then discoverable as "tracked" under OUR handle,
+    // survives our close() via the engine's own reference, and its meta tag reads back
+    // through a re-minted handle.
+    genericHandoffThenCloseSurvives:
+      generic.handoffTrackedOk === true && generic.handoffSurvivedClose === true,
     // The generic-vs-typed crossing cost was measured over N iterations of the same call.
     genericCostMeasured:
       generic.iterations === 500 &&

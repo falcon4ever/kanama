@@ -200,6 +200,8 @@
     commandStringNamesByValue: new Map(),
     commandStringNamesById: new Map(),
     nextCommandStringNameId: 1,
+    stagedGenericArgs: new Map(),
+    nextStagedGenericArgsId: 1,
     activeCommandFlushFrame: null,
     activeOwnerHandle: 0,
     benchmarkCallback: null,
@@ -1296,6 +1298,46 @@
       const handle = this.allocateBrowserHandle("Node", ownerHandle);
       this.api.kanamaWebAdoptNodeHandle(handle);
       return handle;
+    },
+    mintGenericHandle(ownerHandle, kindTag) {
+      // Task 76: an immediate generic call returned an engine object that is neither
+      // script-backed nor already tracked. Mint a tracked browser handle of the kind the
+      // GDScript arm classified (node / resource / object), OWNED by the calling script
+      // per the task-61 "close what you create" contract: released explicitly through
+      // the kind-specific release paths (releaseResource / releaseConstructedObject) or
+      // implicitly by releaseBrowserHandlesOwnedBy at the owner script's teardown.
+      if (kindTag === "node") {
+        const handle = this.allocateBrowserHandle("Node", ownerHandle);
+        this.api.kanamaWebAdoptNodeHandle(handle);
+        return handle;
+      }
+      if (kindTag === "resource") {
+        const handle = this.allocateBrowserHandle("Resource", ownerHandle);
+        this.api.kanamaWebAdoptResourceHandle(handle);
+        return handle;
+      }
+      const handle = this.allocateBrowserHandle("Object", ownerHandle);
+      this.api.kanamaWebAdoptObjectHandle(handle);
+      return handle;
+    },
+    stageGenericArgs(value) {
+      // Task 76: one-shot transport for a queued generic call's packed-args string. NOT
+      // the interned StringName table (which never evicts, by design, and is bounded by
+      // the set of distinct method/animation/bus names): packed argument strings are
+      // unbounded in a hot loop, so each staged string is consumed exactly once by its
+      // applier arm and deleted.
+      const id = this.nextStagedGenericArgsId;
+      this.nextStagedGenericArgsId += 1;
+      this.stagedGenericArgs.set(id, String(value));
+      return id;
+    },
+    takeStagedGenericArgs(id) {
+      const value = this.stagedGenericArgs.get(id);
+      if (value === undefined) {
+        throw new Error(`Unknown or already consumed Kanama Web generic args id=${id}`);
+      }
+      this.stagedGenericArgs.delete(id);
+      return value;
     },
     immediateConstructObject(className) {
       const owner = this.activeOwnerHandle;

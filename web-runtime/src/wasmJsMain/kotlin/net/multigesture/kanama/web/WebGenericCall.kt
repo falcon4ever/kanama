@@ -6,27 +6,32 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.releaseWebConstructedObject
+import net.multigesture.kanama.api.releaseWebResource
+import net.multigesture.kanama.api.releaseWebTrackedObject
 
 /**
- * EXPERIMENTAL — Task 76 spike: "call any Godot method by name" fallback for the Web backend.
+ * Task 76: "call any Godot method by name" fallback for the Web backend.
  *
- * The typed opcode families stay the fast path; this is the feasibility probe for a generic
- * reflective tier (`callv` behind one opcode pair) so an unadmitted method no longer needs a
- * per-family hand-wired opcode. It is deliberately NOT part of the shared cross-platform API
- * surface — desktop/Android/iOS already have their generic primitive (ptrcall) — and it must not be
- * used by production gameplay code until the design questions recorded in the task-76 PR
- * (handle-minting policy, protocol bump, coverage-gate slow-path bucket) are settled.
+ * The typed opcode families stay the fast path; this is the generic reflective tier (`callv` behind
+ * one opcode pair) so an unadmitted method no longer needs a per-family hand-wired opcode. It is
+ * deliberately NOT part of the shared cross-platform API surface — desktop/Android/iOS already have
+ * their generic primitive (ptrcall). A production wrapper that routes a call through this tier must
+ * carry a `genericWebGameplayFallback("Class.method")` marker so the coverage report accounts for
+ * it in the generic (slow-path) bucket.
  *
  * Argument encoding: each argument crosses as `typeTag:value`, arguments joined with the unit
  * separator (the established packed-string transport). Supported tags: `n` (null), `b` (bool), `i`
- * (int), `d` (double), `s` (string, must not contain the separator), and `h` (an already-tracked
- * object handle, resolved through `_kanama_object_handles` in the GDScript arm).
+ * (int), `d` (double), `s` (string; `%` and separator payload bytes are percent-escaped), and `h`
+ * (an already-tracked object handle, resolved through `_kanama_object_handles` in the GDScript
+ * arm).
  *
- * Return encoding (immediate calls): `typeTag<US>payload...`. Object returns follow the
- * CONSERVATIVE policy copied from the space-state ray-query arm: resolve to an already-tracked
- * handle (`_kanama_ensure_created` for script-backed objects, `is_same` scan otherwise); an
- * untracked engine object reports tag `object-untracked` with handle 0. The spike never mints new
- * handles.
+ * Return encoding (immediate calls): `typeTag<US>payload...`. Object returns resolve to an
+ * already-tracked handle first (`_kanama_ensure_created` for script-backed objects, `is_same` scan
+ * otherwise); an untracked engine object is classified at runtime (Node / Resource / plain Object)
+ * and a tracked handle of that kind is MINTED, owned by the receiver's proxy per the task-61 "close
+ * what you create" contract — release it with [WebGenericCallResult.close] or let the owner
+ * script's teardown drain it.
  */
 object WebExperimentalGenericCall {
   internal const val UNIT_SEPARATOR = '\u001f' // matches the packed-string transport
@@ -66,13 +71,19 @@ object WebExperimentalGenericCall {
     return WebGenericCallResult.parse(raw)
   }
 
-  /** Wall-clock milliseconds for spike measurements (performance.now under the hood). */
+  /** Wall-clock milliseconds for harness measurements (performance.now under the hood). */
   fun nowMillis(): Double = webNowMillis()
 
   /** Publishes the smoke fixture's probe report for the browser driver to read. */
   fun publishProbeReport(report: String) {
     webGenericCallProbeReport = report
   }
+
+  internal fun escapeStringPayload(value: String): String =
+    value.replace("%", "%25").replace(UNIT_SEPARATOR.toString(), "%1F")
+
+  internal fun unescapeStringPayload(value: String): String =
+    value.replace("%1F", UNIT_SEPARATOR.toString()).replace("%25", "%")
 
   private fun encodeArgs(args: List<Any?>): String =
     args.joinToString(UNIT_SEPARATOR.toString()) { encodeArg(it) }
@@ -90,12 +101,7 @@ object WebExperimentalGenericCall {
       }
       is Double -> "d:$arg"
       is Float -> "d:${arg.toDouble()}"
-      is String -> {
-        require(UNIT_SEPARATOR !in arg) {
-          "Kanama Web generic call string arguments must not contain the unit separator"
-        }
-        "s:$arg"
-      }
+      is String -> "s:${escapeStringPayload(arg)}"
       is GodotObject -> "h:${arg.handle.value}"
       else -> error("Kanama Web generic call cannot encode argument type ${arg::class.simpleName}")
     }
@@ -123,18 +129,43 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
 
   fun asString(): String {
     check(tag == "s") { "Generic call returned tag '$tag', not a string" }
-    return payload[0]
+    return WebExperimentalGenericCall.unescapeStringPayload(payload[0])
+  }
+
+  /** The tracked handle an object return resolved (or minted) to. */
+  fun asObjectHandle(): Int {
+    check(tag == "o") { "Generic call returned tag '$tag', not an object" }
+    return payload[0].toInt()
   }
 
   /**
-   * The already-tracked handle an object return resolved to, or 0 when the engine object is
-   * untracked (tag `object-untracked` — the spike's conservative no-minting policy).
+   * How the object return resolved: `script` (a Kanama-scripted object's own handle), `tracked` (an
+   * existing handle found by the `is_same` scan), or the minted kinds `node` / `resource` /
+   * `object`. Null for non-object results.
    */
-  fun asObjectHandle(): Int {
-    check(tag == "o" || tag == "object-untracked") {
-      "Generic call returned tag '$tag', not an object"
+  val objectKind: String?
+    get() = if (tag == "o" && payload.size > 1) payload[1] else null
+
+  /** True when this call MINTED the returned handle (so this caller owns it). */
+  val isMintedHandle: Boolean
+    get() = objectKind == "node" || objectKind == "resource" || objectKind == "object"
+
+  /**
+   * Releases a MINTED handle through its kind-specific release path (task-61 "close what you
+   * create"): the proxy erases its dictionary reference and the browser slot retires. Handles that
+   * resolved to `script`/`tracked` are not owned by this caller and refuse to close.
+   */
+  fun close() {
+    val handle = asObjectHandle()
+    when (objectKind) {
+      "node" -> releaseWebConstructedObject(handle)
+      "resource" -> releaseWebResource(handle)
+      "object" -> releaseWebTrackedObject(handle)
+      else ->
+        error(
+          "Generic call handle kind '$objectKind' is not owned by this caller (only minted handles close)"
+        )
     }
-    return payload[0].toInt()
   }
 
   companion object {

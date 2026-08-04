@@ -37,17 +37,18 @@ internal class WebCommandBuffer(capacity: Int) {
   }
 
   /**
-   * EXPERIMENTAL (task 76 spike): queued generic void call — `callv(method, args)` on the applier
-   * side. Rides the ordinary command buffer as two interned strings (method name + packed args).
-   * Note the intern table never evicts, so a hot loop with distinct packed-arg strings grows it; a
-   * shipping version needs either an eviction policy or a non-interned string lane.
+   * Task 76: queued generic void call — `callv(method, args)` on the applier side. The method name
+   * rides the interned StringName table (bounded by the set of distinct method names, the same
+   * policy animation/bus names use); the packed-args string rides the ONE-SHOT staged transport
+   * (`stageGenericArgs`/`takeStagedGenericArgs`), which evicts each entry when its applier arm
+   * consumes it, so hot loops with distinct argument values do not grow a table.
    */
   fun appendGenericVoidCall(objectHandle: Int, method: String, packedArgs: String) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = OPCODE_GENERIC_QUEUED_VOID_CALL
     words[offset + 1] = objectHandle
     words[offset + 2] = internWebCommandStringName(method)
-    words[offset + 3] = internWebCommandStringName(packedArgs)
+    words[offset + 3] = stageWebGenericArgs(packedArgs)
   }
 
   fun appendVector2Mutation(opcode: Int, objectHandle: Int, x: Float, y: Float) {
@@ -312,5 +313,9 @@ private fun flushWebCommands(words: WebInt32Array, wordCount: Int, commandCount:
 
 private fun internWebCommandStringName(value: String): Int =
   js("globalThis.KanamaWebBridge.internCommandStringName(value)")
+
+/** Task 76: one-shot staged packed-args transport for queued generic calls (see append site). */
+private fun stageWebGenericArgs(value: String): Int =
+  js("globalThis.KanamaWebBridge.stageGenericArgs(value)")
 
 internal fun webNowMillis(): Double = js("performance.now()")

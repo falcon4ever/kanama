@@ -151,6 +151,13 @@ fun kanamaWebAdoptObjectHandle(objectHandle: Int): Int {
   return 1
 }
 
+/** Task 76: minted generic-call resource returns register RESOURCE kind at allocation. */
+@JsExport
+fun kanamaWebAdoptResourceHandle(objectHandle: Int): Int {
+  registerWebBrowserHandle(objectHandle, WebBrowserHandleKind.RESOURCE)
+  return 1
+}
+
 @JsExport
 fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
   clearWebPositionSnapshot(objectHandle)

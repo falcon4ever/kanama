@@ -52,6 +52,19 @@ internal fun unsupportedWebGameplayCall(signature: String): Nothing =
 internal fun unsupportedWebGameplayFamily(signature: String): Nothing =
   error("Kanama Web gameplay call family is not implemented: $signature")
 
+/**
+ * Marks a call satisfied by the GENERIC fallback tier (task 76: `callv` behind opcodes
+ * 1001/1002) rather than a typed opcode family. Coverage counts it as covered, but the
+ * generated report lists it in its own generic (slow-path) bucket — the report stays honest
+ * about typed vs generic, so the typed fast-path set can grow from real usage data instead of
+ * guesses. Place one marker per Class.method at the wrapper (or fixture) call site that routes
+ * through [net.multigesture.kanama.web.WebExperimentalGenericCall].
+ */
+@PublishedApi
+internal fun genericWebGameplayFallback(signature: String) {
+  require('.' in signature) { "Generic fallback marker must name Class.method: $signature" }
+}
+
 internal object WebSignalCallbackRegistry {
   private data class Entry(
     val ownerHandle: Int,
