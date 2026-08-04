@@ -9,7 +9,6 @@ import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
-import net.multigesture.kanama.backend.NodeBackendContractProbe
 import net.multigesture.kanama.backend.RigidBody3DBackendContractProbe
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
@@ -216,11 +215,11 @@ open class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
     }
 }
 
-/** Enable or disable the node's physics processing (the tutorial pauses the player on win). */
-fun Node.setPhysicsProcess(enable: Boolean) {
-  NodeBackendContractProbe(backendHandle).setPhysicsProcess(enable)
-}
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.setPhysicsProcess(enable: Boolean) = setPhysicsProcess(enable)
 
-/** World-space rotation basis derived from the synchronous global-rotation read (scale-1 rigs). */
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 val Node3D.globalBasis: Basis
-  get() = Basis.fromEuler(globalRotation)
+  get() = globalBasis

@@ -7,6 +7,7 @@ import net.multigesture.kanama.backend.DirectionalLight3DBackendContractProbe
 import net.multigesture.kanama.backend.EnvironmentBackendContractProbe
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
@@ -15,11 +16,23 @@ import net.multigesture.kanama.backend.Node3DBackendContractProbe
 import net.multigesture.kanama.backend.OSBackendContractProbe
 import net.multigesture.kanama.backend.RenderingServerBackendContractProbe
 import net.multigesture.kanama.backend.WorldEnvironmentBackendContractProbe
+import net.multigesture.kanama.types.Transform3D
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
 
 private fun BackendGodotHandle.bool3(descriptor: net.multigesture.kanama.backend.GodotCallDescriptor, value: Boolean) =
   GodotBackendCalls.invokeBoolArg(descriptor, this, value)
+
+private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
+  val rotationBasis = Basis.fromEuler(rotation)
+  // Node basis = R * S: columns scaled (Godot composes scale on the right of rotation).
+  return Basis(
+    rotationBasis.getColumn(0) * scale.x,
+    rotationBasis.getColumn(1) * scale.y,
+    rotationBasis.getColumn(2) * scale.z,
+  )
+}
 
 /**
  * Web API surface for the 3D rendering foundation (Task 60c).
@@ -133,6 +146,57 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
       Node3DBackendContractProbe(backendHandle)
         .setGlobalRotation(GodotVector3(value.x.toFloat(), value.y.toFloat(), value.z.toFloat()))
     }
+
+  /** The node's local rotation+scale basis; writes decompose to the two snapshot families. */
+  var basis: Basis
+    get() = composeBasis(rotation, scale)
+    set(value) {
+      rotation = value.getEuler()
+      scale = value.getScale()
+    }
+
+  /** The node's local transform (basis + origin over the mirrored snapshots). */
+  var transform: Transform3D
+    get() = Transform3D(basis, position)
+    set(value) {
+      position = value.origin
+      basis = value.basis
+    }
+
+  /** The node's world transform; rotation/origin cross synchronously, global scale assumed 1. */
+  var globalTransform: Transform3D
+    get() = Transform3D(Basis.fromEuler(globalRotation), globalPosition)
+    set(value) {
+      globalPosition = value.origin
+      globalRotation = value.basis.getEuler()
+    }
+
+  /**
+   * World-space rotation basis over the synchronous global-rotation reads (scale-1 rigs, the
+   * same contract as [globalTransform]); writes decompose to the global-rotation family.
+   */
+  var globalBasis: Basis
+    get() = Basis.fromEuler(globalRotation)
+    set(value) {
+      globalRotation = value.getEuler()
+    }
+
+  /**
+   * Orient the forward axis at [target] from the current position — -Z by default, +Z when
+   * [useModelFront] (the desktop signature; rides look_at_from_position, task 64).
+   */
+  fun lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
+    lookAtFromPosition(globalPosition, target, up, useModelFront)
+  }
+
+  /** Node3D visibility read (synchronous immediate). */
+  fun isVisible(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(D.NODE3D_IS_VISIBLE, backendHandle)
+
+  /** Godot's rotate_object_local: right-multiply the local basis by an axis-angle rotation. */
+  fun rotateObjectLocal(axis: Vector3, angle: Double) {
+    basis = basis * Basis.fromAxisAngle(axis, angle)
+  }
 }
 
 class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
@@ -196,7 +260,25 @@ class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHand
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())
 
-class Camera3D(godotObject: GodotHandle) : Node3D(godotObject)
+class Camera3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  /** World-space origin of the ray through the given screen point. */
+  fun projectRayOrigin(screenPoint: Vector2): Vector3 =
+    GodotBackendCalls.invokeVector2RetVector3(
+        D.CAMERA3D_PROJECT_RAY_ORIGIN,
+        backendHandle,
+        GodotVector2(screenPoint.x.toFloat(), screenPoint.y.toFloat()),
+      )
+      .let { Vector3(it.x.toDouble(), it.y.toDouble(), it.z.toDouble()) }
+
+  /** World-space direction of the ray through the given screen point. */
+  fun projectRayNormal(screenPoint: Vector2): Vector3 =
+    GodotBackendCalls.invokeVector2RetVector3(
+        D.CAMERA3D_PROJECT_RAY_NORMAL,
+        backendHandle,
+        GodotVector2(screenPoint.x.toFloat(), screenPoint.y.toFloat()),
+      )
+      .let { Vector3(it.x.toDouble(), it.y.toDouble(), it.z.toDouble()) }
+}
 
 /** 3D physics body base (Task 60d). */
 open class PhysicsBody3D(godotObject: GodotHandle) : Node3D(godotObject)

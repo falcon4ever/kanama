@@ -310,6 +310,14 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
       )
       ?.let { Camera3D(WebObjectId(it.backendToken().toInt())) }
 
+  /** Fresh viewport-space pointer position (no snapshot mirrors pointer state). */
+  fun getMousePosition(): Vector2 =
+    GodotBackendCalls.invokeNoArgsRetVector2(
+        InitialGodotCallDescriptors.VIEWPORT_GET_MOUSE_POSITION,
+        backendHandle,
+      )
+      .let { Vector2(it.x.toDouble(), it.y.toDouble()) }
+
   fun getVisibleRect(): Rect2 =
     ViewportBackendContractProbe(backendHandle).visibleRect.let { rect ->
       Rect2(
@@ -441,6 +449,14 @@ class PackedScene internal constructor(backendHandle: BackendGodotHandle) : Reso
 
   fun instantiate(): GodotObject? =
     PackedSceneBackendContractProbe(backendHandle).instantiate()?.let(::GodotObject)
+
+  /** The recorded scene contents (mesh extraction without instantiating). */
+  fun getState(): SceneState? =
+    GodotBackendCalls.invokeNoArgsRetHandle(
+        InitialGodotCallDescriptors.PACKEDSCENE_GET_STATE,
+        backendHandle,
+      )
+      ?.let { SceneState(WebObjectId(it.backendToken().toInt())) }
 }
 
 class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObject(backendHandle) {
@@ -606,6 +622,15 @@ object Input {
 
   fun isActionJustPressed(action: String): Boolean =
     InputBackendContractProbe.isActionJustPressed(action)
+
+  /** exact_match is baked to Godot's default false on Web (the StringName family carries it). */
+  fun isActionJustReleased(action: String, exactMatch: Boolean = false): Boolean {
+    require(!exactMatch) { "Web is_action_just_released supports only exact_match=false" }
+    return GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.INPUT_IS_ACTION_JUST_RELEASED,
+      action,
+    )
+  }
 
   fun actionPress(action: String) {
     InputActionBackendContractProbe.actionPress(action)

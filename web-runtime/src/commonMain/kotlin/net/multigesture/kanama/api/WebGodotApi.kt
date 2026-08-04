@@ -10,8 +10,10 @@ import net.multigesture.kanama.backend.CanvasItemInputBackendContractProbe
 import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector2i
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.Node2DBackendContractProbe
 import net.multigesture.kanama.backend.NodeBackendContractProbe
@@ -23,6 +25,7 @@ import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
+import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.KanamaWebScript
 import net.multigesture.kanama.web.WebObjectId
 import net.multigesture.kanama.web.webScriptInstance
@@ -43,6 +46,31 @@ open class GodotObject internal constructor(internal val backendHandle: BackendG
   /** Returns true when both wrappers refer to the same Godot object instance. */
   fun isSameInstance(other: GodotObject): Boolean =
     backendHandle.backendToken() == other.backendHandle.backendToken()
+
+  /** Engine-side class check (the Web bridge carries no class metadata client-side). */
+  fun isClass(className: String): Boolean =
+    GodotObjectBackendContractProbe(backendHandle).isClass(className)
+
+  fun hasMethod(method: String): Boolean = NodeBackendContractProbe(backendHandle).hasMethod(method)
+
+  /**
+   * Dynamic one-Double-argument method call (the FPS's damage(amount) on ray hits). Web models
+   * desktop's variadic `call` as the typed argument shapes the corpus dispatches.
+   */
+  fun call(method: String, value: Double) {
+    NodeBackendContractProbe(backendHandle).callDouble(method, value)
+  }
+
+  /** Dynamic two-Vector3 dispatch (the corpus's damage(impact, force) convention). */
+  fun call(method: String, first: Vector3, second: Vector3) {
+    GodotBackendCalls.invokeStringNameVector3Vector3Arg(
+      InitialGodotCallDescriptors.OBJECT_CALL_VECTOR3_VECTOR3,
+      backendHandle,
+      method,
+      GodotVector3(first.x.toFloat(), first.y.toFloat(), first.z.toFloat()),
+      GodotVector3(second.x.toFloat(), second.y.toFloat(), second.z.toFloat()),
+    )
+  }
 
   fun signal(name: String): GodotSignal = GodotSignal(this, name)
 
@@ -155,6 +183,50 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
       value,
     )
   }
+
+  /**
+   * All children as tracked handles, walked over get_child_count + get_child. Web supports only
+   * Godot's default include_internal=false (the child-indexing family bakes it).
+   */
+  fun getChildren(includeInternal: Boolean = false): List<Node> {
+    require(!includeInternal) { "Web get_children supports only include_internal=false" }
+    val probe = NodeBackendContractProbe(backendHandle)
+    return (0 until probe.getChildCount()).mapNotNull { index -> probe.getChild(index)?.let(::Node) }
+  }
+
+  /** Matching descendants as tracked handles (engine-side find_children). */
+  fun findChildren(
+    pattern: String,
+    type: String = "",
+    recursive: Boolean = true,
+    owned: Boolean = true,
+  ): List<Node> =
+    GodotBackendCalls.invokeStringStringBoolBoolRetHandleList(
+        InitialGodotCallDescriptors.NODE_FIND_CHILDREN,
+        backendHandle,
+        pattern,
+        type,
+        recursive,
+        owned,
+      )
+      .map(::Node)
+
+  /** Enable or disable the node's physics processing (e.g. pausing the player on win). */
+  fun setPhysicsProcess(enable: Boolean) {
+    NodeBackendContractProbe(backendHandle).setPhysicsProcess(enable)
+  }
+
+  /** Web adaptation: the corpus runs the default 60 Hz fixed physics tick. */
+  fun getPhysicsProcessDeltaTime(): Double = 1.0 / 60.0
+
+  fun setProcess(enable: Boolean) {
+    GodotBackendCalls.invokeBoolArg(InitialGodotCallDescriptors.NODE_SET_PROCESS, backendHandle, enable)
+  }
+
+  /** Web no-ops: generated proxies dispatch input only to scripts that declare handlers. */
+  fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+
+  fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 }
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {
@@ -303,6 +375,13 @@ class Texture2D internal constructor(private var resourceHandle: BackendGodotHan
 
 object ResourceLoader {
   const val CACHE_MODE_REUSE = 1L
+
+  /** Generic resource load (scripted resources resolve to their hydrated script handle). */
+  fun load(
+    path: String,
+    typeHint: String = "",
+    cacheMode: Long = CACHE_MODE_REUSE,
+  ): Resource? = ResourceLoaderBackendContractProbe.load(path, typeHint, cacheMode)?.let(::Resource)
 
   @ManualGodotLifetimeApi
   fun loadTexture2D(path: String, cacheMode: Long = CACHE_MODE_REUSE): Texture2D? =
