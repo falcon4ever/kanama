@@ -273,6 +273,14 @@ open class Resource internal constructor(backendHandle: BackendGodotHandle) :
   constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
 
   companion object {
+    /**
+     * Public factory matching desktop, where the `Resource` constructor is internal and
+     * `fromHandle` is the public self-factory spelling — so a `KanamaScript<Resource>` script can
+     * write `Resource.fromHandle(godotObject)` and compile on either platform (task 64). The web
+     * constructor stays public for source compatibility with the already-ported corpus.
+     */
+    fun fromHandle(handle: GodotHandle): Resource = Resource(handle)
+
     /** Re-types any Godot object as a Resource (the Web bridge carries no class metadata). */
     fun fromObject(value: GodotObject?): Resource? = value?.let { Resource(it.backendHandle) }
   }
@@ -302,6 +310,15 @@ object ResourceLoader {
 
   fun loadPackedScene(path: String, cacheMode: Long = CACHE_MODE_REUSE): PackedScene? =
     ResourceLoaderBackendContractProbe.load(path, "PackedScene", cacheMode)?.let(::PackedScene)
+
+  /**
+   * Loads an audio stream the caller owns (release with [AudioStream.close]) — the acquisition
+   * path for `AudioStreamPlayer.setStream` on an already-held stream (task 64). Same admitted
+   * loader family (and "AudioStream" type hint) that `setStreamFromPath` already rides.
+   */
+  @ManualGodotLifetimeApi
+  fun loadAudioStream(path: String, cacheMode: Long = CACHE_MODE_REUSE): AudioStream? =
+    ResourceLoaderBackendContractProbe.load(path, "AudioStream", cacheMode)?.let(::AudioStream)
 }
 
 object GD {
