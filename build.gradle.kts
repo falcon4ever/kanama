@@ -714,6 +714,95 @@ tasks.register("packageDistributions") {
   dependsOn("packageDesktopKit", "packageStoreNativeArtifact", "packageStoreAddon")
 }
 
+// ---------------------------------------------------------------------------
+// Task 63 (issue #102) — bundled jlink runtime for exported desktop games.
+//
+// Exported games are unpack-and-play: they ship a jlink-trimmed `runtime/`
+// image that the native bootstrap probes app-relative BEFORE JAVA_HOME (see
+// bootstrap/bootstrap.c). The module set below is pinned from what kanama.jar
+// needs — one recipe for every Kanama game, never recomputed per project.
+// Recompute only when kanama.jar's bundled dependency set changes:
+//   <jdk-25>/bin/jdeps --print-module-deps --ignore-missing-deps \
+//     build/libs/kanama.jar <scripts>/kanama-scripts.jar
+// Pinned 2026-08-03 (0.4.x): java.base, java.instrument, jdk.unsupported
+// (FFM lives in java.base; java.instrument + jdk.unsupported come from the
+// bundled kotlinx-coroutines debug agent + Unsafe usage). The rare game that
+// pulls an extra JDK module (e.g. java.net.http, jdk.localedata, or
+// jdk.jdwp.agent for JDWP-debugging an exported build) adds it with
+//   -PkanamaRuntimeAdditionalModules=java.net.http,jdk.localedata
+// The default path must require nothing from the user.
+// ---------------------------------------------------------------------------
+val kanamaRuntimePinnedModules = listOf("java.base", "java.instrument", "jdk.unsupported")
+val kanamaRuntimeAdditionalModules =
+  providers.gradleProperty("kanamaRuntimeAdditionalModules").orElse("")
+val gameRuntimeImageDir = layout.buildDirectory.dir("game-runtime/runtime")
+
+fun hostJvmServerLibraryRelativePath(): String {
+  val osName = System.getProperty("os.name").lowercase()
+  return when {
+    osName.contains("mac") || osName.contains("darwin") -> "lib/server/libjvm.dylib"
+    osName.contains("windows") -> "bin/server/jvm.dll"
+    else -> "lib/server/libjvm.so"
+  }
+}
+
+tasks.register<Exec>("jlinkGameRuntime") {
+  group = "distribution"
+  description =
+    "Build the jlink-trimmed Java runtime image bundled with exported desktop games (host platform)."
+
+  val toolchainService = project.extensions.getByType<JavaToolchainService>()
+  val jdkHome =
+    toolchainService
+      .launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) }
+      .map { it.metadata.installationPath }
+  val runtimeModules =
+    kanamaRuntimeAdditionalModules.map { extra ->
+      val additional = extra.split(',').map(String::trim).filter(String::isNotEmpty)
+      (kanamaRuntimePinnedModules + additional).distinct().joinToString(",")
+    }
+
+  inputs.property("kanamaRuntimeModules", runtimeModules)
+  inputs.property("kanamaRuntimeJdkHome", jdkHome.map { it.asFile.absolutePath })
+  outputs.dir(gameRuntimeImageDir)
+
+  doFirst {
+    // jlink refuses to write into an existing directory, and Gradle pre-creates
+    // declared output directories — clear it right before running.
+    gameRuntimeImageDir.get().asFile.deleteRecursively()
+    val jlinkName =
+      if (System.getProperty("os.name").lowercase().contains("windows")) "jlink.exe" else "jlink"
+    commandLine(
+      jdkHome.get().asFile.resolve("bin/$jlinkName").absolutePath,
+      "--add-modules",
+      runtimeModules.get(),
+      "--output",
+      gameRuntimeImageDir.get().asFile.absolutePath,
+      "--strip-debug",
+      "--no-header-files",
+      "--no-man-pages",
+      "--compress",
+      "zip-6",
+    )
+  }
+
+  doLast {
+    val imageDir = gameRuntimeImageDir.get().asFile
+    val serverLib = imageDir.resolve(hostJvmServerLibraryRelativePath())
+    if (!serverLib.isFile) {
+      throw GradleException(
+        "jlink runtime image completed but ${serverLib.absolutePath} was not created"
+      )
+    }
+    val sizeMb =
+      imageDir.walkTopDown().filter { it.isFile }.map { it.length() }.sum() / (1024L * 1024L)
+    logger.lifecycle(
+      "[kanama] game runtime image: ${imageDir.absolutePath} " +
+        "($sizeMb MB, modules=${runtimeModules.get()})"
+    )
+  }
+}
+
 val xcodeDeveloperDir =
   providers
     .gradleProperty("kanamaXcodeDeveloperDir")
