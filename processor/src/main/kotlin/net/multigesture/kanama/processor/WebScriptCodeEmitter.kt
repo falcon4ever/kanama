@@ -8,7 +8,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 15
+    const val PROTOCOL_VERSION = 16
     const val PROTOCOL_SCHEMA_VERSION = 1
 
     /**
@@ -18,6 +18,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      */
     val DISPATCHED_VIRTUALS =
       linkedSetOf(
+        "_enter_tree",
         "_ready",
         "_process",
         "_physics_process",
@@ -33,10 +34,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /**
      * Errors for virtuals a Web build would silently drop (task 66).
      *
-     * `@OnEnterTree` and friends compile for a Web target and are then never called, so the body
-     * just disappears — in the tps-demo port that cost a long debugging detour for what should have
-     * been a build failure. Fail the build instead, naming the script and the function. Empty on
-     * every non-Web target, where the same virtuals are dispatched normally.
+     * An undispatched virtual compiles for a Web target and is then never called, so the body just
+     * disappears — in the tps-demo port that cost a long debugging detour for what should have been
+     * a build failure. Fail the build instead, naming the script and the function. Empty on every
+     * non-Web target, where the same virtuals are dispatched normally. (`_enter_tree` used to be
+     * the canonical offender; task 66b admitted it to [DISPATCHED_VIRTUALS] for real.)
      */
     fun undispatchedVirtualErrors(model: ScriptModel, options: Map<String, String>): List<String> {
       if (!isWebTarget(options)) return emptyList()
@@ -45,12 +47,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         .map { virtual ->
           val where = "${model.simpleName}.${virtual.kotlinMethodName}"
           val advice =
-            if (virtual.virtualName == "_enter_tree")
-              "move its body into an @OnReady function — the Web backend dispatches script " +
-                "lifecycle from _ready"
-            else
-              "move the work into a dispatched virtual " +
-                "(${DISPATCHED_VIRTUALS.joinToString(", ")})"
+            "move the work into a dispatched virtual " +
+              "(${DISPATCHED_VIRTUALS.joinToString(", ")})"
           "$where: ${virtual.virtualName} is not dispatched by the Kanama Web backend, so this " +
             "function would never run in a Web build; $advice."
         }
@@ -292,6 +290,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("      else -> unknown(\"script\", scriptId)")
     appendLine("    }")
     appendLine()
+    appendEnterTreeDispatcher()
     appendReadyDispatcher()
     appendProcessDispatcher()
     appendPhysicsProcessDispatcher()
@@ -405,6 +404,22 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           method != null -> "(script as ${input.model.simpleName}).${method.kotlinName}()"
           else -> "Unit"
         }
+      appendLine("      ${index + 1} -> $body")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  private fun StringBuilder.appendEnterTreeDispatcher() {
+    appendLine("  fun enterTree(scriptId: Int, script: KanamaWebScript) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { index, input ->
+      val enterTree = input.model.virtuals.firstOrNull { it.virtualName == "_enter_tree" }
+      val body =
+        if (enterTree == null) "Unit"
+        else "(script as ${input.model.simpleName}).${enterTree.kotlinMethodName}()"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1221,6 +1236,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\treturn _kanama_handle")
     appendLine()
     appendPullProperties(model)
+    if (model.virtuals.any { it.virtualName == "_enter_tree" }) {
+      // _enter_tree fires before _ready, so the Kotlin instance may not exist yet:
+      // _kanama_ensure_created constructs it AND pushes every @export property value
+      // (scene-instantiated exports are applied during instantiate(), before add_child,
+      // so they are visible to the Kotlin @OnEnterTree body). Unlike _ready this
+      // dispatches on EVERY tree entry, matching Godot's own _enter_tree semantics.
+      appendLine("func _enter_tree() -> void:")
+      appendLine("\tif _kanama_ensure_created() == 0:")
+      appendLine("\t\treturn")
+      appendLine("\t_kanama_bridge.enterTree(_kanama_handle)")
+      appendLine()
+    }
     appendLine("func _ready() -> void:")
     appendLine("\tif _kanama_ensure_created() == 0 or _kanama_ready_dispatched:")
     appendLine("\t\treturn")
