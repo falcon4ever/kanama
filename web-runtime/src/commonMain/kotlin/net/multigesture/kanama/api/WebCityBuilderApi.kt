@@ -7,7 +7,6 @@ import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBasis
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.GodotTransform3D
-import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.GodotVector3i
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors
@@ -27,8 +26,6 @@ private fun Basis.toBackend(): GodotBasis =
 
 private fun Vector3.toBackend(): GodotVector3 =
   GodotVector3(x.toFloat(), y.toFloat(), z.toFloat())
-
-private fun GodotVector3.toApi(): Vector3 = Vector3(x.toDouble(), y.toDouble(), z.toDouble())
 
 /** City-Builder surface: the runtime-built structure grid. */
 class GridMap(godotObject: GodotHandle) : Node3D(godotObject) {
@@ -196,70 +193,46 @@ class Mesh internal constructor(godotObject: GodotHandle) : Resource(godotObject
   }
 }
 
-fun PackedScene.getState(): SceneState? =
-  GodotBackendCalls.invokeNoArgsRetHandle(
-      InitialGodotCallDescriptors.PACKEDSCENE_GET_STATE,
-      backendHandle,
-    )
-    ?.let { SceneState(WebObjectId(it.backendToken().toInt())) }
+/** Import-compat alias for shared demo sources; delegates to the [PackedScene] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun PackedScene.getState(): SceneState? = getState()
 
-fun MeshInstance3D.getMesh(): Mesh? =
-  GodotBackendCalls.invokeNoArgsRetHandle(
-      InitialGodotCallDescriptors.MESHINSTANCE3D_GET_MESH,
-      backendHandle,
-    )
-    ?.let { Mesh(WebObjectId(it.backendToken().toInt())) }
+/**
+ * Import-compat alias for shared demo sources; delegates to the [MeshInstance3D] member (task 64).
+ */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun MeshInstance3D.getMesh(): Mesh? = getMesh()
 
-fun Camera3D.projectRayOrigin(screenPoint: Vector2): Vector3 =
-  GodotBackendCalls.invokeVector2RetVector3(
-      InitialGodotCallDescriptors.CAMERA3D_PROJECT_RAY_ORIGIN,
-      backendHandle,
-      GodotVector2(screenPoint.x.toFloat(), screenPoint.y.toFloat()),
-    )
-    .toApi()
+/** Import-compat alias for shared demo sources; delegates to the [Camera3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Camera3D.projectRayOrigin(screenPoint: Vector2): Vector3 = projectRayOrigin(screenPoint)
 
-fun Camera3D.projectRayNormal(screenPoint: Vector2): Vector3 =
-  GodotBackendCalls.invokeVector2RetVector3(
-      InitialGodotCallDescriptors.CAMERA3D_PROJECT_RAY_NORMAL,
-      backendHandle,
-      GodotVector2(screenPoint.x.toFloat(), screenPoint.y.toFloat()),
-    )
-    .toApi()
+/** Import-compat alias for shared demo sources; delegates to the [Camera3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Camera3D.projectRayNormal(screenPoint: Vector2): Vector3 = projectRayNormal(screenPoint)
 
-/** Fresh viewport-space pointer position (no snapshot mirrors pointer state). */
-fun Viewport.getMousePosition(): Vector2 =
-  GodotBackendCalls.invokeNoArgsRetVector2(
-      InitialGodotCallDescriptors.VIEWPORT_GET_MOUSE_POSITION,
-      backendHandle,
-    )
-    .let { Vector2(it.x.toDouble(), it.y.toDouble()) }
+/** Import-compat alias for shared demo sources; delegates to the [Viewport] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Viewport.getMousePosition(): Vector2 = getMousePosition()
 
+/** Import-compat alias for shared demo sources; delegates to the [Node] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.findChildren(
   pattern: String,
   type: String = "",
   recursive: Boolean = true,
   owned: Boolean = true,
-): List<Node> =
-  GodotBackendCalls.invokeStringStringBoolBoolRetHandleList(
-      InitialGodotCallDescriptors.NODE_FIND_CHILDREN,
-      backendHandle,
-      pattern,
-      type,
-      recursive,
-      owned,
-    )
-    .map { Node(it) }
+): List<Node> = findChildren(pattern, type, recursive, owned)
 
-fun GodotObject.isClass(name: String): Boolean =
-  GodotObjectBackendContractProbe(backendHandle).isClass(name)
+/** Import-compat alias for shared demo sources; delegates to the [GodotObject] member (task 64). */
+fun GodotObject.isClass(name: String): Boolean = isClass(name)
 
+/** Web-only erasure helper for the ported corpus (no desktop counterpart; stays an extension). */
 fun GodotObject.asObject(): GodotObject = this
 
+/** Import-compat alias for shared demo sources; delegates to the [Input] member (task 64). */
 fun Input.isActionJustReleased(action: String): Boolean =
-  GodotBackendCalls.invokeStringNameRetBoolSingleton(
-    InitialGodotCallDescriptors.INPUT_IS_ACTION_JUST_RELEASED,
-    action,
-  )
+  isActionJustReleased(action, exactMatch = false)
 
 object ResourceSaver {
   /** Persists [resource]; scripted resources pull current Kotlin values before serializing. */
@@ -272,14 +245,13 @@ object ResourceSaver {
     )
 }
 
-/** Generic resource load (scripted resources resolve to their hydrated script handle). */
+/** Import-compat alias for shared demo sources; delegates to the [ResourceLoader] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun ResourceLoader.load(
   path: String,
   typeHint: String = "",
   cacheMode: Long = ResourceLoader.CACHE_MODE_REUSE,
-): Resource? =
-  net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe.load(path, typeHint, cacheMode)
-    ?.let { Resource(WebObjectId(it.backendToken().toInt())) }
+): Resource? = load(path, typeHint, cacheMode)
 
 /** An owned scripted resource created from Kotlin; release via [close] when handed off. */
 class OwnedScriptResource<out T>
