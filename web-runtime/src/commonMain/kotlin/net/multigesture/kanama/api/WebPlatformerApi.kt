@@ -78,18 +78,32 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
   }
 
   /**
-   * Position the node and orient -Z at [target]. Web bakes up/use_model_front to Godot's
-   * defaults (the only values the demos pass); the rotation snapshot is refreshed synchronously
-   * so a following rotation read sees the new orientation.
+   * Position the node and orient the forward axis at [target]: -Z (camera forward) by default,
+   * +Z (asset front) when [useModelFront] is true — the desktop/Godot signature (task 64). Web
+   * bakes the up vector to Godot's default; the rotation snapshot is refreshed synchronously so
+   * a following rotation read sees the new orientation.
+   *
+   * Transport note: the admitted opcode carries only position+target with the engine bool baked
+   * to false, so [useModelFront] rides the same opcode by mirroring the target through
+   * [position]. That is exact, not approximate: `Basis::looking_at(d, up, true)` and
+   * `Basis::looking_at(-d, up, false)` normalize to the identical `v_z = d / |d|` and hence the
+   * identical basis (core/math/basis.cpp), and the engine's error guards (target == position,
+   * up collinearity) map one-to-one under the mirror.
    */
-  fun lookAtFromPosition(position: Vector3, target: Vector3, up: Vector3 = Vector3.UP) {
+  fun lookAtFromPosition(
+    position: Vector3,
+    target: Vector3,
+    up: Vector3 = Vector3.UP,
+    useModelFront: Boolean = false,
+  ) {
     require(up == Vector3.UP) {
       "Web look_at_from_position supports only the default up vector Vector3.UP"
     }
+    val engineTarget = if (useModelFront) position - (target - position) else target
     Node3DBackendContractProbe(backendHandle)
       .lookAtFromPosition(
         GodotVector3(position.x.toFloat(), position.y.toFloat(), position.z.toFloat()),
-        GodotVector3(target.x.toFloat(), target.y.toFloat(), target.z.toFloat()),
+        GodotVector3(engineTarget.x.toFloat(), engineTarget.y.toFloat(), engineTarget.z.toFloat()),
       )
   }
 
