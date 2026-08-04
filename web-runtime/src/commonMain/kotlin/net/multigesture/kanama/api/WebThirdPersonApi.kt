@@ -56,9 +56,12 @@ var Node3D.globalTransform: Transform3D
     globalRotation = value.basis.getEuler()
   }
 
-/** Orient -Z at [target] from the current position (rides look_at_from_position). */
-fun Node3D.lookAt(target: Vector3, up: Vector3 = Vector3.UP) {
-  lookAtFromPosition(globalPosition, target, up)
+/**
+ * Orient the forward axis at [target] from the current position — -Z by default, +Z when
+ * [useModelFront] (the desktop signature; rides look_at_from_position, task 64).
+ */
+fun Node3D.lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
+  lookAtFromPosition(globalPosition, target, up, useModelFront)
 }
 
 /** Node3D visibility read (synchronous immediate). */

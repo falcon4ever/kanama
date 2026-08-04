@@ -335,6 +335,23 @@ class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
     get() = GPUParticles2DBackendContractProbe(backendHandle).lifetime
 }
 
+/**
+ * An audio-stream resource the script holds by handle (task 64). Mirrors desktop's `AudioStream`
+ * far enough for the portable `AudioStreamPlayer.setStream` spelling; a stream obtained from
+ * [ResourceLoader.loadAudioStream] is owned by the caller and released with [close] (the
+ * PackedScene lifetime pattern).
+ */
+open class AudioStream internal constructor(backendHandle: BackendGodotHandle) :
+  Resource(backendHandle) {
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
+  /** Releases the stream's browser handle (already-released is an error). */
+  @ManualGodotLifetimeApi
+  fun close() {
+    releaseWebResource(handle.value)
+  }
+}
+
 class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()) {
   fun setVolumeDb(value: Double) {
     AudioStreamPlayerBackendContractProbe(backendHandle).setVolumeDb(value)
@@ -353,6 +370,16 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHa
     } finally {
       releaseWebResource(stream.backendToken().toInt())
     }
+  }
+
+  /**
+   * Assigns [stream] — a stream the caller already holds — or clears the player when null: the
+   * desktop `setStream(null)` stop-all spelling (task 64). Godot stops any playing sound on
+   * assignment. Ownership stays with the caller; unlike [setStreamFromPath], no handle is
+   * released here.
+   */
+  fun setStream(stream: AudioStream?) {
+    AudioStreamPlayerBackendContractProbe(backendHandle).setStream(stream?.backendHandle)
   }
 
   fun setPitchScale(value: Double) {

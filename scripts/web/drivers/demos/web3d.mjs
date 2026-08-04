@@ -109,6 +109,33 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const atPeak = render.last ?? ready;
   trace(`render: process=${peak.processCalls} applied=${peak.appliedCommands} live=${atPeak.liveHandles}`);
 
+  // Task-64 API-parity probes (Main methods #3 and #4). Method #3 exercises
+  // Resource.fromHandle identity and AudioStreamPlayer.setStream (assign + play + null-clear),
+  // then aims the root at +X with the default -Z-forward convention; method #4 repeats the aim
+  // with useModelFront=true. Orientation is read back over the immediate global-rotation
+  // channel (opcode 141): the default aim must read yaw -PI/2, the model-front aim +PI/2 — a
+  // PI flip (the fps Enemy's 180-degree gap). A Kotlin-side check failure throws before the
+  // aim, so a stale yaw fails these checks and the throw itself lands in callbackErrors.
+  const readGlobalYaw = () =>
+    evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      bridge.immediateNoArgsVector3X(141, bridge.web3dMainHandle);
+      return bridge.immediateNoArgsVector3Y();
+    })()`);
+  trace("parity_probe");
+  await evaluate(
+    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 3); true",
+  );
+  const defaultYaw = await readGlobalYaw();
+  trace(`parity default yaw=${defaultYaw}`);
+  await evaluate(
+    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 4); true",
+  );
+  const modelFrontYaw = await readGlobalYaw();
+  trace(`parity model-front yaw=${modelFrontYaw}`);
+  const HALF_PI = Math.PI / 2;
+  const angleNear = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 1e-3;
+
   // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the scene root, draining handles.
   trace("smoke_teardown");
   await evaluate(
@@ -126,6 +153,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
     renderFramesAdvanced: peak.processCalls >= ready.processCalls + 10,
     transformCommandsApplied: peak.appliedCommands >= ready.appliedCommands + 10,
+    // Task-64 parity: fromHandle + setStream ran clean (a throw would leave the aim stale)
+    // and lookAt's useModelFront flips the forward axis by exactly PI.
+    parityDefaultLook: angleNear(defaultYaw, -HALF_PI),
+    parityModelFrontLook: angleNear(modelFrontYaw, HALF_PI),
+    parityModelFrontFlip: angleNear(modelFrontYaw - defaultYaw, Math.PI),
     fullTeardownToZero: settled.liveHandles === 0,
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
