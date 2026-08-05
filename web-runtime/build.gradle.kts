@@ -259,6 +259,11 @@ val webGameplayCoverageSources =
         layout.projectDirectory.file(
             "src/commonMain/kotlin/net/multigesture/kanama/api/WebDodgeApi.kt"
         ),
+        // Task 64: AnimationPlayer.getCurrentAnimation rides the generic tier; its marker
+        // lives in the platformer wrapper file.
+        layout.projectDirectory.file(
+            "src/commonMain/kotlin/net/multigesture/kanama/api/WebPlatformerApi.kt"
+        ),
         // Task 76: the web3d fixture exercises the generic callv fallback; its
         // genericWebGameplayFallback markers populate the report's slow-path bucket.
         layout.projectDirectory.file("src/web3dSmoke/web/kotlin-src/Main.kt"),

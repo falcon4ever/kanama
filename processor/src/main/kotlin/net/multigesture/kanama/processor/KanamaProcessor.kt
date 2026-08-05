@@ -118,6 +118,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       for (message in WebScriptCodeEmitter.undispatchedVirtualErrors(model, env.options)) {
         env.logger.error("[kanama:ksp] $message", symbol)
       }
+      for (message in WebScriptCodeEmitter.unsupportedWebPropertyErrors(model, env.options)) {
+        env.logger.error("[kanama:ksp] $message", symbol)
+      }
       symbol.containingFile?.let {
         aggregatorSources += it
         scriptAggregatorSources += it
@@ -2068,7 +2071,7 @@ private fun scriptPropertyDefaultLiteral(
   val start = (location.lineNumber - 1).coerceIn(0, sourceLines.lastIndex)
   val declarationLine = findPropertyDeclarationLine(sourceLines, start, propertyName) ?: return null
   val declaration = collectPropertyDeclaration(sourceLines, declarationLine)
-  val initializer = extractPropertyInitializer(declaration) ?: return null
+  val initializer = extractPropertyInitializer(declaration, propertyName) ?: return null
   enumFqName?.let {
     return normalizeEnumDefaultLiteral(initializer, it, enumEntries)
   }
@@ -2119,7 +2122,7 @@ private fun findPropertyDeclarationLine(
   return (first..last).firstOrNull { declarationPattern.containsMatchIn(lines[it]) }
 }
 
-private fun collectPropertyDeclaration(lines: List<String>, start: Int): String {
+internal fun collectPropertyDeclaration(lines: List<String>, start: Int): String {
   val parts = mutableListOf<String>()
   var parenDepth = 0
   for (i in start..(start + 8).coerceAtMost(lines.lastIndex)) {
@@ -2147,8 +2150,15 @@ private fun stripLineComment(line: String): String {
   return line
 }
 
-private fun extractPropertyInitializer(declaration: String): String? {
-  val eq = declaration.indexOf('=')
+internal fun extractPropertyInitializer(declaration: String, propertyName: String): String? {
+  // The collected declaration can start with a one-line annotation carrying arguments
+  // (`@Export(hint = PropertyHint.RANGE, hintString = "0,100,1") var numberOfJumps: Long = 2`),
+  // so the initializer's `=` is the first one AFTER the `var`/`val <name>` keyword — taking the
+  // first `=` in the whole string used to land inside the annotation and shipped a null
+  // defaultLiteral for every one-line annotated declaration.
+  val declarationStart =
+    Regex("""\b(?:var|val)\s+${Regex.escape(propertyName)}\b""").find(declaration) ?: return null
+  val eq = declaration.indexOf('=', startIndex = declarationStart.range.last + 1)
   if (eq < 0) return null
   return declaration.substring(eq + 1).trim().removeSuffix(";").trim().takeIf { it.isNotEmpty() }
 }

@@ -105,6 +105,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   );
   trace(`enterTreeProbe: mask=${enterTreeProbe} enterTreeCalls=${ready.enterTreeCalls}`);
 
+  // Task 64 property-push proof: Main.property_probe (method#7, Int->Int) returns a mask —
+  // bit 1 = the scene-exported NodePath (NodePath("Spinner"), never the default) was pushed
+  // into Kotlin, bit 2 = the scene value 47 of the RANGE-hinted one-line-annotated export
+  // arrived, bit 4 = the pushed NodePath resolves a live node. A healthy run returns 7.
+  const propertyProbe = Number(
+    await evaluate(
+      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 7, 0)",
+    ),
+  );
+  trace(`propertyProbe: mask=${propertyProbe}`);
+
   // Observe the render running: the spinner's _process advances processCalls and its
   // Node3D.rotation mutations advance appliedCommands each frame.
   const seed = {
@@ -179,6 +190,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     enterTreeDispatched: ready.enterTreeCalls >= 1 && (enterTreeProbe & 1) === 1,
     // 66b: exported property visible at _enter_tree (bit 2) AND it ran before _ready (bit 4).
     enterTreePropertyOrdering: enterTreeProbe === 7,
+    // Task 64: the scene-exported NodePath value was pushed into the Kotlin instance.
+    nodePathPropertyPushed: (propertyProbe & 1) === 1,
+    // Task 64: the scene value of the RANGE-hinted one-line-annotated export arrived in Kotlin
+    // (initializer parser + hint emission end to end).
+    rangeHintPropertyPushed: (propertyProbe & 2) === 2,
+    // Task 64: the pushed NodePath resolves a live node through the NodePath accessor overload.
+    nodePathResolvesNode: (propertyProbe & 4) === 4,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
     renderFramesAdvanced: peak.processCalls >= ready.processCalls + 10,
     transformCommandsApplied: peak.appliedCommands >= ready.appliedCommands + 10,

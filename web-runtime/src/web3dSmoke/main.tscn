@@ -42,6 +42,8 @@ size = Vector3(0.6, 0.6, 0.6)
 [node name="Web3D" type="Node3D"]
 script = ExtResource("1_main")
 enter_tree_greeting = "web3d-enter-tree"
+spinner_path = NodePath("Spinner")
+probe_range_value = 47
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")

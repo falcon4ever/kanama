@@ -546,4 +546,245 @@ class WebScriptCodeEmitterTest {
       )
     }
   }
+
+  // ---- Task 64: NodePath / hint metadata / Vector3 completion / property guards ----
+
+  private fun task64Property(
+    kotlinName: String,
+    godotName: String,
+    type: TypeMapping,
+    hint: Int = 0,
+    hintString: String = "",
+    defaultLiteral: String? = null,
+    enumFqName: String? = null,
+    narrow: NarrowScalar? = null,
+  ) =
+    ScriptPropertyModel(
+      kotlinName = kotlinName,
+      godotName = godotName,
+      type = type,
+      isMutable = true,
+      hint = hint,
+      hintString = hintString,
+      defaultLiteral = defaultLiteral,
+      enumFqName = enumFqName,
+      enumEntries = if (enumFqName != null) listOf("A", "B") else emptyList(),
+      narrow = narrow,
+    )
+
+  private fun task64Model(properties: List<ScriptPropertyModel>) =
+    ScriptModel(
+      simpleName = "Task64Script",
+      fqName = "net.multigesture.kanama.web.Task64Script",
+      attachTo = "Node3D",
+      isTool = false,
+      isGlobalClass = false,
+      properties = properties,
+      toolButtons = emptyList(),
+      virtuals = emptyList(),
+      methods = emptyList(),
+      signals = emptyList(),
+    )
+
+  @Test
+  fun emitsNodePathRangeAndVector3PropertyArms() {
+    val model =
+      task64Model(
+        listOf(
+          task64Property(
+            "viewPath",
+            "view",
+            TypeMapping.NODE_PATH,
+            defaultLiteral = "net.multigesture.kanama.types.NodePath(\"../View\")",
+          ),
+          task64Property(
+            "numberOfJumps",
+            "number_of_jumps",
+            TypeMapping.INT,
+            hint = 1,
+            hintString = "0,100,1",
+            defaultLiteral = "2",
+          ),
+          task64Property(
+            "sensitivity",
+            "sensitivity",
+            TypeMapping.FLOAT,
+            hint = 1,
+            hintString = "0.0,1.0,0.01,or_greater",
+            defaultLiteral = "0.25",
+          ),
+          task64Property(
+            "spawnOffset",
+            "spawn_offset",
+            TypeMapping.VECTOR3,
+            defaultLiteral = "net.multigesture.kanama.types.Vector3(1.0, 2.0, 3.0)",
+          ),
+          task64Property(
+            "restPoint",
+            "rest_point",
+            TypeMapping.VECTOR3,
+            defaultLiteral = "net.multigesture.kanama.types.Vector3.ZERO",
+          ),
+        )
+      )
+    assertTrue(
+      WebScriptCodeEmitter.unsupportedWebPropertyErrors(model, webOptions).isEmpty(),
+      "the supported fixtures must pass the Web property guard",
+    )
+
+    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://Task64Script.kt")))
+    val proxy = emitter.proxySources().single { it.sourceResourcePath.isNotEmpty() }.source
+
+    // Declarations: NodePath with its literal default, RANGE hints as @export_range (numeric
+    // parts bare, option flags quoted), Vector3 typed with the Kotlin literal honored.
+    assertTrue(proxy.contains("@export var view: NodePath = NodePath(\"../View\")"))
+    assertTrue(proxy.contains("@export_range(0, 100, 1) var number_of_jumps: int = 2"))
+    assertTrue(
+      proxy.contains("@export_range(0.0, 1.0, 0.01, \"or_greater\") var sensitivity: float = 0.25")
+    )
+    assertTrue(proxy.contains("@export var spawn_offset: Vector3 = Vector3(1.0, 2.0, 3.0)"))
+    assertTrue(proxy.contains("@export var rest_point: Vector3 = Vector3.ZERO"))
+
+    // Push (engine -> Kotlin at hydration): NodePath rides the string channel as its path.
+    assertTrue(proxy.contains("_kanama_bridge.setStringProperty(_kanama_handle, 1, String(view))"))
+    assertTrue(
+      proxy.contains(
+        "_kanama_bridge.setVector3Property(_kanama_handle, 4, spawn_offset.x, spawn_offset.y, spawn_offset.z)"
+      )
+    )
+
+    // Pull (save-time sync): the packed string rewraps into a GDScript NodePath.
+    assertTrue(proxy.contains("view = NodePath(_kanama_packed_1)"))
+
+    // Kotlin registry: setter rewraps into the web NodePath value class; getter and packed
+    // getter unwrap the path.
+    val registry = emitter.registrySource()
+    assertTrue(
+      registry.contains(
+        "(script as Task64Script).viewPath = net.multigesture.kanama.types.NodePath(value)"
+      )
+    )
+    assertTrue(registry.contains("(script as Task64Script).viewPath.path"))
+  }
+
+  @Test
+  fun rejectsExpressionDefaultsOnWebTargets() {
+    val model =
+      task64Model(listOf(task64Property("tiltUpperLimit", "tilt_upper_limit", TypeMapping.FLOAT)))
+    val errors = WebScriptCodeEmitter.unsupportedWebPropertyErrors(model, webOptions)
+    assertEquals(1, errors.size)
+    assertTrue(errors.single().contains("Task64Script.tiltUpperLimit"))
+    assertTrue(errors.single().contains("Spell the default as a literal"))
+    // Non-Web targets keep the old behavior (the JVM/iOS emitters do not consume the
+    // proxy default), so the guard must stay silent there.
+    assertTrue(WebScriptCodeEmitter.unsupportedWebPropertyErrors(model, emptyMap()).isEmpty())
+  }
+
+  @Test
+  fun rejectsPropertyTypesWithoutFullWebArmSets() {
+    val unsupported =
+      listOf(
+        task64Property("stats", "stats", TypeMapping.DICTIONARY, defaultLiteral = "emptyMap()"),
+        task64Property("gridCell", "grid_cell", TypeMapping.VECTOR3I, defaultLiteral = "x"),
+        task64Property(
+          "mode",
+          "mode",
+          TypeMapping.INT,
+          defaultLiteral = "0",
+          enumFqName = "demo.Mode",
+        ),
+        task64Property(
+          "narrowValue",
+          "narrow_value",
+          TypeMapping.FLOAT,
+          defaultLiteral = "1f",
+          narrow = NarrowScalar.FLOAT32,
+        ),
+      )
+    for (property in unsupported) {
+      val errors =
+        WebScriptCodeEmitter.unsupportedWebPropertyErrors(task64Model(listOf(property)), webOptions)
+      assertEquals(1, errors.size, "expected exactly one error for ${property.kotlinName}")
+      assertTrue(errors.single().contains("Task64Script.${property.kotlinName}"))
+      assertTrue(errors.single().contains("no full Kanama Web property arm set"))
+    }
+  }
+
+  @Test
+  fun rejectsInexpressibleHintsLoudly() {
+    // RANGE on a non-numeric export.
+    val rangeOnString =
+      task64Model(
+        listOf(
+          task64Property(
+            "label",
+            "label",
+            TypeMapping.STRING,
+            hint = 1,
+            hintString = "0,1",
+            defaultLiteral = "\"x\"",
+          )
+        )
+      )
+    assertTrue(
+      WebScriptCodeEmitter.unsupportedWebPropertyErrors(rangeOnString, webOptions)
+        .single()
+        .contains("only expressible for int/float")
+    )
+
+    // RANGE without a numeric min,max prefix.
+    val badRange =
+      task64Model(
+        listOf(
+          task64Property(
+            "jumps",
+            "jumps",
+            TypeMapping.INT,
+            hint = 1,
+            hintString = "lots",
+            defaultLiteral = "1",
+          )
+        )
+      )
+    assertTrue(
+      WebScriptCodeEmitter.unsupportedWebPropertyErrors(badRange, webOptions)
+        .single()
+        .contains("cannot be emitted as")
+    )
+
+    // A hint with no Web emission at all (e.g. MULTILINE_TEXT = 4) must never be dropped
+    // silently.
+    val unknownHint =
+      task64Model(
+        listOf(
+          task64Property(
+            "notes",
+            "notes",
+            TypeMapping.STRING,
+            hint = 4,
+            hintString = "",
+            defaultLiteral = "\"\"",
+          )
+        )
+      )
+    assertTrue(
+      WebScriptCodeEmitter.unsupportedWebPropertyErrors(unknownHint, webOptions)
+        .single()
+        .contains("no Kanama Web proxy emission")
+    )
+    assertTrue(WebScriptCodeEmitter.unsupportedWebPropertyErrors(unknownHint, emptyMap()).isEmpty())
+  }
+
+  @Test
+  fun parsesRangeHintStrings() {
+    assertEquals(listOf("0", "100", "1"), WebScriptCodeEmitter.rangeExportArguments("0,100,1"))
+    assertEquals(
+      listOf("0.0", "1.0", "0.01", "\"or_greater\""),
+      WebScriptCodeEmitter.rangeExportArguments("0.0,1.0,0.01,or_greater"),
+    )
+    assertEquals(listOf("-4", "4"), WebScriptCodeEmitter.rangeExportArguments("-4,4"))
+    assertEquals(null, WebScriptCodeEmitter.rangeExportArguments("lots"))
+    assertEquals(null, WebScriptCodeEmitter.rangeExportArguments("1"))
+    assertEquals(null, WebScriptCodeEmitter.rangeExportArguments("1,,2"))
+  }
 }
