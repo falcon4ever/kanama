@@ -6,6 +6,7 @@ import net.multigesture.kanama.backend.AnimatedSprite3DBackendContractProbe
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotObjectBackendContractProbe
 import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InputEventMouseMotionBackendContractProbe
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.backend.NodeBackendContractProbe
@@ -59,6 +60,14 @@ class RayCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
     RayCast3DBackendContractProbe(backendHandle).getCollisionNormal().let {
       Vector3(it.x, it.y, it.z)
     }
+
+  /**
+   * Adds a collision exception so the ray does not report collisions with [node] — desktop's
+   * CollisionObject3D parameter (web's CollisionObject3D is the aliased PhysicsBody3D tier).
+   */
+  fun addException(node: CollisionObject3D) {
+    GodotBackendCalls.invokeObjectArg(D.RAYCAST3D_ADD_EXCEPTION, backendHandle, node.backendHandle)
+  }
 }
 
 /** 3D billboard sprite (FPS muzzle flashes and impact decals). */
