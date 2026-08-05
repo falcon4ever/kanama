@@ -96,6 +96,15 @@ fails the Web compile — that is the fail-loud coverage gate working as
 intended. Files under the merged root resolve to `res://kotlin-src/*.kt` and
 match the scene script attachments on both platforms.
 
+`@ScriptProperty`/`@Export` declarations are portable including `NodePath`
+properties and hint metadata (a `PropertyHint.RANGE` hint reaches the generated
+proxy as `@export_range(...)`). Two Web-specific rules fail the build loudly
+instead of silently mis-hydrating: a property default must be spelled as a
+plain literal (`1.0471975511965976`, not `Mathf.PI / 3.0` — the proxy re-emits
+the default into GDScript and pushes it back into Kotlin at hydration), and a
+property type or hint outside the supported Web set is rejected with an error
+naming the property.
+
 ## Build The Web Scripts
 
 `buildWebScripts` generates the GDScript proxy bundle (proxies + manifest +

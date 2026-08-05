@@ -2,9 +2,11 @@ package web3d
 
 import kotlin.math.PI
 import kotlin.math.abs
+import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
+import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
@@ -24,6 +26,7 @@ import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
+import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 
@@ -45,6 +48,21 @@ import net.multigesture.kanama.web.WebExperimentalGenericCall
 class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
   /** Overridden in main.tscn to [ENTER_TREE_EXPORTED] — never the default — for the 66b proof. */
   @ScriptProperty var enterTreeGreeting: String = "unset"
+
+  /**
+   * Task-64 NodePath push proof: overridden in main.tscn to `NodePath("Spinner")` — never the
+   * default — and [propertyProbe] both compares the pushed path and resolves a live node
+   * through the NodePath [net.multigesture.kanama.api.Node] accessor overloads.
+   */
+  @ScriptProperty var spinnerPath: NodePath = NodePath("")
+
+  /**
+   * Task-64 hint-metadata + one-line-annotation proof: the proxy must declare this as
+   * `@export_range(0, 100, 1)`, and the deliberately one-line annotated declaration exercises
+   * the initializer parser (the annotation arguments contain `=` before the real initializer).
+   * Overridden in main.tscn to 47 — never the default 5.
+   */
+  @Export(hint = PropertyHint.RANGE, hintString = "0,100,1") var probeRangeValue: Long = 5
 
   private lateinit var spinner: Node3D
   private var angle = 0.0
@@ -295,6 +313,22 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
         "\"genericMs\":$genericMs,\"typedMs\":$typedMs" +
         "}"
     )
+  }
+
+  /**
+   * Task-64 property-push probe (driver method #7): bit 1 = the scene-exported NodePath value
+   * (`NodePath("Spinner")`, never the default) was pushed into Kotlin, bit 2 = the scene value
+   * 47 of the RANGE-hinted one-line-annotated export arrived (proving the initializer parser
+   * and the hint path end to end), bit 4 = the pushed NodePath resolves a live node through the
+   * NodePath accessor overload. A healthy run returns exactly 7.
+   */
+  @RegisterFunction("property_probe")
+  fun propertyProbe(value: Long): Long {
+    var mask = 0L
+    if (spinnerPath.path == "Spinner") mask = mask or 1L
+    if (probeRangeValue == 47L) mask = mask or 2L
+    if (self.getAsOrNull(spinnerPath, ::Node3D) != null) mask = mask or 4L
+    return mask
   }
 
   private companion object {

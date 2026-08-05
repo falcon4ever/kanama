@@ -53,6 +53,147 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "function would never run in a Web build; $advice."
         }
     }
+
+    // Godot PropertyHint ids the Web emitter reasons about (mirrors annotations/PropertyHint).
+    private const val PROPERTY_HINT_RANGE = 1
+    private const val PROPERTY_HINT_RESOURCE_TYPE = 17
+    private const val PROPERTY_HINT_TYPE_STRING = 23
+    private const val PROPERTY_HINT_NODE_TYPE = 34
+
+    private val RANGE_HINT_NUMBER = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?""")
+
+    /** The normalized NodePath default literal shape produced by the processor. */
+    private val NODE_PATH_DEFAULT =
+      Regex("""net\.multigesture\.kanama\.types\.NodePath\((".*")\)""")
+
+    /**
+     * Parses a Godot RANGE hint string (`"min,max[,step][,option...]"`) into `@export_range`
+     * argument spellings — leading numeric parts stay bare, trailing option flags (`or_greater`,
+     * `suffix:m`, ...) are quoted — or null when the string has no `min,max` numeric prefix. Shared
+     * by the emitter and [unsupportedWebPropertyErrors] so the accepted grammar cannot drift from
+     * what actually reaches the proxy.
+     */
+    internal fun rangeExportArguments(hintString: String): List<String>? {
+      val parts = hintString.split(',').map { it.trim() }
+      if (parts.size < 2 || parts.any { it.isEmpty() }) return null
+      val bounds = parts.takeWhile { RANGE_HINT_NUMBER.matches(it) }
+      if (bounds.size < 2) return null
+      return bounds + parts.drop(bounds.size).map { "\"$it\"" }
+    }
+
+    /**
+     * Errors for `@ScriptProperty`/`@Export` declarations a Web build would mishandle (task 64,
+     * mirroring [undispatchedVirtualErrors]): a property type without the full Web arm set
+     * (declaration, push, pull, registry accessors) used to emit non-compiling registry code or
+     * silently drop values; an expression default used to hydrate the type default over the Kotlin
+     * initializer; an unexpressible hint used to vanish from the proxy. Each is a build error
+     * naming the script, the property, and the fix. Empty on every non-Web target.
+     */
+    fun unsupportedWebPropertyErrors(
+      model: ScriptModel,
+      options: Map<String, String>,
+    ): List<String> {
+      if (!isWebTarget(options)) return emptyList()
+      val errors = mutableListOf<String>()
+      for (property in model.properties) {
+        val where = "${model.simpleName}.${property.kotlinName}"
+        val supported =
+          when {
+            property.enumFqName != null || property.narrow != null -> false
+            else ->
+              when (property.type) {
+                TypeMapping.STRING,
+                TypeMapping.INT,
+                TypeMapping.FLOAT,
+                TypeMapping.BOOL,
+                TypeMapping.VECTOR2,
+                TypeMapping.VECTOR2I,
+                TypeMapping.VECTOR3,
+                TypeMapping.NODE_PATH -> true
+                TypeMapping.OBJECT ->
+                  property.objectWrapperFqName != null || property.customScriptFqName != null
+                TypeMapping.ARRAY ->
+                  property.arrayElementString ||
+                    property.arrayElementWrapperFqName != null ||
+                    property.arrayElementCustomScriptFqName != null
+                else -> false
+              }
+          }
+        if (!supported) {
+          val declared =
+            when {
+              property.enumFqName != null -> property.enumFqName
+              property.narrow != null -> "narrow ${property.narrow}"
+              else -> property.type.toString()
+            }
+          errors +=
+            "$where: @ScriptProperty type '$declared' has no full Kanama Web property arm set " +
+              "(declaration/push/pull/registry); a Web build would emit broken or silently " +
+              "dropped property code. Use a Web-supported property type " +
+              "(String, Long, Double, Boolean, Vector2, Vector2i, Vector3, NodePath, a wrapped " +
+              "object/script type, or a supported List) or keep the property off the Web target."
+          continue
+        }
+        val defaultDrivesProxy =
+          when (property.type) {
+            TypeMapping.STRING,
+            TypeMapping.INT,
+            TypeMapping.FLOAT,
+            TypeMapping.BOOL,
+            TypeMapping.VECTOR2,
+            TypeMapping.VECTOR2I,
+            TypeMapping.VECTOR3,
+            TypeMapping.NODE_PATH -> true
+            else -> false
+          }
+        if (defaultDrivesProxy && property.defaultLiteral == null) {
+          errors +=
+            "$where: the property initializer is not a plain literal, so the Web proxy would " +
+              "declare (and hydrate) the type default instead of the Kotlin value. Spell the " +
+              "default as a literal (e.g. `1.0471975511965976` instead of `Mathf.PI / 3.0`)."
+        }
+        when (property.hint) {
+          0 -> Unit
+          PROPERTY_HINT_RANGE -> {
+            val rangeType = property.type == TypeMapping.INT || property.type == TypeMapping.FLOAT
+            if (!rangeType) {
+              errors +=
+                "$where: PropertyHint.RANGE is only expressible for int/float exports on the " +
+                  "Web target (GDScript @export_range); this property is ${property.type}."
+            } else if (rangeExportArguments(property.hintString) == null) {
+              errors +=
+                "$where: RANGE hintString '${property.hintString}' is not 'min,max[,step]" +
+                  "[,option...]' with numeric bounds, so it cannot be emitted as " +
+                  "@export_range; fix the hintString."
+            }
+          }
+          // Structural hints are already carried by the typed GDScript declaration the proxy
+          // emits (e.g. `@export var scene: PackedScene`, `@export var list: Array[Texture2D]`):
+          // Godot re-derives the same resource/node/typed-array hint from the type, so nothing
+          // is lost in the .gd.
+          PROPERTY_HINT_RESOURCE_TYPE,
+          PROPERTY_HINT_NODE_TYPE ->
+            if (property.type != TypeMapping.OBJECT) {
+              errors +=
+                "$where: hint ${property.hint} is only valid on object/resource exports; " +
+                  "it cannot be expressed in the Web proxy for ${property.type}."
+            }
+          PROPERTY_HINT_TYPE_STRING ->
+            if (property.type != TypeMapping.ARRAY) {
+              errors +=
+                "$where: hint ${property.hint} is only valid on typed-array exports; " +
+                  "it cannot be expressed in the Web proxy for ${property.type}."
+            }
+          else ->
+            errors +=
+              "$where: property hint ${property.hint} (hintString '${property.hintString}') " +
+                "has no Kanama Web proxy emission; it would be silently dropped from the " +
+                "generated .gd. Use a supported hint (RANGE, or the structural resource/node/" +
+                "typed-array hints) or remove it for the Web target."
+        }
+      }
+      return errors
+    }
   }
 
   data class ProxySource(
@@ -516,6 +657,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName}"
           )
         }
+        if (property.type == TypeMapping.NODE_PATH) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName}.path"
+          )
+        }
       }
       appendLine("        else -> unknown(\"property\", propertyId)")
       appendLine("      }")
@@ -536,6 +682,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (property.type == TypeMapping.STRING && property.isMutable) {
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value"
+          )
+        }
+        if (property.type == TypeMapping.NODE_PATH && property.isMutable) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.NodePath(value)"
           )
         }
       }
@@ -831,6 +982,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         val expression =
           when {
             property.type == TypeMapping.STRING -> access
+            property.type == TypeMapping.NODE_PATH -> "$access.path"
             property.type == TypeMapping.INT -> "$access.toString()"
             property.type == TypeMapping.FLOAT -> "$access.toString()"
             property.type == TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
@@ -1011,7 +1163,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     if (model.signals.isNotEmpty()) appendLine()
     model.properties.forEach { property ->
       appendPropertyGroup(property)
-      appendLine("@export var ${property.godotName}: ${gdType(property)} = ${gdDefault(property)}")
+      appendLine(
+        "${exportAnnotation(property)} var ${property.godotName}: ${gdType(property)} = ${gdDefault(property)}"
+      )
     }
 
     appendLine()
@@ -1144,6 +1298,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.STRING ->
           appendLine(
             "\t_kanama_bridge.setStringProperty(_kanama_handle, ${index + 1}, ${property.godotName})"
+          )
+        // A NodePath is its plain path string on the wire everywhere (protocol unchanged);
+        // the Kotlin registry rewraps it into the web NodePath value class.
+        TypeMapping.NODE_PATH ->
+          appendLine(
+            "\t_kanama_bridge.setStringProperty(_kanama_handle, ${index + 1}, String(${property.godotName}))"
           )
         TypeMapping.INT ->
           appendLine(
@@ -3523,6 +3683,23 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       else -> property.type.kotlinType
     }
 
+  /**
+   * The export annotation for a property declaration. A RANGE hint becomes GDScript's dedicated
+   * `@export_range(...)` form (that is how hint metadata reaches the proxy — task 64); structural
+   * resource/node/typed-array hints are already carried by the typed declaration and keep the plain
+   * `@export`. Any other nonzero hint was rejected loudly by [unsupportedWebPropertyErrors] before
+   * emission, so nothing is ever silently dropped here.
+   */
+  private fun exportAnnotation(property: ScriptPropertyModel): String {
+    if (property.hint != PROPERTY_HINT_RANGE) return "@export"
+    val arguments =
+      rangeExportArguments(property.hintString)
+        ?: error(
+          "unreachable: RANGE hintString '${property.hintString}' passed the Web property guard"
+        )
+    return "@export_range(${arguments.joinToString(", ")})"
+  }
+
   private fun StringBuilder.appendPropertyGroup(property: ScriptPropertyModel) {
     fun appendGroup(annotation: String, group: ScriptPropertyGroupModel?) {
       if (group == null) return
@@ -3560,7 +3737,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.BOOL,
           TypeMapping.VECTOR2,
           TypeMapping.VECTOR2I,
-          TypeMapping.VECTOR3 -> true
+          TypeMapping.VECTOR3,
+          TypeMapping.NODE_PATH -> true
           TypeMapping.OBJECT ->
             property.customScriptFqName != null || property.objectWrapperFqName != null
           TypeMapping.ARRAY ->
@@ -3576,6 +3754,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("\tvar $packed := String(_kanama_bridge.getPackedProperty(_kanama_handle, $id))")
       when {
         property.type == TypeMapping.STRING -> appendLine("\t$name = $packed")
+        property.type == TypeMapping.NODE_PATH -> appendLine("\t$name = NodePath($packed)")
         property.type == TypeMapping.INT -> appendLine("\t$name = int($packed)")
         property.type == TypeMapping.FLOAT -> appendLine("\t$name = float($packed)")
         property.type == TypeMapping.BOOL -> appendLine("\t$name = $packed == \"1\"")
@@ -3642,6 +3821,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       property.type == TypeMapping.ARRAY -> "Array"
       property.objectWrapperFqName != null -> gdObjectType(property.objectWrapperFqName)
       property.customScriptFqName != null -> property.customScriptFqName.substringAfterLast('.')
+      // Typed at the PROPERTY declaration only: method signatures keep Variant for these
+      // (their unsupported-method fallback bodies `return null`, which a typed Vector3/NodePath
+      // return would turn into a GDScript compile error).
+      property.type == TypeMapping.VECTOR3 -> "Vector3"
+      property.type == TypeMapping.NODE_PATH -> "NodePath"
       else -> gdType(property.type)
     }
 
@@ -3668,11 +3852,38 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.INT -> property.defaultLiteral?.removeSuffix("L") ?: "0"
       TypeMapping.FLOAT -> property.defaultLiteral?.removeSuffix("f")?.removeSuffix("F") ?: "0.0"
       TypeMapping.BOOL -> property.defaultLiteral ?: "false"
-      TypeMapping.VECTOR2 -> "Vector2.ZERO"
-      TypeMapping.VECTOR2I -> "Vector2i.ZERO"
+      TypeMapping.NODE_PATH -> "NodePath(${nodePathDefaultString(property.defaultLiteral)})"
+      TypeMapping.VECTOR2 -> vectorGdDefault(property.defaultLiteral, "Vector2")
+      TypeMapping.VECTOR2I -> vectorGdDefault(property.defaultLiteral, "Vector2i")
+      TypeMapping.VECTOR3 -> vectorGdDefault(property.defaultLiteral, "Vector3")
       TypeMapping.ARRAY -> "[]"
       else -> "null"
     }
+
+  /**
+   * The quoted path from a normalized NodePath default literal
+   * (`net.multigesture.kanama.types.NodePath("../View")` -> `"../View"`), or `""` when there is
+   * none. The literal's quoted segment is a plain Kotlin string literal, which spells the same way
+   * in GDScript.
+   */
+  private fun nodePathDefaultString(defaultLiteral: String?): String =
+    defaultLiteral?.let { NODE_PATH_DEFAULT.matchEntire(it)?.groupValues?.get(1) } ?: "\"\""
+
+  /**
+   * The GDScript spelling of a normalized vector default literal: `<fq>.ZERO` -> `<Simple>.ZERO`,
+   * `<fq>(args)` -> `<Simple>(args)` with Kotlin numeric suffixes stripped. A property with no
+   * normalized literal falls back to `<Simple>.ZERO` (also the pre-task-64 spelling, which ignored
+   * the literal entirely — honoring it keeps the pushed hydration value in sync with the Kotlin
+   * initializer).
+   */
+  private fun vectorGdDefault(defaultLiteral: String?, simpleClass: String): String {
+    if (defaultLiteral == null) return "$simpleClass.ZERO"
+    if (defaultLiteral.endsWith(".ZERO")) return "$simpleClass.ZERO"
+    val args = defaultLiteral.substringAfter('(').substringBeforeLast(')')
+    val gdArgs =
+      args.split(',').joinToString(", ") { it.trim().trimEnd('f', 'F', 'd', 'D', 'l', 'L') }
+    return "$simpleClass($gdArgs)"
+  }
 
   private fun gdDefault(type: TypeMapping): String =
     when (type) {

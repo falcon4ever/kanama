@@ -256,6 +256,16 @@ class AnimationPlayer(godotObject: GodotHandle) : Node(godotObject.toBackendHand
   fun getAnimation(name: String): Animation? =
     GodotBackendCalls.invokeNodePathRetHandle(D.ANIMATIONMIXER_GET_ANIMATION, backendHandle, name)
       ?.let { Animation(WebObjectId(it.backendToken().toInt())) }
+
+  /**
+   * The name of the currently playing animation (GDScript's `current_animation` read; empty when
+   * nothing plays). No typed opcode carries this string read, so it rides the task-76 generic
+   * `callv` tier through the engine's `get_current_animation` property getter.
+   */
+  fun getCurrentAnimation(): String {
+    genericWebGameplayFallback("AnimationPlayer.get_current_animation")
+    return webGenericImmediateStringCall(this, "get_current_animation")
+  }
 }
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject.toBackendHandle())

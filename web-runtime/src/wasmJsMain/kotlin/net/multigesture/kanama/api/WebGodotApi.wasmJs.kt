@@ -57,3 +57,6 @@ internal actual fun releaseWebTrackedObject(handle: Int) {
   check(released == 1) { "Unknown or already released Kanama Web object handle=$handle" }
   unregisterWebBrowserHandle(handle, WebBrowserHandleKind.OBJECT)
 }
+
+internal actual fun webGenericImmediateStringCall(target: GodotObject, method: String): String =
+  net.multigesture.kanama.web.WebExperimentalGenericCall.callImmediate(target, method).asString()

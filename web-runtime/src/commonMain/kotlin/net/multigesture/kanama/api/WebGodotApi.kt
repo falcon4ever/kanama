@@ -22,6 +22,7 @@ import net.multigesture.kanama.backend.ResourceLoaderBackendContractProbe
 import net.multigesture.kanama.backend.SignalBackendContractProbe
 import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -140,8 +141,14 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
     getNodeOrNull(path)?.let { ctor(it.handle) }
 
+  fun <T : GodotObject> getAsOrNull(path: NodePath, ctor: (GodotHandle) -> T): T? =
+    getAsOrNull(path.path, ctor)
+
   fun <T : GodotObject> requireAs(path: String, ctor: (GodotHandle) -> T): T =
     getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
+
+  fun <T : GodotObject> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
+    requireAs(path.path, ctor)
 
   fun getTree(): SceneTree =
     SceneTree(
@@ -470,3 +477,12 @@ internal expect fun releaseWebConstructedObject(handle: Int)
 internal expect fun releaseWebTrackedObject(handle: Int)
 
 internal expect fun isWebBrowserHandleLive(handle: Int): Boolean
+
+/**
+ * Immediate generic call (task-76 `callv` tier) expecting a String result. The wasmJs actual
+ * routes through `WebExperimentalGenericCall.callImmediate` — commonMain wrappers cannot see the
+ * wasmJs source set directly, and this keeps the generic transport's single extern as the only
+ * crossing. Wrapper call sites carry a [genericWebGameplayFallback] marker so the coverage
+ * report's slow-path bucket stays honest.
+ */
+internal expect fun webGenericImmediateStringCall(target: GodotObject, method: String): String
