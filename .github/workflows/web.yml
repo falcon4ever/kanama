@@ -50,8 +50,8 @@ env:
   # unpinned demos checkout means an unrelated demo-repo commit can redden every
   # Kanama PR. Bump it deliberately when a demo port lands (see
   # docs/exporting/web.md, "Bumping the demos pin").
-  # Task 64: thirdperson single-source slice 1 (kanama-demos#33 merge).
-  DEMOS_REF: 58d8f0511292ff68dbdc7405998e0eac98772dff
+  # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
+  DEMOS_REF: 5e0b606aeab5f41591371b1b4c663bd2fc582841
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
