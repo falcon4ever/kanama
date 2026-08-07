@@ -28,10 +28,18 @@ versioning once public releases begin.
     `connectVector2/connectVector2i/connectVector3` overloads receive it, and a
     zero-argument `connect` lambda still runs and ignores it as before.
 
-  Two shapes are deliberately still unfilled and stay declared in the build's
-  dispatch census with their reason: `(String, Object)` and `(Int, Object)`.
   The fps Web smoke now shoots an enemy dead, so the player→enemy damage path is
   gated on Chrome and Firefox instead of untested.
+
+  The last two shapes — `(String, Object)` and `(Int, Object?)`, which mix the
+  string and object-handle channels — now dispatch too, packed into one string
+  over the existing crossing (no protocol change). **An argument shape the Web
+  backend cannot dispatch is now a build error** naming the script, the member,
+  the shape and the shapes that *are* supported, instead of a stub that throws
+  when the engine happens to call it; the same gate covers `@ScriptSignal`
+  payloads a Kotlin lambda could not receive. Floats deliberately may not ride
+  the mixed-argument crossing (its decimal text would round them), so a float
+  mixed with text or an object is one of the shapes the build now rejects.
 - `GD.isInstanceValid`, `GD.typeOf` and `GD.hash` now encode their argument as a
   real Variant on desktop/Android (task 78). `GD.encodeVariant` handled six
   scalar types and stringified everything else, so a wrapper object arrived as a
