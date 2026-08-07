@@ -1909,8 +1909,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     //
     // Nodes only: the erase lives in `_exit_tree`, which a Resource-attached script never gets,
     // and a RefCounted stored in a static Dictionary would be pinned alive forever.
-    appendLine("\tif self is Node:")
-    appendLine("\t\t_kanama_object_handles[_kanama_handle] = self")
+    //
+    // The `Object` local is load-bearing, not ceremony: GDScript's parser rejects `self is Node`
+    // outright in a proxy that `extends Resource` ("Expression is of type Weapon so it can't be
+    // of type Node") and the whole script fails to compile. Widening to the static type the check
+    // is legal for keeps one spelling for every attachment.
+    appendLine("\tvar _kanama_self_object: Object = self")
+    appendLine("\tif _kanama_self_object is Node:")
+    appendLine("\t\t_kanama_object_handles[_kanama_handle] = _kanama_self_object")
     appendLine(
       "\t_kanama_apply_callback = JavaScriptBridge.create_callback(_kanama_apply_commands)"
     )

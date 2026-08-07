@@ -103,6 +103,46 @@ class WebScriptCodeEmitterTest {
     )
   }
 
+  /**
+   * Task 82: a proxy publishes its own script handle in the shared handle dictionary so a FOREIGN
+   * proxy can resolve it (a signal payload that is another Kanama script). The Node test must go
+   * through an `Object`-typed local, because GDScript's parser rejects `self is Node` outright in a
+   * proxy that `extends Resource` — "Expression is of type Weapon so it can't be of type Node" —
+   * and takes the whole script down with it. That is not hypothetical: it red-lighted the FPS demo,
+   * whose `Weapon` is `@ScriptClass(attachTo = "Resource")`, and the export does not type-check
+   * GDScript, so nothing caught it before the browser did.
+   */
+  @Test
+  fun publishesOwnHandleThroughAnObjectWidenedNodeTestForEveryAttachment() {
+    for (attachTo in listOf("Node2D", "Resource")) {
+      val proxy =
+        WebScriptCodeEmitter(
+            listOf(
+              WebScriptInput(
+                model("HandleScript").copy(attachTo = attachTo),
+                "res://HandleScript.kt",
+              )
+            )
+          )
+          .proxySources()
+          .single { it.sourceResourcePath.isNotEmpty() }
+
+      assertTrue(
+        proxy.source.contains("var _kanama_self_object: Object = self"),
+        "attachTo=$attachTo must widen self before the Node test:\n${proxy.source}",
+      )
+      assertTrue(
+        proxy.source.contains(
+          "\tif _kanama_self_object is Node:\n" +
+            "\t\t_kanama_object_handles[_kanama_handle] = _kanama_self_object"
+        ),
+        "attachTo=$attachTo must publish its handle for Nodes only:\n${proxy.source}",
+      )
+      // The spelling GDScript refuses to parse under `extends Resource`.
+      assertFalse(proxy.source.contains("if self is Node:"))
+    }
+  }
+
   @Test
   fun emitsProxyWithLifecycleBatchAndImmediatePaths() {
     val emitter =
