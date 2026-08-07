@@ -800,6 +800,7 @@ class MultiplayerSynchronizer(godotObject: GodotHandle) : Node(godotObject.toBac
 }
 
 object IP {
+  // KANAMA-BLOCKED(since:2026-07-27, webcall:IP.get_local_addresses): Web dispatches no IP call
   /** No socket surface on Web; the lobby falls back to its "this device" copy. */
   fun getLocalAddresses(): List<String> = emptyList()
 }
