@@ -775,6 +775,226 @@ class WebScriptCodeEmitterTest {
     assertTrue(WebScriptCodeEmitter.unsupportedWebPropertyErrors(unknownHint, emptyMap()).isEmpty())
   }
 
+  // ---------- Task 80 slice 1: the generator declares its own degradations ----------
+
+  /**
+   * The degradation fixture: one method per interesting arm plus the two signal shapes. `damage` is
+   * fps's real hole (task 79) — a single Double argument has no arm, so the proxy emits a stub that
+   * throws.
+   */
+  private fun task80Model() =
+    ScriptModel(
+      simpleName = "Enemy",
+      fqName = "net.multigesture.kanama.web.Enemy",
+      attachTo = "Node3D",
+      isTool = false,
+      isGlobalClass = false,
+      properties =
+        listOf(
+          ScriptPropertyModel(
+            kotlinName = "health",
+            godotName = "health",
+            type = TypeMapping.FLOAT,
+            isMutable = true,
+            defaultLiteral = "100.0",
+          )
+        ),
+      toolButtons = emptyList(),
+      virtuals = listOf(VirtualModel("_ready", "callReady", "ready")),
+      methods =
+        listOf(
+          MethodModel(
+            kotlinName = "damage",
+            godotName = "damage",
+            returnType = null,
+            args = listOf(ArgModel("amount", TypeMapping.FLOAT)),
+            kind = MethodKind.REGULAR,
+          ),
+          MethodModel(
+            kotlinName = "die",
+            godotName = "die",
+            returnType = null,
+            args = emptyList(),
+            kind = MethodKind.REGULAR,
+          ),
+        ),
+      signals =
+        listOf(
+          SignalModel("died", emptyList()),
+          SignalModel("hurt", listOf(ArgModel("amount", TypeMapping.FLOAT))),
+        ),
+    )
+
+  @Test
+  fun declaresUnsupportedDispatchForAMethodArgumentWithNoArm() {
+    val method = task80Model().methods.single { it.godotName == "damage" }
+    val dispatch = WebScriptCodeEmitter.methodDispatch(method)
+
+    assertEquals(WebMethodArm.NONE, WebScriptCodeEmitter.methodArm(method))
+    assertEquals(WebDispatchStatus.UNSUPPORTED, dispatch.status)
+    assertEquals("unsupported", dispatch.status.json)
+    // The reason must name the shape that has no arm, not just say "unsupported".
+    assertTrue(dispatch.reason!!.contains("(FLOAT) -> void"), dispatch.reason!!)
+    assertTrue(dispatch.reason!!.contains("throws"), dispatch.reason!!)
+
+    // The claim behind the status: this is exactly the arm that emits the throwing stub.
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+    assertTrue(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 1, \"damage\")"))
+  }
+
+  @Test
+  fun declaresTypedDispatchForANoArgumentMethod() {
+    val method = task80Model().methods.single { it.godotName == "die" }
+    val dispatch = WebScriptCodeEmitter.methodDispatch(method)
+
+    assertEquals(WebMethodArm.NO_ARGS, WebScriptCodeEmitter.methodArm(method))
+    assertEquals(WebDispatchStatus.TYPED, dispatch.status)
+    assertEquals(null, dispatch.reason, "a typed entry carries no dispatchReason")
+  }
+
+  @Test
+  fun declaresArgumentDroppedForAScalarSignalPayload() {
+    // A Kotlin lambda connect binds _kanama_web_signal_dispatch1, whose emitted body discards the
+    // argument, so a scalar payload never reaches the callback.
+    val dropped =
+      WebScriptCodeEmitter.signalDispatch(
+        SignalModel("hurt", listOf(ArgModel("amount", TypeMapping.FLOAT)))
+      )
+    assertEquals(WebDispatchStatus.ARGUMENT_DROPPED, dropped.status)
+    assertEquals("argument-dropped", dropped.status.json)
+    assertTrue(dropped.reason!!.contains("signal payload dropped"), dropped.reason!!)
+    assertTrue(dropped.reason!!.contains("(FLOAT)"), dropped.reason!!)
+
+    // Zero-argument signals ride dispatch0 intact; a lone object argument rides
+    // dispatch_object as a handle. Neither is a degradation.
+    assertEquals(
+      WebDispatchStatus.TYPED,
+      WebScriptCodeEmitter.signalDispatch(SignalModel("died", emptyList())).status,
+    )
+    assertEquals(
+      WebDispatchStatus.TYPED,
+      WebScriptCodeEmitter.signalDispatch(
+          SignalModel(
+            "body_entered",
+            listOf(ArgModel("body", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")),
+          )
+        )
+        .status,
+    )
+
+    // Multi-argument payloads cannot reach a lambda at all (connect requires 0..1), but a named
+    // registered-method connect can still carry them -- so they are dropped, not unsupported.
+    val multi =
+      WebScriptCodeEmitter.signalDispatch(
+        SignalModel(
+          "scored",
+          listOf(ArgModel("points", TypeMapping.INT), ArgModel("combo", TypeMapping.INT)),
+        )
+      )
+    assertEquals(WebDispatchStatus.ARGUMENT_DROPPED, multi.status)
+    assertTrue(multi.reason!!.contains("at most 1 emitted argument"), multi.reason!!)
+  }
+
+  @Test
+  fun writesDispatchVerdictsIntoTheProtocolManifest() {
+    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt")))
+    val protocol = emitter.protocolManifest()
+
+    // The manifest shape changed, so its own schemaVersion moved -- but the bridge contract did
+    // not, so the protocol version must not.
+    assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 16"), protocol)
+
+    assertTrue(
+      protocol.contains(
+        "\"name\": \"damage\", \"arguments\": [{\"name\": \"amount\", " +
+          "\"type\": \"Double\", \"nullable\": false, \"hasDefault\": false}], " +
+          "\"returnType\": null, \"dispatch\": \"unsupported\", \"dispatchReason\": \"no arm " +
+          "for the registered-method shape (FLOAT) -> void; the proxy emits a stub that throws\""
+      ),
+      protocol,
+    )
+    assertTrue(
+      protocol.contains(
+        "\"name\": \"die\", \"arguments\": [], \"returnType\": null, \"dispatch\": \"typed\"}"
+      ),
+      protocol,
+    )
+    assertTrue(
+      protocol.contains("\"name\": \"died\", \"arguments\": [], \"dispatch\": \"typed\"}"),
+      protocol,
+    )
+    assertTrue(
+      protocol.contains("\"name\": \"hurt\"") &&
+        protocol.contains("\"dispatch\": \"argument-dropped\", \"dispatchReason\": \"signal "),
+      protocol,
+    )
+    // Properties and dispatched virtuals are guarded elsewhere (#148 / 66a) and must read typed.
+    assertTrue(protocol.contains("\"name\": \"health\""), protocol)
+    assertFalse(
+      protocol.contains("\"dispatch\": \"not-emitted\""),
+      "no property or virtual in this fixture may be not-emitted",
+    )
+
+    // A typed entry carries no dispatchReason at all, so its absence means "no degradation".
+    assertEquals(
+      2,
+      Regex("\"dispatchReason\"").findAll(protocol).count(),
+      "only the two degraded entries may carry a reason",
+    )
+  }
+
+  @Test
+  fun reportsEveryNonTypedEntryWithCounts() {
+    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt")))
+
+    val degradations = emitter.degradations()
+    assertEquals(2, degradations.size, degradations.toString())
+    assertEquals(
+      listOf("Enemy.damage (method)", "Enemy.hurt (signal)"),
+      degradations.map { "${it.scriptName}.${it.memberName} (${it.kind})" },
+    )
+    // 1 property + 1 virtual + 2 methods + 2 signals.
+    assertEquals(6, emitter.memberCount())
+
+    val report = emitter.degradationReport()
+    assertTrue(
+      report.first().contains("2 of 6 declared member(s) across 1 script(s)"),
+      report.first(),
+    )
+    assertTrue(report.first().contains("method 1, signal 1, property 0, virtual 0"), report.first())
+    assertTrue(report.any { it.contains("Enemy.damage (method): no arm for") }, report.toString())
+    assertTrue(
+      report.any { it.contains("Enemy.hurt (signal): signal payload dropped") },
+      report.toString(),
+    )
+
+    // Slice 1 is non-fatal on purpose: a degradation must never become a build error here.
+    assertTrue(
+      WebScriptCodeEmitter.unsupportedWebPropertyErrors(task80Model(), webOptions).isEmpty()
+    )
+    assertTrue(WebScriptCodeEmitter.undispatchedVirtualErrors(task80Model(), webOptions).isEmpty())
+  }
+
+  @Test
+  fun reportsNothingForAFullyTypedScript() {
+    val typed =
+      task80Model()
+        .copy(
+          methods = task80Model().methods.filter { it.godotName == "die" },
+          signals = task80Model().signals.filter { it.godotName == "died" },
+        )
+    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(typed, "res://Enemy.kt")))
+
+    assertEquals(emptyList(), emitter.degradations())
+    assertEquals(1, emitter.degradationReport().size, "a clean script reports only the summary")
+    assertFalse(emitter.protocolManifest().contains("dispatchReason"))
+  }
+
   @Test
   fun parsesRangeHintStrings() {
     assertEquals(listOf("0", "100", "1"), WebScriptCodeEmitter.rangeExportArguments("0,100,1"))
