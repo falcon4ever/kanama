@@ -1,8 +1,7 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
-import net.multigesture.kanama.binding.runtime.VariantConverters
-import net.multigesture.kanama.binding.runtime.VariantType
 import net.multigesture.kanama.ffi.GodotFFI
 import java.lang.foreign.Arena
 import java.lang.foreign.FunctionDescriptor
@@ -34,6 +33,7 @@ object GD {
     private const val TYPEOF_HASH: Long = 326422594L
     private const val HASH_HASH: Long = 326422594L
     private const val IS_INSTANCE_VALID_HASH: Long = 996128841L
+    private const val IS_INSTANCE_ID_VALID_HASH: Long = 2232439758L
     private const val ONE_FLOAT_HASH: Long = 2140049587L
     private const val TWO_FLOAT_HASH: Long = 92296394L
     private const val THREE_FLOAT_HASH: Long = 998901048L
@@ -48,11 +48,6 @@ object GD {
     private val getPtrUtilityFunction = GodotFFI.lookup(
         "variant_get_ptr_utility_function",
         FunctionDescriptor.of(ADDRESS, ADDRESS, JAVA_LONG),
-    )
-
-    private val variantDestroy = GodotFFI.lookup(
-        "variant_destroy",
-        FunctionDescriptor.ofVoid(ADDRESS),
     )
 
     private val utilityCalls = ConcurrentHashMap<Pair<String, Long>, MethodHandle>()
@@ -74,62 +69,45 @@ object GD {
         val release: () -> Unit,
     )
 
+    /**
+     * Encodes [value] as a real Variant for the utility-call ABI.
+     *
+     * Delegates to [BuiltinTypes.initVariantFromAny] — the same encoder the ptrcall and
+     * `Object.call` paths use — so a [GodotObject] arrives as a `TYPE_OBJECT` variant and
+     * every value type keeps its own Variant type instead of collapsing to one of six
+     * scalars.
+     *
+     * There is deliberately no `toString()` fallback here (task 78): encoding an
+     * unsupported value as a STRING variant made `isInstanceValid(node)` ask Godot
+     * whether a *string* was a live instance, so it answered false for every live
+     * object, and `typeOf(node)` reported `TYPE_STRING`. Unsupported types now fail with
+     * `Unsupported Variant value type: <class>` instead of silently lying. The
+     * text-rendering utilities keep their conversion in [displayArgument].
+     */
     private fun encodeVariant(arena: Arena, value: Any?): VariantScratch {
-        val variant = arena.allocate(24L, 8L)
-        return when (value) {
-            null -> VariantScratch(variant) { variantDestroy.invoke(variant) }
-            is String -> {
-                val typed = arena.allocate(8L, 8L)
-                GodotStrings.initString(typed, value)
-                VariantConverters.variantFromType(VariantType.STRING).invoke(variant, typed)
-                VariantScratch(variant) {
-                    variantDestroy.invoke(variant)
-                    GodotStrings.destroyString(typed)
-                }
-            }
-
-            is Boolean -> {
-                val typed = arena.allocate(JAVA_BYTE)
-                typed.set(JAVA_BYTE, 0, if (value) 1.toByte() else 0.toByte())
-                VariantConverters.variantFromType(VariantType.BOOL).invoke(variant, typed)
-                VariantScratch(variant) { variantDestroy.invoke(variant) }
-            }
-
-            is Int -> {
-                val typed = arena.allocate(JAVA_LONG)
-                typed.set(JAVA_LONG, 0, value.toLong())
-                VariantConverters.variantFromType(VariantType.INT).invoke(variant, typed)
-                VariantScratch(variant) { variantDestroy.invoke(variant) }
-            }
-
-            is Long -> {
-                val typed = arena.allocate(JAVA_LONG)
-                typed.set(JAVA_LONG, 0, value)
-                VariantConverters.variantFromType(VariantType.INT).invoke(variant, typed)
-                VariantScratch(variant) { variantDestroy.invoke(variant) }
-            }
-
-            is Float -> {
-                val typed = arena.allocate(JAVA_DOUBLE)
-                typed.set(JAVA_DOUBLE, 0, value.toDouble())
-                VariantConverters.variantFromType(VariantType.FLOAT).invoke(variant, typed)
-                VariantScratch(variant) { variantDestroy.invoke(variant) }
-            }
-
-            is Double -> {
-                val typed = arena.allocate(JAVA_DOUBLE)
-                typed.set(JAVA_DOUBLE, 0, value)
-                VariantConverters.variantFromType(VariantType.FLOAT).invoke(variant, typed)
-                VariantScratch(variant) { variantDestroy.invoke(variant) }
-            }
-
-            else -> encodeVariant(arena, value.toString())
-        }
+        val variant = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
+        BuiltinTypes.initVariantFromAny(variant, value, arena)
+        return VariantScratch(variant) { BuiltinTypes.destroyVariant(variant) }
     }
+
+    /**
+     * Argument conversion for the `print`/`str` family only.
+     *
+     * Those utilities exist to render text, so a value Godot has no Variant for is
+     * rendered with Kotlin's `toString()` rather than aborting the call. That is the
+     * pre-task-78 behaviour, kept here — confined to the text-rendering family — instead
+     * of living inside the encoder that every utility shares. The scalar set below is
+     * passed through untouched so Godot keeps formatting numbers and booleans itself.
+     */
+    private fun displayArgument(value: Any?): Any? =
+        when (value) {
+            null, is String, is Boolean, is Int, is Long, is Float, is Double -> value
+            else -> value.toString()
+        }
 
     private fun callVoidVarargUtility(name: String, hash: Long, values: Array<out Any?>) {
         Arena.ofConfined().use { arena ->
-            val encoded = values.map { encodeVariant(arena, it) }
+            val encoded = values.map { encodeVariant(arena, displayArgument(it)) }
             try {
                 val args = if (encoded.isEmpty()) {
                     MemorySegment.NULL
@@ -163,7 +141,7 @@ object GD {
 
     private fun callStringVarargUtility(name: String, hash: Long, values: Array<out Any?>): String {
         Arena.ofConfined().use { arena ->
-            val encoded = values.map { encodeVariant(arena, it) }
+            val encoded = values.map { encodeVariant(arena, displayArgument(it)) }
             val ret = arena.allocate(8L, 8L)
             GodotStrings.initString(ret, "")
             try {
@@ -424,6 +402,18 @@ object GD {
         }
     }
 
+    private fun callBoolOneLongUtility(name: String, hash: Long, value: Long): Boolean {
+        Arena.ofConfined().use { arena ->
+            val arg0 = arena.allocate(JAVA_LONG)
+            arg0.set(JAVA_LONG, 0, value)
+            val args = arena.allocate(ADDRESS, 1)
+            args.setAtIndex(ADDRESS, 0, arg0)
+            val ret = arena.allocate(JAVA_BYTE)
+            utilityCall(name, hash).invoke(ret, args, 1)
+            return ret.get(JAVA_BYTE, 0).toInt() != 0
+        }
+    }
+
     private fun callLongOneVariantUtility(name: String, hash: Long, value: Any?): Long {
         Arena.ofConfined().use { arena ->
             val encoded = encodeVariant(arena, value)
@@ -562,15 +552,37 @@ object GD {
     @JvmStatic
     fun seed(value: Long) = callVoidOneLongUtility("seed", SEED_HASH, value)
 
+    /**
+     * Returns the `Variant.Type` of [value] (`TYPE_OBJECT` = 24 for a wrapper,
+     * `TYPE_STRING` = 4 for a `String`, and so on).
+     */
     @JvmStatic
     fun typeOf(value: Any?): Long = callLongOneVariantUtility("typeof", TYPEOF_HASH, value)
 
+    /** Returns Godot's Variant hash of [value]. */
     @JvmStatic
     fun hash(value: Any?): Long = callLongOneVariantUtility("hash", HASH_HASH, value)
 
+    /**
+     * Returns true when [instance] still refers to a live Godot object.
+     *
+     * The parameter is a typed wrapper rather than `Any?` on purpose: Godot answers
+     * false for every non-object Variant, so an id or a string would compile and then
+     * always return false (task 78). Use [isInstanceIdValid] to check a raw instance id.
+     */
     @JvmStatic
-    fun isInstanceValid(value: Any?): Boolean =
-        callBoolOneVariantUtility("is_instance_valid", IS_INSTANCE_VALID_HASH, value)
+    fun isInstanceValid(instance: GodotObject?): Boolean =
+        callBoolOneVariantUtility("is_instance_valid", IS_INSTANCE_VALID_HASH, instance)
+
+    /**
+     * Returns true when [id] — an id from `GodotObject.getInstanceId()` — still resolves
+     * to a live Godot object. This is the id-shaped counterpart of [isInstanceValid];
+     * unlike that call it does not dereference the object, so it stays valid to ask
+     * after the object has been freed.
+     */
+    @JvmStatic
+    fun isInstanceIdValid(id: Long): Boolean =
+        callBoolOneLongUtility("is_instance_id_valid", IS_INSTANCE_ID_VALID_HASH, id)
 
     @JvmStatic
     fun degToRad(value: Double): Double = callDoubleOneArgUtility("deg_to_rad", ONE_FLOAT_HASH, value)
