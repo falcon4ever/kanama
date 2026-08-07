@@ -32,6 +32,18 @@ versioning once public releases begin.
   dispatch census with their reason: `(String, Object)` and `(Int, Object)`.
   The fps Web smoke now shoots an enemy dead, so the player→enemy damage path is
   gated on Chrome and Firefox instead of untested.
+- `GD.isInstanceValid`, `GD.typeOf` and `GD.hash` now encode their argument as a
+  real Variant on desktop/Android (task 78). `GD.encodeVariant` handled six
+  scalar types and stringified everything else, so a wrapper object arrived as a
+  STRING variant: `GD.isInstanceValid(node)` asked Godot whether a *string* was a
+  live instance and returned false for every live object, and `GD.typeOf(node)`
+  reported `TYPE_STRING` (the same collapse hit value types such as `Vector3`).
+  The encoder now delegates to the shared `BuiltinTypes.initVariantFromAny` used
+  by the ptrcall and `Object.call` paths, and fails with a named error instead of
+  silently stringifying an unencodable value; the `print`/`str` family keeps its
+  `toString()` rendering, now scoped to those text utilities alone. The runtime
+  smoke asserts `typeof(node) == TYPE_OBJECT` and `is_instance_valid` true for a
+  live node / false after it is freed.
 - iOS now mirrors the object-typed export `class_name` fix (task 64 follow-up):
   the script property descriptor bridge gained a
   `kanama_ios_runtime_script_resource_property_class_name` entry (same
@@ -70,6 +82,17 @@ versioning once public releases begin.
   `Array[CustomResource]` also match. Runtime smoke now pins the reported
   shape: typed member + typed local assignment, `is` check, load identity, and
   a property round-trip.
+
+### Changed
+
+- `GD.isInstanceValid` now takes `GodotObject?` instead of `Any?`, matching the
+  Web backend (task 78). Godot answers false for every non-object Variant, so
+  the old signature let an instance id or a string compile and then always
+  return false; a wrong argument is now a compile error. New
+  `GD.isInstanceIdValid(id: Long)` covers the id spelling — it does not
+  dereference the object, so it is the safe check to keep across a `free()`.
+  Source-breaking only for callers that passed a non-`GodotObject` value, which
+  could not have been working.
 
 ## 0.4.0 - 2026-07-24
 

@@ -1009,6 +1009,30 @@ class HelloScript(godotObject: GodotHandle) :
           "closed_rc=$closedRc usable=$usable scalar_main_thread=$scalarMainThread"
       )
     }
+    // task 78 — the GD utilities that take a Variant must encode a wrapper object as a
+    // real TYPE_OBJECT variant. The old encoder stringified anything outside six scalar
+    // types, so is_instance_valid was handed a STRING and answered false for every live
+    // object (type_of_node reported TYPE_STRING = 4, valid_live = false). type_of_node=24
+    // and valid_live=true are the assertions that fail if that fallback comes back;
+    // valid_freed/id_valid_freed prove the check still reports a dead instance.
+    run {
+      val probeNode = ClassDB.instantiate("Node") as? GodotObject
+      val probeInstanceId = probeNode?.getInstanceId() ?: 0L
+      val probeTypeOf = probeNode?.let { GD.typeOf(it) } ?: -1L
+      val probeHash = probeNode?.let { GD.hash(it) } ?: 0L
+      val probeValidLive = probeNode != null && GD.isInstanceValid(probeNode)
+      val probeIdValidLive = GD.isInstanceIdValid(probeInstanceId)
+      probeNode?.call("free")
+      val probeValidFreed = probeNode != null && GD.isInstanceValid(probeNode)
+      val probeIdValidFreed = GD.isInstanceIdValid(probeInstanceId)
+      System.err.println(
+        "[kanama:kt] GD variant utilities type_of_node=$probeTypeOf hash_nonzero=${probeHash != 0L} " +
+          "valid_live=$probeValidLive valid_freed=$probeValidFreed " +
+          "id_valid_live=$probeIdValidLive id_valid_freed=$probeIdValidFreed " +
+          "valid_null=${GD.isInstanceValid(null)} type_of_string=${GD.typeOf("kanama")} " +
+          "type_of_int=${GD.typeOf(7L)} type_of_vector3=${GD.typeOf(Vector3(1f, 2f, 3f))}"
+      )
+    }
     val tweenAwaitTweener = tween?.tweenAwait(selfNode.signal("renamed"))?.setTimeout(30.0)
     val tweenValidBefore = tween?.isValid() ?: false
     val processedTweensBeforeKill = SceneTree.getProcessedTweens().size

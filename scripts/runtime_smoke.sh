@@ -163,6 +163,13 @@ check "kt script classdb_parity kanama_can=true kanama_instantiate_null=true gds
 # member read (`var m: SmokeResource = hs.smoke_resource` on a typed HelloScript var).
 check "kt script typed_global_class same_load=true member_null=true typed=true is_check=true roundtrip=true member_matches=true instance_class_name=true script_class_name=true"
 check "Mathf lerp=2\\.5 clamp=10 wrap=1 approx=true round=3 lerpf=2\\.5 clampf=10\\.0 sinf=0\\.0 sqrtf=3\\.0"
+# task 78 — GD's Variant-taking utilities must encode arguments as real Variants. The old
+# encoder knew six scalar types and stringified everything else, so is_instance_valid was
+# handed a STRING and returned false for every LIVE object (and typeof reported TYPE_STRING
+# for objects and value types alike). type_of_node=24 (TYPE_OBJECT), type_of_vector3=9
+# (TYPE_VECTOR3) and valid_live=true all fail if the toString() fallback returns; the
+# _freed=false pair proves the check still reports a dead instance.
+check "GD variant utilities type_of_node=24 hash_nonzero=true valid_live=true valid_freed=false id_valid_live=true id_valid_freed=false valid_null=false type_of_string=4 type_of_int=2 type_of_vector3=9"
 check "Generated name constants ok=true"
 check "ProjectSettings string_list=alpha\\|beta"
 check "ProjectSettings dictionary name=kanama enabled=true count=2 scale=1\\.5"
