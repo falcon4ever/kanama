@@ -370,28 +370,6 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
     probeImpactSum = impactPoint + force
   }
 
-  /**
-   * The match3 `Tile.set_tile_type(String, Texture2D)` shape (task 80 slice 3): text and an object
-   * handle in one packed argument list. The label is deliberately HOSTILE — it carries the packed
-   * transport's own separator and percent-escape look-alikes — so the escaping is under test, not
-   * just the arity.
-   */
-  @RegisterFunction("dispatch_probe_tag")
-  fun dispatchProbeTag(label: String, node: Node3D) {
-    probeTagArgument = label
-    probeTagNodeMatched = node.handle == self.handle
-  }
-
-  /**
-   * The tps `Level.add_player(id, spawnPoint: Marker3D?)` shape: a whole number plus a NULLABLE
-   * object, so the 0 handle must arrive as Kotlin `null` rather than as a wrapper around nothing.
-   */
-  @RegisterFunction("dispatch_probe_join")
-  fun dispatchProbeJoin(id: Long, spawnPoint: Node3D?) {
-    probeJoinId = id
-    probeJoinNodeWasNull = spawnPoint == null
-  }
-
   @RegisterFunction("dispatch_probe_vector") fun dispatchProbeVector(): Vector3 = PROBE_VECTOR
 
   @RegisterFunction("dispatch_probe_number") fun dispatchProbeNumber(): Double = PROBE_NUMBER
@@ -475,6 +453,32 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
       mask = mask or 64L
     }
     return mask
+  }
+
+  // A registered function's method id is its DECLARATION ORDER, and the browser drivers call
+  // several of these by id (dispatch_probe is method#16). Append new ones BELOW this line --
+  // inserting one above shifts every id after it and the driver silently calls the wrong method.
+
+  /**
+   * The match3 `Tile.set_tile_type(String, Texture2D)` shape (task 80 slice 3): text and an object
+   * handle in one packed argument list. The label is deliberately HOSTILE — it carries the packed
+   * transport's own separator and percent-escape look-alikes — so the escaping is under test, not
+   * just the arity.
+   */
+  @RegisterFunction("dispatch_probe_tag")
+  fun dispatchProbeTag(label: String, node: Node3D) {
+    probeTagArgument = label
+    probeTagNodeMatched = node.handle == self.handle
+  }
+
+  /**
+   * The tps `Level.add_player(id, spawnPoint: Marker3D?)` shape: a whole number plus a NULLABLE
+   * object, so the 0 handle must arrive as Kotlin `null` rather than as a wrapper around nothing.
+   */
+  @RegisterFunction("dispatch_probe_join")
+  fun dispatchProbeJoin(id: Long, spawnPoint: Node3D?) {
+    probeJoinId = id
+    probeJoinNodeWasNull = spawnPoint == null
   }
 
   /**
