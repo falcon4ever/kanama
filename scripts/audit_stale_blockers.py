@@ -191,7 +191,9 @@ def scan_markers(root: Path) -> tuple[list[Marker], list[str]]:
                 continue
             raw_tokens = [part.strip() for part in match.group(1).split(",")]
             raw_tokens = [part for part in raw_tokens if part]
-            reason = match.group(2).strip()
+            # A marker in a .md file is written as an HTML comment so it stays out of
+            # the rendered page; drop the comment terminator from the reason.
+            reason = re.sub(r"(?:-->|\*/)\s*$", "", match.group(2)).strip()
             since = ""
             tokens: list[str] = []
             for token in raw_tokens:

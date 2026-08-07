@@ -170,6 +170,7 @@ above — mobile WebKit stays outside the validated claim.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather
   than a CI cell; iOS/iPadOS WebKit is hand-checked only, not gated.
+<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): Linux-host mobs never free; matrix cells quarantined -->
 - One defect is tracked openly rather than solved: on one Linux CI host,
   spawned mobs never receive `VisibleOnScreenNotifier2D.screen_exited` and are
   never freed (task 71; the affected matrix cells are quarantined, not hidden).
