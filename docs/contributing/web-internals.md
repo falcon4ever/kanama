@@ -65,7 +65,7 @@ Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently **16**); startup rejects a mismatch
+`KANAMA_WEB_PROTOCOL_VERSION` (currently **17**); startup rejects a mismatch
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -210,52 +210,73 @@ and `WebPropertyArm` in `WebScriptCodeEmitter.kt` are the arm tables themselves,
 the GDScript emitter switches on them, and the manifest reports whichever arm was
 taken. Admitting a new shape means adding an arm and its emitter branch — the
 manifest cannot drift from what the proxy actually does, because there is only one
-table. The same tables feed a non-fatal per-build report on the KSP warn channel:
+table. The same tables feed a per-build census line on the KSP warn channel:
 
 ```
-[kanama:web-dispatch] 1 of 37 declared member(s) across 8 script(s) do not dispatch typed (method 1, signal 0, property 0, virtual 0)
-[kanama:web-dispatch]   Tile.set_tile_type (method): no arm for the registered-method shape (STRING, OBJECT) -> void; the proxy emits a stub that throws
+[kanama:web-dispatch] 0 of 37 declared member(s) across 6 script(s) do not dispatch typed (method 0, signal 0, property 0, virtual 0)
 ```
 
-Read it as a statement about **emission, not about a broken demo**: an
-`unsupported` stub only throws if Godot actually invokes that registered function
-(Kotlin-to-Kotlin calls never reach the proxy), and an `argument-dropped` signal
-payload still arrives intact when the signal is connected to a **named**
-registered method rather than to a Kotlin lambda — that named path rides the
-method's own arm. Properties and virtuals additionally have hard build-time
-guards (`unsupportedWebPropertyErrors`, `undispatchedVirtualErrors`), so a
-non-`typed` entry in either of those sections means one of those guards has a
-hole.
+**A non-`typed` member fails the build.** `undispatchedMemberErrors` turns every
+entry the census would report into a KSP **error** naming the script, the member,
+the shape and the reason, plus the shapes that *are* dispatched:
+
+```
+e: [ksp] .../Main.kt:49: [kanama:web-dispatch] Main.gate_proof (registered function): no arm
+   for the registered-method shape (FLOAT) -> INT; the proxy emits a stub that throws. Declare a
+   shape the Web backend dispatches — no arguments; any all-numeric argument list up to 6 scalar
+   slots; a single String or object argument; a mixed list of String/NodePath/Long/Boolean/object
+   arguments; or a zero-argument value return — or add the arm for this shape to WebMethodArm and
+   its emitter branch.
+```
+
+This is the repo-wide rule 66a (`undispatchedVirtualErrors`, kanama#114) and
+#148's property guards already applied to virtuals and properties, now
+generalized to registered functions and signals: **a generator may not emit a
+stub that throws at runtime, or quietly drop a declared payload — it either
+dispatches, or it fails the build.** There is deliberately **no allowlist**:
+every shape the corpus declares has an arm, so an exemption list would only be a
+place for the next degradation to hide. Widening a shape means adding an arm, not
+adding an entry. A non-`typed` property or virtual additionally means one of the
+older guards has a hole, and the error says so.
 
 The manifest's own `schemaVersion` versions this file's shape and is independent
 of `protocolVersion`, which versions the runtime bridge contract; adding these
 fields moved the former only.
 
-**What the census then bought.** Reading it across the twelve-demo corpus turned
+**What the census bought.** Reading it across the twelve-demo corpus turned
 "add a `callDouble` arm" into a measured parcel — 52 degraded members over 19
-distinct missing shapes — and two arms plus one signal change closed 50 of them
-at protocol 17:
+distinct missing shapes — and three arms plus one signal change closed all of
+them, at protocol 17 and with **no new bridge entry point after slice 2**:
 
 | Arm | Covers |
 |---|---|
 | `NUMERIC_VOID` | Any all-numeric argument list, flattened into the six-slot `callDoubles` crossing (six slots is exactly one `(VECTOR3, VECTOR3)` pair). |
 | `PACKED_RETURN` | Every zero-argument value-returning method. The value crosses packed into one string with the same encoding `getPackedProperty` uses, so one entry point serves STRING/NODE_PATH/INT/FLOAT/BOOL/VECTOR2/VECTOR2I/VECTOR3/QUATERNION/BASIS. |
+| `PACKED_ARGS` | A **mixed-channel** argument list — text, whole numbers, booleans and object handles together — packed into one string over the *existing* `callString` crossing. Object arguments ride as their handle id (a Kanama-scripted object as its own script handle, anything else as a transient handle released right after the call), which is what reaches shapes the string and object arms cannot: `(STRING, OBJECT)` (match3 `Tile.set_tile_type`) and `(INT, OBJECT?)` (tps-demo `add_player`). |
 | `_kanama_web_signal_dispatch1` | One emitted scalar, packed the same way, delivered by the typed `GodotSignal.connect*` overloads. A zero-argument lambda still runs and ignores it. |
 
-Two shapes remain `unsupported` on purpose, because they mix the string and
-object-handle channels: `(STRING, OBJECT) -> void` (match3 `Tile.set_tile_type`)
-and `(INT, OBJECT) -> void` (tps-demo `add_player`). They stay in the census with
-their reasons rather than being quietly dropped, which is also why the build
-report is still non-fatal.
+`PACKED_ARGS` deliberately refuses **floats** (and the float-backed vectors). The
+packed list is decimal text produced by GDScript's `str()`, which rounds a double
+to 14 significant digits, so a float carried there would arrive slightly *wrong* —
+the silent-wrong-VALUE class this whole gate exists to kill. An all-numeric shape
+has the exact `callDoubles` crossing anyway; what is left over is a float *mixed*
+with text or an object, and that shape has no arm and fails the build rather than
+losing precision in silence. Text arguments are `%`-escaped with the same
+spelling the generic-call transport uses (`%` → `%25`, unit separator → `%1F`), so
+a payload can never split the list.
 
 **Each admitted shape is exercised, not just emitted.** The in-repo `web3d`
 fixture declares one registered function per shape and drives each through the
 real crossing — Kotlin asks Godot to call it BY NAME, Godot dispatches to the
 generated proxy, the proxy takes the arm — then compares the value that came
 back against the value that went out (`Main.dispatch_probe`, driver method #16,
-must return the full mask). A shape that only the emitter tests cover is a shape
-nothing has ever actually run, and the manifest cannot see a shape that
-dispatches but delivers the WRONG VALUE.
+must return the full mask — 127). A shape that only the emitter tests cover is a
+shape nothing has ever actually run, and the manifest cannot see a shape that
+dispatches but delivers the WRONG VALUE. The mixed-channel bit carries a
+deliberately hostile label (real unit separators, percent-escape look-alikes, a
+quote and a backslash) plus a live object handle, and a second call passes a
+`null` object so the nullable lane is proven to deliver `null` rather than a
+wrapper around handle 0.
 
 ## Validation Fixtures
 

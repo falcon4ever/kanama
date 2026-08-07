@@ -349,6 +349,10 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
   private var probeBoolArgument = false
   private var probeImpactSum = Vector3.ZERO
   private var probeSignalPayload = -1L
+  private var probeTagArgument = ""
+  private var probeTagNodeMatched = false
+  private var probeJoinId = -1L
+  private var probeJoinNodeWasNull = false
 
   @RegisterFunction("dispatch_probe_float")
   fun dispatchProbeFloat(amount: Double) {
@@ -377,14 +381,16 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
   @RegisterFunction("dispatch_probe_count") fun dispatchProbeCount(): Long = PROBE_COUNT
 
   /**
-   * Task-80 dispatch probe (driver method #16). Bits, all of which a healthy run sets (mask 63):
+   * Task-80 dispatch probe (driver method #16). Bits, all of which a healthy run sets (mask 127):
    *
    * 1 = a single-FLOAT registered function received its argument (task 79's exact hole),
    * 2 = a `(BOOL)` registered function received its argument,
    * 4 = a `(VECTOR3, VECTOR3)` registered function received BOTH vectors intact,
    * 8 = a `() -> VECTOR3` return survived the packed transport AND the proxy's parse,
    * 16 = the `() -> FLOAT`, `() -> STRING`, `() -> BOOL` and `() -> INT` returns all did too,
-   * 32 = a one-`int` signal payload reached a Kotlin lambda instead of being discarded.
+   * 32 = a one-`int` signal payload reached a Kotlin lambda instead of being discarded,
+   * 64 = the slice-3 MIXED shapes: `(STRING, OBJECT)` carried a hostile label and a live object
+   * handle, and `(INT, OBJECT?)` carried a number plus a null object.
    *
    * Everything except the signal bit rides `callv` through the generic tier, so the values make a
    * full Kotlin -> GDScript proxy -> Kotlin round trip and the proxy's own parse is under test.
@@ -432,7 +438,47 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
     }
 
     if (probeSignalPayload == PROBE_COUNT) mask = mask or 32L
+
+    // Task 80 slice 3: the two MIXED-channel shapes. The generic tier is the only caller that can
+    // pass a string/int AND an object handle, which is exactly the shape the packed argument list
+    // exists for; `null` proves the nullable-object lane delivers null rather than a 0 wrapper.
+    generic.callImmediate(self, "dispatch_probe_tag", listOf(PROBE_HOSTILE_TEXT, self))
+    generic.callImmediate(self, "dispatch_probe_join", listOf(PROBE_COUNT, null))
+    if (
+      probeTagArgument == PROBE_HOSTILE_TEXT &&
+        probeTagNodeMatched &&
+        probeJoinId == PROBE_COUNT &&
+        probeJoinNodeWasNull
+    ) {
+      mask = mask or 64L
+    }
     return mask
+  }
+
+  // A registered function's method id is its DECLARATION ORDER, and the browser drivers call
+  // several of these by id (dispatch_probe is method#16). Append new ones BELOW this line --
+  // inserting one above shifts every id after it and the driver silently calls the wrong method.
+
+  /**
+   * The match3 `Tile.set_tile_type(String, Texture2D)` shape (task 80 slice 3): text and an object
+   * handle in one packed argument list. The label is deliberately HOSTILE — it carries the packed
+   * transport's own separator and percent-escape look-alikes — so the escaping is under test, not
+   * just the arity.
+   */
+  @RegisterFunction("dispatch_probe_tag")
+  fun dispatchProbeTag(label: String, node: Node3D) {
+    probeTagArgument = label
+    probeTagNodeMatched = node.handle == self.handle
+  }
+
+  /**
+   * The tps `Level.add_player(id, spawnPoint: Marker3D?)` shape: a whole number plus a NULLABLE
+   * object, so the 0 handle must arrive as Kotlin `null` rather than as a wrapper around nothing.
+   */
+  @RegisterFunction("dispatch_probe_join")
+  fun dispatchProbeJoin(id: Long, spawnPoint: Node3D?) {
+    probeJoinId = id
+    probeJoinNodeWasNull = spawnPoint == null
   }
 
   /**
@@ -451,6 +497,11 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
     const val ENTER_TREE_EXPORTED = "web3d-enter-tree"
     const val PROBE_NUMBER = 12.25
     const val PROBE_TEXT = "kanama-packed-return"
+    /**
+     * Real unit separators, percent-escape look-alikes, a quote and a backslash: the packed
+     * argument list must survive every byte that could split or mis-decode it.
+     */
+    const val PROBE_HOSTILE_TEXT = "a\u001Fb:c%1F\u001Fd\\e\"f%25"
     const val PROBE_COUNT = 4242L
     val PROBE_VECTOR = Vector3(1.5, -2.5, 3.5)
     val PROBE_IMPACT = Vector3(0.25, 0.5, 0.75)

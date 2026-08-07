@@ -410,8 +410,20 @@ class WebScriptCodeEmitterTest {
         "callObjectObjectLong(_kanama_handle, 2, first_handle, second_handle, shapeIdx)"
       )
     )
-    assertTrue(
+    // Task 80 slice 3: match3's (STRING, OBJECT) shape used to emit a throwing stub here; it now
+    // rides the packed argument list over the existing string crossing.
+    assertFalse(
       tileProxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 1, \"set_tile_type\")")
+    )
+    assertTrue(
+      tileProxy.contains("callString(_kanama_handle, 1, \"\\u001f\".join(_kanama_packed_args))"),
+      tileProxy,
+    )
+    assertTrue(
+      tileProxy.contains(
+        "_kanama_packed_args.append(str(_kanama_web_pack_object(texture, _kanama_packed_transient)))"
+      ),
+      tileProxy,
     )
 
     // Neither match3 script declares _enter_tree, so neither proxy may emit the crossing:
@@ -864,6 +876,34 @@ class WebScriptCodeEmitterTest {
               ),
             kind = MethodKind.REGULAR,
           ),
+          // tps-demo's add_player(id, spawnPoint: Marker3D?) shape: the object is nullable and
+          // rides the same packed list as the (STRING, OBJECT) one above.
+          MethodModel(
+            kotlinName = "addPlayer",
+            godotName = "add_player",
+            returnType = null,
+            args =
+              listOf(
+                ArgModel("id", TypeMapping.INT),
+                ArgModel(
+                  "spawnPoint",
+                  TypeMapping.OBJECT,
+                  "net.multigesture.kanama.api.GodotObject",
+                  nullable = true,
+                ),
+              ),
+            kind = MethodKind.REGULAR,
+          ),
+          // A shape no arm covers: a FLOAT argument WITH a value return. The numeric crossing is
+          // void-only, the packed return takes no arguments, and the packed argument list refuses
+          // floats (they do not round-trip through GDScript's decimal text).
+          MethodModel(
+            kotlinName = "reload",
+            godotName = "reload",
+            returnType = TypeMapping.INT,
+            args = listOf(ArgModel("seconds", TypeMapping.FLOAT)),
+            kind = MethodKind.REGULAR,
+          ),
         ),
       signals =
         listOf(
@@ -876,6 +916,14 @@ class WebScriptCodeEmitterTest {
         ),
     )
 
+  /** [task80Model] with its two deliberately degraded members removed: the gate must pass. */
+  private fun task80TypedModel() =
+    task80Model()
+      .copy(
+        methods = task80Model().methods.filter { it.godotName != "reload" },
+        signals = task80Model().signals.filter { it.godotName != "scored" },
+      )
+
   private fun task80Proxy(): String =
     WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt")))
       .proxySources()
@@ -884,21 +932,21 @@ class WebScriptCodeEmitterTest {
 
   @Test
   fun declaresUnsupportedDispatchForAMethodArgumentWithNoArm() {
-    // Slice 2 deliberately did not fill (STRING, OBJECT) -> void: it mixes the string and the
-    // object-handle channels, and the census keeps declaring it rather than dropping it.
-    val method = task80Model().methods.single { it.godotName == "retarget" }
+    // `(FLOAT) -> INT` falls between every arm: the numeric crossing is void-only, the packed
+    // return takes no arguments, and the packed argument list refuses floats on purpose.
+    val method = task80Model().methods.single { it.godotName == "reload" }
     val dispatch = WebScriptCodeEmitter.methodDispatch(method)
 
     assertEquals(WebMethodArm.NONE, WebScriptCodeEmitter.methodArm(method))
     assertEquals(WebDispatchStatus.UNSUPPORTED, dispatch.status)
     assertEquals("unsupported", dispatch.status.json)
     // The reason must name the shape that has no arm, not just say "unsupported".
-    assertTrue(dispatch.reason!!.contains("(STRING, OBJECT) -> void"), dispatch.reason!!)
+    assertTrue(dispatch.reason!!.contains("(FLOAT) -> INT"), dispatch.reason!!)
     assertTrue(dispatch.reason!!.contains("throws"), dispatch.reason!!)
 
     // The claim behind the status: this is exactly the arm that emits the throwing stub.
     assertTrue(
-      task80Proxy().contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 7, \"retarget\")")
+      task80Proxy().contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 9, \"reload\")")
     )
   }
 
@@ -1152,6 +1200,211 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.contains("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]"), proxy)
   }
 
+  // ---------- Task 80 slice 3: the mixed-channel packed argument list ----------
+
+  @Test
+  fun dispatchesMixedArgumentShapesThroughThePackedArgumentCrossing() {
+    // The two shapes slice 2 left unfilled, both of which mix the string and object-handle
+    // channels: match3 Tile.set_tile_type(String, Texture2D) and tps Level.add_player(id,
+    // Marker3D?).
+    val text = task80Model().methods.single { it.godotName == "retarget" }
+    val nullableObject = task80Model().methods.single { it.godotName == "add_player" }
+    assertEquals(WebMethodArm.PACKED_ARGS, WebScriptCodeEmitter.methodArm(text))
+    assertEquals(WebMethodArm.PACKED_ARGS, WebScriptCodeEmitter.methodArm(nullableObject))
+    assertEquals(WebDispatchStatus.TYPED, WebScriptCodeEmitter.methodDispatch(text).status)
+    assertEquals(null, WebScriptCodeEmitter.methodDispatch(nullableObject).reason)
+
+    val proxy = task80Proxy()
+    // The text argument is %-escaped, the object argument becomes a handle id, and the whole
+    // list rides the EXISTING string crossing -- no new bridge entry point, no protocol bump.
+    assertTrue(proxy.contains("_kanama_packed_args.append(_kanama_web_pack_text(tag))"), proxy)
+    assertTrue(
+      proxy.contains(
+        "_kanama_packed_args.append(str(_kanama_web_pack_object(node, _kanama_packed_transient)))"
+      ),
+      proxy,
+    )
+    assertTrue(
+      proxy.contains(
+        "_kanama_bridge.callString(_kanama_handle, 7, \"\\u001f\".join(_kanama_packed_args))"
+      ),
+      proxy,
+    )
+    assertTrue(proxy.contains("_kanama_packed_args.append(str(id))"), proxy)
+    assertFalse(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 7,"), proxy)
+    assertFalse(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 8,"), proxy)
+
+    // Every transient handle the call minted is erased and released after the crossing.
+    assertTrue(proxy.contains("for _kanama_packed_handle in _kanama_packed_transient:"), proxy)
+    assertTrue(
+      proxy.contains("\t\t_kanama_bridge.releaseTransientObjectHandle(_kanama_packed_handle)"),
+      proxy,
+    )
+
+    // The helpers: the escape must be the SAME spelling the generic-call transport uses, and a
+    // Kanama-scripted argument must cross as its script handle so Kotlin can resolve it.
+    assertTrue(proxy.contains("func _kanama_web_pack_text(value: String) -> String:"), proxy)
+    assertTrue(
+      proxy.contains("\treturn value.replace(\"%\", \"%25\").replace(\"\\u001f\", \"%1F\")"),
+      proxy,
+    )
+    assertTrue(
+      proxy.contains(
+        "func _kanama_web_pack_object(value: Object, transient_handles: Array[int]) -> int:"
+      ),
+      proxy,
+    )
+    assertTrue(proxy.contains("\tif value.has_method(\"_kanama_ensure_created\"):"), proxy)
+
+    val registry =
+      WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt"))).registrySource()
+    // The Kotlin side splits the same list and unescapes with the mirror of the GDScript packer.
+    assertTrue(registry.contains("val packedArgs = value.split('\\u001F')"), registry)
+    assertTrue(
+      registry.contains(
+        "(script as Enemy).retarget(packedArgs[0].replace(\"%1F\", \"\\u001F\")" +
+          ".replace(\"%25\", \"%\"), net.multigesture.kanama.api.GodotObject(checkNotNull(" +
+          "packedArgs[1].toInt().takeIf { it != 0 }?.let { WebObjectId(it) }) " +
+          "{ \"Argument node is not nullable\" }))"
+      ),
+      registry,
+    )
+    // A nullable object argument delivers null for the 0 handle instead of throwing.
+    assertTrue(
+      registry.contains(
+        "(script as Enemy).addPlayer(packedArgs[0].toLong(), packedArgs[1].toInt()" +
+          ".takeIf { it != 0 }?.let { WebObjectId(it) }?.let " +
+          "{ net.multigesture.kanama.api.GodotObject(it) })"
+      ),
+      registry,
+    )
+  }
+
+  @Test
+  fun refusesFloatArgumentsOnThePackedArgumentCrossing() {
+    // The boundary that keeps the packed list honest: GDScript's str() rounds a double to 14
+    // significant digits, so a float here would arrive slightly WRONG. It has no arm and says so.
+    fun armFor(vararg args: ArgModel) =
+      WebScriptCodeEmitter.methodArm(
+        MethodModel("probe", "probe", null, args.toList(), MethodKind.REGULAR)
+      )
+    val objectArg = ArgModel("node", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
+
+    // Exactly-representable argument types ride the crossing...
+    assertEquals(WebMethodArm.PACKED_ARGS, armFor(ArgModel("tag", TypeMapping.STRING), objectArg))
+    assertEquals(WebMethodArm.PACKED_ARGS, armFor(ArgModel("id", TypeMapping.INT), objectArg))
+    assertEquals(WebMethodArm.PACKED_ARGS, armFor(ArgModel("on", TypeMapping.BOOL), objectArg))
+    assertEquals(
+      WebMethodArm.PACKED_ARGS,
+      armFor(ArgModel("path", TypeMapping.NODE_PATH), ArgModel("tag", TypeMapping.STRING)),
+    )
+    // ... a float mixed with them does not, and neither does an unwrapped object.
+    val lossy =
+      MethodModel(
+        "probe",
+        "probe",
+        null,
+        listOf(ArgModel("tag", TypeMapping.STRING), ArgModel("amount", TypeMapping.FLOAT)),
+        MethodKind.REGULAR,
+      )
+    assertEquals(WebMethodArm.NONE, WebScriptCodeEmitter.methodArm(lossy))
+    assertTrue(
+      WebScriptCodeEmitter.methodDispatch(lossy).reason!!.contains("(STRING, FLOAT) -> void"),
+      WebScriptCodeEmitter.methodDispatch(lossy).reason!!,
+    )
+    assertEquals(
+      WebMethodArm.NONE,
+      armFor(ArgModel("tag", TypeMapping.STRING), ArgModel("v", TypeMapping.VECTOR3)),
+    )
+    assertEquals(
+      WebMethodArm.NONE,
+      armFor(ArgModel("tag", TypeMapping.STRING), ArgModel("node", TypeMapping.OBJECT)),
+    )
+    // An all-numeric list keeps its own exact crossing rather than falling through to this one.
+    assertEquals(
+      WebMethodArm.NUMERIC_VOID,
+      armFor(ArgModel("id", TypeMapping.INT), ArgModel("amount", TypeMapping.FLOAT)),
+    )
+    assertFalse(WebScriptCodeEmitter.isPackedArgList(emptyList()))
+  }
+
+  // ---------- Task 80 slice 3: the gate ----------
+
+  @Test
+  fun failsTheBuildForAnyMemberThatDoesNotDispatchTyped() {
+    val errors = WebScriptCodeEmitter.undispatchedMemberErrors(task80Model(), webOptions)
+
+    // Exactly the census population -- no more (a typed member must never fail a build) and no
+    // fewer (an allowlist would just be a place for the next degradation to hide).
+    assertEquals(2, errors.size, errors.toString())
+    val method = errors.single { it.contains("(registered function)") }
+    assertTrue(method.startsWith("Enemy.reload (registered function):"), method)
+    assertTrue(method.contains("(FLOAT) -> INT"), method)
+    assertTrue(method.contains("the proxy emits a stub that throws"), method)
+    // Naming the fix is the difference between a gate and a wall.
+    assertTrue(method.contains("all-numeric argument list up to 6 scalar slots"), method)
+
+    val signal = errors.single { it.contains("(signal)") }
+    assertTrue(signal.startsWith("Enemy.scored (signal):"), signal)
+    assertTrue(signal.contains("at most 1 emitted argument"), signal)
+
+    // The gate is Web-only: the same declarations dispatch normally everywhere else.
+    assertTrue(WebScriptCodeEmitter.undispatchedMemberErrors(task80Model(), emptyMap()).isEmpty())
+    assertTrue(
+      WebScriptCodeEmitter.undispatchedMemberErrors(
+          task80Model(),
+          mapOf("kanamaRuntimeTarget" to "ios"),
+        )
+        .isEmpty()
+    )
+  }
+
+  @Test
+  fun passesTheGateForAFullyTypedScript() {
+    val typed = task80TypedModel()
+    assertEquals(emptyList(), WebScriptCodeEmitter.undispatchedMemberErrors(typed, webOptions))
+    assertEquals(
+      emptyList(),
+      WebScriptCodeEmitter(listOf(WebScriptInput(typed, "res://Enemy.kt"))).degradations(),
+    )
+  }
+
+  @Test
+  fun failsTheBuildWhenAPropertyOrVirtualGuardHasAHole() {
+    // Properties and virtuals have their own guards; the gate re-checks their manifest verdict so
+    // a hole in either one cannot ship as a silently non-typed manifest entry.
+    val holed =
+      task80TypedModel()
+        .copy(
+          properties =
+            listOf(
+              ScriptPropertyModel(
+                kotlinName = "config",
+                godotName = "config",
+                type = TypeMapping.DICTIONARY,
+                isMutable = true,
+              )
+            ),
+          virtuals = listOf(VirtualModel("_notification", "callNotification", "notification")),
+        )
+    val errors = WebScriptCodeEmitter.undispatchedMemberErrors(holed, webOptions)
+    assertEquals(2, errors.size, errors.toString())
+    assertTrue(
+      errors.any {
+        it.startsWith("Enemy.config (property)") &&
+          it.contains("unsupportedWebPropertyErrors has a hole")
+      },
+      errors.toString(),
+    )
+    assertTrue(
+      errors.any {
+        it.startsWith("Enemy.notification (virtual)") &&
+          it.contains("undispatchedVirtualErrors has a hole")
+      },
+      errors.toString(),
+    )
+  }
+
   @Test
   fun writesDispatchVerdictsIntoTheProtocolManifest() {
     val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt")))
@@ -1214,11 +1467,30 @@ class WebScriptCodeEmitterTest {
         protocol.contains("\"dispatch\": \"argument-dropped\", \"dispatchReason\": \"signal "),
       protocol,
     )
-    // The shape slice 2 deliberately left unfilled is still declared, with its reason.
+    // Slice 3 filled the two mixed-channel shapes; both now read typed IN THE MANIFEST.
+    assertTrue(
+      protocol.contains("\"name\": \"retarget\"") &&
+        protocol.contains(
+          "{\"name\": \"node\", \"type\": \"net.multigesture.kanama.api.GodotObject\", " +
+            "\"nullable\": false, \"hasDefault\": false}], \"returnType\": null, " +
+            "\"dispatch\": \"typed\"}"
+        ),
+      protocol,
+    )
+    assertTrue(
+      protocol.contains("\"name\": \"add_player\"") &&
+        protocol.contains(
+          "{\"name\": \"spawnPoint\", \"type\": \"net.multigesture.kanama.api.GodotObject\", " +
+            "\"nullable\": true, \"hasDefault\": false}], \"returnType\": null, " +
+            "\"dispatch\": \"typed\"}"
+        ),
+      protocol,
+    )
+    // A shape with no arm is still declared, with its reason.
     assertTrue(
       protocol.contains(
         "\"dispatch\": \"unsupported\", \"dispatchReason\": \"no arm for the registered-method " +
-          "shape (STRING, OBJECT) -> void; the proxy emits a stub that throws\""
+          "shape (FLOAT) -> INT; the proxy emits a stub that throws\""
       ),
       protocol,
     )
@@ -1244,25 +1516,35 @@ class WebScriptCodeEmitterTest {
     val degradations = emitter.degradations()
     assertEquals(2, degradations.size, degradations.toString())
     assertEquals(
-      listOf("Enemy.retarget (method)", "Enemy.scored (signal)"),
+      listOf("Enemy.reload (method)", "Enemy.scored (signal)"),
       degradations.map { "${it.scriptName}.${it.memberName} (${it.kind})" },
     )
-    // 1 property + 1 virtual + 7 methods + 3 signals.
-    assertEquals(12, emitter.memberCount())
+    // 1 property + 1 virtual + 9 methods + 3 signals.
+    assertEquals(14, emitter.memberCount())
 
     val report = emitter.degradationReport()
     assertTrue(
-      report.first().contains("2 of 12 declared member(s) across 1 script(s)"),
+      report.first().contains("2 of 14 declared member(s) across 1 script(s)"),
       report.first(),
     )
     assertTrue(report.first().contains("method 1, signal 1, property 0, virtual 0"), report.first())
-    assertTrue(report.any { it.contains("Enemy.retarget (method): no arm for") }, report.toString())
+    assertTrue(report.any { it.contains("Enemy.reload (method): no arm for") }, report.toString())
     assertTrue(
       report.any { it.contains("Enemy.scored (signal): signal payload dropped") },
       report.toString(),
     )
+    // Since slice 3 the census population is fatal, and the report says so.
+    assertTrue(report.any { it.contains("FAIL the build (task 80 slice 3)") }, report.toString())
 
-    // Still non-fatal: the hard gate is slice 3, and it cannot land while any shape is unfilled.
+    // The census and the gate read one table: the same two members, no more and no fewer.
+    assertEquals(
+      degradations.map { "${it.scriptName}.${it.memberName}" },
+      WebScriptCodeEmitter.undispatchedMemberErrors(task80Model(), webOptions).map {
+        it.substringBefore(" (")
+      },
+    )
+    // The older per-kind guards stay quiet here: this script's degradations are a method and a
+    // signal, which is exactly the population they never covered.
     assertTrue(
       WebScriptCodeEmitter.unsupportedWebPropertyErrors(task80Model(), webOptions).isEmpty()
     )
@@ -1271,13 +1553,7 @@ class WebScriptCodeEmitterTest {
 
   @Test
   fun reportsNothingForAFullyTypedScript() {
-    val typed =
-      task80Model()
-        .copy(
-          methods = task80Model().methods.filter { it.godotName != "retarget" },
-          signals = task80Model().signals.filter { it.godotName != "scored" },
-        )
-    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(typed, "res://Enemy.kt")))
+    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(task80TypedModel(), "res://Enemy.kt")))
 
     assertEquals(emptyList(), emitter.degradations())
     assertEquals(1, emitter.degradationReport().size, "a clean script reports only the summary")

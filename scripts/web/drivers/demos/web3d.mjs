@@ -116,8 +116,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   );
   trace(`propertyProbe: mask=${propertyProbe}`);
 
-  // Task 80 slice 2 dispatch-shape conformance: Main.dispatch_probe (method#16, Int->Int)
-  // returns a mask. Every bit is a shape slice 2 admitted, exercised through the REAL crossing
+  // Task 80 dispatch-shape conformance: Main.dispatch_probe (method#16, Int->Int)
+  // returns a mask. Every bit is a shape task 80 admitted, exercised through the REAL crossing
   // (Kotlin asks Godot to call the method by name, Godot dispatches to the generated GDScript
   // proxy, the proxy takes the new arm) rather than through the emitter tests alone:
   //   1 = a (FLOAT) registered function received its argument -- task 79's exact hole
@@ -126,7 +126,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   //   8 = a () -> VECTOR3 return survived the packed transport AND the proxy's parse
   //  16 = the () -> FLOAT / STRING / BOOL / INT returns did too
   //  32 = a one-int signal payload reached a Kotlin lambda instead of being discarded
-  // A healthy run returns exactly 63. Values, not just dispatch: each bit compares the value
+  //  64 = the slice-3 MIXED shapes: (STRING, OBJECT) carried a hostile label plus a live object
+  //       handle, and (INT, OBJECT?) carried a number plus a null object
+  // A healthy run returns exactly 127. Values, not just dispatch: each bit compares the value
   // that came back against the value that went out.
   const dispatchProbe = Number(
     await evaluate(
@@ -217,7 +219,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     // Task 64: the pushed NodePath resolves a live node through the NodePath accessor overload.
     nodePathResolvesNode: (propertyProbe & 4) === 4,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
-    dispatchShapesRoundTrip: dispatchProbe === 63,
+    dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
     renderFramesAdvanced: peak.processCalls >= ready.processCalls + 10,
     transformCommandsApplied: peak.appliedCommands >= ready.appliedCommands + 10,
