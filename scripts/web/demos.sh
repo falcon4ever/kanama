@@ -134,9 +134,12 @@ kanama_web_demo_local_only_reason() {
 # because nobody was looking. A quarantined cell that PASSES is reported just as
 # loudly, because a stale quarantine is worse than none.
 #
-# Lifting one is a one-line deletion here.
+# Lifting one is a one-line deletion here -- and scripts/audit_stale_blockers.py makes the
+# deletion mandatory: the KANAMA-BLOCKED marker below fails the build the moment its task is
+# archived, so a quarantine cannot outlive the defect it cites.
 kanama_web_quarantine_reason() {
   case "$1" in
+    # KANAMA-BLOCKED(since:2026-07-28, task:71): dodge/squash mobs never free on a Linux host
     dodge:firefox|squash:chrome|squash:firefox)
       echo "task 71 — spawned mobs never free on a Linux host; both demos pass on macOS"
       ;;
