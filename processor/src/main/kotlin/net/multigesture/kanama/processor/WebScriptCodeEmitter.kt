@@ -110,7 +110,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
 
   companion object {
     const val PROTOCOL_VERSION = 16
-    const val PROTOCOL_SCHEMA_VERSION = 1
+
+    /**
+     * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
+     * [PROTOCOL_VERSION], which versions the runtime bridge contract. 2 adds the per-entry
+     * `dispatch` / `dispatchReason` fields (task 80); no bridge entry point changed, so the
+     * protocol version deliberately did not move.
+     */
+    const val PROTOCOL_SCHEMA_VERSION = 2
 
     /**
      * Godot virtuals the emitted proxy actually crosses into Kotlin. Keep in sync with the
@@ -440,6 +447,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     val name: String,
     val args: List<ArgModel>,
     val returnType: TypeMapping?,
+    val dispatch: WebDispatch,
   )
 
   fun proxySources(): List<ProxySource> =
@@ -505,28 +513,37 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         append("        {\"id\": ${index + 1}, \"name\": ${quote(property.godotName)}, ")
         append("\"type\": ${quote(protocolPropertyType(property))}, ")
         append("\"nullable\": ${property.nullable}, \"hint\": ${property.hint}, ")
-        append("\"hintString\": ${quote(property.hintString)}, \"usage\": ${property.usage}}")
+        append("\"hintString\": ${quote(property.hintString)}, \"usage\": ${property.usage}")
+        appendDispatch(propertyDispatch(property))
+        append("}")
         appendLine(if (index == model.properties.lastIndex) "" else ",")
       }
       appendLine("      ],")
       appendProtocolMethods(
         "virtuals",
         model.virtuals.map { virtual ->
-          ProtocolMethod(virtual.virtualName, virtual.args, virtual.returnType)
+          ProtocolMethod(
+            virtual.virtualName,
+            virtual.args,
+            virtual.returnType,
+            virtualDispatch(virtual),
+          )
         },
       )
       appendLine(",")
       appendProtocolMethods(
         "methods",
         model.methods.map { method ->
-          ProtocolMethod(method.godotName, method.args, method.returnType)
+          ProtocolMethod(method.godotName, method.args, method.returnType, methodDispatch(method))
         },
       )
       appendLine(",")
       appendLine("      \"signals\": [")
       model.signals.forEachIndexed { index, signal ->
         append("        {\"id\": ${index + 1}, \"name\": ${quote(signal.godotName)}, ")
-        append("\"arguments\": ${protocolArgs(signal.args)}}")
+        append("\"arguments\": ${protocolArgs(signal.args)}")
+        appendDispatch(signalDispatch(signal))
+        append("}")
         appendLine(if (index == model.signals.lastIndex) "" else ",")
       }
       appendLine("      ]")
@@ -535,6 +552,58 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
     appendLine("  ]")
     appendLine("}")
+  }
+
+  /**
+   * Every non-`typed` manifest entry, in manifest order (task 80).
+   *
+   * Same arm tables the emitter and [protocolManifest] use, so the build report can never claim a
+   * different population than the manifest it is reporting on.
+   */
+  fun degradations(): List<WebDegradation> = buildList {
+    scripts.forEach { input ->
+      val model = input.model
+      fun record(name: String, kind: String, dispatch: WebDispatch) {
+        if (!dispatch.isTyped) add(WebDegradation(model.simpleName, name, kind, dispatch))
+      }
+      model.properties.forEach { record(it.godotName, "property", propertyDispatch(it)) }
+      model.virtuals.forEach { record(it.virtualName, "virtual", virtualDispatch(it)) }
+      model.methods.forEach { record(it.godotName, "method", methodDispatch(it)) }
+      model.signals.forEach { record(it.godotName, "signal", signalDispatch(it)) }
+    }
+  }
+
+  /** Total manifest entries across every script, i.e. the denominator of [degradations]. */
+  fun memberCount(): Int =
+    scripts.sumOf { (model, _) ->
+      model.properties.size + model.virtuals.size + model.methods.size + model.signals.size
+    }
+
+  /**
+   * The non-fatal build-time degradation report (task 80 slice 1), as lines to log.
+   *
+   * Deliberately NOT a build failure: the corpus trips it today (fps `Enemy.damage(Double)` has no
+   * single-FLOAT arm), so slice 1 only makes the population visible. Turning this into a hard gate
+   * is slice 3, and it cannot land until slice 2 fills the holes this report finds.
+   */
+  fun degradationReport(): List<String> = buildList {
+    val degradations = degradations()
+    val byKind = degradations.groupingBy { it.kind }.eachCount()
+    val counts =
+      listOf("method", "signal", "property", "virtual").joinToString(", ") {
+        "$it ${byKind[it] ?: 0}"
+      }
+    add(
+      "[kanama:web-dispatch] ${degradations.size} of ${memberCount()} declared member(s) across " +
+        "${scripts.size} script(s) do not dispatch typed ($counts)"
+    )
+    degradations.forEach { add("[kanama:web-dispatch]   $it") }
+    if (degradations.isNotEmpty()) {
+      add(
+        "[kanama:web-dispatch] non-fatal (task 80 slice 1): these are declared in " +
+          "KanamaWebProtocol.generated.json as dispatch != \"typed\""
+      )
+    }
   }
 
   fun constantsSource(): String = buildString {
@@ -3876,10 +3945,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       append("        {\"id\": ${index + 1}, \"name\": ${quote(method.name)}, ")
       append("\"arguments\": ${protocolArgs(method.args)}, \"returnType\": ")
       append(method.returnType?.let { quote(it.kotlinType) } ?: "null")
+      appendDispatch(method.dispatch)
       append("}")
       appendLine(if (index == methods.lastIndex) "" else ",")
     }
     append("      ]")
+  }
+
+  /**
+   * Task 80: every manifest entry declares how it actually reaches Kotlin. `dispatchReason` is
+   * present only when the entry is not `typed`, so its absence is exactly "no degradation".
+   */
+  private fun StringBuilder.appendDispatch(dispatch: WebDispatch) {
+    append(", \"dispatch\": ${quote(dispatch.status.json)}")
+    dispatch.reason?.let { append(", \"dispatchReason\": ${quote(it)}") }
   }
 
   private fun protocolArgs(args: List<ArgModel>): String = buildString {
