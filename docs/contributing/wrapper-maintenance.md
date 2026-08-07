@@ -208,11 +208,13 @@ in `scripts/check_wrapper_generator.py`:
   `collision:` line and skips it, instead of writing a `<Class>.kt` that duplicate-declares
   the class and breaks the compile. When a class graduates to a real generated wrapper
   (as `Time`/`InputMap`/`PhysicsServer3D` did), delete its entry so generation is allowed.
+  `FileAccess` lives here: iOS hosts it as a hand-written static facade plus its own
+  `FileAccessHandle` in `ios-runtime/.../api/FileAccess.kt`.
 
 - **Explicit uncompilable classes.** `IOS_UNSUPPORTED_CLASSES` lists the classes whose
-  generated draft cannot compile on iOS, each with its reason: `DirAccess`/`FileAccess`
-  (their drafts reference the hand-authored `DirAccessHandle`/`FileAccessHandle` desktop
-  policy classes iOS does not carry) and `MethodTweener` (its generated fluent methods clash
+  generated draft cannot compile on iOS, each with its reason: `DirAccess` (its draft
+  references the hand-authored `DirAccessHandle` desktop policy class iOS does not carry)
+  and `MethodTweener` (its generated fluent methods clash
   with the hand-written iOS `Tweener` glue). `--ios-emit-class <that class>` logs an
   `unsupported:` line and skips it. Together with the collision registry these are the only
   by-design exceptions to iOS class-set parity with desktop (task 30); retire an entry by

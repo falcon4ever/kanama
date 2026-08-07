@@ -205,6 +205,10 @@ IOS_EMIT_CLASSES: set[str] | None = None
 # anywhere on iOS — requesting one logs an `unsupported:` line and skips it, so a bulk regen
 # stays fail-loud instead of writing a file that breaks compileKotlinIosArm64. Retire an entry
 # by porting the desktop policy surface it depends on.
+# FileAccess sat in this same list until iOS grew its own FileAccessHandle (2026-07-13), and the
+# docs still described it as uncompilable four weeks later. The marker below makes
+# scripts/audit_stale_blockers.py go red the day DirAccess gets the same treatment.
+# KANAMA-BLOCKED(since:2026-07-13, symbol:DirAccessHandle@ios): iOS carries no DirAccessHandle policy class
 IOS_UNSUPPORTED_CLASSES = {
     "DirAccess": "desktop hosts DirAccess as a hand-shaped static facade; the generated draft "
                  "references the hand-authored DirAccessHandle alias class iOS does not carry",
