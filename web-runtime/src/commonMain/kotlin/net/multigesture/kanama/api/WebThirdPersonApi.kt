@@ -63,42 +63,33 @@ private fun Vector3.toGodot(): GodotVector3 = GodotVector3(x.toFloat(), y.toFloa
 
 private fun GodotVector3.toApi(): Vector3 = Vector3(x, y, z)
 
-/** First collision of a motion sweep; close it when done (KinematicCollision3D rule). */
-fun PhysicsBody3D.moveAndCollide(motion: Vector3): KinematicCollision3D? =
-  GodotBackendCalls.invokeVector3RetHandle(
-      D.PHYSICSBODY3D_MOVE_AND_COLLIDE,
-      backendHandle,
-      motion.toGodot(),
-    )
-    ?.let { KinematicCollision3D(it) }
+/** Import-compat alias for shared demo sources; delegates to the [PhysicsBody3D] member (task 64). */
+fun PhysicsBody3D.moveAndCollide(motion: Vector3): KinematicCollision3D? = moveAndCollide(motion)
 
-fun PhysicsBody3D.addCollisionExceptionWith(body: GodotObject) {
-  GodotBackendCalls.invokeObjectArg(
-    D.PHYSICSBODY3D_ADD_COLLISION_EXCEPTION_WITH,
-    backendHandle,
-    body.backendHandle,
-  )
-}
+/**
+ * Import-compat alias for shared demo sources; widens desktop's Node parameter for the ported
+ * corpus and delegates to the [PhysicsBody3D] member (task 64).
+ */
+fun PhysicsBody3D.addCollisionExceptionWith(body: GodotObject) =
+  addCollisionExceptionWith(Node(body.handle))
 
-fun PhysicsBody3D.setAxisLock(axis: Long, lock: Boolean) {
-  GodotBackendCalls.invokeLongBoolArg(D.PHYSICSBODY3D_SET_AXIS_LOCK, backendHandle, axis, lock)
-}
+/** Import-compat alias for shared demo sources; delegates to the [PhysicsBody3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun PhysicsBody3D.setAxisLock(axis: Long, lock: Boolean) = setAxisLock(axis, lock)
 
-/** PhysicsServer3D.BodyAxis constants (PhysicsBody3D.set_axis_lock). */
+/** Import-compat alias for shared demo sources; mirrors the [PhysicsBody3D] companion (task 64). */
 object BodyAxis {
-  const val ANGULAR_X: Long = 8L
-  const val ANGULAR_Y: Long = 16L
-  const val ANGULAR_Z: Long = 32L
+  const val ANGULAR_X: Long = PhysicsBody3D.BODY_AXIS_ANGULAR_X
+  const val ANGULAR_Y: Long = PhysicsBody3D.BODY_AXIS_ANGULAR_Y
+  const val ANGULAR_Z: Long = PhysicsBody3D.BODY_AXIS_ANGULAR_Z
 }
 
-fun CollisionObject3D.setCollisionLayerValue(layer: Long, value: Boolean) {
-  GodotBackendCalls.invokeLongBoolArg(
-    D.COLLISIONOBJECT3D_SET_COLLISION_LAYER_VALUE,
-    backendHandle,
-    layer,
-    value,
-  )
-}
+/**
+ * Import-compat alias for shared demo sources; keeps the ported corpus's Long layer parameter and
+ * delegates to the [PhysicsBody3D] member, which takes desktop's Int layerNumber (task 64).
+ */
+fun CollisionObject3D.setCollisionLayerValue(layer: Long, value: Boolean) =
+  setCollisionLayerValue(layer.toInt(), value)
 
 /** CollisionObject3D alias tier for the third-person port (layer/mask + exceptions). */
 typealias CollisionObject3D = PhysicsBody3D
@@ -168,9 +159,11 @@ class SpringArm3D(godotObject: GodotHandle) : Node3D(godotObject) {
   }
 }
 
-fun RayCast3D.addException(body: GodotObject) {
-  GodotBackendCalls.invokeObjectArg(D.RAYCAST3D_ADD_EXCEPTION, backendHandle, body.backendHandle)
-}
+/**
+ * Import-compat alias for shared demo sources; widens desktop's CollisionObject3D parameter for
+ * the ported corpus and delegates to the [RayCast3D] member (task 64).
+ */
+fun RayCast3D.addException(body: GodotObject) = addException(CollisionObject3D(body.handle))
 
 /** Position marker (grenade launch point) — pure transform surface. */
 class Marker3D(godotObject: GodotHandle) : Node3D(godotObject)
@@ -189,11 +182,13 @@ class Animation internal constructor(godotObject: GodotHandle) : GodotObject(god
   }
 }
 
-/** Overlapping scripted bodies (bodies without Kanama scripts are omitted by contract). */
-fun Area3D.getOverlappingBodies(): List<GodotObject> =
-  GodotBackendCalls.invokeNoArgsRetHandleList(D.AREA3D_GET_OVERLAPPING_BODIES, backendHandle).map {
-    GodotObject(WebObjectId(it.backendToken().toInt()))
-  }
+/**
+ * Import-compat alias for shared demo sources; delegates to the [Area3D] member and keeps the
+ * ported corpus's List<GodotObject> return type, covariant over the member's List<Node3D>
+ * (task 64).
+ */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Area3D.getOverlappingBodies(): List<GodotObject> = getOverlappingBodies()
 
 /** Import-compat alias for shared demo sources; delegates to the [GodotObject] member (task 64). */
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
