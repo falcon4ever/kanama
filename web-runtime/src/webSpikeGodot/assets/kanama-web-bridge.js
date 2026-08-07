@@ -238,6 +238,10 @@
     // is the number that says which.
     simSeconds: 0,
     noArgCalls: 0,
+    // Task 80 slice 2: how often the two new registered-method crossings actually ran. A
+    // driver can otherwise only see the SIDE EFFECT of a dispatched method, never the dispatch.
+    doubleArgCalls: 0,
+    packedReturnCalls: 0,
     addBunnyCalls: 0,
     removeBunnyCalls: 0,
     finishCalls: 0,
@@ -270,6 +274,11 @@
     latestSnapshotY: 0,
     match3Properties: new Map(),
     match3ReadyByClass: {},
+    // Script class name -> how many instances are LIVE right now. match3ReadyByClass only ever
+    // counts up (it is a _ready tally), so a driver cannot use it to see something die. This
+    // decrements on the _exit_tree free, which is what lets the FPS driver assert that a shot
+    // enemy actually queue_free()d instead of merely that enemies once existed.
+    liveScriptsByClass: {},
     match3DeferredReadyByClass: {},
     // handle -> script class name, recorded at ready. Purely diagnostic: a
     // boundary failure otherwise reports a bare handle number, which tells a CI
@@ -885,6 +894,7 @@
     // rebuilds the declared arguments from the same walk. This is what makes the FPS's
     // damage(amount: float) reach Kotlin instead of throwing (task 79).
     callDoubles(handle, methodId, a0, a1, a2, a3, a4, a5) {
+      this.doubleArgCalls += 1;
       return this.invoke(
         handle,
         "registered_function",
@@ -897,6 +907,7 @@
     // packed into one string with the same encoding getPackedProperty uses, so the whole
     // value-returning category needs one entry point rather than one per return type.
     callPacked(handle, methodId) {
+      this.packedReturnCalls += 1;
       return this.invoke(
         handle,
         "registered_function",
@@ -957,6 +968,11 @@
           this.match3TileScriptFrees += 1;
         }
         this.match3ScriptNamesByHandle.delete(handle);
+        const liveScriptName = this.scriptNameByHandle[handle];
+        if (liveScriptName !== undefined) {
+          const remaining = (this.liveScriptsByClass[liveScriptName] ?? 0) - 1;
+          this.liveScriptsByClass[liveScriptName] = remaining > 0 ? remaining : 0;
+        }
         this.releaseBrowserHandlesOwnedBy(handle);
       }
       return result;
@@ -2352,6 +2368,7 @@
       this.readyCount += 1;
       this.scriptNameByHandle[handle] = scriptName;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
+      this.liveScriptsByClass[scriptName] = (this.liveScriptsByClass[scriptName] ?? 0) + 1;
       if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
         // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit
         // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
@@ -2630,6 +2647,8 @@
         readyCount: this.readyCount,
         processCalls: this.processCalls,
         noArgCalls: this.noArgCalls,
+        doubleArgCalls: this.doubleArgCalls,
+        packedReturnCalls: this.packedReturnCalls,
         addBunnyCalls: this.addBunnyCalls,
         removeBunnyCalls: this.removeBunnyCalls,
         finishCalls: this.finishCalls,
