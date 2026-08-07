@@ -58,9 +58,10 @@ object GD {
             check(fn.address() != 0L) {
                 "variant_get_ptr_utility_function($name, $hash) returned NULL"
             }
-            GodotFFI.linker.downcallHandle(
+            GodotFFI.downcallHandle(
                 fn,
                 FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, JAVA_INT),
+                "variant_ptr_utility_function",
             )
         }
 
