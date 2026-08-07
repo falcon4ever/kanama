@@ -101,6 +101,23 @@ versioning once public releases begin.
   dereference the object, so it is the safe check to keep across a `free()`.
   Source-breaking only for callers that passed a non-`GodotObject` value, which
   could not have been working.
+- **Desktop/Android: every native call adapter is now generated during bootstrap,
+  before Godot can call back into the JVM** (task 83). Linking a Panama downcall
+  handle for a `FunctionDescriptor` the process has not seen makes the JVM
+  generate native code; doing that while execution is already inside a
+  Godot→JVM upcall puts code generation inside a thread-local
+  executable-memory transition. `KanamaBinding.init` now calls
+  `NativeCallSurface.prewarm()` before installing the lifecycle upcall stubs, so
+  an upcall only ever *executes* adapters that already exist. Measured on the
+  example project: 16 of the 18 adapter shapes used to be generated inside an
+  upcall, between 0.118 s and 0.544 s after launch; the prewarm moves all of
+  them to 0.001–0.064 s and costs about 30 ms before Godot's first callback.
+  `KANAMA_TRACE_NATIVE_ADAPTERS=1` prints each adapter with its timestamp and
+  the first-upcall boundary; the runtime, tool, and hot-reload smokes assert no
+  adapter is created after it, and
+  `scripts/check_native_call_surface.py` (a `local_ci.sh` stage) fails the build
+  if a source change adds a call shape that is not prewarmed. No ABI change.
+  This is a hardening change with no known user-visible symptom.
 
 ## 0.4.0 - 2026-07-24
 

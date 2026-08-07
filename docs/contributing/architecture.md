@@ -148,6 +148,27 @@ Key points:
 - **Class registration happens during the `initialize` upcall**, not during
   `bootstrap.c`. Godot calls us back when it's ready for us to register —
   we don't push.
+- **Every native call adapter is generated before the upcall stubs are
+  installed.** Linking a downcall handle for a `FunctionDescriptor` the process
+  has not seen makes the JVM generate native code (a downcall stub blob plus a
+  specialized binding class). Doing that while execution is already inside a
+  Godot→JVM upcall puts code generation inside a thread-local
+  executable-memory transition, so `KanamaBinding.init` calls
+  `NativeCallSurface.prewarm()` first and an upcall only ever *executes*
+  adapters that already exist.
+
+  `Linker` caches per descriptor, not per symbol, so the whole backend collapses
+  onto 18 shapes — binding an engine function pointer to an already-linked shape
+  generates nothing. `scripts/check_native_call_surface.py` fails the build if a
+  source change introduces a shape that is not prewarmed, and
+  `KANAMA_TRACE_NATIVE_ADAPTERS=1` prints each adapter with a timestamp plus the
+  first-upcall boundary (the runtime, tool, and hot-reload smokes assert no
+  adapter appears after it).
+
+  Upcall stubs are the deliberate exception: each stub is its own native blob,
+  and stubs for `@RegisterClass` / `@ScriptClass` members can only be built once
+  those classes are known, which is inside the `initialize` upcall. The engine
+  offers no earlier registration point.
 
 ## Runtime crossings
 
