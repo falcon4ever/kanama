@@ -569,6 +569,12 @@ object GD {
      * The parameter is a typed wrapper rather than `Any?` on purpose: Godot answers
      * false for every non-object Variant, so an id or a string would compile and then
      * always return false (task 78). Use [isInstanceIdValid] to check a raw instance id.
+     *
+     * Note that building the OBJECT variant reads the object's header, so this asks the
+     * question through the wrapper's raw pointer. GDScript's `is_instance_valid` reads
+     * the instance id its Variant already cached instead. If you are holding a wrapper
+     * across a `free()` you can capture `getInstanceId()` while it is alive and use
+     * [isInstanceIdValid], which never touches the object.
      */
     @JvmStatic
     fun isInstanceValid(instance: GodotObject?): Boolean =
