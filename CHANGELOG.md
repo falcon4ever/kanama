@@ -9,6 +9,29 @@ versioning once public releases begin.
 
 ### Fixed
 
+- **Web: `@RegisterFunction` shapes that used to throw at runtime now dispatch**
+  (Web protocol 16 → 17). The Web emitter models a hand-maintained set of
+  supported method shapes; everything else took an `else` arm that emitted a
+  stub throwing `Kanama Web gameplay method is not implemented`. That is why FPS
+  enemies were immortal on Web — `Enemy.damage(amount: Double)` had no arm.
+  Filled in one protocol bump:
+  - every all-numeric argument list, through one six-slot crossing:
+    `(Float)`, `(Boolean)`, `(Vector2)`, `(Vector3)`, `(Vector3, Vector3)`,
+    `(Vector2, Boolean)`, `(Int, Float)`;
+  - the whole value-returning category, which previously had no arm at all —
+    `String`, `NodePath`, `Int`, `Float`, `Boolean`, `Vector2`, `Vector2i`,
+    `Vector3`, `Quaternion` and `Basis` returns from a zero-argument
+    `@RegisterFunction`;
+  - scalar `@ScriptSignal` payloads reaching Kotlin lambdas. The one-argument
+    delivery helper used to discard the emitted value; new typed
+    `GodotSignal.connectLong/connectDouble/connectBoolean/connectString/`
+    `connectVector2/connectVector2i/connectVector3` overloads receive it, and a
+    zero-argument `connect` lambda still runs and ignores it as before.
+
+  Two shapes are deliberately still unfilled and stay declared in the build's
+  dispatch census with their reason: `(String, Object)` and `(Int, Object)`.
+  The fps Web smoke now shoots an enemy dead, so the player→enemy damage path is
+  gated on Chrome and Firefox instead of untested.
 - iOS now mirrors the object-typed export `class_name` fix (task 64 follow-up):
   the script property descriptor bridge gained a
   `kanama_ios_runtime_script_resource_property_class_name` entry (same

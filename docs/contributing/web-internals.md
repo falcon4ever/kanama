@@ -213,8 +213,8 @@ manifest cannot drift from what the proxy actually does, because there is only o
 table. The same tables feed a non-fatal per-build report on the KSP warn channel:
 
 ```
-[kanama:web-dispatch] 4 of 49 declared member(s) across 10 script(s) do not dispatch typed (method 2, signal 2, property 0, virtual 0)
-[kanama:web-dispatch]   Enemy.damage (method): no arm for the registered-method shape (FLOAT) -> void; the proxy emits a stub that throws
+[kanama:web-dispatch] 1 of 37 declared member(s) across 8 script(s) do not dispatch typed (method 1, signal 0, property 0, virtual 0)
+[kanama:web-dispatch]   Tile.set_tile_type (method): no arm for the registered-method shape (STRING, OBJECT) -> void; the proxy emits a stub that throws
 ```
 
 Read it as a statement about **emission, not about a broken demo**: an
@@ -230,6 +230,23 @@ hole.
 The manifest's own `schemaVersion` versions this file's shape and is independent
 of `protocolVersion`, which versions the runtime bridge contract; adding these
 fields moved the former only.
+
+**What the census then bought.** Reading it across the twelve-demo corpus turned
+"add a `callDouble` arm" into a measured parcel — 52 degraded members over 19
+distinct missing shapes — and two arms plus one signal change closed 50 of them
+at protocol 17:
+
+| Arm | Covers |
+|---|---|
+| `NUMERIC_VOID` | Any all-numeric argument list, flattened into the six-slot `callDoubles` crossing (six slots is exactly one `(VECTOR3, VECTOR3)` pair). |
+| `PACKED_RETURN` | Every zero-argument value-returning method. The value crosses packed into one string with the same encoding `getPackedProperty` uses, so one entry point serves STRING/NODE_PATH/INT/FLOAT/BOOL/VECTOR2/VECTOR2I/VECTOR3/QUATERNION/BASIS. |
+| `_kanama_web_signal_dispatch1` | One emitted scalar, packed the same way, delivered by the typed `GodotSignal.connect*` overloads. A zero-argument lambda still runs and ignores it. |
+
+Two shapes remain `unsupported` on purpose, because they mix the string and
+object-handle channels: `(STRING, OBJECT) -> void` (match3 `Tile.set_tile_type`)
+and `(INT, OBJECT) -> void` (tps-demo `add_player`). They stay in the census with
+their reasons rather than being quietly dropped, which is also why the build
+report is still non-fatal.
 
 ## Validation Fixtures
 
