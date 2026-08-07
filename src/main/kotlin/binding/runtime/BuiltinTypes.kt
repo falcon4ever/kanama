@@ -166,7 +166,11 @@ object BuiltinTypes {
       check(fn.address() != 0L) {
         "variant_get_ptr_constructor(${type.name}, $constructorIndex) returned NULL"
       }
-      GodotFFI.linker.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
+      GodotFFI.downcallHandle(
+        fn,
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
+        "variant_ptr_constructor",
+      )
     }
 
   private fun ptrBuiltinMethod(type: VariantType, method: String, hash: Long): MethodHandle =
@@ -177,9 +181,10 @@ object BuiltinTypes {
       check(fn.address() != 0L) {
         "variant_get_ptr_builtin_method(${type.name}, $method, $hash) returned NULL"
       }
-      GodotFFI.linker.downcallHandle(
+      GodotFFI.downcallHandle(
         fn,
         FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, JAVA_INT),
+        "variant_ptr_builtin_method",
       )
     }
 
@@ -187,14 +192,18 @@ object BuiltinTypes {
     keyedSetters.getOrPut(type.id) {
       val fn = getPtrKeyedSetter.invoke(type.id) as MemorySegment
       check(fn.address() != 0L) { "variant_get_ptr_keyed_setter(${type.name}) returned NULL" }
-      GodotFFI.linker.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
+      GodotFFI.downcallHandle(
+        fn,
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS),
+        "variant_ptr_keyed_setter",
+      )
     }
 
   private fun ptrDestructor(type: VariantType): MethodHandle =
     destructors.getOrPut(type.id) {
       val fn = getPtrDestructor.invoke(type.id) as MemorySegment
       check(fn.address() != 0L) { "variant_get_ptr_destructor(${type.name}) returned NULL" }
-      GodotFFI.linker.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS))
+      GodotFFI.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS), "variant_ptr_destructor")
     }
 
   /** Destroy an initialized builtin-typed value in-place. */

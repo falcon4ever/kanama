@@ -233,6 +233,9 @@ python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
 stage "GDExtension modernization + backend convergence"
 python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
 
+stage "native call surface prewarm audit"
+python3 "$ROOT_DIR/scripts/check_native_call_surface.py"
+
 stage "vararg ptrcall audit"
 python3 "$ROOT_DIR/scripts/audit_vararg_ptrcalls.py"
 

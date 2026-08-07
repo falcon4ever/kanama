@@ -23,6 +23,7 @@ case "$(uname -s)" in
 esac
 
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+export KANAMA_TRACE_NATIVE_ADAPTERS=1
 if [[ "${KANAMA_TOOL_SMOKE_TRACE_INSTANCES:-0}" == "1" ]]; then
   KANAMA_TRACE_INSTANCES=1 "$GODOT_BIN" --headless --editor --quit --path "$PROJECT_DIR_FOR_GODOT" >"$LOG_FILE" 2>&1
 else
@@ -86,5 +87,13 @@ check_absent "ResourceForgeSmoke create_failed"
 # inner owner still gets an editor placeholder. Pre-fix (thread-wide flag) the marker fired.
 check "ReentrantForgeProbe reentered=true"
 check_absent "ReentrantPlaceholderProbe CONSTRUCTED"
+
+# task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
+# The trace (KANAMA_TRACE_NATIVE_ADAPTERS=1, set above) timestamps every adapter and
+# the moment the first lifecycle upcall is installed. Assert the boundary line is
+# present FIRST, so a dropped env var fails loudly instead of making the absence
+# check pass vacuously.
+check "\[kanama:adapter\] boundary first-lifecycle-upcall-install"
+check_absent "\[kanama:adapter\] downcall .* phase=post-boundary"
 
 echo "[tool_smoke] PASS"

@@ -119,10 +119,10 @@ object ScriptBridge {
     val lookup = MethodHandles.lookup()
 
     fun stub(name: String, type: MethodType, desc: FunctionDescriptor): MemorySegment =
-      GodotFFI.linker.upcallStub(
+      GodotFFI.upcallStub(
         lookup.findStatic(ScriptBridge::class.java, name, type),
         desc,
-        GodotFFI.arena,
+        "ScriptBridge.$name",
       )
 
     // Shared MethodType / FunctionDescriptor constants.
@@ -646,7 +646,11 @@ object ScriptBridge {
     if (si.propertyCount == 0 || si.propertyListPtr == MemorySegment.NULL) return
     if (addFunc.address() == 0L) return
 
-    val callAdd = GodotFFI.linker.downcallHandle(addFunc, addFuncDesc)
+    // This binds a fresh engine-supplied function pointer from inside an upcall, so it is the
+    // one downcall in the backend that *cannot* be hoisted to bootstrap. It is safe only
+    // because [addFuncDesc]'s adapter is prewarmed by NativeCallSurface: binding a symbol to
+    // an already-linked shape is pure MethodHandle work and generates no native code (task 83).
+    val callAdd = GodotFFI.downcallHandle(addFunc, addFuncDesc, "script_instance_state_add")
     val list = si.propertyListPtr.reinterpret(propInfoSize * si.propertyCount)
 
     Arena.ofConfined().use { a ->

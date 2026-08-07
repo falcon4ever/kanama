@@ -24,6 +24,6 @@ object Upcalls {
     descriptor: FunctionDescriptor,
   ): MemorySegment {
     val handle = MethodHandles.lookup().findStatic(targetClass, methodName, methodType)
-    return GodotFFI.linker.upcallStub(handle, descriptor, GodotFFI.arena)
+    return GodotFFI.upcallStub(handle, descriptor, "${targetClass.simpleName}.$methodName")
   }
 }
