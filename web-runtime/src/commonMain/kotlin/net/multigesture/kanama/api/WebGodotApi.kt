@@ -135,8 +135,8 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun getNodeOrNull(path: String): GodotObject? =
     NodeLookupBackendContractProbe(backendHandle).getNodeOrNull(path)?.let(::GodotObject)
 
-  fun getParent(): GodotObject? =
-    NodeBackendContractProbe(backendHandle).getParent()?.let(::GodotObject)
+  /** This node's parent, or null at the tree root — desktop's `Node?` return type (task 64). */
+  fun getParent(): Node? = NodeBackendContractProbe(backendHandle).getParent()?.let(::Node)
 
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
     getNodeOrNull(path)?.let { ctor(it.handle) }
@@ -237,6 +237,12 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
 }
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {
+  /**
+   * Public handle constructor, the web wrapper convention ([Node]'s shape) — desktop's CanvasItem
+   * is publicly constructible from a handle, so shared sources can re-type one (task 64).
+   */
+  constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
+
   var modulate: Color
     get() =
       CanvasItemBackendContractProbe(backendHandle).modulate.let { value ->

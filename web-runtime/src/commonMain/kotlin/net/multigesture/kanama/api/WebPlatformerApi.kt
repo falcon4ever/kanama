@@ -291,7 +291,65 @@ class Camera3D(godotObject: GodotHandle) : Node3D(godotObject) {
 }
 
 /** 3D physics body base (Task 60d). */
-open class PhysicsBody3D(godotObject: GodotHandle) : Node3D(godotObject)
+open class PhysicsBody3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  /**
+   * First collision of a motion sweep; close it when done (KinematicCollision3D rule). Web
+   * supports only Godot's defaults for the trailing arguments — the admitted family carries
+   * just the motion — so non-default values fail loud instead of being silently ignored.
+   */
+  fun moveAndCollide(
+    motion: Vector3,
+    testOnly: Boolean = false,
+    safeMargin: Double = 0.001,
+    recoveryAsCollision: Boolean = false,
+    maxCollisions: Int = 1,
+  ): KinematicCollision3D? {
+    require(!testOnly) { "Web move_and_collide supports only test_only=false" }
+    require(safeMargin == 0.001) { "Web move_and_collide supports only the default safe_margin" }
+    require(!recoveryAsCollision) { "Web move_and_collide supports only recovery_as_collision=false" }
+    require(maxCollisions == 1) { "Web move_and_collide supports only max_collisions=1" }
+    return GodotBackendCalls.invokeVector3RetHandle(
+        D.PHYSICSBODY3D_MOVE_AND_COLLIDE,
+        backendHandle,
+        GodotVector3(motion.x.toFloat(), motion.y.toFloat(), motion.z.toFloat()),
+      )
+      ?.let { KinematicCollision3D(it) }
+  }
+
+  /** Adds a body to the list of bodies this body can't collide with. */
+  fun addCollisionExceptionWith(body: Node) {
+    GodotBackendCalls.invokeObjectArg(
+      D.PHYSICSBODY3D_ADD_COLLISION_EXCEPTION_WITH,
+      backendHandle,
+      body.backendHandle,
+    )
+  }
+
+  /** Locks or unlocks the given PhysicsServer3D.BodyAxis (see the BODY_AXIS_* constants). */
+  fun setAxisLock(axis: Long, lock: Boolean) {
+    GodotBackendCalls.invokeLongBoolArg(D.PHYSICSBODY3D_SET_AXIS_LOCK, backendHandle, axis, lock)
+  }
+
+  /**
+   * Enables or disables the given 1-based layer in `collision_layer` — desktop declares this on
+   * CollisionObject3D; web's CollisionObject3D tier is aliased to this class.
+   */
+  fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
+    GodotBackendCalls.invokeLongBoolArg(
+      D.COLLISIONOBJECT3D_SET_COLLISION_LAYER_VALUE,
+      backendHandle,
+      layerNumber.toLong(),
+      value,
+    )
+  }
+
+  companion object {
+    /** PhysicsServer3D.BodyAxis constants (set_axis_lock), matching desktop's PhysicsBody3D. */
+    const val BODY_AXIS_ANGULAR_X: Long = 8L
+    const val BODY_AXIS_ANGULAR_Y: Long = 16L
+    const val BODY_AXIS_ANGULAR_Z: Long = 32L
+  }
+}
 
 open class StaticBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject)
 
@@ -333,6 +391,14 @@ open class Area3D(godotObject: GodotHandle) : Node3D(godotObject) {
     const val bodyEntered: String = "body_entered"
     const val bodyExited: String = "body_exited"
   }
+
+  /**
+   * Overlapping scripted bodies as [Node3D] handles, desktop's return type (bodies without
+   * Kanama scripts are omitted by contract).
+   */
+  fun getOverlappingBodies(): List<Node3D> =
+    GodotBackendCalls.invokeNoArgsRetHandleList(D.AREA3D_GET_OVERLAPPING_BODIES, backendHandle)
+      .map { Node3D(WebObjectId(it.backendToken().toInt())) }
 }
 
 open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject)
