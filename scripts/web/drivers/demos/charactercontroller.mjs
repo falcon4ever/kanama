@@ -11,6 +11,12 @@
 // handle to zero.
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// How far below the start height counts as "off the platform and falling". The level's
+// KillPlane sits ~17 units down, so anything past this is unambiguously a fall, not a step.
+const FALL_DEPTH = 5;
+// The kill-plane reset teleports to the position captured in the player's _ready; the driver's
+// baseline is read after a settle, so allow for the gravity snap between the two.
+const RESET_TOLERANCE = 2.0;
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const START = Date.now();
 const trace = (msg) => {
@@ -39,6 +45,10 @@ async function snapshot(evaluate) {
         flagReady: classCount(".Flag3D"),
         killPlaneReady: classCount(".KillPlane3D"),
         physicsCalls: bridge.physicsProcessCalls ?? 0,
+        // Task 82: the coroutine frame scheduler's per-frame advance. cc named no "Main"
+        // handle anywhere, which is exactly why it never pumped before protocol 18.
+        pumps: bridge.frameSchedulerPumps ?? 0,
+        continuations: bridge.frameSchedulerContinuations ?? 0,
         appliedCommands: bridge.appliedCommands,
         liveHandles: bridge.liveBrowserHandleCount,
         maxLiveHandles: bridge.maxLiveBrowserHandles,
@@ -107,6 +117,10 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   // fallback otherwise (works headless-Chrome, stalls headless-Firefox rAF).
   const keyDown = keys ? () => keys("down", "w") : () => evaluate(keyExpression("keydown", "KeyW", "w", 87));
   const keyUp = keys ? () => keys("up", "w") : () => evaluate(keyExpression("keyup", "KeyW", "w", 87));
+  // move_down (S). move_up walks the player into the level's boundary wall ~15 units ahead;
+  // the open edge of the starting platform is ~3 units BEHIND the spawn, so S is the way off.
+  const backDown = keys ? () => keys("down", "s") : () => evaluate(keyExpression("keydown", "KeyS", "s", 83));
+  const backUp = keys ? () => keys("up", "s") : () => evaluate(keyExpression("keyup", "KeyS", "s", 83));
   const startupStart = Date.now();
   trace("navigate");
   await navigate(`${url}?charactercontroller=${Date.now()}`);
@@ -165,6 +179,100 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
     : 0;
   trace(`ran: displacement=${displacement.toFixed(2)} physics=${peak.physicsCalls} live=${atPeak.liveHandles}`);
 
+  // ---- Task 82 gate (a): the kill plane, the LOSE transition ----
+  //
+  // Keep walking until the player leaves the platform and falls. The level's KillPlane is an
+  // Area3D whose body_entered handler does NOT emit straight away: it defers one frame through
+  // `kanamaScope.launch { delaySeconds(0.0) }` -- the Web spelling of desktop's
+  // MainThread.awaitNextFrame -- because Godot forbids restructuring nodes inside a physics
+  // callback. Only then does it emit kill_plane_touched, which teleports the player back to its
+  // start position with zero velocity.
+  //
+  // That deferral is the entire test. Before protocol 18 the frame scheduler was never pumped in
+  // this demo, so the continuation after delaySeconds(0.0) never ran: body_entered fired, nothing
+  // threw, and the player fell forever. The assertion is therefore the OBSERVED return to the
+  // start position, read through the engine's own global-position channel -- never "no error".
+  trace("kill plane: walking off the platform");
+  await backDown();
+  let lowestY = startPosition.y;
+  const fallDeadline = Math.min(deadline, Date.now() + 40_000);
+  while (Date.now() < fallDeadline) {
+    const here = await playerPosition(evaluate);
+    if (here) {
+      lowestY = Math.min(lowestY, here.y);
+      trace(`kill plane: y=${here.y.toFixed(2)} x=${here.x.toFixed(2)} z=${here.z.toFixed(2)}`);
+      if (here.y < startPosition.y - FALL_DEPTH) break;
+    }
+    await delay(200);
+  }
+  await backUp();
+  trace(`kill plane: lowest y=${lowestY.toFixed(2)} (start y=${startPosition.y.toFixed(2)})`);
+
+  let killPlaneReset = null;
+  const resetDeadline = Math.min(deadline, Date.now() + 30_000);
+  while (Date.now() < resetDeadline) {
+    const here = await playerPosition(evaluate);
+    if (
+      here &&
+      Math.hypot(here.x - startPosition.x, here.z - startPosition.z) < RESET_TOLERANCE &&
+      here.y > startPosition.y - RESET_TOLERANCE
+    ) {
+      killPlaneReset = here;
+      break;
+    }
+    await delay(200);
+  }
+  trace(`kill plane: reset=${JSON.stringify(killPlaneReset)}`);
+
+  // ---- Task 82 gate (b): the flag, the WIN transition ----
+  //
+  // Reaching the flag on foot means crossing the whole platforming course, which no synthetic
+  // key hold can steer, so the win is driven at the signal it actually hangs off: the Events
+  // autoload's `flag_reached`, emitted through Godot itself (the bridge's no-args signal
+  // crossing, the same one Kotlin uses). Everything downstream is the real chain --
+  // FlagReachedScreen's connected Kotlin lambda launches
+  // `kanamaScope.launch { delaySeconds(2.0); play("fade_in"); await(animation_finished);
+  // reloadCurrentScene() }`.
+  //
+  // The observable is the LEVEL RELOAD: every script in the scene is torn down and readied
+  // again, so the player's script handle changes and its ready count goes to two. None of it
+  // happens if the coroutine never resumes past its 2-second delay.
+  const eventsHandle = Number(
+    await evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      const entry = Object.entries(bridge.scriptNameByHandle ?? {}).find(([, name]) =>
+        String(name).endsWith(".Events"),
+      );
+      return entry ? Number(entry[0]) : 0;
+    })()`),
+  );
+  trace(`flag: eventsHandle=${eventsHandle} playerHandle=${ready.playerHandle}`);
+  let flagReload = null;
+  if (eventsHandle > 0) {
+    await evaluate(
+      `globalThis.KanamaWebBridge.immediateEmitSignalNoArgs(${eventsHandle}, "flag_reached"); true`,
+    );
+    const reloadDeadline = Math.min(deadline, Date.now() + 40_000);
+    while (Date.now() < reloadDeadline) {
+      const snap = await snapshot(evaluate);
+      if (snap && snap.playerReady >= 2 && snap.playerHandle !== ready.playerHandle) {
+        flagReload = snap;
+        break;
+      }
+      await delay(250);
+    }
+  }
+  trace(
+    `flag: reloaded=${flagReload !== null} playerReady=${flagReload?.playerReady} newPlayerHandle=${flagReload?.playerHandle}`,
+  );
+
+  const afterGameplay = (await snapshot(evaluate)) ?? atPeak;
+  peak.maxLiveHandles = Math.max(peak.maxLiveHandles, afterGameplay.maxLiveHandles);
+  peak.crossings = Math.max(peak.crossings, afterGameplay.crossings);
+  peak.appliedCommands = Math.max(peak.appliedCommands, afterGameplay.appliedCommands);
+  peak.callbackErrors = Math.max(peak.callbackErrors, afterGameplay.callbackErrors);
+  trace(`scheduler: pumps=${afterGameplay.pumps} continuations=${afterGameplay.continuations}`);
+
   // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the Events autoload and
   // the scene root; every node exits the tree and releases its handles.
   trace("smoke_teardown");
@@ -194,6 +302,19 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
     // travel(Idle/Move) + particle toggles + blink timers flow as queued commands.
     gameplayCommandsApplied: peak.appliedCommands > baseline.appliedCommands + 80,
     crossingsAdvanced: peak.crossings > ready.crossings,
+    // Task 82: the coroutine frame scheduler is advanced in THIS demo, which names no
+    // "Main" handle anywhere -- the pump rides the _process dispatch every proxy emits.
+    frameSchedulerPumped: afterGameplay.pumps >= 10,
+    // The lose transition: the player left the platform (engine-level global position)...
+    playerFellOffLevel: lowestY < startPosition.y - FALL_DEPTH,
+    // ...and the KillPlane's deferred coroutine put it back at the start. Nothing else in
+    // this demo moves the player upward, so the observed return IS the resumed continuation.
+    killPlaneResetPlayer: killPlaneReset !== null,
+    // The win transition: `flag_reached` reached FlagReachedScreen's coroutine, which after a
+    // 2-second delay played the fade and reloaded the level -- every script readied a second
+    // time under a new handle.
+    flagSignalSourceResolved: eventsHandle > 0,
+    flagReachedReloadedLevel: flagReload !== null,
     fullTeardownToZero: settled.liveHandles === 0,
     // Godot runs every physics tick before the idle/_process pass inside one rAF
     // iteration; the bridge counts any same-tick physics-after-process dispatch.
@@ -224,6 +345,10 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
       physicsProcessCalls: peak.physicsCalls,
       appliedCommands: peak.appliedCommands,
       playerDisplacement: Number(displacement.toFixed(3)),
+      frameSchedulerPumps: afterGameplay.pumps,
+      frameSchedulerContinuations: afterGameplay.continuations,
+      // How far the player fell before the kill plane's deferred emit put it back.
+      killPlaneFallDepth: Number(Math.max(0, startPosition.y - lowestY).toFixed(3)),
     },
     callbacks: {
       pendingSignalCallbacks: settled.callbacks,

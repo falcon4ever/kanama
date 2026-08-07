@@ -1898,6 +1898,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
     appendLine("\t\treturn 0")
+    // Publish this script's own handle in the SHARED dictionary, completing the invariant the
+    // node-lookup path below already states: a handle any proxy hands out must resolve in every
+    // proxy. Without it a Kanama script handle resolved ONLY through `self if handle ==
+    // _kanama_handle`, i.e. only inside its own proxy — so a foreign proxy asked to emit a signal
+    // whose payload is another script (charactercontroller's kill plane emits
+    // `kill_plane_touched` with the PLAYER's handle, through the Events autoload's proxy) had no
+    // way to turn that handle back into an Object and pushed "Unknown Kanama Web signal argument
+    // handle". `_exit_tree` already erased this entry; only the insert was missing.
+    //
+    // Nodes only: the erase lives in `_exit_tree`, which a Resource-attached script never gets,
+    // and a RefCounted stored in a static Dictionary would be pinned alive forever.
+    appendLine("\tif self is Node:")
+    appendLine("\t\t_kanama_object_handles[_kanama_handle] = self")
     appendLine(
       "\t_kanama_apply_callback = JavaScriptBridge.create_callback(_kanama_apply_commands)"
     )
