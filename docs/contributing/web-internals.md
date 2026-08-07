@@ -248,6 +248,15 @@ and `(INT, OBJECT) -> void` (tps-demo `add_player`). They stay in the census wit
 their reasons rather than being quietly dropped, which is also why the build
 report is still non-fatal.
 
+**Each admitted shape is exercised, not just emitted.** The in-repo `web3d`
+fixture declares one registered function per shape and drives each through the
+real crossing — Kotlin asks Godot to call it BY NAME, Godot dispatches to the
+generated proxy, the proxy takes the arm — then compares the value that came
+back against the value that went out (`Main.dispatch_probe`, driver method #16,
+must return the full mask). A shape that only the emitter tests cover is a shape
+nothing has ever actually run, and the manifest cannot see a shape that
+dispatches but delivers the WRONG VALUE.
+
 ## Validation Fixtures
 
 The current fixtures are per-demo driver scripts
