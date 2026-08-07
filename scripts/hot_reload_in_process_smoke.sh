@@ -87,9 +87,17 @@ check_absent() {
   fi
 }
 
+check() {
+  local pattern="$1"
+  if ! grep -Eq -- "$pattern" "$LOG_FILE"; then
+    smoke_fail "missing pattern" "$pattern"
+  fi
+}
+
 set_marker "A"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
 
+KANAMA_TRACE_NATIVE_ADAPTERS=1 \
 KANAMA_IN_PROCESS_HOT_RELOAD_SMOKE=1 \
 KANAMA_IN_PROCESS_HOT_RELOAD_SIGNAL="$SIGNAL_FILE" \
 KANAMA_IN_PROCESS_HOT_RELOAD_STAGE="$STAGE_FILE" \
@@ -117,5 +125,10 @@ check_absent "placeholder=true"
 check_absent "Cannot ptrcall nil constructor"
 check_absent "Orphan StringName"
 check_absent "unclaimed string names"
+# task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
+# Assert the trace is present first, so a dropped KANAMA_TRACE_NATIVE_ADAPTERS
+# fails loudly instead of making the absence check pass vacuously.
+check "\\[kanama:adapter\\] boundary first-lifecycle-upcall-install"
+check_absent "\\[kanama:adapter\\] downcall .* phase=post-boundary"
 
 echo "[hot_reload_in_process_smoke] PASS"

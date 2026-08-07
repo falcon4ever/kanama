@@ -18,6 +18,7 @@ import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.installCommonGodotBackend
 import net.multigesture.kanama.ffi.GodotFFI
+import net.multigesture.kanama.ffi.NativeCallSurface
 
 /**
  * Entry point for the Kotlin side of Kanama.
@@ -39,6 +40,9 @@ object KanamaBinding {
 
     this.library = MemorySegment.ofAddress(library)
     GodotFFI.bootstrap(procAddr)
+    // Generate every native call adapter while we are still on the JNI bootstrap thread, before
+    // any Godot→JVM upcall exists (task 83). Must stay ahead of installInitCallbacks.
+    NativeCallSurface.prewarm()
     installCommonGodotBackend()
     val version = fetchGodotVersion()
     System.err.println(
@@ -130,10 +134,18 @@ object KanamaBinding {
     val deinitializeHandle =
       lookup.findStatic(KanamaBinding::class.java, "deinitializeCallback", methodType)
 
+    // Past this line Godot can re-enter the JVM, so every native downcall adapter the backend
+    // will ever need must already exist (task 83).
+    GodotFFI.markLifecycleUpcallsInstalled()
+
     val initializeStub =
-      GodotFFI.linker.upcallStub(initializeHandle, lifecycleDescriptor, GodotFFI.arena)
+      GodotFFI.upcallStub(initializeHandle, lifecycleDescriptor, "KanamaBinding.initializeCallback")
     val deinitializeStub =
-      GodotFFI.linker.upcallStub(deinitializeHandle, lifecycleDescriptor, GodotFFI.arena)
+      GodotFFI.upcallStub(
+        deinitializeHandle,
+        lifecycleDescriptor,
+        "KanamaBinding.deinitializeCallback",
+      )
 
     val initStruct = MemorySegment.ofAddress(initPtr).reinterpret(32)
     initStruct.set(ADDRESS, 16, initializeStub)

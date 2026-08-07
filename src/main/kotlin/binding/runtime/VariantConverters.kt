@@ -42,7 +42,11 @@ object VariantConverters {
       check(addr.address() != 0L) {
         "get_variant_from_type_constructor(${type.name}) returned NULL"
       }
-      GodotFFI.linker.downcallHandle(addr, FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
+      GodotFFI.downcallHandle(
+        addr,
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
+        "variant_from_type_constructor",
+      )
     }
 
   /** `(GDExtensionTypePtr, GDExtensionVariantPtr) -> void` — unwraps variant into typed. */
@@ -50,7 +54,11 @@ object VariantConverters {
     toType.getOrPut(type.id) {
       val addr = getToTypeCtor.invoke(type.id) as MemorySegment
       check(addr.address() != 0L) { "get_variant_to_type_constructor(${type.name}) returned NULL" }
-      GodotFFI.linker.downcallHandle(addr, FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
+      GodotFFI.downcallHandle(
+        addr,
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
+        "variant_to_type_constructor",
+      )
     }
 
   fun variantTypeOf(variant: MemorySegment): VariantType? {

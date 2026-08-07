@@ -91,13 +91,13 @@ object GodotStrings {
   private val stringDestructor: MethodHandle by lazy {
     val fn = getPtrDestructor.invoke(VariantType.STRING.id) as MemorySegment
     check(fn.address() != 0L) { "variant_get_ptr_destructor(STRING) returned NULL" }
-    GodotFFI.linker.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS))
+    GodotFFI.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS), "string_destructor")
   }
 
   private val stringNameDestructor: MethodHandle by lazy {
     val fn = getPtrDestructor.invoke(VariantType.STRING_NAME.id) as MemorySegment
     check(fn.address() != 0L) { "variant_get_ptr_destructor(STRING_NAME) returned NULL" }
-    GodotFFI.linker.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS))
+    GodotFFI.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS), "string_name_destructor")
   }
 
   /**

@@ -33,7 +33,7 @@ esac
 GLOBAL_CLASS_CACHE="$PROJECT_DIR/.godot/global_script_class_cache.cfg"
 rm -f "$GLOBAL_CLASS_CACHE"
 
-KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" --verbose >"$IMPORT_LOG_FILE" 2>&1
+KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" --verbose >"$IMPORT_LOG_FILE" 2>&1
 
 if ! grep -q '"class": &"SmokeResource"' "$GLOBAL_CLASS_CACHE" ||
    ! grep -q '"base": &"Resource"' "$GLOBAL_CLASS_CACHE"; then
@@ -41,9 +41,9 @@ if ! grep -q '"class": &"SmokeResource"' "$GLOBAL_CLASS_CACHE" ||
   cat "$GLOBAL_CLASS_CACHE" 2>/dev/null || true
   exit 1
 fi
-KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
-KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
-KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
+KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -314,5 +314,22 @@ check_absent "local RPC smoke failed"
 check_absent "Leaked instance: FileAccess"
 check_absent "Leaked instance: DirAccess"
 check_absent "Resource still in use: .*Resource_smoke"
+
+# task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
+# The trace (KANAMA_TRACE_NATIVE_ADAPTERS=1, set above) timestamps every adapter and
+# the moment the first lifecycle upcall is installed. Assert the boundary line is
+# present FIRST, so a dropped env var fails loudly instead of making the absence
+# check pass vacuously.
+for adapter_log in "$LOG_FILE" "$IMPORT_LOG_FILE"; do
+  if ! grep -Eq -- "\[kanama:adapter\] boundary first-lifecycle-upcall-install" "$adapter_log"; then
+    echo "[runtime_smoke] FAIL -- adapter trace missing from $adapter_log" >&2
+    exit 1
+  fi
+  if grep -Eq -- "\[kanama:adapter\] downcall .* phase=post-boundary" "$adapter_log"; then
+    echo "[runtime_smoke] FAIL -- native adapter generated after the first upcall:" >&2
+    grep -E -- "\[kanama:adapter\] downcall .* phase=post-boundary" "$adapter_log" >&2
+    exit 1
+  fi
+done
 
 echo "[runtime_smoke] PASS"

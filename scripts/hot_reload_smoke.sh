@@ -92,17 +92,22 @@ check_common_invariants() {
   check_absent "Cannot ptrcall nil constructor" "$log_file"
   check_absent "Orphan StringName" "$log_file"
   check_absent "unclaimed string names" "$log_file"
+  # task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
+  # Assert the trace is present first, so a dropped KANAMA_TRACE_NATIVE_ADAPTERS
+  # fails loudly instead of making the absence check pass vacuously.
+  check "\\[kanama:adapter\\] boundary first-lifecycle-upcall-install" "$log_file"
+  check_absent "\\[kanama:adapter\\] downcall .* phase=post-boundary" "$log_file"
 }
 
 set_marker "A"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
-KANAMA_TRACE_INSTANCES=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" >"$LOG1" 2>&1
+KANAMA_TRACE_INSTANCES=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" >"$LOG1" 2>&1
 check_marker "A" "$LOG1"
 check_common_invariants "$LOG1"
 
 set_marker "B"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
-KANAMA_TRACE_INSTANCES=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" >"$LOG2" 2>&1
+KANAMA_TRACE_INSTANCES=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" >"$LOG2" 2>&1
 check_marker "B" "$LOG2"
 check_common_invariants "$LOG2"
 
