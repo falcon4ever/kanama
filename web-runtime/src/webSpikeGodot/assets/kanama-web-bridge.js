@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 17;
+  const KANAMA_WEB_PROTOCOL_VERSION = 18;
 
   function commandWordCount(opcode) {
     if (
@@ -341,8 +341,16 @@
     lastRafTimestamp: -1,
     lastProcessRafTick: -1,
     physicsAfterProcessSameTick: 0,
-    match3FramePumps: 0,
-    match3FrameContinuations: 0,
+    // Task 82: the coroutine frame scheduler's per-frame advance. These are demo-independent
+    // on purpose -- a demo that never pumps is a demo whose `delaySeconds` never returns, so
+    // every driver can assert on them and none has to be told which script is "Main".
+    frameSchedulerPumps: 0,
+    frameSchedulerContinuations: 0,
+    lastPumpRafTick: -1,
+    // Handles that have taken their _process dispatch since the last pump. Godot dispatches a
+    // node's _process at most once per engine iteration, so a REPEAT proves a new iteration
+    // began -- the fallback that keeps the pump alive if the rAF tick token ever stops moving.
+    pumpDispatchedHandles: new Set(),
     match3ScaleMutations: 0,
     match3ModulateMutations: 0,
     match3TweensCreated: 0,
@@ -497,64 +505,88 @@
         0,
       );
     },
+    // Task 82: scope the bridge's active owner to a resumed coroutine's OWN script. Called from
+    // Kotlin around each continuation the pump runs (see kanamaWebPumpFrameScheduler); mirrors
+    // the ownership rule `invoke` applies for a real script callback.
+    enterFrameSchedulerOwner(handle) {
+      const previous = this.activeOwnerHandle;
+      if (handle > 0) {
+        this.activeOwnerHandle = this.applyCallbacks.has(handle)
+          ? handle
+          : this.ownerForHandle(handle);
+      }
+      return previous;
+    },
+    exitFrameSchedulerOwner(previous) {
+      this.activeOwnerHandle = previous;
+      return 1;
+    },
+
+    /**
+     * Task 82: advance the shared coroutine frame scheduler EXACTLY once per engine frame.
+     *
+     * This is deliberately unconditional and mode-blind. It used to be a per-demo branch below
+     * that named a "Main" handle, and the eight demos nobody remembered to name never resumed a
+     * `delaySeconds` at all -- silently, because nothing failed; the queued work simply never
+     * ran. The pump itself was always global (it selects by due frame/time, and each task carries
+     * its own owner), so the gating was pure accident. Riding the `_process` dispatch that EVERY
+     * generated proxy emits makes it impossible to bring up a demo without it.
+     *
+     * Once per frame, not once per script: the pump advances the scheduler's frame counter and
+     * elapsed clock, so a second call in the same frame would run time at N x speed. Frame
+     * identity is the rAF tick -- one engine iteration runs synchronously inside one animation
+     * frame, so every dispatch of an iteration observes the same tick -- with a repeat-handle
+     * fallback: Godot dispatches a node's `_process` at most once per iteration, so seeing the
+     * same handle twice proves a new iteration even if the tick token ever stops moving.
+     */
+    pumpFrameScheduler(handle, delta) {
+      const tick = this.rafTick;
+      if (tick === this.lastPumpRafTick && !this.pumpDispatchedHandles.has(handle)) {
+        this.pumpDispatchedHandles.add(handle);
+        return 0;
+      }
+      this.lastPumpRafTick = tick;
+      this.pumpDispatchedHandles.clear();
+      this.pumpDispatchedHandles.add(handle);
+      this.frameSchedulerPumps += 1;
+      const executed = this.invoke(
+        0,
+        "frame_scheduler",
+        "frame scheduler",
+        () => this.api.kanamaWebPumpFrameScheduler(delta),
+        0,
+      );
+      this.frameSchedulerContinuations += executed;
+      return executed;
+    },
+
     frame(handle, delta) {
       this.lastProcessRafTick = this.rafTick;
+      // Before any mode branch: the scheduler advance belongs to the engine frame, not to a demo.
+      this.pumpFrameScheduler(handle, delta);
       if (this.mode === "bunnymark") {
         return this.process(handle, delta);
       }
       if (this.mode === "web3d") {
         // Minimal 3D render smoke: the single Node3D script runs its _process (spins a
-        // child); no coroutine frame scheduler and no benchmark transport.
+        // child); no benchmark transport.
         return this.process(handle, delta);
       }
       if (this.mode === "squash") {
-        // squash-the-creeps is physics-driven; no script owns coroutines, so every
-        // script runs its plain _process/_physics_process dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "fps") {
-        // FPS scripts own no coroutines; every script runs its plain dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "tpsdemo") {
-        // Main is the persistent scene root (it survives the menu/level swap), so it pumps the
-        // shared coroutine frame scheduler for every coroutine owner in the demo (Level robot
-        // respawns, Part fade timers, Blast/PartDisappear lifetimes). Every other script runs
-        // its plain _process dispatch; nothing here takes the spike benchmark transport.
-        if (handle === this.tpsMainHandle) {
-          const executed = this.invoke(
-            handle,
-            "frame_scheduler",
-            "frame scheduler",
-            () => this.api.kanamaWebFrame(handle, delta),
-            0,
-          );
-          this.processCalls += 1;
-        this.simSeconds += delta;
-          return executed;
-        }
+        // Every script runs its plain _process dispatch; nothing here takes the spike
+        // benchmark transport.
         return this.process(handle, delta);
       }
       if (this.mode === "citybuilder") {
-        // City-Builder scripts (Builder cursor/actions, View camera, Audio pool) own no
-        // coroutines; every script runs its plain _process dispatch.
         return this.process(handle, delta);
       }
       if (this.mode === "platformer") {
-        // The Main scene root pumps the shared coroutine frame scheduler (Brick's delaySeconds);
-        // every other script runs its own _process/_physics_process. No benchmark transport.
-        if (handle === this.platformerMainHandle) {
-          const executed = this.invoke(
-            handle,
-            "frame_scheduler",
-            "frame scheduler",
-            () => this.api.kanamaWebFrame(handle, delta),
-            0,
-          );
-          this.processCalls += 1;
-        this.simSeconds += delta;
-          return executed;
-        }
         return this.process(handle, delta);
       }
       if (this.mode === "match3") {
@@ -568,38 +600,17 @@
             0,
           );
         }
+        // match3's board Tiles deliberately take no per-frame dispatch (their animation is
+        // Tween-driven); only Main runs its own _process. The scheduler advance above is
+        // unaffected -- it already happened, whichever handle arrived first this frame.
         if (handle !== this.match3MainHandle) return 0;
-        this.match3FramePumps += 1;
-        const executed = this.invoke(
-          handle,
-          "frame_scheduler",
-          "frame scheduler",
-          () => this.api.kanamaWebFrame(handle, delta),
-          0,
-        );
-        this.match3FrameContinuations += executed;
-        this.processCalls += 1;
-        this.simSeconds += delta;
-        return executed;
+        return this.process(handle, delta);
       }
       if (this.mode === "dodge") {
-        // Real scene demo: the main script pumps the shared coroutine frame scheduler
-        // (and runs its own _process); every other dodge script (Player, spawned Mobs)
-        // runs its _process via process(). Neither path takes the spike benchmark
-        // transport below, which appends a scalar (op100) marker that only the spike
-        // main script can apply — that mis-route is what fataled dodge's per-frame scripts.
-        if (handle === this.dodgeMainHandle) {
-          const executed = this.invoke(
-            handle,
-            "frame_scheduler",
-            "frame scheduler",
-            () => this.api.kanamaWebFrame(handle, delta),
-            0,
-          );
-          this.processCalls += 1;
-        this.simSeconds += delta;
-          return executed;
-        }
+        // Real scene demo: every dodge script (Main, Player, spawned Mobs) runs its _process
+        // via process(). Neither path takes the spike benchmark transport below, which appends
+        // a scalar (op100) marker that only the spike main script can apply — that mis-route is
+        // what fataled dodge's per-frame scripts.
         return this.process(handle, delta);
       }
       const started = performance.now();

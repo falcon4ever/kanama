@@ -127,7 +127,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 17
+    /**
+     * Runtime bridge contract version. 18 (task 82) replaces the per-script `kanamaWebFrame`
+     * crossing with the ownerless `kanamaWebPumpFrameScheduler(delta)`, which the bridge drives
+     * from the `_process` dispatch every proxy emits — so the coroutine frame scheduler advances
+     * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
+     * happened to name.
+     */
+    const val PROTOCOL_VERSION = 18
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of

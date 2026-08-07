@@ -319,3 +319,18 @@ private fun stageWebGenericArgs(value: String): Int =
   js("globalThis.KanamaWebBridge.stageGenericArgs(value)")
 
 internal fun webNowMillis(): Double = js("performance.now()")
+
+/**
+ * Task 82: scopes the JS bridge's active owner to a resumed coroutine's OWN script for the length
+ * of that continuation, and returns the previous owner so the caller can restore it.
+ *
+ * The bridge bills every browser handle allocated during a crossing to its active owner. A frame
+ * pump is not a script callback, so without this the whole frame's continuations would be billed to
+ * whichever script's `_process` drove the pump — handles minted by a mob's resumed coroutine
+ * charged to the scene root, which outlives it (task 72's leak shape).
+ */
+internal fun enterWebBridgeFrameOwner(ownerHandle: Int): Int =
+  js("globalThis.KanamaWebBridge?.enterFrameSchedulerOwner(ownerHandle) ?? 0")
+
+internal fun exitWebBridgeFrameOwner(previousOwner: Int): Int =
+  js("globalThis.KanamaWebBridge?.exitFrameSchedulerOwner(previousOwner) ?? 0")

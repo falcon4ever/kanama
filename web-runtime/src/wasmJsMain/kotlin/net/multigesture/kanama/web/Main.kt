@@ -223,18 +223,47 @@ fun kanamaWebPhysicsProcess(objectId: Int, delta: Double): Int {
   }
 }
 
-/** Match3's single frame pump; the JavaScript bridge invokes it only for the Main script. */
+/**
+ * Advances the shared coroutine frame scheduler by exactly one engine frame.
+ *
+ * Task 82: this is the ONLY scheduler advance, and it deliberately takes **no script handle**. The
+ * pump is global and owner-agnostic — [WebFrameScheduler.pump] selects work by due frame/time and
+ * each queued task carries its own owner — so nothing about advancing it belongs to a particular
+ * script. Its predecessor `kanamaWebFrame(objectId, delta)` pumped *and* ran one script's
+ * `_process`, which is why the JavaScript bridge had to name a "Main" handle per demo; four demos
+ * were named and the other eight silently never resumed a `delaySeconds`.
+ *
+ * The bridge now calls this from the generated `_process` dispatch that EVERY Kanama proxy emits,
+ * once per engine frame. Advancing twice in a frame would double-count `frame`/`elapsedSeconds`, so
+ * the once-per-frame guard lives at that single call site.
+ */
 @JsExport
-fun kanamaWebFrame(objectId: Int, delta: Double): Int {
-  return webCallbackBoundary(objectId, "frame_scheduler") { record ->
+fun kanamaWebPumpFrameScheduler(delta: Double): Int {
+  try {
     commands.clear()
     val executed =
       WebFrameScheduler.pump(delta, instances::isLive) { ownerHandle, action ->
-        withActiveWebScriptHandle(ownerHandle, action)
+        // Both sides of the boundary must see the CONTINUATION's owner rather than whichever
+        // script's _process drove this frame's pump: the Kotlin active handle resolves singleton
+        // calls, and the bridge's active owner is who a browser handle allocated inside the
+        // continuation is billed to. Billing it to the pumping script is task 72's leak class —
+        // the resumed work outlives its own script and its handles never come back.
+        withActiveWebScriptHandle(ownerHandle) {
+          val previousOwner = enterWebBridgeFrameOwner(ownerHandle)
+          try {
+            action()
+          } finally {
+            exitWebBridgeFrameOwner(previousOwner)
+          }
+        }
       }
-    KanamaWebProjectRegistry.process(record.scriptId, record.script, delta)
     commands.flush()
-    executed
+    return executed
+  } catch (error: Throwable) {
+    throw IllegalStateException(
+      "Kanama Web frame scheduler pump failed: cause=${describeCauseChain(error)}",
+      error,
+    )
   }
 }
 

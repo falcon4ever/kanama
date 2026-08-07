@@ -31,6 +31,9 @@ async function snapshot(evaluate) {
         enterTreeCalls: bridge.enterTreeCalls,
         mainReady: classCount(".Main"),
         processCalls: bridge.processCalls,
+        // Task 82: the coroutine frame scheduler's per-frame advance. Demo-independent.
+        pumps: bridge.frameSchedulerPumps ?? 0,
+        continuations: bridge.frameSchedulerContinuations ?? 0,
         appliedCommands: bridge.appliedCommands,
         liveHandles: bridge.liveBrowserHandleCount,
         maxLiveHandles: bridge.maxLiveBrowserHandles,
@@ -193,6 +196,35 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   );
   trace(`generic: ${JSON.stringify(generic)}`);
 
+  // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
+  // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
+  // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
+  // Main.coroutine_probe_mask (method#20, Int->Int) reports how far it got.
+  //
+  // This is the generic version of the bug task 82 fixed: before the fix the frame scheduler was
+  // pumped only for four hardcoded "Main" handles, so in eight of twelve demos a launched
+  // coroutine stopped at its first delay and NOTHING threw. An unpumped scheduler stalls this
+  // mask at 3 forever; a pumped one reaches 31. Asserting "no error" would have passed either way.
+  const readCoroutineMask = () =>
+    evaluate(
+      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 20, 0)",
+    ).then(Number);
+  trace("coroutine_probe");
+  const maskBeforeArm = await readCoroutineMask();
+  await evaluate(
+    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 19); true",
+  );
+  let coroutineMask = await readCoroutineMask();
+  const coroutineDeadline = Math.min(deadline, Date.now() + 15_000);
+  while (coroutineMask !== 31 && Date.now() < coroutineDeadline) {
+    await delay(150);
+    coroutineMask = await readCoroutineMask();
+  }
+  const afterCoroutine = (await snapshot(evaluate)) ?? atPeak;
+  trace(
+    `coroutine: mask=${coroutineMask} (was ${maskBeforeArm}) pumps=${afterCoroutine.pumps} continuations=${afterCoroutine.continuations}`,
+  );
+
   // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the scene root, draining handles.
   trace("smoke_teardown");
   await evaluate(
@@ -205,7 +237,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeWeb3d: ready.mode === "web3d",
-    protocol17: protocolVersion === 17,
+    protocol18: protocolVersion === 18,
     sceneReady: ready.mainReady >= 1,
     // 66b: the bridge crossing fired and the Kotlin @OnEnterTree body observed it.
     enterTreeDispatched: ready.enterTreeCalls >= 1 && (enterTreeProbe & 1) === 1,
@@ -274,6 +306,16 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
       generic.typedHits === 500 &&
       generic.genericMs > 0 &&
       generic.typedMs > 0,
+    // Task 82 (a) the frame scheduler is advanced at all, without this demo naming a "Main"
+    // handle anywhere -- the pump rides the _process dispatch every proxy emits.
+    frameSchedulerPumped: afterCoroutine.pumps >= 10,
+    // ...(b) and a launched coroutine RESUMED past both delay shapes and ran its main-thread
+    // post. Bit 1 armed, 2 body entered, 4 past delaySeconds(0.0), 8 past a timed delay,
+    // 16 MainThread.post ran. An unpumped scheduler stalls at 3 and throws nothing.
+    coroutineDelayResumed: coroutineMask === 31,
+    // The probe had NOT already run before the driver armed it: the mask is a fresh observation,
+    // not a leftover from startup.
+    coroutineProbeArmedByDriver: maskBeforeArm === 0,
     fullTeardownToZero: settled.liveHandles === 0,
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
@@ -298,6 +340,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     crossings: {
       kotlinToGodotCalls: peak.crossings,
       processCalls: peak.processCalls,
+      frameSchedulerPumps: afterCoroutine.pumps,
+      frameSchedulerContinuations: afterCoroutine.continuations,
       appliedCommands: peak.appliedCommands,
       // Task 76 spike cost measurement (schema requires non-negative numbers, so the
       // millisecond totals ride x1000 and the generic/typed ratio rides x100).

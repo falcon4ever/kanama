@@ -141,7 +141,7 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modePlatformer: ready.mode === "platformer",
-    protocol17: protocolVersion === 17,
+    protocol18: protocolVersion === 18,
     sceneScriptsReady:
       ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1 && ready.coinReady >= 1,
     // Both frame pumps ran: _physics_process (player gravity/move_and_slide) and

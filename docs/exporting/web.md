@@ -5,7 +5,7 @@
 The Web backend is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable
 baseline. It compiles Kanama project scripts to **Kotlin/Wasm** and runs them
 against a Godot 4.7 Web export through a generated per-call proxy and a versioned
-JavaScript bridge (protocol 17). It is **not a Supported target**: the renderer is
+JavaScript bridge (protocol 18). It is **not a Supported target**: the renderer is
 single-thread Compatibility only, the browser matrix and performance budgets are
 still being hardened, and there is no packaged install path yet.
 
