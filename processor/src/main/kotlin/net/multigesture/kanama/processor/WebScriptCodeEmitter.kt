@@ -3,6 +3,107 @@ package net.multigesture.kanama.processor
 /** One Web script model paired with its Godot resource path. */
 internal data class WebScriptInput(val model: ScriptModel, val resourcePath: String)
 
+// ---------- Task 80 slice 1: the generator declares its own degradations ----------
+
+/**
+ * How a declared script member actually reaches Kotlin on the Web backend.
+ *
+ * The Web emitter models a hand-maintained set of supported shapes; anything outside it degrades,
+ * historically in silence. Every manifest entry carries one of these so the degradation is a number
+ * in `KanamaWebProtocol.generated.json` and a build-time report line instead of a runtime surprise.
+ */
+internal enum class WebDispatchStatus(val json: String) {
+  /** Dispatches with its declared payload intact. */
+  TYPED("typed"),
+  /** Emitted, but calling it throws at runtime (the `unsupportedGameplayMethod` stub). */
+  UNSUPPORTED("unsupported"),
+  /** Dispatches, but part of the declared payload never reaches Kotlin. */
+  ARGUMENT_DROPPED("argument-dropped"),
+  /** No crossing is emitted at all, so the member can never run on Web. */
+  NOT_EMITTED("not-emitted"),
+}
+
+/** A member's Web dispatch verdict: the status plus a short machine-readable reason. */
+internal data class WebDispatch(val status: WebDispatchStatus, val reason: String? = null) {
+  val isTyped: Boolean
+    get() = status == WebDispatchStatus.TYPED
+}
+
+/**
+ * The proxy dispatch arm a registered `@ScriptFunction` takes, chosen by parameter shape.
+ *
+ * This enum IS the arm choice: [WebScriptCodeEmitter.methodArm] decides it once, the GDScript
+ * emitter switches on it, and the protocol manifest reports it. Adding a bridge entry point means
+ * adding an arm here and an emitter branch for it — the shape table cannot drift from what the
+ * manifest claims, because there is only one table.
+ */
+internal enum class WebMethodArm(val dispatch: WebDispatch) {
+  /** `_draw()` — crossed by the `_draw` virtual dispatcher, not by a per-method function. */
+  DRAW_VIRTUAL(WebDispatch(WebDispatchStatus.TYPED)),
+  /** A `_draw` overload the draw dispatcher does not accept: no crossing is emitted for it. */
+  DRAW_SHAPE_MISMATCH(
+    WebDispatch(
+      WebDispatchStatus.NOT_EMITTED,
+      "the _draw crossing dispatches only the zero-argument void form",
+    )
+  ),
+  /** No arguments, no return: `callNoArgs`. */
+  NO_ARGS(WebDispatch(WebDispatchStatus.TYPED)),
+  /** `(INT) -> INT`: `callInt`. */
+  INT_RET_INT(WebDispatch(WebDispatchStatus.TYPED)),
+  /** `(VECTOR2I) -> void`: `callVector2i`. */
+  VECTOR2I_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /** `(INT) -> void`: `callLongVoid`. */
+  INT_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /** `(STRING) -> void`: `callString`. */
+  STRING_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /** `(OBJECT) -> void`: `callObject`. */
+  OBJECT_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /** `(OBJECT, OBJECT, INT) -> void`: `callObjectObjectLong`. */
+  OBJECT_OBJECT_INT_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /** No arm matches: the proxy emits a stub that throws through `unsupportedGameplayMethod`. */
+  NONE(WebDispatch(WebDispatchStatus.UNSUPPORTED));
+
+  val isTyped: Boolean
+    get() = dispatch.isTyped
+}
+
+/**
+ * The proxy push arm an `@ScriptProperty` takes at hydration, keyed the same way the emitted
+ * `_kanama_ensure_created` body is. [WebPropertyArm.NONE] is the historical `else -> Unit` silent
+ * drop; task 64's `unsupportedWebPropertyErrors` already fails the build for it, so a NONE entry in
+ * the manifest means that guard has a hole.
+ */
+internal enum class WebPropertyArm(val dispatch: WebDispatch) {
+  STRING(WebDispatch(WebDispatchStatus.TYPED)),
+  NODE_PATH(WebDispatch(WebDispatchStatus.TYPED)),
+  INT(WebDispatch(WebDispatchStatus.TYPED)),
+  FLOAT(WebDispatch(WebDispatchStatus.TYPED)),
+  BOOL(WebDispatch(WebDispatchStatus.TYPED)),
+  VECTOR2(WebDispatch(WebDispatchStatus.TYPED)),
+  VECTOR3(WebDispatch(WebDispatchStatus.TYPED)),
+  VECTOR2I(WebDispatch(WebDispatchStatus.TYPED)),
+  OBJECT(WebDispatch(WebDispatchStatus.TYPED)),
+  STRING_ARRAY(WebDispatch(WebDispatchStatus.TYPED)),
+  OBJECT_ARRAY(WebDispatch(WebDispatchStatus.TYPED)),
+  NONE(WebDispatch(WebDispatchStatus.NOT_EMITTED));
+
+  val isTyped: Boolean
+    get() = dispatch.isTyped
+}
+
+/** One non-`typed` manifest entry, as the build-time report prints it. */
+internal data class WebDegradation(
+  val scriptName: String,
+  val memberName: String,
+  /** `method`, `signal`, `property`, or `virtual` — the manifest section the entry sits in. */
+  val kind: String,
+  val dispatch: WebDispatch,
+) {
+  override fun toString(): String =
+    "$scriptName.$memberName ($kind): ${dispatch.reason ?: dispatch.status.json}"
+}
+
 /** Static Kotlin/Wasm registry, protocol manifest, and Godot proxy emitter for Task 57. */
 internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
@@ -30,6 +131,138 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
 
     /** True when KSP is running for the Web (Kotlin/Wasm) target. */
     fun isWebTarget(options: Map<String, String>): Boolean = options["kanamaRuntimeTarget"] == "web"
+
+    // ---- Task 80: one arm table per member kind, read by the emitter AND the manifest ----
+
+    /** The GDScript names of the three signal-delivery helpers every proxy emits. */
+    internal const val SIGNAL_DISPATCH_ZERO = "_kanama_web_signal_dispatch0"
+    internal const val SIGNAL_DISPATCH_ONE = "_kanama_web_signal_dispatch1"
+    internal const val SIGNAL_DISPATCH_OBJECT = "_kanama_web_signal_dispatch_object"
+
+    /**
+     * The dispatch arm the proxy emits for a registered `@ScriptFunction`. The emitter's method
+     * loop switches on this and nothing else, so the manifest's `dispatch` value is the arm that
+     * was actually taken rather than a second reading of the same shapes.
+     */
+    fun methodArm(method: MethodModel): WebMethodArm =
+      when {
+        method.godotName == "_draw" ->
+          if (method.args.isEmpty() && method.returnType == null) WebMethodArm.DRAW_VIRTUAL
+          else WebMethodArm.DRAW_SHAPE_MISMATCH
+        method.args.isEmpty() && method.returnType == null -> WebMethodArm.NO_ARGS
+        method.returnType == TypeMapping.INT &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.INT -> WebMethodArm.INT_RET_INT
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.VECTOR2I -> WebMethodArm.VECTOR2I_VOID
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.INT -> WebMethodArm.INT_VOID
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.STRING -> WebMethodArm.STRING_VOID
+        method.returnType == null &&
+          method.args.size == 1 &&
+          method.args.single().type == TypeMapping.OBJECT &&
+          method.args.single().objectWrapperFqName != null -> WebMethodArm.OBJECT_VOID
+        method.returnType == null &&
+          method.args.size == 3 &&
+          method.args[0].type == TypeMapping.OBJECT &&
+          method.args[1].type == TypeMapping.OBJECT &&
+          method.args[2].type == TypeMapping.INT -> WebMethodArm.OBJECT_OBJECT_INT_VOID
+        else -> WebMethodArm.NONE
+      }
+
+    /** `(FLOAT, INT) -> void` — the shape spelling used in degradation reasons. */
+    private fun shapeOf(args: List<ArgModel>, returnType: TypeMapping?): String =
+      "(${args.joinToString(", ") { it.type.name }}) -> ${returnType?.name ?: "void"}"
+
+    /** [WebMethodArm.dispatch] with the offending shape spelled into the reason. */
+    fun methodDispatch(method: MethodModel): WebDispatch {
+      val arm = methodArm(method)
+      if (arm != WebMethodArm.NONE) return arm.dispatch
+      return WebDispatch(
+        WebDispatchStatus.UNSUPPORTED,
+        "no arm for the registered-method shape " +
+          "${shapeOf(method.args, method.returnType)}; the proxy emits a stub that throws",
+      )
+    }
+
+    /**
+     * How a declared `@ScriptSignal` payload reaches a Kotlin callback.
+     *
+     * A proxy emits three delivery helpers ([SIGNAL_DISPATCH_ZERO], [SIGNAL_DISPATCH_ONE],
+     * [SIGNAL_DISPATCH_OBJECT]) and `GodotSignal.connect`/`connectObject` pick between them: zero
+     * arguments, or exactly one argument carried as an object handle. Anything else rides
+     * [SIGNAL_DISPATCH_ONE], whose emitted body discards the argument.
+     *
+     * A payload the lambda path drops can still be delivered by connecting the signal to a
+     * **named** registered method (`connect(target, "method")`), where it rides that method's own
+     * arm — so this is `argument-dropped`, never `unsupported`.
+     */
+    fun signalDispatch(signal: SignalModel): WebDispatch {
+      val args = signal.args
+      if (args.isEmpty()) return WebDispatch(WebDispatchStatus.TYPED)
+      if (args.size == 1 && args.single().type == TypeMapping.OBJECT) {
+        return WebDispatch(WebDispatchStatus.TYPED)
+      }
+      val limit =
+        if (args.size == 1) "Kotlin lambda callbacks take 0 arguments or 1 object handle"
+        else "Kotlin lambda callbacks accept at most 1 emitted argument"
+      return WebDispatch(
+        WebDispatchStatus.ARGUMENT_DROPPED,
+        "signal payload dropped: $limit, so the declared " +
+          "(${args.joinToString(", ") { it.type.name }}) payload reaches Kotlin only through a " +
+          "named registered-method connect",
+      )
+    }
+
+    /**
+     * The push arm the proxy emits for an `@ScriptProperty` at hydration. Same contract as
+     * [methodArm]: the emitter switches on this value, and the manifest reports it.
+     */
+    fun propertyArm(property: ScriptPropertyModel): WebPropertyArm =
+      when (property.type) {
+        TypeMapping.STRING -> WebPropertyArm.STRING
+        TypeMapping.NODE_PATH -> WebPropertyArm.NODE_PATH
+        TypeMapping.INT -> WebPropertyArm.INT
+        TypeMapping.FLOAT -> WebPropertyArm.FLOAT
+        TypeMapping.BOOL -> WebPropertyArm.BOOL
+        TypeMapping.VECTOR2 -> WebPropertyArm.VECTOR2
+        TypeMapping.VECTOR3 -> WebPropertyArm.VECTOR3
+        TypeMapping.VECTOR2I -> WebPropertyArm.VECTOR2I
+        TypeMapping.OBJECT -> WebPropertyArm.OBJECT
+        TypeMapping.ARRAY ->
+          if (property.arrayElementString) WebPropertyArm.STRING_ARRAY
+          else WebPropertyArm.OBJECT_ARRAY
+        else -> WebPropertyArm.NONE
+      }
+
+    /** [WebPropertyArm.dispatch] with the offending type spelled into the reason. */
+    fun propertyDispatch(property: ScriptPropertyModel): WebDispatch {
+      val arm = propertyArm(property)
+      if (arm != WebPropertyArm.NONE) return arm.dispatch
+      return WebDispatch(
+        WebDispatchStatus.NOT_EMITTED,
+        "no proxy push arm for property type ${property.type.name}; the exported value would " +
+          "never be hydrated into Kotlin",
+      )
+    }
+
+    /**
+     * Whether the proxy crosses this virtual into Kotlin. [DISPATCHED_VIRTUALS] is the single arm
+     * table; `undispatchedVirtualErrors` already fails a Web build for anything outside it, so a
+     * non-typed virtual in the manifest means that guard has a hole.
+     */
+    fun virtualDispatch(virtual: VirtualModel): WebDispatch =
+      if (virtual.virtualName in DISPATCHED_VIRTUALS) WebDispatch(WebDispatchStatus.TYPED)
+      else
+        WebDispatch(
+          WebDispatchStatus.NOT_EMITTED,
+          "${virtual.virtualName} is not dispatched by the Kanama Web backend, so the body " +
+            "would never run",
+        )
 
     /**
      * Errors for virtuals a Web build would silently drop (task 66).
@@ -535,10 +768,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("    when (scriptId) {")
     scripts.forEachIndexed { index, input ->
       val virtual = input.model.virtuals.firstOrNull { it.virtualName == "_draw" }
-      val method =
-        input.model.methods.firstOrNull {
-          it.godotName == "_draw" && it.args.isEmpty() && it.returnType == null
-        }
+      // WebMethodArm.DRAW_VIRTUAL is exactly "_draw() -> void": one arm table decides which
+      // _draw shapes this dispatcher accepts and which the manifest reports as not-emitted.
+      val method = input.model.methods.firstOrNull { methodArm(it) == WebMethodArm.DRAW_VIRTUAL }
       val body =
         when {
           virtual != null -> "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}()"
@@ -1294,42 +1526,42 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
     }
     model.properties.forEachIndexed { index, property ->
-      when (property.type) {
-        TypeMapping.STRING ->
+      when (propertyArm(property)) {
+        WebPropertyArm.STRING ->
           appendLine(
             "\t_kanama_bridge.setStringProperty(_kanama_handle, ${index + 1}, ${property.godotName})"
           )
         // A NodePath is its plain path string on the wire everywhere (protocol unchanged);
         // the Kotlin registry rewraps it into the web NodePath value class.
-        TypeMapping.NODE_PATH ->
+        WebPropertyArm.NODE_PATH ->
           appendLine(
             "\t_kanama_bridge.setStringProperty(_kanama_handle, ${index + 1}, String(${property.godotName}))"
           )
-        TypeMapping.INT ->
+        WebPropertyArm.INT ->
           appendLine(
             "\t_kanama_bridge.setLongProperty(_kanama_handle, ${index + 1}, ${property.godotName})"
           )
-        TypeMapping.FLOAT ->
+        WebPropertyArm.FLOAT ->
           appendLine(
             "\t_kanama_bridge.setDoubleProperty(_kanama_handle, ${index + 1}, ${property.godotName})"
           )
-        TypeMapping.BOOL ->
+        WebPropertyArm.BOOL ->
           appendLine(
             "\t_kanama_bridge.setLongProperty(_kanama_handle, ${index + 1}, 1 if ${property.godotName} else 0)"
           )
-        TypeMapping.VECTOR2 ->
+        WebPropertyArm.VECTOR2 ->
           appendLine(
             "\t_kanama_bridge.setVector2Property(_kanama_handle, ${index + 1}, ${property.godotName}.x, ${property.godotName}.y)"
           )
-        TypeMapping.VECTOR3 ->
+        WebPropertyArm.VECTOR3 ->
           appendLine(
             "\t_kanama_bridge.setVector3Property(_kanama_handle, ${index + 1}, ${property.godotName}.x, ${property.godotName}.y, ${property.godotName}.z)"
           )
-        TypeMapping.VECTOR2I ->
+        WebPropertyArm.VECTOR2I ->
           appendLine(
             "\t_kanama_bridge.setVector2iProperty(_kanama_handle, ${index + 1}, ${property.godotName}.x, ${property.godotName}.y)"
           )
-        TypeMapping.OBJECT -> {
+        WebPropertyArm.OBJECT -> {
           appendLine("\tvar property_handle_${index + 1}: int = 0")
           appendLine("\tif ${property.godotName} != null:")
           appendLine(
@@ -1362,13 +1594,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "\t\t_kanama_bridge.refreshNode3DSnapshot(property_handle_${index + 1}, property_seed_node3d_${index + 1}.position.x, property_seed_node3d_${index + 1}.position.y, property_seed_node3d_${index + 1}.position.z, property_seed_node3d_${index + 1}.rotation.x, property_seed_node3d_${index + 1}.rotation.y, property_seed_node3d_${index + 1}.rotation.z, property_seed_node3d_${index + 1}.scale.x, property_seed_node3d_${index + 1}.scale.y, property_seed_node3d_${index + 1}.scale.z)"
           )
         }
-        TypeMapping.ARRAY -> {
-          if (property.arrayElementString) {
-            appendLine(
-              "\t_kanama_bridge.setStringArrayProperty(_kanama_handle, ${index + 1}, \"\\u001f\".join(${property.godotName}))"
-            )
-            return@forEachIndexed
-          }
+        WebPropertyArm.STRING_ARRAY ->
+          appendLine(
+            "\t_kanama_bridge.setStringArrayProperty(_kanama_handle, ${index + 1}, \"\\u001f\".join(${property.godotName}))"
+          )
+        WebPropertyArm.OBJECT_ARRAY -> {
           appendLine("\tvar property_handles_${index + 1}: String = \"\"")
           appendLine("\tfor property_value in ${property.godotName}:")
           appendLine("\t\tvar property_value_handle := 0")
@@ -1390,7 +1620,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "\t_kanama_bridge.setObjectArrayProperty(_kanama_handle, ${index + 1}, property_handles_${index + 1})"
           )
         }
-        else -> Unit
+        // Task 80: the historical silent drop. unsupportedWebPropertyErrors (task 64) already
+        // fails a Web build here, and the manifest now records it as not-emitted either way.
+        WebPropertyArm.NONE -> Unit
       }
     }
     appendLine("\treturn _kanama_handle")
@@ -1428,9 +1660,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_bridge.ready(_kanama_handle)")
     val immediateMethod =
       model.methods.withIndex().firstOrNull { (_, method) ->
-        method.returnType == TypeMapping.INT &&
-          method.args.size == 1 &&
-          method.args.single().type == TypeMapping.INT
+        methodArm(method) == WebMethodArm.INT_RET_INT
       }
     if (immediateMethod != null) {
       appendLine(
@@ -2808,14 +3038,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_bridge.recordImmediateConnectResult(result)")
     appendLine("\treturn result")
     appendLine()
-    appendLine("func _kanama_web_signal_dispatch0(callback_id: int) -> void:")
+    appendLine("func $SIGNAL_DISPATCH_ZERO(callback_id: int) -> void:")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
     appendLine()
-    appendLine("func _kanama_web_signal_dispatch1(_arg: Variant, callback_id: int) -> void:")
+    appendLine("func $SIGNAL_DISPATCH_ONE(_arg: Variant, callback_id: int) -> void:")
     appendLine("\t# One emitted argument, dropped by the Kotlin callback: rides the zero-arg path.")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
     appendLine()
-    appendLine("func _kanama_web_signal_dispatch_object(arg: Variant, callback_id: int) -> void:")
+    appendLine("func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int) -> void:")
     appendLine("\tvar script_arg_handle := 0")
     appendLine("\tif arg != null and arg.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\tscript_arg_handle = int(arg.call(\"_kanama_ensure_created\"))")
@@ -3544,7 +3774,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\treturn result")
 
     model.methods.forEachIndexed { index, method ->
-      if (method.godotName == "_draw") return@forEachIndexed
+      val arm = methodArm(method)
+      // Both _draw arms skip the per-method function: the zero-arg void form is crossed by the
+      // _draw virtual dispatcher, and any other _draw shape has no crossing at all.
+      if (arm == WebMethodArm.DRAW_VIRTUAL || arm == WebMethodArm.DRAW_SHAPE_MISMATCH) {
+        return@forEachIndexed
+      }
       appendLine()
       val args = method.args.joinToString(", ") { "${it.name}: ${gdType(it)}" }
       val returnType = " -> ${method.returnType?.let(::gdType) ?: "void"}"
@@ -3556,41 +3791,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         "\t\t_kanama_bridge.recordDeferredGameplayMethod(${quote(model.fqName)}, ${quote(method.godotName)})"
       )
       appendLine("\t\treturn${method.returnType?.let { " ${gdDefault(it)}" } ?: ""}")
-      when {
-        method.args.isEmpty() && method.returnType == null ->
+      when (arm) {
+        // Handled above: neither _draw arm reaches this point.
+        WebMethodArm.DRAW_VIRTUAL,
+        WebMethodArm.DRAW_SHAPE_MISMATCH -> Unit
+        WebMethodArm.NO_ARGS ->
           appendLine("\t_kanama_bridge.callNoArgs(_kanama_handle, ${index + 1})")
-        method.returnType == TypeMapping.INT &&
-          method.args.size == 1 &&
-          method.args.single().type == TypeMapping.INT -> {
+        WebMethodArm.INT_RET_INT -> {
           val arg = method.args.single()
           appendLine(
             "\treturn int(_kanama_bridge.callInt(_kanama_handle, ${index + 1}, ${arg.name}))"
           )
         }
-        method.returnType == null &&
-          method.args.size == 1 &&
-          method.args.single().type == TypeMapping.VECTOR2I -> {
+        WebMethodArm.VECTOR2I_VOID -> {
           val arg = method.args.single()
           appendLine(
             "\t_kanama_bridge.callVector2i(_kanama_handle, ${index + 1}, ${arg.name}.x, ${arg.name}.y)"
           )
         }
-        method.returnType == null &&
-          method.args.size == 1 &&
-          method.args.single().type == TypeMapping.INT -> {
+        WebMethodArm.INT_VOID -> {
           val arg = method.args.single()
           appendLine("\t_kanama_bridge.callLongVoid(_kanama_handle, ${index + 1}, ${arg.name})")
         }
-        method.returnType == null &&
-          method.args.size == 1 &&
-          method.args.single().type == TypeMapping.STRING -> {
+        WebMethodArm.STRING_VOID -> {
           val arg = method.args.single()
           appendLine("\t_kanama_bridge.callString(_kanama_handle, ${index + 1}, ${arg.name})")
         }
-        method.returnType == null &&
-          method.args.size == 1 &&
-          method.args.single().type == TypeMapping.OBJECT &&
-          method.args.single().objectWrapperFqName != null -> {
+        WebMethodArm.OBJECT_VOID -> {
           // Registered function taking a single Godot object (e.g. a body_entered signal
           // handler). A Kanama-scripted node is passed as its SCRIPT handle (mirrors node
           // lookup) so the Kotlin side can resolve kotlinScriptInstance on it; anything else
@@ -3612,11 +3839,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("\t\t_kanama_object_handles.erase(arg_handle)")
           appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(arg_handle)")
         }
-        method.returnType == null &&
-          method.args.size == 3 &&
-          method.args[0].type == TypeMapping.OBJECT &&
-          method.args[1].type == TypeMapping.OBJECT &&
-          method.args[2].type == TypeMapping.INT -> {
+        WebMethodArm.OBJECT_OBJECT_INT_VOID -> {
           val first = method.args[0]
           val second = method.args[1]
           val value = method.args[2]
@@ -3636,7 +3859,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("\t_kanama_bridge.releaseTransientObjectHandle(first_handle)")
           appendLine("\t_kanama_bridge.releaseTransientObjectHandle(second_handle)")
         }
-        else -> {
+        // Task 80: this stub throws at runtime, and the manifest + build report now say so.
+        WebMethodArm.NONE -> {
           appendLine(
             "\t_kanama_bridge.unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, ${index + 1}, ${quote(method.godotName)})"
           )
