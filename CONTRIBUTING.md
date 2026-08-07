@@ -210,6 +210,52 @@ Known constraints:
 See `docs/exporting/android.md` and `docs/contributing/android-internals.md`
 for the current Android workflow and limitations.
 
+## Documented Limitations
+
+A comment that says "blocked on X" is true when written and can be a lie by the
+next release: the change that removes X has no reason to grep for the comment.
+Such a claim then keeps steering decisions, because it reads as authoritative.
+This has happened here — one "missing iOS wrapper types" line outlived its cause
+by six weeks and nearly cost a working demo.
+
+**When you land a change that removes a limitation, grep for the comments citing
+it** (`rg -i "<the thing you just added>"`), and delete the ones that are now
+false. This is the counterpart to the pinned-constant rule in `AGENTS.md`.
+
+When the limitation is machine-checkable, do not rely on the grep habit — write
+the claim so `scripts/audit_stale_blockers.py` can re-check it every run:
+
+```
+KANAMA-BLOCKED(since:2026-07-13, symbol:DirAccessHandle@ios): iOS carries no DirAccessHandle
+```
+
+The audit is inverted on purpose: it **fails when the blocker no longer holds**,
+so the build goes red at the moment the comment becomes false, not whenever
+someone next happens to read it. Fixing a failure means deleting the marker and
+the claim it guards.
+
+- `since:YYYY-MM-DD` is required. An undated claim rots invisibly.
+- Every other token asserts an **absence** — the gap the claim depends on:
+  - `symbol:<Name>@<tree>` — no Kotlin declaration or `<Name>.kt` in that tree
+    (`desktop`, `ios`, `web`, `processor`, `example`, `repo`).
+  - `file:<repo-relative-path-or-glob>` — nothing matches.
+  - `webcall:<Class>.<godot_method_name>` — the Web backend contract dispatches
+    no such call. Validated against `extension_api.json`, so a typo cannot pass.
+  - `task:<id>` — the `kanama-tasks` spec is still open (not in `archive/`).
+    That repo is separate, so these tokens are **skipped with a note** when it is
+    absent, including in PR CI. Run the audit locally, or pass `--require-tasks`,
+    to check them.
+- An unresolvable token — unknown kind, unknown tree, a `file:` glob whose
+  anchor directory has moved, a Godot method that does not exist — is a loud
+  failure, never a silent pass. A marker that can never fire is worse than no
+  marker at all.
+- Only convert claims that are actually machine-checkable. Do not invent a
+  marker that guesses at a symbol name a future fix *might* use: it will fail
+  open and go stale exactly like the prose it replaced.
+
+Run it directly with `python3 scripts/audit_stale_blockers.py --list`; it is a
+`local_ci.sh` stage.
+
 ## Design Rules
 
 - Kotlin public APIs use lower-camel names. Do not add PascalCase aliases.

@@ -24,6 +24,12 @@ you are changing:
 - [Web Internals](web-internals.md) before changing the in-development
   Kotlin/Wasm Web backend, its generated proxy, or the versioned JS bridge.
 
+Landing a change that **removes** a limitation is its own kind of change: the
+comments asserting that limitation are now false and nothing else will notice.
+Grep for them, and see "Documented Limitations" in the root `CONTRIBUTING.md`
+for the `KANAMA-BLOCKED` marker that makes the machine-checkable ones fail the
+build the day they go stale.
+
 Use the narrowest useful check while iterating, then run the broader local gate
 before release-facing changes:
 

@@ -269,6 +269,9 @@ python3 "$ROOT_DIR/scripts/audit_replicated_script_properties.py" "$ROOT_DIR/exa
 stage "value-type builtin parity audit"
 python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 
+stage "stale blocker claim audit"
+python3 "$ROOT_DIR/scripts/audit_stale_blockers.py"
+
 stage "JDWP bootstrap/project-setting guard"
 if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] JDWP project setting is not wired through bootstrap and editor tools" >&2

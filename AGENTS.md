@@ -113,6 +113,14 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
   Adding a field to the serialized script model (`ScriptModelJson`) means bumping
   `SCRIPT_MODEL_SCHEMA_VERSION`. Before finishing, grep the repo for the old
   value of any pinned constant you touched.
+- Claims drift the same way constants do, and nothing notices. **When you close
+  a task that removes a limitation, grep for the comments citing it** and delete
+  the ones that are now false. Task 30 gave iOS full wrapper breadth and nobody
+  grepped for "missing iOS wrapper types"; that line steered decisions for six
+  more weeks. Where the limitation is machine-checkable, write it as a
+  `KANAMA-BLOCKED` marker instead — `scripts/audit_stale_blockers.py` fails
+  the build when the blocker is lifted. See "Documented Limitations" in
+  `CONTRIBUTING.md`.
 - Do not widen ABI-sensitive types to make wrappers generate. Add exact helper
   shapes and audits first.
 - Prefer generated wrappers and focused policy fixes over ad hoc hand wrappers.
