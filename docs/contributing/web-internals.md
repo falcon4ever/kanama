@@ -137,6 +137,46 @@ mirrors crossings:
 - **Handle generations** — handles are opaque IDs across the bridge, not live
   pointers, so stale generations are detected and rejected explicitly.
 
+### Coroutine frame scheduler (one advance per engine frame, no demo opt-in)
+
+`kanamaScope.launch { … delaySeconds(…) … }` queues its continuation on one
+global scheduler. Nothing runs a queued continuation except the per-frame pump,
+so a demo whose pump never fires never resumes a delay — and nothing throws,
+because nothing failed: the work simply never runs.
+
+The pump is therefore **unconditional and demo-blind**. The bridge calls the
+ownerless `kanamaWebPumpFrameScheduler(delta)` crossing from the `_process`
+dispatch that *every* generated proxy emits, before any per-mode branch, so a new
+demo cannot be brought up without it. Exactly one advance per engine frame: the
+pump also advances the scheduler's frame counter and elapsed clock, so a second
+call in the same frame would run time at N× speed. Frame identity is the rAF tick
+(one engine iteration runs synchronously inside one animation frame, so every
+dispatch of that iteration observes the same tick), with a repeat-handle fallback
+— Godot dispatches a node's `_process` at most once per iteration, so seeing the
+same handle twice proves a new iteration began.
+
+Because it rides `_process`, the pump advances while *something* is processing.
+Every proxy emits `func _process` unconditionally, so any live Kanama script node
+drives it, and a scene with no live Kanama script has no coroutine owner either —
+owners are script handles, and freeing one drains its queue. The consequence
+worth knowing: while `get_tree().set_paused(true)` holds (or if every Kanama node
+in the scene has explicitly called `set_process(false)`), no `_process` runs, so
+coroutine delays freeze with the rest of the game and resume on unpause. That is
+the intended reading of "paused", not a stall.
+
+Each continuation runs under **its own** owner on both sides of the boundary: the
+Kotlin active script handle and the bridge's active owner are switched to the
+task's owner, not to whichever script's `_process` drove the pump. Billing a
+resumed coroutine's allocations to the pumping script is the task-72 leak shape —
+the handles outlive the script that made them.
+
+Before protocol 18 this ran through a per-script `kanamaWebFrame(objectId, delta)`
+crossing that the bridge invoked for four hardcoded "Main" handles. The other
+eight demos in the corpus never pumped, so every coroutine delay in them hung
+forever (task 82). The conformance probe that closes it lives in the in-repo
+`web3d` fixture: a coroutine that awaits `delaySeconds` and publishes a mask
+proving it *resumed*, asserted by the browser driver.
+
 ### Lifecycle ownership
 
 Handles, callbacks, connections, tweens/tweeners, scheduler continuations, audio
@@ -246,7 +286,8 @@ fields moved the former only.
 **What the census bought.** Reading it across the twelve-demo corpus turned
 "add a `callDouble` arm" into a measured parcel — 52 degraded members over 19
 distinct missing shapes — and three arms plus one signal change closed all of
-them, at protocol 17 and with **no new bridge entry point after slice 2**:
+them, at protocol 17 (the version current when task 80 landed) and with **no new
+bridge entry point after slice 2**:
 
 | Arm | Covers |
 |---|---|

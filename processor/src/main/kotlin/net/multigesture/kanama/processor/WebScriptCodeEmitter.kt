@@ -127,7 +127,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 17
+    /**
+     * Runtime bridge contract version. 18 (task 82) replaces the per-script `kanamaWebFrame`
+     * crossing with the ownerless `kanamaWebPumpFrameScheduler(delta)`, which the bridge drives
+     * from the `_process` dispatch every proxy emits — so the coroutine frame scheduler advances
+     * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
+     * happened to name.
+     */
+    const val PROTOCOL_VERSION = 18
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -1891,6 +1898,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
     appendLine("\t\treturn 0")
+    // Publish this script's own handle in the SHARED dictionary, completing the invariant the
+    // node-lookup path below already states: a handle any proxy hands out must resolve in every
+    // proxy. Without it a Kanama script handle resolved ONLY through `self if handle ==
+    // _kanama_handle`, i.e. only inside its own proxy — so a foreign proxy asked to emit a signal
+    // whose payload is another script (charactercontroller's kill plane emits
+    // `kill_plane_touched` with the PLAYER's handle, through the Events autoload's proxy) had no
+    // way to turn that handle back into an Object and pushed "Unknown Kanama Web signal argument
+    // handle". `_exit_tree` already erased this entry; only the insert was missing.
+    //
+    // Nodes only: the erase lives in `_exit_tree`, which a Resource-attached script never gets,
+    // and a RefCounted stored in a static Dictionary would be pinned alive forever.
+    //
+    // The `Object` local is load-bearing, not ceremony: GDScript's parser rejects `self is Node`
+    // outright in a proxy that `extends Resource` ("Expression is of type Weapon so it can't be
+    // of type Node") and the whole script fails to compile. Widening to the static type the check
+    // is legal for keeps one spelling for every attachment.
+    appendLine("\tvar _kanama_self_object: Object = self")
+    appendLine("\tif _kanama_self_object is Node:")
+    appendLine("\t\t_kanama_object_handles[_kanama_handle] = _kanama_self_object")
     appendLine(
       "\t_kanama_apply_callback = JavaScriptBridge.create_callback(_kanama_apply_commands)"
     )

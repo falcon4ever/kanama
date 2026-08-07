@@ -17,19 +17,24 @@ import net.multigesture.kanama.api.DirectionalLight3D
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Input
+import net.multigesture.kanama.api.KanamaCoroutineOwner
+import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.ManualGodotLifetimeApi
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.OS
 import net.multigesture.kanama.api.RenderingServer
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.ResourceLoader
+import net.multigesture.kanama.api.SceneTree
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
+import kotlinx.coroutines.launch
 
 /**
  * Kanama Web 3D rendering-foundation smoke (Task 60c).
@@ -44,9 +49,17 @@ import net.multigesture.kanama.web.WebExperimentalGenericCall
  * `_kanama_ensure_created()`, which constructs the Kotlin instance and applies every export
  * before dispatching — and (c) via [ready], that it ran BEFORE `_ready`. The driver reads the
  * combined mask through [enterTreeProbe] and fails the smoke unless it is exactly 7.
+ *
+ * Task 82 addition: [coroutineProbe] / [coroutineProbeMask] are the coroutine conformance probe —
+ * the generic, demo-independent proof that the Web frame scheduler is actually pumped, so a
+ * `delaySeconds` resumes instead of hanging forever in silence.
  */
 @ScriptClass(attachTo = "Node3D")
-class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class Main(godotObject: GodotHandle) :
+  KanamaScript<Node3D>(godotObject, ::Node3D), KanamaCoroutineOwner {
+  /** Task 82: owns the coroutine conformance probe, so owner teardown cancels it. */
+  override val kanamaScope = KanamaScope()
+
   /** Overridden in main.tscn to [ENTER_TREE_EXPORTED] — never the default — for the 66b proof. */
   @ScriptProperty var enterTreeGreeting: String = "unset"
 
@@ -353,6 +366,7 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
   private var probeTagNodeMatched = false
   private var probeJoinId = -1L
   private var probeJoinNodeWasNull = false
+  private var coroutineMask = 0L
 
   @RegisterFunction("dispatch_probe_float")
   fun dispatchProbeFloat(amount: Double) {
@@ -482,6 +496,43 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
   }
 
   /**
+   * Task-82 coroutine conformance probe (driver method #19), armed by the browser driver.
+   *
+   * The fifteen lines that would have caught task 82 on day one, in every demo: launch a coroutine
+   * on this script's own scope, await the two delay shapes gameplay actually uses — the
+   * wait-one-frame safe point `delaySeconds(0.0)` (desktop's `MainThread.awaitNextFrame`, which
+   * the kill plane and every "restructure after the physics callback unwinds" site depends on) and
+   * a real timed delay — and record that each one RESUMED.
+   *
+   * Nothing here can fail loudly on its own: a scheduler that is never pumped leaves the whole
+   * body unrun and throws nothing at all. That is exactly why the assertion has to be a positive
+   * observation of resumption, read back through [coroutineProbeMask], and never "no error".
+   */
+  @RegisterFunction("coroutine_probe")
+  fun coroutineProbe() {
+    coroutineMask = 1L
+    kanamaScope.launch {
+      coroutineMask = coroutineMask or 2L
+      SceneTree.delaySeconds(0.0)
+      coroutineMask = coroutineMask or 4L
+      self.getTree().delaySeconds(COROUTINE_PROBE_DELAY_SECONDS)
+      coroutineMask = coroutineMask or 8L
+      MainThread.post { coroutineMask = coroutineMask or 16L }
+    }
+  }
+
+  /**
+   * Task-82 coroutine conformance readback (driver method #20): bit 1 = [coroutineProbe] ran,
+   * 2 = the coroutine body started, 4 = it resumed past `delaySeconds(0.0)`, 8 = it resumed past a
+   * timed `delaySeconds`, 16 = a `MainThread.post` from inside the coroutine ran. A pumped
+   * scheduler reaches 31. An unpumped one never gets past bit 1: `launch` dispatches even its
+   * FIRST continuation through this same scheduler, so the body does not merely stall mid-way —
+   * it never starts, and still throws nothing.
+   */
+  @RegisterFunction("coroutine_probe_mask")
+  fun coroutineProbeMask(value: Long): Long = coroutineMask
+
+  /**
    * Connects and fires the scalar-payload signal once. Called from [ready] so the payload has
    * landed long before the driver reads [dispatchProbe]; the connection is one-shot, so it
    * unregisters itself and the smoke's callback-drain assertion is unaffected.
@@ -503,6 +554,8 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
      */
     const val PROBE_HOSTILE_TEXT = "a\u001Fb:c%1F\u001Fd\\e\"f%25"
     const val PROBE_COUNT = 4242L
+    /** Long enough that a resume proves the timed lane, short enough for a driver poll window. */
+    const val COROUTINE_PROBE_DELAY_SECONDS = 0.25
     val PROBE_VECTOR = Vector3(1.5, -2.5, 3.5)
     val PROBE_IMPACT = Vector3(0.25, 0.5, 0.75)
     val PROBE_FORCE = Vector3(-1.25, 2.5, -3.75)

@@ -221,7 +221,7 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
   const protocolVersion = menu.protocol;
   const checks = {
     modeTpsdemo: menu.mode === "tpsdemo",
-    protocol17: protocolVersion === 17,
+    protocol18: protocolVersion === 18,
     // The menu boots, and pressing Play streams the whole level in: the AnimationTree-driven
     // player, its input synchronizer, the shake camera, and the four red robots with their
     // detachable death parts.
