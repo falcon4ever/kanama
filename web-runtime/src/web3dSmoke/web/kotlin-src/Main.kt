@@ -525,7 +525,9 @@ class Main(godotObject: GodotHandle) :
    * Task-82 coroutine conformance readback (driver method #20): bit 1 = [coroutineProbe] ran,
    * 2 = the coroutine body started, 4 = it resumed past `delaySeconds(0.0)`, 8 = it resumed past a
    * timed `delaySeconds`, 16 = a `MainThread.post` from inside the coroutine ran. A pumped
-   * scheduler reaches 31; an unpumped one stalls at 3 forever.
+   * scheduler reaches 31. An unpumped one never gets past bit 1: `launch` dispatches even its
+   * FIRST continuation through this same scheduler, so the body does not merely stall mid-way —
+   * it never starts, and still throws nothing.
    */
   @RegisterFunction("coroutine_probe_mask")
   fun coroutineProbeMask(value: Long): Long = coroutineMask

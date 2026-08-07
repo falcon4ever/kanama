@@ -203,8 +203,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   //
   // This is the generic version of the bug task 82 fixed: before the fix the frame scheduler was
   // pumped only for four hardcoded "Main" handles, so in eight of twelve demos a launched
-  // coroutine stopped at its first delay and NOTHING threw. An unpumped scheduler stalls this
-  // mask at 3 forever; a pumped one reaches 31. Asserting "no error" would have passed either way.
+  // coroutine stopped at its first delay and NOTHING threw. A pumped scheduler reaches 31; an
+  // unpumped one never gets past bit 1, because `launch` dispatches even its first continuation
+  // through the same scheduler. Asserting "no error" would have passed either way.
   const readCoroutineMask = () =>
     evaluate(
       "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 20, 0)",
