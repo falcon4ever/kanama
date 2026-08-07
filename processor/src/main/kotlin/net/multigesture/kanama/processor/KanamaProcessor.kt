@@ -1175,6 +1175,10 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     env.logger.warn(
       "[kanama:ksp] generated Web @ScriptClass registry for ${webScripts.size} script(s)"
     )
+    // Task 80 slice 1: name every member that does not dispatch typed. Non-fatal by design --
+    // the corpus trips it today -- but printed through the same warn channel as the line above
+    // so it lands in normal Gradle output instead of only under --info.
+    emitter.degradationReport().forEach(env.logger::warn)
   }
 
   companion object {

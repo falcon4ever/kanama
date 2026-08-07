@@ -189,6 +189,48 @@ bridge does **not** silently GC handles behind your back, so *the same
 leaks the same way (until the owning script tears down and its whole object table
 is released).
 
+### Declared dispatch degradations (the protocol manifest)
+
+The Web backend supports a **hand-maintained set of member shapes**. Anything
+outside it degrades, and the generator has always known when it was degrading —
+it just never said so. `KanamaWebProtocol.generated.json` therefore carries a
+`dispatch` field on every `properties` / `virtuals` / `methods` / `signals`
+entry, plus a short `dispatchReason` whenever that value is not `typed`
+(a typed entry carries no reason, so the absence of one means "no degradation"):
+
+| `dispatch` | Meaning |
+|---|---|
+| `typed` | Dispatches with its declared payload intact. |
+| `unsupported` | Emitted, but the proxy stub throws if the engine ever calls it. |
+| `argument-dropped` | Dispatches, but part of the declared payload never reaches Kotlin. |
+| `not-emitted` | No crossing is emitted at all, so the member can never run. |
+
+The value is **not** a second reading of the member's signature: `WebMethodArm`
+and `WebPropertyArm` in `WebScriptCodeEmitter.kt` are the arm tables themselves,
+the GDScript emitter switches on them, and the manifest reports whichever arm was
+taken. Admitting a new shape means adding an arm and its emitter branch — the
+manifest cannot drift from what the proxy actually does, because there is only one
+table. The same tables feed a non-fatal per-build report on the KSP warn channel:
+
+```
+[kanama:web-dispatch] 4 of 49 declared member(s) across 10 script(s) do not dispatch typed (method 2, signal 2, property 0, virtual 0)
+[kanama:web-dispatch]   Enemy.damage (method): no arm for the registered-method shape (FLOAT) -> void; the proxy emits a stub that throws
+```
+
+Read it as a statement about **emission, not about a broken demo**: an
+`unsupported` stub only throws if Godot actually invokes that registered function
+(Kotlin-to-Kotlin calls never reach the proxy), and an `argument-dropped` signal
+payload still arrives intact when the signal is connected to a **named**
+registered method rather than to a Kotlin lambda — that named path rides the
+method's own arm. Properties and virtuals additionally have hard build-time
+guards (`unsupportedWebPropertyErrors`, `undispatchedVirtualErrors`), so a
+non-`typed` entry in either of those sections means one of those guards has a
+hole.
+
+The manifest's own `schemaVersion` versions this file's shape and is independent
+of `protocolVersion`, which versions the runtime bridge contract; adding these
+fields moved the former only.
+
 ## Validation Fixtures
 
 The current fixtures are per-demo driver scripts
