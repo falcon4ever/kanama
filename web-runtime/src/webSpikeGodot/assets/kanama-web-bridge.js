@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 16;
+  const KANAMA_WEB_PROTOCOL_VERSION = 17;
 
   function commandWordCount(opcode) {
     if (
@@ -238,6 +238,10 @@
     // is the number that says which.
     simSeconds: 0,
     noArgCalls: 0,
+    // Task 80 slice 2: how often the two new registered-method crossings actually ran. A
+    // driver can otherwise only see the SIDE EFFECT of a dispatched method, never the dispatch.
+    doubleArgCalls: 0,
+    packedReturnCalls: 0,
     addBunnyCalls: 0,
     removeBunnyCalls: 0,
     finishCalls: 0,
@@ -270,6 +274,11 @@
     latestSnapshotY: 0,
     match3Properties: new Map(),
     match3ReadyByClass: {},
+    // Script class name -> how many instances are LIVE right now. match3ReadyByClass only ever
+    // counts up (it is a _ready tally), so a driver cannot use it to see something die. This
+    // decrements on the _exit_tree free, which is what lets the FPS driver assert that a shot
+    // enemy actually queue_free()d instead of merely that enemies once existed.
+    liveScriptsByClass: {},
     match3DeferredReadyByClass: {},
     // handle -> script class name, recorded at ready. Purely diagnostic: a
     // boundary failure otherwise reports a bare handle number, which tells a CI
@@ -879,6 +888,34 @@
         0,
       );
     },
+    // Task 80 slice 2: the one crossing every all-numeric registered-method shape rides. The
+    // proxy flattens each declared argument into these six slots (six is one VECTOR3 pair, the
+    // widest shape in the corpus) and pads the rest with 0.0; the generated Kotlin dispatcher
+    // rebuilds the declared arguments from the same walk. This is what makes the FPS's
+    // damage(amount: float) reach Kotlin instead of throwing (task 79).
+    callDoubles(handle, methodId, a0, a1, a2, a3, a4, a5) {
+      this.doubleArgCalls += 1;
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallDoubles(handle, methodId, a0, a1, a2, a3, a4, a5),
+        0,
+      );
+    },
+    // Task 80 slice 2: a zero-argument value-returning registered method. The value crosses
+    // packed into one string with the same encoding getPackedProperty uses, so the whole
+    // value-returning category needs one entry point rather than one per return type.
+    callPacked(handle, methodId) {
+      this.packedReturnCalls += 1;
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallPacked(handle, methodId),
+        "",
+      );
+    },
     bunnymarkMethodId(method) {
       const spriteVariant = this.bunnymarkVariant === "BunnymarkV1Sprites";
       if (method === "add") return spriteVariant ? 1 : 2;
@@ -931,6 +968,11 @@
           this.match3TileScriptFrees += 1;
         }
         this.match3ScriptNamesByHandle.delete(handle);
+        const liveScriptName = this.scriptNameByHandle[handle];
+        if (liveScriptName !== undefined) {
+          const remaining = (this.liveScriptsByClass[liveScriptName] ?? 0) - 1;
+          this.liveScriptsByClass[liveScriptName] = remaining > 0 ? remaining : 0;
+        }
         this.releaseBrowserHandlesOwnedBy(handle);
       }
       return result;
@@ -1984,6 +2026,20 @@
       if (result === 1 && this.mode === "match3") this.match3LambdaCallbacks += 1;
       return result;
     },
+    // Task 80 slice 2: one emitted scalar, packed by the proxy the same way a packed property
+    // is. A zero-argument Kotlin lambda still runs -- the registry ignores the payload for it --
+    // so this replaces dispatchSignal0 on the one-argument helper without changing that path.
+    dispatchSignal1(handle, callbackId, packed) {
+      const result = this.invoke(
+        handle,
+        "_kanama_web_signal_dispatch1",
+        `callback#${callbackId}`,
+        () => this.api.kanamaWebDispatchSignal1(handle, callbackId, String(packed)),
+        0,
+      );
+      if (result === 1 && this.mode === "match3") this.match3LambdaCallbacks += 1;
+      return result;
+    },
     immediateObjectQuery(opcode, handle, value) {
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
       this.immediateLongResult = null;
@@ -2312,6 +2368,7 @@
       this.readyCount += 1;
       this.scriptNameByHandle[handle] = scriptName;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
+      this.liveScriptsByClass[scriptName] = (this.liveScriptsByClass[scriptName] ?? 0) + 1;
       if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
         // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit
         // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
@@ -2590,6 +2647,8 @@
         readyCount: this.readyCount,
         processCalls: this.processCalls,
         noArgCalls: this.noArgCalls,
+        doubleArgCalls: this.doubleArgCalls,
+        packedReturnCalls: this.packedReturnCalls,
         addBunnyCalls: this.addBunnyCalls,
         removeBunnyCalls: this.removeBunnyCalls,
         finishCalls: this.finishCalls,

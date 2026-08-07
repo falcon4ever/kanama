@@ -455,6 +455,51 @@ fun kanamaWebCallObject(objectId: Int, methodId: Int, argHandle: Int): Int {
   }
 }
 
+/**
+ * Task 80 slice 2: every all-numeric registered-method shape, flattened into six slots by the proxy
+ * and rebuilt by the generated dispatcher. Unused slots carry 0.0.
+ */
+@JsExport
+fun kanamaWebCallDoubles(
+  objectId: Int,
+  methodId: Int,
+  a0: Double,
+  a1: Double,
+  a2: Double,
+  a3: Double,
+  a4: Double,
+  a5: Double,
+): Int {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    KanamaWebProjectRegistry.callDoubles(
+      record.scriptId,
+      methodId,
+      record.script,
+      a0,
+      a1,
+      a2,
+      a3,
+      a4,
+      a5,
+    )
+    commands.flush()
+    1
+  }
+}
+
+/**
+ * Task 80 slice 2: a zero-argument value-returning registered method. The value comes back packed
+ * into one string (the `getPackedProperty` encoding) and the proxy parses it per declared type.
+ */
+@JsExport
+fun kanamaWebCallPacked(objectId: Int, methodId: Int): String {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    val packed = KanamaWebProjectRegistry.callPacked(record.scriptId, methodId, record.script)
+    commands.flush()
+    packed
+  }
+}
+
 @JsExport
 fun kanamaWebFree(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_exit_tree") { record ->
@@ -523,6 +568,19 @@ fun kanamaWebMatch3Group6CancellationProbe(objectId: Int): Int {
 fun kanamaWebDispatchSignal0(objectId: Int, callbackId: Int): Int {
   return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch0") {
     WebSignalCallbackRegistry.dispatch(objectId, callbackId)
+    1
+  }
+}
+
+/**
+ * Task 80 slice 2: one emitted scalar signal payload, packed by the proxy. A callback registered
+ * without a payload type still runs — [WebSignalCallbackRegistry.dispatchScalar] falls back to the
+ * zero-argument callback — so this is a strict widening of the old `dispatchSignal0` path.
+ */
+@JsExport
+fun kanamaWebDispatchSignal1(objectId: Int, callbackId: Int, packed: String): Int {
+  return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch1") {
+    WebSignalCallbackRegistry.dispatchScalar(objectId, callbackId, packed)
     1
   }
 }

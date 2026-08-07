@@ -185,7 +185,7 @@ export async function runSoak({ url, evaluate, navigate, deadline }) {
 
   const checks = {
     modeDodge: ready.mode === "dodge",
-    protocol16: ready.protocol === 16,
+    protocol17: ready.protocol === 17,
     // The run really lasted: several full rounds, and enough samples to judge.
     soakCyclesCompleted: cycles >= 2,
     soakSamplesCollected: samples.length >= 8,
