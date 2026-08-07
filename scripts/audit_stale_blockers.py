@@ -220,12 +220,23 @@ def scan_markers(root: Path) -> tuple[list[Marker], list[str]]:
     return markers, errors
 
 
-def kotlin_symbol_hits(tree: Path, name: str) -> list[str]:
+def kotlin_symbol_hits(tree_prefix: str, name: str, kotlin_files: list[str]) -> list[str]:
+    """Search TRACKED .kt files under a tree prefix.
+
+    Tracked-only on purpose: an rglob would also walk `build/` and any nested
+    worktree, so a symbol token could fire on stale generated output and report a
+    blocker as lifted when nothing in the source tree had changed.
+    """
     hits: list[str] = []
     decl_re = re.compile(rf"\b(?:{'|'.join(DECL_KEYWORDS)})\s+{re.escape(name)}\b")
-    for path in sorted(tree.rglob("*.kt")):
+    scoped = [
+        n for n in kotlin_files
+        if tree_prefix == "." or n == tree_prefix or n.startswith(tree_prefix + "/")
+    ]
+    for rel in scoped:
+        path = ROOT / rel
         if path.stem == name:
-            hits.append(str(path.relative_to(ROOT)))
+            hits.append(rel)
             continue
         try:
             text = path.read_text()
@@ -235,7 +246,7 @@ def kotlin_symbol_hits(tree: Path, name: str) -> list[str]:
             continue
         for line_no, line in enumerate(text.splitlines(), start=1):
             if decl_re.search(line):
-                hits.append(f"{path.relative_to(ROOT)}:{line_no}")
+                hits.append(f"{rel}:{line_no}")
                 break
     return hits
 
@@ -295,6 +306,7 @@ def resolve(
     contract: set[str],
     godot_methods: dict[str, set[str]],
     tasks: tuple[dict[str, str], dict[str, str]] | None,
+    kotlin_files: list[str],
 ) -> None:
     where = f"{marker.path}:{marker.line_no}"
     if ":" not in token:
@@ -325,14 +337,14 @@ def resolve(
                 f"known: {', '.join(sorted(SYMBOL_TREES))}"
             )
             return
-        tree = ROOT / SYMBOL_TREES[tree_name]
-        if not tree.is_dir():
+        tree_prefix = SYMBOL_TREES[tree_name]
+        if not (ROOT / tree_prefix).is_dir():
             result.errors.append(
-                f"{where}: symbol tree {tree_name!r} -> {SYMBOL_TREES[tree_name]} "
+                f"{where}: symbol tree {tree_name!r} -> {tree_prefix} "
                 f"does not exist; the tree moved and this token can never fire"
             )
             return
-        hits = kotlin_symbol_hits(tree, name)
+        hits = kotlin_symbol_hits(tree_prefix, name, kotlin_files)
         result.resolved += 1
         if hits:
             result.lifted.append(
@@ -457,10 +469,11 @@ def main() -> int:
 
     contract = load_contract_calls()
     godot_methods = load_godot_methods()
+    kotlin_files = [n for n in tracked_files(ROOT) if n.endswith(".kt")]
 
     for marker in markers:
         for token in marker.tokens:
-            resolve(marker, token, result, contract, godot_methods, tasks)
+            resolve(marker, token, result, contract, godot_methods, tasks, kotlin_files)
 
     if args.list:
         today = _datetime.date.today()
