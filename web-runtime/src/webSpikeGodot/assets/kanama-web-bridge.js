@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 16;
+  const KANAMA_WEB_PROTOCOL_VERSION = 17;
 
   function commandWordCount(opcode) {
     if (
@@ -877,6 +877,32 @@
         `method#${methodId}`,
         () => this.api.kanamaWebCallObject(handle, methodId, objectHandle),
         0,
+      );
+    },
+    // Task 80 slice 2: the one crossing every all-numeric registered-method shape rides. The
+    // proxy flattens each declared argument into these six slots (six is one VECTOR3 pair, the
+    // widest shape in the corpus) and pads the rest with 0.0; the generated Kotlin dispatcher
+    // rebuilds the declared arguments from the same walk. This is what makes the FPS's
+    // damage(amount: float) reach Kotlin instead of throwing (task 79).
+    callDoubles(handle, methodId, a0, a1, a2, a3, a4, a5) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallDoubles(handle, methodId, a0, a1, a2, a3, a4, a5),
+        0,
+      );
+    },
+    // Task 80 slice 2: a zero-argument value-returning registered method. The value crosses
+    // packed into one string with the same encoding getPackedProperty uses, so the whole
+    // value-returning category needs one entry point rather than one per return type.
+    callPacked(handle, methodId) {
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallPacked(handle, methodId),
+        "",
       );
     },
     bunnymarkMethodId(method) {
@@ -1979,6 +2005,20 @@
         "_kanama_web_signal_dispatch0",
         `callback#${callbackId}`,
         () => this.api.kanamaWebDispatchSignal0(handle, callbackId),
+        0,
+      );
+      if (result === 1 && this.mode === "match3") this.match3LambdaCallbacks += 1;
+      return result;
+    },
+    // Task 80 slice 2: one emitted scalar, packed by the proxy the same way a packed property
+    // is. A zero-argument Kotlin lambda still runs -- the registry ignores the payload for it --
+    // so this replaces dispatchSignal0 on the one-argument helper without changing that path.
+    dispatchSignal1(handle, callbackId, packed) {
+      const result = this.invoke(
+        handle,
+        "_kanama_web_signal_dispatch1",
+        `callback#${callbackId}`,
+        () => this.api.kanamaWebDispatchSignal1(handle, callbackId, String(packed)),
         0,
       );
       if (result === 1 && this.mode === "match3") this.match3LambdaCallbacks += 1;

@@ -34,6 +34,8 @@ import net.multigesture.kanama.backend.TweenBackendContractProbe
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
+import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.webScriptInstance
 import net.multigesture.kanama.web.WebObjectId
 
@@ -72,6 +74,11 @@ internal object WebSignalCallbackRegistry {
     val oneShot: Boolean,
     val callback: (() -> Unit)? = null,
     val objectCallback: ((Int) -> Unit)? = null,
+    /**
+     * Task 80 slice 2: receives the emitted scalar payload as the proxy packed it. The typed
+     * `GodotSignal.connect*` overloads parse it back into the declared type.
+     */
+    val scalarCallback: ((String) -> Unit)? = null,
   )
 
   private var nextId = 1
@@ -104,6 +111,19 @@ internal object WebSignalCallbackRegistry {
     return id
   }
 
+  /** Registers a callback that wants the emitted scalar payload (task 80 slice 2). */
+  fun registerScalar(
+    ownerHandle: Int,
+    sourceHandle: Int,
+    oneShot: Boolean,
+    callback: (String) -> Unit,
+  ): Int {
+    check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
+    val id = nextId++
+    entries[id] = Entry(ownerHandle, sourceHandle, oneShot, scalarCallback = callback)
+    return id
+  }
+
   fun unregister(id: Int) {
     entries.remove(id)
   }
@@ -122,6 +142,24 @@ internal object WebSignalCallbackRegistry {
       entry.callback ?: error("Kanama Web signal callback id=$id expects an emitted object")
     if (entry.oneShot) entries.remove(id)
     callback()
+  }
+
+  /**
+   * Delivers one emitted scalar payload (task 80 slice 2).
+   *
+   * A callback registered without a payload type still runs and simply ignores [packed] — that is
+   * what keeps `connect(target, argumentCount = 1) { ... }` and `await(target, 1)` working after
+   * the one-argument delivery helper started carrying the payload.
+   */
+  fun dispatchScalar(ownerHandle: Int, id: Int, packed: String) {
+    val entry = requireEntry(ownerHandle, id)
+    val scalar = entry.scalarCallback
+    val plain = entry.callback
+    if (scalar == null && plain == null) {
+      error("Kanama Web signal callback id=$id expects an emitted object")
+    }
+    if (entry.oneShot) entries.remove(id)
+    if (scalar != null) scalar(packed) else plain!!()
   }
 
   fun dispatchObject(ownerHandle: Int, id: Int, argHandle: Int) {
@@ -222,6 +260,89 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
     return result
   }
+
+  /**
+   * Connects a one-argument scalar signal and DELIVERS the payload (task 80 slice 2).
+   *
+   * The proxy packs the emitted value into one string with the same encoding the property channel
+   * uses; [parse] turns it back into the declared type. The typed overloads below are the public
+   * surface — this is the shared plumbing.
+   */
+  private fun <T> connectScalar(
+    target: GodotObject,
+    flags: Long,
+    parse: (String) -> T,
+    callback: (T) -> Unit,
+  ): Long {
+    val callbackId =
+      WebSignalCallbackRegistry.registerScalar(
+        target.handle.value,
+        owner.handle.value,
+        oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
+      ) { packed ->
+        callback(parse(packed))
+      }
+    val result =
+      SignalBackendContractProbe(owner.backendHandle)
+        .connectBound(
+          target.backendHandle,
+          name,
+          "_kanama_web_signal_dispatch1",
+          callbackId.toLong(),
+          flags,
+        )
+    if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
+    return result
+  }
+
+  /** Connects a one-`int` signal, delivering the emitted value. */
+  fun connectLong(target: GodotObject, flags: Long = 0L, callback: (Long) -> Unit): Long =
+    connectScalar(target, flags, { it.trim().toLong() }, callback)
+
+  /** Connects a one-`float` signal, delivering the emitted value. */
+  fun connectDouble(target: GodotObject, flags: Long = 0L, callback: (Double) -> Unit): Long =
+    connectScalar(target, flags, { it.trim().toDouble() }, callback)
+
+  /** Connects a one-`bool` signal, delivering the emitted value. */
+  fun connectBoolean(target: GodotObject, flags: Long = 0L, callback: (Boolean) -> Unit): Long =
+    connectScalar(target, flags, { it == "1" }, callback)
+
+  /** Connects a one-`String` signal, delivering the emitted value. */
+  fun connectString(target: GodotObject, flags: Long = 0L, callback: (String) -> Unit): Long =
+    connectScalar(target, flags, { it }, callback)
+
+  /** Connects a one-`Vector2` signal, delivering the emitted value. */
+  fun connectVector2(target: GodotObject, flags: Long = 0L, callback: (Vector2) -> Unit): Long =
+    connectScalar(
+      target,
+      flags,
+      { packed -> packed.split(',').let { Vector2(it[0].toDouble(), it[1].toDouble()) } },
+      callback,
+    )
+
+  /** Connects a one-`Vector2i` signal, delivering the emitted value. */
+  fun connectVector2i(target: GodotObject, flags: Long = 0L, callback: (Vector2i) -> Unit): Long =
+    connectScalar(
+      target,
+      flags,
+      { packed ->
+        packed.split(',').let { Vector2i(it[0].trim().toInt(), it[1].trim().toInt()) }
+      },
+      callback,
+    )
+
+  /** Connects a one-`Vector3` signal, delivering the emitted value. */
+  fun connectVector3(target: GodotObject, flags: Long = 0L, callback: (Vector3) -> Unit): Long =
+    connectScalar(
+      target,
+      flags,
+      { packed ->
+        packed.split(',').let {
+          Vector3(it[0].toDouble(), it[1].toDouble(), it[2].toDouble())
+        }
+      },
+      callback,
+    )
 
   /**
    * Connects a one-argument object signal (e.g. body_entered). The emitted Godot object arrives

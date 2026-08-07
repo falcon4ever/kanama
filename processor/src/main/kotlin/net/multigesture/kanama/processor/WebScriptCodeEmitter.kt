@@ -61,6 +61,17 @@ internal enum class WebMethodArm(val dispatch: WebDispatch) {
   OBJECT_VOID(WebDispatch(WebDispatchStatus.TYPED)),
   /** `(OBJECT, OBJECT, INT) -> void`: `callObjectObjectLong`. */
   OBJECT_OBJECT_INT_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /**
+   * Any all-numeric argument list flattened into the `callDoubles` slots (task 80 slice 2):
+   * `(FLOAT)`, `(BOOL)`, `(VECTOR2)`, `(VECTOR3)`, `(VECTOR3, VECTOR3)`, `(VECTOR2, BOOL)`, `(INT,
+   * FLOAT)`, … — one crossing for every shape whose arguments are scalar components.
+   */
+  NUMERIC_VOID(WebDispatch(WebDispatchStatus.TYPED)),
+  /**
+   * A zero-argument value-returning method: `callPacked` returns the value packed into one string
+   * and the proxy parses it per the declared return type (task 80 slice 2).
+   */
+  PACKED_RETURN(WebDispatch(WebDispatchStatus.TYPED)),
   /** No arm matches: the proxy emits a stub that throws through `unsupportedGameplayMethod`. */
   NONE(WebDispatch(WebDispatchStatus.UNSUPPORTED));
 
@@ -109,7 +120,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
   companion object {
-    const val PROTOCOL_VERSION = 16
+    const val PROTOCOL_VERSION = 17
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -145,6 +156,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val SIGNAL_DISPATCH_ZERO = "_kanama_web_signal_dispatch0"
     internal const val SIGNAL_DISPATCH_ONE = "_kanama_web_signal_dispatch1"
     internal const val SIGNAL_DISPATCH_OBJECT = "_kanama_web_signal_dispatch_object"
+    /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
+    internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
 
     /**
      * The dispatch arm the proxy emits for a registered `@ScriptFunction`. The emitter's method
@@ -178,7 +191,135 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           method.args[0].type == TypeMapping.OBJECT &&
           method.args[1].type == TypeMapping.OBJECT &&
           method.args[2].type == TypeMapping.INT -> WebMethodArm.OBJECT_OBJECT_INT_VOID
+        method.returnType == null && numericArgSlots(method.args) != null ->
+          WebMethodArm.NUMERIC_VOID
+        method.args.isEmpty() && isPackedReturn(method.returnType) -> WebMethodArm.PACKED_RETURN
         else -> WebMethodArm.NONE
+      }
+
+    /**
+     * Numeric slots the `callDoubles` crossing carries.
+     *
+     * Six is exactly one `(VECTOR3, VECTOR3)` pair, the widest all-numeric registered-method shape
+     * in the corpus. A wider one has no arm and says so in the census instead of degrading in
+     * silence — which is the whole point of the arm table.
+     */
+    const val NUMERIC_ARG_SLOTS = 6
+
+    /**
+     * Scalar component count for a type the numeric crossing carries, or null for a type that has
+     * to ride a different channel (strings, objects, arrays).
+     */
+    private fun numericComponents(type: TypeMapping): Int? =
+      when (type) {
+        TypeMapping.FLOAT,
+        TypeMapping.INT,
+        TypeMapping.BOOL -> 1
+        TypeMapping.VECTOR2,
+        TypeMapping.VECTOR2I -> 2
+        TypeMapping.VECTOR3 -> 3
+        else -> null
+      }
+
+    /**
+     * Total numeric slots this argument list occupies, or null when it cannot ride the numeric
+     * crossing (a non-numeric argument, no arguments at all, or more than [NUMERIC_ARG_SLOTS]).
+     */
+    fun numericArgSlots(args: List<ArgModel>): Int? {
+      if (args.isEmpty()) return null
+      var total = 0
+      args.forEach { arg -> total += numericComponents(arg.type) ?: return null }
+      return if (total <= NUMERIC_ARG_SLOTS) total else null
+    }
+
+    /**
+     * Return types the packed-string return channel encodes. Same spelling as the property packer
+     * (`getPackedProperty`), so the proxy parses a returned value exactly the way it already parses
+     * a pulled property — one transport, one encoding, no second table.
+     */
+    fun isPackedReturn(type: TypeMapping?): Boolean =
+      when (type) {
+        TypeMapping.STRING,
+        TypeMapping.NODE_PATH,
+        TypeMapping.INT,
+        TypeMapping.FLOAT,
+        TypeMapping.BOOL,
+        TypeMapping.VECTOR2,
+        TypeMapping.VECTOR2I,
+        TypeMapping.VECTOR3,
+        TypeMapping.QUATERNION,
+        TypeMapping.BASIS -> true
+        else -> false
+      }
+
+    /**
+     * The GDScript expression per numeric slot, in slot order. `float(...)` normalizes bools and
+     * ints so the crossing sees one numeric type regardless of the declared parameter type.
+     */
+    fun numericArgSlotExpressions(args: List<ArgModel>): List<String> = buildList {
+      args.forEach { arg ->
+        when (arg.type) {
+          TypeMapping.FLOAT -> add(arg.name)
+          TypeMapping.INT,
+          TypeMapping.BOOL -> add("float(${arg.name})")
+          TypeMapping.VECTOR2,
+          TypeMapping.VECTOR2I -> {
+            add("float(${arg.name}.x)")
+            add("float(${arg.name}.y)")
+          }
+          TypeMapping.VECTOR3 -> {
+            add(arg.name + ".x")
+            add(arg.name + ".y")
+            add(arg.name + ".z")
+          }
+          else -> error("no numeric slot layout for ${arg.type.name}")
+        }
+      }
+    }
+
+    /**
+     * The Kotlin expression rebuilding each declared argument from the numeric slot parameters
+     * `a0`..`a5`. Mirror of [numericArgSlotExpressions] — the two walk the same argument list in
+     * the same order, so a slot can never be read as a different component than it was written.
+     */
+    fun numericArgKotlinExpressions(args: List<ArgModel>): List<String> = buildList {
+      var slot = 0
+      fun next(): String = "a${slot++}"
+      args.forEach { arg ->
+        when (arg.type) {
+          TypeMapping.FLOAT -> add(next())
+          TypeMapping.INT -> add("${next()}.toLong()")
+          TypeMapping.BOOL -> add("${next()} != 0.0")
+          TypeMapping.VECTOR2 -> add("net.multigesture.kanama.types.Vector2(${next()}, ${next()})")
+          TypeMapping.VECTOR2I -> add("Vector2i(${next()}.toInt(), ${next()}.toInt())")
+          TypeMapping.VECTOR3 ->
+            add("net.multigesture.kanama.types.Vector3(${next()}, ${next()}, ${next()})")
+          else -> error("no numeric slot layout for ${arg.type.name}")
+        }
+      }
+    }
+
+    /**
+     * The Kotlin expression packing a returned value of [type] into the transport string. Same
+     * encoding as `getPackedProperty`; QUATERNION adds `w` and BASIS packs its three COLUMNS in
+     * x/y/z order, which is exactly the argument order of GDScript's `Basis(x, y, z)`.
+     */
+    fun packedReturnExpression(access: String, type: TypeMapping): String =
+      when (type) {
+        TypeMapping.STRING -> access
+        TypeMapping.NODE_PATH -> "$access.path"
+        TypeMapping.INT,
+        TypeMapping.FLOAT -> "$access.toString()"
+        TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
+        TypeMapping.VECTOR2,
+        TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
+        TypeMapping.VECTOR3 -> "$access.let { \"\${it.x},\${it.y},\${it.z}\" }"
+        TypeMapping.QUATERNION -> "$access.let { \"\${it.x},\${it.y},\${it.z},\${it.w}\" }"
+        TypeMapping.BASIS ->
+          "$access.let { " +
+            "\"\${it.x.x},\${it.x.y},\${it.x.z},\${it.y.x},\${it.y.y},\${it.y.z}," +
+            "\${it.z.x},\${it.z.y},\${it.z.z}\" }"
+        else -> error("no packed return encoding for ${type.name}")
       }
 
     /** `(FLOAT, INT) -> void` — the shape spelling used in degradation reasons. */
@@ -197,12 +338,30 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     /**
+     * Scalar signal payload types [SIGNAL_DISPATCH_ONE] packs and delivers to a Kotlin lambda (task
+     * 80 slice 2). Same packing as the property/return channel: one string, parsed by the typed
+     * `GodotSignal.connect*` overload the consumer chose.
+     */
+    fun isScalarSignalPayload(type: TypeMapping): Boolean =
+      when (type) {
+        TypeMapping.STRING,
+        TypeMapping.INT,
+        TypeMapping.FLOAT,
+        TypeMapping.BOOL,
+        TypeMapping.VECTOR2,
+        TypeMapping.VECTOR2I,
+        TypeMapping.VECTOR3 -> true
+        else -> false
+      }
+
+    /**
      * How a declared `@ScriptSignal` payload reaches a Kotlin callback.
      *
      * A proxy emits three delivery helpers ([SIGNAL_DISPATCH_ZERO], [SIGNAL_DISPATCH_ONE],
      * [SIGNAL_DISPATCH_OBJECT]) and `GodotSignal.connect`/`connectObject` pick between them: zero
-     * arguments, or exactly one argument carried as an object handle. Anything else rides
-     * [SIGNAL_DISPATCH_ONE], whose emitted body discards the argument.
+     * arguments, one scalar carried packed by [SIGNAL_DISPATCH_ONE], or one object handle. Two or
+     * more emitted arguments, and single payloads outside [isScalarSignalPayload], still ride
+     * [SIGNAL_DISPATCH_ONE] with the payload dropped.
      *
      * A payload the lambda path drops can still be delivered by connecting the signal to a
      * **named** registered method (`connect(target, "method")`), where it rides that method's own
@@ -214,8 +373,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       if (args.size == 1 && args.single().type == TypeMapping.OBJECT) {
         return WebDispatch(WebDispatchStatus.TYPED)
       }
+      if (args.size == 1 && isScalarSignalPayload(args.single().type)) {
+        return WebDispatch(WebDispatchStatus.TYPED)
+      }
       val limit =
-        if (args.size == 1) "Kotlin lambda callbacks take 0 arguments or 1 object handle"
+        if (args.size == 1)
+          "Kotlin lambda callbacks take 0 arguments, 1 packed scalar, or 1 object handle"
         else "Kotlin lambda callbacks accept at most 1 emitted argument"
       return WebDispatch(
         WebDispatchStatus.ARGUMENT_DROPPED,
@@ -759,6 +922,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendVector2iMethodDispatcher()
     appendObjectMethodDispatcher()
     appendObjectObjectLongMethodDispatcher()
+    appendNumericMethodDispatcher()
+    appendPackedReturnMethodDispatcher()
     appendLine("  private fun unknown(kind: String, id: Int): Nothing =")
     appendLine("    error(\"Unknown Kanama Web \$kind id=\$id\")")
     appendLine("}")
@@ -1165,6 +1330,57 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("      else -> unknown(\"script\", scriptId)")
     appendLine("    }")
     appendLine("  }")
+    appendLine()
+  }
+
+  /**
+   * Task 80 slice 2: every [WebMethodArm.NUMERIC_VOID] method, reached through one six-slot
+   * crossing. The arm table decides membership — this dispatcher never re-reads the shapes.
+   */
+  private fun StringBuilder.appendNumericMethodDispatcher() {
+    val slots = (0 until NUMERIC_ARG_SLOTS).joinToString(", ") { "a$it: Double" }
+    appendLine("  fun callDoubles(scriptId: Int, methodId: Int, script: KanamaWebScript, $slots) {")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (methodArm(method) == WebMethodArm.NUMERIC_VOID) {
+          val arguments = numericArgKotlinExpressions(method.args).joinToString(", ")
+          appendLine(
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($arguments)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  /**
+   * Task 80 slice 2: every [WebMethodArm.PACKED_RETURN] method. The returned value is packed with
+   * the same encoding `getPackedProperty` uses and parsed by the proxy per its declared type.
+   */
+  private fun StringBuilder.appendPackedReturnMethodDispatcher() {
+    appendLine("  fun callPacked(scriptId: Int, methodId: Int, script: KanamaWebScript): String =")
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (methodArm(method) == WebMethodArm.PACKED_RETURN) {
+          val access = "(script as ${input.model.simpleName}).${method.kotlinName}()"
+          val returnType = checkNotNull(method.returnType) { "PACKED_RETURN needs a return type" }
+          appendLine("        ${methodIndex + 1} -> ${packedReturnExpression(access, returnType)}")
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
     appendLine()
   }
 
@@ -3110,9 +3326,29 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("func $SIGNAL_DISPATCH_ZERO(callback_id: int) -> void:")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
     appendLine()
-    appendLine("func $SIGNAL_DISPATCH_ONE(_arg: Variant, callback_id: int) -> void:")
-    appendLine("\t# One emitted argument, dropped by the Kotlin callback: rides the zero-arg path.")
-    appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
+    appendLine("func $SIGNAL_DISPATCH_ONE(arg: Variant, callback_id: int) -> void:")
+    appendLine(
+      "\t# Task 80 slice 2: the emitted scalar crosses PACKED, so a typed GodotSignal.connect*"
+    )
+    appendLine(
+      "\t# overload receives it. A zero-argument Kotlin lambda ignores the payload as before."
+    )
+    appendLine(
+      "\t_kanama_bridge.dispatchSignal1(_kanama_handle, callback_id, $SIGNAL_PACK_ARG(arg))"
+    )
+    appendLine()
+    appendLine("func $SIGNAL_PACK_ARG(arg: Variant) -> String:")
+    appendLine("\tmatch typeof(arg):")
+    appendLine("\t\tTYPE_NIL:")
+    appendLine("\t\t\treturn \"\"")
+    appendLine("\t\tTYPE_BOOL:")
+    appendLine("\t\t\treturn \"1\" if arg else \"0\"")
+    appendLine("\t\tTYPE_VECTOR2, TYPE_VECTOR2I:")
+    appendLine("\t\t\treturn \"%s,%s\" % [arg.x, arg.y]")
+    appendLine("\t\tTYPE_VECTOR3, TYPE_VECTOR3I:")
+    appendLine("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]")
+    appendLine("\t\t_:")
+    appendLine("\t\t\treturn str(arg)")
     appendLine()
     appendLine("func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int) -> void:")
     appendLine("\tvar script_arg_handle := 0")
@@ -3928,6 +4164,24 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("\t_kanama_bridge.releaseTransientObjectHandle(first_handle)")
           appendLine("\t_kanama_bridge.releaseTransientObjectHandle(second_handle)")
         }
+        WebMethodArm.NUMERIC_VOID -> {
+          // Task 80 slice 2: every all-numeric argument list flattens into the same six-slot
+          // crossing. Unused slots carry 0.0 so the bridge entry point keeps one fixed arity.
+          val slots = numericArgSlotExpressions(method.args)
+          val padded = slots + List(NUMERIC_ARG_SLOTS - slots.size) { "0.0" }
+          appendLine(
+            "\t_kanama_bridge.callDoubles(_kanama_handle, ${index + 1}, ${padded.joinToString(", ")})"
+          )
+        }
+        WebMethodArm.PACKED_RETURN -> {
+          // Task 80 slice 2: the return value crosses packed into one string with the same
+          // encoding getPackedProperty uses, and is parsed here per the declared return type.
+          val returnType = checkNotNull(method.returnType) { "PACKED_RETURN needs a return type" }
+          appendLine(
+            "\tvar _kanama_packed := String(_kanama_bridge.callPacked(_kanama_handle, ${index + 1}))"
+          )
+          appendPackedReturnParse(returnType)
+        }
         // Task 80: this stub throws at runtime, and the manifest + build report now say so.
         WebMethodArm.NONE -> {
           appendLine(
@@ -3936,6 +4190,49 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           method.returnType?.let { appendLine("\treturn ${gdDefault(it)}") }
         }
       }
+    }
+  }
+
+  /**
+   * Parses the `callPacked` transport string into the declared return type and returns it. Mirror
+   * of [packedReturnExpression] and of the property pull parser — one encoding, parsed the same way
+   * on both channels.
+   */
+  private fun StringBuilder.appendPackedReturnParse(type: TypeMapping) {
+    when (type) {
+      TypeMapping.STRING -> appendLine("\treturn _kanama_packed")
+      TypeMapping.NODE_PATH -> appendLine("\treturn NodePath(_kanama_packed)")
+      TypeMapping.INT -> appendLine("\treturn int(_kanama_packed)")
+      TypeMapping.FLOAT -> appendLine("\treturn float(_kanama_packed)")
+      TypeMapping.BOOL -> appendLine("\treturn _kanama_packed == \"1\"")
+      TypeMapping.VECTOR2 -> {
+        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\treturn Vector2(_kanama_parts[0], _kanama_parts[1])")
+      }
+      TypeMapping.VECTOR2I -> {
+        appendLine("\tvar _kanama_parts := _kanama_packed.split(\",\")")
+        appendLine("\treturn Vector2i(int(_kanama_parts[0]), int(_kanama_parts[1]))")
+      }
+      TypeMapping.VECTOR3 -> {
+        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\treturn Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2])")
+      }
+      TypeMapping.QUATERNION -> {
+        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine(
+          "\treturn Quaternion(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2], _kanama_parts[3])"
+        )
+      }
+      TypeMapping.BASIS -> {
+        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\t# Packed as the three basis COLUMNS, which is Basis(x_axis, y_axis, z_axis).")
+        appendLine(
+          "\treturn Basis(Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2]), " +
+            "Vector3(_kanama_parts[3], _kanama_parts[4], _kanama_parts[5]), " +
+            "Vector3(_kanama_parts[6], _kanama_parts[7], _kanama_parts[8]))"
+        )
+      }
+      else -> error("no packed return parse for ${type.name}")
     }
   }
 
