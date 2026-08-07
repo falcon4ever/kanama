@@ -192,37 +192,41 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   // this demo, so the continuation after delaySeconds(0.0) never ran: body_entered fired, nothing
   // threw, and the player fell forever. The assertion is therefore the OBSERVED return to the
   // start position, read through the engine's own global-position channel -- never "no error".
+  //
+  // Fall and reset are watched by ONE tight loop, so the ordering is part of the assertion: the
+  // return to the spawn only counts once a sample has actually seen the player below the
+  // platform. The whole excursion is about a second of free fall, so the poll is fast enough to
+  // land several samples inside it on an engine whose rAF nothing is pacing.
   trace("kill plane: walking off the platform");
   await backDown();
   let lowestY = startPosition.y;
-  const fallDeadline = Math.min(deadline, Date.now() + 40_000);
-  while (Date.now() < fallDeadline) {
+  let killPlaneReset = null;
+  let walkedOff = false;
+  const killPlaneDeadline = Math.min(deadline, Date.now() + 60_000);
+  while (Date.now() < killPlaneDeadline) {
     const here = await playerPosition(evaluate);
     if (here) {
       lowestY = Math.min(lowestY, here.y);
-      trace(`kill plane: y=${here.y.toFixed(2)} x=${here.x.toFixed(2)} z=${here.z.toFixed(2)}`);
-      if (here.y < startPosition.y - FALL_DEPTH) break;
+      if (!walkedOff && lowestY < startPosition.y - FALL_DEPTH) {
+        walkedOff = true;
+        trace(`kill plane: falling at y=${here.y.toFixed(2)} z=${here.z.toFixed(2)}`);
+        await backUp(); // stop walking so the reset lands at the spawn and stays there
+      }
+      if (
+        walkedOff &&
+        Math.hypot(here.x - startPosition.x, here.z - startPosition.z) < RESET_TOLERANCE &&
+        here.y > startPosition.y - RESET_TOLERANCE
+      ) {
+        killPlaneReset = here;
+        break;
+      }
     }
-    await delay(200);
+    await delay(50);
   }
-  await backUp();
-  trace(`kill plane: lowest y=${lowestY.toFixed(2)} (start y=${startPosition.y.toFixed(2)})`);
-
-  let killPlaneReset = null;
-  const resetDeadline = Math.min(deadline, Date.now() + 30_000);
-  while (Date.now() < resetDeadline) {
-    const here = await playerPosition(evaluate);
-    if (
-      here &&
-      Math.hypot(here.x - startPosition.x, here.z - startPosition.z) < RESET_TOLERANCE &&
-      here.y > startPosition.y - RESET_TOLERANCE
-    ) {
-      killPlaneReset = here;
-      break;
-    }
-    await delay(200);
-  }
-  trace(`kill plane: reset=${JSON.stringify(killPlaneReset)}`);
+  if (!walkedOff) await backUp();
+  trace(
+    `kill plane: lowest y=${lowestY.toFixed(2)} (start y=${startPosition.y.toFixed(2)}) reset=${JSON.stringify(killPlaneReset)}`,
+  );
 
   // ---- Task 82 gate (b): the flag, the WIN transition ----
   //
