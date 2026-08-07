@@ -155,6 +155,15 @@ dispatch of that iteration observes the same tick), with a repeat-handle fallbac
 — Godot dispatches a node's `_process` at most once per iteration, so seeing the
 same handle twice proves a new iteration began.
 
+Because it rides `_process`, the pump advances while *something* is processing.
+Every proxy emits `func _process` unconditionally, so any live Kanama script node
+drives it, and a scene with no live Kanama script has no coroutine owner either —
+owners are script handles, and freeing one drains its queue. The consequence
+worth knowing: while `get_tree().set_paused(true)` holds (or if every Kanama node
+in the scene has explicitly called `set_process(false)`), no `_process` runs, so
+coroutine delays freeze with the rest of the game and resume on unpause. That is
+the intended reading of "paused", not a stall.
+
 Each continuation runs under **its own** owner on both sides of the boundary: the
 Kotlin active script handle and the bridge's active owner are switched to the
 task's owner, not to whichever script's `_process` drove the pump. Billing a
