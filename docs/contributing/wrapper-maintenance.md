@@ -213,9 +213,9 @@ in `scripts/check_wrapper_generator.py`:
 
 - **Explicit uncompilable classes.** `IOS_UNSUPPORTED_CLASSES` lists the classes whose
   generated draft cannot compile on iOS, each with its reason: `DirAccess` (its draft
-  references the hand-authored `DirAccessHandle` desktop policy class iOS does not carry)
-  and `MethodTweener` (its generated fluent methods clash
-  with the hand-written iOS `Tweener` glue). `--ios-emit-class <that class>` logs an
+  references the hand-authored `DirAccessHandle` desktop policy class iOS does not
+  carry) and `MethodTweener` (its generated fluent methods clash with the
+  hand-written iOS `Tweener` glue). `--ios-emit-class <that class>` logs an
   `unsupported:` line and skips it. Together with the collision registry these are the only
   by-design exceptions to iOS class-set parity with desktop (task 30); retire an entry by
   porting the desktop policy surface it depends on.
