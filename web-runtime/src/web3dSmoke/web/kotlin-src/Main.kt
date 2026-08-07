@@ -10,6 +10,7 @@ import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.CanvasLayer
 import net.multigesture.kanama.api.DirectionalLight3D
@@ -92,6 +93,7 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
     }
 
     spinner = self.requireAs("Spinner", ::Node3D)
+    armSignalPayloadProbe()
   }
 
   @OnProcess
@@ -331,7 +333,127 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3
     return mask
   }
 
+  // ---------- Task 80 slice 2: dispatch-shape conformance probe ----------
+  //
+  // The shapes slice 2 admitted are exercised HERE, through the real crossing, because a shape
+  // that only the emitter tests cover is a shape nothing has ever actually run. Each probe method
+  // below is reached the way gameplay reaches one: Kotlin asks Godot to call it BY NAME, Godot
+  // dispatches to the generated GDScript proxy, and the proxy takes the new arm.
+  //
+  // This is the miniature of task 80's slice 4 (a backend conformance fixture): it catches what
+  // the manifest cannot, namely a shape that dispatches but delivers the WRONG VALUE.
+
+  @Signal("dispatch_probe_scalar") fun dispatchProbeScalar(value: Long) = Unit
+
+  private var probeFloatArgument = 0.0
+  private var probeBoolArgument = false
+  private var probeImpactSum = Vector3.ZERO
+  private var probeSignalPayload = -1L
+
+  @RegisterFunction("dispatch_probe_float")
+  fun dispatchProbeFloat(amount: Double) {
+    probeFloatArgument = amount
+  }
+
+  @RegisterFunction("dispatch_probe_bool")
+  fun dispatchProbeBool(flag: Boolean) {
+    probeBoolArgument = flag
+  }
+
+  /** The third-person `damage(impactPoint, force)` shape: six numeric slots, the widest one. */
+  @RegisterFunction("dispatch_probe_impact")
+  fun dispatchProbeImpact(impactPoint: Vector3, force: Vector3) {
+    probeImpactSum = impactPoint + force
+  }
+
+  @RegisterFunction("dispatch_probe_vector") fun dispatchProbeVector(): Vector3 = PROBE_VECTOR
+
+  @RegisterFunction("dispatch_probe_number") fun dispatchProbeNumber(): Double = PROBE_NUMBER
+
+  @RegisterFunction("dispatch_probe_text") fun dispatchProbeText(): String = PROBE_TEXT
+
+  @RegisterFunction("dispatch_probe_flag") fun dispatchProbeFlag(): Boolean = true
+
+  @RegisterFunction("dispatch_probe_count") fun dispatchProbeCount(): Long = PROBE_COUNT
+
+  /**
+   * Task-80 dispatch probe (driver method #16). Bits, all of which a healthy run sets (mask 63):
+   *
+   * 1 = a single-FLOAT registered function received its argument (task 79's exact hole),
+   * 2 = a `(BOOL)` registered function received its argument,
+   * 4 = a `(VECTOR3, VECTOR3)` registered function received BOTH vectors intact,
+   * 8 = a `() -> VECTOR3` return survived the packed transport AND the proxy's parse,
+   * 16 = the `() -> FLOAT`, `() -> STRING`, `() -> BOOL` and `() -> INT` returns all did too,
+   * 32 = a one-`int` signal payload reached a Kotlin lambda instead of being discarded.
+   *
+   * Everything except the signal bit rides `callv` through the generic tier, so the values make a
+   * full Kotlin -> GDScript proxy -> Kotlin round trip and the proxy's own parse is under test.
+   */
+  @RegisterFunction("dispatch_probe")
+  fun dispatchProbe(value: Long): Long {
+    val generic = WebExperimentalGenericCall
+    var mask = 0L
+
+    // The two argument shapes exactly as the corpus reaches them: the FPS's typed
+    // call(method, Double) and third-person's typed call(method, Vector3, Vector3). Both are
+    // QUEUED mutations, so the first callImmediate below (which flushes) is what applies them.
+    self.call("dispatch_probe_float", PROBE_NUMBER)
+    self.call("dispatch_probe_impact", PROBE_IMPACT, PROBE_FORCE)
+    // A single BOOL has no typed call family; the generic tier carries it, and callv dispatches
+    // to the same proxy function the engine would.
+    generic.callImmediate(self, "dispatch_probe_bool", listOf(true))
+    if (probeFloatArgument == PROBE_NUMBER) mask = mask or 1L
+    if (probeBoolArgument) mask = mask or 2L
+    if (probeImpactSum == PROBE_IMPACT + PROBE_FORCE) mask = mask or 4L
+
+    // The generic tier tags a Vector3 return "v3" with its three components as the payload.
+    val vector = generic.callImmediate(self, "dispatch_probe_vector")
+    if (
+      vector.tag == "v3" &&
+        vector.payload.size == 3 &&
+        vector.payload[0].toDouble() == PROBE_VECTOR.x &&
+        vector.payload[1].toDouble() == PROBE_VECTOR.y &&
+        vector.payload[2].toDouble() == PROBE_VECTOR.z
+    ) {
+      mask = mask or 8L
+    }
+
+    val number = generic.callImmediate(self, "dispatch_probe_number")
+    val text = generic.callImmediate(self, "dispatch_probe_text")
+    val flag = generic.callImmediate(self, "dispatch_probe_flag")
+    val count = generic.callImmediate(self, "dispatch_probe_count")
+    if (
+      number.asDouble() == PROBE_NUMBER &&
+        text.asString() == PROBE_TEXT &&
+        flag.asBoolean() &&
+        count.asLong() == PROBE_COUNT
+    ) {
+      mask = mask or 16L
+    }
+
+    if (probeSignalPayload == PROBE_COUNT) mask = mask or 32L
+    return mask
+  }
+
+  /**
+   * Connects and fires the scalar-payload signal once. Called from [ready] so the payload has
+   * landed long before the driver reads [dispatchProbe]; the connection is one-shot, so it
+   * unregisters itself and the smoke's callback-drain assertion is unaffected.
+   */
+  private fun armSignalPayloadProbe() {
+    self
+      .signal("dispatch_probe_scalar")
+      .connectLong(self, GodotObject.CONNECT_ONE_SHOT) { payload -> probeSignalPayload = payload }
+    self.emitSignal("dispatch_probe_scalar", PROBE_COUNT)
+  }
+
   private companion object {
     const val ENTER_TREE_EXPORTED = "web3d-enter-tree"
+    const val PROBE_NUMBER = 12.25
+    const val PROBE_TEXT = "kanama-packed-return"
+    const val PROBE_COUNT = 4242L
+    val PROBE_VECTOR = Vector3(1.5, -2.5, 3.5)
+    val PROBE_IMPACT = Vector3(0.25, 0.5, 0.75)
+    val PROBE_FORCE = Vector3(-1.25, 2.5, -3.75)
   }
 }
