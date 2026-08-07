@@ -72,6 +72,13 @@ internal enum class WebMethodArm(val dispatch: WebDispatch) {
    * and the proxy parses it per the declared return type (task 80 slice 2).
    */
   PACKED_RETURN(WebDispatch(WebDispatchStatus.TYPED)),
+  /**
+   * A MIXED-channel argument list, packed into one string over the existing `callString` crossing
+   * (task 80 slice 3): `(STRING, OBJECT)`, `(INT, OBJECT)`, `(STRING, INT)`, … — anything whose
+   * arguments are text, whole numbers, booleans, or object handles. Object arguments ride as their
+   * handle id, which is why this arm reaches shapes [NUMERIC_VOID] and [STRING_VOID] cannot.
+   */
+  PACKED_ARGS(WebDispatch(WebDispatchStatus.TYPED)),
   /** No arm matches: the proxy emits a stub that throws through `unsupportedGameplayMethod`. */
   NONE(WebDispatch(WebDispatchStatus.UNSUPPORTED));
 
@@ -194,6 +201,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         method.returnType == null && numericArgSlots(method.args) != null ->
           WebMethodArm.NUMERIC_VOID
         method.args.isEmpty() && isPackedReturn(method.returnType) -> WebMethodArm.PACKED_RETURN
+        method.returnType == null && isPackedArgList(method.args) -> WebMethodArm.PACKED_ARGS
         else -> WebMethodArm.NONE
       }
 
@@ -320,6 +328,87 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "\"\${it.x.x},\${it.x.y},\${it.x.z},\${it.y.x},\${it.y.y},\${it.y.z}," +
             "\${it.z.x},\${it.z.y},\${it.z.z}\" }"
         else -> error("no packed return encoding for ${type.name}")
+      }
+
+    // ---- Task 80 slice 3: the mixed-channel packed argument list ----
+
+    /** The GDScript helper that %-escapes one text argument for the packed list. */
+    internal const val PACKED_ARG_PACK_TEXT = "_kanama_web_pack_text"
+    /** The GDScript helper that turns one object argument into a bridge handle id. */
+    internal const val PACKED_ARG_PACK_OBJECT = "_kanama_web_pack_object"
+    /** The proxy-local array of handles the call allocated, released right after the crossing. */
+    private const val PACKED_ARG_TRANSIENT = "_kanama_packed_transient"
+    /** The proxy-local packed parts being assembled. */
+    private const val PACKED_ARG_PARTS = "_kanama_packed_args"
+    /** The generated-Kotlin name for the decoded parts of the packed argument list. */
+    private const val PACKED_ARG_KOTLIN_PARTS = "packedArgs"
+
+    /**
+     * Whether [arg] can ride the packed argument list.
+     *
+     * Deliberately NOT floats or float-backed vectors: the packed list is decimal TEXT produced by
+     * GDScript's `str()`, which rounds a double to 14 significant digits, so a float carried here
+     * would arrive slightly wrong — the silent-wrong-VALUE class this whole task exists to kill.
+     * Whole numbers, booleans, text, and object handle ids all round-trip exactly. An all-numeric
+     * shape has the exact [WebMethodArm.NUMERIC_VOID] crossing anyway; what is left over is a float
+     * MIXED with text or an object, and that shape has no arm and fails the build rather than
+     * losing precision in silence.
+     */
+    private fun isPackedArgType(arg: ArgModel): Boolean =
+      when (arg.type) {
+        TypeMapping.STRING,
+        TypeMapping.NODE_PATH,
+        TypeMapping.INT,
+        TypeMapping.BOOL -> true
+        TypeMapping.OBJECT -> arg.objectWrapperFqName != null
+        else -> false
+      }
+
+    /** Whether this whole argument list rides the packed crossing. */
+    fun isPackedArgList(args: List<ArgModel>): Boolean =
+      args.isNotEmpty() && args.all(::isPackedArgType)
+
+    /**
+     * The GDScript expression for one packed part, in argument order. Objects resolve to a handle
+     * id — a Kanama-scripted object's own script handle when it has one (so the Kotlin side can
+     * reach its script instance), otherwise a transient handle appended to [PACKED_ARG_TRANSIENT]
+     * and released after the crossing.
+     */
+    fun packedArgGdExpressions(args: List<ArgModel>): List<String> =
+      args.map { arg ->
+        when (arg.type) {
+          TypeMapping.STRING -> "$PACKED_ARG_PACK_TEXT(${arg.name})"
+          TypeMapping.NODE_PATH -> "$PACKED_ARG_PACK_TEXT(String(${arg.name}))"
+          TypeMapping.INT -> "str(${arg.name})"
+          TypeMapping.BOOL -> "(\"1\" if ${arg.name} else \"0\")"
+          TypeMapping.OBJECT -> "str($PACKED_ARG_PACK_OBJECT(${arg.name}, $PACKED_ARG_TRANSIENT))"
+          else -> error("no packed argument encoding for ${arg.type.name}")
+        }
+      }
+
+    /**
+     * The Kotlin expression rebuilding each declared argument from the packed parts. Mirror of
+     * [packedArgGdExpressions] — the two walk the same argument list in the same order, so a part
+     * can never be read as a different argument than it was written.
+     */
+    fun packedArgKotlinExpressions(args: List<ArgModel>): List<String> =
+      args.mapIndexed { index, arg ->
+        val part = "$PACKED_ARG_KOTLIN_PARTS[$index]"
+        val text = "$part.replace(\"%1F\", \"\\u001F\").replace(\"%25\", \"%\")"
+        when (arg.type) {
+          TypeMapping.STRING -> text
+          TypeMapping.NODE_PATH -> "net.multigesture.kanama.types.NodePath($text)"
+          TypeMapping.INT -> "$part.toLong()"
+          TypeMapping.BOOL -> "($part == \"1\")"
+          TypeMapping.OBJECT -> {
+            val wrapper =
+              checkNotNull(arg.objectWrapperFqName) { "packed object argument needs a wrapper" }
+            val handle = "$part.toInt().takeIf { it != 0 }?.let { WebObjectId(it) }"
+            if (arg.nullable) "$handle?.let { $wrapper(it) }"
+            else "$wrapper(checkNotNull($handle) { \"Argument ${arg.name} is not nullable\" })"
+          }
+          else -> error("no packed argument decoding for ${arg.type.name}")
+        }
       }
 
     /** `(FLOAT, INT) -> void` — the shape spelling used in degradation reasons. */
@@ -482,6 +571,68 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val bounds = parts.takeWhile { RANGE_HINT_NUMBER.matches(it) }
       if (bounds.size < 2) return null
       return bounds + parts.drop(bounds.size).map { "\"$it\"" }
+    }
+
+    /**
+     * Errors for every declared member a Web build would degrade (task 80 slice 3).
+     *
+     * The repo-wide rule, adopted from 66a (`undispatchedVirtualErrors`, kanama#114) and #148's
+     * property guards and now generalized to registered functions and signals: **a generator may
+     * not emit a stub that throws at runtime, or quietly drop a declared payload — it either
+     * dispatches, or it fails the build.** Slice 1 made the population visible (the census), slice
+     * 2 filled it, and this turns the report fatal, so the next hole in the hand-maintained shape
+     * table announces itself as a compile error instead of as a bug someone finds by playing the
+     * game.
+     *
+     * There is deliberately **no allowlist**: every shape the corpus declares has an arm, so an
+     * exemption mechanism would only be a place for the next degradation to hide. Reached through
+     * the same [methodDispatch] / [signalDispatch] / [propertyDispatch] / [virtualDispatch] tables
+     * the manifest and the census read, so the build cannot fail for a reason the manifest denies —
+     * or pass while the manifest declares a degradation. Empty on every non-Web target.
+     */
+    fun undispatchedMemberErrors(model: ScriptModel, options: Map<String, String>): List<String> {
+      if (!isWebTarget(options)) return emptyList()
+      val errors = mutableListOf<String>()
+      model.methods.forEach { method ->
+        val dispatch = methodDispatch(method)
+        if (dispatch.isTyped) return@forEach
+        errors +=
+          "${model.simpleName}.${method.godotName} (registered function): " +
+            "${dispatch.reason ?: dispatch.status.json}. Declare a shape the Web backend " +
+            "dispatches — no arguments; any all-numeric argument list up to $NUMERIC_ARG_SLOTS " +
+            "scalar slots; a single String or object argument; a mixed list of String/NodePath/" +
+            "Long/Boolean/object arguments; or a zero-argument value return — or add the arm for " +
+            "this shape to WebMethodArm and its emitter branch."
+      }
+      model.signals.forEach { signal ->
+        val dispatch = signalDispatch(signal)
+        if (dispatch.isTyped) return@forEach
+        errors +=
+          "${model.simpleName}.${signal.godotName} (signal): " +
+            "${dispatch.reason ?: dispatch.status.json}. Declare a payload the Web backend " +
+            "delivers — no arguments, one packed scalar (String/Long/Double/Boolean/Vector2/" +
+            "Vector2i/Vector3), or one object — or add the wider delivery to the signal dispatch " +
+            "helpers."
+      }
+      // Properties and virtuals already have their own guards; a non-typed entry here means one of
+      // those has a hole, so say exactly that instead of repeating their advice.
+      model.properties.forEach { property ->
+        val dispatch = propertyDispatch(property)
+        if (dispatch.isTyped) return@forEach
+        errors +=
+          "${model.simpleName}.${property.godotName} (property): " +
+            "${dispatch.reason ?: dispatch.status.json} (unsupportedWebPropertyErrors has a hole " +
+            "for this declaration)."
+      }
+      model.virtuals.forEach { virtual ->
+        val dispatch = virtualDispatch(virtual)
+        if (dispatch.isTyped) return@forEach
+        errors +=
+          "${model.simpleName}.${virtual.kotlinMethodName} (virtual): " +
+            "${dispatch.reason ?: dispatch.status.json} (undispatchedVirtualErrors has a hole for " +
+            "this declaration)."
+      }
+      return errors
     }
 
     /**
@@ -743,11 +894,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
   /**
-   * The non-fatal build-time degradation report (task 80 slice 1), as lines to log.
+   * The build-time degradation census (task 80 slice 1), as lines to log.
    *
-   * Deliberately NOT a build failure: the corpus trips it today (fps `Enemy.damage(Double)` has no
-   * single-FLOAT arm), so slice 1 only makes the population visible. Turning this into a hard gate
-   * is slice 3, and it cannot land until slice 2 fills the holes this report finds.
+   * Slice 1 made this visible and slice 2 emptied it; since slice 3 the same population is a BUILD
+   * ERROR ([undispatchedMemberErrors]), so on a build that gets this far the detail lines are
+   * always empty and the summary reads `0 of N`. It stays because the count is the census — the
+   * number that turned "add a callDouble arm" into a measured parcel.
    */
   fun degradationReport(): List<String> = buildList {
     val degradations = degradations()
@@ -763,8 +915,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     degradations.forEach { add("[kanama:web-dispatch]   $it") }
     if (degradations.isNotEmpty()) {
       add(
-        "[kanama:web-dispatch] non-fatal (task 80 slice 1): these are declared in " +
-          "KanamaWebProtocol.generated.json as dispatch != \"typed\""
+        "[kanama:web-dispatch] these are declared in KanamaWebProtocol.generated.json as " +
+          "dispatch != \"typed\" and FAIL the build (task 80 slice 3)"
       )
     }
   }
@@ -1191,6 +1343,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
   }
 
+  /**
+   * The string crossing: one declared STRING argument ([WebMethodArm.STRING_VOID]), or a whole
+   * MIXED argument list packed into that same string ([WebMethodArm.PACKED_ARGS], task 80 slice 3).
+   * The arm table decides which — this dispatcher never re-reads the shapes — so the two encodings
+   * can share one entry point without the protocol growing an extra crossing.
+   */
   private fun StringBuilder.appendStringMethodDispatcher() {
     appendLine(
       "  fun callString(scriptId: Int, methodId: Int, script: KanamaWebScript, value: String) {"
@@ -1199,14 +1357,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     scripts.forEachIndexed { scriptIndex, input ->
       appendLine("      ${scriptIndex + 1} -> when (methodId) {")
       input.model.methods.forEachIndexed { methodIndex, method ->
-        if (
-          method.returnType == null &&
-            method.args.size == 1 &&
-            method.args.single().type == TypeMapping.STRING
-        ) {
-          appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(value)"
-          )
+        val target = "(script as ${input.model.simpleName}).${method.kotlinName}"
+        when (methodArm(method)) {
+          WebMethodArm.STRING_VOID -> appendLine("        ${methodIndex + 1} -> $target(value)")
+          WebMethodArm.PACKED_ARGS -> {
+            val arguments = packedArgKotlinExpressions(method.args).joinToString(", ")
+            appendLine("        ${methodIndex + 1} -> {")
+            appendLine("          val packedArgs = value.split('\\u001F')")
+            appendLine("          $target($arguments)")
+            appendLine("        }")
+          }
+          else -> Unit
         }
       }
       appendLine("        else -> unknown(\"method\", methodId)")
@@ -3350,6 +3511,30 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_:")
     appendLine("\t\t\treturn str(arg)")
     appendLine()
+    appendLine("func $PACKED_ARG_PACK_TEXT(value: String) -> String:")
+    appendLine(
+      "\t# Task 80 slice 3: %-escape a text argument so its payload cannot split the packed"
+    )
+    appendLine("\t# argument list. Same escaping as the generic-call transport: % first.")
+    appendLine("\treturn value.replace(\"%\", \"%25\").replace(\"\\u001f\", \"%1F\")")
+    appendLine()
+    appendLine("func $PACKED_ARG_PACK_OBJECT(value: Object, transient_handles: Array[int]) -> int:")
+    appendLine("\t# Task 80 slice 3: one object argument as a bridge handle id. A Kanama-scripted")
+    appendLine("\t# object crosses as its SCRIPT handle (so Kotlin can resolve its instance);")
+    appendLine("\t# anything else rides a transient handle the caller releases after the call.")
+    appendLine("\tif value == null:")
+    appendLine("\t\treturn 0")
+    appendLine("\tif value.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\tvar script_handle := int(value.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\tif script_handle != 0:")
+    appendLine("\t\t\treturn script_handle")
+    appendLine(
+      "\tvar packed_handle := int(_kanama_bridge.allocateTransientObjectHandle(_kanama_handle))"
+    )
+    appendLine("\t_kanama_object_handles[packed_handle] = value")
+    appendLine("\ttransient_handles.append(packed_handle)")
+    appendLine("\treturn packed_handle")
+    appendLine()
     appendLine("func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int) -> void:")
     appendLine("\tvar script_arg_handle := 0")
     appendLine("\tif arg != null and arg.has_method(\"_kanama_ensure_created\"):")
@@ -4181,6 +4366,23 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "\tvar _kanama_packed := String(_kanama_bridge.callPacked(_kanama_handle, ${index + 1}))"
           )
           appendPackedReturnParse(returnType)
+        }
+        WebMethodArm.PACKED_ARGS -> {
+          // Task 80 slice 3: a MIXED argument list (text/int/bool/object handle) packed into one
+          // string over the EXISTING string crossing -- object arguments ride as their handle id,
+          // which is what lets one arm carry a shape the string and object arms cannot.
+          appendLine("\tvar $PACKED_ARG_TRANSIENT: Array[int] = []")
+          appendLine("\tvar $PACKED_ARG_PARTS: PackedStringArray = PackedStringArray()")
+          packedArgGdExpressions(method.args).forEach {
+            appendLine("\t$PACKED_ARG_PARTS.append($it)")
+          }
+          appendLine(
+            "\t_kanama_bridge.callString(_kanama_handle, ${index + 1}, " +
+              "\"\\u001f\".join($PACKED_ARG_PARTS))"
+          )
+          appendLine("\tfor _kanama_packed_handle in $PACKED_ARG_TRANSIENT:")
+          appendLine("\t\t_kanama_object_handles.erase(_kanama_packed_handle)")
+          appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(_kanama_packed_handle)")
         }
         // Task 80: this stub throws at runtime, and the manifest + build report now say so.
         WebMethodArm.NONE -> {

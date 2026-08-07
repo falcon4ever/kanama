@@ -121,6 +121,12 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       for (message in WebScriptCodeEmitter.unsupportedWebPropertyErrors(model, env.options)) {
         env.logger.error("[kanama:ksp] $message", symbol)
       }
+      // Task 80 slice 3: any declared member that would not dispatch typed on Web is a build
+      // error, not a runtime surprise. Slice 1 reported the same population non-fatally and
+      // slice 2 filled it; this is the gate that keeps it filled.
+      for (message in WebScriptCodeEmitter.undispatchedMemberErrors(model, env.options)) {
+        env.logger.error("[kanama:web-dispatch] $message", symbol)
+      }
       symbol.containingFile?.let {
         aggregatorSources += it
         scriptAggregatorSources += it
