@@ -54,14 +54,17 @@ object NativeCallSurface {
    * (grouped by arity). The order is arbitrary but fixed, so the adapter trace is stable run to
    * run.
    *
-   * Labels name the call family, not a single symbol — most shapes are shared.
+   * Labels name the call family, not a single symbol — most shapes are shared. Keep them distinct
+   * from real GDExtension function names: `check_gdextension_modernization.py` reads every quoted
+   * lowercase string under `src/main` as evidence that a backend binds that entry point, so a label
+   * spelled `script_instance_create` would look like a deprecated bind.
    */
   private val shapes: List<Pair<String, FunctionDescriptor>> =
     listOf(
       // get_proc_address, global_get_singleton, classdb_construct_object3
       "interface_lookup" to FunctionDescriptor.of(ADDRESS, ADDRESS),
       // script_instance_create3
-      "script_instance_create" to FunctionDescriptor.of(ADDRESS, ADDRESS, ADDRESS),
+      "script_instance_ctor" to FunctionDescriptor.of(ADDRESS, ADDRESS, ADDRESS),
       // variant_get_ptr_utility_function, packed_*_array_operator_index[_const]
       "utility_lookup" to FunctionDescriptor.of(ADDRESS, ADDRESS, JAVA_LONG),
       // classdb_get_method_bind
@@ -74,7 +77,7 @@ object NativeCallSurface {
       // variant_get_ptr_builtin_method
       "builtin_method_lookup" to FunctionDescriptor.of(ADDRESS, JAVA_INT, ADDRESS, JAVA_LONG),
       // variant_get_type
-      "variant_get_type" to FunctionDescriptor.of(JAVA_INT, ADDRESS),
+      "variant_type_probe" to FunctionDescriptor.of(JAVA_INT, ADDRESS),
       // string_to_utf8_chars
       "string_to_utf8" to FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, JAVA_LONG),
       // get_godot_version2, object_destroy, variant_destroy, variant_new_nil, and every
