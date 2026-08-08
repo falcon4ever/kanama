@@ -737,14 +737,20 @@ val kanamaRuntimeAdditionalModules =
   providers.gradleProperty("kanamaRuntimeAdditionalModules").orElse("")
 val gameRuntimeImageDir = layout.buildDirectory.dir("game-runtime/runtime")
 
-fun hostJvmServerLibraryRelativePath(): String {
-  val osName = System.getProperty("os.name").lowercase()
-  return when {
-    osName.contains("mac") || osName.contains("darwin") -> "lib/server/libjvm.dylib"
-    osName.contains("windows") -> "bin/server/jvm.dll"
-    else -> "lib/server/libjvm.so"
+// Where each platform's runtime image keeps the server JVM. Windows is the odd
+// one out: `bin\server\jvm.dll`, NOT `lib/server` — and its CRT dependencies
+// (vcruntime140/msvcp140/ucrtbase) sit one level up in `bin\`, which is why
+// bootstrap.c loads it with the DLL-load-dir search flags.
+fun jvmServerLibraryRelativePath(classifier: String): String =
+  when {
+    classifier.startsWith("windows") -> "bin/server/jvm.dll"
+    classifier.startsWith("macos") -> "lib/server/libjvm.dylib"
+    classifier.startsWith("linux") -> "lib/server/libjvm.so"
+    else -> throw GradleException("Unsupported Kanama runtime target classifier: $classifier")
   }
-}
+
+fun hostJvmServerLibraryRelativePath(): String =
+  jvmServerLibraryRelativePath(hostPlatformClassifier())
 
 tasks.register<Exec>("jlinkGameRuntime") {
   group = "distribution"
@@ -799,6 +805,394 @@ tasks.register<Exec>("jlinkGameRuntime") {
     logger.lifecycle(
       "[kanama] game runtime image: ${imageDir.absolutePath} " +
         "($sizeMb MB, modules=${runtimeModules.get()})"
+    )
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Task 63 — CROSS-TARGET runtime images (decided 2026-08-07).
+//
+// A developer on macOS must be able to export a Windows or Linux game. Godot's
+// own export templates are cross-platform, so if Kanama's bundled runtime could
+// only be built ON the target OS, a Mac developer could not ship a Windows game
+// at all. `jlinkGameRuntimeCross` closes that: it links the TARGET platform's
+// Temurin jmods from whatever host you are on.
+//
+// Two constraints, both measured on macOS arm64 (Temurin 25.0.3+9) 2026-08-07:
+//
+//   1. Temurin JDK archives no longer contain a `jmods/` directory at all. JDK
+//      24's JEP 493 ("Linking Run-Time Images without JMODs") lets jlink link
+//      from the JDK's own run-time image, and Temurin ships that way — but a
+//      run-time image can only produce an image for its OWN platform. Adoptium
+//      publishes the jmods as a SEPARATE per-platform download
+//      (`image_type=jmods`, ~80 MB compressed); that is what this fetches.
+//      Downloading the target JDK instead would silently get you nothing.
+//   2. The jmods must be the same JDK FEATURE version as the jlink doing the
+//      linking. Patch levels may differ: jlink 25.0.3+9 linked 25.0.4+7 jmods
+//      cleanly. Both sides are JDK 25 here.
+//
+// Usage: ./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64
+// Output: build/game-runtime/<classifier>/runtime
+// ---------------------------------------------------------------------------
+
+/** One desktop export target: how to fetch its Temurin jmods archive. */
+data class KanamaRuntimeTarget(
+  val classifier: String,
+  val adoptiumOs: String,
+  val adoptiumArch: String,
+  val archiveExtension: String,
+  val jmodsSha256: String,
+)
+
+// SHA-256 pinned from the Adoptium API for kanamaTargetJdkRelease (gradle.properties).
+// Bumping that release means re-pinning every row:
+//   curl -s 'https://api.adoptium.net/v3/assets/feature_releases/25/ga?image_type=jmods&vendor=eclipse'
+val kanamaRuntimeTargets =
+  listOf(
+    KanamaRuntimeTarget(
+      "windows-x64",
+      "windows",
+      "x64",
+      "zip",
+      "b61df3205a98e941188949a0c4d0832a85868a7fc99ad244b84185b7bf6408ef",
+    ),
+    KanamaRuntimeTarget(
+      "linux-x64",
+      "linux",
+      "x64",
+      "tar.gz",
+      "f6ef833f741d549c61f8db740d030ebc4d5bbd6e6b062264d5efd94490fb41ac",
+    ),
+    KanamaRuntimeTarget(
+      "linux-arm64",
+      "linux",
+      "aarch64",
+      "tar.gz",
+      "ee699b04cf189e45bea62ff0f8d94d2600d606d41cc9ac84b81b83dc8ea27b6f",
+    ),
+    KanamaRuntimeTarget(
+      "macos-arm64",
+      "mac",
+      "aarch64",
+      "tar.gz",
+      "6597e7a69447bf2c1f25b9a15edc54d10304570430b45f6728bbb2e02343f87f",
+    ),
+  )
+
+val kanamaTargetJdkRelease = providers.gradleProperty("kanamaTargetJdkRelease")
+// Downloaded jmods archives are large and version-pinned: cache them outside
+// `build/` so `clean` and per-worktree builds never re-download 80 MB.
+val kanamaTargetJmodsCacheDir =
+  providers
+    .gradleProperty("kanamaTargetJmodsCacheDir")
+    .orElse(providers.environmentVariable("KANAMA_TARGET_JMODS_CACHE"))
+    .orElse(File(gradle.gradleUserHomeDir, "kanama-target-jmods").absolutePath)
+
+fun kanamaRuntimeTargetFor(classifier: String): KanamaRuntimeTarget =
+  kanamaRuntimeTargets.firstOrNull { it.classifier == classifier }
+    ?: throw GradleException(
+      "Unknown Kanama runtime target '$classifier'; known targets: " +
+        kanamaRuntimeTargets.joinToString(", ") { it.classifier }
+    )
+
+/** `25.0.4+7` -> `OpenJDK25U-jmods_x64_windows_hotspot_25.0.4_7.zip`. */
+fun kanamaJmodsArchiveName(target: KanamaRuntimeTarget, release: String): String {
+  val feature = release.substringBefore('.')
+  val fileVersion = release.replace('+', '_')
+  return "OpenJDK${feature}U-jmods_${target.adoptiumArch}_${target.adoptiumOs}_hotspot_" +
+    "$fileVersion.${target.archiveExtension}"
+}
+
+fun kanamaJmodsDownloadUrl(target: KanamaRuntimeTarget, release: String): String {
+  val feature = release.substringBefore('.')
+  val tag = "jdk-$release".replace("+", "%2B")
+  return "https://github.com/adoptium/temurin$feature-binaries/releases/download/$tag/" +
+    kanamaJmodsArchiveName(target, release)
+}
+
+fun sha256Of(file: File): String {
+  val digest = java.security.MessageDigest.getInstance("SHA-256")
+  file.inputStream().buffered().use { input ->
+    val buffer = ByteArray(1 shl 16)
+    while (true) {
+      val read = input.read(buffer)
+      if (read <= 0) break
+      digest.update(buffer, 0, read)
+    }
+  }
+  return digest.digest().joinToString("") { "%02x".format(it) }
+}
+
+/** Resolve an archive entry under [root], refusing paths that escape it (zip slip). */
+fun archiveEntryTarget(root: File, entryName: String): File {
+  val target = File(root, entryName).canonicalFile
+  if (!target.toPath().startsWith(root.canonicalFile.toPath())) {
+    throw GradleException("Refusing archive entry outside the extraction root: $entryName")
+  }
+  return target
+}
+
+fun extractZipArchive(archive: File, into: File) {
+  java.util.zip.ZipInputStream(archive.inputStream().buffered()).use { zip ->
+    while (true) {
+      val entry = zip.nextEntry ?: break
+      val target = archiveEntryTarget(into, entry.name)
+      if (entry.isDirectory) {
+        target.mkdirs()
+      } else {
+        target.parentFile.mkdirs()
+        target.outputStream().buffered().use { zip.copyTo(it) }
+      }
+      zip.closeEntry()
+    }
+  }
+}
+
+/**
+ * Minimal ustar/GNU reader — enough for Adoptium's jmods tarballs (plain files and
+ * directories, plus GNU long names). Avoids a Commons Compress dependency and any
+ * shell-out to a `tar` whose flavour differs per runner.
+ */
+fun extractTarGzArchive(archive: File, into: File) {
+  fun tarField(header: ByteArray, start: Int, length: Int): String {
+    val end =
+      (start until start + length).firstOrNull { header[it] == 0.toByte() } ?: (start + length)
+    return String(header, start, end - start, Charsets.UTF_8).trim()
+  }
+
+  java.util.zip.GZIPInputStream(archive.inputStream().buffered()).use { input ->
+    val header = ByteArray(512)
+    var pendingLongName: String? = null
+    while (true) {
+      // A tar stream ends with zero-filled blocks (or simply runs out of data).
+      var filled = 0
+      while (filled < header.size) {
+        val read = input.read(header, filled, header.size - filled)
+        if (read < 0) break
+        filled += read
+      }
+      if (filled < header.size || header.all { it == 0.toByte() }) break
+
+      val rawName = tarField(header, 0, 100)
+      val prefix = tarField(header, 345, 155)
+      val name = pendingLongName ?: if (prefix.isEmpty()) rawName else "$prefix/$rawName"
+      pendingLongName = null
+      val size = tarField(header, 124, 12).ifEmpty { "0" }.toLong(8)
+      val padded = ((size + 511) / 512) * 512
+
+      when (header[156].toInt().toChar()) {
+        // GNU long name: this entry's payload is the NEXT entry's real path.
+        'L' -> {
+          val nameBytes = input.readNBytes(size.toInt())
+          if (nameBytes.size.toLong() != size) {
+            throw GradleException("Truncated tar long-name entry: $archive")
+          }
+          pendingLongName = String(nameBytes, Charsets.UTF_8).trimEnd('\u0000', ' ')
+          input.skipNBytes(padded - size)
+        }
+        '5' -> {
+          archiveEntryTarget(into, name).mkdirs()
+          input.skipNBytes(padded)
+        }
+        // Regular file: type flag '0' or NUL.
+        '0',
+        '\u0000' -> {
+          val target = archiveEntryTarget(into, name)
+          target.parentFile.mkdirs()
+          target.outputStream().buffered().use { output ->
+            var remaining = size
+            val buffer = ByteArray(1 shl 16)
+            while (remaining > 0) {
+              val read = input.read(buffer, 0, minOf(buffer.size.toLong(), remaining).toInt())
+              if (read < 0) throw GradleException("Truncated tar entry '$name': $archive")
+              output.write(buffer, 0, read)
+              remaining -= read
+            }
+          }
+          input.skipNBytes(padded - size)
+        }
+        // Symlinks, pax headers, everything else: skip the payload. Adoptium's
+        // jmods archives are plain files and directories only.
+        else -> input.skipNBytes(padded)
+      }
+    }
+  }
+}
+
+/**
+ * Download (once), checksum, and unpack the target platform's Temurin jmods.
+ * Returns the directory that holds `java.base.jmod` — jlink's `--module-path`.
+ */
+fun resolveTargetJmodsDir(target: KanamaRuntimeTarget, release: String, cacheDir: File): File {
+  cacheDir.mkdirs()
+  val archiveName = kanamaJmodsArchiveName(target, release)
+  val archive = File(cacheDir, archiveName)
+  if (archive.isFile && sha256Of(archive) != target.jmodsSha256) {
+    logger.lifecycle("[kanama] cached jmods archive failed its checksum; re-downloading $archiveName")
+    archive.delete()
+  }
+  if (!archive.isFile) {
+    val url = kanamaJmodsDownloadUrl(target, release)
+    logger.lifecycle("[kanama] downloading target jmods: $url")
+    val partial = File(cacheDir, "$archiveName.part")
+    partial.delete()
+    java.net.URI(url).toURL().openStream().use { input ->
+      partial.outputStream().buffered().use { output -> input.copyTo(output) }
+    }
+    val actual = sha256Of(partial)
+    if (actual != target.jmodsSha256) {
+      partial.delete()
+      throw GradleException(
+        "SHA-256 mismatch for $archiveName\n  expected ${target.jmodsSha256}\n  actual   $actual"
+      )
+    }
+    partial.renameTo(archive)
+  }
+
+  val extractDir = File(cacheDir, "$release-${target.classifier}")
+  val marker = File(extractDir, ".kanama-jmods-sha256")
+  if (marker.isFile && marker.readText().trim() == target.jmodsSha256) {
+    return findJmodsRoot(extractDir, archiveName)
+  }
+  extractDir.deleteRecursively()
+  extractDir.mkdirs()
+  if (target.archiveExtension == "zip") {
+    extractZipArchive(archive, extractDir)
+  } else {
+    extractTarGzArchive(archive, extractDir)
+  }
+  marker.writeText(target.jmodsSha256)
+  return findJmodsRoot(extractDir, archiveName)
+}
+
+fun findJmodsRoot(extractDir: File, archiveName: String): File =
+  extractDir.walkTopDown().maxDepth(3).firstOrNull { File(it, "java.base.jmod").isFile }
+    ?: throw GradleException("No java.base.jmod found after unpacking $archiveName into $extractDir")
+
+/** "pe" | "elf" | "macho" | "unknown" from a native library's magic bytes. */
+fun detectNativeBinaryFormat(file: File): String {
+  val head = ByteArray(8)
+  val read = file.inputStream().use { it.read(head) }
+  if (read < 4) return "unknown"
+  return when {
+    head[0] == 0x7f.toByte() && head[1] == 'E'.code.toByte() && head[2] == 'L'.code.toByte() ->
+      "elf"
+    head[0] == 'M'.code.toByte() && head[1] == 'Z'.code.toByte() -> "pe"
+    head.u32le(0) == 0xfeedfacfL || head.u32le(0) == 0xfeedfaceL -> "macho"
+    head.u32be(0) == 0xcafebabeL || head.u32be(0) == 0xcafebabfL -> "macho"
+    else -> "unknown"
+  }
+}
+
+fun expectedRuntimeBinaryFormat(classifier: String): String =
+  when {
+    classifier.startsWith("windows") -> "pe"
+    classifier.startsWith("macos") -> "macho"
+    else -> "elf"
+  }
+
+tasks.register("jlinkGameRuntimeCross") {
+  group = "distribution"
+  description =
+    "Build the bundled game runtime image for another platform " +
+      "(-PkanamaRuntimeTarget=windows-x64|linux-x64|linux-arm64|macos-arm64)."
+
+  val toolchainService = project.extensions.getByType<JavaToolchainService>()
+  val jdkHome =
+    toolchainService
+      .launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) }
+      .map { it.metadata.installationPath }
+  val requestedTarget = providers.gradleProperty("kanamaRuntimeTarget")
+  val runtimeModules =
+    kanamaRuntimeAdditionalModules.map { extra ->
+      val additional = extra.split(',').map(String::trim).filter(String::isNotEmpty)
+      (kanamaRuntimePinnedModules + additional).distinct().joinToString(",")
+    }
+  val crossRuntimeRoot = layout.buildDirectory.dir("game-runtime")
+
+  doLast {
+    val classifier =
+      requestedTarget.orNull
+        ?: throw GradleException(
+          "jlinkGameRuntimeCross needs -PkanamaRuntimeTarget=<classifier>; known targets: " +
+            kanamaRuntimeTargets.joinToString(", ") { it.classifier }
+        )
+    val target = kanamaRuntimeTargetFor(classifier)
+    val release = kanamaTargetJdkRelease.get()
+    val jdk = jdkHome.get().asFile
+    val jdkFeature = File(jdk, "release").takeIf { it.isFile }?.let { file ->
+      Regex("""JAVA_VERSION="(\d+)""").find(file.readText())?.groupValues?.get(1)
+    }
+    val targetFeature = release.substringBefore('.')
+    if (jdkFeature != null && jdkFeature != targetFeature) {
+      throw GradleException(
+        "jlink cross-targeting requires matching JDK feature versions: build JDK is " +
+          "$jdkFeature, kanamaTargetJdkRelease is $release. Align gradle.properties " +
+          "(kanamaTargetJdkRelease) with the build JDK."
+      )
+    }
+
+    val jmodsDir =
+      resolveTargetJmodsDir(target, release, File(kanamaTargetJmodsCacheDir.get()))
+    val imageDir = File(crossRuntimeRoot.get().asFile, "$classifier/runtime")
+    imageDir.deleteRecursively()
+    imageDir.parentFile.mkdirs()
+
+    val isWindowsHost = System.getProperty("os.name").lowercase().contains("windows")
+    val jlink = File(jdk, if (isWindowsHost) "bin/jlink.exe" else "bin/jlink")
+    val command =
+      listOf(
+        jlink.absolutePath,
+        "--module-path",
+        jmodsDir.absolutePath,
+        "--add-modules",
+        runtimeModules.get(),
+        "--output",
+        imageDir.absolutePath,
+        "--strip-debug",
+        "--no-header-files",
+        "--no-man-pages",
+        "--compress",
+        "zip-6",
+      )
+    logger.lifecycle("[kanama] ${command.joinToString(" ")}")
+    val exit =
+      ProcessBuilder(command).redirectErrorStream(true).start().let { process ->
+        process.inputStream.bufferedReader().forEachLine { logger.lifecycle(it) }
+        process.waitFor()
+      }
+    if (exit != 0) {
+      throw GradleException("jlink failed for target $classifier (exit $exit)")
+    }
+
+    // Prove the image is actually the TARGET platform's, not the host's: the
+    // server JVM must sit at the target's layout and carry the target's object
+    // format. A host-built image landing here is exactly the failure this task
+    // exists to prevent.
+    val serverLib = File(imageDir, jvmServerLibraryRelativePath(classifier))
+    if (!serverLib.isFile) {
+      throw GradleException(
+        "cross jlink produced no ${jvmServerLibraryRelativePath(classifier)} in $imageDir"
+      )
+    }
+    val expectedFormat = expectedRuntimeBinaryFormat(classifier)
+    val actualFormat = detectNativeBinaryFormat(serverLib)
+    val expectedArch = expectedPackageNativeArch(classifier)
+    val actualArch = detectNativeBootstrapArch(serverLib)
+    if (actualFormat != expectedFormat || actualArch != expectedArch) {
+      throw GradleException(
+        "cross jlink produced the wrong platform binary for $classifier: " +
+          "${serverLib.absolutePath} is $actualFormat/$actualArch, expected " +
+          "$expectedFormat/$expectedArch"
+      )
+    }
+
+    val sizeMb =
+      imageDir.walkTopDown().filter { it.isFile }.map { it.length() }.sum() / (1024L * 1024L)
+    logger.lifecycle(
+      "[kanama] cross game runtime image: ${imageDir.absolutePath} " +
+        "($sizeMb MB, target=$classifier $actualFormat/$actualArch, jdk=$release, " +
+        "modules=${runtimeModules.get()})"
     )
   }
 }
