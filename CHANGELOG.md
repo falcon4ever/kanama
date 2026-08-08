@@ -7,7 +7,42 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added
+
+- **Exported desktop games can be built for another platform.** `./gradlew
+  jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64` produces the bundled
+  JVM runtime for a target other than the host, so a developer on macOS can ship
+  a Windows or Linux game — the same expectation Godot's own cross-platform
+  export templates set. Targets: `windows-x64`, `linux-x64`, `linux-arm64`,
+  `macos-arm64`. Runtime image sizes, all four cross-built from macOS arm64
+  against Temurin 25.0.4+7: 31 MB Windows x64, 42 MB Linux x64, 40 MB Linux
+  arm64, 31 MB macOS arm64.
+
+  Two things worth knowing if you look under the hood: a Temurin JDK install no
+  longer contains `jmods/` at all (JDK 24's JEP 493 lets jlink link from the
+  JDK's own run-time image, but only for the platform it runs on), so the task
+  fetches Adoptium's separate per-platform jmods download, SHA-256 pinned and
+  cached outside `build/`; and the jmods must be the same JDK *feature* version
+  as the build JDK, which the task checks before linking.
+
+  `scripts/export_game_assemble.sh` gained `--runtime DIR` handling that refuses
+  to pair a runtime image with an export built for a different platform, and
+  `scripts/export_game_smoke.sh` gained `--runtime DIR` plus a Windows branch.
+  The `package` workflow now cross-builds the Windows and Linux runtimes on a
+  macOS job and boots exported games against those artifacts on `windows-2025`
+  and `ubuntu-24.04` — a runner building its own runtime would prove only
+  same-OS packaging.
+
 ### Fixed
+
+- **A bundled Windows runtime no longer needs the Visual C++ redistributable on
+  the player's machine.** `jvm.dll` lives in `runtime\bin\server` while its CRT
+  dependencies ship one level up in `runtime\bin`, and Windows resolves a loaded
+  DLL's dependencies against the *executable's* directory and System32 — never
+  next to the DLL itself. The bootstrap now registers `runtime\bin` with the
+  loader and loads the JVM with the explicit search flags. It also locates
+  itself with `GetModuleFileNameW` instead of the ANSI variant, so an export
+  under a player profile whose name has no ANSI representation is still found.
 
 - **Web: `@RegisterFunction` shapes that used to throw at runtime now dispatch**
   (Web protocol 16 → 17). The Web emitter models a hand-maintained set of
