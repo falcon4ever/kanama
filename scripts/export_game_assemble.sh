@@ -88,18 +88,24 @@ if [[ ! -f "$scripts_jar" ]]; then
   exit 2
 fi
 
-# The runtime image must contain the platform server JVM library. v1 is a
-# same-OS assembly: the image, the export, and the host are one platform.
+# The runtime image must contain a server JVM library, and it must be the one
+# the EXPORT's platform needs. Assembly is host-independent: a macOS developer
+# exporting a Windows game runs this with a Windows runtime image built by
+# `./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64`. Note the
+# Windows layout is bin\server\jvm.dll, not lib/server.
 jvm_server_lib=""
-for candidate in lib/server/libjvm.dylib lib/server/libjvm.so bin/server/jvm.dll; do
-  if [[ -f "$runtime_dir/$candidate" ]]; then
-    jvm_server_lib="$candidate"
+runtime_platform=""
+for candidate in "macos:lib/server/libjvm.dylib" "linux:lib/server/libjvm.so" "windows:bin/server/jvm.dll"; do
+  if [[ -f "$runtime_dir/${candidate#*:}" ]]; then
+    runtime_platform="${candidate%%:*}"
+    jvm_server_lib="${candidate#*:}"
     break
   fi
 done
 if [[ -z "$jvm_server_lib" ]]; then
   echo "[export_game_assemble] no server JVM library under: $runtime_dir" >&2
-  echo "[export_game_assemble] run: ./gradlew jlinkGameRuntime" >&2
+  echo "[export_game_assemble] run: ./gradlew jlinkGameRuntime          (this platform)" >&2
+  echo "[export_game_assemble] or:  ./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64" >&2
   exit 2
 fi
 
@@ -125,13 +131,36 @@ if [[ -z "$bootstrap_lib" ]]; then
   echo "[export_game_assemble] export the game from Godot first; the Kanama gdextension must be part of the export" >&2
   exit 1
 fi
+
+# The bootstrap library Godot exported names the export's platform. Refuse a
+# runtime image built for a different one: shipping a macOS runtime inside a
+# Windows export produces a game that dies at launch on the player's machine
+# with nothing but a missing-libjvm message, and there is no later gate that
+# would catch it.
+case "$bootstrap_lib" in
+  *.dylib) export_platform="macos" ;;
+  *.so) export_platform="linux" ;;
+  *.dll) export_platform="windows" ;;
+  *) export_platform="unknown" ;;
+esac
+if [[ "$export_platform" != "$runtime_platform" ]]; then
+  echo "[export_game_assemble] platform mismatch: the export is $export_platform" >&2
+  echo "[export_game_assemble]   ($bootstrap_lib)" >&2
+  echo "[export_game_assemble] but the runtime image is $runtime_platform" >&2
+  echo "[export_game_assemble]   ($runtime_dir/$jvm_server_lib)" >&2
+  echo "[export_game_assemble] build the matching image:" >&2
+  echo "[export_game_assemble]   ./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=$export_platform-<arch>" >&2
+  echo "[export_game_assemble] then pass --runtime build/game-runtime/$export_platform-<arch>/runtime" >&2
+  exit 1
+fi
+
 dest_dir="$(dirname "$bootstrap_lib")"
 if [[ "$(basename "$dest_dir")" == "Frameworks" && -f "$dest_dir/../Info.plist" ]]; then
   dest_dir="$(cd "$dest_dir/.." && pwd)/Resources"
   mkdir -p "$dest_dir"
 fi
 
-echo "[export_game_assemble] bootstrap: $bootstrap_lib"
+echo "[export_game_assemble] bootstrap: $bootstrap_lib ($export_platform)"
 cp "$kanama_jar" "$dest_dir/kanama.jar"
 cp "$scripts_jar" "$dest_dir/kanama-scripts.jar"
 rm -rf "$dest_dir/runtime"
