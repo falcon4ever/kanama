@@ -542,7 +542,7 @@ static HMODULE win_load_jvm_library(const char *jvm_lib) {
 
     HMODULE kernel32 = GetModuleHandleW(L"kernel32.dll");
     AddDllDirectoryFn add_dll_directory =
-        kernel32 ? (AddDllDirectoryFn)(void *)GetProcAddress(kernel32, "AddDllDirectory") : NULL;
+        kernel32 ? (AddDllDirectoryFn)GetProcAddress(kernel32, "AddDllDirectory") : NULL;
     wchar_t wide_bin[1024];
     if (add_dll_directory && bin_dir[0] != '\0' &&
         win_ansi_to_wide_path(bin_dir, wide_bin, sizeof wide_bin / sizeof wide_bin[0]) == 0) {
