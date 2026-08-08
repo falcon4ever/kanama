@@ -185,9 +185,12 @@ EOF
 
 platform_options=""
 if [[ "$preset_platform" == "Windows Desktop" ]]; then
-  # modify_resources needs rcedit (icon/version stamping) which CI does not
-  # install, and the console wrapper is the reliable way to capture a GUI-
-  # subsystem Godot binary's stdout/stderr.
+  # modify_resources needs rcedit (icon/version stamping), which CI does not
+  # install. The console wrapper is requested because Godot's Windows binaries
+  # are GUI-subsystem and a console wrapper is the sturdiest way to read their
+  # output; in practice Godot did not emit one for this release export and the
+  # plain .exe's redirected stdout/stderr was captured fine, so the launch step
+  # falls back to it.
   platform_options="$(cat <<'EOF'
 application/modify_resources=false
 debug/export_console_wrapper=2
