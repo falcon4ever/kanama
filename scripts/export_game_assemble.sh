@@ -23,7 +23,11 @@ usage: scripts/export_game_assemble.sh [options] /absolute/path/to/exported-game
 
 Options:
   --runtime DIR       jlink runtime image produced by `./gradlew jlinkGameRuntime`
-                      (default: <repo>/build/game-runtime/runtime)
+                      (default: <repo>/build/game-runtime/runtime). For an export
+                      targeting another platform, point this at the image from
+                      `./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=...`
+                      (build/game-runtime/<classifier>/runtime). The image's
+                      platform must match the export's.
   --kanama-jar FILE   Kanama runtime jar (default: <repo>/build/libs/kanama.jar)
   --scripts-jar FILE  The project's compiled kanama-scripts.jar (required).
   --help, -h          Show this help.
