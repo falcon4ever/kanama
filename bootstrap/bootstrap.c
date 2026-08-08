@@ -34,6 +34,17 @@
 #define access _access
 #define F_OK 0
 #define PATH_SEP "\\"
+/* Declared only when the SDK targets Windows 8+; the values are stable ABI. */
+#ifndef LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
+#define LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR 0x00000100
+#endif
+#ifndef LOAD_LIBRARY_SEARCH_USER_DIRS
+#define LOAD_LIBRARY_SEARCH_USER_DIRS 0x00000400
+#endif
+#ifndef LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
+#define LOAD_LIBRARY_SEARCH_DEFAULT_DIRS 0x00001000
+#endif
+typedef void *(WINAPI *AddDllDirectoryFn)(const wchar_t *);
 #else
 #include <dlfcn.h>
 #include <unistd.h>
@@ -95,8 +106,44 @@ static char *path_parent_in_place(char *path) {
     return path;
 }
 
+#ifdef _WIN32
+/* Convert a wide Windows path to the process ANSI code page, which is what the
+ * rest of this file speaks (and what the JVM's char* option strings take).
+ * A path that is not representable in the ANSI code page — a player whose
+ * profile is C:\Users\Müller on a non-Latin-1 system, say — would come back
+ * with '?' substitutions and then fail every access() probe, so fall back to
+ * the 8.3 short path, which is always ASCII. When the ANSI code page IS UTF-8
+ * (Windows 10 1903+ "Use Unicode UTF-8" or a UTF-8 manifest) nothing is lossy
+ * and WideCharToMultiByte rejects the lpUsedDefaultChar argument, so skip it. */
+static int win_wide_to_ansi_path(const wchar_t *wide, char *out, size_t out_size) {
+    UINT code_page = GetACP();
+    BOOL lossy = FALSE;
+    BOOL *lossy_out = (code_page == CP_UTF8) ? NULL : &lossy;
+    int written = WideCharToMultiByte(code_page, 0, wide, -1, out, (int)out_size, NULL, lossy_out);
+    if (written > 0 && !lossy) {
+        return 0;
+    }
+    wchar_t short_path[1024];
+    DWORD short_len =
+        GetShortPathNameW(wide, short_path, (DWORD)(sizeof short_path / sizeof short_path[0]));
+    if (short_len == 0 || short_len >= sizeof short_path / sizeof short_path[0]) {
+        /* No 8.3 alias (short names can be disabled per volume): keep the
+         * lossy conversion so the diagnostics at least name a path. */
+        return written > 0 ? 0 : -1;
+    }
+    written = WideCharToMultiByte(code_page, 0, short_path, -1, out, (int)out_size, NULL, NULL);
+    return written > 0 ? 0 : -1;
+}
+
+static int win_ansi_to_wide_path(const char *path, wchar_t *out, size_t out_count) {
+    int written = MultiByteToWideChar(GetACP(), 0, path, -1, out, (int)out_count);
+    return written > 0 ? 0 : -1;
+}
+#endif
+
 static const char *jvm_relative_lib_path(void) {
 #ifdef _WIN32
+    /* Windows keeps the server JVM under bin\server, not lib/server. */
     return "bin\\server\\jvm.dll";
 #elif defined(__APPLE__)
     return "lib/server/libjvm.dylib";
@@ -137,16 +184,25 @@ static void print_missing_jvm_diagnostic(void) {
 static int find_self_library_dir(char *out, size_t out_size) {
 #ifdef _WIN32
     HMODULE module = NULL;
-    if (!GetModuleHandleExA(
+    if (!GetModuleHandleExW(
             GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-            (LPCSTR)find_self_library_dir,
+            (LPCWSTR)(void *)find_self_library_dir,
             &module
         )) {
         return -1;
     }
+    /* Wide, then converted once: the exported game may sit under a player
+     * profile whose name has no ANSI representation (see
+     * win_wide_to_ansi_path). GetModuleFileNameA would silently hand back a
+     * path full of '?' and every probe below would miss. */
+    wchar_t wide_lib_path[1024];
+    DWORD len = GetModuleFileNameW(
+        module, wide_lib_path, (DWORD)(sizeof wide_lib_path / sizeof wide_lib_path[0]));
+    if (len == 0 || len >= sizeof wide_lib_path / sizeof wide_lib_path[0]) {
+        return -1;
+    }
     char lib_path[1024];
-    DWORD len = GetModuleFileNameA(module, lib_path, sizeof lib_path);
-    if (len == 0 || len >= sizeof lib_path) {
+    if (win_wide_to_ansi_path(wide_lib_path, lib_path, sizeof lib_path) != 0) {
         return -1;
     }
 #else
@@ -457,6 +513,56 @@ static int is_numeric_port_string(const char *value) {
 /* JVM startup + Kotlin handoff                                       */
 /* ------------------------------------------------------------------ */
 
+#ifdef _WIN32
+/* Task 63: a bundled Windows runtime keeps the server JVM in
+ * <runtime>\bin\server\jvm.dll, but jvm.dll's own dependencies — ucrtbase.dll,
+ * vcruntime140.dll, vcruntime140_1.dll, msvcp140.dll and the api-ms-win-* set —
+ * ship one level up in <runtime>\bin. Windows resolves a loaded DLL's
+ * dependencies against the *executable's* directory (Godot's), System32, and
+ * PATH; it never looks next to the DLL being loaded. A plain LoadLibrary would
+ * therefore boot only on machines that already have the Visual C++
+ * redistributable installed — exactly the "install this first" failure a
+ * bundled runtime exists to remove, and one that hides on developer machines.
+ *
+ * Register <runtime>\bin as a user search directory and load with the explicit
+ * search flags. Only loads that pass those flags consult the user directories,
+ * so Godot's own DLL resolution is untouched. Once jvm.dll is in, the JVM's
+ * later loads of java.dll/net.dll/nio.dll/syslookup.dll bind to the same
+ * already-resolved CRT modules by name. */
+static HMODULE win_load_jvm_library(const char *jvm_lib) {
+    wchar_t wide_jvm[1024];
+    if (win_ansi_to_wide_path(jvm_lib, wide_jvm, sizeof wide_jvm / sizeof wide_jvm[0]) != 0) {
+        return LoadLibraryA(jvm_lib);
+    }
+
+    char bin_dir[1024];
+    snprintf(bin_dir, sizeof bin_dir, "%s", jvm_lib);
+    path_parent_in_place(bin_dir); /* <runtime>\bin\server */
+    path_parent_in_place(bin_dir); /* <runtime>\bin        */
+
+    HMODULE kernel32 = GetModuleHandleW(L"kernel32.dll");
+    AddDllDirectoryFn add_dll_directory =
+        kernel32 ? (AddDllDirectoryFn)(void *)GetProcAddress(kernel32, "AddDllDirectory") : NULL;
+    wchar_t wide_bin[1024];
+    if (add_dll_directory && bin_dir[0] != '\0' &&
+        win_ansi_to_wide_path(bin_dir, wide_bin, sizeof wide_bin / sizeof wide_bin[0]) == 0) {
+        add_dll_directory(wide_bin);
+    }
+
+    HMODULE handle = LoadLibraryExW(
+        wide_jvm,
+        NULL,
+        LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LOAD_LIBRARY_SEARCH_USER_DIRS |
+            LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
+    );
+    if (!handle) {
+        /* Pre-KB2533623 systems reject the search flags outright. */
+        handle = LoadLibraryA(jvm_lib);
+    }
+    return handle;
+}
+#endif
+
 static int start_jvm(const char *jar_path) {
 #ifdef __ANDROID__
     (void)jar_path;
@@ -487,9 +593,9 @@ static int start_jvm(const char *jar_path) {
     fprintf(stderr, "[kanama] using libjvm: %s\n", jvm_lib);
 
 #ifdef _WIN32
-    HMODULE handle = LoadLibraryA(jvm_lib);
+    HMODULE handle = win_load_jvm_library(jvm_lib);
     if (!handle) {
-        fprintf(stderr, "[kanama] error: LoadLibraryA failed for %s: %lu\n", jvm_lib, GetLastError());
+        fprintf(stderr, "[kanama] error: LoadLibrary failed for %s: %lu\n", jvm_lib, GetLastError());
         return -1;
     }
     CreateJavaVMFn create_vm = (CreateJavaVMFn)GetProcAddress(handle, "JNI_CreateJavaVM");
