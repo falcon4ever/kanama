@@ -39,8 +39,11 @@ Godot 4.7 stable. macOS arm64, Windows x86_64, and Linux x86_64/arm64 are
 [Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
 for compatible editor/player binaries and Android export templates. Desktop
 release kits and store add-ons are package artifacts that can be built from
-source today and are the intended release path; exported-game packaging remains
-a separate release-readiness track.
+source today and are the intended release path. Exported games are
+unpack-and-play — they ship a bundled, jlink-trimmed JVM runtime, and that
+runtime is cross-target, so a macOS machine can produce a Windows or Linux
+build. See [Desktop and Packaging](docs/exporting/desktop.md); distribution
+signing/notarization remains a separate release-readiness track.
 
 Android is **Supported** on 4.7 stable for the v0.4.0 line: the workflow builds a
 Godot Android plugin AAR and uses

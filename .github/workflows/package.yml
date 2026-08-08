@@ -106,6 +106,209 @@ jobs:
           path: build/package/store-native/${{ matrix.classifier }}
           if-no-files-found: error
 
+  # ---------------------------------------------------------------------------
+  # Task 63 — exported-game packaging (bundled jlink runtime, issue #102).
+  #
+  # `cross-runtimes` builds the Windows and Linux bundled JVM runtimes ON THE
+  # macOS RUNNER and uploads them; `exported-game` then exports and boots a real
+  # game on windows-2025 and ubuntu-24.04 against exactly those artifacts.
+  #
+  # The split is the point. Letting each runner jlink its own runtime would be
+  # green and would still hide the limitation this work exists to remove: Godot's
+  # export templates are cross-platform, so a developer on macOS expects to ship
+  # a Windows build, and a runtime that could only be produced on Windows would
+  # make Kanama's export story strictly worse than Godot's. The macOS-built
+  # artifact travelling to the Windows runner is what makes the proof
+  # non-circular.
+  # ---------------------------------------------------------------------------
+  cross-runtimes:
+    name: cross-runtime (${{ matrix.target }} built on macOS)
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [windows-x64, linux-x64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      # ~80 MB of Temurin jmods per target, pinned by SHA-256 in
+      # build.gradle.kts. Keyed on gradle.properties so bumping
+      # kanamaTargetJdkRelease busts it.
+      - name: Cache target-platform jmods
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.jmods-cache/${{ matrix.target }}
+          key: jmods-${{ matrix.target }}-${{ hashFiles('gradle.properties') }}
+
+      - name: Build the ${{ matrix.target }} runtime image on macOS
+        shell: bash
+        env:
+          KANAMA_TARGET_JMODS_CACHE: ${{ github.workspace }}/.jmods-cache/${{ matrix.target }}
+        run: ./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=${{ matrix.target }}
+
+      # jlinkGameRuntimeCross already fails on a wrong-platform image; this
+      # re-states it in the log so the artifact's provenance is readable without
+      # digging into Gradle output.
+      - name: Report the cross-built image
+        shell: bash
+        run: |
+          image="build/game-runtime/${{ matrix.target }}/runtime"
+          case "${{ matrix.target }}" in
+            windows-*) jvm="$image/bin/server/jvm.dll" ;;
+            *) jvm="$image/lib/server/libjvm.so" ;;
+          esac
+          echo "host: $(uname -s) $(uname -m)"
+          test -f "$jvm"
+          file "$jvm"
+          du -sh "$image"
+          # upload-artifact drops the executable bit; tar keeps the image intact.
+          tar -C "build/game-runtime/${{ matrix.target }}" \
+            -czf "kanama-game-runtime-${{ matrix.target }}.tar.gz" runtime
+
+      - name: Upload the cross-built runtime image
+        uses: actions/upload-artifact@v6
+        with:
+          name: kanama-game-runtime-${{ matrix.target }}
+          path: kanama-game-runtime-${{ matrix.target }}.tar.gz
+          if-no-files-found: error
+
+  exported-game:
+    name: exported-game (${{ matrix.target }}, macOS-built runtime)
+    runs-on: ${{ matrix.runner }}
+    needs: [gdextension-header, cross-runtimes]
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: windows-x64
+            runner: windows-2025
+            # Suffixes only: the version is GODOT_VERSION, which
+            # scripts/check_godot_version_pin.py keeps pinned to
+            # gradle.properties. A hardcoded version here would drift silently.
+            godot_asset_suffix: win64.exe.zip
+            godot_bin_suffix: win64_console.exe
+            export_template: windows_release_x86_64.exe
+          - target: linux-x64
+            runner: ubuntu-24.04
+            godot_asset_suffix: linux.x86_64.zip
+            godot_bin_suffix: linux.x86_64
+            export_template: linux_release.x86_64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      # export_game_smoke.sh stages the project with python3; setup-python is
+      # what guarantees a `python3` on PATH inside the Windows runner's Git Bash.
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Download GDExtension header
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-gdextension-interface
+          path: gdextension
+
+      - name: Download the macOS-built runtime image
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-game-runtime-${{ matrix.target }}
+          path: cross-runtime
+
+      - name: Unpack the macOS-built runtime image
+        shell: bash
+        run: |
+          tar -C cross-runtime -xzf "cross-runtime/kanama-game-runtime-${{ matrix.target }}.tar.gz"
+          case "${{ matrix.target }}" in
+            windows-*) jvm="cross-runtime/runtime/bin/server/jvm.dll" ;;
+            *) jvm="cross-runtime/runtime/lib/server/libjvm.so" ;;
+          esac
+          test -f "$jvm"
+          echo "runtime built on macOS, consumed on $(uname -s):"
+          ls -la "$jvm"
+
+      - name: Cache Godot and the export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: godot-tools
+          key: godot-export-${{ matrix.target }}-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot and the ${{ matrix.target }} export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p godot-tools
+          curl -fL -o godot.zip \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_${{ matrix.godot_asset_suffix }}"
+          # One archive holds every platform's templates; take only the release
+          # template this job exports with (the same trick web.yml uses). python3
+          # rather than unzip, which the Windows runners' Git Bash lacks.
+          curl -fL -o templates.tpz \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          python3 - godot.zip templates.tpz "templates/${{ matrix.export_template }}" godot-tools <<'PY'
+          import os, shutil, sys, zipfile
+
+          godot_zip, tpz, template_entry, dest = sys.argv[1:5]
+          zipfile.ZipFile(godot_zip).extractall(dest)
+          with zipfile.ZipFile(tpz).open(template_entry) as src:
+              with open(os.path.join(dest, os.path.basename(template_entry)), "wb") as out:
+                  shutil.copyfileobj(src, out)
+          PY
+          rm -f godot.zip templates.tpz
+          ls -la godot-tools
+
+      - name: Install the export template
+        shell: bash
+        run: |
+          # Godot resolves export templates from the per-platform user data dir,
+          # under the DOT form of the version (GODOT_VERSION is the dash form
+          # GitHub tags releases with).
+          godot_dot="${GODOT_VERSION/-/.}"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            templates="$(cygpath -u "$APPDATA")/Godot/export_templates/$godot_dot"
+          else
+            templates="$HOME/.local/share/godot/export_templates/$godot_dot"
+          fi
+          mkdir -p "$templates"
+          cp "godot-tools/${{ matrix.export_template }}" "$templates/"
+          chmod +x "$templates/${{ matrix.export_template }}" || true
+          ls -la "$templates"
+
+      # The gate: export a real game, assemble it around the macOS-built runtime,
+      # and boot it headless with JAVA_HOME unset. The smoke asserts on the
+      # bootstrap's logged libjvm path, which is probed before JAVA_HOME and
+      # before every hardcoded dev fallback, so a JDK elsewhere on the runner
+      # cannot stand in for the bundled runtime.
+      - name: Exported-game smoke (JAVA_HOME unset, macOS-built runtime)
+        shell: bash
+        run: |
+          godot_bin="$PWD/godot-tools/Godot_v${GODOT_VERSION}_${{ matrix.godot_bin_suffix }}"
+          chmod +x "$godot_bin" || true
+          scripts/export_game_smoke.sh \
+            --runtime "$PWD/cross-runtime/runtime" \
+            "$godot_bin"
+
   store-addon:
     name: store-addon
     runs-on: ubuntu-24.04

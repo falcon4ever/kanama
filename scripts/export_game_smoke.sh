@@ -9,8 +9,11 @@
 # fallback), construct a Kanama script, and tear down clean. This is the
 # artifact that turns "we bundled a JVM" into "exported-game support".
 #
-# Host-platform, same-OS v1: validated on macOS arm64; the Linux branch is a
-# best-effort hook for the CI wiring that lands with the Windows/Linux slice.
+# Runs on macOS, Linux, and Windows (Git Bash). `--runtime DIR` feeds it a
+# runtime image built elsewhere, which is how CI proves the thing that actually
+# matters: the Windows and Linux runtimes are CROSS-BUILT on a macOS job and
+# consumed here. A runner that jlinks its own runtime would only prove same-OS
+# packaging, which is the limitation this task exists to remove.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -23,6 +26,10 @@ Requires the matching Godot export templates to be installed (the same
 version as the Godot binary).
 
 Options:
+  --runtime DIR    Use this jlink runtime image instead of building one for the
+                   host. Point it at a cross-built image (see
+                   `./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=...`)
+                   to prove an export runs on a runtime produced elsewhere.
   --work-dir DIR   Existing empty or non-existing workspace dir.
   --keep-work-dir  Do not delete a generated temporary workspace.
   --help, -h       Show this help.
@@ -32,9 +39,14 @@ EOF
 work_dir=""
 keep_work_dir=0
 godot_bin=""
+runtime_dir=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --runtime)
+      runtime_dir="${2:-}"
+      shift 2
+      ;;
     --work-dir)
       work_dir="${2:-}"
       shift 2
@@ -78,7 +90,8 @@ if [[ "$(uname -m)" == "aarch64" || "$(uname -m)" == "arm64" ]]; then
   host_arch="arm64"
 fi
 
-case "$(uname -s)" in
+host_os="$(uname -s)"
+case "$host_os" in
   Darwin)
     preset_name="macOS"
     preset_platform="macOS"
@@ -92,8 +105,14 @@ case "$(uname -s)" in
     export_artifact="kanama_export_smoke.$host_arch"
     preset_arch="$host_arch"
     ;;
+  MINGW*|MSYS*|CYGWIN*)
+    preset_name="Windows Desktop"
+    preset_platform="Windows Desktop"
+    export_artifact="kanama_export_smoke.exe"
+    preset_arch="x86_64"
+    ;;
   *)
-    echo "[export_game_smoke] unsupported host OS for the v1 smoke: $(uname -s)" >&2
+    echo "[export_game_smoke] unsupported host OS: $host_os" >&2
     exit 2
     ;;
 esac
@@ -119,8 +138,21 @@ trap cleanup EXIT
 echo "[export_game_smoke] workspace: $work_dir"
 
 # 1. Build the pieces: bootstrap + kanama.jar + example scripts jar (synced
-#    into example_project/addons/kanama) and the jlink runtime image.
-"$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" syncExampleAddonJar jlinkGameRuntime >/dev/null
+#    into example_project/addons/kanama) and, unless one was handed in, the
+#    jlink runtime image for this platform.
+if [[ -n "$runtime_dir" ]]; then
+  if [[ ! -d "$runtime_dir" ]]; then
+    echo "[export_game_smoke] --runtime image not found: $runtime_dir" >&2
+    exit 2
+  fi
+  runtime_dir="$(cd "$runtime_dir" && pwd -P)"
+  echo "[export_game_smoke] runtime image (supplied): $runtime_dir"
+  "$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" buildNativeBootstrap syncExampleAddonJar >/dev/null
+else
+  "$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" \
+    buildNativeBootstrap syncExampleAddonJar jlinkGameRuntime >/dev/null
+  runtime_dir="$ROOT_DIR/build/game-runtime/runtime"
+fi
 
 # 2. Stage an exportable copy of the example project. The smoke boots
 #    self_smoke.tscn (script construction + wrapper call) instead of the full
@@ -128,7 +160,15 @@ echo "[export_game_smoke] workspace: $work_dir"
 #    filesystem, not a packed export.
 project_dir="$work_dir/project"
 mkdir -p "$project_dir"
-rsync -a --exclude .godot --exclude .DS_Store "$ROOT_DIR/example_project/" "$project_dir/"
+# python3 rather than rsync: rsync is not on the Windows runners' Git Bash, and
+# python3 is already a hard dependency of this script.
+python3 - "$ROOT_DIR/example_project" "$project_dir" <<'EOF'
+import shutil, sys
+shutil.copytree(
+    sys.argv[1], sys.argv[2], dirs_exist_ok=True,
+    ignore=shutil.ignore_patterns(".godot", ".DS_Store"),
+)
+EOF
 mkdir -p "$project_dir/.godot"
 printf 'res://addons/kanama/kanama.gdextension\n' > "$project_dir/.godot/extension_list.cfg"
 python3 - "$project_dir/project.godot" <<'EOF'
@@ -143,14 +183,28 @@ if "import_etc2_astc" not in text:
 open(path, "w").write(text)
 EOF
 
-# The macOS entitlements are required for the embedded JVM: without
-# allow_jit_code_execution/allow_unsigned_executable_memory the hardened
-# runtime aborts JNI_CreateJavaVM (pthread_jit_write_protect_np SIGTRAP), and
-# without disable_library_validation the ad-hoc-signed export may not dlopen
-# the Temurin-signed libjvm.
-macos_options=""
+platform_options=""
+if [[ "$preset_platform" == "Windows Desktop" ]]; then
+  # modify_resources needs rcedit (icon/version stamping), which CI does not
+  # install. The console wrapper is requested because Godot's Windows binaries
+  # are GUI-subsystem and a console wrapper is the sturdiest way to read their
+  # output; in practice Godot did not emit one for this release export and the
+  # plain .exe's redirected stdout/stderr was captured fine, so the launch step
+  # falls back to it.
+  platform_options="$(cat <<'EOF'
+application/modify_resources=false
+debug/export_console_wrapper=2
+codesign/enable=false
+EOF
+)"
+fi
 if [[ "$preset_platform" == "macOS" ]]; then
-  macos_options="$(cat <<'EOF'
+  # The macOS entitlements are required for the embedded JVM: without
+  # allow_jit_code_execution/allow_unsigned_executable_memory the hardened
+  # runtime aborts JNI_CreateJavaVM (pthread_jit_write_protect_np SIGTRAP), and
+  # without disable_library_validation the ad-hoc-signed export may not dlopen
+  # the Temurin-signed libjvm.
+  platform_options="$(cat <<'EOF'
 export/distribution_type=0
 codesign/codesign=1
 codesign/entitlements/allow_jit_code_execution=true
@@ -185,7 +239,7 @@ script_export_mode=2
 [preset.0.options]
 
 binary_format/architecture="$preset_arch"
-$macos_options
+$platform_options
 EOF
 
 # 3. Import, then export the game.
@@ -212,6 +266,7 @@ case "$preset_platform" in
   *) assemble_target="$export_dir" ;;
 esac
 "$ROOT_DIR/scripts/export_game_assemble.sh" \
+  --runtime "$runtime_dir" \
   --scripts-jar "$ROOT_DIR/example_project/addons/kanama/kanama-scripts.jar" \
   "$assemble_target"
 
@@ -222,17 +277,34 @@ esac
 #    elsewhere on the machine never gets consulted first).
 case "$preset_platform" in
   macOS) game_bin="$export_dir/$export_artifact/Contents/MacOS/Kanama Test" ;;
+  "Windows Desktop")
+    # Godot's Windows binaries are GUI-subsystem; the exported console wrapper
+    # is the reliable way to get the bootstrap's stderr into a file.
+    game_bin="$export_dir/${export_artifact%.exe}.console.exe"
+    [[ -f "$game_bin" ]] || game_bin="$export_dir/$export_artifact"
+    ;;
   *) game_bin="$export_dir/$export_artifact" ;;
 esac
 if [[ ! -x "$game_bin" ]]; then
   echo "[export_game_smoke] exported game binary not found: $game_bin" >&2
   exit 1
 fi
+echo "[export_game_smoke] launching: $game_bin"
+
+# A PATH with no JDK on it. Windows needs its system directories to stay
+# reachable; everything else gets the bare minimum.
+if [[ "$preset_platform" == "Windows Desktop" ]]; then
+  system_root="$(cygpath -u "${SYSTEMROOT:-C:\\Windows}" 2>/dev/null || printf '/c/Windows')"
+  clean_path="$system_root/System32:$system_root:$system_root/System32/Wbem"
+else
+  clean_path="/usr/bin:/bin"
+fi
+
 log_file="$work_dir/game.log"
 run_status=0
 (
   unset JAVA_HOME
-  export PATH="/usr/bin:/bin"
+  export PATH="$clean_path"
   exec "$game_bin" --headless --quit --verbose
 ) >"$log_file" 2>&1 || run_status=$?
 if [[ "$run_status" -ne 0 ]]; then
@@ -252,21 +324,32 @@ smoke_fail() {
   exit 1
 }
 
+# The bootstrap logs native paths: backslashes and a drive letter on Windows,
+# where $export_dir is an MSYS path. Normalise separators once and match
+# case-insensitively so one set of assertions covers every platform.
+log_match="$work_dir/game.match.log"
+tr '\\' '/' < "$log_file" > "$log_match"
+
 check() {
   local pattern="$1"
-  if ! grep -Eq -- "$pattern" "$log_file"; then
+  if ! grep -Eiq -- "$pattern" "$log_match"; then
     smoke_fail "missing pattern" "$pattern"
   fi
 }
 
 check_absent() {
   local pattern="$1"
-  if grep -Eq -- "$pattern" "$log_file"; then
+  if grep -Eiq -- "$pattern" "$log_match"; then
     smoke_fail "unexpected pattern" "$pattern"
   fi
 }
 
-export_dir_regex="$(printf '%s' "$export_dir" | sed 's/[.[\*^$()+?{|]/\\&/g')"
+if [[ "$preset_platform" == "Windows Desktop" ]]; then
+  export_dir_native="$(cygpath -m "$export_dir" 2>/dev/null || printf '%s' "$export_dir")"
+else
+  export_dir_native="$export_dir"
+fi
+export_dir_regex="$(printf '%s' "$export_dir_native" | sed 's/[.[\*^$()+?{|]/\\&/g')"
 
 # The bundled runtime inside the export booted the JVM...
 check "\\[kanama\\] bundled runtime: $export_dir_regex/.*runtime/"
