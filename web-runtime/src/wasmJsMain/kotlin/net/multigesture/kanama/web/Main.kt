@@ -267,7 +267,16 @@ fun kanamaWebPumpFrameScheduler(delta: Double): Int {
   }
 }
 
-/** Synthetic transport benchmark path; real Web scripts use [kanamaWebProcess]. */
+/**
+ * Synthetic transport benchmark path; real Web scripts use [kanamaWebProcess].
+ *
+ * Runs the script's `_process` and then appends one synthetic scalar mutation per dispatch, so the
+ * harness can measure command-crossing throughput without a game emitting commands of its own. That
+ * appended marker is work no game asked for, which is why the bridge must only reach this when the
+ * page explicitly asks: `globalThis.KanamaWebMode === "spike"`. It was the bridge's `frame()`
+ * fallthrough until task 84, and the three demos with no mode branch (charactercontroller,
+ * thirdperson, racing) silently ran the benchmark instead of their gameplay.
+ */
 @JsExport
 fun kanamaWebSpikeProcess(objectId: Int, delta: Double): Int {
   return webCallbackBoundary(objectId, "_process") { record ->

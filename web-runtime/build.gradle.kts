@@ -358,6 +358,18 @@ tasks.register("stageWebSpikeGodotProject") {
             into(stagingDir.resolve("kanama-web/generated"))
         }
 
+        // Task 84: the benchmark harness now NAMES itself, exactly like every demo page does.
+        // It used to be the bridge's fallback mode, which meant "the page said nothing" and "the
+        // page asked for the synthetic transport benchmark" were the same state. The bridge's
+        // fallback is a plain game now, so this line is what selects the benchmark.
+        val shell = stagingDir.resolve("kanama-web/shell.html")
+        val originalShell = shell.readText()
+        val pageStart = "globalThis.KanamaWebPageStartedAt = performance.now();"
+        check(originalShell.contains(pageStart)) { "Missing Web shell bootstrap marker" }
+        shell.writeText(
+            originalShell.replace(pageStart, "$pageStart\n      globalThis.KanamaWebMode = \"spike\";")
+        )
+
         val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
         check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
         val mappings =
