@@ -317,8 +317,11 @@ jobs:
       - name: Package the exported game for manual testing
         shell: bash
         run: |
+          # Relative output path on purpose: in Git Bash a Windows absolute path
+          # like D:\a\... makes tar read the drive-letter colon as a remote
+          # host spec and try to connect to a machine named "D".
           cd exported-game-work
-          tar -czf "$GITHUB_WORKSPACE/kanama-exported-game-${{ matrix.target }}.tar.gz" export
+          tar -czf "../kanama-exported-game-${{ matrix.target }}.tar.gz" export
 
       - name: Upload the exported game
         uses: actions/upload-artifact@v6
