@@ -42,7 +42,9 @@ release kits and store add-ons are package artifacts that can be built from
 source today and are the intended release path. Exported games are
 unpack-and-play — they ship a bundled, jlink-trimmed JVM runtime, and that
 runtime is cross-target, so a macOS machine can produce a Windows or Linux
-build. See [Desktop and Packaging](docs/exporting/desktop.md); distribution
+build. A macOS-cross-built Windows export was verified on real Windows hardware
+(2026-08-10): it booted from its own bundled runtime even with a system JDK
+installed. See [Desktop and Packaging](docs/exporting/desktop.md); distribution
 signing/notarization remains a separate release-readiness track.
 
 Android is **Supported** on 4.7 stable for the v0.4.0 line: the workflow builds a

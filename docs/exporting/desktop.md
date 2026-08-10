@@ -137,10 +137,22 @@ finds app-relative, so players never install a JDK. The system JDK stays the
 exports bundle the .NET runtime.
 
 Status: implemented for Windows, Linux, and macOS, and **cross-target** — a
-developer on any desktop host can produce the runtime for any other. Treat
-exported-game packaging as release-readiness work in progress rather than a
-support claim until the macOS notarization track catches up, but the packaging
-itself is no longer host-locked.
+developer on any desktop host can produce the runtime for any other.
+
+Evidence, so you can judge how far it has been taken:
+
+- **Windows** — a game exported with a runtime **cross-built on macOS arm64**
+  was run on real Windows hardware (2026-08-10) and booted from its own bundled
+  runtime. That machine had a JDK installed and the app-relative probe still
+  won (`[kanama] using libjvm: <export>\runtime\bin\server\jvm.dll`, no
+  `checked JAVA_HOME` line), so this is not a case of a system JVM standing in.
+  Real GPU path (`Vulkan 1.2.175 - Forward+`), no VC++ redistributable needed,
+  clean teardown.
+- **Linux** — the same cross-built-on-macOS proof runs on the CI runner with
+  `JAVA_HOME` unset. No dedicated real-hardware pass yet.
+- **macOS** — exports boot from their own runtime; **distribution-grade signing
+  and notarization of the bundled runtime is a separate track and is not done.**
+  That caveat is macOS-specific — it does not gate the Windows or Linux path.
 
 An exported game needs four pieces next to each other: the platform bootstrap
 library referenced by `kanama.gdextension` (Godot's export copies it),
