@@ -45,6 +45,12 @@ async function snapshot(evaluate) {
         flagReady: classCount(".Flag3D"),
         killPlaneReady: classCount(".KillPlane3D"),
         physicsCalls: bridge.physicsProcessCalls ?? 0,
+        // Task 84: real _process dispatches. This demo has no mode branch in the
+        // bridge's frame dispatch, and until task 84 the fallthrough there was the
+        // SYNTHETIC SPIKE BENCHMARK -- so this demo reported processTicks: 0 while
+        // quietly appending a benchmark scalar mutation on every dispatch.
+        // (No backticks in here: this whole function body is a template literal.)
+        processCalls: bridge.processCalls ?? 0,
         // Task 82: the coroutine frame scheduler's per-frame advance. cc named no "Main"
         // handle anywhere, which is exactly why it never pumped before protocol 18.
         pumps: bridge.frameSchedulerPumps ?? 0,
@@ -304,8 +310,20 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
     // Headless rAF throttles to ~15 ticks/s; 40 ticks proves sustained physics.
     physicsFramesAdvanced: peak.physicsCalls >= baseline.physicsCalls + 40,
     // travel(Idle/Move) + particle toggles + blink timers flow as queued commands.
+    // MEASURED 2026-08-10 (macOS arm64, Chrome 151 headless, protocol 18, task 84): the
+    // gameplay window applies ~800 commands over its baseline, so +80 keeps a 10x margin
+    // on the REAL _process path. The threshold is unchanged and was NOT re-derived from
+    // the pre-84 runs, which were inflated by the benchmark's synthetic per-dispatch
+    // scalar mutation -- a lower bound met partly by scaffolding is a lower bound that
+    // proves nothing, so it had to be re-measured even though the number stayed put.
     gameplayCommandsApplied: peak.appliedCommands > baseline.appliedCommands + 80,
     crossingsAdvanced: peak.crossings > ready.crossings,
+    // Task 84: this demo runs the engine's REAL `_process`, not the transport benchmark.
+    // MEASURED 829 (Chrome) / 8524 (Firefox) process dispatches; it was exactly 0 on both
+    // before the fix. Asserted as > 0 rather than a magnitude because the count tracks the
+    // host's rAF rate, and the thing worth failing on is the demo silently leaving the
+    // real dispatch path again.
+    realProcessPathDispatched: afterGameplay.processCalls > 0,
     // Task 82: the coroutine frame scheduler is advanced in THIS demo, which names no
     // "Main" handle anywhere -- the pump rides the _process dispatch every proxy emits.
     frameSchedulerPumped: afterGameplay.pumps >= 10,
@@ -348,6 +366,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
       kotlinToGodotCalls: peak.crossings,
       physicsProcessCalls: peak.physicsCalls,
       appliedCommands: peak.appliedCommands,
+      processCalls: afterGameplay.processCalls,
       playerDisplacement: Number(displacement.toFixed(3)),
       frameSchedulerPumps: afterGameplay.pumps,
       frameSchedulerContinuations: afterGameplay.continuations,

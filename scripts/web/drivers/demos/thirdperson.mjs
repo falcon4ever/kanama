@@ -40,6 +40,12 @@ async function snapshot(evaluate) {
         boxReady: classCount(".Box"),
         smokeQuitReady: classCount(".SmokeQuit"),
         physicsCalls: bridge.physicsProcessCalls ?? 0,
+        // Task 84: real _process dispatches. This demo has no mode branch in the
+        // bridge's frame dispatch, and until task 84 the fallthrough there was the
+        // SYNTHETIC SPIKE BENCHMARK -- so this demo reported processTicks: 0 while
+        // quietly appending a benchmark scalar mutation on every dispatch.
+        // (No backticks in here: this whole function body is a template literal.)
+        processCalls: bridge.processCalls ?? 0,
         appliedCommands: bridge.appliedCommands,
         liveHandles: bridge.liveBrowserHandleCount,
         maxLiveHandles: bridge.maxLiveBrowserHandles,
@@ -208,8 +214,20 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     // Synthetic move_up displaced the player through the camera-relative controller.
     playerMovedOnInput: displacement > 1.0,
     physicsFramesAdvanced: peak.physicsCalls >= baseline.physicsCalls + 40,
+    // MEASURED 2026-08-10 (macOS arm64, Chrome 151 headless, protocol 18, task 84): the
+    // gameplay window applies ~680 commands over its baseline, so +80 keeps an 8x margin
+    // on the REAL _process path. The threshold is unchanged and was NOT re-derived from
+    // the pre-84 runs, which were inflated by the benchmark's synthetic per-dispatch
+    // scalar mutation -- a lower bound met partly by scaffolding proves nothing, so it
+    // had to be re-measured even though the number stayed put.
     gameplayCommandsApplied: peak.appliedCommands > baseline.appliedCommands + 80,
     crossingsAdvanced: peak.crossings > baseline.crossings,
+    // Task 84: this demo runs the engine's REAL `_process`, not the transport benchmark.
+    // MEASURED 793 (Chrome) / 7405 (Firefox) process dispatches; it was exactly 0 on both
+    // before the fix. Asserted as > 0 rather than a magnitude because the count tracks the
+    // host's rAF rate, and the thing worth failing on is the demo silently leaving the
+    // real dispatch path again.
+    realProcessPathDispatched: settled.processCalls > 0,
     fullTeardownToZero: settled.liveHandles === 0,
     physicsOrderingDeterministic: (settled.physicsAfterProcess ?? 0) === 0,
     noCallbackFaults:
@@ -237,6 +255,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
       kotlinToGodotCalls: peak.crossings,
       physicsProcessCalls: peak.physicsCalls,
       appliedCommands: peak.appliedCommands,
+      processCalls: settled.processCalls,
       playerDisplacement: Number(displacement.toFixed(3)),
     },
     callbacks: {

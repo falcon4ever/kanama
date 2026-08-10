@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updated": "2026-07-30",
-  "note": "Web performance budgets (Task 60f). Every number was MEASURED; each demo records the runs it came from. WHAT IS GATED CHANGED after the first Firefox baseline (see `gatingPolicy`): payload and crossings-per-tick are gated, startup is recorded but NOT gated. Firefox's higher crossings-per-tick on _process-heavy demos is a SETTLED headless-environment artifact, not an engine defect (task 74, 2026-08-03): nothing paces requestAnimationFrame in headless Firefox, so render-frame-driven command emission multiplies while physics-driven work tracks the wall-capped physics step; a display-paced Firefox sits near Chrome. Per-engine budgets bound regressions within each environment's own baseline.",
+  "updated": "2026-08-10",
+  "note": "Web performance budgets (Task 60f). Every number was MEASURED; each demo records the runs it came from. WHAT IS GATED CHANGED after the first Firefox baseline (see `gatingPolicy`): payload and crossings-per-tick are gated, startup is recorded but NOT gated. Firefox's higher crossings-per-tick on _process-heavy demos is a SETTLED headless-environment artifact, not an engine defect (task 74, 2026-08-03): nothing paces requestAnimationFrame in headless Firefox, so render-frame-driven command emission multiplies while physics-driven work tracks the wall-capped physics step; a display-paced Firefox sits near Chrome. Per-engine budgets bound regressions within each environment's own baseline. TASK 84 (2026-08-10) re-measured charactercontroller, thirdperson and racing: those three had no `mode` branch in the JS bridge's frame dispatch and so took its SPIKE BENCHMARK fallthrough, which appended a synthetic scalar mutation per dispatch and never counted a _process tick. Their old numbers graded the benchmark, not the game -- every one of them moved DOWN on re-measurement and every ceiling tightened. Each carries a `supersedes` string with what it replaced; nothing here was loosened.",
   "headroom": "payload +15% (asset growth, not a texture reimport); startup 3x with an 8s floor; crossings/tick 2x with a 2.0 floor -- the ratio is diluted by tick count, so 2x absorbs host variation while a real regression (per-frame work reaching the cross-module path) multiplies it several times over.",
   "knownExceptions": {
     "tpsdemo": "638 MB served payload, 570 MB of it upstream demo assets in index.pck. It RUNS, but nobody would download it: this is far outside any sane web budget, and the number below records reality rather than blessing it. Fixing it is asset work in the demo (texture compression, trimming), which 60f explicitly puts out of scope -- budgets are not met by editing gameplay or scene content."
@@ -50,36 +50,35 @@
     },
     "charactercontroller": {
       "maxPayloadBytes": 97000000,
-      "maxCrossingsPerTick": 9.0,
+      "maxCrossingsPerTick": 3.8,
       "minTicksForVerdict": 30,
-      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measuredOn": "2026-08-10, macOS arm64, Chrome 151 headless, protocol 18 (task 84)",
+      "supersedes": "2026-07-30 protocol 15: chrome 4.50 (max 9.0), firefox 19.58 / CI 12.13 (max 39.2). Those runs took bridge.frame()'s SPIKE BENCHMARK fallthrough (task 84): the synthetic per-dispatch scalar mutation was counted as real crossings and processTicks was 0, so the denominator was physics ticks alone. Both halves of the ratio were wrong; the numbers above are re-measured on the real _process path and are NOT comparable to the old ones.",
       "measured": {
         "payloadBytes": 83998154,
-        "startupMs": 2670,
-        "crossingsPerTick": 4.5,
-        "ticksObserved": 211
+        "startupMs": 2704,
+        "crossingsPerTick": 1.86,
+        "ticksObserved": 1543
       },
       "engines": {
         "chrome": {
-          "maxCrossingsPerTick": 9.0,
+          "maxCrossingsPerTick": 3.8,
           "measured": {
-            "crossingsPerTick": 4.5,
-            "ticksObserved": 211,
-            "startupMs": 2670,
-            "on": "macOS arm64, Chrome 150 headless"
+            "crossingsPerTick": 1.86,
+            "ticksObserved": 1543,
+            "startupMs": 2704,
+            "on": "macOS arm64, Chrome 151 headless, protocol 18"
           }
         },
         "firefox": {
-          "maxCrossingsPerTick": 39.2,
+          "maxCrossingsPerTick": 3.8,
           "measured": {
-            "crossingsPerTick": 19.58,
-            "ticksObserved": 295,
-            "startupMs": 37082,
-            "on": "macOS arm64, Firefox 153 headless"
+            "crossingsPerTick": 0.23,
+            "ticksObserved": 9031,
+            "startupMs": 37101,
+            "on": "macOS arm64, Firefox 153 headless, protocol 18 (0.22-0.23 over 4 runs)"
           },
-          "measuredOnCi": {
-            "crossingsPerTick": 12.13
-          }
+          "budgetFrom": "Chrome's number, NOT 2x Firefox's own 0.23. Before task 84 Firefox sat far ABOVE Chrome here (19.58 vs 4.50) because the benchmark transport emitted one synthetic command per dispatch and headless Firefox's unpaced rAF dispatches several times more often. With that gone, the residual crossings are physics-driven (wall-capped) while unpaced rAF only inflates processTicks, so Firefox's ratio now sits BELOW Chrome's and Chrome is the conservative bound for both. The pre-84 CI Firefox figure (12.13) measured the benchmark and is not carried forward; the next full-corpus CI run re-measures it."
         }
       }
     },
@@ -246,33 +245,35 @@
     },
     "racing": {
       "maxPayloadBytes": 49000000,
-      "maxCrossingsPerTick": 5.0,
+      "maxCrossingsPerTick": 4.2,
       "minTicksForVerdict": 30,
-      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measuredOn": "2026-08-10, macOS arm64, Chrome 151 headless, protocol 18 (task 84)",
+      "supersedes": "2026-07-30 protocol 15: chrome 2.51 (max 5.0), firefox 4.93 (max 9.9). Those runs took bridge.frame()'s SPIKE BENCHMARK fallthrough (task 84) -- synthetic per-dispatch crossings in the numerator, processTicks 0 in the denominator -- so they are not comparable to the numbers above.",
       "measured": {
         "payloadBytes": 42091193,
-        "startupMs": 1582,
-        "crossingsPerTick": 2.51,
-        "ticksObserved": 474
+        "startupMs": 1611,
+        "crossingsPerTick": 2.09,
+        "ticksObserved": 548
       },
       "engines": {
         "chrome": {
-          "maxCrossingsPerTick": 5.0,
+          "maxCrossingsPerTick": 4.2,
           "measured": {
-            "crossingsPerTick": 2.51,
-            "ticksObserved": 474,
-            "startupMs": 1582,
-            "on": "macOS arm64, Chrome 150 headless"
+            "crossingsPerTick": 2.09,
+            "ticksObserved": 548,
+            "startupMs": 1611,
+            "on": "macOS arm64, Chrome 151 headless, protocol 18"
           }
         },
         "firefox": {
-          "maxCrossingsPerTick": 9.9,
+          "maxCrossingsPerTick": 4.2,
           "measured": {
-            "crossingsPerTick": 4.93,
-            "ticksObserved": 570,
-            "startupMs": 14132,
-            "on": "macOS arm64, Firefox 153 headless"
-          }
+            "crossingsPerTick": 0.68,
+            "ticksObserved": 2095,
+            "startupMs": 14371,
+            "on": "macOS arm64, Firefox 153 headless, protocol 18"
+          },
+          "budgetFrom": "Chrome's number, NOT 2x Firefox's own 0.68 -- see charactercontroller.firefox.budgetFrom for why Chrome bounds both engines after task 84."
         }
       }
     },
@@ -310,36 +311,35 @@
     },
     "thirdperson": {
       "maxPayloadBytes": 122000000,
-      "maxCrossingsPerTick": 2.3,
+      "maxCrossingsPerTick": 2.0,
       "minTicksForVerdict": 30,
-      "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
+      "measuredOn": "2026-08-10, macOS arm64, Chrome 151 headless, protocol 18 (task 84)",
+      "supersedes": "2026-07-30 protocol 15: chrome 1.15 (max 2.3), firefox 6.01 / CI 7.08 (max 14.2). Those runs took bridge.frame()'s SPIKE BENCHMARK fallthrough (task 84) -- synthetic per-dispatch crossings in the numerator, processTicks 0 in the denominator -- so they are not comparable to the numbers above. The pre-84 CI Firefox figure (7.08) measured the benchmark and is not carried forward; the next full-corpus CI run re-measures it.",
       "measured": {
         "payloadBytes": 105819088,
-        "startupMs": 4412,
-        "crossingsPerTick": 1.15,
-        "ticksObserved": 657
+        "startupMs": 4444,
+        "crossingsPerTick": 0.29,
+        "ticksObserved": 1738
       },
       "engines": {
         "chrome": {
-          "maxCrossingsPerTick": 2.3,
+          "maxCrossingsPerTick": 2.0,
           "measured": {
-            "crossingsPerTick": 1.15,
-            "ticksObserved": 657,
-            "startupMs": 4412,
-            "on": "macOS arm64, Chrome 150 headless"
+            "crossingsPerTick": 0.29,
+            "ticksObserved": 1738,
+            "startupMs": 4444,
+            "on": "macOS arm64, Chrome 151 headless, protocol 18"
           }
         },
         "firefox": {
-          "maxCrossingsPerTick": 14.2,
+          "maxCrossingsPerTick": 2.0,
           "measured": {
-            "crossingsPerTick": 6.01,
-            "ticksObserved": 1314,
-            "startupMs": 64691,
-            "on": "macOS arm64, Firefox 153 headless"
+            "crossingsPerTick": 0.12,
+            "ticksObserved": 8728,
+            "startupMs": 64977,
+            "on": "macOS arm64, Firefox 153 headless, protocol 18"
           },
-          "measuredOnCi": {
-            "crossingsPerTick": 7.08
-          }
+          "budgetFrom": "Chrome's number, NOT 2x Firefox's own 0.12 -- see charactercontroller.firefox.budgetFrom for why Chrome bounds both engines after task 84. 2.0 is the declared crossings/tick floor from `headroom`, which 2x0.29 falls under."
         }
       }
     },
@@ -425,6 +425,6 @@
   "gatingPolicy": {
     "payloadBytes": "GATED. Bytes are host- and engine-independent by construction.",
     "startupMs": "RECORDED, NOT GATED. It is wall-clock and it does not survive a loaded machine: the same thirdperson build measured 4.4s on an idle Chrome and 64.7s on a Firefox sharing a busy workstation. A gate that red-lights because someone else was compiling is measuring the machine, and the failure it would catch (a demo that stops booting) already shows up as a driver timeout.",
-    "crossingsPerTick": "GATED PER ENGINE. Engine-stable for most of the corpus (bunnymark 2.22/1.97, dodge 0.19/0.20, citybuilder 0.84/0.77, fps 1.10/1.02 for chrome/firefox) but NOT for the input-heavy demos, where Firefox does 5-10x the boundary work: charactercontroller 4.50 -> 19.58, thirdperson 1.15 -> 6.01. A Chrome-derived budget had no business gating a Firefox run, which is exactly how this was found -- the gate reddened main."
+    "crossingsPerTick": "GATED PER ENGINE. Engine-stable for most of the corpus (bunnymark 2.22/1.97, dodge 0.19/0.20, citybuilder 0.84/0.77, fps 1.10/1.02 for chrome/firefox). The per-engine split was introduced because Firefox measured 5-10x Chrome's ratio on the input-heavy demos (charactercontroller 4.50 -> 19.58, thirdperson 1.15 -> 6.01) and a Chrome-derived budget reddened main. Task 84 (2026-08-10) established that for those three demos the asymmetry was an artifact of the spike-benchmark fallthrough: the synthetic per-dispatch command scaled with Firefox's unpaced rAF. On the real _process path the asymmetry INVERTS (charactercontroller 1.86 -> 0.23, thirdperson 0.29 -> 0.12, racing 2.09 -> 0.68), because the residual crossings are physics-driven and wall-capped while unpaced rAF only inflates processTicks. Those three therefore take Chrome's ceiling on both engines as the conservative bound. The structure stays per-engine: it is still the right shape, and the rest of the corpus was never re-measured under it."
   }
 }
