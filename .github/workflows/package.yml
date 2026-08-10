@@ -307,7 +307,28 @@ jobs:
           chmod +x "$godot_bin" || true
           scripts/export_game_smoke.sh \
             --runtime "$PWD/cross-runtime/runtime" \
+            --work-dir "$PWD/exported-game-work" \
+            --keep-work-dir \
             "$godot_bin"
+
+      # Publish the exact build the smoke just booted, so a human can unzip it on
+      # real hardware. CI proves it starts headless with JAVA_HOME unset; only a
+      # person double-clicking on a clean machine proves the player experience.
+      - name: Package the exported game for manual testing
+        shell: bash
+        run: |
+          # Relative output path on purpose: in Git Bash a Windows absolute path
+          # like D:\a\... makes tar read the drive-letter colon as a remote
+          # host spec and try to connect to a machine named "D".
+          cd exported-game-work
+          tar -czf "../kanama-exported-game-${{ matrix.target }}.tar.gz" export
+
+      - name: Upload the exported game
+        uses: actions/upload-artifact@v6
+        with:
+          name: kanama-exported-game-${{ matrix.target }}
+          path: kanama-exported-game-${{ matrix.target }}.tar.gz
+          if-no-files-found: error
 
   store-addon:
     name: store-addon

@@ -7,6 +7,13 @@ versioning once public releases begin.
 
 ## Unreleased
 
+- Exported desktop games are published as CI artifacts
+  (`kanama-exported-game-<target>`) so the build CI already boots can be tested
+  on real hardware without rebuilding.
+- Verified on real Windows hardware: a game exported with a jlink runtime
+  cross-built on macOS boots from its own bundled runtime even when a system JDK
+  is installed, with no VC++ redistributable required.
+
 ### Added
 
 - **Exported desktop games can be built for another platform.** `./gradlew
