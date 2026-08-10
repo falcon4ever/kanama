@@ -170,7 +170,12 @@
   const bridge = {
     api: null,
     protocolVersion: KANAMA_WEB_PROTOCOL_VERSION,
-    mode: globalThis.KanamaWebMode ?? "spike",
+    // Task 84: the fallback mode is a plain GAME, never the benchmark. Defaulting to "spike" put
+    // the same trap one level up -- a page that forgot its `KanamaWebMode` line took the synthetic
+    // transport AND the single-script benchmark lifecycle below, silently. Every page that wants
+    // the benchmark now says so; every page that forgets gets a game (and its driver's
+    // `mode === "<demo>"` check fails loudly instead of the run quietly measuring the wrong thing).
+    mode: globalThis.KanamaWebMode ?? "game",
     bunnymarkVariant: globalThis.KanamaWebBunnymarkVariant ?? null,
     bunnymarkLanguage: globalThis.KanamaWebBunnymarkLanguage ?? "kanama",
     previewBunnies: requestedPreviewBunnies(),
@@ -560,35 +565,33 @@
       return executed;
     },
 
+    /**
+     * One engine frame's dispatch into one script.
+     *
+     * Task 84: the REAL `_process` is the FALLTHROUGH and the synthetic transport benchmark is an
+     * explicitly named branch. It used to be the other way round -- eight demos were listed here
+     * and the three nobody remembered (charactercontroller, thirdperson, racing) silently ran the
+     * benchmark instead of their game: ~150 dispatches dropped into `kanamaWebEmptyFrame`, then
+     * `kanamaWebSpikeProcess` appending a synthetic scalar mutation on EVERY dispatch forever.
+     * Nothing failed, so nothing noticed; the numbers simply stopped describing the game
+     * (inflated appliedCommands, an extra crossing per script per frame, and `processTicks: 0`
+     * for a demo that never reached `process()` at all).
+     *
+     * The default has to be what a GAME needs; benchmark scaffolding is what you opt INTO. This is
+     * the same accident shape as task 82's mode-gated scheduler pump one layer down: there the
+     * per-frame work was MISSING by default, here it was WRONG by default. A demo that adds no
+     * branch here now gets correct behaviour by construction, so demo thirteen cannot repeat it.
+     */
     frame(handle, delta) {
       this.lastProcessRafTick = this.rafTick;
       // Before any mode branch: the scheduler advance belongs to the engine frame, not to a demo.
       this.pumpFrameScheduler(handle, delta);
-      if (this.mode === "bunnymark") {
-        return this.process(handle, delta);
-      }
-      if (this.mode === "web3d") {
-        // Minimal 3D render smoke: the single Node3D script runs its _process (spins a
-        // child); no benchmark transport.
-        return this.process(handle, delta);
-      }
-      if (this.mode === "squash") {
-        return this.process(handle, delta);
-      }
-      if (this.mode === "fps") {
-        return this.process(handle, delta);
-      }
-      if (this.mode === "tpsdemo") {
-        // Every script runs its plain _process dispatch; nothing here takes the spike
-        // benchmark transport.
-        return this.process(handle, delta);
-      }
-      if (this.mode === "citybuilder") {
-        return this.process(handle, delta);
-      }
-      if (this.mode === "platformer") {
-        return this.process(handle, delta);
-      }
+      // Opt-in only, named by the page: `stageWebSpikeGodotProject` writes
+      // `globalThis.KanamaWebMode = "spike"` into the harness shell, the same way every demo's
+      // staging task names its own mode. The benchmark is legitimate tooling -- it measures
+      // crossing throughput with no gameplay in the way -- so it stays reachable via
+      // `./gradlew :web-runtime:exportWebSpike`, but only when asked for.
+      if (this.mode === "spike") return this.spikeBenchmarkFrame(handle, delta);
       if (this.mode === "match3") {
         if (handle === this.match3AudioHandle) {
           this.match3AudioProcessCalls += 1;
@@ -604,15 +607,19 @@
         // Tween-driven); only Main runs its own _process. The scheduler advance above is
         // unaffected -- it already happened, whichever handle arrived first this frame.
         if (handle !== this.match3MainHandle) return 0;
-        return this.process(handle, delta);
       }
-      if (this.mode === "dodge") {
-        // Real scene demo: every dodge script (Main, Player, spawned Mobs) runs its _process
-        // via process(). Neither path takes the spike benchmark transport below, which appends
-        // a scalar (op100) marker that only the spike main script can apply — that mis-route is
-        // what fataled dodge's per-frame scripts.
-        return this.process(handle, delta);
-      }
+      return this.process(handle, delta);
+    },
+
+    /**
+     * The synthetic transport benchmark (`KanamaWebMode === "spike"`, the webSpikeGodot harness).
+     *
+     * Samples empty crossings first, then batched frames whose `_process` appends one synthetic
+     * scalar mutation (opcode 1000) per dispatch, so throughput can be measured without a game
+     * emitting its own commands. That appended marker is why this must never be a fallthrough: a
+     * real demo taking it reports work no game asked for.
+     */
+    spikeBenchmarkFrame(handle, delta) {
       const started = performance.now();
       let result;
       const emptyLimit = WARMUP_FRAMES + SAMPLE_FRAMES;
