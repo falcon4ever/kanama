@@ -247,9 +247,11 @@ scripts/web_ci_matrix.sh \
 Every cell runs even after an earlier one fails, so a red run reports the whole
 picture. `--demo-set pr` is the per-PR subset (`match3`, `web3d`, `dodge` — a
 pointer-drag demo, a 3D demo needing no demos checkout, and a full-lifecycle
-demo); `--demo-set full` is the 12-demo corpus. Per-demo budgets live in
-`scripts/web/demos.sh`; scale them for a slower host with `--timeout-scale`
-rather than editing them, so local and CI numbers stay comparable.
+demo); `--demo-set full` is the 12-demo corpus plus the gated spike benchmark
+cell (as is `ci`, minus what a hosted runner cannot build — see the Spike
+Benchmark Cell below). Per-demo budgets live in `scripts/web/demos.sh`; scale
+them for a slower host with `--timeout-scale` rather than editing them, so local
+and CI numbers stay comparable.
 
 **Chrome and Firefox are the CI cells** (`.github/workflows/web.yml`): the PR
 subset on every Web-relevant pull request, the full corpus on push to `main` and
@@ -266,6 +268,7 @@ Which gate runs when, and where. A gate that is not on this list runs nowhere.
 | `ci` corpus × Chrome + Firefox (everything a runner can build) | push to `main`, and nightly | CI |
 | **tps-demo** | before a release tag | local (OOM-killed on a hosted runner) |
 | Soak (10 min, `--demo soak`) | nightly | CI |
+| Spike transport benchmark (`--demo spike`, in the `ci`/`full` sets) | push to `main`, and nightly | CI |
 | Full corpus on **Safari** | before a release tag, and before any promotion decision | local (no headless mode) |
 | Fresh-checkout gate | before a release tag | local |
 | Browser floor re-bisect | when a floor is claimed to move, or a browser major ships that breaks a cell | local |
@@ -297,6 +300,29 @@ registered coroutine jobs must not be higher in the second half than the first
 (plus a few handles of sampling slack), gameplay must still be running at the
 end, and teardown must still drain to zero after a long run rather than only
 after a short one.
+
+### Spike Benchmark Cell
+
+```sh
+scripts/web_ci_matrix.sh --godot /absolute/path/to/godot \
+  --template <web_nothreads_release.zip> --demo spike --engine chrome --engine firefox
+```
+
+The spike is the synthetic transport benchmark (the staged in-repo
+`webSpikeGodot` project — it needs no demos checkout and exports through its own
+`:web-runtime:exportWebSpike` task). It is **opt-in**: the bridge's frame
+fallthrough is the real `_process`, and only a page that stamps
+`globalThis.KanamaWebMode = "spike"` reaches the benchmark transport. This cell
+is what keeps the opt-in path from rotting. Its driver asserts the staging still
+names the mode (an export that loses the mode line falls back to gameplay and
+fails here, loudly), that the benchmark branch's own counters advanced while the
+real `_process` path stayed at exactly zero — the inverse of the demo drivers'
+`realProcessPathDispatched` — folds the page's structural verdict (the
+10000-mutation batch must cross the boundary exactly ONCE) into the envelope,
+and quits the SceneTree to drain live handles to zero. Transport cost is gated
+structurally rather than by a ratio: the spike never takes the
+`_process`/`_physics_process` tick paths, so crossings-per-tick is exempt in
+`scripts/web/budgets.json` with the reason recorded.
 
 ## Performance Budgets
 

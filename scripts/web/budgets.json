@@ -420,6 +420,40 @@
         "crossingsPerTick": 0.22,
         "ticksObserved": 94701
       }
+    },
+    "spike": {
+      "maxPayloadBytes": 47000000,
+      "maxCrossingsPerTick": null,
+      "minTicksForVerdict": 0,
+      "measuredOn": "2026-08-11, macOS arm64, Chrome 151 headless, protocol 18",
+      "note": "The gated transport benchmark cell (task 84 follow-up). Its transport cost is NOT gated by a ceiling here but STRUCTURALLY by the driver's page_* checks: the OPERATIONS(10000)-mutation batch must cross the boundary exactly ONCE (page_backendQueuedCrossings), with zero command-buffer growths -- exact equalities, tighter than any measured ceiling could be. The observed run counters are engine-stable because the lifecycle is frame-count-structural, not wall-clocked: 186/305 crossings/spikeFrames on Chrome vs 185/304 on Firefox, appliedCommands 260161 vs 260160.",
+      "tickRatioNotApplicable": "The spike never takes the _process/_physics_process tick paths this ratio counts -- its frames dispatch into kanamaWebEmptyFrame/kanamaWebSpikeProcess, and processTicks === physicsTicks === 0 is itself a driver assertion (realProcessPathNotDispatched, the inverse of the demo drivers' realProcessPathDispatched). A ratio with a structurally zero denominator is not a measurement. Payload is still gated.",
+      "measured": {
+        "payloadBytes": 40255932,
+        "startupMs": 1303,
+        "crossingsPerTick": 0,
+        "ticksObserved": 0
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": null,
+          "measured": {
+            "crossingsPerTick": 0,
+            "ticksObserved": 0,
+            "startupMs": 1303,
+            "on": "2026-08-11, macOS arm64, Chrome 151 headless: kotlinToGodotCalls 186, spikeFrameDispatches 305, appliedCommands 260161"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": null,
+          "measured": {
+            "crossingsPerTick": 0,
+            "ticksObserved": 0,
+            "startupMs": 5153,
+            "on": "2026-08-11, macOS arm64, Firefox 153 headless: kotlinToGodotCalls 185, spikeFrameDispatches 304, appliedCommands 260160"
+          }
+        }
+      }
     }
   },
   "gatingPolicy": {

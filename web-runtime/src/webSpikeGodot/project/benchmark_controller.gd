@@ -3,6 +3,7 @@ extends Node
 var _bridge
 var _benchmark_callback
 var _reload_started := false
+var _quit_started := false
 
 
 func _ready() -> void:
@@ -14,11 +15,22 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _bridge == null or _reload_started or not _bridge.shouldReload():
+	if _bridge == null:
 		return
-	_reload_started = true
-	_bridge.recordReloadStarted()
-	get_tree().call_deferred("reload_current_scene")
+	if not _reload_started and _bridge.shouldReload():
+		_reload_started = true
+		_bridge.recordReloadStarted()
+		get_tree().call_deferred("reload_current_scene")
+		return
+	# Gated spike cell (task 84 follow-up): the smoke driver ends the run the way
+	# dodge's SmokeQuit does. It raises this page global after the benchmark
+	# verdict; quitting the SceneTree exits every node, so the bridge's live
+	# handle registry drains to zero and the driver can assert envelope-complete
+	# teardown instead of leaving the replacement instance (and its loaded
+	# texture) alive forever.
+	if not _quit_started and JavaScriptBridge.eval("globalThis.KanamaWebSpikeQuitRequested === true"):
+		_quit_started = true
+		get_tree().quit()
 
 
 func _exit_tree() -> void:
