@@ -167,6 +167,21 @@
     return Number.isInteger(requested) ? Math.max(0, Math.min(requested, 5_000)) : 0;
   }
 
+  // Task 81 (census-as-gate): the virtual dispatch categories the exercised-member census
+  // records. These are exactly the names `invoke` receives for the virtuals the generated
+  // proxies dispatch (WebScriptCodeEmitter.DISPATCHED_VIRTUALS), and they map 1:1 onto the
+  // "virtuals" entries of KanamaWebProtocol.generated.json.
+  const EXERCISED_VIRTUAL_DISPATCHES = new Set([
+    "_ready",
+    "_enter_tree",
+    "_process",
+    "_physics_process",
+    "_draw",
+    "_exit_tree",
+    "_input",
+    "_unhandled_input",
+  ]);
+
   const bridge = {
     api: null,
     protocolVersion: KANAMA_WEB_PROTOCOL_VERSION,
@@ -284,6 +299,21 @@
     // decrements on the _exit_tree free, which is what lets the FPS driver assert that a shot
     // enemy actually queue_free()d instead of merely that enemies once existed.
     liveScriptsByClass: {},
+    // Task 81 (census-as-gate): which registered script members actually DISPATCHED across the
+    // JS<->Kotlin boundary, per script class: script class name -> { memberKey: dispatchCount }.
+    // memberKey is the virtual's name for virtual dispatches, "method#<id>" for registered
+    // @RegisterFunction dispatches (the engine drivers resolve the id to the manifest name from
+    // the export's kanama-web/KanamaWebProtocol.generated.json), and "~kotlinSignalCallback" as
+    // one aggregate for anonymous Kotlin-lambda signal subscriptions (they have no member name;
+    // per-id keys would be runtime-assigned noise). Recorded at the `invoke` chokepoint, which
+    // every one of those dispatch funnels already passes through, so a new funnel cannot arrive
+    // unrecorded. This is what result_schema.py's per-demo required-member gate reads: a check
+    // that only counts frames is no longer as green as one that proves an enemy died.
+    exercisedMembers: {},
+    // Dispatches that arrive before the script's recordReady names its handle (60i lesson: a
+    // script instance exists before _ready, and _enter_tree/_process can dispatch first). Keyed
+    // by owner handle and folded into exercisedMembers at recordReady.
+    pendingExercisedByHandle: new Map(),
     match3DeferredReadyByClass: {},
     // handle -> script class name, recorded at ready. Purely diagnostic: a
     // boundary failure otherwise reports a bare handle number, which tells a CI
@@ -443,6 +473,7 @@
         this.activeOwnerHandle = this.applyCallbacks.has(handle)
           ? handle
           : this.ownerForHandle(handle);
+        this.recordExercisedDispatch(this.activeOwnerHandle, callback, member);
       }
       try {
         return action();
@@ -466,6 +497,42 @@
       } finally {
         this.activeOwnerHandle = previousOwner;
       }
+    },
+
+    /**
+     * Task 81 (census-as-gate): record one boundary dispatch into the exercised-member census.
+     *
+     * Categories: registered @RegisterFunction dispatches (all nine call* funnels pass
+     * callback === "registered_function" and member === "method#<id>"), the dispatched
+     * virtuals (callback is the virtual's own name), and the Kotlin-lambda signal dispatch
+     * path (callback === "_kanama_web_signal_dispatch0/1/_object"), which is recorded as ONE
+     * aggregate key because an anonymous lambda has no stable member name to require.
+     * Everything else through `invoke` (property pushes, create, the scheduler pump) is not a
+     * script member and is deliberately not recorded.
+     *
+     * Attribution is the resolved OWNER: for registered methods and virtuals the proxies
+     * always pass the script's own `_kanama_handle`, so owner === handle; for signal lambdas
+     * the owner is the subscribing script. A dispatch that lands before recordReady names the
+     * handle is buffered per handle and folded in at recordReady.
+     */
+    recordExercisedDispatch(owner, callback, member) {
+      let memberKey;
+      if (callback === "registered_function") memberKey = member;
+      else if (EXERCISED_VIRTUAL_DISPATCHES.has(callback)) memberKey = callback;
+      else if (callback.startsWith("_kanama_web_signal_dispatch")) memberKey = "~kotlinSignalCallback";
+      else return;
+      const scriptName = this.scriptNameByHandle[owner];
+      let bucket;
+      if (scriptName === undefined) {
+        bucket = this.pendingExercisedByHandle.get(owner);
+        if (!bucket) {
+          bucket = {};
+          this.pendingExercisedByHandle.set(owner, bucket);
+        }
+      } else {
+        bucket = this.exercisedMembers[scriptName] ?? (this.exercisedMembers[scriptName] = {});
+      }
+      bucket[memberKey] = (bucket[memberKey] ?? 0) + 1;
     },
 
     unsupportedGameplayMethod(scriptId, methodId, methodName) {
@@ -2401,6 +2468,17 @@
       this.scriptNameByHandle[handle] = scriptName;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
       this.liveScriptsByClass[scriptName] = (this.liveScriptsByClass[scriptName] ?? 0) + 1;
+      // Task 81: fold in any dispatches that crossed before this handle had a name (the
+      // _ready dispatch itself always does -- the proxy calls bridge.ready before recordReady).
+      const pendingExercised = this.pendingExercisedByHandle.get(handle);
+      if (pendingExercised) {
+        this.pendingExercisedByHandle.delete(handle);
+        const bucket =
+          this.exercisedMembers[scriptName] ?? (this.exercisedMembers[scriptName] = {});
+        for (const [memberKey, count] of Object.entries(pendingExercised)) {
+          bucket[memberKey] = (bucket[memberKey] ?? 0) + count;
+        }
+      }
       if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
         // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit
         // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
