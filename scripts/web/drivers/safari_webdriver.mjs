@@ -226,10 +226,7 @@ async function main() {
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
-    // eslint-disable-next-line no-unused-vars -- KANAMA-BLOCKED(since:2026-08-11, task:86): collected but not yet passed into buildEnvelope; the fix is task 86's call
     const performance = await collectPerformance(evaluate);
-    // Task 81: unlike the performance section above, this one IS in the Safari envelope --
-    // the schema's required-member gate depends on it on every engine.
     const exercisedMembers = await harvestExercisedMembers();
 
     // No SafariDriver console endpoint: rely on the demo's bridge telemetry.
@@ -237,6 +234,12 @@ async function main() {
       demo: args.demo,
       browser: { engine: "safari", name: "Safari", version: String(browserVersion) },
       payload,
+      // Task 86: this line was MISSING from 2026-07-29 (kanama#124) until today --
+      // collected two lines up, never placed in the envelope, so the budget stage
+      // failed every Safari run with "no performance section". Its numbers are
+      // record-only until measured Safari ceilings exist (budgets.json
+      // enginePolicies.safari).
+      performance,
       durationMs: Date.now() - startedAt,
       consoleEvents: [],
       demoResult,

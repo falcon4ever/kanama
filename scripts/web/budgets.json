@@ -460,5 +460,10 @@
     "payloadBytes": "GATED. Bytes are host- and engine-independent by construction.",
     "startupMs": "RECORDED, NOT GATED. It is wall-clock and it does not survive a loaded machine: the same thirdperson build measured 4.4s on an idle Chrome and 64.7s on a Firefox sharing a busy workstation. A gate that red-lights because someone else was compiling is measuring the machine, and the failure it would catch (a demo that stops booting) already shows up as a driver timeout.",
     "crossingsPerTick": "GATED PER ENGINE. Engine-stable for most of the corpus (bunnymark 2.22/1.97, dodge 0.19/0.20, citybuilder 0.84/0.77, fps 1.10/1.02 for chrome/firefox). The per-engine split was introduced because Firefox measured 5-10x Chrome's ratio on the input-heavy demos (charactercontroller 4.50 -> 19.58, thirdperson 1.15 -> 6.01) and a Chrome-derived budget reddened main. Task 84 (2026-08-10) established that for those three demos the asymmetry was an artifact of the spike-benchmark fallthrough: the synthetic per-dispatch command scaled with Firefox's unpaced rAF. On the real _process path the asymmetry INVERTS (charactercontroller 1.86 -> 0.23, thirdperson 0.29 -> 0.12, racing 2.09 -> 0.68), because the residual crossings are physics-driven and wall-capped while unpaced rAF only inflates processTicks. Those three therefore take Chrome's ceiling on both engines as the conservative bound. The structure stays per-engine: it is still the right shape, and the rest of the corpus was never re-measured under it."
+  },
+  "enginePolicies": {
+    "safari": {
+      "recordOnly": "Hand-run local gate (no headless mode, no CI cell) whose ceilings were never measured: every number in this file was derived on Chrome/Firefox. Numbers are recorded for the corpus baseline; add measured safari engine entries and remove this policy to gate them (task 86)."
+    }
   }
 }
