@@ -528,10 +528,22 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   `_unhandled_input`. Anything else is rejected at build time with a KSP error
   naming the script and the function, rather than compiling and then never
   running. Move the work into one of the dispatched virtuals.
-- Single-thread Compatibility renderer only; no threads, no cross-origin
-  isolation.
+- **Single-thread only** — exports use Godot's `nothreads` Web template: no
+  threads, no SharedArrayBuffer, no cross-origin-isolation requirement. This is
+  deliberate: any static HTTPS server can host the export (itch.io-style hosts
+  included, whose COOP/COEP support is experimental). It is also a double gate:
+  even with Godot's threads template, gameplay runs on Kotlin/Wasm, whose own
+  threading support is immature — threads are not one fix away.
+- **Compatibility renderer only** — Forward+/Mobile are not used for Web, so
+  renderer-dependent features are absent: no volumetric fog, no global
+  illumination, and first-use shader compiles can hitch once.
+- **No multiplayer** — ENet is unavailable in browsers, and Godot's
+  WebSocket/WebRTC multiplayer peers are not wired into the Kanama Web backend.
+  Web builds are single-player (tps-demo's online lobby is deliberately inert
+  for this reason).
 - No Web editor, no compiler, no hot reload, no Web GDExtension, and no TeaVM or
-  Kotlin/JS production path.
+  Kotlin/JS production path. Gameplay is AOT-compiled into the Wasm payload, so
+  a script edit means rebuild + re-export.
 - A packaged/addon install path (exporting without the Kanama checkout) is not
   yet available; the current workflow is a source-checkout export.
 <!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the unexplained-defect entry below -->
