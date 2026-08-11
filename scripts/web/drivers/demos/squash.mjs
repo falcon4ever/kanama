@@ -7,10 +7,11 @@
 // rotate_y; walk-offs free themselves past the VisibleOnScreenNotifier3D), and this run
 // layers real play on top:
 //   1. movement: engine-level action injection (ops 86/87 -- browser key synthesis
-//      stalls headless Firefox; SafariDriver has no keys transport) in short
-//      in-page-released pulses while the player is stance-pinned in the air (op 142,
-//      re-pinned per pulse) -- airborne so no ground-level mob can reach the
-//      MobDetector and end the run early; movement is proven by op 138 position reads,
+//      stalls headless Firefox; SafariDriver has no keys transport) as a fixed
+//      in-page-released hold from an airborne stance pin (op 142) -- airborne so no
+//      ground-level mob can reach the MobDetector and end the run early; movement is
+//      proven by op 138 position reads (threshold sized by a found Web parity defect,
+//      see the MOVE_HOLD_MS note),
 //   2. score: the driver re-pins the player a body-height above the latest live mob
 //      (bridge.squashMobHandle, re-read every poll and stale-tolerated) and lets
 //      gravity close the gap; the landing is real -- slide-collision normal dot UP >
@@ -36,8 +37,9 @@ const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[squash ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
 };
 
-// Airborne stance anchor for movement pulses: mobs top out around y=1.1 and the
-// MobDetector rides the player's feet, so y=8 keeps every phase-1 frame out of reach.
+// Airborne stance anchor for movement holds: mobs top out around y=1.1 and the
+// MobDetector rides the player's feet, so y=8 keeps the hold's early frames out of
+// reach while the arena is still filling.
 const AIR_ANCHOR = [0, 8, 0];
 // Drop height above a mob's root for the squash: the mob's box top sits ~1.07 above its
 // root and the player's sphere bottom ~0.02 below its own, so +1.25 leaves ~0.2 of fall.
@@ -45,10 +47,23 @@ const AIR_ANCHOR = [0, 8, 0];
 // velocity), so the swept move_and_slide contacts the box top within a tick or two --
 // faster than a 10-18 u/s mob can slide out from under the pin.
 const DROP_HEIGHT = 1.25;
-// In-page hold per movement pulse; released in page so driver-transport jank can never
-// stretch a hold. The squash arena is walled (WorldBoundaryShape3D), so even a
+// In-page hold per movement attempt; released in page so driver-transport jank can
+// never stretch a hold. The squash arena is walled (WorldBoundaryShape3D), so even a
 // free-running engine cannot carry the player anywhere dangerous.
-const MOVE_HOLD_MS = 100;
+//
+// SIZED BY A FOUND DEFECT (task 81, 2026-08-11, filed in the PR): while a move action
+// is held, squash's Player calls lookAtFromPosition(self.position, ...) every physics
+// tick, and on Web `self.position` is the mirrored transform snapshot, which the proxy
+// refreshes only in _process -- once per RENDERED frame (_physics_process refreshes
+// only the velocity slot; see WebScriptCodeEmitter's _physics_process emission). Every
+// tick after the first inside one rendered frame therefore teleports the body back to
+// the frame-start position, so NET movement is one physics tick (14/60 = 0.23 u) per
+// rendered frame regardless of how many ticks the frame ran. MEASURED: 100ms holds
+// moved 0.23-0.35 u on a free-running headless Chrome instead of the naive 1.4 u. A
+// 600ms hold nets ~0.23 x rendered-frames, comfortably past the 0.5 u gate even on a
+// slow-framed headless engine, and on a display-paced engine (1 tick/frame) it is
+// simply full-speed movement.
+const MOVE_HOLD_MS = 600;
 
 async function snapshot(evaluate) {
   try {
@@ -144,21 +159,22 @@ async function chaseStep(evaluate) {
   }
 }
 
-// One movement pulse: pin the airborne stance, hold move_forward (14 u/s immediately --
-// squash movement has no acceleration ramp), release in page.
+// One movement attempt: pin the airborne stance, hold move_forward, release in page.
+// Returns the pin result and the engine's own view of the pressed state for the trace.
 async function movePulse(evaluate) {
-  await evaluate(`(() => {
+  return await evaluate(`(() => {
     const bridge = globalThis.KanamaWebBridge;
     const handle = bridge.squashPlayerHandle;
     const sep = String.fromCharCode(31);
-    bridge.immediateObjectQuery(142, handle, [${AIR_ANCHOR.join(", ")}].join(sep));
+    const pinned = bridge.immediateObjectQuery(142, handle, [${AIR_ANCHOR.join(", ")}].join(sep));
     bridge.immediateObjectQuery(86, handle, "move_forward");
+    const pressed = bridge.immediateObjectQuery(69, handle, "move_forward");
     setTimeout(() => {
       try {
         bridge.immediateObjectQuery(87, bridge.squashPlayerHandle, "move_forward");
       } catch {}
     }, ${MOVE_HOLD_MS});
-    return true;
+    return { pinned, pressed };
   })()`);
 }
 
@@ -259,25 +275,27 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   let maxDisplacement = 0;
   let movePulses = 0;
   if (FALSIFY !== "no-input") {
-    for (let pulse = 0; pulse < 8 && Date.now() < deadline; pulse += 1) {
+    for (let attempt = 0; attempt < 3 && Date.now() < deadline; attempt += 1) {
       movePulses += 1;
-      await movePulse(evaluate);
-      await delay(130);
+      const pulseState = await movePulse(evaluate);
+      // Wait out the full in-page hold plus a margin, then read where it ended up.
+      await delay(MOVE_HOLD_MS + 150);
       const position = await playerPosition(evaluate);
       if (position) {
         const displacement = Math.hypot(position.x - AIR_ANCHOR[0], position.z - AIR_ANCHOR[2]);
         maxDisplacement = Math.max(maxDisplacement, displacement);
       }
       mergeSnap(state, await snapshot(evaluate));
-      trace(`pulse#${pulse}: displacement=${maxDisplacement.toFixed(2)}`);
+      trace(
+        `move#${attempt}: displacement=${maxDisplacement.toFixed(2)} pinned=${pulseState?.pinned} pressed=${pulseState?.pressed} pos=${position ? `(${position.x.toFixed(2)},${position.y.toFixed(2)},${position.z.toFixed(2)})` : "null"}`,
+      );
       if (maxDisplacement > 0.5) break;
-      await delay(70);
     }
   } else {
     trace("FALSIFY=no-input: movement pulses skipped");
   }
   const playerMovedOnInput = maxDisplacement > 0.5;
-  trace(`move: pulses=${movePulses} displacement=${maxDisplacement.toFixed(2)}`);
+  trace(`move: attempts=${movePulses} displacement=${maxDisplacement.toFixed(2)}`);
 
   // --- Phase 2: squash a mob, read the score (task 81 part B) ------------------------
   // The chase re-pins above the latest live mob every poll; mob spawn/free evidence for

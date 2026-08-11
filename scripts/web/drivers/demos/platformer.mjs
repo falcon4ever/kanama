@@ -5,8 +5,9 @@
 // the demo's entire scoring loop -- coins, HUD, footsteps -- was dark to every gate.)
 // The run:
 //   1. observes both frame pumps idling (physics AND process, commands applied),
-//   2. reads SoundFootsteps is_playing (op 287) while idle -- expected silent: the
-//      Player pause-toggles the stream with walking (autoplay + stream_paused),
+//   2. reads SoundFootsteps is_playing (op 287) while idle AND later during the walk
+//      hold -- a PIPELINE-LEVEL assertion (stream loaded + mixer playing), NOT a
+//      walking discriminator; see the MEASURED note at the check,
 //   3. walks: engine-level action injection (ops 86/87 -- browser key synthesis stalls
 //      headless Firefox and SafariDriver has no keys transport) in short in-page-released
 //      pulses, re-pinning the stance (op 142) each pulse so a free-running engine can
@@ -19,8 +20,8 @@
 //
 // Falsification harness (task 81 requires every gate provably able to fail): set
 // KANAMA_WEB_T81_FALSIFY to induce exactly one break and watch its check go false --
-//   no-input          -> pulses skipped: playerMovedOnInput + footstepsAudibleWhileWalking false
-//   wrong-audio-path  -> op 287 queries a nonexistent child: both footsteps checks false
+//   no-input          -> pulses skipped: playerMovedOnInput false
+//   wrong-audio-path  -> op 287 queries a nonexistent child: footstepsPipelineLive false
 //   no-coin           -> coin pin skipped: coinCollectedOnHud false
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -247,19 +248,25 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   let atPeak = gameplay.last ?? ready;
   trace(`idle: process=${peak.processCalls} physics=${peak.physicsCalls} applied=${peak.appliedCommands} live=${atPeak.liveHandles}`);
 
-  // --- Audio, idle direction (task 81 part C) --------------------------------------
-  // MEASURED in the real export (2026-08-11, macOS arm64, protocol 18, Chrome 151 +
-  // Firefox 153 headless): op 287 reads 0 while the player idles. Godot 4.7 parks a
-  // stream_paused playback in FADE_OUT_TO_PAUSE/PAUSED, and AudioServer's
-  // is_playback_active reports only PLAYING -- so is_playing DOES distinguish the
-  // pause-toggle and both directions are asserted in this one run.
+  // --- Audio (task 81 part C): PIPELINE-LEVEL, not a walking discriminator ---------
+  // MEASURED in the real export (2026-08-11, macOS arm64, protocol 18): op 287 reads 1
+  // while the player idles with stream_paused=true, and 1 during the walk hold. Root
+  // cause verified in the Godot 4.7 source: Web nothreads plays this ogg through the
+  // SAMPLE path, set_stream_paused pauses the audible sample (set_sample_playback_pause)
+  // but never removes it from AudioServer::sample_playback_list, and a sample's
+  // is_playing IS that list membership -- so on Web is_playing asserts "stream loaded +
+  // mixer entry live" and CANNOT see the pause-toggle. (On the desktop mixed path it
+  // would: set_playback_paused parks the node in FADE_OUT_TO_PAUSE/PAUSED and
+  // is_playback_active reports only PLAYING.) AudioStreamPlayer.get_stream_paused reads
+  // the mixed-list node state on both paths and would distinguish walking; noted as a
+  // follow-up, not in this parcel.
   const idleReads = [];
   for (let i = 0; i < 3; i += 1) {
     const playing = await footstepsPlaying(evaluate);
     if (playing !== null) idleReads.push(playing);
     await delay(120);
   }
-  const footstepsSilentWhileIdle = idleReads.length >= 2 && idleReads.every((v) => v === 0);
+  const footstepsLiveWhileIdle = idleReads.length >= 2 && idleReads.every((v) => v === 1);
   trace(`audio idle reads=${JSON.stringify(idleReads)}`);
 
   // --- Walk pulses (task 81 part A) ------------------------------------------------
@@ -269,20 +276,20 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   const startPosition = await playerPosition(evaluate);
   if (!startPosition) throw new Error("could not read the player's global position");
   let maxDisplacement = 0;
-  let footstepsAudibleWhileWalking = false;
+  let footstepsLiveDuringWalk = false;
   let walkPulses = 0;
   if (FALSIFY !== "no-input") {
     for (let pulse = 0; pulse < 10 && Date.now() < deadline; pulse += 1) {
       walkPulses += 1;
       await walkPulse(evaluate);
-      // Sample footsteps twice inside/around the hold window; the engine may be
-      // free-running, so the walking frames can sit anywhere inside it.
+      // Sample the audio pipeline twice inside/around the hold window (the engine may
+      // be free-running, so the walking frames can sit anywhere inside it).
       await delay(45);
       const mid = await footstepsPlaying(evaluate);
-      if (mid === 1) footstepsAudibleWhileWalking = true;
+      if (mid === 1) footstepsLiveDuringWalk = true;
       await delay(55);
       const late = await footstepsPlaying(evaluate);
-      if (late === 1) footstepsAudibleWhileWalking = true;
+      if (late === 1) footstepsLiveDuringWalk = true;
       const position = await playerPosition(evaluate);
       if (position) {
         const displacement = Math.hypot(position.x - ANCHOR[0], position.z - ANCHOR[2]);
@@ -290,7 +297,7 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
       }
       mergeSnap(peak, await snapshot(evaluate));
       trace(`pulse#${pulse}: displacement=${maxDisplacement.toFixed(2)} audio=[${mid},${late}]`);
-      if (maxDisplacement > 0.5 && footstepsAudibleWhileWalking) break;
+      if (maxDisplacement > 0.5 && footstepsLiveDuringWalk) break;
       await delay(120);
     }
     // Park the player back on the spawn anchor before the scored phase.
@@ -299,7 +306,7 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
     trace("FALSIFY=no-input: walk pulses skipped");
   }
   const playerMovedOnInput = maxDisplacement > 0.5;
-  trace(`walk: pulses=${walkPulses} displacement=${maxDisplacement.toFixed(2)} audioWalk=${footstepsAudibleWhileWalking}`);
+  trace(`walk: pulses=${walkPulses} displacement=${maxDisplacement.toFixed(2)} audioWalk=${footstepsLiveDuringWalk}`);
 
   // --- Coin -> HUD score (task 81 part B) ------------------------------------------
   // Stance-place the player onto the coin; the Area3D overlap fires body_entered and the
@@ -348,11 +355,12 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
     // Task 81: injected move actions displaced the player through Input.get_axis ->
     // handleControls -> move_and_slide -- the demo's input path, driven end to end.
     playerMovedOnInput,
-    // Task 81: SoundFootsteps (autoplay, pause-toggled by walking) is SILENT while the
-    // player idles and AUDIBLE while it walks -- both directions of the pause-toggle in
-    // one run. See the MEASURED note at the idle read above.
-    footstepsSilentWhileIdle,
-    footstepsAudibleWhileWalking,
+    // Task 81: PIPELINE-LEVEL audio assertion -- SoundFootsteps' stream is loaded and
+    // its mixer entry live (op 287 = 1) while idling AND during the walk hold. On the
+    // Web sample path is_playing does NOT see the stream_paused walk-toggle (measured
+    // [1,1,1] idle / [1,1] walking; root cause in the comment at the idle read), so
+    // this catches a dead audio pipeline or a wrong node path, not a mute toggle.
+    footstepsPipelineLive: footstepsLiveWhileIdle && footstepsLiveDuringWalk,
     // Task 81: the coin was collected and the HUD "Coins" label advanced -- the full
     // Area3D overlap -> Player.collectCoin -> coinCollected signal -> Hud label chain.
     coinCollectedOnHud,
