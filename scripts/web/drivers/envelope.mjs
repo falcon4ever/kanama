@@ -128,6 +128,29 @@ export async function collectExercisedMembers(evaluate, exportDir) {
   return members;
 }
 
+/**
+ * Merges two exercised-member censuses, summing dispatch counts (task 81).
+ *
+ * A navigation resets the page's bridge, so a driver that navigates more than
+ * once (match3 reloads for its restart proof) would otherwise report only the
+ * FINAL page load's census -- and match3's final load never receives the drag.
+ * The engine drivers harvest before every navigation and merge, so the envelope
+ * describes the whole run. Either side may be null (page not yet booted, or
+ * already torn down); null contributes nothing.
+ */
+export function mergeExercisedMembers(base, addition) {
+  if (!addition) return base;
+  if (!base) return structuredClone(addition);
+  const merged = structuredClone(base);
+  for (const [scriptName, members] of Object.entries(addition)) {
+    const bucket = (merged[scriptName] ??= {});
+    for (const [member, count] of Object.entries(members)) {
+      bucket[member] = (bucket[member] ?? 0) + count;
+    }
+  }
+  return merged;
+}
+
 // demoResult contract (produced by each demo module):
 //   protocolVersion : number
 //   startup         : { loaded, outcome, durationMs }

@@ -42,6 +42,7 @@ import {
   collectExercisedMembers,
   collectPayload,
   collectPerformance,
+  mergeExercisedMembers,
 } from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike };
@@ -302,7 +303,23 @@ async function main() {
     });
 
     // Transport the demo modules use, independent of CDP specifics.
-    const navigate = (url) => call("Page.navigate", { url });
+    //
+    // Task 81: a navigation resets the page's bridge, so harvest the exercised-member
+    // census BEFORE leaving each page and merge across loads -- match3 navigates twice
+    // and its gameplay drag happens on the FIRST load. Harvesting about:blank (the very
+    // first navigation) collects null and contributes nothing.
+    let exercisedAccumulator = null;
+    const harvestExercisedMembers = async () => {
+      exercisedAccumulator = mergeExercisedMembers(
+        exercisedAccumulator,
+        await collectExercisedMembers(evaluate, args["export-dir"]),
+      );
+      return exercisedAccumulator;
+    };
+    const navigate = async (url) => {
+      await harvestExercisedMembers();
+      return call("Page.navigate", { url });
+    };
     const pointer = async (press, release) => {
       await call("Input.dispatchMouseEvent", { type: "mousePressed", x: press.x, y: press.y, button: "left", buttons: 1, clickCount: 1 });
       await delay(100);
@@ -333,7 +350,7 @@ async function main() {
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
     const performance = await collectPerformance(evaluate);
-    const exercisedMembers = await collectExercisedMembers(evaluate, args["export-dir"]);
+    const exercisedMembers = await harvestExercisedMembers();
 
     const envelope = buildEnvelope({
       demo: args.demo,
