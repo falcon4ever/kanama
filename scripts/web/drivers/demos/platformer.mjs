@@ -38,16 +38,20 @@ const ANCHOR = [0, 0.6, 0];
 // The coin nearest the spawn platform chain: scenes/main.tscn places it at
 // (-3, 0.635, 0) above the platform-medium piece, ground-level footing on all sides.
 const COIN_PIN = [-3, 0.75, 0];
-// In-page hold per walk pulse; the release is scheduled IN PAGE so driver-transport
-// jank can never stretch a hold. MEASURED 2026-08-11 (macOS arm64, protocol 18): a
-// 600ms hold walks 2.35u on Chrome 151 headless and 1.19u on Firefox 153 headless --
-// one pulse clears the 0.5u gate on both, travelling straight -X along the platform
-// chain and stopping short of both the coin at x=-3 and the ~4.5u runway. The free-run
-// excursion the harness lore warns about did not materialize: engine progress during a
-// hold is BOUNDED by the driver's own evaluate traffic (100ms holds moved only
-// 0.22-0.27u on the same free-running Firefox), so wall-time holds under-run, never
-// over-run.
-const WALK_HOLD_MS = 600;
+// Walk-hold sizing, MEASURED 2026-08-11 (macOS arm64, protocol 18): wall-time holds
+// are unusable here because engine progress decouples from the wall clock in both
+// directions -- 100ms holds moved only 0.22-0.27u on free-running Firefox (progress
+// starved under driver evaluate traffic), while 400ms and 600ms holds BOTH ended at
+// x~-2.3 on Chrome (the engine catches up in bursts during the driver's quiet
+// delays), which is inside the coin's overlap reach (~x=-2.2: capsule 0.3 + coin
+// sphere 0.5) and let the walk itself collect the coin, un-falsifying the no-coin
+// break. The release is therefore gated IN PAGE on MEASURED displacement (op 138
+// polled every 25ms, released past WALK_RELEASE_AT) with a wall-time failsafe -- the
+// page's own event loop interleaves with engine frames, so the endpoint is bounded by
+// the threshold plus one burst (~0.6u) plus the deceleration slide (~0.4u), keeping
+// the walk clear of the coin while comfortably past the 0.5u movement gate.
+const WALK_RELEASE_AT = 0.7;
+const WALK_FAILSAFE_MS = 400;
 const AUDIO_CHILD_PATH = FALSIFY === "wrong-audio-path" ? "SoundFootstepsMissing" : "SoundFootsteps";
 
 async function snapshot(evaluate) {
@@ -133,8 +137,9 @@ async function hudCoinsText(evaluate) {
 
 // One walk pulse: re-pin the stance, press move_left+move_forward (the View camera is
 // yawed +45 deg, so this input pair rotates to exactly -X -- along the platform chain
-// toward the coin), and schedule the release IN PAGE so the hold length cannot be
-// stretched by driver-transport jank.
+// toward the coin), and release IN PAGE once the measured displacement passes
+// WALK_RELEASE_AT (wall-time failsafe at WALK_FAILSAFE_MS) so neither driver-transport
+// jank nor an engine catch-up burst can stretch the walk into the coin.
 async function walkPulse(evaluate) {
   await evaluate(`(() => {
     const bridge = globalThis.KanamaWebBridge;
@@ -143,12 +148,28 @@ async function walkPulse(evaluate) {
     bridge.immediateObjectQuery(142, handle, [${ANCHOR.join(", ")}].join(sep));
     bridge.immediateObjectQuery(86, handle, "move_left");
     bridge.immediateObjectQuery(86, handle, "move_forward");
-    setTimeout(() => {
+    const release = () => {
       try {
         bridge.immediateObjectQuery(87, bridge.platformerPlayerHandle, "move_left");
         bridge.immediateObjectQuery(87, bridge.platformerPlayerHandle, "move_forward");
       } catch {}
-    }, ${WALK_HOLD_MS});
+    };
+    const start = Date.now();
+    const watch = setInterval(() => {
+      let done = Date.now() - start >= ${WALK_FAILSAFE_MS};
+      try {
+        const x = bridge.immediateNoArgsVector3X(138, bridge.platformerPlayerHandle);
+        bridge.immediateNoArgsVector3Y();
+        const z = bridge.immediateNoArgsVector3Z();
+        if (Math.hypot(x - ${ANCHOR[0]}, z - ${ANCHOR[2]}) > ${WALK_RELEASE_AT}) done = true;
+      } catch {
+        done = true;
+      }
+      if (done) {
+        clearInterval(watch);
+        release();
+      }
+    }, 25);
     return true;
   })()`);
 }
@@ -288,10 +309,10 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
       await walkPulse(evaluate);
       // Sample the audio pipeline twice inside the hold window (the engine may be
       // free-running, so the walking frames can sit anywhere inside it).
-      await delay(150);
+      await delay(120);
       const mid = await footstepsPlaying(evaluate);
       if (mid === 1) footstepsLiveDuringWalk = true;
-      await delay(400);
+      await delay(260);
       const late = await footstepsPlaying(evaluate);
       if (late === 1) footstepsLiveDuringWalk = true;
       await delay(150);

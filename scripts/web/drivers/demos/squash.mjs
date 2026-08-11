@@ -350,7 +350,7 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
       await delay(200);
     }
   } else {
-    trace("FALSIFY=no-death: player left pinned aloft");
+    trace("FALSIFY=no-death: player kept pinned aloft");
     await pinPlayer(evaluate, AIR_ANCHOR);
   }
 
@@ -361,6 +361,9 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
     Date.now() < evidenceDeadline &&
     !(state.peak.mobInstantiations >= 4 && state.mobFrees >= 2)
   ) {
+    // The no-death falsification must hold the player OUT of harm's way for the whole
+    // settle window, or a wandering mob would kill it anyway and un-falsify the check.
+    if (FALSIFY === "no-death") await pinPlayer(evaluate, AIR_ANCHOR);
     mergeSnap(state, await snapshot(evaluate));
     await delay(200);
   }
