@@ -1663,7 +1663,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ): String {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    require(descriptor.opcode in setOf(259, 278))
+    require(descriptor.opcode in setOf(259, 278, 288))
     commands.flush()
     return immediateWebStringQuery(descriptor.opcode, receiver.webId(), "")
   }

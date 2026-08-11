@@ -3150,6 +3150,28 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val AUDIOSTREAMPLAYER_IS_PLAYING =
+    GodotCallDescriptor(
+      opcode = 287,
+      className = "AudioStreamPlayer",
+      methodName = "is_playing",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val LABEL_GET_TEXT =
+    GodotCallDescriptor(
+      opcode = 288,
+      className = "Label",
+      methodName = "get_text",
+      hash = 201670096L,
+      shape = GodotCallShape.NOARGS_RET_STRING,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 286
+  const val MAX_OPCODE = 288
 }

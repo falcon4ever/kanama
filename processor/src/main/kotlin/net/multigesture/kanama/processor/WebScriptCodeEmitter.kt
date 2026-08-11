@@ -3816,6 +3816,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\telif opcode == 188 and value is AudioStreamPlayer3D:")
     appendLine("\t\t\tresult = int((value as AudioStreamPlayer3D).is_playing())")
+    appendLine("\t\telif opcode == 287 and value is Node:")
+    appendLine("\t\t\t# Optional child path ('' = the receiver itself): harness drivers reach an")
+    appendLine(
+      "\t\t\t# un-scripted child AudioStreamPlayer (platformer SoundFootsteps) through the"
+    )
+    appendLine("\t\t\t# owning script's handle. A missing or non-player target reports 0, which a")
+    appendLine("\t\t\t# driver asserting 'playing' reads as false -- wrong paths cannot pass.")
+    appendLine("\t\t\tvar audio_query_path := String(args[2])")
+    appendLine(
+      "\t\t\tvar audio_query_node: Node = (value as Node) if audio_query_path.is_empty() else (value as Node).get_node_or_null(audio_query_path)"
+    )
+    appendLine("\t\t\tif audio_query_node is AudioStreamPlayer:")
+    appendLine("\t\t\t\tresult = int((audio_query_node as AudioStreamPlayer).is_playing())")
     appendLine("\t\telif opcode == 195 and value is Node3D:")
     appendLine("\t\t\tresult = int((value as Node3D).is_visible())")
     appendLine("\t\telif opcode == 196 and value != null:")
@@ -4070,6 +4083,25 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif opcode == 259 and value is LineEdit:")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as LineEdit).text))")
     appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 288 and value is Node:")
+    appendLine(
+      "\t\t\t# Optional child path ('' = the receiver itself): the squash ScoreLabel IS the"
+    )
+    appendLine("\t\t\t# scripted node, while the platformer 'Coins' Label hangs beneath the Hud")
+    appendLine(
+      "\t\t\t# script's Control. A missing or non-Label target publishes no string, so the"
+    )
+    appendLine("\t\t\t# bridge's immediate string query fails loud instead of returning something")
+    appendLine("\t\t\t# that could pass as text.")
+    appendLine("\t\t\tvar label_query_path := String(args[2])")
+    appendLine(
+      "\t\t\tvar label_query_node: Node = (value as Node) if label_query_path.is_empty() else (value as Node).get_node_or_null(label_query_path)"
+    )
+    appendLine("\t\t\tif label_query_node is Label:")
+    appendLine(
+      "\t\t\t\t_kanama_bridge.recordImmediateStringResult(String((label_query_node as Label).text))"
+    )
+    appendLine("\t\t\t\tresult = 1")
     appendLine("\t\telif opcode == 266 and value is ConfigFile:")
     appendLine("\t\t\tvar has_key_parts := String(args[2]).split(\"\\u001f\")")
     appendLine(

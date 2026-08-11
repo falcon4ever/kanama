@@ -4504,6 +4504,34 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a whole collision-mask write (robot/part death clears every mask bit at once).",
       "introducedBy": "60i-tpsdemo"
+    },
+    {
+      "opcode": 287,
+      "scope": "class",
+      "className": "AudioStreamPlayer",
+      "methodName": "is_playing",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Whether the non-positional stream is audibly playing (platformer footsteps gate: the Player pause-toggles SoundFootsteps with walking). The Web applier accepts an optional child node path in the query payload ('' = the receiver's own node) so harness drivers can reach an un-scripted child player through the owning script's handle -- see compositions.",
+      "introducedBy": "81-gameplay-gate"
+    },
+    {
+      "opcode": 288,
+      "scope": "class",
+      "className": "Label",
+      "methodName": "get_text",
+      "hash": 201670096,
+      "arguments": [],
+      "returnType": "String",
+      "shape": "NOARGS_RET_STRING",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "HUD label text read (platformer coin count, squash score) on the immediate string channel. The Web applier accepts an optional child node path in the query payload ('' = the receiver's own node) so drivers can read a Label beneath a scripted Control -- see compositions.",
+      "introducedBy": "81-gameplay-gate"
     }
   ],
   "compositions": [
@@ -4521,6 +4549,20 @@
         46
       ],
       "semantics": "Load with type AudioStream and CACHE_MODE_REUSE, synchronously assign a successful RETAINED_REFCOUNTED result, then release the temporary wrapper. A failed load performs no assignment, leaves the prior stream unchanged, and owns no handle."
+    },
+    {
+      "name": "AudioStreamPlayer.is_playing_at_path",
+      "opcodes": [
+        287
+      ],
+      "semantics": "When the query payload carries a non-empty child path, compose Node.get_node_or_null on the receiver with AudioStreamPlayer.is_playing on the resolved child; an empty payload (the shape's own spelling) reads the receiver itself. A missing or non-AudioStreamPlayer target reports false on the shared integer query channel."
+    },
+    {
+      "name": "Label.get_text_at_path",
+      "opcodes": [
+        288
+      ],
+      "semantics": "When the query payload carries a non-empty child path, compose Node.get_node_or_null on the receiver with Label.get_text on the resolved child; an empty payload (the shape's own spelling) reads the receiver itself. A missing or non-Label target publishes no string result, so the bridge's immediate string query fails loud rather than returning something that could pass as text."
     }
   ]
 }
