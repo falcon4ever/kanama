@@ -1,4 +1,7 @@
 # shellcheck shell=bash
+# shellcheck disable=SC2034 # every variable here is a registry entry consumed by
+# the scripts that source this file (web_ci_matrix.sh, web_fresh_checkout_smoke.sh);
+# linted standalone, those uses are invisible and SC2034 calls the registry unused.
 #
 # demos.sh -- the single Web demo registry, sourced by every Web gate.
 #

@@ -1,0 +1,13 @@
+{
+  "name": "kanama-web-lint",
+  "private": true,
+  "description": "Lint tooling for the Web export-smoke drivers (scripts/web/drivers). Not a build system: the drivers are plain Node ESM run directly by web_export_smoke.sh. This package exists only so ESLint installs are pinned and reproducible (npm ci).",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.1",
+    "globals": "17.10.0"
+  }
+}
