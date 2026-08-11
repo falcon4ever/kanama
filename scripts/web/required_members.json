@@ -178,10 +178,6 @@
     "web3d": {
       "required": [
         {
-          "member": "Coin._on_body_entered",
-          "reason": "The fixture's coin pickup: the driver walks the player over coins (2 dispatches measured)."
-        },
-        {
           "member": "Main.dispatch_probe",
           "reason": "The task-80 dispatch-shape conformance probe the driver calls explicitly; if it stops dispatching, the whole conformance family went dark."
         },
@@ -190,7 +186,12 @@
           "reason": "The task-82 coroutine frame-scheduler conformance probe the driver calls explicitly."
         }
       ],
-      "todo": []
+      "todo": [
+        {
+          "member": "Coin._on_body_entered",
+          "reason": "Walk-over choreography, engine/host-sensitive: 2 dispatches measured on chrome, but the first gated CI run (kanama#168, run 31542371765) measured ZERO on the runner's firefox -- the walk does not reliably reach a coin there (the same slow-rendering-host class as task 87). Re-require once the driver pins onto a coin deterministically, the platformer pattern."
+        }
+      ]
     },
     "racing": {
       "required": [],
