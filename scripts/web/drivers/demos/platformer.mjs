@@ -38,12 +38,16 @@ const ANCHOR = [0, 0.6, 0];
 // The coin nearest the spawn platform chain: scenes/main.tscn places it at
 // (-3, 0.635, 0) above the platform-medium piece, ground-level footing on all sides.
 const COIN_PIN = [-3, 0.75, 0];
-// In-page hold per walk pulse. 100ms wall is ~0.1s simulated on a display-paced engine
-// and up to ~0.8s on free-running headless Firefox (~8x) -- at 4.2 u/s that bounds the
-// worst-case excursion per pulse to ~3.4 units plus deceleration slide, inside the
-// ~4.5 units of continuous platform running -X from the spawn. The release is scheduled
-// IN PAGE so driver-transport jank can never stretch a hold.
-const WALK_HOLD_MS = 100;
+// In-page hold per walk pulse; the release is scheduled IN PAGE so driver-transport
+// jank can never stretch a hold. MEASURED 2026-08-11 (macOS arm64, protocol 18): a
+// 600ms hold walks 2.35u on Chrome 151 headless and 1.19u on Firefox 153 headless --
+// one pulse clears the 0.5u gate on both, travelling straight -X along the platform
+// chain and stopping short of both the coin at x=-3 and the ~4.5u runway. The free-run
+// excursion the harness lore warns about did not materialize: engine progress during a
+// hold is BOUNDED by the driver's own evaluate traffic (100ms holds moved only
+// 0.22-0.27u on the same free-running Firefox), so wall-time holds under-run, never
+// over-run.
+const WALK_HOLD_MS = 600;
 const AUDIO_CHILD_PATH = FALSIFY === "wrong-audio-path" ? "SoundFootstepsMissing" : "SoundFootsteps";
 
 async function snapshot(evaluate) {
@@ -282,21 +286,27 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
     for (let pulse = 0; pulse < 10 && Date.now() < deadline; pulse += 1) {
       walkPulses += 1;
       await walkPulse(evaluate);
-      // Sample the audio pipeline twice inside/around the hold window (the engine may
-      // be free-running, so the walking frames can sit anywhere inside it).
-      await delay(45);
+      // Sample the audio pipeline twice inside the hold window (the engine may be
+      // free-running, so the walking frames can sit anywhere inside it).
+      await delay(150);
       const mid = await footstepsPlaying(evaluate);
       if (mid === 1) footstepsLiveDuringWalk = true;
-      await delay(55);
+      await delay(400);
       const late = await footstepsPlaying(evaluate);
       if (late === 1) footstepsLiveDuringWalk = true;
+      await delay(150);
+      const pressed = await evaluate(
+        'globalThis.KanamaWebBridge.immediateObjectQuery(69, globalThis.KanamaWebBridge.platformerPlayerHandle, "move_left")',
+      ).catch(() => null);
       const position = await playerPosition(evaluate);
       if (position) {
         const displacement = Math.hypot(position.x - ANCHOR[0], position.z - ANCHOR[2]);
         maxDisplacement = Math.max(maxDisplacement, displacement);
       }
       mergeSnap(peak, await snapshot(evaluate));
-      trace(`pulse#${pulse}: displacement=${maxDisplacement.toFixed(2)} audio=[${mid},${late}]`);
+      trace(
+        `pulse#${pulse}: displacement=${maxDisplacement.toFixed(2)} audio=[${mid},${late}] pressed=${pressed} pos=${position ? `(${position.x.toFixed(2)},${position.y.toFixed(2)},${position.z.toFixed(2)})` : "null"}`,
+      );
       if (maxDisplacement > 0.5 && footstepsLiveDuringWalk) break;
       await delay(120);
     }
