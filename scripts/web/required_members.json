@@ -1,0 +1,212 @@
+{
+  "comment": [
+    "Task 81 (census-as-gate): per-demo REQUIRED registered script members. result_schema.py",
+    "fails a run whose exercisedMembers census is missing any 'required' member, naming it.",
+    "Member spelling is 'ClassSuffix.memberName', suffix-matched against the census's fully",
+    "qualified script class names; memberName is the Godot-facing name from the export's",
+    "kanama-web/KanamaWebProtocol.generated.json ('method' godotName or virtual name).",
+    "",
+    "Scope: the census records DISPATCHES ACROSS THE JS<->Kotlin BOUNDARY -- exactly the",
+    "surface where the Web dispatch-degradation class of bugs lives (the FPS Enemy.damage",
+    "break was a missing dispatch arm). A member invoked Kotlin-to-Kotlin (e.g. via",
+    "kotlinScriptInstance) never crosses and CANNOT be required here; such members appear as",
+    "'todo' rows with the transitive evidence that covers them. 'todo' rows are honesty",
+    "markers, never enforced -- a gap must be visible, not silently omitted.",
+    "",
+    "An absent demo or an empty 'required' list passes (ratchet: tighten as drivers grow).",
+    "Every list below was confirmed against a measured envelope before being required."
+  ],
+  "schemaVersion": 1,
+  "demos": {
+    "platformer": {
+      "required": [
+        {
+          "member": "Coin._on_body_entered",
+          "reason": "The Area3D overlap that starts the scoring chain; the driver pins the player onto the coin (KANAMA_WEB_T81_FALSIFY=no-coin suppresses exactly this)."
+        },
+        {
+          "member": "Hud._on_coin_collected",
+          "reason": "The scene-wired coin_collected handler updating the Coins label; its only emitter is Player.collectCoin, so this transitively proves the Kotlin-side collect ran."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Player.collectCoin",
+          "reason": "Called Kotlin-to-Kotlin (Coin.onBodyEntered resolves the Player via kotlinScriptInstance), so it never crosses the recorded dispatch boundary; covered transitively by Hud._on_coin_collected above."
+        }
+      ]
+    },
+    "squash": {
+      "required": [
+        {
+          "member": "Main._on_mob_timer_timeout",
+          "reason": "MobTimer-driven spawning; without it no mob exists and every other squash assertion is vacuous."
+        },
+        {
+          "member": "ScoreLabel._on_Mob_squashed",
+          "reason": "The squashed-signal scoring handler; its only emitter is Mob.squash, so this transitively proves the Kotlin-side squash ran (KANAMA_WEB_T81_FALSIFY=no-chase suppresses the choreography)."
+        },
+        {
+          "member": "Player._on_MobDetector_body_entered",
+          "reason": "The lose path: a mob reaching the MobDetector kills the player (KANAMA_WEB_T81_FALSIFY=no-death suppresses the ground park that allows it)."
+        },
+        {
+          "member": "Main._on_player_hit",
+          "reason": "The scene-wired hit handler that stops the MobTimer and shows Retry -- the lose path's consequence, one signal downstream of Player.die."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Mob.squash",
+          "reason": "Called Kotlin-to-Kotlin (Player resolves the Mob via kotlinScriptInstance), so it never crosses the recorded dispatch boundary; covered transitively by ScoreLabel._on_Mob_squashed above."
+        }
+      ]
+    },
+    "fps": {
+      "required": [
+        {
+          "member": "Enemy.damage",
+          "reason": "The member whose silent dispatch death started task 81: Player's shot reaches the enemy proxy's damage(amount: float) and crosses via callDoubles (task 79/80). Enemies were immortal on Web for weeks while every gate stayed green."
+        },
+        {
+          "member": "Enemy._on_timer_timeout",
+          "reason": "Enemy return fire: the RayCast attack tick that makes the firefight two-sided runs on a scene Timer every run."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Player.damage",
+          "reason": "Ranked gap #4 (task 81): on Web the enemy resolves the Player via kotlinScriptInstance and calls damage Kotlin-to-Kotlin, so the census cannot see it, and no driver asserts the health HUD chain (_on_health_updated) yet."
+        }
+      ]
+    },
+    "bunnymark": {
+      "required": [
+        {
+          "member": "BunnymarkV1SpritesKanama.add_bunny",
+          "reason": "The driver adds 256 bunnies through this member; the demo's population depends on it."
+        },
+        {
+          "member": "BunnymarkV1SpritesKanama.remove_bunny",
+          "reason": "The driver removes a bunny to advance a handle generation for the stale-handle proof."
+        },
+        {
+          "member": "BunnymarkV1SpritesKanama.finish",
+          "reason": "The driver's teardown entry: frees the bunnies and reports the final counts."
+        }
+      ],
+      "todo": []
+    },
+    "dodge": {
+      "required": [
+        {
+          "member": "Main.new_game",
+          "reason": "The driver starts (and later restarts) the round through this member -- the demo's whole lifecycle hangs off it."
+        },
+        {
+          "member": "Main._on_MobTimer_timeout",
+          "reason": "Mob spawning; without it the mobsSpawnAndFree evidence is vacuous."
+        },
+        {
+          "member": "Main._on_ScoreTimer_timeout",
+          "reason": "Score ticking during the round."
+        },
+        {
+          "member": "Main._on_StartTimer_timeout",
+          "reason": "The round's start delay elapsing is what arms the mob and score timers."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Mob._on_VisibilityNotifier2D_screen_exited",
+          "reason": "Host-variant lifecycle (task 71: mobs never free on Linux Firefox, cell quarantined). The required-member gate has no per-engine quarantine mechanism, so requiring this would re-litigate the quarantine at the schema layer; the driver's mobsSpawnAndFree check carries it where it holds."
+        },
+        {
+          "member": "Main.game_over",
+          "reason": "Fires only when a mob happens to hit the stationary player -- nondeterministic inside the smoke window. Driving the game-over transition is ranked gap #5 in the task-81 spec."
+        }
+      ]
+    },
+    "match3": {
+      "required": [
+        {
+          "member": "Tile._input_event",
+          "reason": "The driver's synthetic pointer press lands on a board tile; every match/collapse/refill assertion begins here."
+        },
+        {
+          "member": "Main._on_tile_pressed",
+          "reason": "The tile press reaching Main's board logic -- the match pipeline's entry."
+        },
+        {
+          "member": "Tile._on_move_finished",
+          "reason": "The tween-completion handler for tile movement: collapse/refill actually finished moving tiles, not merely started."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Audio._on_stream_finished",
+          "reason": "Fires when a sound effect ENDS, which races the driver's window; requiring it would gate on timing, not gameplay."
+        }
+      ]
+    },
+    "citybuilder": {
+      "required": [
+        {
+          "member": "Builder._process",
+          "reason": "Every build/demolish/rotate/save/load action is handled inside Builder's _process input polling -- the demo registers no gameplay methods at all, so this virtual is the only member-level evidence; the driver's GridMap content checks remain the substantive gameplay gate."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Audio._on_stream_finished",
+          "reason": "Placement sounds end asynchronously; requiring it would gate on timing. The demo's registered-member surface is otherwise empty (2 members total in the census table)."
+        }
+      ]
+    },
+    "web3d": {
+      "required": [],
+      "todo": [
+        {
+          "member": "Main.smoke_probes",
+          "reason": "The web3d fixture is probe-driven (generic-callv and render probes); its member-level requirements should be written when the probe surface stabilizes -- today the driver's own probe checks are the gate."
+        }
+      ]
+    },
+    "racing": {
+      "required": [],
+      "todo": [
+        {
+          "member": "Vehicle.gameplay",
+          "reason": "The driver holds drive input and asserts View movement; beyond the Smoke teardown entry no registered method is exercised (spec table: 3 of 5 members never invoked). Needs driver work, not a list entry."
+        }
+      ]
+    },
+    "thirdperson": {
+      "required": [],
+      "todo": [
+        {
+          "member": "BeeBot.damage",
+          "reason": "Task 81 fix #3: the desktop SmokeQuit calls damage twice; the Web driver never does. The (VECTOR3, VECTOR3) damage shape is the FPS bug's sibling -- port the desktop smoke routines, then require BeeBot/BeetleBot/Box.damage here."
+        }
+      ]
+    },
+    "charactercontroller": {
+      "required": [],
+      "todo": [
+        {
+          "member": "KillPlane3D.body_entered",
+          "reason": "Ranked gap #6 (win AND lose dark): the driver drives movement but neither the flag win nor the kill-plane reset (task 82's cc find). Requires driver choreography first."
+        }
+      ]
+    },
+    "tpsdemo": {
+      "required": [],
+      "todo": [
+        {
+          "member": "RedRobot.hit",
+          "reason": "Ranked gap #7: the driver moves the player but never lands a shot; RedRobot.hit / Part.explode stay dark until the combat choreography is written."
+        }
+      ]
+    }
+  }
+}

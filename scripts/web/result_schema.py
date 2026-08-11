@@ -19,12 +19,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from numbers import Real
 from typing import Any, Callable
 
 # Bump when the envelope shape changes in a way drivers must follow.
 SCHEMA_VERSION = 1
+
+# Task 81 (census-as-gate): the per-demo required registered-member lists. A demo
+# named there with a non-empty "required" list FAILS validation unless every listed
+# member appears in the envelope's exercisedMembers census -- a driver asserting
+# frame counters is no longer exactly as green as one asserting an enemy died.
+REQUIRED_MEMBERS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "required_members.json")
 
 # Browser engines that may report a result. Each is validated identically; the
 # smoke shell decides which are CI gates (Chrome) vs local release gates.
@@ -182,6 +189,117 @@ def _validate_teardown(teardown: Any) -> None:
     )
 
 
+def _validate_exercised_members(section: Any) -> None:
+    """Validate the exercised-member census section's shape (Task 81).
+
+    Optional in the envelope shape (a torn-down page cannot be asked), but a demo
+    with a non-empty required-member list fails validation without it -- absence
+    must never be softer than presence for a gated demo.
+    """
+    path = "exercisedMembers"
+    _check_type(section, dict, path)
+    for script, members in section.items():
+        script_path = f"{path}.{script}"
+        _check_type(members, dict, script_path)
+        for member, count in members.items():
+            member_path = f"{script_path}.{member}"
+            _check_type(count, int, member_path)
+            _require(count >= 1, f"{member_path} must be a positive dispatch count")
+
+
+def load_required_members(path: str = REQUIRED_MEMBERS_FILE) -> dict[str, Any]:
+    """Load and validate the per-demo required registered-member lists (Task 81).
+
+    The file is part of the gate: unreadable or malformed means every validation
+    fails, because a silently unenforced requirement is exactly the failure mode
+    this gate exists to close. Rows are objects with a `member` ("Class.name",
+    suffix-matched against the census's script class names) and a `reason`; a
+    demo's `todo` rows are honesty markers for members the current driver or the
+    dispatch boundary cannot reach -- documented gaps, never silent omissions.
+    """
+    try:
+        with open(path, encoding="utf-8") as handle:
+            data = json.load(handle)
+    except (OSError, json.JSONDecodeError) as error:
+        raise SchemaError(f"required-members file {path} is unreadable: {error}") from error
+    _require(isinstance(data, dict), f"{path} must contain a JSON object")
+    _require(data.get("schemaVersion") == 1, f"{path} schemaVersion must be 1")
+    demos = data.get("demos")
+    _require(isinstance(demos, dict), f"{path} must map 'demos' to an object")
+    for demo, entry in demos.items():
+        _require(isinstance(entry, dict), f"{path} demos.{demo} must be an object")
+        for key in entry:
+            _require(
+                key in ("required", "todo"),
+                f"{path} demos.{demo} has unknown key {key!r} (expected 'required'/'todo')",
+            )
+        for kind in ("required", "todo"):
+            rows = entry.get(kind, [])
+            _require(isinstance(rows, list), f"{path} demos.{demo}.{kind} must be a list")
+            for index, row in enumerate(rows):
+                row_path = f"{path} demos.{demo}.{kind}[{index}]"
+                _require(isinstance(row, dict), f"{row_path} must be an object")
+                member = row.get("member")
+                _require(
+                    isinstance(member, str) and "." in member,
+                    f"{row_path}.member must be a 'Class.member' string",
+                )
+                reason = row.get("reason")
+                _require(
+                    isinstance(reason, str) and reason.strip() != "",
+                    f"{row_path}.reason must be a non-empty string",
+                )
+    return demos
+
+
+def _enforce_required_members(envelope: Any, demos: dict[str, Any]) -> None:
+    """Fail the run when a required registered member did not dispatch (Task 81)."""
+    demo = envelope["demo"]
+    required = demos.get(demo, {}).get("required", [])
+    if not required:
+        return
+    _require(
+        "exercisedMembers" in envelope and envelope["exercisedMembers"] is not None,
+        f"demo {demo!r} has required registered members but the envelope carries no "
+        "exercisedMembers census (the driver could not read the bridge, or predates the gate)",
+    )
+    exercised = envelope["exercisedMembers"]
+    missing: list[str] = []
+    for row in required:
+        target = row["member"]
+        class_part, member_name = target.rsplit(".", 1)
+        scripts = [
+            name for name in exercised if name == class_part or name.endswith(f".{class_part}")
+        ]
+        if any(exercised[name].get(member_name, 0) >= 1 for name in scripts):
+            continue
+        if scripts:
+            observed = sorted({key for name in scripts for key in exercised[name]})
+            missing.append(f"{target} (script matched; exercised members: {observed})")
+        else:
+            missing.append(f"{target} (no script matching {class_part!r} dispatched at all)")
+    if missing:
+        raw_keys = sorted(
+            {
+                key
+                for members in exercised.values()
+                for key in members
+                if key.startswith("method#")
+            }
+        )
+        hint = (
+            f"; unresolved keys {raw_keys} suggest the export predates the "
+            "kanama-web/KanamaWebProtocol.generated.json copy -- rebuild the export"
+            if raw_keys
+            else ""
+        )
+        raise SchemaError(
+            f"demo {demo!r} required registered member(s) did not run: "
+            + "; ".join(missing)
+            + hint
+        )
+
+
 _TOP_LEVEL: tuple[tuple[str, Callable[[Any], None]], ...] = (
     ("artifact", _validate_artifact),
     ("browser", _validate_browser),
@@ -193,8 +311,13 @@ _TOP_LEVEL: tuple[tuple[str, Callable[[Any], None]], ...] = (
 )
 
 
-def validate(envelope: Any) -> None:
-    """Validate a parsed result envelope, raising SchemaError on the first fault."""
+def validate(envelope: Any, required_members: dict[str, Any] | None = None) -> None:
+    """Validate a parsed result envelope, raising SchemaError on the first fault.
+
+    ``required_members`` defaults to the committed ``required_members.json`` next to
+    this script; passing a mapping is for tests. The gate is default-on: a caller
+    cannot forget it.
+    """
     _require(isinstance(envelope, dict), "result envelope must be a JSON object")
 
     version = _get(envelope, "schemaVersion", "envelope")
@@ -229,6 +352,14 @@ def validate(envelope: Any) -> None:
     # Optional sections are validated when present and never required.
     if "performance" in envelope and envelope["performance"] is not None:
         _validate_performance(envelope["performance"])
+
+    # Task 81: shape-check the census whenever present, then enforce the per-demo
+    # required lists (which also fail a GATED demo whose census is absent).
+    if "exercisedMembers" in envelope and envelope["exercisedMembers"] is not None:
+        _validate_exercised_members(envelope["exercisedMembers"])
+    _enforce_required_members(
+        envelope, required_members if required_members is not None else load_required_members()
+    )
 
     for group in ("callbacks", "connections", "scheduler"):
         mapping = _get(envelope, group, "envelope")
