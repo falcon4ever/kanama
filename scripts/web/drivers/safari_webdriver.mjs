@@ -29,7 +29,13 @@ import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { runSoak } from "./demos/soak.mjs";
 import { runVisibilityprobe } from "./demos/visibilityprobe.mjs";
 import { runSpike } from "./demos/spike.mjs";
-import { buildEnvelope, collectPayload, collectPerformance } from "./envelope.mjs";
+import {
+  buildEnvelope,
+  collectExercisedMembers,
+  collectPayload,
+  collectPerformance,
+  mergeExercisedMembers,
+} from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -167,7 +173,20 @@ async function main() {
         script: "return eval(arguments[0]);",
         args: [expression],
       }));
-    const navigate = (url) => wd("POST", `/session/${sessionId}/url`, { url });
+    // Task 81: a navigation resets the page's bridge, so harvest the exercised-member
+    // census BEFORE leaving each page and merge across loads (see chrome_cdp.mjs).
+    let exercisedAccumulator = null;
+    const harvestExercisedMembers = async () => {
+      exercisedAccumulator = mergeExercisedMembers(
+        exercisedAccumulator,
+        await collectExercisedMembers(evaluate, args["export-dir"]),
+      );
+      return exercisedAccumulator;
+    };
+    const navigate = async (url) => {
+      await harvestExercisedMembers();
+      return wd("POST", `/session/${sessionId}/url`, { url });
+    };
     const pointer = async (press, release) => {
       // Viewport-origin coordinates are CSS client pixels (W3C), which the demo
       // already produces. Safari requires the trailing DELETE /actions release
@@ -209,6 +228,9 @@ async function main() {
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
     // eslint-disable-next-line no-unused-vars -- KANAMA-BLOCKED(since:2026-08-11, task:86): collected but not yet passed into buildEnvelope; the fix is task 86's call
     const performance = await collectPerformance(evaluate);
+    // Task 81: unlike the performance section above, this one IS in the Safari envelope --
+    // the schema's required-member gate depends on it on every engine.
+    const exercisedMembers = await harvestExercisedMembers();
 
     // No SafariDriver console endpoint: rely on the demo's bridge telemetry.
     const envelope = buildEnvelope({
@@ -218,6 +240,7 @@ async function main() {
       durationMs: Date.now() - startedAt,
       consoleEvents: [],
       demoResult,
+      exercisedMembers,
     });
 
     fs.writeFileSync(args.result, `${JSON.stringify(envelope, null, 2)}\n`);

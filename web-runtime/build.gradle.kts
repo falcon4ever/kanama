@@ -463,6 +463,13 @@ tasks.register<Exec>("exportWebSpike") {
             from(webSpikeAssets.file("kanama-web-bridge.js"))
             into(exportDir)
         }
+        // Task 81 (census-as-gate): the export carries the protocol manifest that describes it
+        // (see exportWeb), so the spike cell's envelope resolves census keys like every demo's.
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProtocol.generated.json")
+            into(exportDir.resolve("kanama-web"))
+        }
         val indexHtml = exportDir.resolve("index.html")
         check(indexHtml.isFile) { "Godot Web export did not produce index.html" }
         val spikeLoader = exportDir.resolve("kanama-web-spike.js")
@@ -775,6 +782,13 @@ tasks.register<Exec>("exportWebBunnymark") {
         copy {
             from(webSpikeAssets.file("kanama-web-bridge.js"))
             into(exportDir)
+        }
+        // Task 81 (census-as-gate): every export carries its own protocol manifest (see
+        // exportWeb) so any smoke run against it can resolve the exercised-member census.
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProtocol.generated.json")
+            into(exportDir.resolve("kanama-web"))
         }
         check(exportDir.resolve("index.html").isFile) {
             "Godot Web Bunnymark export did not produce index.html"
@@ -2791,6 +2805,16 @@ tasks.register<Exec>("exportWeb") {
         copy {
             from(webSpikeAssets.file("kanama-web-bridge.js"))
             into(exportDir)
+        }
+        // Task 81 (census-as-gate): the export carries the protocol manifest that describes
+        // it, so the smoke harness can resolve the bridge's exercised "method#<id>" census
+        // keys to member names (envelope.mjs) and result_schema.py can gate on the per-demo
+        // required-member lists. Same source readProtocolVersion() reads -- the live KSP
+        // output this very build generated, never a staged copy.
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProtocol.generated.json")
+            into(exportDir.resolve("kanama-web"))
         }
 
         val indexHtml = exportDir.resolve("index.html")

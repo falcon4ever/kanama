@@ -219,14 +219,16 @@ scripts/web_export_smoke.sh \
 ```
 
 Each gate asserts gameplay deltas, crossing budgets, handle/callback/scheduler
-teardown to baseline, stale-handle rejection, console-error checks, and a
-protocol-version match.
+teardown to baseline, stale-handle rejection, console-error checks, a
+protocol-version match, and — per demo — that the registered script members on
+its required list in `scripts/web/required_members.json` actually dispatched
+during the run (the exercised-member census, task 81).
 
 Read the harness's own `web_export_smoke: PASS` line, not a driver's check count.
 The driver's checks and the envelope schema are two different gates: a demo can
 pass 13/13 of its own checks and still be rejected by the schema (which is what
-enforces `liveAfterTeardown === 0`), and that is exactly how one demo stayed
-un-gated on every engine for weeks.
+enforces `liveAfterTeardown === 0` and the required-member census), and that is
+exactly how one demo stayed un-gated on every engine for weeks.
 
 ## Browser Matrix
 

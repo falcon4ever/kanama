@@ -73,6 +73,84 @@ export async function collectPerformance(evaluate) {
   }
 }
 
+/**
+ * Reads the bridge's exercised-member census at the end of a run (task 81).
+ *
+ * The bridge records every boundary dispatch of a registered member as
+ * scriptClass -> { memberKey: count }, with registered methods keyed "method#<id>"
+ * (the proxies dispatch by id). This resolves those ids to member names using the
+ * export's own kanama-web/KanamaWebProtocol.generated.json -- the manifest that
+ * describes exactly the proxies this export shipped. An unresolvable key is kept
+ * raw rather than dropped: if a REQUIRED member then appears missing,
+ * result_schema.py fails loudly (a stale export without the manifest must never
+ * pass the gate by omission).
+ *
+ * Collected centrally here, like collectPerformance, so the twelve demo modules
+ * need no changes and a new demo cannot arrive uncounted.
+ */
+export async function collectExercisedMembers(evaluate, exportDir) {
+  let raw;
+  try {
+    raw = await evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      if (!bridge || !bridge.exercisedMembers) return null;
+      return bridge.exercisedMembers;
+    })()`);
+  } catch {
+    // The page was already torn down. The schema decides whether that matters:
+    // a demo with a non-empty required-member list fails without this section.
+    return null;
+  }
+  if (!raw || typeof raw !== "object") return null;
+
+  let manifestScripts = null;
+  try {
+    const manifestPath = path.join(exportDir, "kanama-web", "KanamaWebProtocol.generated.json");
+    manifestScripts = JSON.parse(fs.readFileSync(manifestPath, "utf-8")).scripts ?? null;
+  } catch {
+    // No readable manifest (an export predating the task-81 copy): keys stay raw
+    // "method#<id>", and a demo with a required-member list then fails loudly.
+  }
+
+  const members = {};
+  for (const [scriptName, bucket] of Object.entries(raw)) {
+    const script = manifestScripts?.find((entry) => entry.className === scriptName);
+    const resolved = {};
+    for (const [key, count] of Object.entries(bucket)) {
+      const idMatch = /^method#(\d+)$/.exec(key);
+      const name = idMatch
+        ? (script?.methods?.find((method) => method.id === Number(idMatch[1]))?.name ?? key)
+        : key;
+      resolved[name] = (resolved[name] ?? 0) + count;
+    }
+    members[scriptName] = resolved;
+  }
+  return members;
+}
+
+/**
+ * Merges two exercised-member censuses, summing dispatch counts (task 81).
+ *
+ * A navigation resets the page's bridge, so a driver that navigates more than
+ * once (match3 reloads for its restart proof) would otherwise report only the
+ * FINAL page load's census -- and match3's final load never receives the drag.
+ * The engine drivers harvest before every navigation and merge, so the envelope
+ * describes the whole run. Either side may be null (page not yet booted, or
+ * already torn down); null contributes nothing.
+ */
+export function mergeExercisedMembers(base, addition) {
+  if (!addition) return base;
+  if (!base) return structuredClone(addition);
+  const merged = structuredClone(base);
+  for (const [scriptName, members] of Object.entries(addition)) {
+    const bucket = (merged[scriptName] ??= {});
+    for (const [member, count] of Object.entries(members)) {
+      bucket[member] = (bucket[member] ?? 0) + count;
+    }
+  }
+  return merged;
+}
+
 // demoResult contract (produced by each demo module):
 //   protocolVersion : number
 //   startup         : { loaded, outcome, durationMs }
@@ -92,6 +170,7 @@ export function buildEnvelope({
   consoleEvents,
   demoResult,
   performance = null,
+  exercisedMembers = null,
 }) {
   const checks = demoResult.checks;
   const checkNames = Object.keys(checks);
@@ -147,5 +226,9 @@ export function buildEnvelope({
     // when present, and the budget gate reports "not measured" rather than
     // quietly passing.
     ...(performance ? { performance } : {}),
+    // Task 81: absent only when the page could not be asked -- and then a demo
+    // with a non-empty required-member list FAILS the schema, so this section
+    // cannot quietly disappear the way the Safari performance section did (task 86).
+    ...(exercisedMembers ? { exercisedMembers } : {}),
   };
 }

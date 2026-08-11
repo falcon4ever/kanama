@@ -332,6 +332,27 @@ handle/callback/scheduler teardown, console error checks, and protocol-version
 match, and the harness's own `web_export_smoke: PASS` line (not a driver's
 check count) is what decides green.
 
+**The required-member gate (task 81).** The schema also asserts *what* ran,
+not only that checks were boolean: the bridge records every boundary dispatch
+of a registered script member (the nine `call*` funnels by `method#<id>`, the
+dispatched virtuals by name, Kotlin-lambda signal subscriptions as one
+aggregate key) at the `invoke` chokepoint, the engine drivers collect that
+census into the envelope's `exercisedMembers` section — resolving ids to
+member names from the export's own copy of
+`KanamaWebProtocol.generated.json` — and `result_schema.py` fails any demo
+whose per-demo *required* list in `scripts/web/required_members.json` names a
+member that did not dispatch, naming exactly which. A driver asserting frame
+counters is therefore no longer exactly as green as one asserting an enemy
+died (the FPS `Enemy.damage` break survived every gate for weeks because
+nothing required that member to run). Two scope notes: the census sees the
+JS↔Kotlin boundary — exactly where the dispatch-degradation bug class lives —
+so a member called Kotlin-to-Kotlin (`kotlinScriptInstance`) cannot be
+required and appears as a documented `todo` row with its transitive evidence;
+and an absent demo or empty list passes, so coverage ratchets up as drivers
+grow rather than being faked. Old exports fail the gate with a rebuild hint
+(their envelopes carry unresolved `method#N` keys because the export predates
+the manifest copy).
+
 Browser-specific notes:
 
 - **Safari** exposes Retina coordinate bugs the other engines hide. Godot's
