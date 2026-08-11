@@ -170,9 +170,19 @@ kanama_web_demo_local_only_reason() {
 # archived, so a quarantine cannot outlive the defect it cites.
 kanama_web_quarantine_reason() {
   case "$1" in
-    # KANAMA-BLOCKED(since:2026-07-28, task:71): dodge/squash mobs never free on a Linux host
-    dodge:firefox|squash:chrome|squash:firefox)
-      echo "task 71 — spawned mobs never free on a Linux host; both demos pass on macOS"
+    # KANAMA-BLOCKED(since:2026-07-28, task:71): dodge mobs never free on a Linux host
+    dodge:firefox)
+      echo "task 71 — spawned mobs never free on a Linux host; dodge passes on macOS"
+      ;;
+    # KANAMA-BLOCKED(since:2026-08-11, task:87): held-input movement collapses to one
+    # physics tick per rendered frame; the runner's software-GL Chrome renders ~1
+    # frame per hold window, so playerMovedOnInput reads a single tick (0.233 u).
+    # squash:firefox was LIFTED 2026-08-11 (maintainer decision): the task-71
+    # signature stopped reproducing (mobs freed on both engines, 2026-08-11 main
+    # run 31518477493) and the cell passed outright under the task-81 gameplay
+    # checks — it gates again.
+    squash:chrome)
+      echo "task 87 — per-frame transform snapshot collapses held-input movement on a slow-rendering host"
       ;;
     *) : ;;
   esac
