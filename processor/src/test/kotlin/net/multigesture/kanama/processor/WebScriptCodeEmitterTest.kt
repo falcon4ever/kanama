@@ -256,6 +256,29 @@ class WebScriptCodeEmitterTest {
   }
 
   @Test
+  fun emitsGameplayAudioAndLabelQueryArmsInEveryProxy() {
+    // Task 81 slice 1: the coverage-gate drivers read footstep audio and HUD label text
+    // through the shared object-query channel; both arms accept an optional child path
+    // ('' = the receiver's own node) so a driver can reach un-scripted children.
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+
+    assertTrue(proxy.contains("elif opcode == 287 and value is Node:"))
+    assertTrue(proxy.contains("if audio_query_node is AudioStreamPlayer:"))
+    assertTrue(proxy.contains("result = int((audio_query_node as AudioStreamPlayer).is_playing())"))
+    assertTrue(proxy.contains("elif opcode == 288 and value is Node:"))
+    assertTrue(proxy.contains("if label_query_node is Label:"))
+    assertTrue(
+      proxy.contains(
+        "_kanama_bridge.recordImmediateStringResult(String((label_query_node as Label).text))"
+      )
+    )
+  }
+
+  @Test
   fun emitsExactSceneTreeLifecycleCallsInEveryProxy() {
     val proxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
