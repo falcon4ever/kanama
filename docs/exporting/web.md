@@ -416,10 +416,16 @@ A quarantined cell that **passes** is reported just as loudly, with an explicit
 "lift the quarantine" line, because a stale quarantine is worse than none.
 Lifting one is a one-line deletion.
 
-<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the quarantined cells below -->
-Currently quarantined: `dodge:firefox`, `squash:chrome` and `squash:firefox` —
-task 71, spawned mobs never free on a Linux host. Both demos pass on macOS, and
-`dodge:chrome` passes on Linux, so it is neither a browser nor a demo property.
+<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the dodge quarantine below -->
+Currently quarantined: `dodge:firefox` — task 71, spawned mobs never free on a
+Linux host (dodge passes on macOS, and `dodge:chrome` passes on Linux, so it is
+neither a browser nor a demo property) —
+<!-- KANAMA-BLOCKED(since:2026-08-11, task:87): the squash:chrome quarantine below -->
+and `squash:chrome` — task 87, held-input movement collapses to one physics tick
+per rendered frame on that runner's slow-rendering Chrome. `squash:firefox` was
+lifted on 2026-08-11: the task-71 signature stopped reproducing there (mobs
+freed on both engines) and the cell passed outright under the task-81 gameplay
+checks, so it gates again.
 
 ### Bumping The Demos Pin
 
