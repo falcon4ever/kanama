@@ -71,9 +71,35 @@ const counters = (evaluate) =>
 // The mode was wrong: the export under test is NOT the spike page (either a demo
 // export was pointed at this driver, or the staging lost its mode line and the
 // bridge fell back to "game" gameplay -- task 84's designed failure shape). The
-// benchmark lifecycle will never run, so report the one fact that matters and
-// fail fast rather than timing out.
-function wrongModeEnvelope(mode, startupDurationMs) {
+// benchmark lifecycle will never run, so the envelope FAILS on the mode check --
+// and while it is here it records the other direction of the branch proof: after
+// a bounded window of real engine frames, the spike branch's distinctive
+// counters must have stayed INERT (the benchmark must never run where nothing
+// asked for it -- exactly the task-84 defect, three demos silently benchmarking).
+async function wrongModeEnvelope(evaluate, mode, startupDurationMs) {
+  const inertUntil = Date.now() + 20_000;
+  let inert = { rafTicks: 0, frameIndex: 0, emptyFrameSamples: 0, batchedFrameSamples: 0 };
+  while (Date.now() < inertUntil) {
+    try {
+      inert = await evaluate(`JSON.stringify((() => {
+        const bridge = globalThis.KanamaWebBridge;
+        return {
+          rafTicks: bridge.rafTick ?? 0,
+          frameIndex: bridge.frameIndex,
+          emptyFrameSamples: bridge.emptyFrameMs.length,
+          batchedFrameSamples: bridge.batchedFrameMs.length,
+        };
+      })())`).then(JSON.parse);
+    } catch {
+      // page mid-boot; retry
+    }
+    if (inert.rafTicks >= 120) break;
+    await delay(250);
+  }
+  trace(
+    `wrong mode "${mode}": after ${inert.rafTicks} engine frames the spike counters are ` +
+      `frameIndex=${inert.frameIndex} empty=${inert.emptyFrameSamples} batched=${inert.batchedFrameSamples}`,
+  );
   return {
     protocolVersion: 18,
     startup: {
@@ -82,10 +108,22 @@ function wrongModeEnvelope(mode, startupDurationMs) {
       durationMs: startupDurationMs,
     },
     checks: {
+      // The gate: this export did not opt in to the benchmark. FAILS the run.
       mode: false,
+      // The inverse branch proof, true when the benchmark stayed dormant over a
+      // window of real engine frames. The run still fails on `mode` above.
+      spikeCountersInertOutsideSpikeMode:
+        inert.rafTicks >= 120 &&
+        inert.frameIndex === 0 &&
+        inert.emptyFrameSamples === 0 &&
+        inert.batchedFrameSamples === 0,
     },
     handles: { liveAfterGameplay: 0, liveAfterTeardown: 0, staleRejected: 0 },
-    crossings: { kotlinToGodotCalls: 0 },
+    crossings: {
+      kotlinToGodotCalls: 0,
+      spikeFrameDispatches: Math.max(0, inert.frameIndex),
+      observedEngineFrames: Math.max(0, inert.rafTicks),
+    },
     callbacks: { readyCount: 0 },
     connections: { afterTeardownLiveHandles: 0 },
     scheduler: { commandBufferGrowths: 0 },
@@ -117,7 +155,7 @@ export async function runSpike({ url, evaluate, navigate, deadline }) {
   if (mode === null) throw new Error("Kanama Web bridge never appeared on the spike page");
   if (mode !== "spike") {
     trace(`mode check FAILED: found "${mode}"`);
-    return wrongModeEnvelope(mode, Date.now() - startupStart);
+    return wrongModeEnvelope(evaluate, mode, Date.now() - startupStart);
   }
 
   let ready = false;
