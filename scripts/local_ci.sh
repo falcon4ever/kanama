@@ -79,6 +79,7 @@ usage: scripts/local_ci.sh [--skip-docs] [--skip-bootstrap] [--skip-web] /path/t
 
 Runs local CI-style checks:
   - Gradle build/sync
+  - static lint: shellcheck over the gate scripts, ESLint over the Web drivers
   - optional CMake bootstrap build
   - optional mkdocs strict build
   - Web Kotlin/Wasm compile + fail-loud gameplay coverage gate + smoke scaffold
@@ -274,6 +275,11 @@ python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 
 stage "stale blocker claim audit"
 python3 "$ROOT_DIR/scripts/audit_stale_blockers.py"
+
+stage "shell script lint (shellcheck)"
+# Hard-required (the unzip/ios_template_preflight precedent): the gate itself
+# prints install instructions and exits 2 when shellcheck is absent.
+"$ROOT_DIR/scripts/check_shell_lint.sh"
 
 stage "JDWP bootstrap/project-setting guard"
 if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
@@ -553,8 +559,18 @@ if [[ $skip_web -eq 0 ]]; then
     for driver in "$ROOT_DIR"/scripts/web/drivers/*.mjs "$ROOT_DIR"/scripts/web/drivers/demos/*.mjs; do
       [[ -e "$driver" ]] && node --check "$driver"
     done
+
+    # Correctness lint over the same drivers (task 86: an unused variable held
+    # the Safari envelope's performance section back for two weeks). Pinned
+    # install: npm ci against the committed scripts/web lockfile.
+    stage "web driver lint (eslint)"
+    (
+      cd "$ROOT_DIR/scripts/web"
+      npm ci --no-audit --no-fund
+      ./node_modules/.bin/eslint .
+    )
   else
-    echo "[local_ci] node not found; skipping web driver syntax check"
+    echo "[local_ci] node not found; skipping web driver syntax check + eslint"
   fi
 
   # Export-smoke scaffold self-test against the static fake fixture (no browser).
