@@ -186,7 +186,9 @@ async function pinPlayer(evaluate, target) {
       bridge.immediateObjectQuery(142, bridge.squashPlayerHandle, [${target.join(", ")}].join(sep));
       return true;
     })()`);
-  } catch {}
+  } catch {
+    // Best-effort pin; a player left unpinned surfaces in the gameplay assertions.
+  }
 }
 
 // ScoreLabel text through op 288 (empty child path: the ScoreLabel IS the scripted

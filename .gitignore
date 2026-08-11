@@ -74,6 +74,9 @@ example_project/hs_err_pid*.log
 hs_err_pid*.log
 replay_pid*.log
 
+# --- Web driver lint (npm ci workspace; only package.json + lockfile are source) ---
+scripts/web/node_modules/
+
 # --- Android spike outputs ---
 android/godot-plugin/plugin/.cxx/
 android/godot-plugin/plugin/libs/

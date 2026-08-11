@@ -150,7 +150,9 @@ async function main() {
         sessionId = value.sessionId;
         break;
       } catch (error) {
-        if (driver.exitCode !== null) throw new Error(`safaridriver exited (${driver.exitCode})`);
+        if (driver.exitCode !== null) {
+          throw new Error(`safaridriver exited (${driver.exitCode})`, { cause: error });
+        }
         await delay(300);
       }
     }
@@ -205,6 +207,7 @@ async function main() {
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
+    // eslint-disable-next-line no-unused-vars -- KANAMA-BLOCKED(since:2026-08-11, task:86): collected but not yet passed into buildEnvelope; the fix is task 86's call
     const performance = await collectPerformance(evaluate);
 
     // No SafariDriver console endpoint: rely on the demo's bridge telemetry.

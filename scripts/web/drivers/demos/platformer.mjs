@@ -182,7 +182,9 @@ async function pinPlayer(evaluate, target) {
       bridge.immediateObjectQuery(142, bridge.platformerPlayerHandle, [${target.join(", ")}].join(sep));
       return true;
     })()`);
-  } catch {}
+  } catch {
+    // Best-effort pin; a player left unpinned surfaces in the gameplay assertions.
+  }
 }
 
 async function observe(evaluate, seed, windowMs, deadline, predicate) {
