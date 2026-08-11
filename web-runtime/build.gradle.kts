@@ -463,10 +463,91 @@ tasks.register<Exec>("exportWebSpike") {
             from(webSpikeAssets.file("kanama-web-bridge.js"))
             into(exportDir)
         }
-        check(exportDir.resolve("index.html").isFile) { "Godot Web export did not produce index.html" }
-        check(exportDir.resolve("kanama-web-spike.js").isFile) {
-            "Kotlin/Wasm loader was not installed into the Web export"
+        val indexHtml = exportDir.resolve("index.html")
+        check(indexHtml.isFile) { "Godot Web export did not produce index.html" }
+        val spikeLoader = exportDir.resolve("kanama-web-spike.js")
+        val bridge = exportDir.resolve("kanama-web-bridge.js")
+        check(spikeLoader.isFile) { "Kotlin/Wasm loader was not installed into the Web export" }
+        check(bridge.isFile) { "Versioned JS bridge missing from the spike export" }
+
+        // Task 84 follow-up: the spike benchmark is now a GATED matrix cell, so its export
+        // gets the same hardening the demo exports have had since 57f/60h -- cache-busting
+        // buildId stamp, no leaked workstation paths, no source maps, and the
+        // kanama-web/export-report.json the smoke harness and the CI matrix cross-check.
+        val buildId =
+            MessageDigest.getInstance("SHA-256").let { digest ->
+                digest.update(spikeLoader.readBytes())
+                digest.update(bridge.readBytes())
+                digest.digest().joinToString("") { "%02x".format(it) }.substring(0, 16)
+            }
+        val originalIndex = indexHtml.readText()
+        check(originalIndex.contains("src=\"kanama-web-spike.js\"")) {
+            "Exported spike shell is missing the kanama-web-spike.js script tag"
         }
+        check(originalIndex.contains("src=\"kanama-web-bridge.js\"")) {
+            "Exported spike shell is missing the kanama-web-bridge.js script tag"
+        }
+        indexHtml.writeText(
+            originalIndex
+                .replace(
+                    "src=\"kanama-web-spike.js\"",
+                    "src=\"kanama-web-spike.js?v=$buildId\"",
+                )
+                .replace(
+                    "src=\"kanama-web-bridge.js\"",
+                    "src=\"kanama-web-bridge.js?v=$buildId\"",
+                )
+        )
+
+        val servedIndex = indexHtml.readText()
+        val stagingPath = webSpikeStaging.get().asFile.absolutePath
+        check(!servedIndex.contains(stagingPath)) {
+            "Exported spike index.html leaks the staging path $stagingPath"
+        }
+        check(!servedIndex.contains(System.getProperty("user.home"))) {
+            "Exported spike index.html leaks a workstation-absolute path"
+        }
+        check(fileTree(exportDir) { include("**/*.map") }.files.isEmpty()) {
+            "Web spike export must not ship source maps"
+        }
+
+        val protocolVersion = readProtocolVersion()
+        val servedFiles =
+            exportDir
+                .walkTopDown()
+                .filter { it.isFile }
+                .map { it.relativeTo(exportDir).invariantSeparatorsPath to it.length() }
+                .sortedBy { it.first }
+                .toList()
+        val totalBytes = servedFiles.sumOf { it.second }
+        val reportDir = exportDir.resolve("kanama-web")
+        reportDir.mkdirs()
+        reportDir
+            .resolve("export-report.json")
+            .writeText(
+                buildString {
+                    append("{\n")
+                    append("  \"demo\": \"spike\",\n")
+                    append("  \"protocolVersion\": $protocolVersion,\n")
+                    append("  \"buildId\": \"$buildId\",\n")
+                    append("  \"renderer\": \"$webRendererName\",\n")
+                    append("  \"threadsSupported\": $webThreadsSupported,\n")
+                    append("  \"sourceMaps\": false,\n")
+                    append("  \"totalBytes\": $totalBytes,\n")
+                    append("  \"files\": [\n")
+                    append(
+                        servedFiles.joinToString(",\n") { (path, size) ->
+                            "    {\"name\": \"$path\", \"bytes\": $size}"
+                        }
+                    )
+                    append("\n  ]\n")
+                    append("}\n")
+                }
+            )
+        logger.lifecycle(
+            "[kanama:web] exportWebSpike produced the spike export ($totalBytes bytes, protocol " +
+                "$protocolVersion, buildId $buildId) at $exportDir"
+        )
     }
 }
 
