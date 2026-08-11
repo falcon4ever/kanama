@@ -31,7 +31,7 @@
       ],
       "todo": [
         {
-          "member": "Player.collectCoin",
+          "member": "Player.collect_coin",
           "reason": "Called Kotlin-to-Kotlin (Coin.onBodyEntered resolves the Player via kotlinScriptInstance), so it never crosses the recorded dispatch boundary; covered transitively by Hud._on_coin_collected above."
         }
       ]
