@@ -70,13 +70,21 @@
         },
         {
           "member": "Enemy._on_timer_timeout",
-          "reason": "Enemy return fire: the RayCast attack tick that makes the firefight two-sided runs on a scene Timer every run."
+          "reason": "Enemy return fire: the RayCast attack tick that makes the firefight two-sided runs on a scene Timer every run (51 dispatches measured)."
+        },
+        {
+          "member": "Hud._on_health_updated",
+          "reason": "Ranked gap #4's assertable half: enemy fire -> Player.damage -> health_updated -> HUD. Player.damage itself is Kotlin-to-Kotlin (invisible to the census), but this handler is its only emitter's consequence -- 7 dispatches measured in a run, from the enemies' timed return fire at the driver's fixed stance."
+        },
+        {
+          "member": "Player.change_weapon",
+          "reason": "Ranked gap #10's dispatch half: the weapon-swap chain crosses once at startup every run (hydrates the Weapon resource and instantiates the model the driver's weaponModelInstantiated check watches)."
         }
       ],
       "todo": [
         {
           "member": "Player.damage",
-          "reason": "Ranked gap #4 (task 81): on Web the enemy resolves the Player via kotlinScriptInstance and calls damage Kotlin-to-Kotlin, so the census cannot see it, and no driver asserts the health HUD chain (_on_health_updated) yet."
+          "reason": "On Web the enemy resolves the Player via kotlinScriptInstance and calls damage Kotlin-to-Kotlin, so the census cannot see the member itself; covered transitively by Hud._on_health_updated above."
         }
       ]
     },
@@ -138,11 +146,15 @@
           "reason": "The tile press reaching Main's board logic -- the match pipeline's entry."
         },
         {
-          "member": "Tile._on_move_finished",
-          "reason": "The tween-completion handler for tile movement: collapse/refill actually finished moving tiles, not merely started."
+          "member": "Tile.~kotlinSignalCallback",
+          "reason": "Tile movement completion: Tile's tween-finished subscriptions are Kotlin lambdas, which dispatch through the aggregate callback key (56 measured across a run) -- the evidence that collapse/refill tiles finished moving, not merely started."
         }
       ],
       "todo": [
+        {
+          "member": "Tile._on_move_finished",
+          "reason": "Registered, but invoked from trackedTween's Kotlin tween-finished lambda (Tile.kt), so it never crosses as a named member; the movement evidence is the aggregate row above."
+        },
         {
           "member": "Audio._on_stream_finished",
           "reason": "Fires when a sound effect ENDS, which races the driver's window; requiring it would gate on timing, not gameplay."
@@ -164,20 +176,28 @@
       ]
     },
     "web3d": {
-      "required": [],
-      "todo": [
+      "required": [
         {
-          "member": "Main.smoke_probes",
-          "reason": "The web3d fixture is probe-driven (generic-callv and render probes); its member-level requirements should be written when the probe surface stabilizes -- today the driver's own probe checks are the gate."
+          "member": "Coin._on_body_entered",
+          "reason": "The fixture's coin pickup: the driver walks the player over coins (2 dispatches measured)."
+        },
+        {
+          "member": "Main.dispatch_probe",
+          "reason": "The task-80 dispatch-shape conformance probe the driver calls explicitly; if it stops dispatching, the whole conformance family went dark."
+        },
+        {
+          "member": "Main.coroutine_probe",
+          "reason": "The task-82 coroutine frame-scheduler conformance probe the driver calls explicitly."
         }
-      ]
+      ],
+      "todo": []
     },
     "racing": {
       "required": [],
       "todo": [
         {
-          "member": "Vehicle.gameplay",
-          "reason": "The driver holds drive input and asserts View movement; beyond the Smoke teardown entry no registered method is exercised (spec table: 3 of 5 members never invoked). Needs driver work, not a list entry."
+          "member": "Vehicle._on_sphere_body_entered",
+          "reason": "The one gameplay method observed dispatching (2x, chrome) -- the impact-sound contact handler while the driver holds drive input. Promote to required once its determinism is established across engines/hosts; the rest of racing's members stay dark (spec table: 3 of 5 never invoked) pending driver work."
         }
       ]
     },
