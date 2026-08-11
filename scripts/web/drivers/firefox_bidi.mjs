@@ -30,7 +30,12 @@ import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { runSoak } from "./demos/soak.mjs";
 import { runVisibilityprobe } from "./demos/visibilityprobe.mjs";
 import { runSpike } from "./demos/spike.mjs";
-import { buildEnvelope, collectPayload, collectPerformance } from "./envelope.mjs";
+import {
+  buildEnvelope,
+  collectExercisedMembers,
+  collectPayload,
+  collectPerformance,
+} from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike };
 // macOS workstation path first, then the usual Linux install paths (the CI
@@ -300,6 +305,7 @@ async function main() {
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
     const performance = await collectPerformance(evaluate);
+    const exercisedMembers = await collectExercisedMembers(evaluate, args["export-dir"]);
     const consoleEvents = logEntries
       .filter((entry) => entry.level === "error")
       .map((entry) => ({ type: "console.error", text: entry.text ?? "error" }));
@@ -312,6 +318,7 @@ async function main() {
       consoleEvents,
       demoResult,
       performance,
+      exercisedMembers,
     });
 
     fs.writeFileSync(args.result, `${JSON.stringify(envelope, null, 2)}\n`);

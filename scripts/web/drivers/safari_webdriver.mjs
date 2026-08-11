@@ -29,7 +29,12 @@ import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { runSoak } from "./demos/soak.mjs";
 import { runVisibilityprobe } from "./demos/visibilityprobe.mjs";
 import { runSpike } from "./demos/spike.mjs";
-import { buildEnvelope, collectPayload, collectPerformance } from "./envelope.mjs";
+import {
+  buildEnvelope,
+  collectExercisedMembers,
+  collectPayload,
+  collectPerformance,
+} from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike };
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -209,6 +214,9 @@ async function main() {
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
     // eslint-disable-next-line no-unused-vars -- KANAMA-BLOCKED(since:2026-08-11, task:86): collected but not yet passed into buildEnvelope; the fix is task 86's call
     const performance = await collectPerformance(evaluate);
+    // Task 81: unlike the performance section above, this one IS in the Safari envelope --
+    // the schema's required-member gate depends on it on every engine.
+    const exercisedMembers = await collectExercisedMembers(evaluate, args["export-dir"]);
 
     // No SafariDriver console endpoint: rely on the demo's bridge telemetry.
     const envelope = buildEnvelope({
@@ -218,6 +226,7 @@ async function main() {
       durationMs: Date.now() - startedAt,
       consoleEvents: [],
       demoResult,
+      exercisedMembers,
     });
 
     fs.writeFileSync(args.result, `${JSON.stringify(envelope, null, 2)}\n`);
