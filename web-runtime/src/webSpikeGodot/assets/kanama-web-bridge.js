@@ -320,8 +320,22 @@
     web3dSmokeQuitHandle: 0,
     platformerMainHandle: 0,
     platformerSmokeQuitHandle: 0,
+    // Task 81: the platformer driver drives gameplay -- the Player handle carries the
+    // action press/release (ops 86/87), stance pins (142), position reads (138) and the
+    // SoundFootsteps is_playing query (287); the Hud handle carries the "Coins" Label
+    // text read (288).
+    platformerPlayerHandle: 0,
+    platformerHudHandle: 0,
     squashMainHandle: 0,
     squashSmokeQuitHandle: 0,
+    // Task 81: the squash driver drives gameplay -- the Player handle carries movement
+    // injection and stance pins; the ScoreLabel handle carries the score text read (288);
+    // the Mob handle is the LATEST ready mob, the driver's squash target. Mobs free
+    // themselves (squash or screen-exit), so this goes stale -- the driver re-reads it
+    // every poll and tolerates a stale-handle throw.
+    squashPlayerHandle: 0,
+    squashScoreLabelHandle: 0,
+    squashMobHandle: 0,
     fpsSmokeHandle: 0,
     fpsPlayerHandle: 0,
     charSmokeQuitHandle: 0,
@@ -2410,6 +2424,16 @@
       if (this.mode === "platformer" && scriptName.endsWith(".SmokeQuit")) {
         this.platformerSmokeQuitHandle = handle;
       }
+      if (this.mode === "platformer" && scriptName.endsWith(".Player")) {
+        // Task 81: the driver injects movement (ops 86/87), pins the stance (142), reads
+        // positions (138) and queries SoundFootsteps is_playing (287) through this handle.
+        this.platformerPlayerHandle = handle;
+      }
+      if (this.mode === "platformer" && scriptName.endsWith(".Hud")) {
+        // Task 81: the driver reads the "Coins" Label under the Hud Control (288) to
+        // assert the collision -> cross-script call -> signal -> HUD chain end to end.
+        this.platformerHudHandle = handle;
+      }
       if (this.mode === "squash" && scriptName.endsWith(".Main")) {
         this.squashMainHandle = handle;
       }
@@ -2417,6 +2441,21 @@
         // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
         // drain live handles to zero for the teardown assertion.
         this.squashSmokeQuitHandle = handle;
+      }
+      if (this.mode === "squash" && scriptName.endsWith(".Player")) {
+        // Task 81: movement injection, stance pins, and position reads ride this handle.
+        this.squashPlayerHandle = handle;
+      }
+      if (this.mode === "squash" && scriptName.endsWith(".ScoreLabel")) {
+        // Task 81: the driver reads this Label's own text (288, empty child path) to
+        // assert the squash -> squashed signal -> ScoreLabel chain scored.
+        this.squashScoreLabelHandle = handle;
+      }
+      if (this.mode === "squash" && scriptName.endsWith(".Mob")) {
+        // Task 81: the LATEST ready mob is the driver's squash target. Mobs free
+        // themselves, so this handle goes stale; the driver re-reads it each poll and
+        // tolerates a stale-handle throw rather than the bridge tracking frees here.
+        this.squashMobHandle = handle;
       }
       if (this.mode === "fps" && scriptName.endsWith(".Smoke")) {
         // The scene-root Smoke script's smoke_teardown (method#1) frees the Audio autoload
