@@ -108,7 +108,8 @@ export async function collectExercisedMembers(evaluate, exportDir) {
     const manifestPath = path.join(exportDir, "kanama-web", "KanamaWebProtocol.generated.json");
     manifestScripts = JSON.parse(fs.readFileSync(manifestPath, "utf-8")).scripts ?? null;
   } catch {
-    manifestScripts = null; // keys stay raw; a required list will fail loudly
+    // No readable manifest (an export predating the task-81 copy): keys stay raw
+    // "method#<id>", and a demo with a required-member list then fails loudly.
   }
 
   const members = {};
