@@ -118,6 +118,27 @@ def check(demo: str, measured: dict, budgets: dict, engine: str | None = None) -
 
     per_tick = measured["crossingsPerTick"]
     ticks = measured["ticksObserved"]
+
+    # An engine can be RECORD-ONLY (task 86): its crossings numbers are printed and
+    # recorded but gate nothing, with the reason stated. This is for Safari, whose
+    # ceilings were never measured -- `engine_limits` would otherwise silently grade
+    # it against the demo-level (chrome-era) number. Payload still gates above: it
+    # is a property of the export, not the engine. The reason requirement mirrors
+    # `tickRatioNotApplicable`: an exemption without a stated reason is not one.
+    engine_policy = (budgets.get("enginePolicies") or {}).get(engine or "")
+    if engine_policy is not None and "recordOnly" in (engine_policy or {}):
+        reason = engine_policy["recordOnly"]
+        if not reason:
+            raise BudgetError(
+                f"engine {engine!r} is recordOnly with no stated reason. An exemption "
+                f"without a stated reason is not an exemption."
+            )
+        print(
+            f"web_export_smoke: {demo} crossings/tick RECORDED, not gated, on "
+            f"{engine} (crossings/tick={per_tick} ticks={ticks}) -- {reason}"
+        )
+        return violations
+
     if limits.get("maxCrossingsPerTick") is None:
         # An exempt demo must SAY WHY. A null budget with no reason is an
         # unbudgeted demo wearing a budget's clothes, so it is a hard error.
