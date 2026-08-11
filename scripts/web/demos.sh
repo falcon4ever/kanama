@@ -28,12 +28,39 @@ KANAMA_WEB_PR_DEMOS=(match3 web3d dodge)
 # DODGE export for a long window and asserts no slow leak. It is deliberately
 # absent from both lists above -- it is opt-in (`--demo soak`), because it costs
 # ten minutes, and it must never silently pad a "corpus is green" claim.
-#
+
+# The gated transport benchmark (task 84 follow-up). Like soak it is a harness
+# cell rather than a thirteenth game demo, but unlike soak the CI matrix DOES
+# fold it into the full and ci sets: task 84 made the benchmark opt-in, and
+# opt-in with no gate is exactly the shape that lets a path rot unnoticed
+# (task 81). It exports the IN-REPO staged Phase 0 project through its own
+# dedicated Gradle task (`:web-runtime:exportWebSpike`), so it needs no demos
+# checkout. It stays out of the per-PR subset, which is chosen for speed.
+KANAMA_WEB_GATED_BENCHMARKS=(spike)
+
 # demo key -> the export/build key it runs against. Everything but soak is itself.
 kanama_web_demo_export_key() {
   case "$1" in
     soak) echo "dodge" ;;
     *) echo "$1" ;;
+  esac
+}
+
+# demo key -> the Gradle task that builds its export. Everything but the spike
+# goes through the shared `exportWeb` task with a `-PkanamaWebDemo` key; the
+# spike's staged benchmark project has had its own task since Phase 0.
+kanama_web_demo_export_task() {
+  case "$1" in
+    spike) echo ":web-runtime:exportWebSpike" ;;
+    *) echo ":web-runtime:exportWeb" ;;
+  esac
+}
+
+# demo key -> export directory, relative to the kanama repo root.
+kanama_web_demo_export_dir() {
+  case "$1" in
+    spike) echo "web-runtime/build/web-spike/export" ;;
+    *) echo "web-runtime/build/web-export/$1" ;;
   esac
 }
 
@@ -93,7 +120,7 @@ kanama_web_demo_export_args() {
 # these, so the local and CI numbers stay comparable.
 kanama_web_demo_timeout() {
   case "$1" in
-    match3|bunnymark|dodge|web3d) echo 300 ;;
+    match3|bunnymark|dodge|web3d|spike) echo 300 ;;
     platformer|squash|fps) echo 480 ;;
     charactercontroller|thirdperson|racing|citybuilder|tpsdemo) echo 600 ;;
     # The soak budget is derived from its own duration, never guessed: the driver
@@ -104,7 +131,11 @@ kanama_web_demo_timeout() {
 }
 
 kanama_web_demo_is_known() {
-  kanama_web_demo_project_dir "$1" >/dev/null 2>&1
+  # The spike is deliberately NOT in kanama_web_demo_project_dir: the
+  # fresh-checkout gate validates its --demo arguments against that mapping and
+  # cannot export the spike (it has no exportWeb key), so leaving it unknown
+  # there keeps that gate's rejection loud instead of failing mid-export.
+  [[ "$1" == "spike" ]] || kanama_web_demo_project_dir "$1" >/dev/null 2>&1
 }
 
 # Demos CI structurally cannot run -> the reason. This is NOT quarantine: nothing

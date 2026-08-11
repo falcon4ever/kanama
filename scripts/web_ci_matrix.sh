@@ -36,7 +36,8 @@
 # `--demo-set pr` is the per-PR subset, `full` the whole corpus, and `ci` the
 # corpus minus the demos a hosted runner structurally cannot build (see
 # scripts/web/demos.sh). `full` always means FULL -- a local run is never quietly
-# narrowed.
+# narrowed. Both full and ci also run the gated benchmark cells (the spike
+# transport benchmark, opt-in since task 84 and gated here so it cannot rot).
 
 set -euo pipefail
 
@@ -100,7 +101,11 @@ SKIPPED_DEMOS=()
 case "${DEMO_SET:-}" in
   "") ;;
   pr) DEMOS+=("${KANAMA_WEB_PR_DEMOS[@]}") ;;
-  full) DEMOS+=("${KANAMA_WEB_ALL_DEMOS[@]}") ;;
+  # full and ci also carry the gated benchmark cells (the spike): task 84 made
+  # the transport benchmark opt-in, and an opt-in path with no gate is how a
+  # path rots unnoticed. The pr subset stays without them -- it is chosen for
+  # speed, and the benchmark gates the backend, not a per-PR gameplay claim.
+  full) DEMOS+=("${KANAMA_WEB_ALL_DEMOS[@]}" "${KANAMA_WEB_GATED_BENCHMARKS[@]}") ;;
   ci)
     # The corpus minus what a hosted runner cannot build. Skipped demos are
     # ANNOUNCED and recorded in the evidence; they are never silently dropped.
@@ -113,6 +118,7 @@ case "${DEMO_SET:-}" in
         DEMOS+=("$demo")
       fi
     done
+    DEMOS+=("${KANAMA_WEB_GATED_BENCHMARKS[@]}")
     ;;
   *) die "unknown --demo-set: $DEMO_SET (expected pr|full|ci)" ;;
 esac
@@ -223,7 +229,8 @@ for demo in "${DEMOS[@]}"; do
   # The build key can differ from the driver key: the soak gate drives the dodge
   # export. Everything else exports under its own name.
   export_key="$(kanama_web_demo_export_key "$demo")"
-  export_dir="$ROOT_DIR/web-runtime/build/web-export/$export_key"
+  export_dir="$ROOT_DIR/$(kanama_web_demo_export_dir "$export_key")"
+  export_task="$(kanama_web_demo_export_task "$export_key")"
 
   if [[ "$SKIP_EXPORT" -eq 0 ]]; then
     # Always export from a clean directory: a stale export silently re-runs an
@@ -232,20 +239,24 @@ for demo in "${DEMOS[@]}"; do
     gradle_args=(
       --no-daemon
       -Pkotlin.compiler.execution.strategy=in-process
-      :web-runtime:exportWeb
-      "-PkanamaWebDemo=$export_key"
+      "$export_task"
       "-PkanamaGodotExecutable=$GODOT_BIN"
       "-PkanamaWebTemplateRelease=$TEMPLATE"
     )
-    project_subdir="$(kanama_web_demo_project_dir "$export_key")"
-    if [[ -n "$project_subdir" ]]; then
-      project_dir="$DEMOS_DIR/$project_subdir"
-      [[ -d "$project_dir" ]] || die "$demo: demo project not found: $project_dir"
-      gradle_args+=("-P$(kanama_web_demo_project_property "$export_key")=$project_dir")
+    # The spike's dedicated task exports the in-repo staged benchmark project
+    # and takes no demo key; everything else goes through the shared exportWeb.
+    if [[ "$export_task" == ":web-runtime:exportWeb" ]]; then
+      gradle_args+=("-PkanamaWebDemo=$export_key")
+      project_subdir="$(kanama_web_demo_project_dir "$export_key")"
+      if [[ -n "$project_subdir" ]]; then
+        project_dir="$DEMOS_DIR/$project_subdir"
+        [[ -d "$project_dir" ]] || die "$demo: demo project not found: $project_dir"
+        gradle_args+=("-P$(kanama_web_demo_project_property "$export_key")=$project_dir")
+      fi
+      while IFS= read -r extra; do
+        [[ -n "$extra" ]] && gradle_args+=("$extra")
+      done < <(kanama_web_demo_export_args "$export_key")
     fi
-    while IFS= read -r extra; do
-      [[ -n "$extra" ]] && gradle_args+=("$extra")
-    done < <(kanama_web_demo_export_args "$export_key")
 
     if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${gradle_args[@]}"; then
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2
