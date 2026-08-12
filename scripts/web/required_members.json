@@ -203,11 +203,28 @@
       ]
     },
     "thirdperson": {
-      "required": [],
-      "todo": [
+      "required": [
+        {
+          "member": "SmokeQuit.smoke_combat",
+          "reason": "The driver's combat entry (method#3): dispatches the desktop smoke's ported damage routines. If this stops crossing, the two damage members below lose their driver."
+        },
         {
           "member": "BeeBot.damage",
-          "reason": "Task 81 fix #3: the desktop SmokeQuit calls damage twice; the Web driver never does. The (VECTOR3, VECTOR3) damage shape is the FPS bug's sibling -- port the desktop smoke routines, then require BeeBot/BeetleBot/Box.damage here."
+          "reason": "Task 81 fix #3: the (VECTOR3, VECTOR3) registered-method shape, the FPS damage bug's sibling -- the desktop SmokeQuit tested it, the Web path dispatched it zero times until smoke_combat. Measured on chrome AND firefox envelopes 2026-08-12; KANAMA_WEB_T81_FALSIFY=no-combat suppresses exactly this."
+        },
+        {
+          "member": "BeetleBot.damage",
+          "reason": "The second desktop damage routine (kotlin-src/SmokeQuit.kt:267 sibling), same shape and evidence as BeeBot.damage; the driver additionally asserts both death frees via liveScriptsByClass."
+        }
+      ],
+      "todo": [
+        {
+          "member": "Box.damage",
+          "reason": "Same (VECTOR3, VECTOR3) shape, but no driver choreography destroys a box yet (the desktop smoke does not call it either); the grenade/bullet paths that reach it are ranked gaps #8/#9 in the task-81 spec."
+        },
+        {
+          "member": "Player.damage",
+          "reason": "Boundary-crossing (BeetleBot attack / bee Bullet both reach it via collider.call) but currently FAULTS on Web when it lands: the coin-spill -> CoinsContainer tween passes a NUMBER to Tween.tween_property, the known gap (task 57e backlog / task 81 confirmed break #3). MEASURED 2026-08-12: a beetle attack landing during an extended thirdperson run fatals the boundary (why the driver runs combat BEFORE movement). Require only after the tween number arm lands."
         }
       ]
     },
