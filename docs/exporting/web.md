@@ -436,12 +436,18 @@ Lifting one is a one-line deletion.
 <!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the dodge quarantine below -->
 Currently quarantined: `dodge:firefox` — task 71, spawned mobs never free on a
 Linux host (dodge passes on macOS, and `dodge:chrome` passes on Linux, so it is
-neither a browser nor a demo property). `squash:firefox` and `squash:chrome`
-were both lifted on 2026-08-11: firefox because the task-71 signature stopped
-reproducing there (mobs freed on both engines) and the cell passed outright
-under the task-81 gameplay checks; chrome with the task-87 fix (physics ticks
-now refresh the transform snapshot, so held-input movement no longer collapses
-to one tick per rendered frame on a slow-rendering host).
+neither a browser nor a demo property). `squash:firefox` was lifted on
+2026-08-11 (the task-71 signature stopped reproducing there and the cell passes
+outright under the task-81 gameplay checks, death path included).
+<!-- KANAMA-BLOCKED(since:2026-08-12, task:81): the squash:chrome quarantine below -->
+`squash:chrome` is quarantined for its DEATH-PHASE choreography only: on the
+slow CI host the parked player is not reliably reached by a randomly-heading
+mob inside the driver's window (1-for-2 across runner outings). Its movement
+and score checks are green there — the task-87 lift's proof run measured
+displacement 1.283 (was 0.233 frame-quantized before the fix), so the fix is
+proven on that host and task 87 stays closed; the remaining fix is driver
+death-phase determinism (steer into a mob instead of parking), tracked under
+task 81's driver work.
 
 ### Bumping The Demos Pin
 
