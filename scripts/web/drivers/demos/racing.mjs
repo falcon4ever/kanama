@@ -73,6 +73,19 @@ async function playerPosition(evaluate) {
   }
 }
 
+// A single op-138 read can come back null under host load (the page briefly busy or
+// mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
+// BOUNDED and the caller's null handling is unchanged, so a position that STAYS
+// unreadable (dead bridge, freed player) still fails exactly as loudly as before.
+async function playerPositionRetry(evaluate, attempts = 5) {
+  for (let attempt = 1; ; attempt += 1) {
+    const position = await playerPosition(evaluate);
+    if (position || attempt >= attempts) return position;
+    trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
+    await delay(250);
+  }
+}
+
 async function observe(evaluate, seed, windowMs, deadline, predicate) {
   const peak = { ...seed };
   let last = null;
@@ -144,7 +157,7 @@ export async function runRacing({ url, evaluate, navigate, deadline }) {
     (snap) => snap.physicsCalls >= ready.physicsCalls + 30,
   );
   const baseline = resumed.last ?? ready;
-  const startPosition = await playerPosition(evaluate);
+  const startPosition = await playerPositionRetry(evaluate);
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`resumed: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
@@ -165,7 +178,7 @@ export async function runRacing({ url, evaluate, navigate, deadline }) {
     (snap, p) => snap.physicsCalls >= p.physicsCalls && snap.physicsCalls > baseline.physicsCalls + 120,
   );
   const measured = warm.last ?? baseline;
-  const measuredStart = await playerPosition(evaluate);
+  const measuredStart = await playerPositionRetry(evaluate);
 
   await keyDown();
   const gameplay = await observe(
@@ -176,7 +189,7 @@ export async function runRacing({ url, evaluate, navigate, deadline }) {
     null,
   );
   await keyUp();
-  const runPosition = await playerPosition(evaluate);
+  const runPosition = await playerPositionRetry(evaluate);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? baseline;
   const measureFrom = measuredStart ?? startPosition;

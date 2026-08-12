@@ -76,6 +76,19 @@ async function playerPosition(evaluate) {
   }
 }
 
+// A single op-138 read can come back null under host load (the page briefly busy or
+// mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
+// BOUNDED and the caller's null handling is unchanged, so a position that STAYS
+// unreadable (dead bridge, freed player) still fails exactly as loudly as before.
+async function playerPositionRetry(evaluate, attempts = 5) {
+  for (let attempt = 1; ; attempt += 1) {
+    const position = await playerPosition(evaluate);
+    if (position || attempt >= attempts) return position;
+    trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
+    await delay(250);
+  }
+}
+
 function seedFrom(snap) {
   return {
     processCalls: snap.processCalls,
@@ -185,7 +198,7 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
     (snap) => snap.physicsCalls >= level.physicsCalls + 120,
   );
   const baseline = settled.last ?? level;
-  const startPosition = await playerPosition(evaluate);
+  const startPosition = await playerPositionRetry(evaluate);
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`settled: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
@@ -200,7 +213,7 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
     null,
   );
   await action(87, "move_forward");
-  const runPosition = await playerPosition(evaluate);
+  const runPosition = await playerPositionRetry(evaluate);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? baseline;
   const displacement = runPosition
