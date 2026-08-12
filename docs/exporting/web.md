@@ -245,6 +245,85 @@ pass 13/13 of its own checks and still be rejected by the schema (which is what
 enforces `liveAfterTeardown === 0` and the required-member census), and that is
 exactly how one demo stayed un-gated on every engine for weeks.
 
+## Publishing A Web Export
+
+`packageWebExport` turns an already-built, smoke-validated export into a
+publishable zip. It never builds or refreshes an export — a missing or stale
+one (wrong demo, wrong protocol version, a report that no longer matches the
+served bytes) fails loudly, so the artifact is always the export you
+validated:
+
+```sh
+./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
+  :web-runtime:packageWebExport -PkanamaWebDemo=match3
+```
+
+The zip lands in
+`web-runtime/build/distributions/kanama-web-<demo>-v<version>.zip` with
+`index.html` at the zip root. Before zipping, the gate:
+
+- quotes the export's `buildId` and protocol version from
+  `kanama-web/export-report.json` and rejects a stale export;
+- checks the payload against **itch.io's HTML5 defaults — at most 500 MB and
+  1000 files** — printing the measured size and file count either way; and
+- scans every served byte for workstation-absolute paths with
+  `scripts/web/check_no_local_paths.py`, the fresh-checkout gate's scanner.
+
+Validate the artifact itself — not the export directory it came from — before
+uploading. `web_package_smoke.sh` unzips the artifact to a scratch directory,
+serves that copy, and drives it through the full export smoke:
+
+```sh
+scripts/web_package_smoke.sh \
+  --zip web-runtime/build/distributions/kanama-web-match3-v<version>.zip \
+  --demo match3 --engine chrome --result /tmp/match3-package.json
+```
+
+Read the inner `web_export_smoke: PASS` line, as always.
+
+### itch.io
+
+Upload the zip with [butler](https://itch.io/docs/butler/) (it unpacks zips
+server-side; the channel name marks the upload as HTML5):
+
+```sh
+butler push web-runtime/build/distributions/kanama-web-<demo>-v<version>.zip \
+  <user>/<game>:html5
+```
+
+Then on the project's edit page, confirm the upload is set to **"This file
+will be played in the browser"**. Leave the SharedArrayBuffer support toggle
+**off**: exports use the `web_nothreads` template, so they need no
+cross-origin isolation and no COOP/COEP headers (see
+[Renderer And Thread Constraints](#renderer-and-thread-constraints)). That is
+also why itch.io-style hosting works at all — it serves games over HTTPS from
+a subpath inside an iframe, and the nothreads export is compatible with
+exactly that shape.
+
+### Any Static HTTPS Host
+
+Any static file host works if it serves two things:
+
+- **HTTPS.** Godot's Web export requires a secure context — `127.0.0.1` is
+  one, a plain-HTTP LAN or internet address is not, and the engine never
+  starts without one (the same constraint as
+  [Testing On A Phone Or Tablet](#testing-on-a-phone-or-tablet)).
+- A correct `application/wasm` MIME type for `.wasm` files.
+
+No COOP/COEP headers, no special subpath handling, and no server-side code
+are needed: unzip the artifact into any directory the host serves.
+
+### The tps-demo Exception
+
+tps-demo serves ~638 MB (570 MB of upstream demo assets in `index.pck`) and
+exceeds the itch.io defaults; `packageWebExport` fails it by name rather than
+producing an artifact nobody could upload. This is the same known exception
+recorded in `scripts/web/budgets.json` — shrinking it is asset work in the
+demo, not a packaging concern.
+
+Publishing changes nothing about the backend's status: Web remains
+Experimental, and exporting a game still requires a Kanama source checkout.
+
 ## Browser Matrix
 
 `web_ci_matrix.sh` is the corpus-wide gate: it exports each demo and drives it in
