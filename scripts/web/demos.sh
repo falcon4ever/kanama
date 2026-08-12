@@ -177,16 +177,18 @@ kanama_web_quarantine_reason() {
     dodge:firefox)
       echo "task 71 — spawned mobs never free on a Linux host; dodge passes on macOS"
       ;;
-    # squash:chrome was LIFTED 2026-08-11 with the task-87 fix: _physics_process now
-    # refreshes the transform snapshot, so held-input movement integrates per tick
-    # instead of collapsing to one tick per rendered frame (the runner's software-GL
-    # Chrome rendered ~1 frame per hold window -> playerDisplacement 0.233). The
-    # driver's 0.5 u movement gate is UNCHANGED; the lift's proof is this PR's own CI
-    # plus the next full-corpus main run — if squash:chrome reds again, re-quarantine
-    # and reopen task 87 rather than touching the gate.
-    # (squash:firefox was lifted the same day, maintainer decision: the task-71
-    # signature stopped reproducing — mobs freed on both engines, main run
-    # 31518477493 — and the cell passed outright under the task-81 gameplay checks.)
+    # KANAMA-BLOCKED(since:2026-08-12, task:81): squash death-phase choreography is
+    # timing-flaky on the slow runner. The task-87 lift's proof run (main
+    # 31559892674) PROVED the movement fix on this exact host — playerMovedOnInput
+    # PASSED at displacement 1.283 (was 0.233 quantized), score chain green — but
+    # playerFreedOnMobContact failed: the parked player waits for a randomly-heading
+    # mob, and on this host it is 1-for-2 across runner outings. Do NOT reopen task
+    # 87 (its mechanism is fixed and measured here); the fix is driver death-phase
+    # determinism (steer into a mob instead of parking), tracked under task 81's
+    # driver work. squash:firefox stays LIFTED and passing, death path included.
+    squash:chrome)
+      echo "task 81 — squash death-phase choreography is timing-flaky on a slow host (movement + score PROVEN green here; see the 2026-08-12 marker above)"
+      ;;
     *) : ;;
   esac
 }
