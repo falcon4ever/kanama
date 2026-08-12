@@ -2176,6 +2176,22 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine()
       appendLine("func _physics_process(delta: float) -> void:")
       appendLine("\tif _kanama_handle != 0:")
+      if (node3dAttachment) {
+        // Task 87: the transform snapshot must refresh per PHYSICS TICK, not only per
+        // rendered frame. Physics outpaces rendering whenever rAF is slow or unpaced
+        // (headless engines, low-FPS hosts), and a physics loop that WRITES a transform
+        // derived from a READ of it (squash's lookAtFromPosition(self.position, ...))
+        // teleported the body back to the frame-start position on every tick after the
+        // first inside one rendered frame — net movement collapsed to one tick per
+        // rendered frame (MEASURED 2026-08-11: 0.82 u per 600 ms hold on a free-running
+        // headless Chrome at ~4.4 ticks/frame; CI Linux Chrome quantized to exactly one
+        // tick, 0.233 u). move_and_slide displaces the body engine-side, so no Kotlin
+        // write-through can keep this mirror coherent — only an engine read-back can.
+        appendLine("\t\tvar physics_target3d: Node3D = self")
+        appendLine(
+          "\t\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, physics_target3d.position.x, physics_target3d.position.y, physics_target3d.position.z, physics_target3d.rotation.x, physics_target3d.rotation.y, physics_target3d.rotation.z, physics_target3d.scale.x, physics_target3d.scale.y, physics_target3d.scale.z)"
+        )
+      }
       if (model.attachTo == "CharacterBody3D") {
         // Post-slide velocity refresh: the script reads self.velocity each tick, and after
         // move_and_slide the engine's velocity differs from the last written value.
