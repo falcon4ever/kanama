@@ -231,7 +231,15 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     await evaluate(
       "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, 3); true",
     );
-    const combatDeadline = Math.min(deadline, Date.now() + 30_000);
+    // Window MEASURED both ways (2026-08-12): healthy hosts break out in 1-3s, but the
+    // first gated runner outing (main 31623511177) showed damage DISPATCHED (census
+    // BeeBot.damage/BeetleBot.damage = 1) with neither live count dropping in 30s wall --
+    // the death sequence (coroutine + smoke-puff await) appears paced by RENDERED frames,
+    // and that runner's software-GL Chrome renders ~1-2 fps. 120s bounds the wait without
+    // weakening the check (it still requires both real deaths); if this window ever proves
+    // insufficient there, plan B is demos-side: the smoke_combat path shortens the
+    // cosmetic death delay, and the pacing question gets the task-74 histogram recipe.
+    const combatDeadline = Math.min(deadline, Date.now() + 120_000);
     while (Date.now() < combatDeadline) {
       const snap = await snapshot(evaluate);
       if (snap) {
