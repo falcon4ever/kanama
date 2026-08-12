@@ -105,6 +105,21 @@ the default into GDScript and pushes it back into Kotlin at hydration), and a
 property type or hint outside the supported Web set is rejected with an error
 naming the property.
 
+**Physics loops should derive movement from velocity, not from re-reading a
+spatial value they just wrote.** On Web, spatial reads (`self.position`,
+`self.rotation`, …) come from a mirrored snapshot rather than a live engine
+call. The snapshot refreshes at the start of every `_process` **and** (since
+task 87) every `_physics_process` dispatch, so a per-tick read is coherent with
+the previous tick — but it is still a start-of-dispatch mirror: a value the
+engine changes *inside* the current tick (after `moveAndSlide()`, for example)
+is not visible until the next dispatch. Desktop reads the engine live, so a
+spelling that re-reads a just-written spatial value can be subtly
+platform-different even when it works. Preferred spelling: accumulate movement
+in `self.velocity` + `moveAndSlide()`, and derive orientation from the intended
+direction (as squash's Player does with `lookAtFromPosition(self.position,
+self.position + direction, UP)` — the *direction* is the input, not a read-back
+of engine physics).
+
 ## Build The Web Scripts
 
 `buildWebScripts` generates the GDScript proxy bundle (proxies + manifest +
@@ -421,13 +436,12 @@ Lifting one is a one-line deletion.
 <!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the dodge quarantine below -->
 Currently quarantined: `dodge:firefox` — task 71, spawned mobs never free on a
 Linux host (dodge passes on macOS, and `dodge:chrome` passes on Linux, so it is
-neither a browser nor a demo property) —
-<!-- KANAMA-BLOCKED(since:2026-08-11, task:87): the squash:chrome quarantine below -->
-and `squash:chrome` — task 87, held-input movement collapses to one physics tick
-per rendered frame on that runner's slow-rendering Chrome. `squash:firefox` was
-lifted on 2026-08-11: the task-71 signature stopped reproducing there (mobs
-freed on both engines) and the cell passed outright under the task-81 gameplay
-checks, so it gates again.
+neither a browser nor a demo property). `squash:firefox` and `squash:chrome`
+were both lifted on 2026-08-11: firefox because the task-71 signature stopped
+reproducing there (mobs freed on both engines) and the cell passed outright
+under the task-81 gameplay checks; chrome with the task-87 fix (physics ticks
+now refresh the transform snapshot, so held-input movement no longer collapses
+to one tick per rendered frame on a slow-rendering host).
 
 ### Bumping The Demos Pin
 

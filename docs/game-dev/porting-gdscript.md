@@ -41,6 +41,11 @@ of leaving a project-specific workaround.
   instead of raw `rpc("method_name")` strings.
 - For scenes with `MultiplayerSynchronizer`, verify every replicated custom
   `.:property` is exposed with `@ScriptProperty`.
+- If the port will also run on Web: physics loops should derive movement from
+  velocity (`self.velocity` + `moveAndSlide()`), not from re-reading a spatial
+  value they just wrote — Web spatial reads are a start-of-dispatch mirror, not
+  a live engine call. See the Web export guide's Web-Compatible Project Scripts
+  rules.
 
 When a typed lookup fails, check the actual runtime class before changing the
 helper. Godot often imports GLB scene roots as `Node3D`, with the mesh attached

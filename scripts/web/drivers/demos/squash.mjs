@@ -51,18 +51,24 @@ const DROP_HEIGHT = 1.25;
 // never stretch a hold. The squash arena is walled (WorldBoundaryShape3D), so even a
 // free-running engine cannot carry the player anywhere dangerous.
 //
-// SIZED BY A FOUND DEFECT (task 81, 2026-08-11, filed in the PR): while a move action
-// is held, squash's Player calls lookAtFromPosition(self.position, ...) every physics
-// tick, and on Web `self.position` is the mirrored transform snapshot, which the proxy
-// refreshes only in _process -- once per RENDERED frame (_physics_process refreshes
-// only the velocity slot; see WebScriptCodeEmitter's _physics_process emission). Every
-// tick after the first inside one rendered frame therefore teleports the body back to
-// the frame-start position, so NET movement is one physics tick (14/60 = 0.23 u) per
-// rendered frame regardless of how many ticks the frame ran. MEASURED: 100ms holds
-// moved 0.23-0.35 u on a free-running headless Chrome instead of the naive 1.4 u. A
-// 600ms hold nets ~0.23 x rendered-frames, comfortably past the 0.5 u gate even on a
-// slow-framed headless engine, and on a display-paced engine (1 tick/frame) it is
-// simply full-speed movement.
+// SIZED BY A FOUND DEFECT (task 81, 2026-08-11), SINCE FIXED (task 87, same day):
+// while a move action is held, squash's Player calls lookAtFromPosition(self.position,
+// ...) every physics tick, and on Web `self.position` is the mirrored transform
+// snapshot. Before task 87 the proxy refreshed it only in _process -- once per
+// RENDERED frame -- so every tick after the first inside one rendered frame teleported
+// the body back to the frame-start position: NET movement collapsed to one physics
+// tick (14/60 = 0.23 u) per rendered frame. MEASURED pre-fix, 2026-08-11: 0.82 u per
+// 600 ms hold on a free-running headless Chrome at ~4.4 ticks/frame; CI's
+// slow-rendering Linux Chrome quantized a whole hold to exactly one tick, 0.233 u
+// (run 31518477493, the squash:chrome quarantine). Task 87 makes the _physics_process
+// dispatch refresh the transform snapshot too, so held movement integrates per TICK:
+// MEASURED post-fix, same host and hold, 5.13 u (= 22 ticks x 14/60 -- physically
+// correct 14 u/s of SIMULATED time; displacement scales with ticks run, not
+// wall-clock). Even a host that renders ONE frame in the whole window nets the
+// engine's physics catch-up budget (max_physics_steps_per_frame, default 8 ticks =
+// 1.87 u), not a single tick. The 0.5 u gate is deliberately UNCHANGED: it sits above
+// the old one-tick failure signature (0.233) and far below correct movement on any
+// host that renders at least one frame -- do not weaken it.
 const MOVE_HOLD_MS = 600;
 
 async function snapshot(evaluate) {

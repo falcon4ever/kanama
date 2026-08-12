@@ -133,7 +133,12 @@ mirrors crossings:
 - **Batching** — many mutations coalesce into one crossing (e.g. Bunnymark's
   single 256-position batch) instead of one call per operation.
 - **Property snapshots** — the Kotlin side keeps a read-your-write mirror of
-  Godot object state so reads need not round-trip through JS.
+  Godot object state so reads need not round-trip through JS. State the engine
+  mutates on its own (a body displaced by `move_and_slide`) is pushed back into
+  the mirror at the start of every `_process` **and** every `_physics_process`
+  dispatch (task 87: the per-tick transform refresh — refreshing only per
+  rendered frame collapsed held-input movement to one physics tick per frame
+  whenever physics outpaced rendering).
 - **Handle generations** — handles are opaque IDs across the bridge, not live
   pointers, so stale generations are detected and rejected explicitly.
 
