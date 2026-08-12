@@ -334,6 +334,28 @@ class WebScriptCodeEmitterTest {
   }
 
   @Test
+  fun emitsRigidBodyImpulseQueryArmInEveryProxy() {
+    // Task 81 fix #3's found framework gap: opcode 159 (RigidBody3D.apply_impulse) was in
+    // the contract and the generated backend requires it (invokeVector3Vector3Arg's
+    // opcode set is {108, 154, 159}), but the applier arm was never emitted -- every Web
+    // apply_impulse threw "was not applied", and nothing noticed because no gate ever ran
+    // a bot's damage() on Web until the thirdperson combat port.
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+
+    assertTrue(proxy.contains("elif opcode == 159 and value is RigidBody3D:"))
+    assertTrue(
+      proxy.contains(
+        "(value as RigidBody3D).apply_impulse(Vector3(impulse_parts[0], impulse_parts[1], " +
+          "impulse_parts[2]), Vector3(impulse_parts[3], impulse_parts[4], impulse_parts[5]))"
+      )
+    )
+  }
+
+  @Test
   fun emitsExactSceneTreeLifecycleCallsInEveryProxy() {
     val proxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))

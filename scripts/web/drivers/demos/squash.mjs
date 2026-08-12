@@ -17,9 +17,14 @@
 //      gravity close the gap; the landing is real -- slide-collision normal dot UP >
 //      0.1 -> Mob.squash -> squashed signal -> ScoreLabel -- and the score is read back
 //      through op 288 until the label reads "Score: 1"+,
-//   3. death: the player is parked at ground level; a mob reaching the MobDetector
-//      fires Player.die -> hit signal -> Main stops MobTimer + shows Retry, and the
-//      player script frees (liveScriptsByClass ".Player" drops to 0),
+//   3. death: the player is steered INTO the latest live mob at the mob's own height
+//      (the phase-2 chase step with a ground-level pin: beside the mob, not above it,
+//      so the contact is lateral and cannot read as a landing). The MobDetector
+//      overlap fires Player.die -> hit signal -> Main stops MobTimer + shows Retry,
+//      and the player script frees (liveScriptsByClass ".Player" drops to 0). Until
+//      task 81's determinism pass this phase PARKED the player at the arena center
+//      and waited for a randomly-heading mob -- 1-for-2 on the slow CI runner (the
+//      run that quarantined squash:chrome); steering removes the spawn-angle luck,
 //   4. teardown: SmokeQuit.smoke_teardown still drains every live handle to zero
 //      (SmokeQuit survives the player's free).
 //
@@ -27,7 +32,7 @@
 // KANAMA_WEB_T81_FALSIFY to induce exactly one break and watch its check go false --
 //   no-input  -> movement pulses skipped: playerMovedOnInput false
 //   no-chase  -> mob-drop choreography skipped: mobSquashScoredOnHud false
-//   no-death  -> ground park skipped (player stays pinned aloft): playerFreedOnMobContact false
+//   no-death  -> death steer skipped (player stays pinned aloft): playerFreedOnMobContact false
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -47,6 +52,16 @@ const AIR_ANCHOR = [0, 8, 0];
 // velocity), so the swept move_and_slide contacts the box top within a tick or two --
 // faster than a 10-18 u/s mob can slide out from under the pin.
 const DROP_HEIGHT = 1.25;
+// Lateral offset for the death steer: pin the player BESIDE the mob at the mob's own
+// y, never above it. Geometry (player.tscn/mob.tscn): the MobDetector's disc
+// (r=0.908, half-height 0.072) rides at player-root +1.06 and the mob's box spans its
+// root to ~+1.07, so two roots at the same y overlap the detector into the box top by
+// ~0.08 across the full disc radius -- the same contact that kills a legitimately
+// standing player. The 0.5 side step keeps the player's body sphere (r=0.79 at +0.77)
+// penetrating LESS laterally than it would vertically, so the depenetration normal
+// stays sideways and Player's slide-collision loop cannot read the contact as a
+// landing (normal-dot-UP > 0.1 would squash the mob instead of dying to it).
+const DEATH_SIDE_STEP = 0.5;
 // In-page hold per movement attempt; released in page so driver-transport jank can
 // never stretch a hold. The squash arena is walled (WorldBoundaryShape3D), so even a
 // free-running engine cannot carry the player anywhere dangerous.
@@ -137,8 +152,10 @@ async function playerPosition(evaluate) {
 // One squash-chase step, entirely in page so the mob read and the pin land inside one
 // event-loop turn: re-read the LATEST mob handle (it goes stale when a mob frees --
 // squashed or walked off -- so every access tolerates a throw), read its position, and
-// pin the player DROP_HEIGHT above it.
-async function chaseStep(evaluate) {
+// pin the player at the given offsets from it. Phase 2 pins DROP_HEIGHT above the mob
+// (a real landing squashes it); phase 3 pins BESIDE it at the mob's own y (see
+// DEATH_SIDE_STEP), forcing MobDetector contact that cannot read as a landing.
+async function chaseStep(evaluate, offsetX, offsetY) {
   try {
     return await evaluate(`(() => {
       const bridge = globalThis.KanamaWebBridge;
@@ -154,7 +171,7 @@ async function chaseStep(evaluate) {
       }
       const sep = String.fromCharCode(31);
       try {
-        bridge.immediateObjectQuery(142, bridge.squashPlayerHandle, [x, y + ${DROP_HEIGHT}, z].join(sep));
+        bridge.immediateObjectQuery(142, bridge.squashPlayerHandle, [x + ${offsetX}, y + ${offsetY}, z].join(sep));
       } catch {
         return { pinned: false, reason: "player-gone" };
       }
@@ -314,7 +331,7 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   if (FALSIFY !== "no-chase") {
     while (Date.now() < chaseDeadline) {
       chaseSteps += 1;
-      const step = await chaseStep(evaluate);
+      const step = await chaseStep(evaluate, 0, DROP_HEIGHT);
       await delay(70);
       const text = await scoreText(evaluate);
       if (text !== null) score = text;
@@ -339,41 +356,59 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   trace(`score: steps=${chaseSteps} label="${score}"`);
 
   // --- Phase 3: death path (task 81 part B, run AFTER the score attempt) -------------
-  // Park the player at ground level and let a mob reach the MobDetector. From here on
-  // the player handle is left alone: it frees itself.
+  // Steer the player INTO the latest live mob at the mob's own height: the phase-2
+  // chase step with a side-step pin instead of a drop (see DEATH_SIDE_STEP for the
+  // geometry). Re-pinned every poll, exactly like the chase, so a mob that frees
+  // mid-approach (walk-off, or a contact the engine resolved as a squash) is simply
+  // replaced by the next spawn -- MobTimer keeps spawning until the death itself stops
+  // it. The pre-determinism driver parked the player at the arena center instead and
+  // waited for a randomly-heading mob to wander in, which the slow CI runner proved to
+  // be a coin flip (the squash:chrome quarantine this steer lifts).
+  // The spawn/free evidence (mobsInstantiated, mobsSpawnAndFree) must settle BEFORE the
+  // death steer: the death stops the MobTimer through Main._on_player_hit, so a steer
+  // that connects in its first seconds -- measured 3 steps / ~1 s on a free-running
+  // engine -- would cap mobInstantiations below the long-standing thresholds forever.
+  // The player waits ALOFT for the whole window (re-pinned every poll, the same hold the
+  // no-death falsification uses) so no wandering mob can end the run early.
+  const evidenceDeadline = Math.min(deadline, Date.now() + 15_000);
+  while (
+    Date.now() < evidenceDeadline &&
+    !(state.peak.mobInstantiations >= 4 && state.mobFrees >= 2)
+  ) {
+    await pinPlayer(evaluate, AIR_ANCHOR);
+    mergeSnap(state, await snapshot(evaluate));
+    await delay(200);
+  }
+  trace(
+    `evidence: mobs=${state.peak.mobInstantiations} frees=${state.mobFrees} playerLive=${state.last?.playerLive}`,
+  );
+
   let playerFreedOnMobContact = false;
+  let deathSteps = 0;
   if (FALSIFY !== "no-death") {
-    await pinPlayer(evaluate, [0, 0.1, 0]);
     const deathDeadline = Math.min(deadline, Date.now() + 30_000);
     while (Date.now() < deathDeadline) {
+      deathSteps += 1;
+      const step = await chaseStep(evaluate, DEATH_SIDE_STEP, 0);
+      await delay(150);
       const snap = await snapshot(evaluate);
       mergeSnap(state, snap);
       if (snap) {
-        trace(`death: playerLive=${snap.playerLive} mobs=${snap.mobLive} live=${snap.liveHandles}`);
+        if (DEBUG && step) {
+          trace(
+            `death#${deathSteps}: ${step.pinned ? `mob@(${step.mob.x.toFixed(1)},${step.mob.y.toFixed(1)},${step.mob.z.toFixed(1)})` : step.reason} playerLive=${snap.playerLive} mobs=${snap.mobLive} live=${snap.liveHandles}`,
+          );
+        }
         if (snap.playerLive === 0) {
           playerFreedOnMobContact = true;
           break;
         }
       }
-      await delay(200);
     }
+    trace(`death: steps=${deathSteps} freed=${playerFreedOnMobContact}`);
   } else {
     trace("FALSIFY=no-death: player kept pinned aloft");
     await pinPlayer(evaluate, AIR_ANCHOR);
-  }
-
-  // Let any remaining self-driven evidence (spawns, walk-off frees) settle briefly if
-  // the long-standing thresholds have not been reached yet.
-  const evidenceDeadline = Math.min(deadline, Date.now() + 10_000);
-  while (
-    Date.now() < evidenceDeadline &&
-    !(state.peak.mobInstantiations >= 4 && state.mobFrees >= 2)
-  ) {
-    // The no-death falsification must hold the player OUT of harm's way for the whole
-    // settle window, or a wandering mob would kill it anyway and un-falsify the check.
-    if (FALSIFY === "no-death") await pinPlayer(evaluate, AIR_ANCHOR);
-    mergeSnap(state, await snapshot(evaluate));
-    await delay(200);
   }
   const peak = state.peak;
   const atPeak = state.last ?? ready;
@@ -421,8 +456,9 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
     // Task 81: a real landing squashed a mob and the score chain ran end to end
     // (slide-collision normal check -> Mob.squash -> squashed signal -> ScoreLabel).
     mobSquashScoredOnHud,
-    // Task 81: a mob reached the ground-level MobDetector, Player.die ran, and the
-    // player script freed -- the demo's lose path, previously dark on every gate.
+    // Task 81: steered mob contact fired the MobDetector, Player.die ran, and the
+    // player script freed -- the demo's lose path, driven DETERMINISTICALLY by the
+    // death steer (the park-and-wait predecessor hinged on spawn-angle luck).
     playerFreedOnMobContact,
     fullTeardownToZero: settled.liveHandles === 0,
     // Godot runs every physics tick before the idle/_process pass inside one rAF
@@ -458,6 +494,7 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
       scoreReported: mobSquashScoredOnHud ? Number.parseInt(score.slice("Score: ".length), 10) : 0,
       mobFrees: state.mobFrees,
       chaseSteps,
+      deathSteps,
     },
     callbacks: {
       pendingSignalCallbacks: settled.callbacks,

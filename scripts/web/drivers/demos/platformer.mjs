@@ -109,6 +109,19 @@ async function playerPosition(evaluate) {
   }
 }
 
+// A single op-138 read can come back null under host load (the page briefly busy or
+// mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
+// BOUNDED and the caller's null handling is unchanged, so a position that STAYS
+// unreadable (dead bridge, freed player) still fails exactly as loudly as before.
+async function playerPositionRetry(evaluate, attempts = 5) {
+  for (let attempt = 1; ; attempt += 1) {
+    const position = await playerPosition(evaluate);
+    if (position || attempt >= attempts) return position;
+    trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
+    await delay(250);
+  }
+}
+
 // SoundFootsteps is_playing through op 287 (child-path payload on the Player's handle).
 // Returns 1/0, or null when the page could not be asked.
 async function footstepsPlaying(evaluate) {
@@ -300,7 +313,7 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   // Fixed short holds released in page; NO early exit of any hold, and no physics-count
   // predicates (standing lore). The pulse LOOP stops once both movement and walking
   // audio have been evidenced, or after the pulse budget.
-  const startPosition = await playerPosition(evaluate);
+  const startPosition = await playerPositionRetry(evaluate);
   if (!startPosition) throw new Error("could not read the player's global position");
   let maxDisplacement = 0;
   let footstepsLiveDuringWalk = false;

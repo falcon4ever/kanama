@@ -73,6 +73,19 @@ async function usedCells(evaluate) {
   }
 }
 
+// A single grid read can come back null under host load (the page briefly busy or
+// mid-frame) -- the same one-shot flake shape kanama#170's validation caught on the
+// op-138 position reads. Retries are BOUNDED and the caller's null handling is
+// unchanged, so a grid that STAYS unreadable still fails exactly as loudly as before.
+async function usedCellsRetry(evaluate, attempts = 5) {
+  for (let attempt = 1; ; attempt += 1) {
+    const cells = await usedCells(evaluate);
+    if (cells || attempt >= attempts) return cells;
+    trace(`grid read null (attempt ${attempt}/${attempts}); retrying`);
+    await delay(250);
+  }
+}
+
 // The selector's world position (opcode 138 on the Builder's selector property handle):
 // it lerps toward the mouse-ray cell every process tick.
 async function selectorPosition(evaluate) {
@@ -169,7 +182,7 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline }) {
     (snap) => snap.processCalls >= ready.processCalls + 30,
   );
   const baseline = settledStart.last ?? ready;
-  const baselineCells = await usedCells(evaluate);
+  const baselineCells = await usedCellsRetry(evaluate);
   if (!baselineCells) throw new Error("could not read the GridMap used cells");
   const selectorStart = await selectorPosition(evaluate);
   trace(`baseline: cells=${baselineCells.count} selector=${JSON.stringify(selectorStart)}`);

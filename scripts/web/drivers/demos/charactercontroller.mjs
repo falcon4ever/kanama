@@ -87,6 +87,19 @@ async function playerPosition(evaluate) {
   }
 }
 
+// A single op-138 read can come back null under host load (the page briefly busy or
+// mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
+// BOUNDED and the caller's null handling is unchanged, so a position that STAYS
+// unreadable (dead bridge, freed player) still fails exactly as loudly as before.
+async function playerPositionRetry(evaluate, attempts = 5) {
+  for (let attempt = 1; ; attempt += 1) {
+    const position = await playerPosition(evaluate);
+    if (position || attempt >= attempts) return position;
+    trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
+    await delay(250);
+  }
+}
+
 const keyExpression = (type, code, key, keyCode) => `(() => {
   const canvas = document.querySelector("canvas");
   canvas.focus();
@@ -162,7 +175,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   // itself consumes physics frames and must not eat into the movement window.
   await observe(evaluate, { ...seedFrom(ready), callbackErrors: 0 }, 2_000, deadline, null);
   const baseline = (await snapshot(evaluate)) ?? ready;
-  const startPosition = await playerPosition(evaluate);
+  const startPosition = await playerPositionRetry(evaluate);
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`start position: ${JSON.stringify(startPosition)}`);
 
@@ -177,7 +190,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
     (snap, p) => p.physicsCalls >= baseline.physicsCalls + 150,
   );
   await keyUp();
-  const runPosition = await playerPosition(evaluate);
+  const runPosition = await playerPositionRetry(evaluate);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
   const displacement = runPosition

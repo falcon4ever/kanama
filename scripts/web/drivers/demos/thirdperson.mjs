@@ -2,14 +2,26 @@
 // Web smoke.
 //
 // The demo boots PAUSED behind its instructions page: the driver first dispatches
-// SmokeQuit.smoke_resume (method#1) to press through, then holds move_up via the trusted
-// per-engine key transport and PROVES movement by reading the player's global position
-// through the bridge's immediate Vector3 channel (opcode 138). Enemy AI is self-evidencing
-// while the world runs (beetle-bot navigation, bee-bot bobbing). smoke_teardown (method#2)
-// releases the scene caches and frees the root, draining every live handle to zero.
+// SmokeQuit.smoke_resume (method#1) to press through. COMBAT runs next (task 81 fix #3):
+// SmokeQuit.smoke_combat (method#3) ports the desktop smoke's two damage(Vector3, Vector3)
+// calls -- the FPS damage bug's sibling shape -- onto the scene's own near bee and beetle,
+// and the driver asserts both deaths (liveScriptsByClass decrement on the death
+// coroutine's free, the fps.mjs pattern) while the exercised-member census gates the
+// BeeBot.damage/BeetleBot.damage dispatches. Combat runs BEFORE movement on purpose: see
+// the ORDER IS LOAD-BEARING note at the combat phase. Then the driver holds move_up via
+// the trusted per-engine transport and PROVES movement by reading the player's global
+// position through the bridge's immediate Vector3 channel (opcode 138); remaining enemy
+// AI is self-evidencing while the world runs (far bots navigate and bob). smoke_teardown
+// (method#2) releases the scene caches and frees the root, draining every live handle to
+// zero.
+//
+// Falsification (task 81 requires every gate provably able to fail): set
+// KANAMA_WEB_T81_FALSIFY=no-combat to skip the smoke_combat dispatch and watch
+// botsKilledByDamageCall go false (and the census gate fail naming both damage members).
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
+const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[thirdperson ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -22,6 +34,10 @@ async function snapshot(evaluate) {
       if (!bridge) return null;
       const classCount = (suffix) => {
         const entry = Object.entries(bridge.match3ReadyByClass ?? {}).find(([n]) => n.endsWith(suffix));
+        return entry?.[1] ?? 0;
+      };
+      const liveCount = (suffix) => {
+        const entry = Object.entries(bridge.liveScriptsByClass ?? {}).find(([n]) => n.endsWith(suffix));
         return entry?.[1] ?? 0;
       };
       return {
@@ -38,6 +54,10 @@ async function snapshot(evaluate) {
         beeReady: classCount(".BeeBot"),
         beetleReady: classCount(".BeetleBot"),
         boxReady: classCount(".Box"),
+        // LIVE, not cumulative: decrements on the _exit_tree free, which is what lets
+        // the combat gate see a damaged bot actually die (the fps.mjs enemyLive pattern).
+        beeLive: liveCount(".BeeBot"),
+        beetleLive: liveCount(".BeetleBot"),
         smokeQuitReady: classCount(".SmokeQuit"),
         physicsCalls: bridge.physicsProcessCalls ?? 0,
         // Task 84: real _process dispatches. This demo has no mode branch in the
@@ -75,6 +95,19 @@ async function playerPosition(evaluate) {
     })()`);
   } catch {
     return null;
+  }
+}
+
+// A single op-138 read can come back null under host load (the page briefly busy or
+// mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
+// BOUNDED and the caller's null handling is unchanged, so a position that STAYS
+// unreadable (dead bridge, freed player) still fails exactly as loudly as before.
+async function playerPositionRetry(evaluate, attempts = 5) {
+  for (let attempt = 1; ; attempt += 1) {
+    const position = await playerPosition(evaluate);
+    if (position || attempt >= attempts) return position;
+    trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
+    await delay(250);
   }
 }
 
@@ -163,9 +196,64 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     (snap) => snap.physicsCalls >= pausedBefore + 30,
   );
   const baseline = resumed.last ?? ready;
-  const startPosition = await playerPosition(evaluate);
+  trace(`resumed: physics=${baseline.physicsCalls}`);
+
+  // --- Combat FIRST: the desktop smoke's damage routines, ported (task 81 fix #3) ----
+  //
+  // SmokeQuit.smoke_combat (method#3) calls damage(Vector3, Vector3) on the scene's own
+  // near bee and beetle through Object.call -- the same boundary crossing Bullet/Grenade/
+  // MeleeAttackArea combat uses, and the registered-method shape that killed the whole
+  // combat system silently (the FPS damage bug's sibling; the desktop SmokeQuit tested
+  // it, the Web path never did). The bots' death coroutines queue_free them ~2 SIMULATED
+  // seconds later (smoke puff awaited, coin burst zeroed by the smoke method), so the
+  // assertion is the EFFECT: each live script count drops below its pre-combat value.
+  // The exercised-member census independently gates the BeeBot.damage/BeetleBot.damage
+  // dispatches (scripts/web/required_members.json).
+  //
+  // ORDER IS LOAD-BEARING (MEASURED 2026-08-12): run the combat BEFORE the movement
+  // hold. Moving first walks the player into GroundEnemy's detection range, the beetle
+  // chases and lands an attack ~1 s after the hold ends, and its collider.call("damage")
+  // into the PLAYER reaches the coin-spill -> CoinsContainer tween, whose NUMBER final
+  // value is the known Web Tween.tween_property gap (task 57e backlog / task 81
+  // confirmed break #3) -- a FATAL boundary failure that then stops every later
+  // dispatch, including the combat calls this phase exists to make. Killing the near
+  // bots first removes the only AI that can reach the driver's path, and the movement
+  // baseline is re-snapshotted AFTER the deaths so the movement-window thresholds stay
+  // measured against movement alone (a bound met partly by combat traffic proves
+  // nothing).
+  const beesBefore = baseline.beeLive ?? 0;
+  const beetlesBefore = baseline.beetleLive ?? 0;
+  let beesAfter = beesBefore;
+  let beetlesAfter = beetlesBefore;
+  let combatErrors = 0;
+  if (FALSIFY !== "no-combat") {
+    trace(`smoke_combat: bees=${beesBefore} beetles=${beetlesBefore}`);
+    await evaluate(
+      "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, 3); true",
+    );
+    const combatDeadline = Math.min(deadline, Date.now() + 30_000);
+    while (Date.now() < combatDeadline) {
+      const snap = await snapshot(evaluate);
+      if (snap) {
+        beesAfter = snap.beeLive;
+        beetlesAfter = snap.beetleLive;
+        combatErrors = Math.max(combatErrors, snap.callbackErrors);
+        trace(`combat: bees=${snap.beeLive} beetles=${snap.beetleLive} errs=${snap.callbackErrors}`);
+        if (snap.beeLive < beesBefore && snap.beetleLive < beetlesBefore) break;
+      }
+      await delay(200);
+    }
+    trace(`combat done: bees=${beesAfter}/${beesBefore} beetles=${beetlesAfter}/${beetlesBefore}`);
+  } else {
+    trace("FALSIFY=no-combat: smoke_combat not dispatched");
+  }
+
+  // Movement baseline AFTER the combat settles, so the movement-window thresholds
+  // measure the movement window alone.
+  const moveBaseline = (await snapshot(evaluate)) ?? baseline;
+  const startPosition = await playerPositionRetry(evaluate);
   if (!startPosition) throw new Error("could not read the player's global position");
-  trace(`resumed: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
+  trace(`move baseline: physics=${moveBaseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
   // Hold move_up for a FIXED wall-time (no early exit: the tick rate races past any
   // physics-count predicate before the first observe sample, cutting the hold short —
@@ -173,15 +261,15 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
   await keyDown();
   const gameplay = await observe(
     evaluate,
-    { ...seedFrom(baseline), callbackErrors: 0 },
+    { ...seedFrom(moveBaseline), callbackErrors: combatErrors },
     3_000,
     deadline,
     null,
   );
   await keyUp();
-  const runPosition = await playerPosition(evaluate);
+  const runPosition = await playerPositionRetry(evaluate);
   const peak = gameplay.peak;
-  const atPeak = gameplay.last ?? baseline;
+  const atPeak = gameplay.last ?? moveBaseline;
   const displacement = runPosition
     ? Math.hypot(runPosition.x - startPosition.x, runPosition.z - startPosition.z)
     : 0;
@@ -213,15 +301,23 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     bootPausedThenResumed: ready.physicsCalls === 0 && baseline.physicsCalls > 0,
     // Synthetic move_up displaced the player through the camera-relative controller.
     playerMovedOnInput: displacement > 1.0,
-    physicsFramesAdvanced: peak.physicsCalls >= baseline.physicsCalls + 40,
+    // Task 81 fix #3: smoke_combat's damage(Vector3, Vector3) calls killed a bee AND a
+    // beetle -- both death coroutines freed their scripts. Before this port the shape
+    // was driver-invoked zero times on Web while the desktop smoke tested it twice.
+    botsKilledByDamageCall:
+      beesBefore >= 1 &&
+      beetlesBefore >= 1 &&
+      beesAfter < beesBefore &&
+      beetlesAfter < beetlesBefore,
+    physicsFramesAdvanced: peak.physicsCalls >= moveBaseline.physicsCalls + 40,
     // MEASURED 2026-08-10 (macOS arm64, Chrome 151 headless, protocol 18, task 84): the
     // gameplay window applies ~680 commands over its baseline, so +80 keeps an 8x margin
     // on the REAL _process path. The threshold is unchanged and was NOT re-derived from
     // the pre-84 runs, which were inflated by the benchmark's synthetic per-dispatch
     // scalar mutation -- a lower bound met partly by scaffolding proves nothing, so it
     // had to be re-measured even though the number stayed put.
-    gameplayCommandsApplied: peak.appliedCommands > baseline.appliedCommands + 80,
-    crossingsAdvanced: peak.crossings > baseline.crossings,
+    gameplayCommandsApplied: peak.appliedCommands > moveBaseline.appliedCommands + 80,
+    crossingsAdvanced: peak.crossings > moveBaseline.crossings,
     // Task 84: this demo runs the engine's REAL `_process`, not the transport benchmark.
     // MEASURED 793 (Chrome) / 7405 (Firefox) process dispatches; it was exactly 0 on both
     // before the fix. Asserted as > 0 rather than a magnitude because the count tracks the
@@ -257,6 +353,10 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
       appliedCommands: peak.appliedCommands,
       processCalls: settled.processCalls,
       playerDisplacement: Number(displacement.toFixed(3)),
+      beesBeforeCombat: beesBefore,
+      beesAfterCombat: beesAfter,
+      beetlesBeforeCombat: beetlesBefore,
+      beetlesAfterCombat: beetlesAfter,
     },
     callbacks: {
       pendingSignalCallbacks: settled.callbacks,
