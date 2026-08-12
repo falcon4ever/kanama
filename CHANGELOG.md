@@ -16,6 +16,20 @@ versioning once public releases begin.
 
 ### Added
 
+- **Web exports package into a publishable artifact.**
+  `:web-runtime:packageWebExport -PkanamaWebDemo=<demo>` zips an already-built,
+  smoke-validated Web export (index.html at the zip root, deterministic
+  `kanama-web-<demo>-v<version>.zip` name) after gating it: stale-export
+  refusal (demo/protocol/buildId cross-checks against
+  `kanama-web/export-report.json`), itch.io's HTML5 defaults (500 MB / 1000
+  files, measured output printed either way, tps-demo named as the documented
+  638 MB exception), and a byte-level no-local-paths scan.
+  `scripts/web_package_smoke.sh` proves the artifact is the game by unzipping
+  it to a scratch directory and driving that copy through the full export
+  smoke. Publishing guidance (itch.io via butler, generic static-HTTPS
+  hosting, why the nothreads export needs no COOP/COEP) is in
+  `docs/exporting/web.md` under "Publishing A Web Export". The Web backend's
+  status is unchanged: it remains Experimental.
 - **Exported desktop games can be built for another platform.** `./gradlew
   jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64` produces the bundled
   JVM runtime for a target other than the host, so a developer on macOS can ship
