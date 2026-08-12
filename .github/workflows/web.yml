@@ -51,7 +51,7 @@ env:
   # Kanama PR. Bump it deliberately when a demo port lands (see
   # docs/exporting/web.md, "Bumping the demos pin").
   # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
-  DEMOS_REF: 5e0b606aeab5f41591371b1b4c663bd2fc582841
+  DEMOS_REF: c85b83ad7978d2ab0778131774404c4ace065cb5
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
