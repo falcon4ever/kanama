@@ -1,6 +1,7 @@
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.security.MessageDigest
+import java.util.zip.ZipFile
 
 plugins {
     kotlin("multiplatform")
@@ -2908,6 +2909,224 @@ tasks.register<Exec>("exportWeb") {
         logger.lifecycle(
             "[kanama:web] exportWeb produced $demo export ($totalBytes bytes, protocol " +
                 "$protocolVersion, buildId $buildId) at $exportDir"
+        )
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Task 60i, shape C (first half) -- the player-publish package.
+//
+// `packageWebExport` zips an ALREADY-BUILT `web-runtime/build/web-export/<demo>`
+// into the artifact a finished game uploads to itch.io or any static HTTPS
+// host. It deliberately never builds or refreshes an export: the artifact must
+// be the export that was smoke-validated, so a missing or stale export is a
+// loud failure (the stale-export trap), never a rebuild trigger. The spike
+// benchmark is not a game and has no publish shape; only demo keys package.
+//
+// The gates mirror what a publish host enforces:
+//   - itch.io's HTML5 defaults: at most 500 MB and at most 1000 files, served
+//     from a subpath in an iframe over HTTPS (recorded in the 60i decision).
+//     tps-demo (638 MB) is the documented exception and fails here BY NAME.
+//   - zero workstation-absolute paths in any served byte, via the same scanner
+//     the fresh-checkout gate uses (scripts/web/check_no_local_paths.py).
+//   - freshness: the export's protocol must match the current generated
+//     protocol descriptor, its buildId must match the served entry scripts,
+//     and its report must name the requested demo.
+//
+// Docs: docs/exporting/web.md, "Publishing A Web Export". Validate the zip
+// itself with scripts/web_package_smoke.sh before uploading.
+
+val webPackagePublishLimitBytes = 500L * 1000L * 1000L // itch.io HTML5 default (500 MB)
+val webPackagePublishLimitFiles = 1000 // itch.io HTML5 default
+
+// Shared by the pre-zip gate and the post-zip belt-and-braces check.
+fun readExportReportField(report: File, key: String): String {
+    val match = Regex("\"$key\"\\s*:\\s*\"?([^\",\\n]+)\"?").find(report.readText())
+    return match?.groupValues?.get(1)
+        ?: error("export-report.json at $report has no \"$key\" field")
+}
+
+tasks.register("verifyWebExportForPackaging") {
+    group = "distribution"
+    description =
+        "Gates an already-built Web export (-PkanamaWebDemo) against the publish limits " +
+            "(itch.io HTML5 defaults), the stale-export checks, and the no-local-paths scan."
+    doLast {
+        val demo = webDemo.get()
+        stageTaskFor(demo) // key validation only: an unknown demo key fails with the canonical message
+
+        val exportDir = webExportRoot.get().dir(demo).asFile
+        check(exportDir.isDirectory) {
+            "No Web export to package at $exportDir. packageWebExport never builds one -- " +
+                "run :web-runtime:exportWeb -PkanamaWebDemo=$demo (and smoke it) first."
+        }
+        val servedFiles = exportDir.walkTopDown().filter { it.isFile }.toList()
+        check(servedFiles.isNotEmpty()) {
+            "Web export at $exportDir contains no files -- stale or interrupted export."
+        }
+        check(exportDir.resolve("index.html").isFile) {
+            "Web export at $exportDir has no index.html -- stale or interrupted export."
+        }
+
+        val report = exportDir.resolve("kanama-web/export-report.json")
+        check(report.isFile) {
+            "Web export at $exportDir has no kanama-web/export-report.json -- re-run exportWeb; " +
+                "packaging refuses a directory it cannot identify."
+        }
+        val reportDemo = readExportReportField(report, "demo")
+        val reportBuildId = readExportReportField(report, "buildId")
+        val reportProtocol = readExportReportField(report, "protocolVersion").toInt()
+        check(reportDemo == demo) {
+            "Stale export: $exportDir reports demo \"$reportDemo\" but -PkanamaWebDemo=$demo " +
+                "was requested -- the directory holds a different demo's export."
+        }
+
+        // Freshness against the repository: the export must carry the protocol the
+        // current generated descriptor declares. Without the generated web scripts
+        // there is no reference to judge freshness against -- that is a failure,
+        // not a skip (a gate that silently skips is no gate).
+        val protocolFile = webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile
+        check(protocolFile.isFile) {
+            "Cannot judge export freshness: no generated protocol descriptor at $protocolFile. " +
+                "Run :web-runtime:buildWebScripts so the export can be checked against the " +
+                "current protocol."
+        }
+        val currentProtocol = readProtocolVersion()
+        check(reportProtocol == currentProtocol) {
+            "Stale export: $exportDir was built at protocol $reportProtocol but the current " +
+                "generated protocol is $currentProtocol -- re-run exportWeb before packaging."
+        }
+
+        // Freshness of the report itself: the buildId is derived from the two entry
+        // scripts, so a mismatch means the report describes different bytes than
+        // the directory serves (a half-rebuilt or hand-edited export).
+        val spikeLoader = exportDir.resolve("kanama-web-spike.js")
+        val bridge = exportDir.resolve("kanama-web-bridge.js")
+        check(spikeLoader.isFile && bridge.isFile) {
+            "Web export at $exportDir is missing its entry scripts (kanama-web-spike.js / " +
+                "kanama-web-bridge.js) -- stale or interrupted export."
+        }
+        val actualBuildId =
+            MessageDigest.getInstance("SHA-256").let { digest ->
+                digest.update(spikeLoader.readBytes())
+                digest.update(bridge.readBytes())
+                digest.digest().joinToString("") { "%02x".format(it) }.substring(0, 16)
+            }
+        check(actualBuildId == reportBuildId) {
+            "Stale export: export-report.json buildId $reportBuildId does not match the served " +
+                "entry scripts (computed $actualBuildId) -- re-run exportWeb before packaging."
+        }
+
+        // The publish limits (itch.io HTML5 defaults). The measured numbers are
+        // printed pass or fail, so the gate line is always the record.
+        val fileCount = servedFiles.size
+        val totalBytes = servedFiles.sumOf { it.length() }
+        val measured =
+            "%d files, %.1f MB (limits: %d files, %.0f MB)".format(
+                fileCount,
+                totalBytes / 1_000_000.0,
+                webPackagePublishLimitFiles,
+                webPackagePublishLimitBytes / 1_000_000.0,
+            )
+        logger.lifecycle(
+            "[kanama:web] packageWebExport gate: $demo at $exportDir -- $measured, " +
+                "buildId $reportBuildId, protocol $reportProtocol"
+        )
+        if (fileCount > webPackagePublishLimitFiles) {
+            throw GradleException(
+                "Web export $demo exceeds the itch.io HTML5 default file-count limit: $measured. " +
+                    "A payload over these defaults has no player-publish path."
+            )
+        }
+        if (totalBytes > webPackagePublishLimitBytes) {
+            val exception =
+                if (demo == "tpsdemo") {
+                    " tps-demo is the DOCUMENTED exception: it serves ~638 MB (570 MB of " +
+                        "upstream demo assets in index.pck), over the itch.io defaults by " +
+                        "design -- see docs/exporting/web.md (Publishing A Web Export) and " +
+                        "the known exception recorded in scripts/web/budgets.json. It has " +
+                        "no player-publish artifact at this size; shrinking it is demo " +
+                        "asset work, not a packaging concern."
+                } else {
+                    " A payload over these defaults has no player-publish path."
+                }
+            throw GradleException(
+                "Web export $demo exceeds the itch.io HTML5 default size limit: $measured.$exception"
+            )
+        }
+
+        // A published artifact must carry zero workstation paths in ANY served
+        // byte. Same scanner as the fresh-checkout gate (task 60g / W3): the repo
+        // checkout covers the build/staging trees, the home directory covers
+        // everything else this machine could leak (demos checkout, Gradle home).
+        logger.lifecycle("[kanama:web] packageWebExport gate: scanning $exportDir for local paths")
+        val scanProcess =
+            ProcessBuilder(
+                    "python3",
+                    rootProject.file("scripts/web/check_no_local_paths.py").absolutePath,
+                    exportDir.absolutePath,
+                    "--forbid",
+                    rootProject.projectDir.absolutePath,
+                    "--forbid",
+                    System.getProperty("user.home"),
+                )
+                .redirectErrorStream(true)
+                .start()
+        val scanOutput = scanProcess.inputStream.bufferedReader().readText().trim()
+        val scanExit = scanProcess.waitFor()
+        scanOutput.lines().forEach { logger.lifecycle("  $it") }
+        check(scanExit == 0) {
+            "check_no_local_paths failed for $exportDir (exit $scanExit) -- a published " +
+                "artifact must carry zero workstation paths; see the scanner output above."
+        }
+    }
+}
+
+tasks.register<Zip>("packageWebExport") {
+    group = "distribution"
+    description =
+        "Zips an already-built, gate-validated Web export (-PkanamaWebDemo) into the " +
+            "publishable player artifact (docs/exporting/web.md, Publishing A Web Export)."
+    dependsOn("verifyWebExportForPackaging")
+    archiveFileName.set(webDemo.map { "kanama-web-$it-v${project.version}.zip" })
+    destinationDirectory.set(layout.buildDirectory.dir("distributions"))
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+    // The export's files sit at the ZIP ROOT -- itch.io requires index.html there.
+    from(webDemo.map { webExportRoot.get().dir(it) })
+
+    doLast {
+        val demo = webDemo.get()
+        val zipFile = archiveFile.get().asFile
+        // Belt and braces on the artifact itself: the content gate ran pre-zip,
+        // so re-assert the zip is non-empty, index.html-rooted, and inside the
+        // limits (a zip is smaller than its contents, so these cannot newly fail
+        // unless the packaging itself broke).
+        val entryNames =
+            ZipFile(zipFile).use { zip ->
+                zip.entries().asSequence().filter { !it.isDirectory }.map { it.name }.toList()
+            }
+        check(entryNames.isNotEmpty()) { "Packaged Web export $zipFile has no entries" }
+        check("index.html" in entryNames) {
+            "Packaged Web export $zipFile does not carry index.html at the zip root"
+        }
+        check(entryNames.size <= webPackagePublishLimitFiles) {
+            "Packaged Web export $zipFile carries ${entryNames.size} files, over the itch.io " +
+                "HTML5 default of $webPackagePublishLimitFiles"
+        }
+        check(zipFile.length() <= webPackagePublishLimitBytes) {
+            "Packaged Web export $zipFile is ${zipFile.length()} bytes, over the itch.io " +
+                "HTML5 default of $webPackagePublishLimitBytes"
+        }
+        val report = webExportRoot.get().dir(demo).asFile.resolve("kanama-web/export-report.json")
+        logger.lifecycle(
+            "[kanama:web] packageWebExport produced $zipFile -- ${entryNames.size} files, " +
+                "%.1f MB zipped, buildId %s, protocol %s".format(
+                    zipFile.length() / 1_000_000.0,
+                    readExportReportField(report, "buildId"),
+                    readExportReportField(report, "protocolVersion"),
+                )
         )
     }
 }
