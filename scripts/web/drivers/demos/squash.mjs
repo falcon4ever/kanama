@@ -364,6 +364,25 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   // it. The pre-determinism driver parked the player at the arena center instead and
   // waited for a randomly-heading mob to wander in, which the slow CI runner proved to
   // be a coin flip (the squash:chrome quarantine this steer lifts).
+  // The spawn/free evidence (mobsInstantiated, mobsSpawnAndFree) must settle BEFORE the
+  // death steer: the death stops the MobTimer through Main._on_player_hit, so a steer
+  // that connects in its first seconds -- measured 3 steps / ~1 s on a free-running
+  // engine -- would cap mobInstantiations below the long-standing thresholds forever.
+  // The player waits ALOFT for the whole window (re-pinned every poll, the same hold the
+  // no-death falsification uses) so no wandering mob can end the run early.
+  const evidenceDeadline = Math.min(deadline, Date.now() + 15_000);
+  while (
+    Date.now() < evidenceDeadline &&
+    !(state.peak.mobInstantiations >= 4 && state.mobFrees >= 2)
+  ) {
+    await pinPlayer(evaluate, AIR_ANCHOR);
+    mergeSnap(state, await snapshot(evaluate));
+    await delay(200);
+  }
+  trace(
+    `evidence: mobs=${state.peak.mobInstantiations} frees=${state.mobFrees} playerLive=${state.last?.playerLive}`,
+  );
+
   let playerFreedOnMobContact = false;
   let deathSteps = 0;
   if (FALSIFY !== "no-death") {
@@ -390,20 +409,6 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   } else {
     trace("FALSIFY=no-death: player kept pinned aloft");
     await pinPlayer(evaluate, AIR_ANCHOR);
-  }
-
-  // Let any remaining self-driven evidence (spawns, walk-off frees) settle briefly if
-  // the long-standing thresholds have not been reached yet.
-  const evidenceDeadline = Math.min(deadline, Date.now() + 10_000);
-  while (
-    Date.now() < evidenceDeadline &&
-    !(state.peak.mobInstantiations >= 4 && state.mobFrees >= 2)
-  ) {
-    // The no-death falsification must hold the player OUT of harm's way for the whole
-    // settle window, or a wandering mob would kill it anyway and un-falsify the check.
-    if (FALSIFY === "no-death") await pinPlayer(evaluate, AIR_ANCHOR);
-    mergeSnap(state, await snapshot(evaluate));
-    await delay(200);
   }
   const peak = state.peak;
   const atPeak = state.last ?? ready;
