@@ -293,7 +293,10 @@ internal fun loadWebNode2DSnapshot(
 }
 
 /**
- * Node3D transform frame snapshot pushed from the bridge for scene-graph (non-constructed) nodes.
+ * Node3D transform snapshot pushed from the bridge for scene-graph (non-constructed) nodes. A
+ * scripted node's own proxy pushes it at the start of every `_process` AND every `_physics_process`
+ * dispatch (task 87: per-frame-only refresh collapsed held-input movement to one physics tick per
+ * rendered frame); node lookups and tween steps seed/refresh it for foreign handles.
  */
 internal fun loadWebNode3DSnapshot(
   objectId: Int,

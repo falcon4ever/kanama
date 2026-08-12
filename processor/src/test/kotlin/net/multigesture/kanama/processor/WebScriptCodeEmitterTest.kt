@@ -237,6 +237,61 @@ class WebScriptCodeEmitterTest {
   }
 
   @Test
+  fun refreshesNode3DTransformSnapshotEveryPhysicsTick() {
+    // Task 87: `_process` refreshes the Node3D snapshot once per RENDERED frame, but physics
+    // runs several ticks inside one frame whenever rendering is slow or rAF is unpaced. A
+    // physics loop that WRITES a transform derived from READING it (squash's
+    // lookAtFromPosition(self.position, ...)) collapsed to one tick of net movement per
+    // rendered frame. The `_physics_process` emission must refresh the transform snapshot
+    // too, BEFORE the tick dispatches into Kotlin.
+    val physics =
+      VirtualModel(
+        "_physics_process",
+        "callPhysicsProcess",
+        "physicsProcess",
+        args = listOf(ArgModel("delta", TypeMapping.FLOAT)),
+      )
+    val body = model("Player").copy(attachTo = "CharacterBody3D", virtuals = listOf(physics))
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(body, "res://kotlin-src/Player.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+
+    val physicsFunc =
+      proxy
+        .substringAfter("func _physics_process(delta: float) -> void:")
+        .substringBefore("\nfunc ")
+    assertTrue(
+      physicsFunc.contains(
+        "_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, physics_target3d.position.x"
+      ),
+      "physics tick must refresh the Node3D transform snapshot:\n$physicsFunc",
+    )
+    assertTrue(
+      physicsFunc.indexOf("refreshNode3DSnapshot") <
+        physicsFunc.indexOf("physicsFrame(_kanama_handle, delta)"),
+      "the refresh must land before the tick dispatch so Kotlin reads fresh state:\n$physicsFunc",
+    )
+    // The pre-existing CharacterBody3D post-slide velocity refresh stays.
+    assertTrue(physicsFunc.contains("refreshVelocitySnapshot(_kanama_handle,"))
+
+    // A 2D attachment carries no Node3D snapshot and must not gain the refresh.
+    val proxy2d =
+      WebScriptCodeEmitter(
+          listOf(WebScriptInput(model("Mover").copy(virtuals = listOf(physics)), "res://Mover.kt"))
+        )
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+    val physicsFunc2d =
+      proxy2d
+        .substringAfter("func _physics_process(delta: float) -> void:")
+        .substringBefore("\nfunc ")
+    assertFalse(physicsFunc2d.contains("refreshNode3DSnapshot"))
+  }
+
+  @Test
   fun emitsExactAudioPlayerCommandDecodersInEveryProxy() {
     val proxy =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))

@@ -177,16 +177,16 @@ kanama_web_quarantine_reason() {
     dodge:firefox)
       echo "task 71 — spawned mobs never free on a Linux host; dodge passes on macOS"
       ;;
-    # KANAMA-BLOCKED(since:2026-08-11, task:87): held-input movement collapses to one
-    # physics tick per rendered frame; the runner's software-GL Chrome renders ~1
-    # frame per hold window, so playerMovedOnInput reads a single tick (0.233 u).
-    # squash:firefox was LIFTED 2026-08-11 (maintainer decision): the task-71
-    # signature stopped reproducing (mobs freed on both engines, 2026-08-11 main
-    # run 31518477493) and the cell passed outright under the task-81 gameplay
-    # checks — it gates again.
-    squash:chrome)
-      echo "task 87 — per-frame transform snapshot collapses held-input movement on a slow-rendering host"
-      ;;
+    # squash:chrome was LIFTED 2026-08-11 with the task-87 fix: _physics_process now
+    # refreshes the transform snapshot, so held-input movement integrates per tick
+    # instead of collapsing to one tick per rendered frame (the runner's software-GL
+    # Chrome rendered ~1 frame per hold window -> playerDisplacement 0.233). The
+    # driver's 0.5 u movement gate is UNCHANGED; the lift's proof is this PR's own CI
+    # plus the next full-corpus main run — if squash:chrome reds again, re-quarantine
+    # and reopen task 87 rather than touching the gate.
+    # (squash:firefox was lifted the same day, maintainer decision: the task-71
+    # signature stopped reproducing — mobs freed on both engines, main run
+    # 31518477493 — and the cell passed outright under the task-81 gameplay checks.)
     *) : ;;
   esac
 }
