@@ -3767,6 +3767,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t\t(value as RigidBody3D).apply_force(Vector3(force_parts[0], force_parts[1], force_parts[2]), Vector3(force_parts[3], force_parts[4], force_parts[5]))"
     )
     appendLine("\t\t\tresult = 1")
+    // Opcode 159 was in the contract (and the generated backend REQUIRES it in
+    // invokeVector3Vector3Arg's opcode set) since 60f, but this applier arm was never
+    // emitted: every Web RigidBody3D.apply_impulse threw "was not applied", and nothing
+    // noticed until task 81 fix #3 first drove a bot's damage() on Web.
+    appendLine("\t\telif opcode == 159 and value is RigidBody3D:")
+    appendLine("\t\t\tvar impulse_parts := String(args[2]).split_floats(\"\\u001f\")")
+    appendLine(
+      "\t\t\t(value as RigidBody3D).apply_impulse(Vector3(impulse_parts[0], impulse_parts[1], impulse_parts[2]), Vector3(impulse_parts[3], impulse_parts[4], impulse_parts[5]))"
+    )
+    appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 155 and value is CollisionObject3D:")
     appendLine("\t\t\tvar mask_parts := String(args[2]).split(\"\\u001f\")")
     appendLine(
