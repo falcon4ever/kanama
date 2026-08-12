@@ -1113,6 +1113,22 @@
       this.tweenCallbacks.delete(handle);
       this.noArgsVector3Callbacks.delete(handle);
       this.handleOwners.delete(handle);
+      // A spawned SCRIPTED child is deliberately routed through its instantiator (the
+      // immediatePackedSceneInstantiate re-point; task-60h/#125 separated routing from
+      // lifetime) -- but that routing had no story for the instantiator dying FIRST.
+      // MEASURED (task 81 fix #3, 2026-08-12, thirdperson): a BeeBot's death coroutine
+      // spawns a SmokePuff and queue_frees the bee; the puff's own later self
+      // queue_free (opcode 15, its animation-finished coroutine) then grouped under the
+      // dead bee's owner entry and flushGroup threw "callback is not installed", a
+      // fatal that stopped every later dispatch. When the dying proxy clears, re-point
+      // every child that carries its OWN installed callbacks at itself -- such a child
+      // is a live scripted proxy that can apply its own commands. Children WITHOUT
+      // callbacks are plain acquired handles and keep the existing release-sweep path.
+      for (const [child, owner] of this.handleOwners) {
+        if (owner === handle && child !== handle && this.applyCallbacks.has(child)) {
+          this.handleOwners.set(child, child);
+        }
+      }
     },
     ownerForHandle(handle) {
       const owner = this.handleOwners.get(handle);
