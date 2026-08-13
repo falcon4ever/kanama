@@ -262,11 +262,6 @@ internal fun onWebQueueFree(objectId: Int) {
   }
 }
 
-internal fun clearWebBrowserHandles() {
-  browserHandles.keys.forEach(::clearWebPositionSnapshot)
-  browserHandles.clear()
-}
-
 internal fun discardWebBrowserHandle(handle: Int): Boolean {
   clearWebPositionSnapshot(handle)
   return browserHandles.remove(handle) != null

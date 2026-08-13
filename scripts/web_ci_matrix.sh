@@ -171,6 +171,14 @@ else
 fi
 RESULT_DIR="$(cd "$RESULT_DIR" && pwd)"
 RUNS_DIR="$RESULT_DIR/runs"
+# Task 88 (finding 10): the evidence file is assembled by globbing this directory, but
+# `pass` is computed from THIS invocation's FAILED flag alone. Reusing a --result-dir
+# (the documented pre-release flow is a full run, then a narrow re-run of what failed)
+# left every higher-numbered record from the previous invocation in place, because
+# RUN_INDEX restarts at 0. The evidence then carried stale FAIL rows under pass=true --
+# or stale PASS rows padding a narrow run into a "corpus green" claim. CI only escaped
+# it because $RUNNER_TEMP is fresh per job.
+rm -rf "$RUNS_DIR"
 mkdir -p "$RUNS_DIR"
 
 absolutize_out() {
