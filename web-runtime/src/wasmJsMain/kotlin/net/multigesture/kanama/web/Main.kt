@@ -380,7 +380,22 @@ fun kanamaWebSetLongProperty(objectId: Int, propertyId: Int, value: Double): Int
 
 @JsExport
 fun kanamaWebSetObjectProperty(objectId: Int, propertyId: Int, value: Int): Int {
-  if (value != 0) registerWebBrowserHandle(value, WebBrowserHandleKind.RESOURCE)
+  // Task 88 (K3): a property value that is a LIVE SCRIPT is tracked by `instances`, not by
+  // the browser-handle map, and nothing ever removes it from that map again --
+  // `kanamaWebFree` clears snapshots, signal callbacks, scheduler jobs and the instance but
+  // not `browserHandles`, and the JS release sweep skips script handles (they sit outside
+  // BROWSER_HANDLE_NAMESPACE). Registering one here therefore made `requireLive`'s
+  // `check(containsWebBrowserHandle(token))` fall back TRUE for a script that had already
+  // died, so the stale-handle guard passed and the real failure surfaced later with an
+  // unrelated message. Reachable today: FPS scene-assigns `player` to every Enemy and
+  // reloads after death.
+  //
+  // Guard mirrors registerReturnedNode (WebBackendBookkeeping.kt): skip live instances, and
+  // leave a handle that is already tracked under another kind alone (a node can be both an
+  // exported property and a requireAs child -- City-Builder's view camera).
+  if (value != 0 && !instances.isLive(value) && !containsWebBrowserHandle(value)) {
+    registerWebBrowserHandle(value, WebBrowserHandleKind.RESOURCE)
+  }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
     KanamaWebProjectRegistry.setObjectProperty(record.scriptId, propertyId, record.script, value)
     1
@@ -406,7 +421,14 @@ fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValue
   val values =
     encodedValues.takeIf { it.isNotEmpty() }?.split(',')?.map(String::toInt)?.toIntArray()
       ?: IntArray(0)
-  values.forEach { registerWebBrowserHandle(it, WebBrowserHandleKind.RESOURCE) }
+  // Task 88 (K3): same guard as the scalar arm above -- a live script in an exported array
+  // is tracked by `instances` and must not be pinned in the browser-handle map, which has
+  // no removal path for it.
+  values.forEach {
+    if (!instances.isLive(it) && !containsWebBrowserHandle(it)) {
+      registerWebBrowserHandle(it, WebBrowserHandleKind.RESOURCE)
+    }
+  }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
     KanamaWebProjectRegistry.setObjectArrayProperty(
       record.scriptId,
