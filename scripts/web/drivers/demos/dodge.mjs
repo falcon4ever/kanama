@@ -10,6 +10,12 @@
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
+// Task 88: prove the post-teardown invariant can FAIL. Set
+// KANAMA_WEB_T81_FALSIFY=pre-teardown-registries to judge ownerRegistriesToBaseline
+// against the mid-play sample (mobs alive, callbacks and coroutine jobs registered)
+// instead of the settled one. The run must go RED -- a gate only ever observed
+// passing is not evidence that it discriminates.
+const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[dodge ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -27,7 +33,7 @@ async function snapshot(evaluate) {
         const entry = Object.entries(bridge.match3ReadyByClass ?? {}).find(([n]) => n.endsWith(suffix));
         return entry?.[1] ?? 0;
       };
-      return {
+  return {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? 0,
         mainHandle: bridge.dodgeMainHandle,
@@ -270,7 +276,13 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     crossingsAdvanced: peak.crossings > ready.crossings,
     // The spawn/free lifecycle works: mobs left the screen and released their handles
     // (>=2 observed drops during play) and stayed bounded by the peak — no leak.
-    mobsSpawnAndFree: peak.mobFrees >= 2 && atPeak.liveHandles <= peak.maxLiveHandles,
+    // Task 88: the second clause used to be `atPeak.liveHandles <= peak.maxLiveHandles`,
+    // which cannot be false (maxLiveHandles is a monotone high-water mark of
+    // liveHandles). Dropped rather than rewritten: the free path is already proven by
+    // the mobFrees count here, by the per-entity retention ratio (task 73) during play,
+    // and by liveAfterTeardown === 0 at the end. A clause that cannot fail only makes
+    // the check read stronger than it is.
+    mobsSpawnAndFree: peak.mobFrees >= 2,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
     // No handle kind is retained per spawned mob, measured at the post-restart
@@ -282,6 +294,10 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   };
 
   const last = settled;
+  // Task 88 falsification hook: normally the settled post-teardown sample; the
+  // falsify mode judges the invariant against the mid-play peak instead, where mobs
+  // are alive and callbacks/jobs are registered, so the check must go false.
+  const registries = FALSIFY === "pre-teardown-registries" ? atPeak : last;
   const boundaryErrors = [];
   if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
@@ -323,7 +339,16 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
         checks.fullTeardownToZero && last.callbackErrors === 0 && last.failure === null
           ? "clean"
           : "incomplete",
-      ownerRegistriesToBaseline: last.liveHandles <= peak.maxLiveHandles,
+      // Task 88: this was `last.liveHandles <= peak.maxLiveHandles`, which is TRUE BY
+      // CONSTRUCTION -- maxLiveHandles is a monotone high-water mark of liveHandles and
+      // observe() merges the settled sample into peak before returning it. The field is
+      // the contract's post-teardown invariant, so it must assert what match3/tpsdemo
+      // assert: every owner registry actually drained.
+      ownerRegistriesToBaseline:
+        registries.liveHandles === 0 &&
+        registries.callbacks === 0 &&
+        registries.pending === 0 &&
+        registries.jobs === 0,
     },
     boundaryErrors,
   };
