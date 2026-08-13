@@ -262,21 +262,41 @@ class WebScriptCodeEmitterTest {
       proxy
         .substringAfter("func _physics_process(delta: float) -> void:")
         .substringBefore("\nfunc ")
+    // Task 88 (findings 5+6): the refresh moved into one runtime-guarded helper, so the
+    // tick asserts the CALL and the helper asserts the shapes. Task 87's invariant is
+    // unchanged: the transform must refresh before the tick dispatches into Kotlin.
     assertTrue(
-      physicsFunc.contains(
-        "_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, physics_target3d.position.x"
-      ),
-      "physics tick must refresh the Node3D transform snapshot:\n$physicsFunc",
+      physicsFunc.contains("_kanama_refresh_self_snapshots()"),
+      "physics tick must refresh the self transform snapshots:\n$physicsFunc",
     )
     assertTrue(
-      physicsFunc.indexOf("refreshNode3DSnapshot") <
+      physicsFunc.indexOf("_kanama_refresh_self_snapshots()") <
         physicsFunc.indexOf("physicsFrame(_kanama_handle, delta)"),
       "the refresh must land before the tick dispatch so Kotlin reads fresh state:\n$physicsFunc",
     )
     // The pre-existing CharacterBody3D post-slide velocity refresh stays.
     assertTrue(physicsFunc.contains("refreshVelocitySnapshot(_kanama_handle,"))
 
-    // A 2D attachment carries no Node3D snapshot and must not gain the refresh.
+    val helper =
+      proxy
+        .substringAfter("func _kanama_refresh_self_snapshots() -> void:")
+        .substringBefore("\nfunc ")
+    // The widening is load-bearing: `self` carries the SCRIPT's leaf type, so GDScript
+    // rejects `self as CanvasItem` at parse time for a Node-extending script. Pin it.
+    assertTrue(helper.contains("var kanama_self: Object = self"), helper)
+    assertFalse(
+      helper.contains("self is Node2D") && !helper.contains("kanama_self is Node2D"),
+      "the is-a test must go through the widened local, never bare `self`:\n$helper",
+    )
+    assertTrue(helper.contains("if kanama_self is Node3D:"), helper)
+    assertTrue(
+      helper.contains("_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, kanama_n3.position.x"),
+      helper,
+    )
+
+    // Finding 5: a 2D attachment now gets the SAME per-tick read-back. Its mirror used to
+    // be seeded once and thereafter only written through, so engine-driven 2D motion read
+    // stale forever. The 3D branch stays inert for it at RUNTIME rather than by omission.
     val proxy2d =
       WebScriptCodeEmitter(
           listOf(WebScriptInput(model("Mover").copy(virtuals = listOf(physics)), "res://Mover.kt"))
@@ -288,7 +308,21 @@ class WebScriptCodeEmitterTest {
       proxy2d
         .substringAfter("func _physics_process(delta: float) -> void:")
         .substringBefore("\nfunc ")
-    assertFalse(physicsFunc2d.contains("refreshNode3DSnapshot"))
+    assertTrue(
+      physicsFunc2d.contains("_kanama_refresh_self_snapshots()"),
+      "a 2D body must refresh its transform per tick too (finding 5):\n$physicsFunc2d",
+    )
+    val helper2d =
+      proxy2d
+        .substringAfter("func _kanama_refresh_self_snapshots() -> void:")
+        .substringBefore("\nfunc ")
+    assertTrue(helper2d.contains("if kanama_self is Node2D:"), helper2d)
+    assertTrue(
+      helper2d.contains(
+        "_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, kanama_n2.position.x"
+      ),
+      helper2d,
+    )
   }
 
   @Test

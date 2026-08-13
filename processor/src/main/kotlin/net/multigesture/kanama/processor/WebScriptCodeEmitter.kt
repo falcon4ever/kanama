@@ -1977,18 +1977,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_signal_vector2i_callback,")
     appendLine("\t\t_kanama_tween_callback,")
     appendLine("\t\t_kanama_noargs_vector3_callback)")
-    if (node2dAttachment) {
-      appendLine("\tvar target: Node2D = self")
-      appendLine(
-        "\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, target.position.x, target.position.y, target.scale.x, target.scale.y, target.modulate.r, target.modulate.g, target.modulate.b, target.modulate.a, target.rotation)"
-      )
-    }
-    if (node3dAttachment) {
-      appendLine("\tvar target3d: Node3D = self")
-      appendLine(
-        "\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, target3d.position.x, target3d.position.y, target3d.position.z, target3d.rotation.x, target3d.rotation.y, target3d.rotation.z, target3d.scale.x, target3d.scale.y, target3d.scale.z)"
-      )
-    }
+    appendLine("\t_kanama_refresh_self_snapshots()")
     // The renderer name is global and any script may branch on it at ready (squash's Main
     // attaches to a plain Node), so every proxy seeds its per-script snapshot.
     appendLine(
@@ -2112,17 +2101,60 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("\t_kanama_bridge.enterTree(_kanama_handle)")
       appendLine()
     }
+    // Task 88 (findings 5 + 6): ONE runtime-guarded refresh of every mirrored self
+    // snapshot, called from _kanama_ensure_created, _ready, _process and _physics_process.
+    //
+    // Finding 6: it replaces five compile-time `attachTo in setOf(...)` gates. Those were
+    // closed hand-written lists, not is-a tests, so a script attached to CharacterBody2D /
+    // RigidBody2D / PathFollow2D / GPUParticles3D / SpringArm3D -- ordinary subclasses --
+    // seeded NOTHING, and its first self-transform read hit the backend's fail-loud
+    // "Missing Web ... snapshot" at runtime while the build stayed green.
+    //
+    // Finding 5: it also gives 2D the engine READ-BACK that task 87 gave 3D. The Node2D
+    // mirror was seeded once at creation and thereafter only written through, so anything
+    // the ENGINE moved -- a Tween in flight, an animated parent, physics on a RigidBody2D
+    // -- read stale for the object's whole life. Refreshed per frame AND per physics tick,
+    // matching the 3D path, because physics outpaces rendering on an unpaced host.
+    //
+    // WHY `var kanama_self: Object = self` and not plain `self is Node2D`: `self` carries
+    // the SCRIPT's type, which GDScript knows is a leaf, so it rejects `self as CanvasItem`
+    // at PARSE time for a Node-extending script ("Invalid cast. Cannot convert from
+    // res://...gd to CanvasItem" -- measured 2026-08-13, 32 such errors). Widening to
+    // Object first makes the downcast legal and defers the test to the engine, which is the
+    // only thing that actually knows the hierarchy.
+    appendLine("func _kanama_refresh_self_snapshots() -> void:")
+    appendLine("\tif _kanama_handle == 0:")
+    appendLine("\t\treturn")
+    appendLine("\tvar kanama_self: Object = self")
+    appendLine("\tif kanama_self is Node2D:")
+    appendLine("\t\tvar kanama_n2 := kanama_self as Node2D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, kanama_n2.position.x, kanama_n2.position.y, kanama_n2.scale.x, kanama_n2.scale.y, kanama_n2.modulate.r, kanama_n2.modulate.g, kanama_n2.modulate.b, kanama_n2.modulate.a, kanama_n2.rotation)"
+    )
+    appendLine("\telif kanama_self is Control:")
+    appendLine("\t\t# Controls are CanvasItems but not Node2Ds -- same mirror, same reason as")
+    appendLine("\t\t# the node-lookup arm: modulate reads (HUD fades) must resolve.")
+    appendLine("\t\tvar kanama_ctl := kanama_self as Control")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(_kanama_handle, kanama_ctl.position.x, kanama_ctl.position.y, kanama_ctl.scale.x, kanama_ctl.scale.y, kanama_ctl.modulate.r, kanama_ctl.modulate.g, kanama_ctl.modulate.b, kanama_ctl.modulate.a, kanama_ctl.rotation)"
+    )
+    appendLine("\tif kanama_self is Node3D:")
+    appendLine("\t\tvar kanama_n3 := kanama_self as Node3D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, kanama_n3.position.x, kanama_n3.position.y, kanama_n3.position.z, kanama_n3.rotation.x, kanama_n3.rotation.y, kanama_n3.rotation.z, kanama_n3.scale.x, kanama_n3.scale.y, kanama_n3.scale.z)"
+    )
+    appendLine("\tif kanama_self is CanvasItem:")
+    appendLine("\t\tvar kanama_ci := kanama_self as CanvasItem")
+    appendLine("\t\tvar kanama_vr := kanama_ci.get_viewport_rect()")
+    appendLine(
+      "\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, kanama_vr.position.x, kanama_vr.position.y, kanama_vr.size.x, kanama_vr.size.y)"
+    )
+    appendLine()
     appendLine("func _ready() -> void:")
     appendLine("\tif _kanama_ensure_created() == 0 or _kanama_ready_dispatched:")
     appendLine("\t\treturn")
     appendLine("\t_kanama_ready_dispatched = true")
-    if (node2dAttachment) {
-      appendLine("\tvar target: Node2D = self")
-      appendLine("\tvar viewport_rect := target.get_viewport_rect()")
-      appendLine(
-        "\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
-      )
-    }
+    appendLine("\t_kanama_refresh_self_snapshots()")
     appendLine("\tif _kanama_bridge.shouldDeferReady(${quote(model.fqName)}):")
     appendLine("\t\t_kanama_bridge.recordDeferredReady(${quote(model.fqName)})")
     appendLine(
@@ -2150,19 +2182,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func _process(delta: float) -> void:")
     appendLine("\tif _kanama_handle != 0:")
-    if (node2dAttachment) {
-      appendLine("\t\tvar target: Node2D = self")
-      appendLine("\t\tvar viewport_rect := target.get_viewport_rect()")
-      appendLine(
-        "\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, viewport_rect.position.x, viewport_rect.position.y, viewport_rect.size.x, viewport_rect.size.y)"
-      )
-    }
-    if (node3dAttachment) {
-      appendLine("\t\tvar target3d: Node3D = self")
-      appendLine(
-        "\t\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, target3d.position.x, target3d.position.y, target3d.position.z, target3d.rotation.x, target3d.rotation.y, target3d.rotation.z, target3d.scale.x, target3d.scale.y, target3d.scale.z)"
-      )
-    }
+    appendLine("\t\t_kanama_refresh_self_snapshots()")
     if (particlesAttachment) {
       appendLine("\t\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
     }
@@ -2180,7 +2200,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine()
       appendLine("func _physics_process(delta: float) -> void:")
       appendLine("\tif _kanama_handle != 0:")
-      if (node3dAttachment) {
+      run {
         // Task 87: the transform snapshot must refresh per PHYSICS TICK, not only per
         // rendered frame. Physics outpaces rendering whenever rAF is slow or unpaced
         // (headless engines, low-FPS hosts), and a physics loop that WRITES a transform
@@ -2191,10 +2211,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         // headless Chrome at ~4.4 ticks/frame; CI Linux Chrome quantized to exactly one
         // tick, 0.233 u). move_and_slide displaces the body engine-side, so no Kotlin
         // write-through can keep this mirror coherent — only an engine read-back can.
-        appendLine("\t\tvar physics_target3d: Node3D = self")
-        appendLine(
-          "\t\t_kanama_bridge.refreshNode3DSnapshot(_kanama_handle, physics_target3d.position.x, physics_target3d.position.y, physics_target3d.position.z, physics_target3d.rotation.x, physics_target3d.rotation.y, physics_target3d.rotation.z, physics_target3d.scale.x, physics_target3d.scale.y, physics_target3d.scale.z)"
-        )
+        appendLine("\t\t_kanama_refresh_self_snapshots()")
       }
       if (model.attachTo == "CharacterBody3D") {
         // Post-slide velocity refresh: the script reads self.velocity each tick, and after
