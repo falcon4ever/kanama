@@ -182,10 +182,22 @@ def _validate_performance(performance: Any) -> None:
 def _validate_teardown(teardown: Any) -> None:
     path = "teardown"
     _check_type(_get(teardown, "outcome", path), str, f"{path}.outcome")
-    _check_type(
+    owner_registries_to_baseline = _check_type(
         _get(teardown, "ownerRegistriesToBaseline", path),
         bool,
         f"{path}.ownerRegistriesToBaseline",
+    )
+    # Task 88: this used to be TYPE-checked only, so the field could arrive `false` and
+    # the run still passed -- in every driver, including the two that computed it
+    # honestly. Proven by falsification: dodge judged against its mid-play sample
+    # reported ownerRegistriesToBaseline=false and still printed
+    # `web_export_smoke: PASS`. A post-teardown invariant that cannot fail the run is
+    # not an invariant, so enforce it the way liveAfterTeardown is enforced.
+    _require(
+        owner_registries_to_baseline is True,
+        f"{path}.ownerRegistriesToBaseline must be true after full teardown "
+        f"(every owner registry -- handles, signal callbacks, pending coroutines and "
+        f"registered jobs -- must drain to 0)",
     )
 
 

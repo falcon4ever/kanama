@@ -10,6 +10,12 @@
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
+// Task 88: prove the post-teardown invariant can FAIL. Set
+// KANAMA_WEB_T81_FALSIFY=pre-teardown-registries to judge ownerRegistriesToBaseline
+// against the mid-play sample (mobs alive, callbacks and coroutine jobs registered)
+// instead of the settled one. The run must go RED -- a gate only ever observed
+// passing is not evidence that it discriminates.
+const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[dodge ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -27,7 +33,7 @@ async function snapshot(evaluate) {
         const entry = Object.entries(bridge.match3ReadyByClass ?? {}).find(([n]) => n.endsWith(suffix));
         return entry?.[1] ?? 0;
       };
-      return {
+  return {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? 0,
         mainHandle: bridge.dodgeMainHandle,
@@ -288,6 +294,10 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   };
 
   const last = settled;
+  // Task 88 falsification hook: normally the settled post-teardown sample; the
+  // falsify mode judges the invariant against the mid-play peak instead, where mobs
+  // are alive and callbacks/jobs are registered, so the check must go false.
+  const registries = FALSIFY === "pre-teardown-registries" ? atPeak : last;
   const boundaryErrors = [];
   if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
@@ -335,10 +345,10 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
       // the contract's post-teardown invariant, so it must assert what match3/tpsdemo
       // assert: every owner registry actually drained.
       ownerRegistriesToBaseline:
-        last.liveHandles === 0 &&
-        last.callbacks === 0 &&
-        last.pending === 0 &&
-        last.jobs === 0,
+        registries.liveHandles === 0 &&
+        registries.callbacks === 0 &&
+        registries.pending === 0 &&
+        registries.jobs === 0,
     },
     boundaryErrors,
   };
