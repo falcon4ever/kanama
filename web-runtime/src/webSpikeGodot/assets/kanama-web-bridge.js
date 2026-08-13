@@ -905,6 +905,15 @@
     shouldDeferReady(scriptName) {
       return false;
     },
+    // Task 88: the _ready echo probe is SPIKE SCAFFOLDING and must not ride the default
+    // path. Every generated proxy used to call its first Int->Int @RegisterFunction with
+    // the literal 47 at scene entry -- harmless for WebSpikeScript.echo (whose round trip
+    // `finish()` asserts below), but a user script declaring `fun addScore(points: Long):
+    // Long` got a phantom +47 per instance, on Web only, silently. Same accident shape as
+    // tasks 82 and 84: benchmark scaffolding reachable by default instead of opted into.
+    shouldRunImmediateProbe() {
+      return this.mode === "spike";
+    },
     recordDeferredReady(scriptName) {
       this.match3DeferredReadyByClass[scriptName] =
         (this.match3DeferredReadyByClass[scriptName] ?? 0) + 1;
