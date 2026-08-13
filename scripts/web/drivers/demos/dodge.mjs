@@ -270,7 +270,13 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
     crossingsAdvanced: peak.crossings > ready.crossings,
     // The spawn/free lifecycle works: mobs left the screen and released their handles
     // (>=2 observed drops during play) and stayed bounded by the peak — no leak.
-    mobsSpawnAndFree: peak.mobFrees >= 2 && atPeak.liveHandles <= peak.maxLiveHandles,
+    // Task 88: the second clause used to be `atPeak.liveHandles <= peak.maxLiveHandles`,
+    // which cannot be false (maxLiveHandles is a monotone high-water mark of
+    // liveHandles). Dropped rather than rewritten: the free path is already proven by
+    // the mobFrees count here, by the per-entity retention ratio (task 73) during play,
+    // and by liveAfterTeardown === 0 at the end. A clause that cannot fail only makes
+    // the check read stronger than it is.
+    mobsSpawnAndFree: peak.mobFrees >= 2,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
     // No handle kind is retained per spawned mob, measured at the post-restart
@@ -323,7 +329,16 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
         checks.fullTeardownToZero && last.callbackErrors === 0 && last.failure === null
           ? "clean"
           : "incomplete",
-      ownerRegistriesToBaseline: last.liveHandles <= peak.maxLiveHandles,
+      // Task 88: this was `last.liveHandles <= peak.maxLiveHandles`, which is TRUE BY
+      // CONSTRUCTION -- maxLiveHandles is a monotone high-water mark of liveHandles and
+      // observe() merges the settled sample into peak before returning it. The field is
+      // the contract's post-teardown invariant, so it must assert what match3/tpsdemo
+      // assert: every owner registry actually drained.
+      ownerRegistriesToBaseline:
+        last.liveHandles === 0 &&
+        last.callbacks === 0 &&
+        last.pending === 0 &&
+        last.jobs === 0,
     },
     boundaryErrors,
   };

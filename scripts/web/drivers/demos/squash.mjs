@@ -449,7 +449,13 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
     handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
     // Mobs freed themselves (squashed and/or walked off), bounded by the peak -- no leak.
-    mobsSpawnAndFree: state.mobFrees >= 2 && atPeak.liveHandles <= peak.maxLiveHandles,
+    // Task 88: the second clause used to be `atPeak.liveHandles <= peak.maxLiveHandles`,
+    // which cannot be false (maxLiveHandles is a monotone high-water mark of
+    // liveHandles). Dropped rather than rewritten: the free path is already proven by
+    // the mobFrees count here, by the per-entity retention ratio (task 73) during play,
+    // and by liveAfterTeardown === 0 at the end. A clause that cannot fail only makes
+    // the check read stronger than it is.
+    mobsSpawnAndFree: state.mobFrees >= 2,
     // Task 81: injected move_forward displaced the player through Input.is_action_pressed
     // -> physicsProcess -> move_and_slide -- the demo's input path, driven end to end.
     playerMovedOnInput,
@@ -511,7 +517,16 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
         checks.fullTeardownToZero && settled.callbackErrors === 0 && settled.failure === null
           ? "clean"
           : "incomplete",
-      ownerRegistriesToBaseline: settled.liveHandles <= peak.maxLiveHandles,
+      // Task 88: this was `settled.liveHandles <= peak.maxLiveHandles`, which is TRUE BY
+      // CONSTRUCTION -- maxLiveHandles is a monotone high-water mark of liveHandles and
+      // observe() merges the settled sample into peak before returning it. The field is
+      // the contract's post-teardown invariant, so it must assert what match3/tpsdemo
+      // assert: every owner registry actually drained.
+      ownerRegistriesToBaseline:
+        settled.liveHandles === 0 &&
+        settled.callbacks === 0 &&
+        settled.pending === 0 &&
+        settled.jobs === 0,
     },
     boundaryErrors,
   };

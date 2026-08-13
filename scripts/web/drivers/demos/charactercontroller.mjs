@@ -401,7 +401,16 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
         checks.fullTeardownToZero && settled.callbackErrors === 0 && settled.failure === null
           ? "clean"
           : "incomplete",
-      ownerRegistriesToBaseline: settled.liveHandles <= peak.maxLiveHandles,
+      // Task 88: this was `settled.liveHandles <= peak.maxLiveHandles`, which is TRUE BY
+      // CONSTRUCTION -- maxLiveHandles is a monotone high-water mark of liveHandles and
+      // observe() merges the settled sample into peak before returning it. The field is
+      // the contract's post-teardown invariant, so it must assert what match3/tpsdemo
+      // assert: every owner registry actually drained.
+      ownerRegistriesToBaseline:
+        settled.liveHandles === 0 &&
+        settled.callbacks === 0 &&
+        settled.pending === 0 &&
+        settled.jobs === 0,
     },
     boundaryErrors,
   };
