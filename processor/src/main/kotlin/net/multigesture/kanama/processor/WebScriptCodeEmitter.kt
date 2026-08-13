@@ -3285,10 +3285,28 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\t_kanama_bridge.recordImmediateObjectHandle(int(existing_handle))")
     appendLine("\t\t\t\treturn int(existing_handle)")
     appendLine("\t_kanama_object_handles[result_handle] = value")
+    // Task 88 (finding 7): seed the SAME three shapes _kanama_node_lookup seeds. This arm
+    // used to seed Node3D only, so a 2D node returned through this channel -- get_parent()
+    // (opcode 73) or duplicate() (114) -- arrived with no mirrored canvas snapshot, and the
+    // first position/scale/modulate/rotation read on it hit the backend's fail-loud
+    // "Missing Web ... snapshot" error. Copy-paste drift: node_lookup, packed-scene
+    // instantiate and the tween get_child arm were all fixed; this copy was missed.
+    appendLine("\tif value is Node2D:")
+    appendLine("\t\tvar node_2d := value as Node2D")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, node_2d.position.x, node_2d.position.y, node_2d.scale.x, node_2d.scale.y, node_2d.modulate.r, node_2d.modulate.g, node_2d.modulate.b, node_2d.modulate.a, node_2d.rotation)"
+    )
     appendLine("\tif value is Node3D:")
     appendLine("\t\tvar node_3d := value as Node3D")
     appendLine(
       "\t\t_kanama_bridge.refreshNode3DSnapshot(result_handle, node_3d.position.x, node_3d.position.y, node_3d.position.z, node_3d.rotation.x, node_3d.rotation.y, node_3d.rotation.z, node_3d.scale.x, node_3d.scale.y, node_3d.scale.z)"
+    )
+    appendLine("\tif value is Control:")
+    appendLine("\t\t# Controls are CanvasItems but not Node2Ds: seed the mirrored canvas snapshot")
+    appendLine("\t\t# so modulate reads (HUD fades) resolve without a prior write.")
+    appendLine("\t\tvar control := value as Control")
+    appendLine(
+      "\t\t_kanama_bridge.refreshNode2DSnapshot(result_handle, control.position.x, control.position.y, control.scale.x, control.scale.y, control.modulate.r, control.modulate.g, control.modulate.b, control.modulate.a, control.rotation)"
     )
     appendLine("\tif value is SpriteFrames:")
     appendLine(
