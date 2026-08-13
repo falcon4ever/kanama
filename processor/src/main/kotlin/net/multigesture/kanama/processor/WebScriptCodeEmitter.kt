@@ -2135,10 +2135,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         methodArm(method) == WebMethodArm.INT_RET_INT
       }
     if (immediateMethod != null) {
+      // Task 88: gated on the spike harness. This is an echo probe for the transport
+      // benchmark, not gameplay -- unconditional, it invoked a USER method with a magic
+      // argument at every scene entry.
+      appendLine("\tif _kanama_bridge.shouldRunImmediateProbe():")
       appendLine(
-        "\tvar immediate_result := int(_kanama_bridge.callInt(_kanama_handle, ${immediateMethod.index + 1}, 47))"
+        "\t\tvar immediate_result := int(_kanama_bridge.callInt(_kanama_handle, ${immediateMethod.index + 1}, 47))"
       )
-      appendLine("\t_kanama_bridge.recordImmediateResult(immediate_result)")
+      appendLine("\t\t_kanama_bridge.recordImmediateResult(immediate_result)")
     }
     appendLine(
       "\t_kanama_bridge.recordReady(_kanama_handle, _KANAMA_SCRIPT_ID, ${quote(model.fqName)})"
