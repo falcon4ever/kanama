@@ -430,8 +430,13 @@ fun kanamaWebCallString(objectId: Int, methodId: Int, value: String): Int {
 @JsExport
 fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callLong(record.scriptId, methodId, record.script, value.toLong())
-      .toInt()
+    val result =
+      KanamaWebProjectRegistry.callLong(record.scriptId, methodId, record.script, value.toLong())
+    // Task 88: same missing flush as the signal boundaries — its siblings callNoArgs and
+    // callLongVoid both flush, this one did not, so a user's `fun f(x: Long): Long` lost
+    // every mutation it queued.
+    commands.flush()
+    result.toInt()
   }
 }
 
@@ -606,6 +611,13 @@ fun kanamaWebMatch3Group6CancellationProbe(objectId: Int): Int {
 fun kanamaWebDispatchSignal0(objectId: Int, callbackId: Int): Int {
   return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch0") {
     WebSignalCallbackRegistry.dispatch(objectId, callbackId)
+    // Task 88: a boundary that runs user Kotlin MUST flush before returning. Signal lambdas
+    // did not, and the next per-frame entry point opens with `commands.clear()` — a pure
+    // discard — so every queued mutation issued from a lambda callback was thrown away.
+    // It survived only when an IMMEDIATE_RESULT call happened to follow the last mutation
+    // (immediate arms flush first), which is why cc's blink timers were dead while
+    // thirdperson's Resume button worked. Enforced by check_web_callback_flush.py.
+    commands.flush()
     1
   }
 }
@@ -619,6 +631,7 @@ fun kanamaWebDispatchSignal0(objectId: Int, callbackId: Int): Int {
 fun kanamaWebDispatchSignal1(objectId: Int, callbackId: Int, packed: String): Int {
   return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch1") {
     WebSignalCallbackRegistry.dispatchScalar(objectId, callbackId, packed)
+    commands.flush()
     1
   }
 }
@@ -627,6 +640,7 @@ fun kanamaWebDispatchSignal1(objectId: Int, callbackId: Int, packed: String): In
 fun kanamaWebDispatchSignalObject(objectId: Int, callbackId: Int, argHandle: Int): Int {
   return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch_object") {
     WebSignalCallbackRegistry.dispatchObject(objectId, callbackId, argHandle)
+    commands.flush()
     1
   }
 }

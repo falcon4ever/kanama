@@ -237,6 +237,10 @@ python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
 stage "native call surface prewarm audit"
 python3 "$ROOT_DIR/scripts/check_native_call_surface.py"
 
+stage "web callback flush audit"
+python3 "$ROOT_DIR/scripts/check_web_callback_flush.py" --main \
+  "$ROOT_DIR/web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt"
+
 stage "vararg ptrcall audit"
 python3 "$ROOT_DIR/scripts/audit_vararg_ptrcalls.py"
 
