@@ -198,6 +198,17 @@ internal fun registerConstructedNode(token: Int, className: String): GodotHandle
       positionSnapshots[it] = GodotVector2(0.0f, 0.0f)
       scaleSnapshots[it] = GodotVector2(1.0f, 1.0f)
       modulateSnapshots[it] = GodotColor(1.0f, 1.0f, 1.0f, 1.0f)
+      // Task 88 (K5): seed the 3D transform mirror too. Only the 2D mirrors were seeded, so
+      // a ClassDB-constructed Node3D (a MeshInstance3D built at runtime, for instance) hit
+      // the backend's fail-loud "Missing Web Node3D ... snapshot" on its first
+      // getPosition/getRotation/getScale -- a script that only ever WROTE the transform was
+      // fine, which is why this stayed hidden. These are the true defaults of a
+      // freshly-constructed node (origin, no rotation, unit scale), exactly as the 2D
+      // seeds above are, so seeding both shapes is accurate rather than merely defensive:
+      // the class is not known to be 2D or 3D here, and the unused mirror is never read.
+      position3Snapshots[it] = GodotVector3(0.0f, 0.0f, 0.0f)
+      rotation3Snapshots[it] = GodotVector3(0.0f, 0.0f, 0.0f)
+      scale3Snapshots[it] = GodotVector3(1.0f, 1.0f, 1.0f)
       if (className == "Sprite2D") textureSnapshots[it] = 0
       GodotHandle.fromBackendToken(it.toLong())
     }
