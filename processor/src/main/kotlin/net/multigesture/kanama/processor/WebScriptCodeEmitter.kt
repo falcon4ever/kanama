@@ -2282,6 +2282,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\tvar target_object: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
     )
+    // Task 88 (finding 4): a queue_free'd node stays ALIVE until the end of the frame, and
+    // Godot (and the desktop backend) keep it callable for that window. The queue_free arm
+    // used to erase the handle up front, so a later command in the SAME batch could not
+    // resolve it, fell to this ladder's `else`, and took `push_error` + `break` -- dropping
+    // every remaining command and then tripping `check(applied == expected)` Kotlin-side.
+    // Identical Kotlin code works on desktop, so that divergence was a defect.
+    //
+    // The entry is now retired lazily instead: it survives while the node does, and is
+    // erased the first time resolution sees a genuinely freed instance. That keeps the
+    // shared dictionary from accumulating references to freed objects without needing a
+    // free-time hook on every acquired node.
+    appendLine("\t\tif target_object != null and not is_instance_valid(target_object):")
+    appendLine("\t\t\t_kanama_object_handles.erase(object_handle)")
+    appendLine("\t\t\ttarget_object = null")
     appendLine("\t\tif opcode == 1000 and object_handle == _kanama_handle:")
     appendLine("\t\t\tlast_value = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tset_meta(\"kanama_web_scalar\", last_value)")
@@ -2697,7 +2711,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 15 and target_object is Node:")
-    appendLine("\t\t\t_kanama_object_handles.erase(object_handle)")
+    // Task 88 (finding 4): do NOT erase here -- the node is alive until the end of the
+    // frame and must stay callable for that window (Godot + desktop semantics). The
+    // lazy is_instance_valid sweep above retires the entry once the free actually lands.
     appendLine("\t\t\t(target_object as Node).queue_free()")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 8")
