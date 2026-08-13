@@ -2145,9 +2145,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\tif kanama_self is CanvasItem:")
     appendLine("\t\tvar kanama_ci := kanama_self as CanvasItem")
-    appendLine("\t\tvar kanama_vr := kanama_ci.get_viewport_rect()")
+    // get_viewport_rect() REQUIRES the node to be in the tree -- outside it Godot logs
+    // `Condition "!is_inside_tree()" is true` and returns an empty Rect2. That matters here
+    // and did not before: this helper is also called from _kanama_ensure_created, which runs
+    // as soon as ANY other script resolves the node, potentially before it enters the tree
+    // (the 60i lesson). The old emission only refreshed the rect from _ready/_process, both
+    // guaranteed in-tree. MEASURED 2026-08-13: without this guard match3 and dodge fail the
+    // smoke's zero-console-errors leg. The transform reads above need no such guard --
+    // position/scale/rotation/modulate are local and valid out of tree.
+    appendLine("\t\tif kanama_ci.is_inside_tree():")
+    appendLine("\t\t\tvar kanama_vr := kanama_ci.get_viewport_rect()")
     appendLine(
-      "\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, kanama_vr.position.x, kanama_vr.position.y, kanama_vr.size.x, kanama_vr.size.y)"
+      "\t\t\t_kanama_bridge.refreshViewportRectSnapshot(_kanama_handle, kanama_vr.position.x, kanama_vr.position.y, kanama_vr.size.x, kanama_vr.size.y)"
     )
     appendLine()
     appendLine("func _ready() -> void:")
