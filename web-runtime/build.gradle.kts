@@ -1,5 +1,6 @@
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.OutputStream
 import java.security.MessageDigest
 import java.util.zip.ZipFile
 
@@ -3128,5 +3129,63 @@ tasks.register<Zip>("packageWebExport") {
                     readExportReportField(report, "protocolVersion"),
                 )
         )
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Task 88 (finding 14): a GDScript parse error must FAIL the export.
+//
+// Godot prints `SCRIPT ERROR: Parse Error: ...` and `Failed to load script ...` for a
+// proxy it cannot load, and then exits 0. MEASURED 2026-08-13: an emitter change that
+// broke every generated proxy produced 32 such lines, `BUILD SUCCESSFUL`, and a shippable
+// 42 MB artifact whose scripts could not load. The step that is supposed to prove the
+// emitted proxies are valid GDScript proved nothing, and only a downstream browser smoke
+// would have noticed.
+//
+// Applied to every `exportWeb*` task by name so a future export task inherits it instead
+// of having to remember. Godot's output is TEE'd rather than swallowed: a long export must
+// still stream live, or a stall becomes undebuggable.
+// ---------------------------------------------------------------------------
+tasks.withType<Exec>().matching { it.name.startsWith("exportWeb") }.configureEach {
+    val capturedGodotOutput = ByteArrayOutputStream()
+
+    fun tee(sink: OutputStream): OutputStream =
+        object : OutputStream() {
+            override fun write(b: Int) {
+                sink.write(b)
+                capturedGodotOutput.write(b)
+            }
+
+            override fun write(b: ByteArray, off: Int, len: Int) {
+                sink.write(b, off, len)
+                capturedGodotOutput.write(b, off, len)
+            }
+
+            override fun flush() {
+                sink.flush()
+                capturedGodotOutput.flush()
+            }
+        }
+
+    doFirst {
+        standardOutput = tee(System.out)
+        errorOutput = tee(System.err)
+    }
+
+    doLast {
+        val offenders =
+            capturedGodotOutput
+                .toString(Charsets.UTF_8)
+                .lines()
+                .filter { it.contains("SCRIPT ERROR") || it.contains("Failed to load script") }
+        check(offenders.isEmpty()) {
+            buildString {
+                append("Godot reported ${offenders.size} script error(s) while exporting, ")
+                append("so the export contains proxies that cannot load.\n")
+                append("The export step exits 0 on these, which is why this check exists.\n\n")
+                offenders.take(20).forEach { append("  ").append(it.trim()).append('\n') }
+                if (offenders.size > 20) append("  ... and ${offenders.size - 20} more\n")
+            }
+        }
     }
 }
