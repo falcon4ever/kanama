@@ -134,7 +134,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
      * happened to name.
      */
-    const val PROTOCOL_VERSION = 18
+    const val PROTOCOL_VERSION = 19
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -2261,7 +2261,30 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif _kanama_handle != 0:")
     appendLine("\t\t_kanama_bridge.draw(_kanama_handle)")
     appendLine()
+    // Task 88 (finding 3): _exit_tree DISPATCHES, it no longer destroys.
+    //
+    // Godot fires _exit_tree on every tree exit, and a node that leaves may come straight
+    // back (object pooling, reparent-on-pickup). Destroying the Kotlin instance here meant
+    // the script could never return: _ready fires once per node and _kanama_ready_dispatched
+    // was latched true and never reset, so re-entry gave either a permanently dead script
+    // (no handle, every `if _kanama_handle != 0` guard false forever) or -- with
+    // @OnEnterTree -- a fresh instance whose @OnReady could never run. Desktop keeps the
+    // instance alive across a reparent; this makes Web match Godot and desktop.
+    //
+    // Because the instance now SURVIVES a tree exit, the latched _kanama_ready_dispatched
+    // becomes CORRECT rather than a bug: Godot's fire-once _ready semantics are exactly
+    // what we want for a node that came back with its state intact.
     appendLine("func _exit_tree() -> void:")
+    appendLine("\tif _kanama_handle == 0:")
+    appendLine("\t\treturn")
+    appendLine("\t_kanama_bridge.exitTree(_kanama_handle)")
+    appendLine()
+    // Destruction is PREDELETE only -- the one notification that means the node is really
+    // going away. Godot always exits the tree before deleting, so @OnExitTree has already
+    // run by the time we get here.
+    appendLine("func _notification(what: int) -> void:")
+    appendLine("\tif what != NOTIFICATION_PREDELETE:")
+    appendLine("\t\treturn")
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\t_kanama_clear_callbacks()")
     appendLine("\t\treturn")
