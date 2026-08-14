@@ -11,6 +11,8 @@
 // crossings, then tears the scene down twice to baseline and proves stale
 // handles are rejected.
 
+import { resolveMethodId } from "../envelope.mjs";
+
 const OFFSET = 68;
 const BOARD = 8;
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -203,10 +205,26 @@ function teardownClean(t) {
   );
 }
 
-export async function runMatch3({ url, evaluate, navigate, pointer }) {
+export async function runMatch3({ url, evaluate, navigate, pointer, exportDir }) {
   const startupStart = Date.now();
   const firstRun = await navigateAndSettle(navigate, evaluate, url, "first");
   const startupDurationMs = Date.now() - startupStart;
+
+  // Task 80 slice 6: read the demo's hydrated-state dump WHILE THE BOARD IS ALIVE. Run
+  // after teardown it returns null -- the bridge zeroes match3MainHandle when Main frees,
+  // and a null payload would look like "the probe is broken" rather than "asked too late".
+  // Ids are resolved from the export manifest, never hardcoded: adding a
+  // @RegisterFunction renumbers the rest (this probe took id 1 and pushed the existing
+  // two down), so a hardcoded call would dispatch a different method and still "work".
+  const probeId = resolveMethodId(exportDir, "match3.Main", "differential_probe");
+  const differentialPayload =
+    probeId === null
+      ? null
+      : await evaluate(
+          `(() => { const b = globalThis.KanamaWebBridge;` +
+            ` if (!b || !b.match3MainHandle) return null;` +
+            ` return String(b.callPacked(b.match3MainHandle, ${probeId})); })()`,
+        );
 
   const legalSwap = findLegalSwap(firstRun.settled.tileGrid);
   if (!legalSwap) throw new Error("Settled Match3 board has no legal swap");
@@ -273,7 +291,17 @@ export async function runMatch3({ url, evaluate, navigate, pointer }) {
     (firstTeardown.sceneTreeStaleProbe === 1 ? 1 : 0) +
     (secondTeardown.sceneTreeStaleProbe === 1 ? 1 : 0);
 
+  // Task 80 slice 6: read the demo's own hydrated-state dump. The SAME Kotlin runs on
+  // desktop, which prints it to stdout under the smoke env var, so the two payloads must
+  // be byte-identical; differential_diff.py compares them. The method id is resolved from
+  // the export manifest rather than hardcoded -- ids are positional, so adding a
+  // @RegisterFunction above this one would silently renumber it and a hardcoded call
+  // would dispatch a different method while still appearing to work.
   return {
+    differential:
+      probeId === null
+        ? { available: false, reason: "differential_probe not found in the export manifest" }
+        : { available: true, script: "match3.Main", payload: differentialPayload },
     protocolVersion: firstRun.settled.protocol,
     startup: {
       loaded: firstRun.board.pass === true,
