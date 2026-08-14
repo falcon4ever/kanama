@@ -383,11 +383,37 @@ def validate(envelope: Any, required_members: dict[str, Any] | None = None) -> N
     overall = _get(envelope, "pass", "envelope")
     _check_type(overall, bool, "pass")
     summary = envelope["assertions"]["summary"]
-    expected_pass = summary["failed"] == 0 and envelope["startup"]["loaded"] is True
+    # Task 88 (finding 8): this mirror used to encode only TWO of the four legs the sole
+    # producer of `pass` actually applies (drivers/envelope.mjs:203 also requires zero
+    # boundaryErrors and zero console errors). Two consequences, both bad: a genuine
+    # console-error failure arrived as a confusing "pass must reflect ..." SCHEMA
+    # violation, and the validator could not enforce the two missing legs at all -- an
+    # envelope built to the schema's own formula would have dropped the
+    # zero-console-errors gate while staying green here.
+    console = envelope["console"]
+    console_errors = console["errors"]
+    boundary_errors = console["boundaryErrors"]
+    expected_pass = (
+        summary["failed"] == 0
+        and envelope["startup"]["loaded"] is True
+        and len(console_errors) == 0
+        and len(boundary_errors) == 0
+    )
     _require(
         overall == expected_pass,
-        f"pass ({overall}) must reflect startup.loaded and zero failed assertions ({expected_pass})",
+        f"pass ({overall}) must reflect startup.loaded, zero failed assertions, zero "
+        f"console errors and zero boundary errors ({expected_pass}: "
+        f"failed={summary['failed']}, loaded={envelope['startup']['loaded']}, "
+        f"consoleErrors={len(console_errors)}, boundaryErrors={len(boundary_errors)})",
     )
+    # And the legs must be enforced, not merely mirrored: a `pass` envelope carrying
+    # errors is a contradiction the validator should reject on its own terms.
+    if overall:
+        _require(
+            len(console_errors) == 0 and len(boundary_errors) == 0,
+            f"pass is true but the run reported {len(console_errors)} console error(s) "
+            f"and {len(boundary_errors)} boundary error(s)",
+        )
 
 
 def main(argv: list[str]) -> int:

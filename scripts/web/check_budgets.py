@@ -209,10 +209,14 @@ def main(argv: list[str]) -> int:
     measured = measurements(envelope)
 
     if args.report:
+        # Task 88 (finding 13): --report is contractually "print measurements, never fail",
+        # and measurements() deliberately yields None for absent fields -- so the unguarded
+        # division raised TypeError on exactly the partial envelope this mode exists for.
         payload = measured["payloadBytes"]
+        payload_text = "unreported" if payload is None else f"{payload / 1e6:.1f}MB"
         print(
             f"budget report: {demo} "
-            f"payload={payload / 1e6:.1f}MB "
+            f"payload={payload_text} "
             f"startup={measured['startupMs']}ms "
             f"crossings/tick={measured['crossingsPerTick']} "
             f"(ticks={measured['ticksObserved']}, sim={measured['simSeconds']}s)"
