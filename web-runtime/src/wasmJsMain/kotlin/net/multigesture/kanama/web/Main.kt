@@ -565,10 +565,34 @@ fun kanamaWebCallPacked(objectId: Int, methodId: Int): String {
   }
 }
 
+/**
+ * Task 88 (finding 3): dispatch the script's `@OnExitTree` WITHOUT destroying it.
+ *
+ * Godot fires `_exit_tree` on every tree exit, and a node that leaves the tree may come straight
+ * back (object pooling, reparent-on-pickup). Destroying the Kotlin instance here — which is what
+ * this path used to do — meant the script could never come back: `_ready` fires once per node, and
+ * `_kanama_ready_dispatched` was latched true and never reset, so re-entry gave either a
+ * permanently dead script or a fresh instance whose `@OnReady` could never run. Desktop keeps the
+ * instance alive across a reparent; this makes Web match.
+ *
+ * Destruction now happens in [kanamaWebFree], which the proxy calls from NOTIFICATION_PREDELETE —
+ * the only notification that means the node is really going away.
+ */
 @JsExport
-fun kanamaWebFree(objectId: Int): Int {
+fun kanamaWebExitTree(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_exit_tree") { record ->
     KanamaWebProjectRegistry.exitTree(record.scriptId, record.script)
+    commands.flush()
+    1
+  }
+}
+
+@JsExport
+fun kanamaWebFree(objectId: Int): Int {
+  // The script's @OnExitTree already ran in kanamaWebExitTree when the node left the
+  // tree; this is destruction only. Godot always exits the tree before deleting a node,
+  // so the ordering holds.
+  return webCallbackBoundary(objectId, "free") { record ->
     commands.flush()
     drawCommands.clear()
     clearWebPositionSnapshot(objectId)

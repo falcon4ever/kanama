@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 18;
+  const KANAMA_WEB_PROTOCOL_VERSION = 19;
 
   function commandWordCount(opcode) {
     if (
@@ -1043,6 +1043,17 @@
     },
     roundTrip(value) {
       return this.api.kanamaWebRoundTrip(value);
+    },
+    // Task 88 (finding 3): the script's @OnExitTree, dispatched on EVERY tree exit and
+    // without destroying the instance -- a node that leaves the tree may come back.
+    exitTree(handle) {
+      return this.invoke(
+        handle,
+        "_exit_tree",
+        "_exit_tree",
+        () => this.api.kanamaWebExitTree(handle),
+        0,
+      );
     },
     free(handle) {
       const scriptName = this.match3ScriptNamesByHandle.get(handle);
