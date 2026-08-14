@@ -18,8 +18,14 @@ opts in with a marker on the same line:
 
     ... the JavaScript bridge (protocol 19). <!-- kanama-claim: protocol -->
 
-Unmarked mentions are historical by definition. That mirrors the `KANAMA-BLOCKED(...)`
-convention from slice 1: machine-checkable assertions, explicitly placed.
+Unmarked mentions are historical by definition. That mirrors the stale-blocker marker
+convention from slice 1 (see scripts/audit_stale_blockers.py): machine-checkable
+assertions, explicitly placed rather than inferred from prose.
+
+(Written without the literal marker token on purpose: slice 1's auditor flags any
+occurrence followed by "(" or ":" as a candidate, and it caught this very file's
+docstring on first CI contact -- the claim auditor auditing the claim auditor's
+documentation, and behaving exactly as designed.)
 
 Adding a claim kind: give it an extractor here and mark the doc line. The check fails
 if a marked line's stated value disagrees with the source, and it fails just as loudly
