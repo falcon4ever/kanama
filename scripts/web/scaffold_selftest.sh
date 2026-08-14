@@ -34,6 +34,12 @@ run_case() {
   local result="$case_dir/result.json"
   mkdir -p "$export_dir"
   cp -R "$FIXTURE/index.html" "$FIXTURE/kanama-web-fake.js" "$export_dir/"
+  # A real export always ships its protocol manifest, and the smoke now checks the
+  # runtime's protocol against it. The fixture carries one too (declaring the same
+  # version the fake driver reports) so this stand-in stays faithful to the shape it
+  # stands in for -- otherwise the self-test's success case fails on a missing file
+  # rather than on anything it means to assert.
+  cp -R "$FIXTURE/kanama-web" "$export_dir/"
 
   local driver_cmd="python3 $FAKE_DRIVER --mode $mode"
   if [[ "$mode" == "mutate" ]]; then

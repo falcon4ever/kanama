@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 2,
+  "protocolVersion": 6,
+  "scripts": [
+    {
+      "id": 1,
+      "resourcePath": "res://kotlin-src/Fake.kt",
+      "className": "fake.FakeScript",
+      "attachTo": "Node",
+      "properties": [],
+      "virtuals": [{"id": 1, "name": "_ready", "arguments": [], "returnType": null}],
+      "methods": [],
+      "signals": []
+    }
+  ]
+}
