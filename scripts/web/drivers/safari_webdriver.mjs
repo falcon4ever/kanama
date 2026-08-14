@@ -183,9 +183,55 @@ async function main() {
       );
       return exercisedAccumulator;
     };
+    // Task 88 finding 11: Safari used to ship `consoleEvents: []` unconditionally,
+    // because SafariDriver exposes no console endpoint like CDP's consoleAPICalled or
+    // BiDi's log entries. An empty list is BYTE-IDENTICAL to a genuinely clean run, so
+    // the envelope's zero-console-errors pass leg -- one of the four -- asserted nothing
+    // on the one engine this gate exists for. A page-level JS error on Safari simply did
+    // not appear in the evidence.
+    //
+    // Observe it in-page instead: wrap console.error and listen for `error` /
+    // `unhandledrejection`, accumulating into a global the driver reads back. This is a
+    // WEAKER guarantee than Chrome's and Firefox's protocol-level capture, and the code
+    // says so: the hook can only be installed once navigation RETURNS, so anything
+    // thrown before that is still missed. In practice the Kotlin/Wasm boot runs after
+    // the load event and takes seconds, so boot and the whole gameplay run are covered
+    // -- but "covered" and "guaranteed" are different words and this is the first.
+    const CONSOLE_HOOK = `(() => {
+      if (globalThis.__kanamaSafariConsole) return 1;
+      const sink = [];
+      globalThis.__kanamaSafariConsole = sink;
+      const original = console.error ? console.error.bind(console) : null;
+      console.error = (...parts) => {
+        try { sink.push({ type: "error", text: "console.error: " + parts.map(String).join(" ") }); } catch (_) {}
+        if (original) original(...parts);
+      };
+      addEventListener("error", (event) => {
+        sink.push({ type: "error", text: "uncaught: " + (event.message || String(event.error)) });
+      });
+      addEventListener("unhandledrejection", (event) => {
+        sink.push({ type: "error", text: "unhandled rejection: " + String(event.reason) });
+      });
+      return 1;
+    })()`;
+    let consoleAccumulator = [];
+    const harvestConsole = async () => {
+      try {
+        const captured = await evaluate("globalThis.__kanamaSafariConsole ?? []");
+        if (Array.isArray(captured)) consoleAccumulator = consoleAccumulator.concat(captured);
+      } catch {
+        // The page is mid-navigation or gone. Anything it captured is already merged.
+      }
+      return consoleAccumulator;
+    };
     const navigate = async (url) => {
       await harvestExercisedMembers();
-      return wd("POST", `/session/${sessionId}/url`, { url });
+      // A navigation destroys the hook with its realm, so drain before leaving and
+      // re-install after arriving -- the same shape as the exercised-member census.
+      await harvestConsole();
+      const result = await wd("POST", `/session/${sessionId}/url`, { url });
+      await evaluate(CONSOLE_HOOK);
+      return result;
     };
     const pointer = async (press, release) => {
       // Viewport-origin coordinates are CSS client pixels (W3C), which the demo
@@ -241,7 +287,8 @@ async function main() {
       // enginePolicies.safari).
       performance,
       durationMs: Date.now() - startedAt,
-      consoleEvents: [],
+      // Real captured events now, not a fabricated empty list (task 88 finding 11).
+      consoleEvents: await harvestConsole(),
       demoResult,
       exercisedMembers,
     });
