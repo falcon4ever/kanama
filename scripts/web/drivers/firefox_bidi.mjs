@@ -314,7 +314,7 @@ async function main() {
         ],
       });
 
-    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, keys, deadline });
+    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, keys, deadline, exportDir: args["export-dir"] });
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);

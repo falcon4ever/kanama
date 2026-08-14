@@ -222,7 +222,7 @@ async function main() {
       await wd("DELETE", `/session/${sessionId}/actions`);
     };
 
-    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, deadline });
+    const demoResult = await runDemo({ url: args.url, evaluate, navigate, pointer, deadline , exportDir: args["export-dir"]});
 
     const browserVersion = await evaluate("navigator.userAgent");
     const payload = collectPayload(args["export-dir"], args.url, args["source-checksum"]);
