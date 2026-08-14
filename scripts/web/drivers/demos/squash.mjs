@@ -437,7 +437,7 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeSquash: ready.mode === "squash",
-    protocol18: protocolVersion === 18,
+    protocol19: protocolVersion === 19,
     sceneScriptsReady:
       ready.mainReady >= 1 && ready.playerReady >= 1 && ready.scoreLabelReady >= 1,
     // MobTimer spawned mobs; each initialize ran the look_at/rotate/rotation-read chain.
