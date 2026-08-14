@@ -141,7 +141,18 @@ and `web_export_smoke.sh` fails any run below them:
 |---|---|---|---|---|
 | Chrome | 130 | tested (2026-07-28) | 150 (headless) | CI cell |
 | Firefox | 141 | tested (2026-07-28) | 152–153 (headless) | CI cell |
-| Safari | 26.5 | validated-at (2026-07-27) | 26.5 / WebKit 605.1.15, macOS 26.5.1 | local gate; **no headless mode**, so it needs a logged-in GUI session |
+| Safari | 26.5 | validated-at (2026-07-27) | 26.5 / WebKit 605.1.15, macOS 26.5.1 — **11 of 12 demos as of 2026-08-14**, `match3` fails (see below) | **spot-checked, not gated**; no headless mode, needs a logged-in GUI session, and cannot run two at once |
+
+**Safari is spot-checked, deliberately.** It has no headless mode, needs a
+logged-in GUI session with an unoccluded window, and cannot run two gates
+concurrently, so a CI cell would cost more than it returns (maintainer decision,
+2026-08-14). The trade is explicit: **between spot checks, the Safari claim can go
+stale without anything noticing.** It did — the corpus was 12/12 on 2026-07-27 and
+**11/12** when next run on 2026-08-14, with `match3` failing deterministically on the
+swap/collapse path. That regression predates the task-88 work (a control built from
+`56087469` fails the same way), so it landed at some point in those five weeks
+unobserved. When quoting Safari evidence, quote **the date it was last run**, not the
+best result ever recorded.
 
 **"Tested" and "validated-at" are different claims.** Tested means the gate was
 run on the floor version and on the one below it: Chrome 129 never boots the
