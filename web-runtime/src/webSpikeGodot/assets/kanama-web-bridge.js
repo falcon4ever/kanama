@@ -1469,6 +1469,19 @@
       const id = this.nextStagedGenericArgsId;
       this.nextStagedGenericArgsId += 1;
       this.stagedGenericArgs.set(id, String(value));
+      // Task 88 (B2): every staged string is consumed by its applier arm in the same
+      // batch, so this map should never hold more than one batch's worth. It has no
+      // teardown drain and no leak gate can see it -- liveAfterTeardown counts browser
+      // handles, and the soak gate trends handles/callbacks/jobs -- so an entry that is
+      // never consumed (a stale target drops its command before takeStagedGenericArgs
+      // runs) would accumulate silently and forever. A ceiling well above any legitimate
+      // batch converts that invisible leak into a named failure.
+      if (this.stagedGenericArgs.size > 65536) {
+        throw new Error(
+          `Kanama Web staged generic-args map has ${this.stagedGenericArgs.size} unconsumed ` +
+            "entries: applier arms are not consuming what the encoder stages",
+        );
+      }
       return id;
     },
     takeStagedGenericArgs(id) {

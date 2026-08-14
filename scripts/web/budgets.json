@@ -9,7 +9,6 @@
   "fixtures": {
     "fake": {
       "maxPayloadBytes": 10000000,
-      "maxStartupMs": 60000,
       "maxCrossingsPerTick": 1000.0,
       "minTicksForVerdict": 0,
       "measuredOn": "n/a -- the scaffold self-test's static fixture, not a real demo"
@@ -409,7 +408,6 @@
     },
     "soak": {
       "maxPayloadBytes": 49000000,
-      "maxStartupMs": 8000,
       "maxCrossingsPerTick": 1.0,
       "minTicksForVerdict": 1000,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15, 270s run",
