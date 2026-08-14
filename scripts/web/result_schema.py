@@ -424,6 +424,13 @@ def main(argv: list[str]) -> int:
         action="store_true",
         help="print the current schema version and exit",
     )
+    parser.add_argument(
+        "--manifest",
+        help=(
+            "the export's KanamaWebProtocol.generated.json; when given, the envelope's "
+            "protocolVersion must equal the manifest's"
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.print_version:
@@ -445,6 +452,47 @@ def main(argv: list[str]) -> int:
     except SchemaError as error:
         print(f"web_export_smoke: result schema violation in {args.result}: {error}", file=sys.stderr)
         return 1
+
+    # Task 88 follow-up: the protocol pin used to live in all 12 demo drivers as a
+    # literal, with the number baked into the CHECK NAME too (`protocol18:
+    # protocolVersion === 18`). A bump then failed every demo on nothing but the pin --
+    # measured going 18 -> 19, which cost a full corpus run to discover. Worse, matching
+    # a literal only proves the runtime agrees with whatever number someone last typed.
+    #
+    # Comparing the RUNTIME's protocol against the MANIFEST OF THE EXPORT IT CAME FROM is
+    # both maintenance-free and a stronger invariant: it catches a stale export driven by
+    # a newer runtime (or the reverse), which the literal never could -- and that is a
+    # trap this project has hit ("rm -rf the export when in doubt; check the printed
+    # buildId/protocol").
+    if args.manifest:
+        try:
+            with open(args.manifest, encoding="utf-8") as handle:
+                manifest = json.load(handle)
+        except (OSError, json.JSONDecodeError) as error:
+            print(
+                f"web_export_smoke: could not read manifest {args.manifest}: {error}",
+                file=sys.stderr,
+            )
+            return 2
+        declared = manifest.get("protocolVersion")
+        observed = envelope.get("protocolVersion")
+        if declared is None:
+            print(
+                f"web_export_smoke: manifest {args.manifest} declares no protocolVersion",
+                file=sys.stderr,
+            )
+            return 2
+        if declared != observed:
+            print(
+                f"web_export_smoke: protocol mismatch — the runtime reported "
+                f"{observed} but the export's manifest declares {declared}. The export "
+                f"and the Kotlin/Wasm runtime driving it are not from the same build.",
+                file=sys.stderr,
+            )
+            return 1
+        print(
+            f"web_export_smoke: protocol {observed} matches the export manifest"
+        )
 
     print(f"web_export_smoke: result {args.result} satisfies schema v{SCHEMA_VERSION}")
     return 0

@@ -238,7 +238,6 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   const protocolVersion = ready.protocol;
   const checks = {
     modeWeb3d: ready.mode === "web3d",
-    protocol19: protocolVersion === 19,
     sceneReady: ready.mainReady >= 1,
     // 66b: the bridge crossing fired and the Kotlin @OnEnterTree body observed it.
     enterTreeDispatched: ready.enterTreeCalls >= 1 && (enterTreeProbe & 1) === 1,
