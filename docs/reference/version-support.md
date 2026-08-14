@@ -133,7 +133,7 @@ handles. Gameplay coverage reports zero blocking calls;
 `GodotObject.emit_signal_typed` remains visible as one explicit nonblocking
 unsupported family rather than being pattern-hidden.
 
-Browser floors and the versions the corpus is driven on (protocol 16). The
+Browser floors and the versions the corpus is driven on (protocol 19). <!-- kanama-claim: protocol --> The
 floors are declared once, machine-readably, in `scripts/web/browser_floors.json`,
 and `web_export_smoke.sh` fails any run below them:
 
