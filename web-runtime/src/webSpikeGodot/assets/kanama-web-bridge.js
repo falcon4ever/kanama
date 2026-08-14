@@ -1234,32 +1234,6 @@
       this.liveBrowserHandleCount -= 1;
       this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
     },
-    releaseRemainingBrowserHandles() {
-      for (let slotIndex = 1; slotIndex < this.browserHandleSlots.length; slotIndex += 1) {
-        const slot = this.browserHandleSlots[slotIndex];
-        if (!slot.live) continue;
-        if (slot.kind === "Sprite2D") this.objectFrees += 1;
-        for (const [handle, owner] of this.handleOwners) {
-          if ((handle & BROWSER_HANDLE_SLOT_MASK) !== slotIndex) continue;
-          if (slot.kind === "AudioStreamPlayer") {
-            this.audioPlayerStates.delete(handle);
-            this.match3AudioPlayerFrees += 1;
-          }
-          if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
-          if (slot.kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
-            this.sceneTreeHandlesByOwner.delete(owner);
-          }
-          this.handleOwners.delete(handle);
-        }
-        slot.live = false;
-        slot.kind = null;
-        this.freeBrowserHandleSlots.push(slotIndex);
-      }
-      this.liveBrowserHandleCount = 0;
-      this.browserNodeHandlesByScript.clear();
-      this.tweenChildren.clear();
-      this.sceneTreeHandlesByOwner.clear();
-    },
     releaseBrowserHandlesOwnedBy(owner) {
       for (const tweenHandle of [...this.tweenChildren.keys()]) {
         if (this.handleOwners.get(tweenHandle) === owner) this.tweenChildren.delete(tweenHandle);

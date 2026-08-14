@@ -243,8 +243,30 @@ export async function runSpike({ url, evaluate, navigate, deadline }) {
   for (const [name, value] of Object.entries(results.checks ?? {})) {
     checks[`page_${name}`] = value === true;
   }
+  // Task 88 (finding 9): budgets.json exempts spike from the crossings/tick ceiling
+  // BECAUSE these page checks gate transport cost structurally instead. Folding them from
+  // a dynamic dict meant absence contributed NOTHING: a bridge refactor that renamed or
+  // relocated finish()'s keys would silently add zero page_* checks, the five driver-level
+  // checks would still pass, the schema's checks-non-empty requirement would still be
+  // satisfied, and the one regression this cell exists to catch -- per-operation crossings
+  // instead of one batched crossing -- would be asserted nowhere. Require them by name.
+  const REQUIRED_PAGE_CHECKS = [
+    "backendQueuedCrossings",
+    "immediateResult",
+    "queuedMutation",
+    "freed",
+    "generationAdvanced",
+    "staleHandleInvalidated",
+  ];
+  const missingPageChecks = REQUIRED_PAGE_CHECKS.filter((name) => !(`page_${name}` in checks));
+  checks.pageChecksPresent = missingPageChecks.length === 0;
 
   const boundaryErrors = [];
+  if (missingPageChecks.length > 0) {
+    boundaryErrors.push(
+      `spike page checks missing, so the structural transport gate asserted nothing: ${missingPageChecks.join(", ")}`,
+    );
+  }
   if (drained.callbackErrors !== 0) {
     boundaryErrors.push(
       `callbackErrors=${drained.callbackErrors}: ${drained.lastCallbackError ?? "unknown"}`,
