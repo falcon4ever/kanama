@@ -244,6 +244,17 @@ if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then
   fail "performance budget check failed for $RESULT"
 fi
 
+# --- driver coverage: name what this run never reached (task 80 slice 5). ------
+# The census lists what a run DID dispatch, so a member no driver has ever touched is
+# invisible by construction -- that is how `Enemy.damage` stayed dark for months while
+# the corpus reported green. This is a REPORT, not a gate: coverage gaps are a backlog,
+# and failing the build on one would only train people to stop reading it. It does not
+# use `fail`, and a non-zero exit here (unusable inputs) is surfaced without sinking a
+# run that otherwise passed every gate.
+if ! python3 "$WEB_DIR/coverage_report.py" --result "$RESULT" --export-dir "$EXPORT_DIR"; then
+  echo "web_export_smoke: coverage report could not run (inputs unusable) -- continuing" >&2
+fi
+
 # --- prove the served tree was not mutated by serving/driving. ----------------
 CHECKSUM_AFTER="$(tree_checksum "$EXPORT_DIR")"
 if [[ "$CHECKSUM_BEFORE" != "$CHECKSUM_AFTER" ]]; then
