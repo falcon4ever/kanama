@@ -226,7 +226,8 @@ fi
 
 # --- validate the result envelope against the versioned schema. ---------------
 [[ -f "$RESULT" ]] || fail "driver produced no result at $RESULT"
-if ! python3 "$WEB_DIR/result_schema.py" "$RESULT"; then
+if ! python3 "$WEB_DIR/result_schema.py" "$RESULT" \
+  --manifest "$EXPORT_DIR/kanama-web/KanamaWebProtocol.generated.json"; then
   fail "result schema validation failed for $RESULT"
 fi
 
