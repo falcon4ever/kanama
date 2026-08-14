@@ -129,6 +129,35 @@ export async function collectExercisedMembers(evaluate, exportDir) {
 }
 
 /**
+ * Task 80 slice 6: resolve a registered method's NAME to the id the bridge dispatches on.
+ *
+ * The reverse of the census resolution above. Method ids are positional, so a driver must
+ * never hardcode one -- adding a @RegisterFunction above another silently renumbers it,
+ * and the call would then dispatch a DIFFERENT method while still "working".
+ *
+ * Returns null when the manifest or the method is missing, so the caller can report the
+ * probe as unavailable rather than calling id 0 and reporting a confident wrong answer.
+ */
+export function resolveMethodId(exportDir, className, methodName) {
+  try {
+    const manifestPath = path.join(exportDir, "kanama-web", "KanamaWebProtocol.generated.json");
+    const scripts = JSON.parse(fs.readFileSync(manifestPath, "utf-8")).scripts ?? [];
+    // Package spelling differs per demo -- match3's manifest says
+    // `net.multigesture.kanama.demos.match3.Main` while fps says `fps.Enemy` -- so match
+    // on the tail rather than the full string. An exact-equality lookup silently found
+    // nothing for match3 and would have reported "probe unavailable" for a probe that
+    // was present.
+    const tail = (name) => String(name).split(".").pop();
+    const script = scripts.find(
+      (entry) => entry.className === className || tail(entry.className) === tail(className),
+    );
+    return script?.methods?.find((method) => method.name === methodName)?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Merges two exercised-member censuses, summing dispatch counts (task 81).
  *
  * A navigation resets the page's bridge, so a driver that navigates more than
@@ -225,6 +254,7 @@ export function buildEnvelope({
     // Optional: absent when the page could not be asked. The schema validates it
     // when present, and the budget gate reports "not measured" rather than
     // quietly passing.
+    ...(demoResult.differential ? { differential: demoResult.differential } : {}),
     ...(performance ? { performance } : {}),
     // Task 81: absent only when the page could not be asked -- and then a demo
     // with a non-empty required-member list FAILS the schema, so this section
