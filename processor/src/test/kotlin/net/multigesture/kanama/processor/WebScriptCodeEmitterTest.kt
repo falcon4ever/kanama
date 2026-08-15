@@ -550,6 +550,17 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("setLongProperty(_kanama_handle, 1, width)"))
     assertTrue(mainProxy.contains("setObjectProperty(_kanama_handle, 2, property_handle_2)"))
     assertTrue(mainProxy.contains("setObjectArrayProperty(_kanama_handle, 3, property_handles_3)"))
+    // Task 88 K6: a null element must NOT be minted a handle. `textures` here is
+    // non-nullable (List<Texture2D>), so the proxy pushes 0 and the Kotlin side is the
+    // one that refuses it -- the proxy's job is only to stop lying about what was there.
+    assertTrue(mainProxy.contains("if property_value == null:"))
+    assertTrue(mainProxy.contains("\t\t\tproperty_value_handle = 0"))
+    // ...and minting still happens for a REAL element that has no handle yet.
+    assertTrue(
+      mainProxy.contains(
+        "property_value_handle = int(_kanama_bridge.allocateBrowserHandle(\"Resource\", _kanama_handle))"
+      )
+    )
     assertTrue(mainProxy.contains("func _kanama_node_lookup(args: Array) -> int:"))
     assertTrue(mainProxy.contains("recordImmediateObjectHandle(script_handle)"))
     assertTrue(mainProxy.contains("if is_same(_kanama_object_handles[existing_handle], value):"))
@@ -623,9 +634,49 @@ class WebScriptCodeEmitterTest {
     assertTrue(registry.contains("(script as Main).width = value"))
     assertTrue(registry.contains("(script as Main).tileScene = handle?.let"))
     assertTrue(registry.contains("(script as Main).textures = values.map"))
+    // Task 88 K6, NON-nullable element type: 0 cannot be represented, so the generated
+    // setter refuses it by name instead of fabricating a wrapper over handle 0.
+    assertTrue(registry.contains("holds null, but its element type is non-nullable"))
+    assertTrue(registry.contains("declare it List<Texture2D?>"))
+    assertFalse(registry.contains("(script as Main).textures = values.map { if (it == 0) null"))
     assertTrue(registry.contains("(script as Main).input("))
     assertTrue(registry.contains("(script as Main).onTilePressed(Vector2i(x, y))"))
     assertTrue(registry.contains("(script as Tile).inputEvent("))
+  }
+
+  @Test
+  fun `task 88 K6 -- a nullable object-array element receives null instead of a minted handle`() {
+    // The other direction of the assertion above: same property, element type declared
+    // nullable. Godot typed arrays genuinely can hold null, so this is the shape that can
+    // represent one -- and it must map handle 0 to null, not to a live wrapper.
+    val model =
+      ScriptModel(
+        simpleName = "Main",
+        fqName = "net.multigesture.kanama.demos.match3.Main",
+        attachTo = "Node2D",
+        isTool = false,
+        isGlobalClass = false,
+        properties =
+          listOf(
+            ScriptPropertyModel(
+              kotlinName = "textures",
+              godotName = "textures",
+              type = TypeMapping.ARRAY,
+              isMutable = true,
+              arrayElementWrapperFqName = "net.multigesture.kanama.api.Texture2D",
+              arrayElementNullable = true,
+            )
+          ),
+        toolButtons = emptyList(),
+        virtuals = emptyList(),
+        methods = emptyList(),
+        signals = emptyList(),
+      )
+    val registry =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://Main.kt"))).registrySource()
+
+    assertTrue(registry.contains("if (it == 0) null else"))
+    assertFalse(registry.contains("holds null, but its element type is non-nullable"))
   }
 
   // ---------- Task 66a: virtuals the Web backend does not dispatch ----------

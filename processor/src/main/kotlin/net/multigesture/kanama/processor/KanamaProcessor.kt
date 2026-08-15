@@ -869,6 +869,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.customScriptIsResource,
           scriptType.arrayElementCustomScriptIsResource,
           scriptType.arrayElementString,
+          scriptType.arrayElementNullable,
           resolvedType.nullability == Nullability.NULLABLE,
           scriptType.narrow,
           scriptType.enumFqName,
@@ -1404,8 +1405,12 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
       if (fq == "kotlin.collections.List" || fq == "kotlin.collections.MutableList") {
         val isMutable = fq == "kotlin.collections.MutableList"
-        val elementDecl = type.arguments.firstOrNull()?.type?.resolve()?.declaration
+        val elementResolved = type.arguments.firstOrNull()?.type?.resolve()
+        val elementDecl = elementResolved?.declaration
         val elementFq = elementDecl?.qualifiedName?.asString()
+        // Task 88 K6: `List<Texture2D?>` vs `List<Texture2D>` decides whether a null
+        // array element can be delivered as null or must fail loudly.
+        val elementNullable = elementResolved?.isMarkedNullable == true
         if (elementFq == "kotlin.String") {
           return ScriptPropertyTypeModel(
             type = TypeMapping.ARRAY,
@@ -1428,6 +1433,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             hint = PROPERTY_HINT_TYPE_STRING,
             hintString = elementHint,
             arrayElementWrapperFqName = elementWrapper,
+            arrayElementNullable = elementNullable,
             isMutableList = isMutable,
           )
         }
