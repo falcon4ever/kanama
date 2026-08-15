@@ -72,6 +72,39 @@ async function main() {
   // could be misattributed, so the drivers are not safe to run two-at-a-time on
   // one machine -- which is already true of a gate that needs an unoccluded
   // window.
+  // Task 89: Safari has no headless mode, so the gate needs a REAL window that is
+  // visible and focused -- and when it is not, nothing says so. Safari suspends
+  // requestAnimationFrame for a non-visible page, so Godot's main loop advances a
+  // handful of frames and stops; the run then fails deep inside a demo ("board was
+  // not settled") with no console error, no boundary error and no failing check to
+  // point at the cause. A locked screen is the common way to get there: an unattended
+  // spot-check that idles into the lock screen produces a full corpus of confusing,
+  // demo-specific failures that look exactly like a code regression.
+  //
+  // Worse than the noise is the other direction: a demo whose checks complete inside
+  // the few frames that DO run could pass while the engine is effectively dead. So
+  // this is refused up front, not reported afterwards.
+  //
+  // macOS omits CGSSessionScreenIsLocked entirely when unlocked, and sets it to Yes
+  // when locked -- so the key's PRESENCE with Yes is the signal, not its absence.
+  const screenIsLocked = () => {
+    try {
+      const consoleUsers = execFileSync("ioreg", ["-n", "Root", "-d1"], { encoding: "utf8" });
+      return /"CGSSessionScreenIsLocked"\s*=\s*Yes/.test(consoleUsers);
+    } catch {
+      return false; // Cannot tell -- do not block the gate on a diagnostic failing.
+    }
+  };
+  if (screenIsLocked()) {
+    throw new Error(
+      "safari_webdriver: the macOS screen is LOCKED, so this run would be meaningless.\n" +
+        "  Safari suspends requestAnimationFrame for a non-visible page: Godot advances a few\n" +
+        "  frames and stops, and every check downstream then fails as a demo-level assertion\n" +
+        "  (or passes vacuously). Unlock the screen and re-run. The Safari gate is a hand-run\n" +
+        "  spot-check by design -- it needs a logged-in GUI session with a visible window.",
+    );
+  }
+
   const automationSafariPids = () => {
     try {
       return execFileSync("pgrep", ["-f", "Safari.*--automation"], { encoding: "utf8" })
@@ -173,6 +206,50 @@ async function main() {
         script: "return eval(arguments[0]);",
         args: [expression],
       }));
+    // Task 89: the lock check at startup cannot prove the window stayed usable -- an
+    // occluded, minimized or backgrounded window fails the same way, and the screen can
+    // lock mid-run. Two distinct conditions matter, and each has its own silent failure:
+    //
+    //   visibility -- a hidden page gets no rAF, so the engine stops advancing.
+    //   focus      -- Safari delivers synthesized pointer input to the KEY window only,
+    //                 so an unfocused window swallows the gesture entirely.
+    //
+    // The second is what task 89 chased for weeks as a "match3 regression". The census
+    // told the real story: on a failing run the demo's input members are simply MISSING
+    // (no _input, no _input_event, no _on_tile_pressed, not even _on_mouse_entered)
+    // while the board is perfectly healthy -- tweens balanced 33/33, callbacks at 12,
+    // zero console errors. The gesture never arrived. The run then failed as "the match
+    // did not complete", naming the symptom and never the cause.
+    const focusOwnWindow = async () => {
+      const handle = await wd("GET", `/session/${sessionId}/window`);
+      await wd("POST", `/session/${sessionId}/window`, { handle });
+    };
+    const interactiveState = () =>
+      evaluate("({ visibility: document.visibilityState, focused: document.hasFocus() })");
+    const assertInteractive = async (label) => {
+      let state = await interactiveState();
+      if (process.env.KANAMA_WEB_SMOKE_DEBUG === "1") {
+        process.stderr.write(`[safari interactive] ${label}: ${JSON.stringify(state)}\n`);
+      }
+      if (!state.focused) {
+        // Recoverable on its own terms: switching to our own window handle is the W3C
+        // way to make it the active top-level browsing context.
+        await focusOwnWindow();
+        state = await interactiveState();
+      }
+      if (state.visibility !== "visible" || !state.focused) {
+        throw new Error(
+          `safari_webdriver: the automation window is not usable at ${label} ` +
+            `(visibility=${state.visibility}, focused=${state.focused}).\n` +
+            "  A hidden page gets no requestAnimationFrame, so the Godot main loop stalls; an\n" +
+            "  unfocused window silently discards synthesized pointer input. Either way the\n" +
+            "  run's evidence would be meaningless, so it stops here rather than failing later\n" +
+            "  inside a demo assertion. Keep the Safari window visible and frontmost -- do not\n" +
+            "  let the screen lock, and do not run two Safari gates at once.",
+        );
+      }
+    };
+
     // Task 81: a navigation resets the page's bridge, so harvest the exercised-member
     // census BEFORE leaving each page and merge across loads (see chrome_cdp.mjs).
     let exercisedAccumulator = null;
@@ -231,9 +308,13 @@ async function main() {
       await harvestConsole();
       const result = await wd("POST", `/session/${sessionId}/url`, { url });
       await evaluate(CONSOLE_HOOK);
+      await assertInteractive(`navigate(${new URL(url).pathname})`);
       return result;
     };
     const pointer = async (press, release) => {
+      // Checked HERE and not only at navigate: focus can be stolen at any moment by
+      // another app, and the gesture below is exactly what a stolen focus destroys.
+      await assertInteractive("pointer dispatch");
       // Viewport-origin coordinates are CSS client pixels (W3C), which the demo
       // already produces. Safari requires the trailing DELETE /actions release
       // to actually finalize and dispatch the pointer sequence.
