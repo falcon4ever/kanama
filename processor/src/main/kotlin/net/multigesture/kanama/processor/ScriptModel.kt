@@ -157,6 +157,15 @@ internal data class ScriptPropertyModel(
   val arrayElementCustomScriptIsResource: Boolean = false,
   val arrayElementString: Boolean = false,
   /**
+   * Source-level nullability of an object array's ELEMENT type (`List<Texture2D?>`). Distinct from
+   * [nullable], which is the nullability of the property itself.
+   *
+   * Task 88 K6: a Godot typed array genuinely can hold null, so the Web proxy pushes a 0 handle for
+   * one. Only a nullable element type can receive that as null; a non-nullable one must fail loudly
+   * rather than fabricate a wrapper over a minted handle, which is what shipped before.
+   */
+  val arrayElementNullable: Boolean = false,
+  /**
    * Source-level nullability of the property type. The JVM emitter does not need it
    * (VariantConverters handle null), but the iOS emitter does: an object-typed `@ScriptProperty`
    * delivers `null` for a 0 handle only when the Kotlin field is nullable. Phase 3.2
@@ -232,6 +241,15 @@ internal data class ScriptPropertyTypeModel(
   val customScriptIsResource: Boolean = false,
   val arrayElementCustomScriptIsResource: Boolean = false,
   val arrayElementString: Boolean = false,
+  /**
+   * Source-level nullability of an object array's ELEMENT type (`List<Texture2D?>`). Distinct from
+   * [nullable], which is the nullability of the property itself.
+   *
+   * Task 88 K6: a Godot typed array genuinely can hold null, so the Web proxy pushes a 0 handle for
+   * one. Only a nullable element type can receive that as null; a non-nullable one must fail loudly
+   * rather than fabricate a wrapper over a minted handle, which is what shipped before.
+   */
+  val arrayElementNullable: Boolean = false,
   val narrow: NarrowScalar? = null,
   val enumFqName: String? = null,
   val enumEntries: List<String> = emptyList(),

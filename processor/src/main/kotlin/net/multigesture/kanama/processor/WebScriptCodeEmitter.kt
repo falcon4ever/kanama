@@ -1806,8 +1806,21 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values.map { requireNotNull(net.multigesture.kanama.web.webScriptInstance(it) as? $elementScript) { \"Array element is not a hydrated $elementScript\" } }"
           )
         } else if (property.type == TypeMapping.ARRAY && property.isMutable && wrapper != null) {
+          // Task 88 K6: 0 means the exported array held null at this index. A nullable
+          // element type takes it as null; a non-nullable one CANNOT represent it, so it
+          // fails here naming the property rather than handing back a wrapper over handle
+          // 0 that only explodes later, somewhere else, as someone else's bug.
+          val element =
+            if (property.arrayElementNullable) {
+              "if (it == 0) null else $wrapper(GodotHandle.fromBackendToken(it.toLong()))"
+            } else {
+              "if (it == 0) error(\"Kanama Web: exported array '${property.godotName}' on " +
+                "${input.model.simpleName} holds null, but its element type is non-nullable -- " +
+                "declare it List<${wrapper.substringAfterLast('.')}?>\") else " +
+                "$wrapper(GodotHandle.fromBackendToken(it.toLong()))"
+            }
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values.map { $wrapper(GodotHandle.fromBackendToken(it.toLong())) }"
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values.map { $element }"
           )
         }
       }
@@ -2069,11 +2082,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine(
             "\t\t\tproperty_value_handle = int(property_value.call(\"_kanama_ensure_created\"))"
           )
-          appendLine("\t\tif property_value_handle == 0:")
+          // Task 88 K6: a null element must stay null. Minting a handle for it -- which is
+          // what "handle == 0 -> allocate" did unconditionally -- hands the script a LIVE
+          // wrapper over an empty Resource where its export held nothing, and the scalar arm
+          // one screen up already guards with `if != null`. Godot typed arrays really can
+          // hold null, so 0 is pushed across and the Kotlin side decides what it means.
+          appendLine("\t\tif property_value == null:")
+          appendLine("\t\t\tproperty_value_handle = 0")
+          appendLine("\t\telse:")
+          appendLine("\t\t\tif property_value_handle == 0:")
           appendLine(
-            "\t\t\tproperty_value_handle = int(_kanama_bridge.allocateBrowserHandle(\"Resource\", _kanama_handle))"
+            "\t\t\t\tproperty_value_handle = int(_kanama_bridge.allocateBrowserHandle(\"Resource\", _kanama_handle))"
           )
-          appendLine("\t\t_kanama_object_handles[property_value_handle] = property_value")
+          appendLine("\t\t\t_kanama_object_handles[property_value_handle] = property_value")
           appendLine(
             "\t\tproperty_handles_${index + 1} += (\",\" if not property_handles_${index + 1}.is_empty() else \"\") + str(property_value_handle)"
           )
