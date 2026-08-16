@@ -231,11 +231,19 @@ async function main() {
       if (process.env.KANAMA_WEB_SMOKE_DEBUG === "1") {
         process.stderr.write(`[safari interactive] ${label}: ${JSON.stringify(state)}\n`);
       }
-      if (!state.focused) {
-        // Recoverable on its own terms: switching to our own window handle is the W3C
-        // way to make it the active top-level browsing context.
+      // Task 89: focus loss here is usually TRANSIENT -- a previous run's Safari dying,
+      // or the window still settling after navigation -- so recover and retry rather than
+      // failing the run over a blip. Measured: 1 run in 8 arrived at pointer dispatch with
+      // focused=false, and that single blip is enough to make the whole gesture vanish and
+      // the run fail three assertions downstream. Switching to our own window handle is the
+      // W3C way to make it the active top-level browsing context.
+      for (let attempt = 1; attempt <= 6 && !state.focused; attempt += 1) {
         await focusOwnWindow();
+        await delay(250);
         state = await interactiveState();
+        if (state.focused && process.env.KANAMA_WEB_SMOKE_DEBUG === "1") {
+          process.stderr.write(`[safari interactive] ${label}: focus recovered on attempt ${attempt}\n`);
+        }
       }
       if (state.visibility !== "visible" || !state.focused) {
         throw new Error(
