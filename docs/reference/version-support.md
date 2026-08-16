@@ -141,18 +141,29 @@ and `web_export_smoke.sh` fails any run below them:
 |---|---|---|---|---|
 | Chrome | 130 | tested (2026-07-28) | 150 (headless) | CI cell |
 | Firefox | 141 | tested (2026-07-28) | 152–153 (headless) | CI cell |
-| Safari | 26.5 | validated-at (2026-07-27) | 26.5 / WebKit 605.1.15, macOS 26.5.1 — **11 of 12 demos as of 2026-08-14**, `match3` fails (see below) | **spot-checked, not gated**; no headless mode, needs a logged-in GUI session, and cannot run two at once |
+| Safari | 26.5 | validated-at (2026-07-27) | 26.5 / WebKit 605.1.15, macOS 26.5.1 — 12 of 12 on 2026-07-27; `match3` failed the 2026-08-14 spot check and was fixed 2026-08-15 (harness, not the demo — see below). **The full corpus has not been re-run since the fix** | **spot-checked, not gated**; no headless mode, needs a logged-in GUI session, and cannot run two at once |
 
 **Safari is spot-checked, deliberately.** It has no headless mode, needs a
 logged-in GUI session with an unoccluded window, and cannot run two gates
 concurrently, so a CI cell would cost more than it returns (maintainer decision,
 2026-08-14). The trade is explicit: **between spot checks, the Safari claim can go
 stale without anything noticing.** It did — the corpus was 12/12 on 2026-07-27 and
-**11/12** when next run on 2026-08-14, with `match3` failing deterministically on the
-swap/collapse path. That regression predates the task-88 work (a control built from
-`56087469` fails the same way), so it landed at some point in those five weeks
-unobserved. When quoting Safari evidence, quote **the date it was last run**, not the
-best result ever recorded.
+**11/12** when next run on 2026-08-14, with `match3` failing on the swap path.
+
+**That was not a regression in Kanama or in the demo.** Root-caused 2026-08-15: the
+harness dispatched the swap gesture while the Safari window was **not focused**, and
+Safari delivers synthesized pointer input to the key window only, so the gesture was
+discarded outright — the board was healthy, the coordinates were right, and Godot simply
+never received any input. It reproduced about **1 run in 8**. Fixed by retrying the
+focus recovery and by proving the engine accepts input before playing the real gesture;
+`match3` then passed 12 consecutive runs.
+
+Two things are worth carrying from it. **A locked screen voids a Safari run entirely** —
+Safari suspends `requestAnimationFrame` for a non-visible page, so the engine advances a
+few frames and stops, and the run fails inside a demo assertion with nothing naming the
+cause; the driver now refuses to start in that state. And **quote the date a Safari
+result was last measured**, not the best result ever recorded — the corpus above has not
+been re-run since the fix, so 12/12 is a July number, not a current one.
 
 **"Tested" and "validated-at" are different claims.** Tested means the gate was
 run on the floor version and on the one below it: Chrome 129 never boots the
