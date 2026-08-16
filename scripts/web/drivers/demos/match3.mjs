@@ -119,6 +119,62 @@ function findLegalSwap(tileGrid) {
   return null;
 }
 
+const MAIN_FQN = "net.multigesture.kanama.demos.match3.Main";
+
+// Task 89: "the board's counters are quiescent" is NOT "the engine will accept input",
+// and this driver used to treat them as the same claim. Dispatch the gesture the instant
+// settle returns and it is sometimes dropped outright -- measured at ~5%: 2 failures in 8
+// runs with nothing in between, 0 in 59 with any round-trip at all (Fisher p ~ 0.015).
+//
+// When it is dropped, NOTHING says so. The board stays healthy (tweens 33/33, callbacks
+// 12), the coordinates are right, the page receives every event -- and the run fails three
+// assertions downstream of a swap that never happened, naming the symptom and never the
+// cause. It cost this project five weeks of "match3 regressed on Safari".
+//
+// So prove the engine accepts input before betting the run on it, rather than sleeping and
+// hoping. A click on empty canvas is harmless here: Main.input ignores a release with no
+// prior tile press, so it moves nothing and starts no tween. `_input`'s dispatch count in
+// the census is the receipt -- the same "assert the effect, don't assume it" rule the rest
+// of this gate runs on. A blind delay(100) would pass today and rot on a slower machine.
+//
+// Deliberately match3-only: this is the one demo with evidence. The 3D demos inject input
+// at the engine level and never take this path.
+async function inputDispatches(evaluate) {
+  return evaluate(
+    `(globalThis.KanamaWebBridge?.exercisedMembers?.[${JSON.stringify(MAIN_FQN)}]?.["_input"] ?? 0)`,
+  );
+}
+
+async function awaitInputAccepted(pointer, evaluate) {
+  // Off the board on purpose -- the board is centred, so the canvas corner cannot be over
+  // a tile, and a hover would start a scale tween that the settle invariants just proved
+  // balanced.
+  const spot = await evaluate(`(() => {
+    const rect = document.querySelector("canvas").getBoundingClientRect();
+    return { x: rect.left + 20, y: rect.top + 20 };
+  })()`);
+  for (let attempt = 1; attempt <= 10; attempt += 1) {
+    const before = await inputDispatches(evaluate);
+    await pointer(spot, spot);
+    const deadline = Date.now() + 1000;
+    while (Date.now() < deadline) {
+      const after = await inputDispatches(evaluate);
+      if (after > before) {
+        trace(`input accepted after ${attempt} probe click(s) (_input ${before} -> ${after})`);
+        return attempt;
+      }
+      await delay(50);
+    }
+    trace(`probe click ${attempt} was not accepted (_input still ${before})`);
+  }
+  throw new Error(
+    "Match3: the engine never dispatched _input for a probe click on empty canvas. " +
+      "The board is settled and the page is live, so input is being dropped between the " +
+      "DOM and Godot's input queue -- see kanama-tasks/89. Playing the real gesture now " +
+      "would fail three assertions downstream of a swap that never happened.",
+  );
+}
+
 async function drag(pointer, evaluate, { x, y, dx, dy }) {
   // Board -> CSS client-pixel geometry is browser-agnostic; each driver's
   // pointer() handles the protocol.
@@ -228,6 +284,9 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
 
   const legalSwap = findLegalSwap(firstRun.settled.tileGrid);
   if (!legalSwap) throw new Error("Settled Match3 board has no legal swap");
+  // Prove the engine takes input BEFORE the snapshot the swap is judged against, so a
+  // dropped probe click cannot be mistaken for a dropped swap.
+  const probeClicks = await awaitInputAccepted(pointer, evaluate);
   const beforeSwap = await snapshot(evaluate);
   await drag(pointer, evaluate, legalSwap);
   const afterSwap = await waitUntil(
@@ -309,6 +368,11 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
       durationMs: startupDurationMs,
     },
     checks,
+    // Task 89 evidence, not decoration: >1 means the engine actually refused input after
+    // settle on this run, which is the fault the gate exists for. If this is 1 forever
+    // across many runs, the gate has become a no-op and the retry can go; if it climbs,
+    // the underlying drop is getting worse, not better.
+    inputProbeClicks: probeClicks,
     handles: {
       liveAfterGameplay: afterSwap.liveHandles,
       liveAfterTeardown: secondTeardown.afterAudio.liveHandles,
