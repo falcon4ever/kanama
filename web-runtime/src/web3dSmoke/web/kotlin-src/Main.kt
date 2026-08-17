@@ -87,6 +87,12 @@ class Main(godotObject: GodotHandle) :
   // so "the scene value arrived" and "the field happens to look right" cannot be confused --
   // which is the whole point of slice 4: the manifest proves a shape is EMITTED, this proves it
   // delivers the right VALUE.
+  //
+  // probeObject needs `node_paths=PackedStringArray("probe_object")` on the NODE HEADER in
+  // main.tscn, not just the `probe_object = NodePath(...)` value line. Godot resolves an
+  // exported NodePath into a node REFERENCE only for properties named in that attribute;
+  // without it the property stays null and this looks exactly like a backend gap. It is not
+  // one -- and the same trap is waiting for anyone hand-authoring a scene.
   @ScriptProperty var probeString: String = "wrong"
 
   @ScriptProperty var probeInt: Long = -1

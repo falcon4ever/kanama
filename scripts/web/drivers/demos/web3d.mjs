@@ -276,20 +276,16 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // confused. Bits 8..2048 = String, Int, Float, Bool, Vector2, Vector3, Vector2i, Object,
     // String[].
     //
-    // Expected 3071, NOT 4095: bit 1024 (the OBJECT arm, an exported NODE reference) does not
-    // arrive. MEASURED on this fixture's first run, and the fixture is spelled exactly like the
-    // corpus -- `probe_object = NodePath("Spinner")` in the scene, the same form City-Builder
-    // uses for `selector` / `view_camera`, pointing at a live Node3D child that bit 4 proves
-    // resolves. The generated proxy emits the push correctly too, so this is neither a scene
-    // typo nor a missing emitter arm. Leading hypothesis: Godot resolves an exported NodePath
-    // to its object as the node enters the tree, while `_kanama_ensure_created` can push
-    // properties BEFORE that (the 60i "a script instance exists before _ready" rule), so the
-    // push reads null. NOT confirmed -- recorded in kanama-tasks/80.
+    // A healthy run returns 4095 -- every typed arm, INCLUDING the OBJECT arm.
     //
-    // Gated at the measured-working set deliberately: a red gate nobody can act on teaches
-    // nothing, and silently dropping the bit from the mask would hide exactly what slice 4
-    // exists to find. When the object arm is fixed this returns 4095 and fails until updated.
-    propertyShapesDeliverValues: propertyProbe === 3071,
+    // The object arm briefly looked like a gap: bit 1024 was clear, and the scene carried
+    // `probe_object = NodePath("Spinner")`, the same value line City-Builder uses. The value
+    // line is not the whole story -- Godot only resolves an exported NodePath into a node
+    // REFERENCE when the node header declares it: `node_paths=PackedStringArray("probe_object")`.
+    // City-Builder's Builder node has that attribute; this fixture did not. Nothing was wrong
+    // with the backend, and the corpus was never affected (fps and City-Builder both `error()`
+    // on a null reference and both pass).
+    propertyShapesDeliverValues: propertyProbe === 4095,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

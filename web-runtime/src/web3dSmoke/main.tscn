@@ -39,7 +39,7 @@ size = Vector3(1, 1, 1)
 [sub_resource type="BoxShape3D" id="Shape_Coin"]
 size = Vector3(0.6, 0.6, 0.6)
 
-[node name="Web3D" type="Node3D"]
+[node name="Web3D" type="Node3D" node_paths=PackedStringArray("probe_object")]
 script = ExtResource("1_main")
 enter_tree_greeting = "web3d-enter-tree"
 spinner_path = NodePath("Spinner")
