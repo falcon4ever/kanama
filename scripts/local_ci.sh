@@ -283,6 +283,14 @@ python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 stage "stale blocker claim audit"
 python3 "$ROOT_DIR/scripts/audit_stale_blockers.py"
 
+stage "unapplied lifecycle annotation check"
+# Tripwire for ONE shape: an annotation imported and never applied, which silently
+# disables the hook (FullScreenHandler's @OnReady, dead since the port). The compiler
+# does not warn and the Web census cannot see desktop-only wiring, so this is the only
+# net today. Scans this repo; the demos checkout is scanned in the web workflow, which
+# is where demo sources exist.
+python3 "$ROOT_DIR/scripts/check_unapplied_annotations.py" "$ROOT_DIR"
+
 stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself
 # prints install instructions and exits 2 when shellcheck is absent.
