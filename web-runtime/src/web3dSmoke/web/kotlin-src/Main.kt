@@ -32,6 +32,8 @@ import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 import kotlinx.coroutines.launch
@@ -77,6 +79,31 @@ class Main(godotObject: GodotHandle) :
    * Overridden in main.tscn to 47 — never the default 5.
    */
   @Export(hint = PropertyHint.RANGE, hintString = "0,100,1") var probeRangeValue: Long = 5
+
+  // ---------- Task 80 slice 4: property-shape conformance ----------
+  //
+  // One export per TYPED arm in WebPropertyArm, every value carried by main.tscn and every
+  // default deliberately WRONG. A shape that fails to push leaves its Kotlin default in place,
+  // so "the scene value arrived" and "the field happens to look right" cannot be confused --
+  // which is the whole point of slice 4: the manifest proves a shape is EMITTED, this proves it
+  // delivers the right VALUE.
+  @ScriptProperty var probeString: String = "wrong"
+
+  @ScriptProperty var probeInt: Long = -1
+
+  @ScriptProperty var probeFloat: Double = -1.0
+
+  @ScriptProperty var probeBool: Boolean = false
+
+  @ScriptProperty var probeVector2: Vector2 = Vector2.ZERO
+
+  @ScriptProperty var probeVector3: Vector3 = Vector3.ZERO
+
+  @ScriptProperty var probeVector2i: Vector2i = Vector2i.ZERO
+
+  @ScriptProperty var probeObject: Node3D? = null
+
+  @ScriptProperty var probeStringArray: List<String> = emptyList()
 
   private lateinit var spinner: Node3D
   private var angle = 0.0
@@ -343,6 +370,17 @@ class Main(godotObject: GodotHandle) :
     if (spinnerPath.path == "Spinner") mask = mask or 1L
     if (probeRangeValue == 47L) mask = mask or 2L
     if (self.getAsOrNull(spinnerPath, ::Node3D) != null) mask = mask or 4L
+    // Task 80 slice 4: one bit per remaining typed arm, each comparing against the value
+    // main.tscn carries -- NOT against the Kotlin default, which is wrong on purpose.
+    if (probeString == "conformance") mask = mask or 8L
+    if (probeInt == 1234L) mask = mask or 16L
+    if (probeFloat == 0.5) mask = mask or 32L
+    if (probeBool) mask = mask or 64L
+    if (probeVector2 == Vector2(1f, 2f)) mask = mask or 128L
+    if (probeVector3 == Vector3(3f, 4f, 5f)) mask = mask or 256L
+    if (probeVector2i == Vector2i(6, 7)) mask = mask or 512L
+    if (probeObject != null) mask = mask or 1024L
+    if (probeStringArray == listOf("a", "b")) mask = mask or 2048L
     return mask
   }
 

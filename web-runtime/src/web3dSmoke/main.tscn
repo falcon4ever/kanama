@@ -44,6 +44,15 @@ script = ExtResource("1_main")
 enter_tree_greeting = "web3d-enter-tree"
 spinner_path = NodePath("Spinner")
 probe_range_value = 47
+probe_string = "conformance"
+probe_int = 1234
+probe_float = 0.5
+probe_bool = true
+probe_vector2 = Vector2(1, 2)
+probe_vector3 = Vector3(3, 4, 5)
+probe_vector2i = Vector2i(6, 7)
+probe_object = NodePath("Spinner")
+probe_string_array = Array[String](["a", "b"])
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")

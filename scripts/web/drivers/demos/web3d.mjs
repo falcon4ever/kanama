@@ -111,7 +111,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   // Task 64 property-push proof: Main.property_probe (method#7, Int->Int) returns a mask —
   // bit 1 = the scene-exported NodePath (NodePath("Spinner"), never the default) was pushed
   // into Kotlin, bit 2 = the scene value 47 of the RANGE-hinted one-line-annotated export
-  // arrived, bit 4 = the pushed NodePath resolves a live node. A healthy run returns 7.
+  // arrived, bit 4 = the pushed NodePath resolves a live node. Task 80 slice 4 added one bit
+  // per remaining TYPED property arm (8..2048), so a healthy run now returns 4095.
   const propertyProbe = Number(
     await evaluate(
       "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 7, 0)",
@@ -250,6 +251,26 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     rangeHintPropertyPushed: (propertyProbe & 2) === 2,
     // Task 64: the pushed NodePath resolves a live node through the NodePath accessor overload.
     nodePathResolvesNode: (propertyProbe & 4) === 4,
+    // Task 80 slice 4: EVERY typed property arm delivered the scene's value, not merely a
+    // dispatch. Each Kotlin default is wrong on purpose, so a shape that fails to push leaves
+    // its default behind and clears its bit -- "arrived" and "looks plausible" cannot be
+    // confused. Bits 8..2048 = String, Int, Float, Bool, Vector2, Vector3, Vector2i, Object,
+    // String[].
+    //
+    // Expected 3071, NOT 4095: bit 1024 (the OBJECT arm, an exported NODE reference) does not
+    // arrive. MEASURED on this fixture's first run, and the fixture is spelled exactly like the
+    // corpus -- `probe_object = NodePath("Spinner")` in the scene, the same form City-Builder
+    // uses for `selector` / `view_camera`, pointing at a live Node3D child that bit 4 proves
+    // resolves. The generated proxy emits the push correctly too, so this is neither a scene
+    // typo nor a missing emitter arm. Leading hypothesis: Godot resolves an exported NodePath
+    // to its object as the node enters the tree, while `_kanama_ensure_created` can push
+    // properties BEFORE that (the 60i "a script instance exists before _ready" rule), so the
+    // push reads null. NOT confirmed -- recorded in kanama-tasks/80.
+    //
+    // Gated at the measured-working set deliberately: a red gate nobody can act on teaches
+    // nothing, and silently dropping the bit from the mask would hide exactly what slice 4
+    // exists to find. When the object arm is fixed this returns 4095 and fails until updated.
+    propertyShapesDeliverValues: propertyProbe === 3071,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
     dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
