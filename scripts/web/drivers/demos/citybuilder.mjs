@@ -11,6 +11,10 @@
 // and the scene root, draining every live handle to zero.
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// Cells the authored sample city occupies -- 122 structures in `sample map/map.tres`,
+// recovered losslessly from the upstream binary and diffed tuple-for-tuple against it
+// (task 65). One cell per structure.
+const SAMPLE_MAP_CELLS = 122;
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const START = Date.now();
 const trace = (msg) => {
@@ -242,6 +246,16 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline }) {
       : 0;
   trace(`loaded: cells=${loadedCells?.count} selectorMoved=${selectorDisplacement.toFixed(2)}`);
 
+  // Task 65: press `load_resources` (key 8) and prove the AUTHORED sample city arrives.
+  // This gate did not exist because it could not pass: `sample map/map.res` was the
+  // upstream BINARY resource referencing GDScript the port deleted, so no script attached,
+  // `kotlinScriptInstance<DataMap>()` returned null, and loadMap silently fell back to a
+  // fresh empty map -- a no-op on desktop and Web alike. The smoke skipping key 8 is what
+  // let that survive: the one input that would have failed was the one never pressed.
+  await tap("load_resources");
+  const sampleCells = await usedCellsRetry(evaluate);
+  trace(`sample map: cells=${sampleCells?.count} (expected ${SAMPLE_MAP_CELLS})`);
+
   // Full teardown: smoke_teardown (method#1) releases hydrated structure assets, frees
   // the Audio autoload and the scene root; every node exits and releases its handles.
   trace("smoke_teardown");
@@ -282,6 +296,12 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline }) {
       (savedCells?.count ?? 0) === (toggledCells?.count ?? -1) &&
       (loadedCells?.count ?? 0) === (savedCells?.count ?? -1) &&
       (loadedCells?.items[0]?.item ?? -2) === toggledItem,
+    // Exact, not a threshold: `sample map/map.tres` is a fixed authored asset (122
+    // structures, cash 5860, verified against the upstream original). If someone edits the
+    // map, this SHOULD fail and be updated deliberately rather than drift silently.
+    sampleMapLoadsAuthoredCity:
+      (sampleCells?.count ?? -1) === SAMPLE_MAP_CELLS &&
+      (sampleCells?.count ?? 0) > (loadedCells?.count ?? 0),
     processFramesAdvanced: peak.processCalls >= baseline.processCalls + 40,
     gameplayCommandsApplied: peak.appliedCommands > baseline.appliedCommands,
     crossingsAdvanced: peak.crossings > baseline.crossings,
