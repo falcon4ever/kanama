@@ -1,3 +1,4 @@
+import { resolveMethodId } from "../envelope.mjs";
 // demos/web3d.mjs -- 3D render-foundation smoke: observe + teardown assertions.
 //
 // The web3d scene auto-runs: Main._ready applies the platformer's Compatibility-renderer
@@ -71,7 +72,17 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runWeb3d({ url, evaluate, navigate, deadline }) {
+export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir }) {
+  // Task 80 slice 4: resolve probe ids from the export manifest, never hardcode them.
+  // Adding ONE @RegisterFunction renumbers the rest -- `signal_probe` took id 7 and pushed
+  // `property_probe` to 8 and `dispatch_probe` to 17. A hardcoded id then dispatches a
+  // DIFFERENT method and still returns a number, so the check keeps "passing" while testing
+  // something else entirely. Same trap slice 6 hit on match3.
+  const probeId = (name) => {
+    const id = resolveMethodId(exportDir, "web3d.Main", name);
+    if (!id) throw new Error(`web3d: ${name} not found in the export manifest`);
+    return id;
+  };
   const startupStart = Date.now();
   trace("navigate");
   await navigate(`${url}?web3d=${Date.now()}`);
@@ -103,7 +114,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   // @OnReady. A healthy protocol-16 run returns exactly 7.
   const enterTreeProbe = Number(
     await evaluate(
-      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 5, 0)",
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("enter_tree_probe")}, 0)`,
     ),
   );
   trace(`enterTreeProbe: mask=${enterTreeProbe} enterTreeCalls=${ready.enterTreeCalls}`);
@@ -115,10 +126,18 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   // per remaining TYPED property arm (8..2048), so a healthy run now returns 4095.
   const propertyProbe = Number(
     await evaluate(
-      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 7, 0)",
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("property_probe")}, 0)`,
     ),
   );
   trace(`propertyProbe: mask=${propertyProbe}`);
+
+  // Task 80 slice 4: signal-shape conformance (see Main.signal_probe).
+  const signalProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("signal_probe")}, 0)`,
+    ),
+  );
+  trace(`signalProbe: mask=${signalProbe}`);
 
   // Task 80 dispatch-shape conformance: Main.dispatch_probe (method#16, Int->Int)
   // returns a mask. Every bit is a shape task 80 admitted, exercised through the REAL crossing
@@ -136,7 +155,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   // that came back against the value that went out.
   const dispatchProbe = Number(
     await evaluate(
-      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 16, 0)",
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("dispatch_probe")}, 0)`,
     ),
   );
   trace(`dispatchProbe: mask=${dispatchProbe}`);
@@ -209,12 +228,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
   // through the same scheduler. Asserting "no error" would have passed either way.
   const readCoroutineMask = () =>
     evaluate(
-      "globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, 20, 0)",
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("coroutine_probe_mask")}, 0)`,
     ).then(Number);
   trace("coroutine_probe");
   const maskBeforeArm = await readCoroutineMask();
   await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 19); true",
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("coroutine_probe")}); true`,
   );
   let coroutineMask = await readCoroutineMask();
   const coroutineDeadline = Math.min(deadline, Date.now() + 15_000);
@@ -271,6 +290,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline }) {
     // nothing, and silently dropping the bit from the mask would hide exactly what slice 4
     // exists to find. When the object arm is fixed this returns 4095 and fails until updated.
     propertyShapesDeliverValues: propertyProbe === 3071,
+    // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
+    // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
+    // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an
+    // argument-dropped member a build error, so the fixture failed to compile when this probe
+    // first tried it -- see the note on signal_probe in Main.kt.
+    signalShapesDeliverPayloads: signalProbe === 3,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
     dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.

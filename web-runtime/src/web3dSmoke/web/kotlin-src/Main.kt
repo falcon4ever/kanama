@@ -134,6 +134,7 @@ class Main(godotObject: GodotHandle) :
 
     spinner = self.requireAs("Spinner", ::Node3D)
     armSignalPayloadProbe()
+    armSignalShapeProbes()
   }
 
   @OnProcess
@@ -364,6 +365,24 @@ class Main(godotObject: GodotHandle) :
    * and the hint path end to end), bit 4 = the pushed NodePath resolves a live node through the
    * NodePath accessor overload. A healthy run returns exactly 7.
    */
+  /**
+   * Task-80 slice-4 signal-shape probe. Bits: 1 = a ZERO-argument signal reached a Kotlin lambda,
+   * 2 = a ONE-OBJECT signal delivered a live handle. A healthy run returns 3.
+   *
+   * The two-argument shape is NOT covered, because it cannot be declared: slice 3 turned an
+   * `argument-dropped` member into a BUILD ERROR, so the fixture failed to compile when this
+   * probe first tried it. That is worth knowing -- signalDispatch()'s own doc still says such a
+   * payload "reaches Kotlin only through a named registered-method connect", an escape hatch the
+   * build no longer permits anyone to take.
+   */
+  @RegisterFunction("signal_probe")
+  fun signalProbe(value: Long): Long {
+    var mask = 0L
+    if (confZeroFired) mask = mask or 1L
+    if (confObjectHandleLive) mask = mask or 2L
+    return mask
+  }
+
   @RegisterFunction("property_probe")
   fun propertyProbe(value: Long): Long {
     var mask = 0L
@@ -395,6 +414,21 @@ class Main(godotObject: GodotHandle) :
   // the manifest cannot, namely a shape that dispatches but delivers the WRONG VALUE.
 
   @Signal("dispatch_probe_scalar") fun dispatchProbeScalar(value: Long) = Unit
+
+  // ---------- Task 80 slice 4: signal-shape conformance ----------
+  //
+  // signalDispatch() admits exactly three TYPED lambda shapes -- zero args, one packed scalar,
+  // one object handle -- and calls everything else `argument-dropped`, documenting that such a
+  // payload "reaches Kotlin only through a named registered-method connect". The scalar shape is
+  // already covered (dispatch_probe bit 32). These cover the other two, AND the dropped contract
+  // itself: the limitation is asserted, not assumed, and so is the escape hatch the docs promise.
+  @Signal("conf_signal_zero") fun confSignalZero() = Unit
+
+  @Signal("conf_signal_object") fun confSignalObject(node: GodotObject) = Unit
+
+  private var confZeroFired = false
+  private var confObjectHandleLive = false
+
 
   private var probeFloatArgument = 0.0
   private var probeBoolArgument = false
@@ -580,6 +614,22 @@ class Main(godotObject: GodotHandle) :
       .signal("dispatch_probe_scalar")
       .connectLong(self, GodotObject.CONNECT_ONE_SHOT) { payload -> probeSignalPayload = payload }
     self.emitSignal("dispatch_probe_scalar", PROBE_COUNT)
+  }
+
+  /**
+   * Task 80 slice 4, signal shapes. Armed from [ready] alongside the scalar probe, one-shot so
+   * the callback-drain assertion is unaffected.
+   */
+  private fun armSignalShapeProbes() {
+    self.signal("conf_signal_zero").connect(self, flags = GodotObject.CONNECT_ONE_SHOT) {
+      confZeroFired = true
+    }
+    self.emitSignal("conf_signal_zero")
+
+    self.signal("conf_signal_object").connectObject(self, GodotObject.CONNECT_ONE_SHOT) { node ->
+      confObjectHandleLive = node != null
+    }
+    self.emitSignal("conf_signal_object", self)
   }
 
   private companion object {
