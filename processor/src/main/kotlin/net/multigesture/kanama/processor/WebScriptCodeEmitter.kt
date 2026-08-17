@@ -459,9 +459,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * more emitted arguments, and single payloads outside [isScalarSignalPayload], still ride
      * [SIGNAL_DISPATCH_ONE] with the payload dropped.
      *
-     * A payload the lambda path drops can still be delivered by connecting the signal to a
+     * A payload the lambda path drops would still be deliverable by connecting the signal to a
      * **named** registered method (`connect(target, "method")`), where it rides that method's own
-     * arm — so this is `argument-dropped`, never `unsupported`.
+     * arm — which is why the status is `argument-dropped` rather than `unsupported`.
+     *
+     * **That escape hatch is not reachable today.** Task 80 slice 3 made any non-`typed` member a
+     * BUILD ERROR, so a signal with such a payload cannot be declared at all: the task-80 slice-4
+     * conformance fixture failed to COMPILE when it tried to cover the two-argument shape. The
+     * status name is still right — the limitation is the lambda transport, not the signal — but
+     * read "reaches Kotlin only through a named connect" as *what would happen if the build allowed
+     * it*, not as advice anyone can currently follow. Either widen the lambda transport or let the
+     * build admit the shape; until then this branch is unreachable by construction.
      */
     fun signalDispatch(signal: SignalModel): WebDispatch {
       val args = signal.args
