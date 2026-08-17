@@ -51,7 +51,10 @@ env:
   # Kanama PR. Bump it deliberately when a demo port lands (see
   # docs/exporting/web.md, "Bumping the demos pin").
   # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
-  DEMOS_REF: c85b83ad7978d2ab0778131774404c4ace065cb5
+  # Task 64/65: the @OnReady repair (demos#39) + the re-authored sample map (demos#38).
+  # Bumped WITH the annotation gate below: the gate fails against the previous pin, which
+  # still carries the FullScreenHandler bug -- both sides pin together or neither is green.
+  DEMOS_REF: 87e5cfc3fb5c38fddd21a2a71ee6e29a77f7d354
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
@@ -119,6 +122,13 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ripgrep
+
+      - name: Unapplied lifecycle annotation check (kanama + pinned demos)
+        shell: bash
+        # Runs HERE and not only in local-ci because this is the one job with the demos
+        # checkout, and the demo scripts are where this shape has actually bitten.
+        run: |
+          python3 scripts/check_unapplied_annotations.py . kanama-demos
 
       - name: Report browser versions
         shell: bash
