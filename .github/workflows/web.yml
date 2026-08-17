@@ -120,6 +120,13 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq ripgrep
 
+      - name: Unapplied lifecycle annotation check (kanama + pinned demos)
+        shell: bash
+        # Runs HERE and not only in local-ci because this is the one job with the demos
+        # checkout, and the demo scripts are where this shape has actually bitten.
+        run: |
+          python3 scripts/check_unapplied_annotations.py . kanama-demos
+
       - name: Report browser versions
         shell: bash
         run: |
