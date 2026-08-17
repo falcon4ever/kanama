@@ -32,6 +32,8 @@ import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 import kotlinx.coroutines.launch
@@ -78,6 +80,37 @@ class Main(godotObject: GodotHandle) :
    */
   @Export(hint = PropertyHint.RANGE, hintString = "0,100,1") var probeRangeValue: Long = 5
 
+  // ---------- Task 80 slice 4: property-shape conformance ----------
+  //
+  // One export per TYPED arm in WebPropertyArm, every value carried by main.tscn and every
+  // default deliberately WRONG. A shape that fails to push leaves its Kotlin default in place,
+  // so "the scene value arrived" and "the field happens to look right" cannot be confused --
+  // which is the whole point of slice 4: the manifest proves a shape is EMITTED, this proves it
+  // delivers the right VALUE.
+  //
+  // probeObject needs `node_paths=PackedStringArray("probe_object")` on the NODE HEADER in
+  // main.tscn, not just the `probe_object = NodePath(...)` value line. Godot resolves an
+  // exported NodePath into a node REFERENCE only for properties named in that attribute;
+  // without it the property stays null and this looks exactly like a backend gap. It is not
+  // one -- and the same trap is waiting for anyone hand-authoring a scene.
+  @ScriptProperty var probeString: String = "wrong"
+
+  @ScriptProperty var probeInt: Long = -1
+
+  @ScriptProperty var probeFloat: Double = -1.0
+
+  @ScriptProperty var probeBool: Boolean = false
+
+  @ScriptProperty var probeVector2: Vector2 = Vector2.ZERO
+
+  @ScriptProperty var probeVector3: Vector3 = Vector3.ZERO
+
+  @ScriptProperty var probeVector2i: Vector2i = Vector2i.ZERO
+
+  @ScriptProperty var probeObject: Node3D? = null
+
+  @ScriptProperty var probeStringArray: List<String> = emptyList()
+
   private lateinit var spinner: Node3D
   private var angle = 0.0
   private var enterTreeRan = false
@@ -107,6 +140,7 @@ class Main(godotObject: GodotHandle) :
 
     spinner = self.requireAs("Spinner", ::Node3D)
     armSignalPayloadProbe()
+    armSignalShapeProbes()
   }
 
   @OnProcess
@@ -337,12 +371,41 @@ class Main(godotObject: GodotHandle) :
    * and the hint path end to end), bit 4 = the pushed NodePath resolves a live node through the
    * NodePath accessor overload. A healthy run returns exactly 7.
    */
+  /**
+   * Task-80 slice-4 signal-shape probe. Bits: 1 = a ZERO-argument signal reached a Kotlin lambda,
+   * 2 = a ONE-OBJECT signal delivered a live handle. A healthy run returns 3.
+   *
+   * The two-argument shape is NOT covered, because it cannot be declared: slice 3 turned an
+   * `argument-dropped` member into a BUILD ERROR, so the fixture failed to compile when this
+   * probe first tried it. That is worth knowing -- signalDispatch()'s own doc still says such a
+   * payload "reaches Kotlin only through a named registered-method connect", an escape hatch the
+   * build no longer permits anyone to take.
+   */
+  @RegisterFunction("signal_probe")
+  fun signalProbe(value: Long): Long {
+    var mask = 0L
+    if (confZeroFired) mask = mask or 1L
+    if (confObjectHandleLive) mask = mask or 2L
+    return mask
+  }
+
   @RegisterFunction("property_probe")
   fun propertyProbe(value: Long): Long {
     var mask = 0L
     if (spinnerPath.path == "Spinner") mask = mask or 1L
     if (probeRangeValue == 47L) mask = mask or 2L
     if (self.getAsOrNull(spinnerPath, ::Node3D) != null) mask = mask or 4L
+    // Task 80 slice 4: one bit per remaining typed arm, each comparing against the value
+    // main.tscn carries -- NOT against the Kotlin default, which is wrong on purpose.
+    if (probeString == "conformance") mask = mask or 8L
+    if (probeInt == 1234L) mask = mask or 16L
+    if (probeFloat == 0.5) mask = mask or 32L
+    if (probeBool) mask = mask or 64L
+    if (probeVector2 == Vector2(1f, 2f)) mask = mask or 128L
+    if (probeVector3 == Vector3(3f, 4f, 5f)) mask = mask or 256L
+    if (probeVector2i == Vector2i(6, 7)) mask = mask or 512L
+    if (probeObject != null) mask = mask or 1024L
+    if (probeStringArray == listOf("a", "b")) mask = mask or 2048L
     return mask
   }
 
@@ -357,6 +420,21 @@ class Main(godotObject: GodotHandle) :
   // the manifest cannot, namely a shape that dispatches but delivers the WRONG VALUE.
 
   @Signal("dispatch_probe_scalar") fun dispatchProbeScalar(value: Long) = Unit
+
+  // ---------- Task 80 slice 4: signal-shape conformance ----------
+  //
+  // signalDispatch() admits exactly three TYPED lambda shapes -- zero args, one packed scalar,
+  // one object handle -- and calls everything else `argument-dropped`, documenting that such a
+  // payload "reaches Kotlin only through a named registered-method connect". The scalar shape is
+  // already covered (dispatch_probe bit 32). These cover the other two, AND the dropped contract
+  // itself: the limitation is asserted, not assumed, and so is the escape hatch the docs promise.
+  @Signal("conf_signal_zero") fun confSignalZero() = Unit
+
+  @Signal("conf_signal_object") fun confSignalObject(node: GodotObject) = Unit
+
+  private var confZeroFired = false
+  private var confObjectHandleLive = false
+
 
   private var probeFloatArgument = 0.0
   private var probeBoolArgument = false
@@ -542,6 +620,22 @@ class Main(godotObject: GodotHandle) :
       .signal("dispatch_probe_scalar")
       .connectLong(self, GodotObject.CONNECT_ONE_SHOT) { payload -> probeSignalPayload = payload }
     self.emitSignal("dispatch_probe_scalar", PROBE_COUNT)
+  }
+
+  /**
+   * Task 80 slice 4, signal shapes. Armed from [ready] alongside the scalar probe, one-shot so
+   * the callback-drain assertion is unaffected.
+   */
+  private fun armSignalShapeProbes() {
+    self.signal("conf_signal_zero").connect(self, flags = GodotObject.CONNECT_ONE_SHOT) {
+      confZeroFired = true
+    }
+    self.emitSignal("conf_signal_zero")
+
+    self.signal("conf_signal_object").connectObject(self, GodotObject.CONNECT_ONE_SHOT) { node ->
+      confObjectHandleLive = node != null
+    }
+    self.emitSignal("conf_signal_object", self)
   }
 
   private companion object {
