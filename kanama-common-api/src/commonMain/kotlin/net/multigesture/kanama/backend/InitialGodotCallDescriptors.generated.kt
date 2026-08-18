@@ -3172,6 +3172,17 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val TWEEN_TWEEN_PROPERTY_DOUBLE =
+    GodotCallDescriptor(
+      opcode = 289,
+      className = "Tween",
+      methodName = "tween_property",
+      hash = 4049770449L,
+      shape = GodotCallShape.OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 288
+  const val MAX_OPCODE = 289
 }

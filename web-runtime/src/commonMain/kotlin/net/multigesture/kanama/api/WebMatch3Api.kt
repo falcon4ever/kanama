@@ -628,11 +628,30 @@ class Tween internal constructor(backendHandle: BackendGodotHandle) : GodotObjec
             duration,
           )
           ?.let(::PropertyTweener)
+      // Task 64: a component path -- "position:y", "modulate:a" -- takes a NUMBER. This arm
+      // was missing while Vector2/Color/Vector3 all existed, so third-person's coin spill
+      // reached `unsupportedWebGameplayCall` and faulted the boundary the moment a beetle
+      // attack landed. Int/Long are accepted too: a caller writing `0` for a float property
+      // should not have to know the difference.
+      is Double -> tweenPropertyScalar(target, property, finalValue, duration)
+      is Float -> tweenPropertyScalar(target, property, finalValue.toDouble(), duration)
+      is Int -> tweenPropertyScalar(target, property, finalValue.toDouble(), duration)
+      is Long -> tweenPropertyScalar(target, property, finalValue.toDouble(), duration)
       else ->
         unsupportedWebGameplayCall(
           "Tween.tween_property final value ${finalValue?.let { it::class.simpleName } ?: "null"}"
         )
     }
+
+  private fun tweenPropertyScalar(
+    target: GodotObject,
+    property: String,
+    finalValue: Double,
+    duration: Double,
+  ): PropertyTweener? =
+    TweenBackendContractProbe(backendHandle)
+      .tweenProperty(target.backendHandle, property, finalValue, duration)
+      ?.let(::PropertyTweener)
 
   fun bindNode(node: Node): Tween {
     val returned = TweenBackendContractProbe(backendHandle).bindNode(node.backendHandle)

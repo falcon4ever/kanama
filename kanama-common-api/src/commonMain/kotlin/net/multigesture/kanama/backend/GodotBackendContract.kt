@@ -68,6 +68,7 @@ enum class GodotCallShape {
   LONG_ARG_SINGLETON,
   OBJECT_RET_HANDLE,
   OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE,
+  OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE,
   CALLABLE_RET_HANDLE,
   NOARGS_RET_LONG_SINGLETON,
   STRINGNAME_OBJECT_RET_INT,
@@ -554,6 +555,26 @@ interface GodotBackendSpi {
     target: GodotHandle,
     property: String,
     finalValue: GodotVector3,
+    duration: Double,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /**
+   * SCALAR property tweener -- `tween_property(node, "position:y", 4.0, 0.5)`.
+   *
+   * The sibling of the Vector2/Color/Vector3 variants, and the one that was missing: a component
+   * path like `"position:y"` takes a NUMBER, so third-person's coin spill (CoinsContainer) had no
+   * arm at all and faulted the Web boundary when a beetle attack landed. Every other tween shape
+   * was present, which is exactly why nobody noticed.
+   */
+  fun invokeObjectNodePathDoubleDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: Double,
     duration: Double,
   ): GodotHandle? {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
@@ -2020,6 +2041,28 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeObjectNodePathDoubleDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: Double,
+    duration: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeObjectNodePathDoubleDoubleRetHandle(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+  }
+
   fun invokeCallableRetHandle(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
@@ -2319,6 +2362,22 @@ class TweenBackendContractProbe(private val handle: GodotHandle) {
   ): GodotHandle? =
     GodotBackendCalls.invokeObjectNodePathVector3DoubleRetHandle(
       InitialGodotCallDescriptors.TWEEN_TWEEN_PROPERTY_VECTOR3,
+      handle,
+      target,
+      property,
+      finalValue,
+      duration,
+    )
+
+  /** Scalar variant: a component path such as `"position:y"` takes a number. */
+  fun tweenProperty(
+    target: GodotHandle,
+    property: String,
+    finalValue: Double,
+    duration: Double,
+  ): GodotHandle? =
+    GodotBackendCalls.invokeObjectNodePathDoubleDoubleRetHandle(
+      InitialGodotCallDescriptors.TWEEN_TWEEN_PROPERTY_DOUBLE,
       handle,
       target,
       property,

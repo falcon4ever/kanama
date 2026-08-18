@@ -4532,6 +4532,26 @@
       "returnOwnership": "BORROWED",
       "semantics": "HUD label text read (platformer coin count, squash score) on the immediate string channel. The Web applier accepts an optional child node path in the query payload ('' = the receiver's own node) so drivers can read a Label beneath a scripted Control -- see compositions.",
       "introducedBy": "81-gameplay-gate"
+    },
+    {
+      "opcode": 289,
+      "scope": "class",
+      "className": "Tween",
+      "methodName": "tween_property",
+      "hash": 4049770449,
+      "arguments": [
+        "Object",
+        "NodePath",
+        "Variant",
+        "float"
+      ],
+      "returnType": "PropertyTweener",
+      "shape": "OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "SCALAR variant of the property tweener: a component path such as \"position:y\" takes a number, not a vector. Its absence is why third-person's coin spill (CoinsContainer) faulted the Web boundary -- every other tween shape existed, so nothing flagged the hole.",
+      "introducedBy": "64-tween-double-arm",
+      "descriptorName": "TWEEN_TWEEN_PROPERTY_DOUBLE"
     }
   ],
   "compositions": [
