@@ -134,7 +134,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
      * happened to name.
      */
-    const val PROTOCOL_VERSION = 19
+    const val PROTOCOL_VERSION = 20
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -3417,7 +3417,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif opcode == 38 and receiver is Tween:")
     appendLine("\t\t(receiver as Tween).set_parallel(bool(args[2]))")
     appendLine("\t\tresult_handle = receiver_handle")
-    appendLine("\telif (opcode == 39 or opcode == 40 or opcode == 136) and receiver is Tween:")
+    appendLine(
+      "\telif (opcode == 39 or opcode == 40 or opcode == 136 or opcode == 289) and receiver is Tween:"
+    )
     appendLine("\t\tvar proposed_handle := int(args[2])")
     appendLine("\t\tvar target_handle := int(args[3])")
     appendLine(
@@ -3435,6 +3437,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif target != null and opcode == 136:")
     appendLine(
       "\t\t\ttweener = (receiver as Tween).tween_property(target, NodePath(String(args[4])), Vector3(float(args[5]), float(args[6]), float(args[7])), float(args[8]))"
+    )
+    // Task 64: the SCALAR arm. A component path ("position:y") takes a plain number, so this
+    // passes float(args[5]) straight through rather than composing a vector.
+    appendLine("\t\telif target != null and opcode == 289:")
+    appendLine(
+      "\t\t\ttweener = (receiver as Tween).tween_property(target, NodePath(String(args[4])), float(args[5]), float(args[6]))"
     )
     appendLine("\t\tif tweener != null:")
     appendLine("\t\t\t_kanama_object_handles[proposed_handle] = tweener")

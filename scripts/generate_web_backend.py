@@ -331,6 +331,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     286: {},
     287: {},
     288: {},
+    289: {},
 }
 
 
@@ -1231,6 +1232,25 @@ def body_OBJECT_RET_HANDLE(calls):
     ]
 
 
+def body_OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        "require(duration.isFinite() && duration >= 0.0)",
+        "require(finalValue.isFinite())",
+        "commands.flush()",
+        "return registerReturnedBrowserObject(",
+        "immediateWebTweenPropertyDouble(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "target.webId(),",
+        "property,",
+        "finalValue,",
+        "duration,",
+        ")",
+        ")",
+    ]
+
+
 def body_OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -1858,6 +1878,16 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ],
         "GodotHandle?",
     ),
+    "OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE": (
+        [
+            "receiver: GodotHandle",
+            "target: GodotHandle",
+            "property: String",
+            "finalValue: Double",
+            "duration: Double",
+        ],
+        "GodotHandle?",
+    ),
     "CALLABLE_RET_HANDLE": (
         ["receiver: GodotHandle", "target: GodotHandle", "method: String"],
         "GodotHandle?",
@@ -2174,6 +2204,7 @@ EMIT_ORDER = [
     "LONG_ARG_SINGLETON",
     "OBJECT_RET_HANDLE",
     "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE",
+    "OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE",
     "CALLABLE_RET_HANDLE",
     "NOARGS_RET_LONG_SINGLETON",
     "STRINGNAME_OBJECT_RET_INT",

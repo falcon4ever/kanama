@@ -139,6 +139,15 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`signalProbe: mask=${signalProbe}`);
 
+  // Task 64: the scalar tween arm (see Main.scalar_tween_probe). 1 = a NUMBER final value
+  // produced a live PropertyTweener instead of faulting the boundary.
+  const scalarTween = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("scalar_tween_probe")}, 0)`,
+    ),
+  );
+  trace(`scalarTweenProbe: ${scalarTween}`);
+
   // Task 80 dispatch-shape conformance: Main.dispatch_probe (method#16, Int->Int)
   // returns a mask. Every bit is a shape task 80 admitted, exercised through the REAL crossing
   // (Kotlin asks Godot to call the method by name, Godot dispatches to the generated GDScript
@@ -292,6 +301,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // argument-dropped member a build error, so the fixture failed to compile when this probe
     // first tried it -- see the note on signal_probe in Main.kt.
     signalShapesDeliverPayloads: signalProbe === 3,
+    // Task 64: tween_property with a NUMBER. Vector2/Color/Vector3 all had arms and this one
+    // did not, so third-person's coin spill faulted the Web boundary on a component path.
+    scalarTweenArmDelivers: scalarTween === 1,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
     dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.

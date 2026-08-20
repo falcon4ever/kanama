@@ -381,6 +381,19 @@ class Main(godotObject: GodotHandle) :
    * payload "reaches Kotlin only through a named registered-method connect", an escape hatch the
    * build no longer permits anyone to take.
    */
+  /**
+   * Task 64: the SCALAR tween arm. Before it existed, `tween_property` with a NUMBER fell to
+   * `unsupportedWebGameplayCall` and faulted the boundary -- Vector2/Color/Vector3 all had arms,
+   * so a shape audit saw a full set and third-person's coin spill died on a component path
+   * (`"position:y"`). Returns 1 when the tweener came back live.
+   */
+  @RegisterFunction("scalar_tween_probe")
+  fun scalarTweenProbe(value: Long): Long {
+    val tween = self.createTween() ?: return 0L
+    val tweener = tween.tweenProperty(self, "position:y", 0.0, 0.05)
+    return if (tweener != null) 1L else 0L
+  }
+
   @RegisterFunction("signal_probe")
   fun signalProbe(value: Long): Long {
     var mask = 0L

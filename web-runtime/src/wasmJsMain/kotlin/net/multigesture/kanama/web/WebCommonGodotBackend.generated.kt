@@ -1246,6 +1246,32 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     )
   }
 
+  override fun invokeObjectNodePathDoubleDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    target: GodotHandle,
+    property: String,
+    finalValue: Double,
+    duration: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(duration.isFinite() && duration >= 0.0)
+    require(finalValue.isFinite())
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebTweenPropertyDouble(
+        descriptor.opcode,
+        receiver.webId(),
+        target.webId(),
+        property,
+        finalValue,
+        duration,
+      )
+    )
+  }
+
   override fun invokeCallableRetHandle(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

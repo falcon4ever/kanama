@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 19;
+  const KANAMA_WEB_PROTOCOL_VERSION = 20;
 
   function commandWordCount(opcode) {
     if (
@@ -2027,6 +2027,12 @@
       // Rides the generic tween-property flow: the "property" slot carries the method name
       // and the returned CallbackTweener registers as a tween child for release.
       return this.immediateTweenProperty(opcode, tweenHandle, targetHandle, method, []);
+    },
+    immediateTweenPropertyDouble(opcode, tweenHandle, targetHandle, property, value, duration) {
+      // Task 64: the SCALAR arm. A component path like "position:y" takes a number, and its
+      // absence is why third-person's coin spill faulted the boundary -- every other tween
+      // shape was here, so the hole never showed up in a shape audit.
+      return this.immediateTweenProperty(opcode, tweenHandle, targetHandle, property, [value, duration]);
     },
     immediateTweenPropertyVector2(opcode, tweenHandle, targetHandle, property, x, y, duration) {
       if (this.mode === "match3" && property === "position") {

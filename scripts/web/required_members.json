@@ -224,7 +224,7 @@
         },
         {
           "member": "Player.damage",
-          "reason": "Boundary-crossing (BeetleBot attack / bee Bullet both reach it via collider.call) but currently FAULTS on Web when it lands: the coin-spill -> CoinsContainer tween passes a NUMBER to Tween.tween_property, the known gap (task 57e backlog / task 81 confirmed break #3). MEASURED 2026-08-12: a beetle attack landing during an extended thirdperson run fatals the boundary (why the driver runs combat BEFORE movement). Require only after the tween number arm lands."
+          "reason": "Boundary-crossing (BeetleBot attack / bee Bullet both reach it via collider.call) but currently FAULTS on Web when it lands: the coin-spill -> CoinsContainer tween passes a NUMBER to Tween.tween_property, the known gap (task 57e backlog / task 81 confirmed break #3). MEASURED 2026-08-12: a beetle attack landing during an extended thirdperson run fatals the boundary (why the driver runs combat BEFORE movement). The tween NUMBER arm LANDED (task 64, opcode 289): a component path such as 'position:y' now has a real arm instead of unsupportedWebGameplayCall, and the web3d fixture proves it (scalar_tween_probe). Still not promotable to required here, for a DIFFERENT reason: no driver spills coins, so the member is never exercised and promoting it would fail the gate. Needs a driver step first."
         }
       ]
     },

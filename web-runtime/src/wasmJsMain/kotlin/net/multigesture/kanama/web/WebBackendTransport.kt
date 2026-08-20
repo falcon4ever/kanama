@@ -184,6 +184,18 @@ internal fun immediateWebTweenPropertyVector3(
     "globalThis.KanamaWebBridge.immediateTweenPropertyVector3(opcode, tweenId, targetId, property, x, y, z, duration)"
   )
 
+internal fun immediateWebTweenPropertyDouble(
+  opcode: Int,
+  tweenId: Int,
+  targetId: Int,
+  property: String,
+  value: Double,
+  duration: Double,
+): Int =
+  js(
+    "globalThis.KanamaWebBridge.immediateTweenPropertyDouble(opcode, tweenId, targetId, property, value, duration)"
+  )
+
 internal fun immediateWebTweenCallback(
   opcode: Int,
   tweenId: Int,
