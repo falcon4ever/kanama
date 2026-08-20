@@ -218,19 +218,19 @@
         },
         {
           "member": "Player.damage",
-          "reason": "PROMOTED 2026-08-20 (task 64 coin economy). Same (VECTOR3, VECTOR3) shape as the two bot damage members, and the one a BeetleBot attack / bee Bullet lands in play via collider.call. It was a 'todo' for two successive reasons: first it FAULTED on Web (loseCoins -> CoinsContainer's tween_property passes a NUMBER, and the Web backend had no scalar arm -- task 81 confirmed break #3, which is why the driver still runs combat BEFORE movement), then, once task 64 landed the scalar arm (opcode 289), because NO DRIVER SPILLED COINS so the member was never exercised. thirdperson.mjs's coin-economy phase now dispatches it directly. MEASURED chrome 2026-08-20, protocol 21: census Player.damage = 1, crossings.coinsSpilled = 5, callbackErrors 0. KANAMA_WEB_T81_FALSIFY=no-coins suppresses exactly this."
+          "reason": "PROMOTED 2026-08-20 (task 64 coin economy). Same (VECTOR3, VECTOR3) shape as the two bot damage members, and the one a BeetleBot attack / bee Bullet lands in play via collider.call. It was a 'todo' for two successive reasons: first it FAULTED on Web (loseCoins -> CoinsContainer's tween_property passes a NUMBER, and the Web backend had no scalar arm -- task 81 confirmed break #3, which is why the driver still runs combat BEFORE movement), then, once task 64 landed the scalar arm (opcode 289), because NO DRIVER SPILLED COINS so the member was never exercised. thirdperson.mjs's coin-economy phase now dispatches it directly. MEASURED on chrome (3 runs) AND firefox 2026-08-20, protocol 21: census Player.damage = 1, crossings.coinsSpilled = 5, callbackErrors 0, teardown still draining to zero handles. KANAMA_WEB_T81_FALSIFY=no-coins suppresses exactly this."
         },
         {
           "member": "Player.collect_coin",
-          "reason": "The coin-economy phase seeds the player's purse with five of these before the spill (loseCoins only spawns min(coins, 5) coins, so an empty purse spills nothing). Each one also runs the CoinsContainer scalar tween, so a regressed task-64 arm faults HERE, before the spill, rather than silently skipping it. MEASURED chrome 2026-08-20: census Player.collect_coin = 5."
+          "reason": "The coin-economy phase seeds the player's purse with five of these before the spill (loseCoins only spawns min(coins, 5) coins, so an empty purse spills nothing). Each one also runs the CoinsContainer scalar tween, so a regressed task-64 arm faults HERE, before the spill, rather than silently skipping it. MEASURED on chrome (3 runs) AND firefox 2026-08-20: census Player.collect_coin = 5."
         },
         {
           "member": "Coin._follow",
-          "reason": "The vacuum tween's per-step callback, dispatched BY NAME through the engine's Tween (tween_method) -- i.e. a real JS<->Kotlin crossing, not a Kotlin-to-Kotlin call. It is the first gameplay member on Web whose dispatcher is a Tween interpolation rather than a proxy method or a virtual. MEASURED chrome 2026-08-20: 20 dispatches for 5 coins."
+          "reason": "The vacuum tween's per-step callback, dispatched BY NAME through the engine's Tween (tween_method) -- i.e. a real JS<->Kotlin crossing, not a Kotlin-to-Kotlin call. It is the first gameplay member on Web whose dispatcher is a Tween interpolation rather than a proxy method or a virtual. The dispatch COUNT is host-paced (chrome 20, firefox 145 for the same five coins, because the tween interpolates per rendered frame), so only its presence is required, never a magnitude. MEASURED 2026-08-20."
         },
         {
           "member": "Coin._collect",
-          "reason": "The vacuum tween's terminal callback (tween_callback), one per collected coin, and the ONLY boundary-crossing evidence that the coin actually reached the player: it is what re-enters Player.collectCoin -> CoinsContainer.updateCoinsAmount -> the scalar tween. MEASURED chrome 2026-08-20: 5 dispatches for 5 spilled coins, callbackErrors 0."
+          "reason": "The vacuum tween's terminal callback (tween_callback), one per collected coin, and the ONLY boundary-crossing evidence that the coin actually reached the player: it is what re-enters Player.collectCoin -> CoinsContainer.updateCoinsAmount -> the scalar tween. Exactly one per coin on both engines, so unlike _follow this one IS counted: MEASURED chrome (3 runs) and firefox 2026-08-20, 5 dispatches for 5 spilled coins, callbackErrors 0."
         }
       ],
       "todo": [
