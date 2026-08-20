@@ -1272,6 +1272,27 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     )
   }
 
+  override fun invokeColorRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotColor,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    commands.flush()
+    return registerReturnedBrowserObject(
+      immediateWebColorRetHandle(
+        descriptor.opcode,
+        receiver.webId(),
+        value.r.toDouble(),
+        value.g.toDouble(),
+        value.b.toDouble(),
+        value.a.toDouble(),
+      )
+    )
+  }
+
   override fun invokeCallableRetHandle(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

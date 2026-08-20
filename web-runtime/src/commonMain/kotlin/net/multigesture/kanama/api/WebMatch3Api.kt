@@ -723,6 +723,28 @@ class PropertyTweener internal constructor(backendHandle: BackendGodotHandle) :
   fun setEase(ease: Long): PropertyTweener =
     wrapOrThis(PropertyTweenerBackendContractProbe(backendHandle).setEase(ease))
 
+  /**
+   * Task 64 tier 2: a custom starting value, COLOR arm.
+   *
+   * Desktop takes `Any?` because it rides a Variant ptrcall. Web needs a typed arm per
+   * value shape, and Color is the one the corpus uses (Icone's fade). Anything else names
+   * the arms that DO exist rather than failing vaguely -- the tween-property family taught
+   * us that a partial set of arms looks complete from the outside.
+   */
+  fun from(value: Any?): PropertyTweener =
+    when (value) {
+      is Color ->
+        wrapOrThis(
+          PropertyTweenerBackendContractProbe(backendHandle)
+            .from(GodotColor(value.r, value.g, value.b, value.a))
+        )
+      else ->
+        unsupportedWebGameplayCall(
+          "PropertyTweener.from value ${value?.let { it::class.simpleName } ?: "null"} " +
+            "(the Web backend has the Color arm only)"
+        )
+    }
+
   private fun wrapOrThis(value: BackendGodotHandle?): PropertyTweener =
     if (value == null || value.backendToken() == backendHandle.backendToken()) this
     else PropertyTweener(value)

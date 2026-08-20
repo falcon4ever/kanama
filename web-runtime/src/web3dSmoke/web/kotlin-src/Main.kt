@@ -31,6 +31,7 @@ import net.multigesture.kanama.api.SceneTree
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -392,6 +393,28 @@ class Main(godotObject: GodotHandle) :
     val tween = self.createTween() ?: return 0L
     val tweener = tween.tweenProperty(self, "position:y", 0.0, 0.05)
     return if (tweener != null) 1L else 0L
+  }
+
+  /**
+   * Task 64 tier 2: PropertyTweener.from, COLOR arm. Returns 1 when the call came back with
+   * a live tweener.
+   *
+   * `from` is SELF-RETURNING, so a broken arm and a working one both hand back the same
+   * handle -- "it returned something" proves nothing. The probe therefore asserts the
+   * returned tweener is the SAME object the tween produced (identity), which is what the
+   * fluent contract promises and what a dropped call would break by returning null.
+   */
+  @RegisterFunction("tweener_from_probe")
+  fun tweenerFromProbe(value: Long): Long {
+    // A COLOR property, because from() must agree with the tween's value type -- Godot
+    // rejects "float and Color" outright, which is exactly what the first draft of this
+    // probe did. Sun is the fixture's DirectionalLight3D and light_color is a real Color.
+    val sun = self.getAsOrNull(NodePath("Sun"), ::Node3D) ?: return 0L
+    val tween = self.createTween() ?: return 0L
+    val tweener =
+      tween.tweenProperty(sun, "light_color", Color(1f, 1f, 1f, 1f), 0.05) ?: return 0L
+    val chained = tweener.from(Color(0.5f, 0.5f, 0.5f, 1f))
+    return if (chained.handle.value == tweener.handle.value) 1L else 0L
   }
 
   @RegisterFunction("signal_probe")

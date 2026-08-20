@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 20"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 21"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -617,7 +617,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 20"))
+    assertTrue(protocol.contains("\"protocolVersion\": 21"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -628,7 +628,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=20\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=21\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1638,7 +1638,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 20"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 21"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
