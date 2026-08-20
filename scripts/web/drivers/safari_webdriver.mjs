@@ -286,16 +286,21 @@ async function main() {
       if (globalThis.__kanamaSafariConsole) return 1;
       const sink = [];
       globalThis.__kanamaSafariConsole = sink;
+      // Task 90: emit the SAME event shape the other drivers do -- type "console.error" or
+      // "exception", text RAW. envelope.mjs already classifies Godot's WARNING: lines and
+      // pointer-lock rejections as non-fatal; it could not do that for Safari while this hook
+      // invented its own type and double-prefixed the text ("console.error: WARNING: ..."),
+      // so every renderer warning read as a hard error and tpsdemo failed a leg Chrome passed.
       const original = console.error ? console.error.bind(console) : null;
       console.error = (...parts) => {
-        try { sink.push({ type: "error", text: "console.error: " + parts.map(String).join(" ") }); } catch (_) {}
+        try { sink.push({ type: "console.error", text: parts.map(String).join(" ") }); } catch (_) {}
         if (original) original(...parts);
       };
       addEventListener("error", (event) => {
-        sink.push({ type: "error", text: "uncaught: " + (event.message || String(event.error)) });
+        sink.push({ type: "exception", text: event.message || String(event.error) });
       });
       addEventListener("unhandledrejection", (event) => {
-        sink.push({ type: "error", text: "unhandled rejection: " + String(event.reason) });
+        sink.push({ type: "exception", text: String(event.reason) });
       });
       return 1;
     })()`;

@@ -222,7 +222,10 @@ export function buildEnvelope({
       // Headless browsers reject pointer lock without a user gesture/focus; Godot's
       // mouse-capture request then surfaces as a WrongDocumentError (an async exception in
       // Chrome, a console error in Firefox). Environmental, not a game fault.
-      /WrongDocumentError/.test(event.text);
+      /WrongDocumentError/.test(event.text) ||
+      // Safari states the same refusal differently: it requires a genuine user gesture and a
+      // WebDriver-synthesized click does not qualify. Same environmental cause, same verdict.
+      /NotAllowedError.*Pointer lock requires a user gesture/.test(event.text);
     (isWarning ? consoleWarnings : consoleErrors).push(`${event.type}: ${event.text}`);
     lastWasWarning = isWarning;
   }
