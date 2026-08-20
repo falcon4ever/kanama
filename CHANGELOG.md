@@ -7,6 +7,60 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — Web behaviour (agent-surface audit, tasks 88/89)
+
+An adversarial audit of the Web backend's agent-written surfaces found and closed
+nineteen defects. The ones that change what a running script does:
+
+- **Queued mutations issued from a Kotlin lambda signal callback were silently
+  discarded.** Any `queue_free`, property write or `add_child` made from inside a
+  `connect { ... }` lambda never reached Godot: the boundary returned without flushing
+  the command buffer. Every Web boundary that runs user Kotlin now flushes.
+- **Re-parenting a node destroyed its script state.** `_exit_tree` tore the Kotlin
+  instance down, so a node removed and re-added — a pooling pattern, or any
+  `reparent()` — came back blank. Teardown moved to `NOTIFICATION_PREDELETE`, where
+  Godot actually means it. (Protocol 19.)
+- **A `queue_free`'d node became uncallable immediately** instead of surviving to the
+  end of the frame as it does on desktop.
+- **A null element in an exported object array arrived as a live wrapper.** The array
+  arm minted a browser handle for `null`, so a script read a real-looking object where
+  its scene held nothing. Null now stays null; if the element type is non-nullable the
+  build fails naming the property and the fix, rather than fabricating a value.
+- **`tween_property` with a NUMBER had no arm.** Vector2, Color and Vector3 all worked,
+  so a component path — `tween_property(node, "position:y", 4.0, 0.5)` — faulted the
+  Web boundary. (Protocol 20.)
+- Handle-seeding and snapshot-refresh parity fixes for objects arriving through
+  sibling paths, and a self-snapshot refresh guarded for nodes outside the tree.
+
+### Fixed — gates that certified the wrong thing
+
+Several gates passed without testing what they claimed. These are developer-facing, but
+they are why the defects above went unseen:
+
+- The **post-teardown invariant was never enforced at all**, and nine drivers asserted
+  it tautologically.
+- **A GDScript parse error did not fail the export** — a broken proxy shipped as BUILD
+  SUCCESSFUL.
+- **Safari reported an empty console it had never observed**, making the
+  zero-console-errors pass leg vacuous on the one engine that gate exists for.
+- **Safari runs on a locked screen produced meaningless results**: the engine advances a
+  few frames and stops, and the run fails inside a demo assertion with nothing naming
+  the cause. The driver now refuses to start in that state.
+- The envelope schema's pass mirror now encodes all four legs; the protocol check is
+  derived from the export manifest rather than hardcoded.
+
+### Added — checks that would have caught them
+
+- **Exercised-member coverage report** naming every declared member no driver reaches,
+  and a **desktop↔Web differential probe**.
+- **A backend conformance fixture** asserting that every typed property and signal shape
+  delivers its *value*, not merely a dispatch.
+- **A build failure when a lifecycle annotation is imported but never applied** — a dead
+  `@OnReady` had silently disabled a demo's pause-time input handling.
+- **Documentation claims are checked against their sources**, so a marked claim fails the
+  build when the code moves out from under it.
+
+
 - Exported desktop games are published as CI artifacts
   (`kanama-exported-game-<target>`) so the build CI already boots can be tested
   on real hardware without rebuilding.
