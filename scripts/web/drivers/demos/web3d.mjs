@@ -148,6 +148,14 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`scalarTweenProbe: ${scalarTween}`);
 
+  // Task 64 tier 2: PropertyTweener.from (see Main.tweener_from_probe).
+  const tweenerFrom = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("tweener_from_probe")}, 0)`,
+    ),
+  );
+  trace(`tweenerFromProbe: ${tweenerFrom}`);
+
   // Task 80 dispatch-shape conformance: Main.dispatch_probe (method#16, Int->Int)
   // returns a mask. Every bit is a shape task 80 admitted, exercised through the REAL crossing
   // (Kotlin asks Godot to call the method by name, Godot dispatches to the generated GDScript
@@ -304,6 +312,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64: tween_property with a NUMBER. Vector2/Color/Vector3 all had arms and this one
     // did not, so third-person's coin spill faulted the Web boundary on a component path.
     scalarTweenArmDelivers: scalarTween === 1,
+    // Task 64 tier 2: from() returned the SAME tweener, which is what the fluent contract
+    // promises -- a dropped call returns null and clears this.
+    propertyTweenerFromDelivers: tweenerFrom === 1,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
     dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.

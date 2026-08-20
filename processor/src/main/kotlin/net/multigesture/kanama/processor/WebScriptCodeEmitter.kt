@@ -134,7 +134,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
      * happened to name.
      */
-    const val PROTOCOL_VERSION = 20
+    const val PROTOCOL_VERSION = 21
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -3459,6 +3459,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tresult_handle = receiver_handle")
     appendLine("\telif opcode == 42 and receiver is PropertyTweener:")
     appendLine("\t\t(receiver as PropertyTweener).set_ease(int(args[2]))")
+    appendLine("\t\tresult_handle = receiver_handle")
+    // Task 64 tier 2: from() takes a Variant; the COLOR arm carries its four components in
+    // the numeric slots the tween-property appliers already use.
+    appendLine("\telif opcode == 290 and receiver is PropertyTweener:")
+    appendLine(
+      "\t\t(receiver as PropertyTweener).from(Color(float(args[5]), float(args[6]), float(args[7]), float(args[8])))"
+    )
     appendLine("\t\tresult_handle = receiver_handle")
     appendLine("\telif opcode == 134 and receiver is Tween:")
     appendLine(

@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 20;
+  const KANAMA_WEB_PROTOCOL_VERSION = 21;
 
   function commandWordCount(opcode) {
     if (
@@ -2027,6 +2027,15 @@
       // Rides the generic tween-property flow: the "property" slot carries the method name
       // and the returned CallbackTweener registers as a tween child for release.
       return this.immediateTweenProperty(opcode, tweenHandle, targetHandle, method, []);
+    },
+    immediateColorRetHandle(opcode, objectId, r, g, b, a) {
+      // Task 64 tier 2: a fluent PropertyTweener call that returns the receiver, so it
+      // reuses the tween-callback channel and reports the SAME handle back rather than
+      // minting one -- the proxy sets result_handle = receiver_handle.
+      const callback = this.callbackFor(this.tweenCallbacks, objectId, "Godot PropertyTweener color");
+      this.immediateObjectHandleResult = null;
+      callback(opcode, objectId, 0, 0, "", r, g, b, a);
+      return this.immediateObjectHandleResult === objectId ? objectId : 0;
     },
     immediateTweenPropertyDouble(opcode, tweenHandle, targetHandle, property, value, duration) {
       // Task 64: the SCALAR arm. A component path like "position:y" takes a number, and its

@@ -3183,6 +3183,17 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
     )
 
+  val PROPERTY_TWEENER_FROM_COLOR =
+    GodotCallDescriptor(
+      opcode = 290,
+      className = "PropertyTweener",
+      methodName = "from",
+      hash = 4190193059L,
+      shape = GodotCallShape.COLOR_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 289
+  const val MAX_OPCODE = 290
 }

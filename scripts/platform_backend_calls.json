@@ -4552,6 +4552,23 @@
       "semantics": "SCALAR variant of the property tweener: a component path such as \"position:y\" takes a number, not a vector. Its absence is why third-person's coin spill (CoinsContainer) faulted the Web boundary -- every other tween shape existed, so nothing flagged the hole.",
       "introducedBy": "64-tween-double-arm",
       "descriptorName": "TWEEN_TWEEN_PROPERTY_DOUBLE"
+    },
+    {
+      "opcode": 290,
+      "scope": "class",
+      "className": "PropertyTweener",
+      "methodName": "from",
+      "hash": 4190193059,
+      "arguments": [
+        "Variant"
+      ],
+      "returnType": "PropertyTweener",
+      "shape": "COLOR_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "Custom starting value for a property tween, COLOR arm. Icone's fade runs from the opposite alpha rather than from wherever modulate happened to sit; without it the web override had to drop from() and animate differently than desktop.",
+      "introducedBy": "64-tier2-property-tweener-from",
+      "descriptorName": "PROPERTY_TWEENER_FROM_COLOR"
     }
   ],
   "compositions": [
