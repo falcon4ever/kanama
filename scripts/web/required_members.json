@@ -215,6 +215,22 @@
         {
           "member": "BeetleBot.damage",
           "reason": "The second desktop damage routine (kotlin-src/SmokeQuit.kt:267 sibling), same shape and evidence as BeeBot.damage; the driver additionally asserts both death frees via liveScriptsByClass."
+        },
+        {
+          "member": "Player.damage",
+          "reason": "PROMOTED 2026-08-20 (task 64 coin economy). Same (VECTOR3, VECTOR3) shape as the two bot damage members, and the one a BeetleBot attack / bee Bullet lands in play via collider.call. It was a 'todo' for two successive reasons: first it FAULTED on Web (loseCoins -> CoinsContainer's tween_property passes a NUMBER, and the Web backend had no scalar arm -- task 81 confirmed break #3, which is why the driver still runs combat BEFORE movement), then, once task 64 landed the scalar arm (opcode 289), because NO DRIVER SPILLED COINS so the member was never exercised. thirdperson.mjs's coin-economy phase now dispatches it directly. MEASURED chrome 2026-08-20, protocol 21: census Player.damage = 1, crossings.coinsSpilled = 5, callbackErrors 0. KANAMA_WEB_T81_FALSIFY=no-coins suppresses exactly this."
+        },
+        {
+          "member": "Player.collect_coin",
+          "reason": "The coin-economy phase seeds the player's purse with five of these before the spill (loseCoins only spawns min(coins, 5) coins, so an empty purse spills nothing). Each one also runs the CoinsContainer scalar tween, so a regressed task-64 arm faults HERE, before the spill, rather than silently skipping it. MEASURED chrome 2026-08-20: census Player.collect_coin = 5."
+        },
+        {
+          "member": "Coin._follow",
+          "reason": "The vacuum tween's per-step callback, dispatched BY NAME through the engine's Tween (tween_method) -- i.e. a real JS<->Kotlin crossing, not a Kotlin-to-Kotlin call. It is the first gameplay member on Web whose dispatcher is a Tween interpolation rather than a proxy method or a virtual. MEASURED chrome 2026-08-20: 20 dispatches for 5 coins."
+        },
+        {
+          "member": "Coin._collect",
+          "reason": "The vacuum tween's terminal callback (tween_callback), one per collected coin, and the ONLY boundary-crossing evidence that the coin actually reached the player: it is what re-enters Player.collectCoin -> CoinsContainer.updateCoinsAmount -> the scalar tween. MEASURED chrome 2026-08-20: 5 dispatches for 5 spilled coins, callbackErrors 0."
         }
       ],
       "todo": [
@@ -223,8 +239,16 @@
           "reason": "Same (VECTOR3, VECTOR3) shape, but no driver choreography destroys a box yet (the desktop smoke does not call it either); the grenade/bullet paths that reach it are ranked gaps #8/#9 in the task-81 spec."
         },
         {
-          "member": "Player.damage",
-          "reason": "Boundary-crossing (BeetleBot attack / bee Bullet both reach it via collider.call) but currently FAULTS on Web when it lands: the coin-spill -> CoinsContainer tween passes a NUMBER to Tween.tween_property, the known gap (task 57e backlog / task 81 confirmed break #3). MEASURED 2026-08-12: a beetle attack landing during an extended thirdperson run fatals the boundary (why the driver runs combat BEFORE movement). The tween NUMBER arm LANDED (task 64, opcode 289): a component path such as 'position:y' now has a real arm instead of unsupportedWebGameplayCall, and the web3d fixture proves it (scalar_tween_probe). Still not promotable to required here, for a DIFFERENT reason: no driver spills coins, so the member is never exercised and promoting it would fail the gate. Needs a driver step first."
+          "member": "CoinsContainer.update_coins_amount",
+          "reason": "The coin HUD's only registered member, and the caller of the NUMBER tween_property that task 64 fixed -- but it CANNOT be required here: Player holds the container through kotlinScriptInstance<CoinsContainer>() and calls it Kotlin-to-Kotlin, so it never crosses the boundary the census watches. Transitive evidence instead: Player.collect_coin and Coin._collect are required above, both of them call it on the very next line, and the run's noCallbackFaults check fails if its tween finds no scalar arm (that is exactly how the pre-task-64 boundary died). Requiring it would need a driver-reachable caller, which the demo does not have."
+        },
+        {
+          "member": "Player.lose_coins",
+          "reason": "Reached only from Player.damage, in-Kotlin, so it never crosses. Covered transitively: Player.damage is required above and crossings.coinsSpilled (5) is the count of coins this member instantiated."
+        },
+        {
+          "member": "Coin.spawn",
+          "reason": "Called Kotlin-to-Kotlin by whoever bursts the coins (Player.loseCoins, BeeBot/BeetleBot death). Covered transitively by Coin._follow/_collect: nothing tweens home unless spawn connected the detection area first."
         }
       ]
     },
