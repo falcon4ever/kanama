@@ -332,6 +332,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     287: {},
     288: {},
     289: {},
+    290: {},
 }
 
 
@@ -1232,6 +1233,23 @@ def body_OBJECT_RET_HANDLE(calls):
     ]
 
 
+def body_COLOR_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        "commands.flush()",
+        "return registerReturnedBrowserObject(",
+        "immediateWebColorRetHandle(",
+        "descriptor.opcode,",
+        "receiver.webId(),",
+        "value.r.toDouble(),",
+        "value.g.toDouble(),",
+        "value.b.toDouble(),",
+        "value.a.toDouble(),",
+        ")",
+        ")",
+    ]
+
+
 def body_OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -1888,6 +1906,10 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ],
         "GodotHandle?",
     ),
+    "COLOR_RET_HANDLE": (
+        ["receiver: GodotHandle", "value: GodotColor"],
+        "GodotHandle?",
+    ),
     "CALLABLE_RET_HANDLE": (
         ["receiver: GodotHandle", "target: GodotHandle", "method: String"],
         "GodotHandle?",
@@ -2205,6 +2227,7 @@ EMIT_ORDER = [
     "OBJECT_RET_HANDLE",
     "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE",
     "OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE",
+    "COLOR_RET_HANDLE",
     "CALLABLE_RET_HANDLE",
     "NOARGS_RET_LONG_SINGLETON",
     "STRINGNAME_OBJECT_RET_INT",

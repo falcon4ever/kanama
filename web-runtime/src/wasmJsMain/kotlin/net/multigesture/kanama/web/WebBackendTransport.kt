@@ -184,6 +184,15 @@ internal fun immediateWebTweenPropertyVector3(
     "globalThis.KanamaWebBridge.immediateTweenPropertyVector3(opcode, tweenId, targetId, property, x, y, z, duration)"
   )
 
+internal fun immediateWebColorRetHandle(
+  opcode: Int,
+  objectId: Int,
+  r: Double,
+  g: Double,
+  b: Double,
+  alpha: Double,
+): Int = js("globalThis.KanamaWebBridge.immediateColorRetHandle(opcode, objectId, r, g, b, alpha)")
+
 internal fun immediateWebTweenPropertyDouble(
   opcode: Int,
   tweenId: Int,

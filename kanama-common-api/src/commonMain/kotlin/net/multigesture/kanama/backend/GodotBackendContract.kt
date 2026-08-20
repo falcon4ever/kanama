@@ -69,6 +69,7 @@ enum class GodotCallShape {
   OBJECT_RET_HANDLE,
   OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE,
   OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE,
+  COLOR_RET_HANDLE,
   CALLABLE_RET_HANDLE,
   NOARGS_RET_LONG_SINGLETON,
   STRINGNAME_OBJECT_RET_INT,
@@ -576,6 +577,22 @@ interface GodotBackendSpi {
     property: String,
     finalValue: Double,
     duration: Double,
+  ): GodotHandle? {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /**
+   * A fluent call taking a COLOR and returning the receiver -- `PropertyTweener.from(Color)`.
+   *
+   * Task 64 tier 2: Icone's fade sets a custom starting value so the tween runs from the opposite
+   * alpha rather than from wherever the modulate happened to be. Without this the web override had
+   * to drop `from(...)` entirely, which is a different animation.
+   */
+  fun invokeColorRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: GodotColor,
   ): GodotHandle? {
     error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
   }
@@ -2063,6 +2080,17 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeColorRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: GodotColor,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.COLOR_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeColorRetHandle(descriptor, resolve(selected, descriptor), receiver, value)
+  }
+
   fun invokeCallableRetHandle(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
@@ -2419,6 +2447,14 @@ class PropertyTweenerBackendContractProbe(private val handle: GodotHandle) {
       InitialGodotCallDescriptors.PROPERTYTWEENER_SET_EASE,
       handle,
       ease,
+    )
+
+  /** Task 64 tier 2: custom starting value, COLOR arm. */
+  fun from(value: GodotColor): GodotHandle? =
+    GodotBackendCalls.invokeColorRetHandle(
+      InitialGodotCallDescriptors.PROPERTY_TWEENER_FROM_COLOR,
+      handle,
+      value,
     )
 }
 
