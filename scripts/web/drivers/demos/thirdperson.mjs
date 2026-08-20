@@ -2,8 +2,8 @@
 // Web smoke.
 //
 // The demo boots PAUSED behind its instructions page: the driver first dispatches
-// SmokeQuit.smoke_resume (method#1) to press through. COMBAT runs next (task 81 fix #3):
-// SmokeQuit.smoke_combat (method#3) ports the desktop smoke's two damage(Vector3, Vector3)
+// SmokeQuit.smoke_resume to press through. COMBAT runs next (task 81 fix #3):
+// SmokeQuit.smoke_combat ports the desktop smoke's two damage(Vector3, Vector3)
 // calls -- the FPS damage bug's sibling shape -- onto the scene's own near bee and beetle,
 // and the driver asserts both deaths (liveScriptsByClass decrement on the death
 // coroutine's free, the fps.mjs pattern) while the exercised-member census gates the
@@ -11,13 +11,22 @@
 // the ORDER IS LOAD-BEARING note at the combat phase. Then the driver holds move_up via
 // the trusted per-engine transport and PROVES movement by reading the player's global
 // position through the bridge's immediate Vector3 channel (opcode 138); remaining enemy
-// AI is self-evidencing while the world runs (far bots navigate and bob). smoke_teardown
-// (method#2) releases the scene caches and frees the root, draining every live handle to
-// zero.
+// AI is self-evidencing while the world runs (far bots navigate and bob). The COIN
+// ECONOMY phase runs last (task 64: see the note at the phase itself). smoke_teardown
+// releases the scene caches and frees the root, draining every live handle to zero.
+//
+// Method ids are resolved from the export's own manifest by NAME, never hardcoded: ids are
+// positional, so appending one @RegisterFunction above another renumbers it and a pinned id
+// then dispatches a DIFFERENT method while still "working" (task 80 slice 4/6).
 //
 // Falsification (task 81 requires every gate provably able to fail): set
 // KANAMA_WEB_T81_FALSIFY=no-combat to skip the smoke_combat dispatch and watch
-// botsKilledByDamageCall go false (and the census gate fail naming both damage members).
+// botsKilledByDamageCall go false (and the census gate fail naming both damage members),
+// or KANAMA_WEB_T81_FALSIFY=no-coins to skip the coin spill and watch
+// coinsSpilledByPlayerDamage/coinsCollectedByTweenCallbacks go false (and the census gate
+// fail naming Player.damage, Player.collect_coin, Coin._follow and Coin._collect).
+
+import { resolveMethodId } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -98,6 +107,33 @@ async function playerPosition(evaluate) {
   }
 }
 
+// The coin economy's own counters (task 64).
+//
+// `spawned`/`live` come from the ready/live class registries; `follows`/`collects` come
+// from the bridge's exercised-member census, which is keyed "method#<id>" IN THE PAGE --
+// the id->name resolution happens later, in envelope.mjs, against the export manifest. So
+// an in-run assertion has to ask by id, and the ids are resolved from that same manifest
+// (match3.mjs reads the census the same way for its _input proof).
+async function coinCensus(evaluate, followId, collectId) {
+  try {
+    return await evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      if (!bridge) return null;
+      const forClass = (registry, suffix) =>
+        Object.entries(registry ?? {}).find(([n]) => n.endsWith(suffix))?.[1];
+      const bucket = forClass(bridge.exercisedMembers, ".Coin") ?? {};
+      return {
+        spawned: forClass(bridge.match3ReadyByClass, ".Coin") ?? 0,
+        live: forClass(bridge.liveScriptsByClass, ".Coin") ?? 0,
+        follows: bucket["method#${followId}"] ?? 0,
+        collects: bucket["method#${collectId}"] ?? 0,
+      };
+    })()`);
+  } catch {
+    return null; // page mid-navigation or torn down
+  }
+}
+
 // A single op-138 read can come back null under host load (the page briefly busy or
 // mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
 // BOUNDED and the caller's null handling is unchanged, so a position that STAYS
@@ -132,7 +168,24 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runThirdperson({ url, evaluate, navigate, deadline }) {
+export async function runThirdperson({ url, evaluate, navigate, deadline, exportDir }) {
+  // Every dispatched method id comes from the export's own manifest, by name. The old
+  // "method#1/method#2 are pinned, new methods must APPEND" contract in the demo's
+  // SmokeQuit doc comment was a landmine: appending is exactly what a contributor would
+  // NOT do if they grouped a new method with a related one.
+  const methodId = (className, name) => {
+    const id = resolveMethodId(exportDir, className, name);
+    if (!id) throw new Error(`thirdperson: ${className}.${name} not found in the export manifest`);
+    return id;
+  };
+  const smokeResumeId = methodId("thirdperson.SmokeQuit", "smoke_resume");
+  const smokeTeardownId = methodId("thirdperson.SmokeQuit", "smoke_teardown");
+  const smokeCombatId = methodId("thirdperson.SmokeQuit", "smoke_combat");
+  const collectCoinId = methodId("thirdperson.Player", "collect_coin");
+  const playerDamageId = methodId("thirdperson.Player", "damage");
+  const coinFollowId = methodId("thirdperson.Coin", "_follow");
+  const coinCollectId = methodId("thirdperson.Coin", "_collect");
+
   // Engine-level action injection (ops 86/87) on the player's own handle, the
   // same path racing and tpsdemo already use. Player.kt reads movement through
   // Input.get_vector("move_left", "move_right", "move_up", "move_down"), and
@@ -183,10 +236,10 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
   // The demo boots paused behind its instructions page; physics must be still.
   const pausedBefore = (await snapshot(evaluate))?.physicsCalls ?? 0;
 
-  // Press through the page (SmokeQuit.smoke_resume, method#1) and wait for physics.
+  // Press through the page (SmokeQuit.smoke_resume) and wait for physics.
   trace("smoke_resume");
   await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, 1); true",
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, ${smokeResumeId}); true`,
   );
   const resumed = await observe(
     evaluate,
@@ -200,7 +253,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
 
   // --- Combat FIRST: the desktop smoke's damage routines, ported (task 81 fix #3) ----
   //
-  // SmokeQuit.smoke_combat (method#3) calls damage(Vector3, Vector3) on the scene's own
+  // SmokeQuit.smoke_combat calls damage(Vector3, Vector3) on the scene's own
   // near bee and beetle through Object.call -- the same boundary crossing Bullet/Grenade/
   // MeleeAttackArea combat uses, and the registered-method shape that killed the whole
   // combat system silently (the FPS damage bug's sibling; the desktop SmokeQuit tested
@@ -229,7 +282,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
   if (FALSIFY !== "no-combat") {
     trace(`smoke_combat: bees=${beesBefore} beetles=${beetlesBefore}`);
     await evaluate(
-      "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, 3); true",
+      `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, ${smokeCombatId}); true`,
     );
     // Window MEASURED both ways (2026-08-12): healthy hosts break out in 1-3s, but the
     // first gated runner outing (main 31623511177) showed damage DISPATCHED (census
@@ -283,13 +336,85 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     : 0;
   trace(`ran: displacement=${displacement.toFixed(2)} physics=${peak.physicsCalls} live=${atPeak.liveHandles}`);
 
-  // Full teardown: smoke_teardown (method#2) releases the scene caches and frees the
-  // root; every node exits the tree and releases its handles.
+  // --- COIN ECONOMY: spill and collect (task 64) --------------------------------------
+  //
+  // The demo's coin loop was DARK on Web, and not by accident: smoke_combat deliberately
+  // zeroes each dying bot's coinsCount, because `CoinsContainer` slides its HUD with
+  // `tween_property(self, "position:y", <number>, 0.5)` and the Web backend had no SCALAR
+  // tween_property arm -- every other shape (Vector2/Vector3/Color) was there, so the hole
+  // never showed up in a shape audit. The first coin to reach the player faulted the whole
+  // boundary. Task 64 landed the scalar arm (bridge immediateTweenPropertyDouble); this
+  // phase is what turns that arm from a fixture claim (web3d's scalar_tween_probe) into a
+  // REAL gameplay path, and it is the driver step that unblocks Player.damage in
+  // scripts/web/required_members.json.
+  //
+  // Choreography, entirely through registered methods that already exist in the demo:
+  //   1. COIN_SEED x Player.collect_coin -- the purse; each one also runs the HUD's
+  //      scalar tween, so a regressed arm faults here, before the spill.
+  //   2. Player.damage(Vector3.ZERO, +Z) -- the boundary-crossing (VECTOR3, VECTOR3)
+  //      shape a beetle attack lands in play. It calls loseCoins(), which instantiates
+  //      min(coins, 5) real coins AT THE PLAYER and spawns them.
+  //   3. The coins' own vacuum does the rest: each coin's PlayerDetectionArea (r=5) is
+  //      centred on the player it spawned at, so body_entered fires on the next physics
+  //      frame and the coin tweens home -- `_follow` per interpolation step and `_collect`
+  //      at the end, both dispatched BY NAME through the engine's Tween, i.e. across the
+  //      JS<->Kotlin boundary where the census can see them. `_collect` calls back into
+  //      Player.collectCoin -> CoinsContainer.updateCoinsAmount -> the scalar tween again.
+  //
+  // A tiny +Z force keeps the knockback from moving the player anywhere; the damage, not
+  // the ragdoll, is the point. The phase runs AFTER the movement window so it cannot lend
+  // that window commands or displacement, and its own traffic is folded into a SEPARATE
+  // peak (runPeak) for the same reason.
+  const COIN_SEED = 5;
+  const coinsBefore = await coinCensus(evaluate, coinFollowId, coinCollectId);
+  let coinsAfter = coinsBefore;
+  if (FALSIFY !== "no-coins") {
+    trace(`coins: seeding the purse with ${COIN_SEED} x collect_coin`);
+    for (let index = 0; index < COIN_SEED; index += 1) {
+      await evaluate(
+        `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpPlayerHandle, ${collectCoinId}); true`,
+      );
+    }
+    trace("coins: Player.damage");
+    await evaluate(
+      "globalThis.KanamaWebBridge.callDoubles(globalThis.KanamaWebBridge.tpPlayerHandle, " +
+        `${playerDamageId}, 0, 0, 0, 0, 0, 1); true`,
+    );
+    // The collect tween is 0.5 SIMULATED seconds and the coins spawn already overlapping
+    // the player, so a healthy host finishes in a second or two; the bound is generous for
+    // the same reason the combat window is (a software-GL runner paces these coroutines by
+    // rendered frames). It still requires every seeded coin to be collected -- waiting
+    // longer cannot make a dead dispatch path pass.
+    const coinDeadline = Math.min(deadline, Date.now() + 60_000);
+    while (Date.now() < coinDeadline) {
+      const snap = await coinCensus(evaluate, coinFollowId, coinCollectId);
+      if (snap) {
+        coinsAfter = snap;
+        trace(
+          `coins: spawned=${snap.spawned} live=${snap.live} follows=${snap.follows} collects=${snap.collects}`,
+        );
+        if (snap.collects >= COIN_SEED) break;
+      }
+      await delay(250);
+    }
+  } else {
+    trace("FALSIFY=no-coins: the coin spill is not driven");
+  }
+  const coinsSpilled = (coinsAfter?.spawned ?? 0) - (coinsBefore?.spawned ?? 0);
+  trace(`coins done: spilled=${coinsSpilled} collects=${coinsAfter?.collects ?? 0}`);
+
+  // Fold the coin phase into a peak of its own: `peak` stays the MOVEMENT window's, so
+  // gameplayCommandsApplied/physicsFramesAdvanced keep measuring movement alone, while the
+  // handle and crossing REPORTS describe the whole run.
+  const runPeak = (await observe(evaluate, peak, 1_000, deadline, null)).peak;
+
+  // Full teardown: smoke_teardown releases the scene caches and frees the root; every
+  // node exits the tree and releases its handles.
   trace("smoke_teardown");
   await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, 2); true",
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, ${smokeTeardownId}); true`,
   );
-  const teardown = await observe(evaluate, peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(evaluate, runPeak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
 
@@ -331,14 +456,31 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     // host's rAF rate, and the thing worth failing on is the demo silently leaving the
     // real dispatch path again.
     realProcessPathDispatched: settled.processCalls > 0,
+    // Task 64 coin economy. Player.damage -> loseCoins() instantiated one real coin per
+    // seeded coin AT THE PLAYER: the cumulative Coin ready count rose by exactly the seed.
+    // A spill that silently produced nothing (a broken DemoScenes cache, a Coin scene that
+    // fails to instantiate) reads as 0 here, not as a quiet pass.
+    coinsSpilledByPlayerDamage: coinsSpilled >= COIN_SEED,
+    // ...and every spilled coin came HOME through the engine's Tween: `_follow` per
+    // interpolation step, `_collect` once per coin, both dispatched by name across the
+    // JS<->Kotlin boundary. `_collect` is what re-enters Player.collectCoin and therefore
+    // the CoinsContainer scalar tween, so this is the check that keeps the task-64 arm
+    // honest in real gameplay rather than in a fixture.
+    coinsCollectedByTweenCallbacks:
+      (coinsAfter?.follows ?? 0) >= COIN_SEED && (coinsAfter?.collects ?? 0) >= COIN_SEED,
     fullTeardownToZero: settled.liveHandles === 0,
     physicsOrderingDeterministic: (settled.physicsAfterProcess ?? 0) === 0,
+    // runPeak covers the coin phase too: a scalar-tween regression faults the boundary
+    // there, and this is the check that must go red for it.
     noCallbackFaults:
-      peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
+      peak.callbackErrors === 0 &&
+      runPeak.callbackErrors === 0 &&
+      settled.callbackErrors === 0 &&
+      settled.failure === null,
   };
 
   const boundaryErrors = [];
-  if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
+  if (runPeak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${runPeak.callbackErrors}`);
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
 
   return {
@@ -350,20 +492,23 @@ export async function runThirdperson({ url, evaluate, navigate, deadline }) {
     },
     checks,
     handles: {
-      liveAfterGameplay: peak.maxLiveHandles,
+      liveAfterGameplay: runPeak.maxLiveHandles,
       liveAfterTeardown: settled.liveHandles,
       staleRejected: 0,
     },
     crossings: {
-      kotlinToGodotCalls: peak.crossings,
-      physicsProcessCalls: peak.physicsCalls,
-      appliedCommands: peak.appliedCommands,
+      kotlinToGodotCalls: runPeak.crossings,
+      physicsProcessCalls: runPeak.physicsCalls,
+      appliedCommands: runPeak.appliedCommands,
       processCalls: settled.processCalls,
       playerDisplacement: Number(displacement.toFixed(3)),
       beesBeforeCombat: beesBefore,
       beesAfterCombat: beesAfter,
       beetlesBeforeCombat: beetlesBefore,
       beetlesAfterCombat: beetlesAfter,
+      coinsSpilled,
+      coinFollowDispatches: coinsAfter?.follows ?? 0,
+      coinCollectDispatches: coinsAfter?.collects ?? 0,
     },
     callbacks: {
       pendingSignalCallbacks: settled.callbacks,
