@@ -283,6 +283,11 @@ python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 stage "stale blocker claim audit"
 python3 "$ROOT_DIR/scripts/audit_stale_blockers.py"
 
+stage "web protocol pin agreement"
+# The bridge constant is the dangerous one: bumping the emitter without it does not fail
+# loudly, it just stops the page booting and reads as "scene did not become ready". Twice.
+python3 "$ROOT_DIR/scripts/check_protocol_pins.py"
+
 stage "unapplied lifecycle annotation check"
 # Tripwire for ONE shape: an annotation imported and never applied, which silently
 # disables the hook (FullScreenHandler's @OnReady, dead since the port). The compiler
