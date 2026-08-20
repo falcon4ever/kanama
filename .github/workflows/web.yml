@@ -51,10 +51,9 @@ env:
   # Kanama PR. Bump it deliberately when a demo port lands (see
   # docs/exporting/web.md, "Bumping the demos pin").
   # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
-  # Task 64/65: the @OnReady repair (demos#39) + the re-authored sample map (demos#38).
-  # Bumped WITH the annotation gate below: the gate fails against the previous pin, which
-  # still carries the FullScreenHandler bug -- both sides pin together or neither is green.
-  DEMOS_REF: 87e5cfc3fb5c38fddd21a2a71ee6e29a77f7d354
+  # Task 64: adds the converged Icone (demos#40), which calls PropertyTweener.from -- an arm
+  # that only exists from kanama#204 onward. Both sides pin together or neither is green.
+  DEMOS_REF: fa4cb1b6608f36142872e0ac14a4d052deb3d70f
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
