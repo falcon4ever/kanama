@@ -237,8 +237,12 @@ python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
 stage "native call surface prewarm audit"
 python3 "$ROOT_DIR/scripts/check_native_call_surface.py"
 
-stage "documentation claim audit"
-python3 "$ROOT_DIR/scripts/check_doc_claims.py" --root "$ROOT_DIR"
+stage "claim audit (task 85 aggregator)"
+# ONE place that lists the claim checks. Individual stages used to be added here one
+# incident at a time, which is how a check can quietly stop being listed. The aggregator
+# reports what it SKIPPED as loudly as what it checked, and fails if everything was
+# skipped. KANAMA_TASKS_DIR is optional: that repo is local-only, so CI skips it and says so.
+"$ROOT_DIR/scripts/audit_claims.sh"
 
 stage "web callback flush audit"
 python3 "$ROOT_DIR/scripts/check_web_callback_flush.py" --main \
@@ -279,22 +283,6 @@ python3 "$ROOT_DIR/scripts/audit_replicated_script_properties.py" "$ROOT_DIR/exa
 
 stage "value-type builtin parity audit"
 python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
-
-stage "stale blocker claim audit"
-python3 "$ROOT_DIR/scripts/audit_stale_blockers.py"
-
-stage "web protocol pin agreement"
-# The bridge constant is the dangerous one: bumping the emitter without it does not fail
-# loudly, it just stops the page booting and reads as "scene did not become ready". Twice.
-python3 "$ROOT_DIR/scripts/check_protocol_pins.py"
-
-stage "unapplied lifecycle annotation check"
-# Tripwire for ONE shape: an annotation imported and never applied, which silently
-# disables the hook (FullScreenHandler's @OnReady, dead since the port). The compiler
-# does not warn and the Web census cannot see desktop-only wiring, so this is the only
-# net today. Scans this repo; the demos checkout is scanned in the web workflow, which
-# is where demo sources exist.
-python3 "$ROOT_DIR/scripts/check_unapplied_annotations.py" "$ROOT_DIR"
 
 stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself
