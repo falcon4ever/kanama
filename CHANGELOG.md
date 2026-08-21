@@ -29,6 +29,15 @@ nineteen defects. The ones that change what a running script does:
 - **`tween_property` with a NUMBER had no arm.** Vector2, Color and Vector3 all worked,
   so a component path — `tween_property(node, "position:y", 4.0, 0.5)` — faulted the
   Web boundary. (Protocol 20.)
+- **`PropertyTweener.from` did not exist on Web.** A tween could not be given a custom
+  starting value, so a demo doing so had to drop the call and animate differently on Web
+  than on desktop — silently, since nothing failed. The Color arm is in; other value
+  types name the arms that do exist rather than failing vaguely. (Protocol 21.)
+
+**Web exports must be rebuilt.** The protocol moved 18 → 21 over these fixes (19 for the
+re-parent repair, 20 for the scalar tween arm, 21 for `PropertyTweener.from`). The
+generated proxies and the JS bridge compare it at startup, so an export built against an
+older protocol will refuse to run — rebuild rather than mixing.
 - Handle-seeding and snapshot-refresh parity fixes for objects arriving through
   sibling paths, and a self-snapshot refresh guarded for nodes outside the tree.
 
