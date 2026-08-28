@@ -1,0 +1,17 @@
+[configuration]
+
+entry_symbol = "kanama_entry"
+compatibility_minimum = "4.7"
+
+[libraries]
+
+macos.debug = "res://addons/kanama/libkanama_bootstrap.dylib"
+macos.release = "res://addons/kanama/libkanama_bootstrap.dylib"
+linux.debug.x86_64 = "res://addons/kanama/libkanama_bootstrap.so"
+linux.release.x86_64 = "res://addons/kanama/libkanama_bootstrap.so"
+linux.debug.arm64 = "res://addons/kanama/libkanama_bootstrap.so"
+linux.release.arm64 = "res://addons/kanama/libkanama_bootstrap.so"
+windows.debug.x86_64 = "res://addons/kanama/kanama_bootstrap.dll"
+windows.release.x86_64 = "res://addons/kanama/kanama_bootstrap.dll"
+ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
+ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"

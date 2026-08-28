@@ -1,0 +1,4 @@
+build/
+*/.godot/
+*/addons/kanama/*.dylib
+*/addons/kanama/*.jar

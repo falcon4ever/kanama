@@ -5,6 +5,8 @@ kotlin {
   jvmToolchain(25)
   iosArm64()
   iosSimulatorArm64()
+  // SPIKE (task 75)
+  macosArm64()
 
   @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
   wasmJs { browser() }
@@ -14,6 +16,8 @@ kotlin {
     val iosMain by creating { dependsOn(commonMain) }
     val iosArm64Main by getting { dependsOn(iosMain) }
     val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+    // SPIKE (task 75)
+    val macosArm64Main by getting { dependsOn(iosMain) }
     commonTest.dependencies { implementation(kotlin("test")) }
   }
 }
