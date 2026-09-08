@@ -82,9 +82,10 @@ task, then use targeted `rg` searches.
 |---|---|---|
 | `kanama/` (this repo) | public | Runtime, wrappers, generator, docs. |
 | `kanama-demos/` | public | 11 public demos: Bunnymark, Match3, 3D-Platformer, dodge, squash, character-controller, Racing, FPS, third-person, tps-demo-kanama, and City-Builder. |
-| `kanama-demos-private/` | private | Private demos such as deformable-snow-kanama and plowpatrol; not for tracked files. |
-| `kanama-maintainer-notes/` | private | `DEV_LOG.md` and `TASKS.md` with device IDs, signing teams, and exact local commands; never copy values from here into tracked files. |
-| `kanama-tasks/` | private | Roadmap task specs, one standalone file per task (index `README.md`; closed tasks move to `archive/`). The `task:` tokens in `KANAMA-BLOCKED` markers resolve against it. |
+
+Maintainers may keep additional private checkouts beside these two. Nothing
+from them belongs in tracked files: no paths, device or signing identifiers,
+demo names, or copied notes.
 
 ## Generated vs Hand-Authored Files
 
