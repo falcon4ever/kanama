@@ -71,10 +71,12 @@ see the [iOS export guide](docs/exporting/ios.md) and
 A **Kotlin/Wasm Web backend is Experimental (preview)**. The full twelve-demo
 corpus — Bunnymark and Match3 through FPS, Racing, City-Builder, and tps-demo —
 runs as production Godot Web exports through a generated proxy and a versioned
-JavaScript bridge, with no on-device JVM. Chrome and Firefox gate the corpus in
-CI (Linux; full corpus plus a ten-minute leak soak nightly) against tested
-browser floors and measured per-engine performance budgets, and Safari passes
-the same gate as a local pre-release check (it has no headless mode). It is
+JavaScript bridge, with no on-device JVM. Chrome and Firefox gate it in CI on
+Linux — a three-demo subset per pull request, the corpus minus tps-demo on
+`main` and nightly (tps-demo is a local gate), plus a ten-minute leak soak
+nightly — against tested browser floors and measured per-engine performance
+budgets, and Safari passes the same gate as a local pre-release check (it has
+no headless mode). It is
 still **not a Supported target**: single-thread Compatibility renderer only, a
 source-checkout export (no packaged addon), and desktop browsers only
 (iOS/iPadOS hand-checked on device, not gated). See the

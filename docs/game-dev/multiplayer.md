@@ -11,7 +11,7 @@ The common ENet shape mirrors GDScript:
 ```kotlin
 val peer = ENetMultiplayerPeer.create()
 peer.createServer(port)
-sceneTree.multiplayerPeer = peer
+self.getMultiplayer()?.multiplayerPeer = peer
 ```
 
 For a client:
@@ -19,10 +19,10 @@ For a client:
 ```kotlin
 val peer = ENetMultiplayerPeer.create()
 peer.createClient(address, port)
-sceneTree.multiplayerPeer = peer
+self.getMultiplayer()?.multiplayerPeer = peer
 ```
 
-Use `OfflineMultiplayerPeer.create()` or clear the tree's peer when returning
+Use `OfflineMultiplayerPeer.create()` or clear the `MultiplayerAPI`'s peer when returning
 to local-only play. Keep the peer owner clear in your code; it is easy to leave
 old connection state behind when switching between menu and gameplay scenes.
 

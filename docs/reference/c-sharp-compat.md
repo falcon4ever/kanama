@@ -33,7 +33,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 
 | Capability | Status | Notes |
 |---|---|---|
-| Kotlin project build | SUPPORTED | External projects use Gradle + KSP and depend on Kanama artifacts from `mavenLocal()`. |
+| Kotlin project build | SUPPORTED | External projects use Gradle + KSP and resolve Kanama artifacts from the kit's bundled `addons/kanama/maven` repository, or from `mavenLocal()` after `publishKanamaToMavenLocal` on a source checkout. |
 | Editor build button | SUPPORTED | Optional Kanama Tools plugin adds `Build Scripts`. |
 | Auto build on save | SUPPORTED | Debounced and opt-in through project settings. |
 | Scene reload after script sync | SUPPORTED | Enabled through the Kanama Tools plugin. |
@@ -71,7 +71,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Custom signal declarations | SUPPORTED | `@Signal` metadata and generated `*Signals` emit helpers are available. |
 | Godot signal connections | SUPPORTED | Use `object.signal(Name.Signals.foo).connect(...)` and generated method-name constants. |
 | Lambda signal callbacks | PARTIAL | Zero to three emitted arguments are supported through generated dispatcher methods used by Kanama's signal connection helpers. |
-| Runtime custom resources | SUPPORTED | `newScriptInstance<T>()` creates a script-backed `Resource` from Kotlin (GDScript `.new()` parity); or create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. |
+| Runtime custom resources | SUPPORTED | `newScriptInstance<T>()` creates a script-backed `Resource` from Kotlin (GDScript `.new()` parity); or create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. `newScriptInstance` is desktop/Android only (deferred on iOS; use the attach-then-resolve path there). |
 | Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS. Flags and broader resource arrays remain intentionally conservative. |
 | Coroutines | SUPPORTED | `KanamaScope`, Godot main-thread dispatch, `awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |
 

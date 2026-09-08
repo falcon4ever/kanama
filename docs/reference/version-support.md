@@ -115,8 +115,8 @@ Unlike desktop/Android/iOS, the Web backend does **not** use a JVM or an
 FFM/PanamaPort path. It is a **Kotlin/Wasm** backend: project gameplay compiles
 to WebAssembly and talks to the Godot 4.7 Web export (Emscripten/Wasm) through a
 generated per-call proxy and a versioned JavaScript bridge
-(`web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js`, protocol version
-15). The typed backend seam is shared with the other platforms through
+(`web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js`, currently
+protocol 21). <!-- kanama-claim: protocol --> The typed backend seam is shared with the other platforms through
 `scripts/platform_backend_calls.json`, and
 `scripts/generate_web_gameplay_coverage.py` fails loudly if a call the demo
 executes has no admitted backend family. See
@@ -129,9 +129,10 @@ web3d, 3D-Platformer, squash, FPS, character-controller, third-person, Racing,
 City-Builder and tps-demo — each pass an automated, assertion-driven play
 sequence, not a page-load check. Every run asserts gameplay deltas, crossing
 budgets, and handle/callback/scheduler teardown to baseline, and rejects stale
-handles. Gameplay coverage reports zero blocking calls;
-`GodotObject.emit_signal_typed` remains visible as one explicit nonblocking
-unsupported family rather than being pattern-hidden.
+handles. Gameplay coverage reports zero blocking calls; the families a demo
+calls that the backend does not model (`GodotObject.emit_signal_typed` among
+them) stay listed as explicit nonblocking unsupported entries rather than being
+pattern-hidden.
 
 Browser floors and the versions the corpus is driven on (protocol 21). <!-- kanama-claim: protocol --> The
 floors are declared once, machine-readably, in `scripts/web/browser_floors.json`,
@@ -192,10 +193,10 @@ above — mobile WebKit stays outside the validated claim.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather
   than a CI cell; iOS/iPadOS WebKit is hand-checked only, not gated.
-<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): Linux-host mobs never free; matrix cells quarantined -->
+<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): Linux-host mobs never free; the dodge:firefox cell is quarantined -->
 - One defect is tracked openly rather than solved: on one Linux CI host,
   spawned mobs never receive `VisibleOnScreenNotifier2D.screen_exited` and are
-  never freed (task 71; the affected matrix cells are quarantined, not hidden).
+  never freed (task 71; the `dodge:firefox` cell is quarantined, not hidden).
   Nothing measured implicates the Kanama backend, but it has not been ruled
   out — see [Exporting → Web](../exporting/web.md) Known Limitations.
 - Reproducible export builds currently require
@@ -238,7 +239,8 @@ scripts/local_ci.sh \
   /absolute/path/to/godot-4.7-stable
 ```
 
-The script runs the main local checks:
+The script runs about forty stages (see `scripts/local_ci.sh`); the headline
+ones are:
 
 - API constant validation against `extension_api.json`,
 - Gradle jar sync,

@@ -171,7 +171,7 @@ stage "JVM unit tests"
 
 stage "public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
-  README.md docs CONTRIBUTING.md templates example_project; then
+  README.md AGENTS.md CLAUDE.md docs CONTRIBUTING.md templates example_project; then
   echo "[local_ci] tracked public docs/templates must not contain local machine paths or personal checkout names" >&2
   exit 1
 fi

@@ -7,7 +7,8 @@ is less settled than the desktop path.
 ## What Works
 
 Nine Kanama demo exports are Android smoke targets (the eight starter/creeps
-demos plus Bunnymark). On 2026-06-26, the Godot
+demos plus Bunnymark; `tps-demo-kanama` also carries an Android preset but sits
+outside the automated matrix). On 2026-06-26, the Godot
 4.7 stable demo matrix passed on Pixel 7 with debug APK exports, and
 Starter-Kit-Match3 also passed the R8-minified release smoke with Kanama's
 PanamaPort fork:
@@ -137,8 +138,9 @@ The current Android path is intentionally narrow:
   reports unsupported ASTC textures being converted at runtime.
 - The current validated demo exports use Godot's OpenGL Compatibility renderer
   on Android. Desktop can continue using its normal renderer.
-- Godot Android can also use Vulkan through the Mobile renderer; Kanama's
-  Android preview has been validated through OpenGL Compatibility.
+- Godot Android can also use Vulkan through the Mobile renderer; the nine-demo
+  matrix passed under it on Pixel 7 (2026-07-10), while the demo corpus still
+  ships OpenGL Compatibility as its default mobile renderer.
 - Mobile polish is per demo: screen size, orientation, touch input, and UI
   scaling are separate from the core runtime path.
 - Physical devices can expose first-use hitches when gameplay first instantiates

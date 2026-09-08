@@ -33,13 +33,13 @@ nineteen defects. The ones that change what a running script does:
   starting value, so a demo doing so had to drop the call and animate differently on Web
   than on desktop — silently, since nothing failed. The Color arm is in; other value
   types name the arms that do exist rather than failing vaguely. (Protocol 21.)
+- Handle-seeding and snapshot-refresh parity fixes for objects arriving through
+  sibling paths, and a self-snapshot refresh guarded for nodes outside the tree.
 
 **Web exports must be rebuilt.** The protocol moved 18 → 21 over these fixes (19 for the
 re-parent repair, 20 for the scalar tween arm, 21 for `PropertyTweener.from`). The
 generated proxies and the JS bridge compare it at startup, so an export built against an
 older protocol will refuse to run — rebuild rather than mixing.
-- Handle-seeding and snapshot-refresh parity fixes for objects arriving through
-  sibling paths, and a self-snapshot refresh guarded for nodes outside the tree.
 
 ### Fixed — gates that certified the wrong thing
 
@@ -69,16 +69,35 @@ they are why the defects above went unseen:
 - **Documentation claims are checked against their sources**, so a marked claim fails the
   build when the code moves out from under it.
 
+### Added
 
+- **The Web corpus grew from two demos to twelve.** After 0.4.0 shipped Match3 and
+  Bunnymark, dodge-the-creeps, the 3D Platformer, squash-the-creeps, FPS, the
+  character-controller tutorial, the third-person controller, Racing, City-Builder,
+  and tps-demo were each brought up as production Web exports (#96–#113, protocols
+  7–15), adding the 3D rendering foundation, physics, RayCast3D and slide-collision
+  queries, Resource-script hydration, object-carrying signals, and a shared handle
+  registry along the way. A Web build now rejects any script virtual the proxy does
+  not dispatch (#114) and dispatches `_enter_tree` (#145, protocol 16).
+- **Web gameplay compiles from one `kotlin-src` per demo**, with per-file overrides
+  under `web/kotlin-src` (#133, #136). NodePath exports, hint metadata, and fail-loud
+  property guards reach the Web proxy (#148); extension helpers became members on the
+  Web wrapper classes and `Resource.fromHandle` / `AudioStreamPlayer.setStream` gained
+  Web parity (#144, #146, #150); a generic `callv` fallback covers calls with no typed
+  family (#141).
+- **Exported desktop games bundle a jlink-trimmed Java runtime**, found app-relative
+  before `JAVA_HOME`, so players never install a JDK: `jlinkGameRuntime`,
+  `scripts/export_game_assemble.sh`, and `scripts/export_game_smoke.sh` (#140). The
+  cross-target variant below builds on this.
 - Exported desktop games are published as CI artifacts
   (`kanama-exported-game-<target>`) so the build CI already boots can be tested
   on real hardware without rebuilding.
 - Verified on real Windows hardware: a game exported with a jlink runtime
   cross-built on macOS boots from its own bundled runtime even when a system JDK
   is installed, with no VC++ redistributable required.
-
-### Added
-
+- **Web exports can be served to a phone for hand-checks**: `scripts/web/serve_export.py
+  --lan --https`, since Godot's Web export needs a secure context, with load progress
+  and an up-front refusal on plain HTTP (#122, #134).
 - **Web exports package into a publishable artifact.**
   `:web-runtime:packageWebExport -PkanamaWebDemo=<demo>` zips an already-built,
   smoke-validated Web export (index.html at the zip root, deterministic
@@ -119,6 +138,13 @@ they are why the defects above went unseen:
 
 ### Fixed
 
+- **Web: coroutine delays resume in every demo.** The frame scheduler is now pumped once
+  per engine frame from every generated proxy; before, eight of the twelve demos never
+  pumped it, so a `delaySeconds` in them hung forever (#157, protocol 18). The real
+  `_process` is the bridge's frame fallthrough and the spike benchmark is opt-in (#162);
+  physics ticks read a fresh transform snapshot, so held-input movement is no longer
+  quantized to the render frame (#170); a spawned script owns its own lifetime instead of
+  dying with the script that spawned it (#125).
 - **A bundled Windows runtime no longer needs the Visual C++ redistributable on
   the player's machine.** `jvm.dll` lives in `runtime\bin\server` while its CRT
   dependencies ship one level up in `runtime\bin`, and Windows resolves a loaded
@@ -249,7 +275,7 @@ they are why the defects above went unseen:
   report and a versioned export-smoke harness (`scripts/web_export_smoke.sh`).
   Both demos pass the automated smoke in Chrome (the CI gate) and Firefox; in
   Safari, Bunnymark passes automatically and Match3 is verified by hand. Adds the
-  [Web export guide](exporting/web.md). Still **not a Supported target**:
+  [Web export guide](docs/exporting/web.md). Still **not a Supported target**:
   single-thread Compatibility renderer only, no packaged addon, two-demo corpus.
 
 - Create script-backed custom resources from Kotlin with `newScriptInstance<T>()`
@@ -393,7 +419,8 @@ Kotlin/Native backend graduated from experimental to **Supported** as well —
 all running the same generated Godot API wrappers under a cross-platform drift
 gate. Wrapper coverage reached ~99% of classes/methods, the docs were
 reorganized into consumer/maintainer/internal tracks, and the support tiers
-were formalized. See `docs/internals/release-support-decision.md` for the
+were formalized. See `docs/internals/release-support-decision.md` (moved out of the public docs
+tree on 2026-07-14; see `docs/internals/README.md`) for the
 grounded support matrix and §7 for the mobile promotion bar. `0.3.0` is a
 pre-1.0 preview baseline.
 
@@ -561,7 +588,8 @@ pre-1.0 preview baseline.
   self-test and current demo corpus have playable device runs; per-frame Kanama
   binding overhead measured ~0.63 ms on iPhone 12. iOS shipped experimental in
   this cycle and was then promoted to Supported (4.7 stable, above); see
-  `docs/internals/active/ios-backend-roadmap.md` for its initial gaps.
+  `docs/internals/active/ios-backend-roadmap.md` (moved out of the public docs tree
+  on 2026-07-14; see `docs/internals/README.md`) for its initial gaps.
 - Added an iOS hand-written/stub registry: `// KANAMA-IOS-{STUB,HANDWRITTEN,SUGAR}`
   markers, `scripts/ios_handwritten_report.py` (generates
   `docs/internals/reference/ios-backend-handwritten.md`), and `scripts/check_ios_no_silent_stubs.py`
