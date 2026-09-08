@@ -174,20 +174,32 @@ is needed.
 
 ## Resource And Tween Ownership
 
-Treat live Godot `Resource` and `RefCounted` values as ownership-sensitive.
-Do not close a value just because a Kotlin wrapper is in scope if Godot is
-expected to keep using the underlying object.
+Follow the one rule in
+[Godot API → Resource Ownership](../game-dev/godot-api.md#resource-ownership):
+`close()` releases **your** reference and never destroys an object someone else
+still holds. Which wrappers are yours is fixed by how you got them:
 
-For tweens, this means never closing a `Tween` or `Tweener` immediately after
-scheduling animation work:
+- **Owned — close it.** `X.create()`, `ResourceLoader.load…`, and every
+  `RefCounted`-typed method return, including plain getters such as
+  `meshInstance.getMesh()` or `animationPlayer.getAnimation("walk")`. Not
+  closing one leaks the reference, and Godot prints `Leaked instance: <Class>`
+  at shutdown.
+- **Borrowed — never close it.** A view you minted around a handle you already
+  had: `Resource.fromHandle(...)`, or a script-class constructor over an
+  existing object.
+- **Engine-owned and live — use the Godot lifecycle.** A running `Tween` from
+  `createTween()`: `kill()` it, do not `close()` it. Nodes are not refcounted at
+  all; `queueFree()` them.
+
+For tweens that means:
 
 ```kotlin
-// Correct: Godot owns and runs the active tween.
+// Correct: Godot owns and runs the active tween; the Tweener it hands back is
+// yours, so close it once configured.
 val tween = self.createTween() ?: return
-tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2)
-
-// Wrong: this can release the live tween before the renderer/UI consumes it.
 tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2)?.close()
+
+// Wrong: releasing the live tween itself.
 tween.close()
 ```
 
@@ -195,14 +207,13 @@ If the script tracks a tween to cancel it later, use `kill()` and drop the
 Kotlin reference. Closing active tweens early can show up as native renderer
 crashes on desktop Metal/MoltenVK rather than as a clean Kotlin exception.
 
-The same rule applies when assigning generated resources into scene nodes.
-For example, after `meshInstance.setMesh(mesh)`, do not immediately
-`mesh.close()` unless the wrapper/API contract says the setter retained a
-separate reference. Prefer keeping the resource live for as long as the scene
-node can render it. Calls to `Resource.close()` and `RefCounted.close()` are
-annotated with `@ManualGodotLifetimeApi`; demo gameplay should not opt in
-unless the value is clearly caller-owned and the original GDScript had an
-equivalent explicit release.
+Handing a created resource to a node is safe to follow with `close()`: the
+setter takes its own reference, so after `meshInstance.setMesh(mesh)` a
+`mesh.close()` (or `use { }` around the whole handoff) releases only yours
+(tasks 61/62; issue #91 is what happened before that contract held).
+`RefCounted.close()` is annotated `@ManualGodotLifetimeApi` so every release is
+a visible decision: opt in where the wrapper is owned by the rules above, never
+for a borrowed view or a live engine-owned object.
 
 ## Signals And Callbacks
 
@@ -407,7 +418,6 @@ needed by the task:
 
 ```bash
 /path/to/godot-4.7-stable/bin/godot.macos.editor.arm64
-/path/to/godot-4.7-stable/bin/godot.macos.editor.arm64
 ```
 
 Headless smoke tests should load the real scene and exercise a small behavior
@@ -420,16 +430,16 @@ lingering embedded game audio are tracked separately. Record them, but do not
 treat them as proof that a gameplay port failed unless they leave a process
 alive or break repeatable validation.
 
-Before chasing shutdown leaks, separate owned resources from borrowed scene
-state. Good cleanup candidates are project-owned warmup caches, explicitly
-created `Tween`/`Tweener` wrappers after configuration, pooled nodes that will
-not be reused, and active `AudioStreamPlayer`s that should stop before
-`unloadCurrentScene()`. Do not close resources returned from scene-owned nodes
-just because the wrapper is closeable.
+Before chasing shutdown leaks, find the owned wrapper that was never closed:
+project-owned warmup caches, `Tweener` wrappers left open after configuration,
+resource read-backs kept only for a check, pooled nodes that will not be
+reused, and active `AudioStreamPlayer`s that should stop before
+`unloadCurrentScene()`. Do not close a borrowed view or a live engine-owned
+object to silence a warning.
 
-Resource-returning getters create closeable temporary wrappers. Do not write
-checks such as `crosshair.texture != null` and discard the wrapper. Store it,
-check it, and close it:
+Resource-returning getters hand back an owned wrapper even though the node
+keeps its own reference. Do not write checks such as `crosshair.texture != null`
+and discard the wrapper. Store it, check it, and close it:
 
 ```kotlin
 val texture = crosshair.texture
@@ -437,15 +447,15 @@ check(texture != null)
 texture?.close()
 ```
 
-Be careful with resources borrowed from scene-owned nodes. For example,
-`AnimationPlayer.getAnimation()` returns an animation owned by the player/scene.
-Use the returned wrapper immediately, but do not `use { ... }` or `close()` it
-just to silence a shutdown warning:
+The same holds for a resource you only touch briefly, such as an animation on
+a scene-owned `AnimationPlayer`: the getter still transferred a reference, so
+release it when you are done instead of leaving it to leak:
 
 ```kotlin
-animationPlayer.getAnimation("walk")?.setLoopMode(Animation.LOOP_LINEAR)
+animationPlayer.getAnimation("walk")?.use { it.setLoopMode(Animation.LOOP_LINEAR) }
 ```
 
-If a shutdown warning names a borrowed scene resource, prefer fixing the scene
-lifetime, stopping active playback, or documenting the residual warning over
-releasing a resource you do not own.
+If a shutdown warning still names a scene resource after every owned wrapper
+is closed, look at the scene lifetime (active playback, a node freed after the
+tree) or document the residual warning; do not release a handle you did not
+take.

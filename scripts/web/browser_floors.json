@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updated": "2026-07-28",
+  "updated": "2026-08-20",
   "note": "Declared Web browser version floors (Task 60h). `basis` says what the number is worth: 'tested' means the gate was actually run on that version and on the one below it; 'validated-at' means it is only the oldest version ever driven, with nothing older tried. check_browser_floor.py fails a smoke run whose browser is below `minimum`, so this file is the single place a floor claim is made -- docs quote it, they do not restate it.",
   "engines": {
     "chrome": {
@@ -18,7 +18,7 @@
     "safari": {
       "minimum": "26.5",
       "basis": "validated-at",
-      "evidence": "2026-07-27: Safari 26.5 / WebKit 605.1.15 on macOS 26.5.1, the full corpus. Safari ships with the OS and cannot be installed side by side, so no lower bound is testable on the workstation at all -- this is the only version ever driven, not a tested minimum.",
+      "evidence": "2026-07-27: Safari 26.5 / WebKit 605.1.15 on macOS 26.5.1, the full corpus. Safari ships with the OS and cannot be installed side by side, so no lower bound is testable on the workstation at all -- this is the only version ever driven, not a tested minimum. Re-measured 2026-08-20 on the same Safari 26.5 / WebKit 605.1.15: 13 of 13 cells (the twelve-demo corpus plus the spike) at protocol 20, zero console errors.",
       "validatedAt": ["26.5"]
     }
   }

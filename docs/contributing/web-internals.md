@@ -76,8 +76,9 @@ The typed per-call families are shared with the other platforms through
 iOS use. `scripts/generate_web_gameplay_coverage.py` harvests the calls each
 demo actually executes and **fails if a demo call has no admitted backend
 family**, so coverage metadata cannot be silently erased. The current report has
-zero blocking calls and keeps `GodotObject.emit_signal_typed` visible as one
-explicit nonblocking unsupported family rather than pattern-hiding it.
+zero blocking calls, and the families a demo calls that the backend does not
+model (`GodotObject.emit_signal_typed` among them) stay listed as explicit
+nonblocking unsupported entries rather than being pattern-hidden.
 
 ### Backend-dispatch codegen: generated dispatch + hand-written transport (Task 60a)
 
@@ -327,7 +328,8 @@ wrapper around handle 0.
 ## Validation Fixtures
 
 The current fixtures are per-demo driver scripts
-(`scripts/web/drivers/demos/*.mjs`, one per corpus demo, shared by the
+(`scripts/web/drivers/demos/*.mjs`, one per corpus demo plus the `soak`, `spike`,
+and `visibilityprobe` harness drivers, shared by the
 Chrome/Firefox/Safari engine drivers) plus machine-readable JSON results, one
 per demo × browser cell, validated against a versioned envelope schema by
 `web_export_smoke.sh`; `web_ci_matrix.sh` aggregates the cells into a single

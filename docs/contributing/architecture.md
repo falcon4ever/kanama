@@ -136,7 +136,7 @@ sequenceDiagram
     B-->>G: return GDEXTENSION_INITIALIZATION_SCENE
     Note over G,K: From here on, all calls are direct Godot ⇄ JVM via Panama. Bootstrap is done.
     G->>K: initialize(level=SCENE) [upcall]
-    K->>G: classdb_register_extension_class2(...) [downcall]
+    K->>G: classdb_register_extension_class6(...) [downcall]
 ```
 
 Key points:
@@ -198,7 +198,7 @@ flowchart LR
 
 - **Downcalls (JVM → Godot)** — `Linker.downcallHandle(addr, descriptor)`
   produces a `MethodHandle` the JIT can inline through. Used for everything:
-  `classdb_register_extension_class2`, `object_method_bind_call`,
+  `classdb_register_extension_class6`, `object_method_bind_call`,
   `variant_new_copy`, etc.
 - **Upcalls (Godot → JVM)** — `Linker.upcallStub(handle, descriptor, arena)`
   produces a function pointer that, when called from C, lands inside a JVM
@@ -242,19 +242,22 @@ already been crossed.
 
 **Where JNI shows up — and where it doesn't.** Panama (FFM) handles the
 JVM→native direction beautifully, but it has no story for *creating* a JVM
-from C in the first place. So `bootstrap.c` makes exactly three JNI
-Invocation API calls, once, during startup:
+from C in the first place. So `bootstrap.c` makes a handful of JNI calls,
+once, during startup:
 
 1. `JNI_CreateJavaVM` — bring a JVM into existence inside Godot's process
-2. `FindClass("KanamaBinding")` — locate the Kotlin entry point
-3. `CallStaticVoidMethod(init)` — hand off control
+   (on Android the same file attaches to the existing ART VM instead, via
+   `GetJavaVM`/`AttachCurrentThread`)
+2. `FindClass("KanamaBinding")` + `GetStaticMethodID` — locate the Kotlin entry point
+3. `CallStaticVoidMethod(init)` — hand off control, wrapped in
+   `ExceptionCheck`/`ExceptionDescribe` so a failed init is reported, not lost
 
 The moment that `init` call returns, JNI is done. Forever. No
 `RegisterNatives`, no further `FindClass`, no more JNI in any call path.
 From that point on, Godot ⇄ JVM traffic is *only* Panama: `downcallHandle`
 for JVM→Godot calls and `upcallStub` for Godot→JVM callbacks.
 
-The only way to eliminate even those three JNI calls would be GraalVM
+The only way to eliminate even those startup JNI calls would be GraalVM
 native-image (AOT-compile Kotlin to a native library that exports real C
 symbols). That's a different runtime — no JIT, no hot reload — and explicitly
 not the path Kanama is taking.
@@ -286,25 +289,31 @@ the moment its refcount drops to zero — which can happen on any thread, at
 any time, while a JVM-side wrapper still holds a reference to its raw
 pointer. Touching that pointer after free is undefined behaviour.
 
-The defence is **one `Arena.ofShared()` per Godot object**:
+Kanama does not tie JVM wrapper lifetime to native lifetime; it keeps the two
+explicit:
 
 ```
-Godot creates instance
-  → Kanama allocates Arena.ofShared()
-  → ObjectRegistry maps instanceId → (Arena, JVM wrapper)
-  → All MemorySegments for this object are allocated in its arena
+Godot creates a script / extension instance
+  → Kanama registers the Kotlin object in ObjectRegistry under a fresh
+    monotonic Long handle, which is also the void* token passed to
+    object_set_instance (never a JVM address: those move under GC)
+  → every engine callback (call, virtual, set/get, notification, free)
+    resolves that token back to the Kotlin object
 
-Godot frees instance (refcount → 0)
-  → free_instance upcall fires
-  → ObjectRegistry.release(instanceId)
-  → Arena.close()
-  → Any subsequent MemorySegment access throws IllegalStateException
+Godot frees the instance
+  → the free_instance upcall fires
+  → ObjectRegistry.unregister(handle) drops the Kotlin object
 ```
 
-This is the single most important reason to use Panama instead of raw JNI:
-`Arena` gives us **deterministic, scoped invalidation of every pointer
-derived from a freed object**, with no cooperation needed from the user code
-or the GC. Use-after-free becomes a thrown exception, not a segfault.
+Wrappers around engine-owned objects (`Node`, `GodotObject`, …) are non-owning
+views over a raw pointer: a wrapper kept past its object's death is a dangling
+pointer, and `GD.isInstanceValid` is the check for it. `RefCounted` wrappers
+are the exception — they own the `+1` reference their factory or getter
+transferred, `close()` releases it, and a wrapper that has already been closed
+refuses further use (`requireOpenHandle()`), so a double-close or
+use-after-close surfaces as a Kotlin exception rather than a native fault. The
+ownership rules are in
+[RefCounted Return Ownership](wrapper-maintenance.md#refcounted-return-ownership).
 
 ## Script class model
 
@@ -322,8 +331,9 @@ would appear to be the native wrapper while still being a reloadable script
 instance.
 
 The accepted direction is to keep the separate script object model and improve
-ergonomics around it incrementally. There are three tiers, in ascending
-complexity:
+ergonomics around it incrementally. Two tiers are on the table, in ascending
+complexity; **neither is implemented yet** — this section records the accepted
+design, not shipped behaviour:
 
 **Tier 1 — KSP-generated per-type base classes (no compiler plugin needed)**
 
@@ -378,9 +388,9 @@ fragility across Kotlin compiler versions. The KSP extension-function approach
 achieves the same result purely through code generation, with no compiler
 changes and no new build dependencies.
 
-Runtime cost: zero — the JIT inlines one-liner static forwarders completely
+Expected runtime cost: zero — the JIT inlines one-liner static forwarders completely
 within the first few hundred calls; `self` is a cached field, so no lookup
-overhead. Build cost: longer KSP + kotlinc time and a slightly larger jar
+overhead. Expected build cost: longer KSP + kotlinc time and a slightly larger jar
 (both negligible).
 
 ## Script-language no-op callbacks

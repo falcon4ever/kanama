@@ -229,8 +229,9 @@ Two cross-platform load-bearing wrapper shapes are reproduced by explicit policy
 does not drop them), locked by `check_ios_policies`:
 
 - **Composite default-value overrides.** `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` injects a final
-  Kotlin default expression by exact `(class, method, arg)`. `Node3D.look_at(up = Vector3.UP)`
-  is the current entry — demos call the 1-arg `lookAt(target)` form and rely on it. Kept
+  Kotlin default expression by exact `(class, method, arg)`. `Node3D.look_at` and
+  `Node3D.look_at_from_position` (both `up = Vector3.UP`) are the current entries — demos
+  call the short `lookAt(target)` form and rely on it. Kept
   surgical (per exact arg) so no other method silently gains a default.
 - **Non-null factory.** `NON_NULL_FROM_HANDLE_CLASSES` (currently `{Resource}`) emits
   `fromHandle(handle): Resource` (non-null) so a `@ScriptClass(attachTo = "Resource")` script's
@@ -287,8 +288,9 @@ non-virtual skips and the skipped properties found:
       — reuses the Rect2i/Object/Color/int cells. `Rect2i` is not an iOS arg kind.
   - **`Dictionary`→`Dictionary` (`GDScriptTextDocument.resolve`/`.rename`) is a
     by-design skip**, not a gap. Task 22 briefly landed it via
-    `ptrcallWithDictionaryArgRetDictionary`, but the shape was **reverted for
-    stability**: a Dictionary-in/Dictionary-out passthrough through the generic
+    `ptrcallWithDictionaryArgRetDictionary`, but the shape was **pulled from the
+    generator for stability** (the helper body is still in `ObjectCalls.kt`; nothing
+    emits a call to it): a Dictionary-in/Dictionary-out passthrough through the generic
     `Map<String, Any?>` helper silently drops non-String keys, so
     `audit_generator_shape_policy` keeps the `('Dictionary',) -> 'Dictionary'`
     shape out of `CALL_SHAPES` (it must stay hand-audited if ever needed). The

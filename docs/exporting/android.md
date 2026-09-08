@@ -100,7 +100,7 @@ Current values:
 | Kanama Android plugin AGP | 9.2.1 |
 | Kanama Android plugin compile SDK | 36 |
 | Kanama Android plugin min SDK | 26 |
-| Kanama Android plugin CMake | 3.22.1 |
+| Kanama Android plugin CMake | 3.22+ (`cmake_minimum_required`; AGP's default 3.22.1 is what builds it) |
 | Kanama AAR ABIs | `arm64-v8a`, `x86_64` |
 | Demo APK export ABI | `arm64-v8a` |
 

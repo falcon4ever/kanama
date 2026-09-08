@@ -80,7 +80,7 @@ model described next.
 
 ## Current architecture: generated wrappers + ObjectCalls
 
-iOS reuses the desktop/Android solution. Desktop's full ~1086-class API in
+iOS reuses the desktop/Android solution. Desktop's full ~1036-class API in
 `src/main/kotlin/.../api/` is **generated** ("Generated from Godot docs") by
 `scripts/generate_api_wrapper.py` from `extension_api.json`, and since task 30 the
 iOS tree carries the **full desktop-equivalent class set** (1021 generated wrappers +
@@ -130,7 +130,8 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
 
 Informed by a survey of the desktop `ObjectCalls.*` helper shapes
 (regenerable with `grep -rhoE "ObjectCalls\.[A-Za-z0-9_]+" src/main/.../api/ | sort -u`):
-the generated wrappers reference ~1467 distinct `ObjectCalls.*` helper shapes (121 for
+the generated wrappers reference ~1500 distinct `ObjectCalls.*` helper shapes (1467 at
+the task-30 survey; 121 for
 the platformer's classes alone), of which only ~7% map to an existing iOS C
 primitive. Hand-writing a C function per shape is untenable, so:
 

@@ -7,7 +7,8 @@ is less settled than the desktop path.
 ## What Works
 
 Nine Kanama demo exports are Android smoke targets (the eight starter/creeps
-demos plus Bunnymark). On 2026-06-26, the Godot
+demos plus Bunnymark; `tps-demo-kanama` also carries an Android preset but sits
+outside the automated matrix). On 2026-06-26, the Godot
 4.7 stable demo matrix passed on Pixel 7 with debug APK exports, and
 Starter-Kit-Match3 also passed the R8-minified release smoke with Kanama's
 PanamaPort fork:

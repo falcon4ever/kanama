@@ -147,7 +147,7 @@ mob.squashed.connect($UserInterface/ScoreLabel._on_Mob_squashed)
 The Kanama equivalent uses explicit objects and Godot-facing names:
 
 ```kotlin
-val mob = mobScene.instantiate()
+val mob = mobScene?.instantiate() ?: return
 val scoreLabel = self.requireAs("UserInterface/ScoreLabel", ::Label)
 val mobScript = mob.kotlinScriptInstance<Mob>()
     ?: error("Instantiated mob scene is not backed by Mob")
