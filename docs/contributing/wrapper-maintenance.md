@@ -244,7 +244,7 @@ every platform, so that class of drift cannot silently return.
 
 ## Coverage Triage
 
-For v0.3.0 wrapper work, use the coverage reports as the baseline instead of
+For wrapper work, use the coverage reports as the baseline instead of
 waiting for another demo to expose a gap:
 
 1. Refresh `docs/contributing/api-coverage.md` and

@@ -65,7 +65,7 @@ Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently **17**); startup rejects a mismatch
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 21); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -396,6 +396,6 @@ mkdocs build --strict
 ## Out of Scope
 
 No Web editor or compiler, no hot reload, no threads, no TeaVM or Kotlin/JS
-production path, and no Supported status. The user-facing export workflow, an
-`exporting/web.md` guide, and any Experimental-preview announcement are tracked
-separately and are not part of this in-development backend.
+production path, and no Supported status. The user-facing export workflow lives
+in [Exporting → Web](../exporting/web.md); promotion past Experimental is a
+separate decision, gated on the browser matrix and budgets described there.

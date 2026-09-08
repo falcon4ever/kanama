@@ -29,11 +29,12 @@ wording.
 
 ## First Stop for Implementation Work
 
-If you're working on a specific roadmap task, read the matching file in
-`/Users/lmuller/dev/kanama-tasks/` first. Each task is standalone and points to
-the smallest doc set and exact files to edit. The index is
-`kanama-tasks/README.md`. For ad-hoc work not covered by a task file, use
-"Read First By Task" below.
+If you're working on a specific roadmap task, read the matching file in the
+sibling `kanama-tasks/` checkout first (it sits beside this repo like
+`kanama-demos/`; `scripts/audit_stale_blockers.py` resolves it the same way, or
+through `KANAMA_TASKS_DIR`). Each task is standalone and points to the smallest
+doc set and exact files to edit. The index is `kanama-tasks/README.md`. For
+ad-hoc work not covered by a task file, use "Read First By Task" below.
 
 ## Read First By Task
 
@@ -80,9 +81,10 @@ task, then use targeted `rg` searches.
 | Repo | Audience | Contents |
 |---|---|---|
 | `kanama/` (this repo) | public | Runtime, wrappers, generator, docs. |
-| `kanama-demos/` | public | 19 public demos: Bunnymark, Match3, 3D-Platformer, dodge, squash, character-controller, Racing, FPS, third-person, tps-demo-kanama, City-Builder, and others. |
+| `kanama-demos/` | public | 11 public demos: Bunnymark, Match3, 3D-Platformer, dodge, squash, character-controller, Racing, FPS, third-person, tps-demo-kanama, and City-Builder. |
 | `kanama-demos-private/` | private | Private demos such as deformable-snow-kanama and plowpatrol; not for tracked files. |
 | `kanama-maintainer-notes/` | private | `DEV_LOG.md` and `TASKS.md` with device IDs, signing teams, and exact local commands; never copy values from here into tracked files. |
+| `kanama-tasks/` | private | Roadmap task specs, one standalone file per task (index `README.md`; closed tasks move to `archive/`). The `task:` tokens in `KANAMA-BLOCKED` markers resolve against it. |
 
 ## Generated vs Hand-Authored Files
 

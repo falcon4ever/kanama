@@ -1,6 +1,6 @@
 # Android
 
-Kanama's Android path is **Supported** on Godot 4.7 stable for the v0.3.0 line,
+Kanama's Android path is **Supported** on Godot 4.7 stable,
 device-validated across four physical models (Pixel 7 / Moto g 5G 2023 / Galaxy
 S10+ / Pixel 3 XL, Android 16/14/12/9). It proves that
 Kanama can run inside a
@@ -11,8 +11,11 @@ Use the
 [Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
 for the matching editor binary and Android export templates.
 
-This is not a production-ready mobile target yet. Treat it as an opt-in preview
-for testing Kanama games on Android.
+Supported carries the mobile caveats recorded in
+[Version Support](../reference/version-support.md): release builds require
+Android 13+ (debug runs down to Android 9), the packaged addon is runtime-only
+(compiling project scripts needs the Kanama checkout), the release path depends
+on Kanama's PanamaPort fork, and there is no mobile hot reload.
 
 ## Current Status
 
@@ -43,7 +46,8 @@ silent OpenGL fallback fails the check) alongside the normal Kanama startup and
 screenshot checks.
 
 The Pixel 7 debug matrix, the minified Match3 gate, and the Vulkan/Mobile
-renderer pass do not imply a broad release support tier yet. The demo corpus
+renderer pass are the evidence behind the Supported claim; they are not a claim
+of per-demo mobile polish. The demo corpus
 ships OpenGL Compatibility as its default mobile renderer; both renderers are
 now smoke-validated on Pixel 7, while gameplay/visual parity under Vulkan
 beyond the smoke bar remains per-demo validation.
