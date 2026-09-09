@@ -235,6 +235,10 @@
         {
           "member": "Coin._collect",
           "reason": "The vacuum tween's terminal callback (tween_callback), one per collected coin, and the ONLY boundary-crossing evidence that the coin actually reached the player: it is what re-enters Player.collectCoin -> CoinsContainer.updateCoinsAmount -> the scalar tween. Exactly one per coin on both engines, so unlike _follow this one IS counted: MEASURED chrome (3 runs) and firefox 2026-08-20, 5 dispatches for 5 spilled coins, callbackErrors 0."
+        },
+        {
+          "member": "FullScreenHandler._ready",
+          "reason": "Task 64 parcel 1 (kanama#212 + demos#45): the shared FullScreenHandler converged onto Web and its @OnReady sets PROCESS_MODE_ALWAYS through the new set_process_mode family (opcode 301). The deleted web override never had a _ready, so this virtual is new Web surface; requiring it keeps the convergence honest -- if the autoload stops constructing or the ready path stops crossing, the gate says so."
         }
       ],
       "todo": [
