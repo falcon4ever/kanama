@@ -503,7 +503,9 @@ corpus is green" stops meaning anything.
 ### Quarantined Cells
 
 A known-failing `demo:engine` pair can be **quarantined** in
-`scripts/web/demos.sh` with a reason that names a task. A quarantined cell still
+`scripts/web/demos.sh` with a reason that names a task and an expiry date; past
+the date the matrix prints `QUARANTINE EXPIRED` on every run until the cell is
+lifted or the date is renewed. A quarantined cell still
 exports, still runs and still reports — it just does not fail the build. Deleting
 the demo from the matrix instead would be the trap this gate exists to close: the
 corpus would look green because nobody was looking.

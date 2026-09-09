@@ -160,7 +160,11 @@ kanama_web_demo_local_only_reason() {
   esac
 }
 
-# Quarantined cells: "demo:engine" -> the reason, which must name a task.
+# Quarantined cells: "demo:engine" -> the reason, which must name a task. Every entry
+# also carries an expiry date in kanama_web_quarantine_until below (task 99, review R20):
+# a KANAMA-BLOCKED marker fires only when its task is ARCHIVED, so a parked task can
+# quarantine a cell indefinitely. Past the date, web_ci_matrix.sh prints QUARANTINE
+# EXPIRED on every run (non-fatal for now) until the cell is lifted or the date renewed.
 #
 # A quarantined cell still EXPORTS, still RUNS, and still reports its result --
 # it simply does not fail the build. Deleting a demo from the matrix instead
@@ -183,6 +187,16 @@ kanama_web_quarantine_reason() {
     # parking (task 81 driver determinism): 3/3 chrome + 3/3 firefox local repeats
     # green, death in 1-4 steer steps; the runner-scale proof is the lifting PR's
     # own CI plus the next main full-corpus run.
+    *) : ;;
+  esac
+}
+
+# Expiry per quarantined cell (ISO date). Set by hand when a cell is quarantined or the
+# citing task is re-planned; the matrix warns loudly once today is past it.
+kanama_web_quarantine_until() {
+  case "$1" in
+    # quarantined 2026-07-28 (task 71 parked); maintainer sets the real date.
+    dodge:firefox) echo "2026-10-31" ;;
     *) : ;;
   esac
 }
