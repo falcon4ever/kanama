@@ -1,0 +1,95 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Abstraction and base class for packet-based protocols.
+ *
+ * Generated from Godot docs: PacketPeer
+ */
+open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
+    var encodeBufferMaxSize: Int
+        @JvmName("encodeBufferMaxSizeProperty")
+        get() = getEncodeBufferMaxSize()
+        @JvmName("setEncodeBufferMaxSizeProperty")
+        set(value) = setEncodeBufferMaxSize(value)
+
+    /**
+     * Returns the error state of the last packet received (via `get_packet` and `get_var`).
+     *
+     * Generated from Godot docs: PacketPeer.get_packet_error
+     */
+    fun getPacketError(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, handle)
+    }
+
+    /**
+     * Returns the number of packets currently available in the ring-buffer.
+     *
+     * Generated from Godot docs: PacketPeer.get_available_packet_count
+     */
+    fun getAvailablePacketCount(): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetInt(getAvailablePacketCountBind, handle)
+    }
+
+    /**
+     * Maximum buffer size allowed when encoding `Variant`s. Raise this value to support heavier memory
+     * allocations. The `put_var` method allocates memory on the stack, and the buffer used will grow
+     * automatically to the closest power of two to match the size of the `Variant`. If the `Variant`
+     * is bigger than `encode_buffer_max_size`, the method will error out with `ERR_OUT_OF_MEMORY`.
+     *
+     * Generated from Godot docs: PacketPeer.get_encode_buffer_max_size
+     */
+    fun getEncodeBufferMaxSize(): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetInt(getEncodeBufferMaxSizeBind, handle)
+    }
+
+    /**
+     * Maximum buffer size allowed when encoding `Variant`s. Raise this value to support heavier memory
+     * allocations. The `put_var` method allocates memory on the stack, and the buffer used will grow
+     * automatically to the closest power of two to match the size of the `Variant`. If the `Variant`
+     * is bigger than `encode_buffer_max_size`, the method will error out with `ERR_OUT_OF_MEMORY`.
+     *
+     * Generated from Godot docs: PacketPeer.set_encode_buffer_max_size
+     */
+    fun setEncodeBufferMaxSize(maxSize: Int) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntArg(setEncodeBufferMaxSizeBind, handle, maxSize)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PacketPeer? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PacketPeer? =
+            if (handle.address() == 0L) null else PacketPeer(handle)
+
+        private const val GET_PACKET_ERROR_HASH = 3185525595L
+        private val getPacketErrorBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "get_packet_error", GET_PACKET_ERROR_HASH)
+        }
+
+        private const val GET_AVAILABLE_PACKET_COUNT_HASH = 3905245786L
+        private val getAvailablePacketCountBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "get_available_packet_count", GET_AVAILABLE_PACKET_COUNT_HASH)
+        }
+
+        private const val GET_ENCODE_BUFFER_MAX_SIZE_HASH = 3905245786L
+        private val getEncodeBufferMaxSizeBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "get_encode_buffer_max_size", GET_ENCODE_BUFFER_MAX_SIZE_HASH)
+        }
+
+        private const val SET_ENCODE_BUFFER_MAX_SIZE_HASH = 1286410249L
+        private val setEncodeBufferMaxSizeBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "set_encode_buffer_max_size", SET_ENCODE_BUFFER_MAX_SIZE_HASH)
+        }
+    }
+}

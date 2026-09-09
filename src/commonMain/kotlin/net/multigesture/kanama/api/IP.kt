@@ -1,0 +1,114 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Internet protocol (IP) support functions such as DNS resolution.
+ *
+ * Generated from Godot docs: IP
+ */
+object IP {
+    private val singleton: MemorySegment by lazy {
+        ObjectCalls.getSingleton("IP")
+    }
+
+    const val RESOLVER_MAX_QUERIES: Long = 256L
+    const val RESOLVER_INVALID_ID: Long = -1L
+    const val RESOLVER_STATUS_NONE: Long = 0L
+    const val RESOLVER_STATUS_WAITING: Long = 1L
+    const val RESOLVER_STATUS_DONE: Long = 2L
+    const val RESOLVER_STATUS_ERROR: Long = 3L
+    const val TYPE_NONE: Long = 0L
+    const val TYPE_IPV4: Long = 1L
+    const val TYPE_IPV6: Long = 2L
+    const val TYPE_ANY: Long = 3L
+
+    /**
+     * Creates a queue item to resolve a hostname to an IPv4 or IPv6 address depending on the `Type`
+     * constant given as `ip_type`. Returns the queue ID if successful, or `RESOLVER_INVALID_ID` on
+     * error.
+     *
+     * Generated from Godot docs: IP.resolve_hostname_queue_item
+     */
+    @JvmStatic
+    fun resolveHostnameQueueItem(host: String, ipType: Long = 3L): Int {
+        return ObjectCalls.ptrcallWithStringAndLongArgRetInt(resolveHostnameQueueItemBind, singleton, host, ipType)
+    }
+
+    /**
+     * Returns a queued hostname's status as a `ResolverStatus` constant, given its queue `id`.
+     *
+     * Generated from Godot docs: IP.get_resolve_item_status
+     */
+    @JvmStatic
+    fun getResolveItemStatus(id: Int): Long {
+        return ObjectCalls.ptrcallWithIntArgRetLong(getResolveItemStatusBind, singleton, id)
+    }
+
+    /**
+     * Removes a given item `id` from the queue. This should be used to free a queue after it has
+     * completed to enable more queries to happen.
+     *
+     * Generated from Godot docs: IP.erase_resolve_item
+     */
+    @JvmStatic
+    fun eraseResolveItem(id: Int) {
+        ObjectCalls.ptrcallWithIntArg(eraseResolveItemBind, singleton, id)
+    }
+
+    /**
+     * Returns all the user's current IPv4 and IPv6 addresses as an array.
+     *
+     * Generated from Godot docs: IP.get_local_addresses
+     */
+    @JvmStatic
+    fun getLocalAddresses(): List<String> {
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLocalAddressesBind, singleton)
+    }
+
+    /**
+     * Removes all of a `hostname`'s cached references. If no `hostname` is given, all cached IP
+     * addresses are removed.
+     *
+     * Generated from Godot docs: IP.clear_cache
+     */
+    @JvmStatic
+    fun clearCache(hostname: String = "") {
+        ObjectCalls.ptrcallWithStringArg(clearCacheBind, singleton, hostname)
+    }
+
+    @JvmStatic
+    fun fromHandle(handle: MemorySegment): IP? =
+        wrap(handle)
+
+    internal fun wrap(handle: MemorySegment): IP? =
+        if (handle.address() == 0L) null else this
+
+    private const val RESOLVE_HOSTNAME_QUEUE_ITEM_HASH = 1749894742L
+    private val resolveHostnameQueueItemBind by lazy {
+        ObjectCalls.getMethodBind("IP", "resolve_hostname_queue_item", RESOLVE_HOSTNAME_QUEUE_ITEM_HASH)
+    }
+
+    private const val GET_RESOLVE_ITEM_STATUS_HASH = 3812250196L
+    private val getResolveItemStatusBind by lazy {
+        ObjectCalls.getMethodBind("IP", "get_resolve_item_status", GET_RESOLVE_ITEM_STATUS_HASH)
+    }
+
+    private const val ERASE_RESOLVE_ITEM_HASH = 1286410249L
+    private val eraseResolveItemBind by lazy {
+        ObjectCalls.getMethodBind("IP", "erase_resolve_item", ERASE_RESOLVE_ITEM_HASH)
+    }
+
+    private const val GET_LOCAL_ADDRESSES_HASH = 1139954409L
+    private val getLocalAddressesBind by lazy {
+        ObjectCalls.getMethodBind("IP", "get_local_addresses", GET_LOCAL_ADDRESSES_HASH)
+    }
+
+    private const val CLEAR_CACHE_HASH = 3005725572L
+    private val clearCacheBind by lazy {
+        ObjectCalls.getMethodBind("IP", "clear_cache", CLEAR_CACHE_HASH)
+    }
+}

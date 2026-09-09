@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 
 from wrapper_model import load_api_classes, scan_wrapper_classes
+from wrapper_model import SHARED_API_DIR
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -104,7 +105,8 @@ def render_shell(class_name: str, base_name: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api", type=Path, default=API_PATH)
-    parser.add_argument("--api-dir", type=Path, default=API_DIR)
+    parser.add_argument("--api-dir", type=Path, default=API_DIR, help="Platform directory whose wrapper set (shared tree included) counts as existing.")
+    parser.add_argument("--output-dir", type=Path, default=SHARED_API_DIR, help="Where new shell wrappers are written (default: the shared tree).")
     parser.add_argument("--from-skip-report", type=Path)
     parser.add_argument("--class", dest="classes", action="append", default=[])
     parser.add_argument("--exclude", action="append", default=[])
@@ -133,7 +135,7 @@ def main() -> int:
     generated: set[str] = set()
     for class_name in candidates:
         base_name = nearest_base(class_name, api_classes, generated, open_existing)
-        output = args.api_dir / f"{class_name}.kt"
+        output = args.output_dir / f"{class_name}.kt"
         if args.dry_run:
             print(f"{class_name}: {base_name}")
             continue

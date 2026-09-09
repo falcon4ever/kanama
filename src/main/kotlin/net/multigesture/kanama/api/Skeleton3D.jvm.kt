@@ -1,0 +1,101 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+
+// GENERATED desktop/Android companion for Skeleton3D (scripts/generate_api_wrapper.py --write-tree).
+// DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
+// ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
+// they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
+// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithIntAndStringNameArgRetVariantScalar,
+//   ptrcallWithIntArgRetPackedInt32List, ptrcallWithIntArgRetString,
+//   ptrcallWithIntArgRetStringNameList, ptrcallWithIntStringNameAndVariantArg,
+//   ptrcallWithStringNameListArg
+// Index: docs/contributing/ios-shape-gap.md
+
+/**
+ * Returns the name of the bone at index `bone_idx`.
+ *
+ * Generated from Godot docs: Skeleton3D.get_bone_name
+ */
+fun Skeleton3D.getBoneName(boneIdx: Int): String {
+    return ObjectCalls.ptrcallWithIntArgRetString(getBoneNameBind, handle, boneIdx)
+}
+
+/**
+ * Returns the metadata with the given `key` for the bone at index `bone_idx`.
+ *
+ * Generated from Godot docs: Skeleton3D.get_bone_meta
+ */
+fun Skeleton3D.getBoneMeta(boneIdx: Int, key: String): Any? {
+    return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(getBoneMetaBind, handle, boneIdx, key)
+}
+
+/**
+ * Returns the list of all metadata keys for the bone at index `bone_idx`.
+ *
+ * Generated from Godot docs: Skeleton3D.get_bone_meta_list
+ */
+fun Skeleton3D.getBoneMetaList(boneIdx: Int): List<String> {
+    return ObjectCalls.ptrcallWithIntArgRetStringNameList(getBoneMetaListBind, handle, boneIdx)
+}
+
+/**
+ * Sets the metadata with the given `key` to `value` for the bone at index `bone_idx`.
+ *
+ * Generated from Godot docs: Skeleton3D.set_bone_meta
+ */
+fun Skeleton3D.setBoneMeta(boneIdx: Int, key: String, value: Any?) {
+    ObjectCalls.ptrcallWithIntStringNameAndVariantArg(setBoneMetaBind, handle, boneIdx, key, value)
+}
+
+/**
+ * Returns an array containing the bone indexes of all the child node of the passed in bone,
+ * `bone_idx`.
+ *
+ * Generated from Godot docs: Skeleton3D.get_bone_children
+ */
+fun Skeleton3D.getBoneChildren(boneIdx: Int): List<Int> {
+    return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getBoneChildrenBind, handle, boneIdx)
+}
+
+/**
+ * Tells the `PhysicalBone3D` nodes in the Skeleton to start simulating and reacting to the physics
+ * world. Optionally, a list of bone names can be passed-in, allowing only the passed-in bones to
+ * be simulated.
+ *
+ * Generated from Godot docs: Skeleton3D.physical_bones_start_simulation
+ */
+fun Skeleton3D.physicalBonesStartSimulation(bones: List<String>) {
+    ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, handle, bones)
+}
+
+private const val GET_BONE_NAME_HASH = 844755477L
+private val getBoneNameBind by lazy {
+    ObjectCalls.getMethodBind("Skeleton3D", "get_bone_name", GET_BONE_NAME_HASH)
+}
+
+private const val GET_BONE_META_HASH = 203112058L
+private val getBoneMetaBind by lazy {
+    ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta", GET_BONE_META_HASH)
+}
+
+private const val GET_BONE_META_LIST_HASH = 663333327L
+private val getBoneMetaListBind by lazy {
+    ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta_list", GET_BONE_META_LIST_HASH)
+}
+
+private const val SET_BONE_META_HASH = 702482756L
+private val setBoneMetaBind by lazy {
+    ObjectCalls.getMethodBind("Skeleton3D", "set_bone_meta", SET_BONE_META_HASH)
+}
+
+private const val GET_BONE_CHILDREN_HASH = 1706082319L
+private val getBoneChildrenBind by lazy {
+    ObjectCalls.getMethodBind("Skeleton3D", "get_bone_children", GET_BONE_CHILDREN_HASH)
+}
+
+private const val PHYSICAL_BONES_START_SIMULATION_HASH = 2787316981L
+private val physicalBonesStartSimulationBind by lazy {
+    ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_start_simulation", PHYSICAL_BONES_START_SIMULATION_HASH)
+}

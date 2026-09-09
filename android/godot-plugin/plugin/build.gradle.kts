@@ -24,6 +24,11 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
         exclude("example/**")
         remapForeignImports()
     }
+    // The shared generated wrapper tree (task 103): the same files the root JVM module and
+    // :ios-runtime compile, remapped exactly like the desktop sources.
+    from(kanamaRoot.dir("src/commonMain/kotlin")) {
+        remapForeignImports()
+    }
     from(kanamaRoot.dir("annotations/src/main/kotlin")) {
         remapForeignImports()
     }

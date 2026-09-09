@@ -1,0 +1,134 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * A shader implemented in the Godot shading language.
+ *
+ * Generated from Godot docs: Shader
+ */
+open class Shader(handle: MemorySegment) : Resource(handle) {
+    var code: String
+        @JvmName("codeProperty")
+        get() = getCode()
+        @JvmName("setCodeProperty")
+        set(value) = setCode(value)
+
+    /**
+     * Returns the shader mode for the shader.
+     *
+     * Generated from Godot docs: Shader.get_mode
+     */
+    fun getMode(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
+    }
+
+    /**
+     * Returns the shader's code as the user has written it, not the full generated code used
+     * internally.
+     *
+     * Generated from Godot docs: Shader.set_code
+     */
+    fun setCode(code: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
+    }
+
+    /**
+     * Returns the shader's code as the user has written it, not the full generated code used
+     * internally.
+     *
+     * Generated from Godot docs: Shader.get_code
+     */
+    fun getCode(): String {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
+    }
+
+    /**
+     * Sets the default texture to be used with a texture uniform. The default is used if a texture is
+     * not set in the `ShaderMaterial`. Note: `name` must match the name of the uniform in the code
+     * exactly. Note: If the sampler array is used use `index` to access the specified texture.
+     *
+     * Generated from Godot docs: Shader.set_default_texture_parameter
+     */
+    fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
+    }
+
+    /**
+     * Returns the texture that is set as default for the specified parameter. Note: `name` must match
+     * the name of the uniform in the code exactly. Note: If the sampler array is used use `index` to
+     * access the specified texture.
+     *
+     * Generated from Godot docs: Shader.get_default_texture_parameter
+     */
+    fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
+        checkOpen()
+        return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, handle, name, index))
+    }
+
+    /**
+     * Only available when running in the editor. Opens a popup that visualizes the generated shader
+     * code, including all variants and internal shader code. See also
+     * `Material.inspect_native_shader_code`.
+     *
+     * Generated from Godot docs: Shader.inspect_native_shader_code
+     */
+    fun inspectNativeShaderCode() {
+        checkOpen()
+        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
+    }
+
+    companion object {
+        const val MODE_SPATIAL: Long = 0L
+        const val MODE_CANVAS_ITEM: Long = 1L
+        const val MODE_PARTICLES: Long = 2L
+        const val MODE_SKY: Long = 3L
+        const val MODE_FOG: Long = 4L
+        const val MODE_TEXTURE_BLIT: Long = 5L
+
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Shader? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Shader? =
+            if (handle.address() == 0L) null else Shader(handle)
+
+        private const val GET_MODE_HASH = 3392948163L
+        private val getModeBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "get_mode", GET_MODE_HASH)
+        }
+
+        private const val SET_CODE_HASH = 83702148L
+        private val setCodeBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "set_code", SET_CODE_HASH)
+        }
+
+        private const val GET_CODE_HASH = 201670096L
+        private val getCodeBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "get_code", GET_CODE_HASH)
+        }
+
+        private const val SET_DEFAULT_TEXTURE_PARAMETER_HASH = 3850209648L
+        private val setDefaultTextureParameterBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "set_default_texture_parameter", SET_DEFAULT_TEXTURE_PARAMETER_HASH)
+        }
+
+        private const val GET_DEFAULT_TEXTURE_PARAMETER_HASH = 4213877425L
+        private val getDefaultTextureParameterBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "get_default_texture_parameter", GET_DEFAULT_TEXTURE_PARAMETER_HASH)
+        }
+
+        private const val INSPECT_NATIVE_SHADER_CODE_HASH = 3218959716L
+        private val inspectNativeShaderCodeBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "inspect_native_shader_code", INSPECT_NATIVE_SHADER_CODE_HASH)
+        }
+    }
+}

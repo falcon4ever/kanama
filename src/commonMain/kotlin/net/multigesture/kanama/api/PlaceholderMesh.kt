@@ -1,0 +1,38 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.AABB
+
+/**
+ * Placeholder class for a mesh.
+ *
+ * Generated from Godot docs: PlaceholderMesh
+ */
+class PlaceholderMesh(handle: MemorySegment) : Mesh(handle) {
+    /**
+     * The smallest `AABB` enclosing this mesh in local space.
+     *
+     * Generated from Godot docs: PlaceholderMesh.set_aabb
+     */
+    fun setAabb(aabb: AABB) {
+        checkOpen()
+        ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PlaceholderMesh? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PlaceholderMesh? =
+            if (handle.address() == 0L) null else PlaceholderMesh(handle)
+
+        private const val SET_AABB_HASH = 259215842L
+        private val setAabbBind by lazy {
+            ObjectCalls.getMethodBind("PlaceholderMesh", "set_aabb", SET_AABB_HASH)
+        }
+    }
+}

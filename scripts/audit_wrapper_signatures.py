@@ -20,7 +20,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from wrapper_model import ApiMethod, load_api_method_index
+from wrapper_model import ApiMethod, load_api_method_index, wrapper_source_files
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -356,7 +356,7 @@ def main() -> int:
 
     api_methods = load_api_method_index(args.api)
     errors: list[str] = []
-    for path in sorted(args.api_dir.glob("*.kt")):
+    for path in wrapper_source_files(args.api_dir, companions=True):
         errors.extend(scan_file(path, api_methods))
 
     if errors:

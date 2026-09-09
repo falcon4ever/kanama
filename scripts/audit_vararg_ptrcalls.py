@@ -15,6 +15,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from wrapper_model import wrapper_source_files
+
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
@@ -80,7 +82,7 @@ def main() -> int:
     findings: list[Finding] = []
     checked = 0
 
-    for path in sorted(API_DIR.glob("*.kt")):
+    for path in wrapper_source_files(API_DIR, companions=True):
         file_findings, file_checked = audit_file(path, vararg_methods)
         findings.extend(file_findings)
         checked += file_checked

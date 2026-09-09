@@ -1,0 +1,57 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Generated from Godot docs: OggPacketSequence
+ */
+class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
+    var samplingRate: Double
+        @JvmName("samplingRateProperty")
+        get() = getSamplingRate()
+        @JvmName("setSamplingRateProperty")
+        set(value) = setSamplingRate(value)
+
+    fun setSamplingRate(samplingRate: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setSamplingRateBind, handle, samplingRate)
+    }
+
+    fun getSamplingRate(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSamplingRateBind, handle)
+    }
+
+    fun getLength(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OggPacketSequence? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OggPacketSequence? =
+            if (handle.address() == 0L) null else OggPacketSequence(handle)
+
+        private const val SET_SAMPLING_RATE_HASH = 373806689L
+        private val setSamplingRateBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "set_sampling_rate", SET_SAMPLING_RATE_HASH)
+        }
+
+        private const val GET_SAMPLING_RATE_HASH = 1740695150L
+        private val getSamplingRateBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "get_sampling_rate", GET_SAMPLING_RATE_HASH)
+        }
+
+        private const val GET_LENGTH_HASH = 1740695150L
+        private val getLengthBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "get_length", GET_LENGTH_HASH)
+        }
+    }
+}

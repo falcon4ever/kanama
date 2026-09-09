@@ -8,14 +8,19 @@ This check fails unless every such site is annotated with a KANAMA-IOS-STUB or
 KANAMA-IOS-HANDWRITTEN marker within the 2 lines above it — so you cannot add a new silent
 stub without recording it (and it shows up in scripts/ios_handwritten_report.py).
 
-Scans ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/*.kt.
+Scans the iOS wrapper sources: ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/*.kt plus
+the shared tree src/commonMain/kotlin/net/multigesture/kanama/api/*.kt (task 103).
 Run: python3 scripts/check_ios_no_silent_stubs.py   (exit 1 on un-annotated stub)
 """
 
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from wrapper_model import wrapper_source_files  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api"
@@ -43,7 +48,7 @@ def covered_by_marker(lines: list[str], idx: int) -> bool:
 def main() -> int:
     offenders: list[str] = []
     marked = 0
-    for path in sorted(API_DIR.glob("*.kt")):
+    for path in wrapper_source_files(API_DIR, companions=True):
         lines = path.read_text(encoding="utf-8").splitlines()
         for idx, line in enumerate(lines):
             if "const " in line:  # enum/const values are not stubs

@@ -1,0 +1,161 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Generated from Godot docs: OpenXRIPBinding
+ */
+class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
+    var action: OpenXRAction?
+        @JvmName("actionProperty")
+        get() = getAction()
+        @JvmName("setActionProperty")
+        set(value) = setAction(value)
+
+    var bindingPath: String
+        @JvmName("bindingPathProperty")
+        get() = getBindingPath()
+        @JvmName("setBindingPathProperty")
+        set(value) = setBindingPath(value)
+
+    val bindingModifiers: List<Any?>
+        @JvmName("bindingModifiersProperty")
+        get() = getBindingModifiers()
+
+    val paths: List<String>
+        @JvmName("pathsProperty")
+        get() = getPaths()
+
+    fun setAction(action: OpenXRAction?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectArgs(setActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
+    }
+
+    fun getAction(): OpenXRAction? {
+        checkOpen()
+        return OpenXRAction.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionBind, handle))
+    }
+
+    fun setBindingPath(bindingPath: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringArg(setBindingPathBind, handle, bindingPath)
+    }
+
+    fun getBindingPath(): String {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetString(getBindingPathBind, handle)
+    }
+
+    fun getBindingModifierCount(): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, handle)
+    }
+
+    fun getBindingModifier(index: Int): OpenXRActionBindingModifier? {
+        checkOpen()
+        return OpenXRActionBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, handle, index))
+    }
+
+    fun getBindingModifiers(): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, handle)
+    }
+
+    fun getPaths(): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPathsBind, handle)
+    }
+
+    fun getPathCount(): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetInt(getPathCountBind, handle)
+    }
+
+    fun hasPath(path: String): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasPathBind, handle, path)
+    }
+
+    fun addPath(path: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringArg(addPathBind, handle, path)
+    }
+
+    fun removePath(path: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringArg(removePathBind, handle, path)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): OpenXRIPBinding? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): OpenXRIPBinding? =
+            if (handle.address() == 0L) null else OpenXRIPBinding(handle)
+
+        private const val SET_ACTION_HASH = 349361333L
+        private val setActionBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "set_action", SET_ACTION_HASH)
+        }
+
+        private const val GET_ACTION_HASH = 4072409085L
+        private val getActionBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_action", GET_ACTION_HASH)
+        }
+
+        private const val SET_BINDING_PATH_HASH = 83702148L
+        private val setBindingPathBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "set_binding_path", SET_BINDING_PATH_HASH)
+        }
+
+        private const val GET_BINDING_PATH_HASH = 201670096L
+        private val getBindingPathBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_binding_path", GET_BINDING_PATH_HASH)
+        }
+
+        private const val GET_BINDING_MODIFIER_COUNT_HASH = 3905245786L
+        private val getBindingModifierCountBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_binding_modifier_count", GET_BINDING_MODIFIER_COUNT_HASH)
+        }
+
+        private const val GET_BINDING_MODIFIER_HASH = 3538296211L
+        private val getBindingModifierBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_binding_modifier", GET_BINDING_MODIFIER_HASH)
+        }
+
+        private const val GET_BINDING_MODIFIERS_HASH = 3995934104L
+        private val getBindingModifiersBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_binding_modifiers", GET_BINDING_MODIFIERS_HASH)
+        }
+
+        private const val GET_PATHS_HASH = 1139954409L
+        private val getPathsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_paths", GET_PATHS_HASH)
+        }
+
+        private const val GET_PATH_COUNT_HASH = 3905245786L
+        private val getPathCountBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "get_path_count", GET_PATH_COUNT_HASH)
+        }
+
+        private const val HAS_PATH_HASH = 3927539163L
+        private val hasPathBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "has_path", HAS_PATH_HASH)
+        }
+
+        private const val ADD_PATH_HASH = 83702148L
+        private val addPathBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "add_path", ADD_PATH_HASH)
+        }
+
+        private const val REMOVE_PATH_HASH = 83702148L
+        private val removePathBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "remove_path", REMOVE_PATH_HASH)
+        }
+    }
+}

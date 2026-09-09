@@ -1,0 +1,21 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Vector2
+
+// GENERATED desktop/Android companion for CSGPolygon3D (scripts/generate_api_wrapper.py --write-tree).
+// DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
+// ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
+// they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
+// KANAMA-IOS-GAP CSGPolygon3D waits on: ptrcallWithPackedVector2ListArg
+// Index: docs/contributing/ios-shape-gap.md
+
+fun CSGPolygon3D.setPolygon(polygon: List<Vector2>) {
+    ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+}
+
+private const val SET_POLYGON_HASH = 1509147220L
+private val setPolygonBind by lazy {
+    ObjectCalls.getMethodBind("CSGPolygon3D", "set_polygon", SET_POLYGON_HASH)
+}

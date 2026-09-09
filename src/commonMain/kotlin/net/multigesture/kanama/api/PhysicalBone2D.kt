@@ -1,0 +1,236 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.NodePath
+
+/**
+ * A `RigidBody2D`-derived node used to make `Bone2D`s in a `Skeleton2D` react to physics.
+ *
+ * Generated from Godot docs: PhysicalBone2D
+ */
+class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
+    var bone2dNodepath: NodePath
+        @JvmName("bone2dNodepathProperty")
+        get() = getBone2dNodepath()
+        @JvmName("setBone2dNodepathProperty")
+        set(value) = setBone2dNodepath(value)
+
+    var bone2dIndex: Int
+        @JvmName("bone2dIndexProperty")
+        get() = getBone2dIndex()
+        @JvmName("setBone2dIndexProperty")
+        set(value) = setBone2dIndex(value)
+
+    var autoConfigureJoint: Boolean
+        @JvmName("autoConfigureJointProperty")
+        get() = getAutoConfigureJoint()
+        @JvmName("setAutoConfigureJointProperty")
+        set(value) = setAutoConfigureJoint(value)
+
+    var simulatePhysics: Boolean
+        @JvmName("simulatePhysicsProperty")
+        get() = getSimulatePhysics()
+        @JvmName("setSimulatePhysicsProperty")
+        set(value) = setSimulatePhysics(value)
+
+    var followBoneWhenSimulating: Boolean
+        @JvmName("followBoneWhenSimulatingProperty")
+        get() = getFollowBoneWhenSimulating()
+        @JvmName("setFollowBoneWhenSimulatingProperty")
+        set(value) = setFollowBoneWhenSimulating(value)
+
+    /**
+     * Returns the first `Joint2D` child node, if one exists. This is mainly a helper function to make
+     * it easier to get the `Joint2D` that the `PhysicalBone2D` is autoconfiguring.
+     *
+     * Generated from Godot docs: PhysicalBone2D.get_joint
+     */
+    fun getJoint(): Joint2D? {
+        return Joint2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJointBind, handle))
+    }
+
+    /**
+     * If `true`, the `PhysicalBone2D` will automatically configure the first `Joint2D` child node. The
+     * automatic configuration is limited to setting up the node properties and positioning the
+     * `Joint2D`.
+     *
+     * Generated from Godot docs: PhysicalBone2D.get_auto_configure_joint
+     */
+    fun getAutoConfigureJoint(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(getAutoConfigureJointBind, handle)
+    }
+
+    /**
+     * If `true`, the `PhysicalBone2D` will automatically configure the first `Joint2D` child node. The
+     * automatic configuration is limited to setting up the node properties and positioning the
+     * `Joint2D`.
+     *
+     * Generated from Godot docs: PhysicalBone2D.set_auto_configure_joint
+     */
+    fun setAutoConfigureJoint(autoConfigureJoint: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setAutoConfigureJointBind, handle, autoConfigureJoint)
+    }
+
+    /**
+     * If `true`, the `PhysicalBone2D` will start simulating using physics. If `false`, the
+     * `PhysicalBone2D` will follow the transform of the `Bone2D` node. Note: To have the `Bone2D`s
+     * visually follow the `PhysicalBone2D`, use a `SkeletonModification2DPhysicalBones` modification
+     * on the `Skeleton2D` node with the `Bone2D` nodes.
+     *
+     * Generated from Godot docs: PhysicalBone2D.set_simulate_physics
+     */
+    fun setSimulatePhysics(simulatePhysics: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setSimulatePhysicsBind, handle, simulatePhysics)
+    }
+
+    /**
+     * If `true`, the `PhysicalBone2D` will start simulating using physics. If `false`, the
+     * `PhysicalBone2D` will follow the transform of the `Bone2D` node. Note: To have the `Bone2D`s
+     * visually follow the `PhysicalBone2D`, use a `SkeletonModification2DPhysicalBones` modification
+     * on the `Skeleton2D` node with the `Bone2D` nodes.
+     *
+     * Generated from Godot docs: PhysicalBone2D.get_simulate_physics
+     */
+    fun getSimulatePhysics(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, handle)
+    }
+
+    /**
+     * Returns a boolean that indicates whether the `PhysicalBone2D` is running and simulating using
+     * the Godot 2D physics engine. When `true`, the PhysicalBone2D node is using physics.
+     *
+     * Generated from Godot docs: PhysicalBone2D.is_simulating_physics
+     */
+    fun isSimulatingPhysics(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, handle)
+    }
+
+    /**
+     * The `NodePath` to the `Bone2D` that this `PhysicalBone2D` should simulate.
+     *
+     * Generated from Godot docs: PhysicalBone2D.set_bone2d_nodepath
+     */
+    fun setBone2dNodepath(nodepath: NodePath) {
+        ObjectCalls.ptrcallWithNodePathArg(setBone2dNodepathBind, handle, nodepath)
+    }
+
+    /**
+     * The `NodePath` to the `Bone2D` that this `PhysicalBone2D` should simulate.
+     *
+     * Generated from Godot docs: PhysicalBone2D.get_bone2d_nodepath
+     */
+    fun getBone2dNodepath(): NodePath {
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodepathBind, handle)
+    }
+
+    /**
+     * The index of the `Bone2D` that this `PhysicalBone2D` should simulate.
+     *
+     * Generated from Godot docs: PhysicalBone2D.set_bone2d_index
+     */
+    fun setBone2dIndex(boneIndex: Int) {
+        ObjectCalls.ptrcallWithIntArg(setBone2dIndexBind, handle, boneIndex)
+    }
+
+    /**
+     * The index of the `Bone2D` that this `PhysicalBone2D` should simulate.
+     *
+     * Generated from Godot docs: PhysicalBone2D.get_bone2d_index
+     */
+    fun getBone2dIndex(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(getBone2dIndexBind, handle)
+    }
+
+    /**
+     * If `true`, the `PhysicalBone2D` will keep the transform of the bone it is bound to when
+     * simulating physics.
+     *
+     * Generated from Godot docs: PhysicalBone2D.set_follow_bone_when_simulating
+     */
+    fun setFollowBoneWhenSimulating(followBone: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(setFollowBoneWhenSimulatingBind, handle, followBone)
+    }
+
+    /**
+     * If `true`, the `PhysicalBone2D` will keep the transform of the bone it is bound to when
+     * simulating physics.
+     *
+     * Generated from Godot docs: PhysicalBone2D.get_follow_bone_when_simulating
+     */
+    fun getFollowBoneWhenSimulating(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(getFollowBoneWhenSimulatingBind, handle)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PhysicalBone2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PhysicalBone2D? =
+            if (handle.address() == 0L) null else PhysicalBone2D(handle)
+
+        private const val GET_JOINT_HASH = 3582132112L
+        private val getJointBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "get_joint", GET_JOINT_HASH)
+        }
+
+        private const val GET_AUTO_CONFIGURE_JOINT_HASH = 36873697L
+        private val getAutoConfigureJointBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "get_auto_configure_joint", GET_AUTO_CONFIGURE_JOINT_HASH)
+        }
+
+        private const val SET_AUTO_CONFIGURE_JOINT_HASH = 2586408642L
+        private val setAutoConfigureJointBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "set_auto_configure_joint", SET_AUTO_CONFIGURE_JOINT_HASH)
+        }
+
+        private const val SET_SIMULATE_PHYSICS_HASH = 2586408642L
+        private val setSimulatePhysicsBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "set_simulate_physics", SET_SIMULATE_PHYSICS_HASH)
+        }
+
+        private const val GET_SIMULATE_PHYSICS_HASH = 36873697L
+        private val getSimulatePhysicsBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "get_simulate_physics", GET_SIMULATE_PHYSICS_HASH)
+        }
+
+        private const val IS_SIMULATING_PHYSICS_HASH = 36873697L
+        private val isSimulatingPhysicsBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "is_simulating_physics", IS_SIMULATING_PHYSICS_HASH)
+        }
+
+        private const val SET_BONE2D_NODEPATH_HASH = 1348162250L
+        private val setBone2dNodepathBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "set_bone2d_nodepath", SET_BONE2D_NODEPATH_HASH)
+        }
+
+        private const val GET_BONE2D_NODEPATH_HASH = 4075236667L
+        private val getBone2dNodepathBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "get_bone2d_nodepath", GET_BONE2D_NODEPATH_HASH)
+        }
+
+        private const val SET_BONE2D_INDEX_HASH = 1286410249L
+        private val setBone2dIndexBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "set_bone2d_index", SET_BONE2D_INDEX_HASH)
+        }
+
+        private const val GET_BONE2D_INDEX_HASH = 3905245786L
+        private val getBone2dIndexBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "get_bone2d_index", GET_BONE2D_INDEX_HASH)
+        }
+
+        private const val SET_FOLLOW_BONE_WHEN_SIMULATING_HASH = 2586408642L
+        private val setFollowBoneWhenSimulatingBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "set_follow_bone_when_simulating", SET_FOLLOW_BONE_WHEN_SIMULATING_HASH)
+        }
+
+        private const val GET_FOLLOW_BONE_WHEN_SIMULATING_HASH = 36873697L
+        private val getFollowBoneWhenSimulatingBind by lazy {
+            ObjectCalls.getMethodBind("PhysicalBone2D", "get_follow_bone_when_simulating", GET_FOLLOW_BONE_WHEN_SIMULATING_HASH)
+        }
+    }
+}

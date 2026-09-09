@@ -1,0 +1,27 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.NodePath
+
+// GENERATED desktop/Android companion for SkeletonModification2DCCDIK (scripts/generate_api_wrapper.py --write-tree).
+// DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
+// ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
+// they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
+// KANAMA-IOS-GAP SkeletonModification2DCCDIK waits on: ptrcallWithIntArgRetNodePath
+// Index: docs/contributing/ios-shape-gap.md
+
+/**
+ * Returns the `Bone2D` node assigned to the CCDIK joint at `joint_idx`.
+ *
+ * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_bone2d_node
+ */
+fun SkeletonModification2DCCDIK.getCcdikJointBone2dNode(jointIdx: Int): NodePath {
+    checkOpen()
+    return ObjectCalls.ptrcallWithIntArgRetNodePath(getCcdikJointBone2dNodeBind, handle, jointIdx)
+}
+
+private const val GET_CCDIK_JOINT_BONE2D_NODE_HASH = 408788394L
+private val getCcdikJointBone2dNodeBind by lazy {
+    ObjectCalls.getMethodBind("SkeletonModification2DCCDIK", "get_ccdik_joint_bone2d_node", GET_CCDIK_JOINT_BONE2D_NODE_HASH)
+}

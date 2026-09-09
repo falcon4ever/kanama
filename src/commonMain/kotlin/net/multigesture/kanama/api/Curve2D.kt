@@ -1,0 +1,386 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Transform2D
+import net.multigesture.kanama.types.Vector2
+
+/**
+ * Describes a Bézier curve in 2D space.
+ *
+ * Generated from Godot docs: Curve2D
+ */
+class Curve2D(handle: MemorySegment) : Resource(handle) {
+    var bakeInterval: Double
+        @JvmName("bakeIntervalProperty")
+        get() = getBakeInterval()
+        @JvmName("setBakeIntervalProperty")
+        set(value) = setBakeInterval(value)
+
+    var pointCount: Int
+        @JvmName("pointCountProperty")
+        get() = getPointCount()
+        @JvmName("setPointCountProperty")
+        set(value) = setPointCount(value)
+
+    /**
+     * The number of points describing the curve.
+     *
+     * Generated from Godot docs: Curve2D.get_point_count
+     */
+    fun getPointCount(): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
+    }
+
+    /**
+     * The number of points describing the curve.
+     *
+     * Generated from Godot docs: Curve2D.set_point_count
+     */
+    fun setPointCount(count: Int) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
+    }
+
+    /**
+     * Adds a point with the specified `position` relative to the curve's own position, with control
+     * points `in` and `out`. Appends the new point at the end of the point list. If `index` is given,
+     * the new point is inserted before the existing point identified by index `index`. Every existing
+     * point starting from `index` is shifted further down the list of points. The index must be
+     * greater than or equal to `0` and must not exceed the number of existing points in the line. See
+     * `point_count`.
+     *
+     * Generated from Godot docs: Curve2D.add_point
+     */
+    fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0f, 0f), out: Vector2 = Vector2(0f, 0f), index: Int = -1) {
+        checkOpen()
+        ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, handle, position, inValue, out, index)
+    }
+
+    /**
+     * Sets the position for the vertex `idx`. If the index is out of bounds, the function sends an
+     * error to the console.
+     *
+     * Generated from Godot docs: Curve2D.set_point_position
+     */
+    fun setPointPosition(idx: Int, position: Vector2) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, handle, idx, position)
+    }
+
+    /**
+     * Returns the position of the vertex `idx`. If the index is out of bounds, the function sends an
+     * error to the console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.get_point_position
+     */
+    fun getPointPosition(idx: Int): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, idx)
+    }
+
+    /**
+     * Sets the position of the control point leading to the vertex `idx`. If the index is out of
+     * bounds, the function sends an error to the console. The position is relative to the vertex.
+     *
+     * Generated from Godot docs: Curve2D.set_point_in
+     */
+    fun setPointIn(idx: Int, position: Vector2) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointInBind, handle, idx, position)
+    }
+
+    /**
+     * Returns the position of the control point leading to the vertex `idx`. The returned position is
+     * relative to the vertex `idx`. If the index is out of bounds, the function sends an error to the
+     * console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.get_point_in
+     */
+    fun getPointIn(idx: Int): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointInBind, handle, idx)
+    }
+
+    /**
+     * Sets the position of the control point leading out of the vertex `idx`. If the index is out of
+     * bounds, the function sends an error to the console. The position is relative to the vertex.
+     *
+     * Generated from Godot docs: Curve2D.set_point_out
+     */
+    fun setPointOut(idx: Int, position: Vector2) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointOutBind, handle, idx, position)
+    }
+
+    /**
+     * Returns the position of the control point leading out of the vertex `idx`. The returned position
+     * is relative to the vertex `idx`. If the index is out of bounds, the function sends an error to
+     * the console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.get_point_out
+     */
+    fun getPointOut(idx: Int): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointOutBind, handle, idx)
+    }
+
+    /**
+     * Deletes the point `idx` from the curve. Sends an error to the console if `idx` is out of bounds.
+     *
+     * Generated from Godot docs: Curve2D.remove_point
+     */
+    fun removePoint(idx: Int) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntArg(removePointBind, handle, idx)
+    }
+
+    /**
+     * Removes all points from the curve.
+     *
+     * Generated from Godot docs: Curve2D.clear_points
+     */
+    fun clearPoints() {
+        checkOpen()
+        ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
+    }
+
+    /**
+     * Returns the position between the vertex `idx` and the vertex `idx + 1`, where `t` controls if
+     * the point is the first vertex (`t = 0.0`), the last vertex (`t = 1.0`), or in between. Values of
+     * `t` outside the range (`0.0 <= t <= 1.0`) give strange, but predictable results. If `idx` is out
+     * of bounds it is truncated to the first or last vertex, and `t` is ignored. If the curve has no
+     * points, the function sends an error to the console, and returns `(0, 0)`.
+     *
+     * Generated from Godot docs: Curve2D.sample
+     */
+    fun sample(idx: Int, t: Double): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(sampleBind, handle, idx, t)
+    }
+
+    /**
+     * Returns the position at the vertex `fofs`. It calls `sample` using the integer part of `fofs` as
+     * `idx`, and its fractional part as `t`.
+     *
+     * Generated from Godot docs: Curve2D.samplef
+     */
+    fun samplef(fofs: Double): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDoubleArgRetVector2(samplefBind, handle, fofs)
+    }
+
+    /**
+     * The distance in pixels between two adjacent cached points. Changing it forces the cache to be
+     * recomputed the next time the `get_baked_points` or `get_baked_length` function is called. The
+     * smaller the distance, the more points in the cache and the more memory it will consume, so use
+     * with care.
+     *
+     * Generated from Godot docs: Curve2D.set_bake_interval
+     */
+    fun setBakeInterval(distance: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, handle, distance)
+    }
+
+    /**
+     * The distance in pixels between two adjacent cached points. Changing it forces the cache to be
+     * recomputed the next time the `get_baked_points` or `get_baked_length` function is called. The
+     * smaller the distance, the more points in the cache and the more memory it will consume, so use
+     * with care.
+     *
+     * Generated from Godot docs: Curve2D.get_bake_interval
+     */
+    fun getBakeInterval(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, handle)
+    }
+
+    /**
+     * Returns the total length of the curve, based on the cached points. Given enough density (see
+     * `bake_interval`), it should be approximate enough.
+     *
+     * Generated from Godot docs: Curve2D.get_baked_length
+     */
+    fun getBakedLength(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, handle)
+    }
+
+    /**
+     * Returns a point within the curve at position `offset`, where `offset` is measured as a pixel
+     * distance along the curve. To do that, it finds the two cached points where the `offset` lies
+     * between, then interpolates the values. This interpolation is cubic if `cubic` is set to `true`,
+     * or linear if set to `false`. Cubic interpolation tends to follow the curves better, but linear
+     * is faster (and often, precise enough).
+     *
+     * Generated from Godot docs: Curve2D.sample_baked
+     */
+    fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(sampleBakedBind, handle, offset, cubic)
+    }
+
+    /**
+     * Similar to `sample_baked`, but returns `Transform2D` that includes a rotation along the curve,
+     * with `Transform2D.origin` as the point position and the `Transform2D.x` vector pointing in the
+     * direction of the path at that point. Returns an empty transform if the length of the curve is
+     * `0`.
+     *
+     * Generated from Godot docs: Curve2D.sample_baked_with_rotation
+     */
+    fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false): Transform2D {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(sampleBakedWithRotationBind, handle, offset, cubic)
+    }
+
+    /**
+     * Returns the cache of points as a `PackedVector2Array`.
+     *
+     * Generated from Godot docs: Curve2D.get_baked_points
+     */
+    fun getBakedPoints(): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getBakedPointsBind, handle)
+    }
+
+    /**
+     * Returns the closest point on baked segments (in curve's local space) to `to_point`. `to_point`
+     * must be in this curve's local space.
+     *
+     * Generated from Godot docs: Curve2D.get_closest_point
+     */
+    fun getClosestPoint(toPoint: Vector2): Vector2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, toPoint)
+    }
+
+    /**
+     * Returns the closest offset to `to_point`. This offset is meant to be used in `sample_baked`.
+     * `to_point` must be in this curve's local space.
+     *
+     * Generated from Godot docs: Curve2D.get_closest_offset
+     */
+    fun getClosestOffset(toPoint: Vector2): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getClosestOffsetBind, handle, toPoint)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Curve2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Curve2D? =
+            if (handle.address() == 0L) null else Curve2D(handle)
+
+        private const val GET_POINT_COUNT_HASH = 3905245786L
+        private val getPointCountBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_point_count", GET_POINT_COUNT_HASH)
+        }
+
+        private const val SET_POINT_COUNT_HASH = 1286410249L
+        private val setPointCountBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "set_point_count", SET_POINT_COUNT_HASH)
+        }
+
+        private const val ADD_POINT_HASH = 4175465202L
+        private val addPointBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "add_point", ADD_POINT_HASH)
+        }
+
+        private const val SET_POINT_POSITION_HASH = 163021252L
+        private val setPointPositionBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "set_point_position", SET_POINT_POSITION_HASH)
+        }
+
+        private const val GET_POINT_POSITION_HASH = 2299179447L
+        private val getPointPositionBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_point_position", GET_POINT_POSITION_HASH)
+        }
+
+        private const val SET_POINT_IN_HASH = 163021252L
+        private val setPointInBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "set_point_in", SET_POINT_IN_HASH)
+        }
+
+        private const val GET_POINT_IN_HASH = 2299179447L
+        private val getPointInBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_point_in", GET_POINT_IN_HASH)
+        }
+
+        private const val SET_POINT_OUT_HASH = 163021252L
+        private val setPointOutBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "set_point_out", SET_POINT_OUT_HASH)
+        }
+
+        private const val GET_POINT_OUT_HASH = 2299179447L
+        private val getPointOutBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_point_out", GET_POINT_OUT_HASH)
+        }
+
+        private const val REMOVE_POINT_HASH = 1286410249L
+        private val removePointBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "remove_point", REMOVE_POINT_HASH)
+        }
+
+        private const val CLEAR_POINTS_HASH = 3218959716L
+        private val clearPointsBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "clear_points", CLEAR_POINTS_HASH)
+        }
+
+        private const val SAMPLE_HASH = 26514310L
+        private val sampleBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "sample", SAMPLE_HASH)
+        }
+
+        private const val SAMPLEF_HASH = 3588506812L
+        private val samplefBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "samplef", SAMPLEF_HASH)
+        }
+
+        private const val SET_BAKE_INTERVAL_HASH = 373806689L
+        private val setBakeIntervalBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "set_bake_interval", SET_BAKE_INTERVAL_HASH)
+        }
+
+        private const val GET_BAKE_INTERVAL_HASH = 1740695150L
+        private val getBakeIntervalBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_bake_interval", GET_BAKE_INTERVAL_HASH)
+        }
+
+        private const val GET_BAKED_LENGTH_HASH = 1740695150L
+        private val getBakedLengthBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_baked_length", GET_BAKED_LENGTH_HASH)
+        }
+
+        private const val SAMPLE_BAKED_HASH = 3464257706L
+        private val sampleBakedBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "sample_baked", SAMPLE_BAKED_HASH)
+        }
+
+        private const val SAMPLE_BAKED_WITH_ROTATION_HASH = 3296056341L
+        private val sampleBakedWithRotationBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "sample_baked_with_rotation", SAMPLE_BAKED_WITH_ROTATION_HASH)
+        }
+
+        private const val GET_BAKED_POINTS_HASH = 2961356807L
+        private val getBakedPointsBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_baked_points", GET_BAKED_POINTS_HASH)
+        }
+
+        private const val GET_CLOSEST_POINT_HASH = 2656412154L
+        private val getClosestPointBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_closest_point", GET_CLOSEST_POINT_HASH)
+        }
+
+        private const val GET_CLOSEST_OFFSET_HASH = 2276447920L
+        private val getClosestOffsetBind by lazy {
+            ObjectCalls.getMethodBind("Curve2D", "get_closest_offset", GET_CLOSEST_OFFSET_HASH)
+        }
+    }
+}

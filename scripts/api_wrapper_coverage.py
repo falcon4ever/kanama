@@ -71,11 +71,12 @@ def platform_class_set_lines(classes: dict[str, ApiClass], wrapper_classes: set[
     """Per-platform emitted class counts (the drift-gate view, task 30)."""
     from check_wrapper_generator import API_DIR, DESKTOP_HANDSHAPED, IOS_API_DIR, IOS_HANDSHAPED
     from generate_api_wrapper import IOS_HANDWRITTEN_COLLISION_CLASSES, IOS_UNSUPPORTED_CLASSES
+    from wrapper_model import wrapper_source_files
 
     api_names = set(classes)
-    desktop_committed = {p.stem for p in API_DIR.glob("*.kt")}
+    desktop_committed = {p.stem for p in wrapper_source_files(API_DIR)}
     desktop_generated = len((desktop_committed & api_names) - DESKTOP_HANDSHAPED)
-    ios_committed = {p.stem for p in IOS_API_DIR.glob("*.kt")}
+    ios_committed = {p.stem for p in wrapper_source_files(IOS_API_DIR)}
     ios_generated = len(
         (ios_committed & api_names) - set(IOS_HANDWRITTEN_COLLISION_CLASSES) - IOS_HANDSHAPED
     )

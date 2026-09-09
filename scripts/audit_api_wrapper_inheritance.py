@@ -13,6 +13,8 @@ import re
 import sys
 from pathlib import Path
 
+from wrapper_model import wrapper_source_files
+
 from wrapper_model import ancestors, load_api_classes
 
 
@@ -51,7 +53,7 @@ def main() -> int:
     api_classes = load_api_classes(API_PATH)
     errors: list[str] = []
 
-    for path in sorted(API_DIR.glob("*.kt")):
+    for path in wrapper_source_files(API_DIR):
         content = path.read_text(encoding="utf-8")
         match = CLASS_RE.search(content)
         if not match:

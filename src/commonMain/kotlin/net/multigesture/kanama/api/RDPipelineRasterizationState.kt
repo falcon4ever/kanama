@@ -1,0 +1,435 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Pipeline rasterization state (used by `RenderingDevice`).
+ *
+ * Generated from Godot docs: RDPipelineRasterizationState
+ */
+class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
+    var enableDepthClamp: Boolean
+        @JvmName("enableDepthClampProperty")
+        get() = getEnableDepthClamp()
+        @JvmName("setEnableDepthClampProperty")
+        set(value) = setEnableDepthClamp(value)
+
+    var discardPrimitives: Boolean
+        @JvmName("discardPrimitivesProperty")
+        get() = getDiscardPrimitives()
+        @JvmName("setDiscardPrimitivesProperty")
+        set(value) = setDiscardPrimitives(value)
+
+    var wireframe: Boolean
+        @JvmName("wireframeProperty")
+        get() = getWireframe()
+        @JvmName("setWireframeProperty")
+        set(value) = setWireframe(value)
+
+    var cullMode: Long
+        @JvmName("cullModeProperty")
+        get() = getCullMode()
+        @JvmName("setCullModeProperty")
+        set(value) = setCullMode(value)
+
+    var frontFace: Long
+        @JvmName("frontFaceProperty")
+        get() = getFrontFace()
+        @JvmName("setFrontFaceProperty")
+        set(value) = setFrontFace(value)
+
+    var depthBiasEnabled: Boolean
+        @JvmName("depthBiasEnabledProperty")
+        get() = getDepthBiasEnabled()
+        @JvmName("setDepthBiasEnabledProperty")
+        set(value) = setDepthBiasEnabled(value)
+
+    var depthBiasConstantFactor: Double
+        @JvmName("depthBiasConstantFactorProperty")
+        get() = getDepthBiasConstantFactor()
+        @JvmName("setDepthBiasConstantFactorProperty")
+        set(value) = setDepthBiasConstantFactor(value)
+
+    var depthBiasClamp: Double
+        @JvmName("depthBiasClampProperty")
+        get() = getDepthBiasClamp()
+        @JvmName("setDepthBiasClampProperty")
+        set(value) = setDepthBiasClamp(value)
+
+    var depthBiasSlopeFactor: Double
+        @JvmName("depthBiasSlopeFactorProperty")
+        get() = getDepthBiasSlopeFactor()
+        @JvmName("setDepthBiasSlopeFactorProperty")
+        set(value) = setDepthBiasSlopeFactor(value)
+
+    var lineWidth: Double
+        @JvmName("lineWidthProperty")
+        get() = getLineWidth()
+        @JvmName("setLineWidthProperty")
+        set(value) = setLineWidth(value)
+
+    var patchControlPoints: Long
+        @JvmName("patchControlPointsProperty")
+        get() = getPatchControlPoints()
+        @JvmName("setPatchControlPointsProperty")
+        set(value) = setPatchControlPoints(value)
+
+    /**
+     * If `true`, clamps depth values according to the minimum and maximum depth of the associated
+     * viewport.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_enable_depth_clamp
+     */
+    fun setEnableDepthClamp(pMember: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, handle, pMember)
+    }
+
+    /**
+     * If `true`, clamps depth values according to the minimum and maximum depth of the associated
+     * viewport.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_enable_depth_clamp
+     */
+    fun getEnableDepthClamp(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, handle)
+    }
+
+    /**
+     * If `true`, primitives are discarded immediately before the rasterization stage.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_discard_primitives
+     */
+    fun setDiscardPrimitives(pMember: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, handle, pMember)
+    }
+
+    /**
+     * If `true`, primitives are discarded immediately before the rasterization stage.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_discard_primitives
+     */
+    fun getDiscardPrimitives(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, handle)
+    }
+
+    /**
+     * If `true`, performs wireframe rendering for triangles instead of flat or textured rendering.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_wireframe
+     */
+    fun setWireframe(pMember: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setWireframeBind, handle, pMember)
+    }
+
+    /**
+     * If `true`, performs wireframe rendering for triangles instead of flat or textured rendering.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_wireframe
+     */
+    fun getWireframe(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, handle)
+    }
+
+    /**
+     * The cull mode to use when drawing polygons, which determines whether front faces or backfaces
+     * are hidden.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_cull_mode
+     */
+    fun setCullMode(pMember: Long) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, pMember)
+    }
+
+    /**
+     * The cull mode to use when drawing polygons, which determines whether front faces or backfaces
+     * are hidden.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_cull_mode
+     */
+    fun getCullMode(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
+    }
+
+    /**
+     * The winding order to use to determine which face of a triangle is considered its front face.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_front_face
+     */
+    fun setFrontFace(pMember: Long) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, handle, pMember)
+    }
+
+    /**
+     * The winding order to use to determine which face of a triangle is considered its front face.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_front_face
+     */
+    fun getFrontFace(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, handle)
+    }
+
+    /**
+     * If `true`, each generated depth value will by offset by some amount. The specific amount is
+     * generated per polygon based on the values of `depth_bias_slope_factor` and
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_enabled
+     */
+    fun setDepthBiasEnabled(pMember: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, handle, pMember)
+    }
+
+    /**
+     * If `true`, each generated depth value will by offset by some amount. The specific amount is
+     * generated per polygon based on the values of `depth_bias_slope_factor` and
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_enabled
+     */
+    fun getDepthBiasEnabled(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, handle)
+    }
+
+    /**
+     * A constant offset added to each depth value. Applied after `depth_bias_slope_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_constant_factor
+     */
+    fun setDepthBiasConstantFactor(pMember: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, handle, pMember)
+    }
+
+    /**
+     * A constant offset added to each depth value. Applied after `depth_bias_slope_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_constant_factor
+     */
+    fun getDepthBiasConstantFactor(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, handle)
+    }
+
+    /**
+     * A limit for how much each depth value can be offset. If negative, it serves as a minimum value,
+     * but if positive, it serves as a maximum value.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_clamp
+     */
+    fun setDepthBiasClamp(pMember: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, handle, pMember)
+    }
+
+    /**
+     * A limit for how much each depth value can be offset. If negative, it serves as a minimum value,
+     * but if positive, it serves as a maximum value.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_clamp
+     */
+    fun getDepthBiasClamp(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, handle)
+    }
+
+    /**
+     * A constant scale applied to the slope of each polygons' depth. Applied before
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_slope_factor
+     */
+    fun setDepthBiasSlopeFactor(pMember: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, handle, pMember)
+    }
+
+    /**
+     * A constant scale applied to the slope of each polygons' depth. Applied before
+     * `depth_bias_constant_factor`.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_slope_factor
+     */
+    fun getDepthBiasSlopeFactor(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, handle)
+    }
+
+    /**
+     * The line width to use when drawing lines (in pixels). Thick lines may not be supported on all
+     * hardware.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_line_width
+     */
+    fun setLineWidth(pMember: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, handle, pMember)
+    }
+
+    /**
+     * The line width to use when drawing lines (in pixels). Thick lines may not be supported on all
+     * hardware.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_line_width
+     */
+    fun getLineWidth(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
+    }
+
+    /**
+     * The number of control points to use when drawing a patch with tessellation enabled. Higher
+     * values result in higher quality at the cost of performance.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.set_patch_control_points
+     */
+    fun setPatchControlPoints(pMember: Long) {
+        checkOpen()
+        ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, handle, pMember)
+    }
+
+    /**
+     * The number of control points to use when drawing a patch with tessellation enabled. Higher
+     * values result in higher quality at the cost of performance.
+     *
+     * Generated from Godot docs: RDPipelineRasterizationState.get_patch_control_points
+     */
+    fun getPatchControlPoints(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, handle)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): RDPipelineRasterizationState? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): RDPipelineRasterizationState? =
+            if (handle.address() == 0L) null else RDPipelineRasterizationState(handle)
+
+        private const val SET_ENABLE_DEPTH_CLAMP_HASH = 2586408642L
+        private val setEnableDepthClampBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_enable_depth_clamp", SET_ENABLE_DEPTH_CLAMP_HASH)
+        }
+
+        private const val GET_ENABLE_DEPTH_CLAMP_HASH = 36873697L
+        private val getEnableDepthClampBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_enable_depth_clamp", GET_ENABLE_DEPTH_CLAMP_HASH)
+        }
+
+        private const val SET_DISCARD_PRIMITIVES_HASH = 2586408642L
+        private val setDiscardPrimitivesBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_discard_primitives", SET_DISCARD_PRIMITIVES_HASH)
+        }
+
+        private const val GET_DISCARD_PRIMITIVES_HASH = 36873697L
+        private val getDiscardPrimitivesBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_discard_primitives", GET_DISCARD_PRIMITIVES_HASH)
+        }
+
+        private const val SET_WIREFRAME_HASH = 2586408642L
+        private val setWireframeBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_wireframe", SET_WIREFRAME_HASH)
+        }
+
+        private const val GET_WIREFRAME_HASH = 36873697L
+        private val getWireframeBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_wireframe", GET_WIREFRAME_HASH)
+        }
+
+        private const val SET_CULL_MODE_HASH = 2662586502L
+        private val setCullModeBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_cull_mode", SET_CULL_MODE_HASH)
+        }
+
+        private const val GET_CULL_MODE_HASH = 2192484313L
+        private val getCullModeBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_cull_mode", GET_CULL_MODE_HASH)
+        }
+
+        private const val SET_FRONT_FACE_HASH = 2637251213L
+        private val setFrontFaceBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_front_face", SET_FRONT_FACE_HASH)
+        }
+
+        private const val GET_FRONT_FACE_HASH = 708793786L
+        private val getFrontFaceBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_front_face", GET_FRONT_FACE_HASH)
+        }
+
+        private const val SET_DEPTH_BIAS_ENABLED_HASH = 2586408642L
+        private val setDepthBiasEnabledBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_enabled", SET_DEPTH_BIAS_ENABLED_HASH)
+        }
+
+        private const val GET_DEPTH_BIAS_ENABLED_HASH = 36873697L
+        private val getDepthBiasEnabledBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_enabled", GET_DEPTH_BIAS_ENABLED_HASH)
+        }
+
+        private const val SET_DEPTH_BIAS_CONSTANT_FACTOR_HASH = 373806689L
+        private val setDepthBiasConstantFactorBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_constant_factor", SET_DEPTH_BIAS_CONSTANT_FACTOR_HASH)
+        }
+
+        private const val GET_DEPTH_BIAS_CONSTANT_FACTOR_HASH = 1740695150L
+        private val getDepthBiasConstantFactorBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_constant_factor", GET_DEPTH_BIAS_CONSTANT_FACTOR_HASH)
+        }
+
+        private const val SET_DEPTH_BIAS_CLAMP_HASH = 373806689L
+        private val setDepthBiasClampBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_clamp", SET_DEPTH_BIAS_CLAMP_HASH)
+        }
+
+        private const val GET_DEPTH_BIAS_CLAMP_HASH = 1740695150L
+        private val getDepthBiasClampBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_clamp", GET_DEPTH_BIAS_CLAMP_HASH)
+        }
+
+        private const val SET_DEPTH_BIAS_SLOPE_FACTOR_HASH = 373806689L
+        private val setDepthBiasSlopeFactorBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_slope_factor", SET_DEPTH_BIAS_SLOPE_FACTOR_HASH)
+        }
+
+        private const val GET_DEPTH_BIAS_SLOPE_FACTOR_HASH = 1740695150L
+        private val getDepthBiasSlopeFactorBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_slope_factor", GET_DEPTH_BIAS_SLOPE_FACTOR_HASH)
+        }
+
+        private const val SET_LINE_WIDTH_HASH = 373806689L
+        private val setLineWidthBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_line_width", SET_LINE_WIDTH_HASH)
+        }
+
+        private const val GET_LINE_WIDTH_HASH = 1740695150L
+        private val getLineWidthBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_line_width", GET_LINE_WIDTH_HASH)
+        }
+
+        private const val SET_PATCH_CONTROL_POINTS_HASH = 1286410249L
+        private val setPatchControlPointsBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_patch_control_points", SET_PATCH_CONTROL_POINTS_HASH)
+        }
+
+        private const val GET_PATCH_CONTROL_POINTS_HASH = 3905245786L
+        private val getPatchControlPointsBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_patch_control_points", GET_PATCH_CONTROL_POINTS_HASH)
+        }
+    }
+}

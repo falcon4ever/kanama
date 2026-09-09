@@ -4,14 +4,22 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
+from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
 
 from api_wrapper_candidates import CALL_SHAPES, CallShape, camel_name, const_name
 from wrapper_model import (
+    DESKTOP_API_DIR,
+    IOS_API_DIR,
+    ROOT,
+    SHARED_API_DIR,
     ApiClass,
     ApiMethod,
     ancestors,
+    is_companion_file,
     load_api_classes,
     load_api_singletons,
     object_type_names,
@@ -119,6 +127,7 @@ DEFAULT_IMPORTS = {
     "ObjectCalls": "net.multigesture.kanama.binding.runtime.ObjectCalls",
     "MemorySegment": "java.lang.foreign.MemorySegment",
     "JvmName": "kotlin.jvm.JvmName",
+    "JvmStatic": "kotlin.jvm.JvmStatic",
     "Vector2": "net.multigesture.kanama.types.Vector2",
     "Vector2i": "net.multigesture.kanama.types.Vector2i",
     "Vector3": "net.multigesture.kanama.types.Vector3",
@@ -192,46 +201,228 @@ IOS_AUDIT_ONLY = False
 # `.wrap`). None = no constraint (desktop / single-class fixture default is set in main).
 IOS_EMIT_CLASSES: set[str] | None = None
 
-# Real Godot classes that are deliberately hand-written on iOS (inside IosGodotApi.kt or a
-# bespoke single-class file), so the generator must NOT emit a wrapper for them — a generated
-# `<Class>.kt` would duplicate-declare the class and break the compile. `scan_wrapper_classes`
-# only sees classes that own a `.kt` file, so the ones nested in IosGodotApi.kt are invisible to
-# it; without this registry, `--ios-emit-class SceneTree` would silently produce a colliding file.
-# main() logs + skips any requested class listed here, making the collision explicit (task 11,
-# generator policy). Retire an entry only when the class moves to a real generated wrapper (as
-# Time/InputMap/PhysicsServer3D did in task 10) — then delete it here so generation is allowed.
-# Classes the iOS generator refuses to emit because their generated draft cannot compile on
-# iOS (task 30 breadth pass). Unlike IOS_HANDWRITTEN_COLLISION_CLASSES these are not hosted
-# anywhere on iOS — requesting one logs an `unsupported:` line and skips it, so a bulk regen
-# stays fail-loud instead of writing a file that breaks compileKotlinIosArm64. Retire an entry
-# by porting the desktop policy surface it depends on.
-# FileAccess sat in this same list until iOS grew its own FileAccessHandle (2026-07-13), and the
-# docs still described it as uncompilable four weeks later. The marker below makes
+# What the current render is for. "desktop" and "ios" are the per-platform files (the old two
+# modes); "shared" renders a class into the shared tree, where iOS decides the METHOD SET (only
+# helper shapes audited on iOS) and desktop decides the SURFACE (@JvmStatic, factory helpers).
+RENDER_TARGET = "desktop"
+
+
+def _jvm_static() -> bool:
+    # @JvmStatic is an @OptionalExpectation annotation: Kotlin/Native ignores it, so the shared tree
+    # carries it for the JVM. The iOS per-platform files keep the old iOS-mode output for now.
+    return RENDER_TARGET != "ios"
+
+
+@contextmanager
+def _mode(ios: bool, emit_classes: set[str] | None = None):
+    """Temporarily select the per-platform gate the module-level flags encode."""
+    global IOS_AUDIT_ONLY, IOS_EMIT_CLASSES
+    previous = (IOS_AUDIT_ONLY, IOS_EMIT_CLASSES)
+    IOS_AUDIT_ONLY = ios
+    IOS_EMIT_CLASSES = emit_classes if ios else None
+    try:
+        yield
+    finally:
+        IOS_AUDIT_ONLY, IOS_EMIT_CLASSES = previous
+
+# ---------------------------------------------------------------------------------------------
+# One generated wrapper tree, N platform compiles (task 103). Every Godot class with a committed
+# wrapper is generated ONCE into SHARED_API_DIR unless it appears in this table. The table is the
+# single list of per-platform wrappers, with what each platform does:
+#   desktop: "generated" (a desktop-mode file in DESKTOP_API_DIR) | "hand" (hand-shaped there)
+#   ios:     "generated" (an iOS-mode file in IOS_API_DIR) | "hand" (hand-shaped there) |
+#            "collision" (hand-written inside IosGodotApi.kt or a bespoke file; the generator
+#            refuses to emit it) | "unsupported" (its draft cannot compile on iOS; not hosted)
+# A class is per-platform only when the two platforms genuinely differ in how they host it; the
+# drift gate (scripts/check_wrapper_generator.py) checks every "generated" cell against a fresh
+# regen and only exempts the "hand" cells. Retire an entry by teaching the generator to emit the
+# class losslessly on both platforms (custom section) and deleting it here.
+# FileAccess sat in the unsupported list until iOS grew its own FileAccessHandle (2026-07-13), and
+# the docs still described it as uncompilable four weeks later. The marker below makes
 # scripts/audit_stale_blockers.py go red the day DirAccess gets the same treatment.
 # KANAMA-BLOCKED(since:2026-07-13, symbol:DirAccessHandle@ios): iOS carries no DirAccessHandle policy class
-IOS_UNSUPPORTED_CLASSES = {
-    "DirAccess": "desktop hosts DirAccess as a hand-shaped static facade; the generated draft "
-                 "references the hand-authored DirAccessHandle alias class iOS does not carry",
-    "MethodTweener": "generated setTrans/setEase clash with the hand-written iOS Tweener fluent "
-                     "glue (IosGodotApi.kt) the class must subclass",
+@dataclass(frozen=True)
+class WrapperHome:
+    desktop: str
+    ios: str
+    reason: str
+
+
+PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
+    "AnimationPlayer": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "ArrayMesh": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "AudioStreamPlayer": WrapperHome("hand", "collision",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit; iOS: hand-written cinterop-glue Node subclass in IosGodotApi.kt"),
+    "BaseMaterial3D": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "BoxMesh": WrapperHome("hand", "hand",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
+        "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
+        "validated 114/114)"),
+    "BoxShape3D": WrapperHome("hand", "hand",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
+        "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
+        "validated 114/114)"),
+    "Button": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "ButtonGroup": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "CallbackTweener": WrapperHome("hand", "collision",
+        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
+        "written Tween chaining glue in IosGodotApi.kt"),
+    "Camera3D": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "ConfigFile": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "DirAccess": WrapperHome("hand", "unsupported",
+        "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit; "
+        "iOS: desktop hosts DirAccess as a hand-shaped static facade; the generated draft references the "
+        "hand-authored DirAccessHandle alias class iOS does not carry"),
+    "ENetMultiplayerPeer": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "EditorExportPlatform": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "Engine": WrapperHome("hand", "collision",
+        "desktop: hand-written singleton: registerSingleton keeps a RefCounted-rejection lifetime guard "
+        "(audit_singleton_refcounted_policy); iOS: hand-written singleton (get_main_loop -> MainLoop, no "
+        "wrapper class) in Engine.kt"),
+    "FileAccess": WrapperHome("hand", "collision",
+        "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit; "
+        "iOS: hand-written static facade + FileAccessHandle glue in FileAccess.kt (static-method dispatch "
+        "subset); the generated draft would clash and still references the desktop hand-shaped "
+        "FileAccessHandle surface"),
+    "Font": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "Image": WrapperHome("generated", "hand",
+        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
+        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
+    "ImageTexture": WrapperHome("generated", "hand",
+        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
+        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
+    "InputEventKey": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "InputEventMouseButton": WrapperHome("hand", "collision",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit; iOS: hand-written cinterop-glue event wrapper in IosGodotApi.kt"),
+    "InputEventMouseMotion": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "Light3D": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "LightmapGI": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "LineEdit": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "Material": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "Mesh": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "MeshDataTool": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "MeshLibrary": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "MethodTweener": WrapperHome("generated", "unsupported",
+        "iOS: generated setTrans/setEase clash with the hand-written iOS Tweener fluent glue "
+        "(IosGodotApi.kt) the class must subclass"),
+    "Node": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "Node3D": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "NoiseTexture2D": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "OpenXRSpatialAnchorCapability": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "PackedScene": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "ParticleProcessMaterial": WrapperHome("generated", "hand",
+        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
+        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
+    "PhysicsBody3D": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "PlaneMesh": WrapperHome("generated", "hand",
+        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
+        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
+    "ProceduralSkyMaterial": WrapperHome("generated", "hand",
+        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
+        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
+    "ProjectSettings": WrapperHome("generated", "collision",
+        "iOS: hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt"),
+    "PropertyTweener": WrapperHome("hand", "collision",
+        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
+        "written Tween chaining glue in IosGodotApi.kt"),
+    "Range": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "RefCounted": WrapperHome("hand", "generated",
+        "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
+    "Resource": WrapperHome("hand", "generated",
+        "desktop: hand create/fromObject/asObject helpers; the refcount lifetime is inherited from "
+        "RefCounted (task 51)"),
+    "ResourceLoader": WrapperHome("hand", "collision",
+        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
+        "written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt"),
+    "SceneMultiplayer": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "SceneTree": WrapperHome("hand", "collision",
+        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
+        "written Node subclass (createTween F2 fix + coroutine/companion glue) in IosGodotApi.kt"),
+    "ShaderMaterial": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "Slider": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "StandardMaterial3D": WrapperHome("hand", "hand",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
+        "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
+        "validated 114/114)"),
+    "StaticBody3D": WrapperHome("generated", "collision",
+        "iOS: hand-written thin Node3D subclass in IosGodotApi.kt"),
+    "SurfaceTool": WrapperHome("hand", "generated",
+        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
+        "emit"),
+    "TabBar": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
+    "Tween": WrapperHome("hand", "collision",
+        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
+        "written Variant tween_property runtime in IosGodotApi.kt"),
+    "Tweener": WrapperHome("generated", "collision",
+        "iOS: hand-written Tween chaining glue in IosGodotApi.kt"),
+    "Viewport": WrapperHome("hand", "generated",
+        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
 }
 
-IOS_HANDWRITTEN_COLLISION_CLASSES = {
-    "FileAccess": "hand-written static facade + FileAccessHandle glue in FileAccess.kt (static-method "
-                  "dispatch subset); the generated draft would clash and still references the desktop "
-                  "hand-shaped FileAccessHandle surface",
-    "SceneTree": "hand-written Node subclass (createTween F2 fix + coroutine/companion glue) in IosGodotApi.kt",
-    "Tween": "hand-written Variant tween_property runtime in IosGodotApi.kt",
-    "Tweener": "hand-written Tween chaining glue in IosGodotApi.kt",
-    "PropertyTweener": "hand-written Tween chaining glue in IosGodotApi.kt",
-    "CallbackTweener": "hand-written Tween chaining glue in IosGodotApi.kt",
-    "ResourceLoader": "hand-written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt",
-    "Engine": "hand-written singleton (get_main_loop -> MainLoop, no wrapper class) in Engine.kt",
-    "ProjectSettings": "hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt",
-    "StaticBody3D": "hand-written thin Node3D subclass in IosGodotApi.kt",
-    "AudioStreamPlayer": "hand-written cinterop-glue Node subclass in IosGodotApi.kt",
-    "InputEventMouseButton": "hand-written cinterop-glue event wrapper in IosGodotApi.kt",
-}
+DESKTOP_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "hand")
+IOS_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.ios == "hand")
+IOS_HANDWRITTEN_COLLISION_CLASSES = {n: h.reason for n, h in PER_PLATFORM_WRAPPERS.items() if h.ios == "collision"}
+IOS_UNSUPPORTED_CLASSES = {n: h.reason for n, h in PER_PLATFORM_WRAPPERS.items() if h.ios == "unsupported"}
+# Generated for one platform only: the other platform hand-shapes, hand-writes, or lacks the class.
+DESKTOP_ONLY_GENERATED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "generated")
+IOS_ONLY_GENERATED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.ios == "generated")
+assert not (DESKTOP_ONLY_GENERATED & IOS_ONLY_GENERATED), "a class generated on both platforms is shared, not per-platform"
 
 # Logical arg kinds the iOS generic dispatch + Kotlin layout marshal today. Scalars
 # widen per the width table (int*->int64/8B, float->double/8B); Vector2/3 components
@@ -427,25 +618,7 @@ KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
 NULLABLE_OBJECT_PARAM_OVERRIDES = {
     ("Node", "set_owner", "owner"),
 }
-CUSTOM_MEMBER_SECTIONS = {
-    "AnimationMixer": """
-    fun setParameter(path: String, value: Any?) {
-        setIndexed(path, value)
-    }
-
-    fun getParameter(path: String): Any? =
-        getIndexed(path)
-
-    fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
-        val value = getParameter(path)
-        val playback = when (value) {
-            is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
-            is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
-            else -> null
-        }
-        return playback ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
-    }
-""".strip("\n"),
+DESKTOP_MEMBER_SECTIONS = {
     "ProjectSettings": """
     @JvmStatic
     fun getSettingString(name: String, defaultValue: String = ""): String =
@@ -526,26 +699,7 @@ CUSTOM_MEMBER_SECTIONS = {
         (value as? Map<*, *>)?.entries?.associate { (key, mapValue) -> key.toString() to mapValue } ?: defaultValue
 """.strip("\n"),
 }
-CUSTOM_COMPANION_MEMBER_SECTIONS = {
-    "Sprite2D": """
-        @JvmStatic
-        fun create(): Sprite2D =
-            Sprite2D(ObjectCalls.constructObject("Sprite2D"))
-""".strip("\n"),
-    "FastNoiseLite": """
-        @JvmStatic
-        fun create(): FastNoiseLite =
-            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
-
-        @JvmStatic
-        fun fromResource(value: Resource): FastNoiseLite? =
-            if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
-""".strip("\n"),
-    "OfflineMultiplayerPeer": """
-        @JvmStatic
-        fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
-""".strip("\n"),
+DESKTOP_COMPANION_MEMBER_SECTIONS = {
     "ParticleProcessMaterial": """
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =
@@ -561,11 +715,6 @@ CUSTOM_COMPANION_MEMBER_SECTIONS = {
         fun fromResource(value: Resource): ProceduralSkyMaterial? =
             if (value.isClass("ProceduralSkyMaterial")) ProceduralSkyMaterial(value.handle) else null
 """.strip("\n"),
-    "SphereMesh": """
-        @JvmStatic
-        fun fromResource(value: Resource): SphereMesh? =
-            if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null
-""".strip("\n"),
 }
 
 # iOS-only hand-written body members emitted into the generated wrapper as a stable
@@ -575,7 +724,7 @@ CUSTOM_COMPANION_MEMBER_SECTIONS = {
 # after every regen. Emitting them here makes regeneration lossless. Referenced types
 # (SceneTree, Tween, IosGodot, Node, NodePath) are all in the same package, so no extra
 # imports are needed. Gated to IOS_AUDIT_ONLY in render_wrapper.
-IOS_CUSTOM_MEMBER_SECTIONS = {
+IOS_MEMBER_SECTIONS = {
     "RefCounted": """
     // ── Kanama iOS RefCounted ownership (generator custom-section; task 31 mirror) ─────
     // A wrapper returned from a RefCounted-typed ptrcall method owns the +1 reference the
@@ -684,32 +833,6 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
         call("set_shader_parameter", param, value)
     }
 """.strip("\n"),
-    "PhysicsDirectSpaceState3D": """
-    // intersect_ray returns a Godot Dictionary, decoded via the fixed-schema raycast C-shim
-    // (kanama_ios_godot_ptrcall_ret_raycast_dict). Empty map = no hit. "collider" is wrapped from the
-    // raw handle into a GodotObject so scripts can `hit["collider"] as? GodotObject`.
-    fun intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?> {
-        val query = parameters ?: return emptyMap()
-        val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, handle, query.handle)
-        if (raw.isEmpty()) return emptyMap()
-        val result = raw.toMutableMap()
-        (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(it) }
-        return result
-    }
-""".strip("\n"),
-    "PhysicsRayQueryParameters3D": """
-    // The RID list excluded from collisions (e.g. the caster's own body). Marshalled to a Godot
-    // Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
-    fun setExclude(exclude: List<net.multigesture.kanama.types.RID>) {
-        checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
-    }
-""".strip("\n"),
-    "ShapeCast3D": """
-    // Long-index overload (desktop ShapeCast3D exposes both Int and Long), so loops over the now-Long
-    // getCollisionCount() (`for (i in 0 until getCollisionCount())`) pass a Long index straight through.
-    fun getCollisionPoint(index: Long): Vector3 = getCollisionPoint(index.toInt())
-""".strip("\n"),
     "SurfaceTool": """
     // No-arg commit() — the generated commit(existing, flags) doesn't default the nullable `existing`
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
@@ -722,39 +845,11 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
 
     fun getCamera2D(): Camera2D? = getCamera2d()
 """.strip("\n"),
-    "AnimationMixer": """
-    // AnimationTree parameters are exposed as `parameters/...` engine properties, so route through
-    // set()/get() (no NodePath set_indexed needed). Matches the desktop AnimationMixer helpers.
-    fun setParameter(path: String, value: Any?) {
-        set(path, value)
-    }
-
-    fun getParameter(path: String): Any? =
-        get(path)
-
-    fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
-        val value = getParameter(path)
-        val playback = when (value) {
-            is AnimationNodeStateMachinePlayback -> value
-            // iOS decodes a Variant Object return as a raw handle (MemorySegment), not a wrapper.
-            is MemorySegment -> if (value.address() != 0L) AnimationNodeStateMachinePlayback(value) else null
-            is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
-            is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
-            else -> null
-        }
-        return playback ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
-    }
-""".strip("\n"),
 }
 
-# iOS-only companion-object custom sections (mirrors CUSTOM_COMPANION_MEMBER_SECTIONS for the
-# IOS_AUDIT_ONLY path). Members are emitted inside the generated companion object (8-space indent).
-IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
-    "Sprite2D": """
-        // Instantiate a Sprite2D node without exposing platform FFI construction to game code.
-        fun create(): Sprite2D =
-            Sprite2D(MemorySegment.ofAddress(IosGodot.constructObject("Sprite2D")))
-""".strip("\n"),
+# iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
+# 8-space indent). A shared class's iOS-only sugar belongs in IOS_EXTENSION_SECTIONS instead.
+IOS_COMPANION_MEMBER_SECTIONS = {
     "RefCounted": """
         // Releases the +1 return-slot reference carried by `handle` without minting a
         // wrapper — the generated self-return-collapse pattern calls this before
@@ -830,11 +925,6 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
         fun fromMaterial(value: Material): BaseMaterial3D? =
             if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
 """.strip("\n"),
-    "FastNoiseLite": """
-        // Instantiate a FastNoiseLite (RefCounted noise generator).
-        fun create(): FastNoiseLite =
-            FastNoiseLite(MemorySegment.ofAddress(IosGodot.constructObject("FastNoiseLite")))
-""".strip("\n"),
     "LightmapGI": """
         // Instantiate a LightmapGI node.
         fun create(): LightmapGI =
@@ -855,11 +945,6 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
         fun create(): ConfigFile =
             ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))
 """.strip("\n"),
-    "OfflineMultiplayerPeer": """
-        // Instantiate an OfflineMultiplayerPeer (single-player multiplayer stub).
-        fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("OfflineMultiplayerPeer")))
-""".strip("\n"),
     "ENetMultiplayerPeer": """
         // Instantiate an ENetMultiplayerPeer.
         fun create(): ENetMultiplayerPeer =
@@ -875,35 +960,180 @@ IOS_CUSTOM_COMPANION_MEMBER_SECTIONS = {
         fun fromResource(value: Resource?): ShaderMaterial? =
             value?.takeIf { it.isClass("ShaderMaterial") }?.let { ShaderMaterial(it.handle) }
 """.strip("\n"),
-    "PhysicsRayQueryParameters3D": """
-        // Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
-        // (marshalled through the Array[RID] C-shim so intersect_ray skips the caster's own collider).
-        fun create(
-            from: Vector3,
-            to: Vector3,
-            collisionMask: Long = 4294967295L,
-            exclude: List<net.multigesture.kanama.types.RID> = emptyList(),
-        ): PhysicsRayQueryParameters3D {
-            val query = PhysicsRayQueryParameters3D(MemorySegment.ofAddress(IosGodot.constructObject("PhysicsRayQueryParameters3D")))
-            query.from = from
-            query.to = to
-            query.collisionMask = collisionMask
-            if (exclude.isNotEmpty()) query.setExclude(exclude)
-            return query
-        }
+}
 
-        private const val SET_EXCLUDE_HASH = 381264803L
-        private val setExcludeBind by lazy {
-            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_exclude", SET_EXCLUDE_HASH)
-        }
+
+
+# Custom sections come in three flavours, one table each, keyed by class. The generator refuses a
+# key in the wrong table (a member-style section on a shared class would duplicate on one platform).
+#   *_MEMBER_SECTIONS / *_COMPANION_MEMBER_SECTIONS: member-style text emitted INSIDE the generated
+#     class / companion object. SHARED_* apply to shared-tree classes on every platform (so the text
+#     may only use what both platforms resolve: ObjectCalls.constructObject, isClass, wrappers);
+#     DESKTOP_*/IOS_* apply to the classes generated for that platform only.
+#   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
+#     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
+SHARED_MEMBER_SECTIONS: dict[str, str] = {}
+SHARED_COMPANION_MEMBER_SECTIONS = {
+    "Sprite2D": """
+        @JvmStatic
+        fun create(): Sprite2D =
+            Sprite2D(ObjectCalls.constructObject("Sprite2D"))
 """.strip("\n"),
-    "PhysicsDirectSpaceState3D": """
-        private const val INTERSECT_RAY_HASH = 3957970750L
-        private val intersectRayBind by lazy {
-            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_ray", INTERSECT_RAY_HASH)
-        }
+    "FastNoiseLite": """
+        @JvmStatic
+        fun create(): FastNoiseLite =
+            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
+
+        @JvmStatic
+        fun fromResource(value: Resource): FastNoiseLite? =
+            if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
+""".strip("\n"),
+    "OfflineMultiplayerPeer": """
+        @JvmStatic
+        fun create(): OfflineMultiplayerPeer =
+            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
+""".strip("\n"),
+    "SphereMesh": """
+        @JvmStatic
+        fun fromResource(value: Resource): SphereMesh? =
+            if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null
 """.strip("\n"),
 }
+
+# Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
+DESKTOP_EXTENSION_SECTIONS = {
+    "AnimationMixer": """
+fun AnimationMixer.setParameter(path: String, value: Any?) {
+    setIndexed(path, value)
+}
+
+fun AnimationMixer.getParameter(path: String): Any? =
+    getIndexed(path)
+
+fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
+    val value = getParameter(path)
+    val playback = when (value) {
+        is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
+        is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
+        else -> null
+    }
+    return playback ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
+}
+""".strip("\n"),
+}
+
+# iOS-only sugar on SHARED classes, emitted as extensions into `<Class>.ios.kt`. Each entry is
+# (extra imports, text); ObjectCalls, MemorySegment and the binding.runtime helpers are imported
+# by the companion header.
+IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
+    "AnimationMixer": ((), """
+// AnimationTree parameters are exposed as `parameters/...` engine properties, so route through
+// set()/get() (no NodePath set_indexed needed). Matches the desktop AnimationMixer helpers.
+fun AnimationMixer.setParameter(path: String, value: Any?) {
+    set(path, value)
+}
+
+fun AnimationMixer.getParameter(path: String): Any? =
+    get(path)
+
+fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
+    val value = getParameter(path)
+    val playback = when (value) {
+        is AnimationNodeStateMachinePlayback -> value
+        // iOS decodes a Variant Object return as a raw handle (MemorySegment), not a wrapper.
+        is MemorySegment -> if (value.address() != 0L) AnimationNodeStateMachinePlayback(value) else null
+        is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
+        is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
+        else -> null
+    }
+    return playback ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
+}
+""".strip("\n")),
+    "PhysicsDirectSpaceState3D": ((), """
+// intersect_ray returns a Godot Dictionary, decoded via the fixed-schema raycast C-shim
+// (kanama_ios_godot_ptrcall_ret_raycast_dict). Empty map = no hit. "collider" is wrapped from the
+// raw handle into a GodotObject so scripts can `hit["collider"] as? GodotObject`.
+fun PhysicsDirectSpaceState3D.intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?> {
+    val query = parameters ?: return emptyMap()
+    val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, handle, query.handle)
+    if (raw.isEmpty()) return emptyMap()
+    val result = raw.toMutableMap()
+    (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(it) }
+    return result
+}
+
+private const val INTERSECT_RAY_HASH = 3957970750L
+private val intersectRayBind by lazy {
+    ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_ray", INTERSECT_RAY_HASH)
+}
+""".strip("\n")),
+    "PhysicsRayQueryParameters3D": (("net.multigesture.kanama.types.RID", "net.multigesture.kanama.types.Vector3"), """
+// The RID list excluded from collisions (e.g. the caster's own body). Marshalled to a Godot
+// Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
+fun PhysicsRayQueryParameters3D.setExclude(exclude: List<RID>) {
+    checkOpen()
+    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+}
+
+// Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
+// (marshalled through the Array[RID] C-shim so intersect_ray skips the caster's own collider).
+fun PhysicsRayQueryParameters3D.Companion.create(
+    from: Vector3,
+    to: Vector3,
+    collisionMask: Long = 4294967295L,
+    exclude: List<RID> = emptyList(),
+): PhysicsRayQueryParameters3D {
+    val query = PhysicsRayQueryParameters3D(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))
+    query.from = from
+    query.to = to
+    query.collisionMask = collisionMask
+    if (exclude.isNotEmpty()) query.setExclude(exclude)
+    return query
+}
+
+private const val SET_EXCLUDE_HASH = 381264803L
+private val setExcludeBind by lazy {
+    ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_exclude", SET_EXCLUDE_HASH)
+}
+""".strip("\n")),
+    "ShapeCast3D": (("net.multigesture.kanama.types.Vector3",), """
+// Long-index overload (desktop ShapeCast3D exposes both Int and Long), so loops over the now-Long
+// getCollisionCount() (`for (i in 0 until getCollisionCount())`) pass a Long index straight through.
+fun ShapeCast3D.getCollisionPoint(index: Long): Vector3 = getCollisionPoint(index.toInt())
+""".strip("\n")),
+}
+
+
+def _member_section(class_name: str) -> str | None:
+    if RENDER_TARGET == "shared":
+        return SHARED_MEMBER_SECTIONS.get(class_name)
+    return (IOS_MEMBER_SECTIONS if IOS_AUDIT_ONLY else DESKTOP_MEMBER_SECTIONS).get(class_name)
+
+
+def _companion_section(class_name: str) -> str | None:
+    if RENDER_TARGET == "shared":
+        return SHARED_COMPANION_MEMBER_SECTIONS.get(class_name)
+    return (IOS_COMPANION_MEMBER_SECTIONS if IOS_AUDIT_ONLY else DESKTOP_COMPANION_MEMBER_SECTIONS).get(class_name)
+
+
+def check_section_tables(shared_classes: set[str]) -> None:
+    """Fail loudly when a custom section is keyed on a class its table cannot host."""
+    problems = []
+    for table_name, table, allowed in (
+        ("SHARED_MEMBER_SECTIONS", SHARED_MEMBER_SECTIONS, shared_classes),
+        ("SHARED_COMPANION_MEMBER_SECTIONS", SHARED_COMPANION_MEMBER_SECTIONS, shared_classes),
+        ("DESKTOP_EXTENSION_SECTIONS", DESKTOP_EXTENSION_SECTIONS, shared_classes),
+        ("IOS_EXTENSION_SECTIONS", IOS_EXTENSION_SECTIONS, shared_classes),
+        ("DESKTOP_MEMBER_SECTIONS", DESKTOP_MEMBER_SECTIONS, DESKTOP_ONLY_GENERATED),
+        ("DESKTOP_COMPANION_MEMBER_SECTIONS", DESKTOP_COMPANION_MEMBER_SECTIONS, DESKTOP_ONLY_GENERATED),
+        ("IOS_MEMBER_SECTIONS", IOS_MEMBER_SECTIONS, IOS_ONLY_GENERATED),
+        ("IOS_COMPANION_MEMBER_SECTIONS", IOS_COMPANION_MEMBER_SECTIONS, IOS_ONLY_GENERATED),
+    ):
+        for key in table:
+            if key not in allowed:
+                problems.append(f"{table_name}[{key!r}]: not a class this table may host")
+    if problems:
+        raise SystemExit("[generate_api_wrapper] custom-section table misuse:\n  " + "\n  ".join(problems))
 
 
 def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
@@ -914,11 +1144,11 @@ def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
     # regen — matching desktop/Android, where GodotObject.kt makes the file check pass.
     if class_name == "GodotObject":
         return True
-    path = api_dir / f"{class_name}.kt"
-    if not path.exists():
-        return False
-    content = path.read_text(encoding="utf-8")
-    return "fun wrap(handle: MemorySegment)" in content
+    for directory in (SHARED_API_DIR, api_dir):
+        path = directory / f"{class_name}.kt"
+        if path.exists():
+            return "fun wrap(handle: MemorySegment)" in path.read_text(encoding="utf-8")
+    return False
 
 
 def api_object_wrapper_type(type_name: str, wrapper_classes: set[str]) -> str | None:
@@ -1902,6 +2132,7 @@ def render_method(
     api_classes: dict[str, ApiClass],
     api_dir: Path,
     singleton: bool = False,
+    singleton_expr: str = "singleton",
 ) -> str:
     function_name = method_function_name(class_name, method.name)
     bind_name = f"{function_name}Bind"
@@ -1939,10 +2170,10 @@ def render_method(
             raise ValueError(f"unsupported typed object-array wrapper for {return_array_element}")
         call_args.append(f"{return_wrapper}::fromHandle")
     if shape.function == "ptrcallWithObjectArgs":
-        receiver = "singleton" if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
+        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
         call = f"ObjectCalls.{shape.function}({bind_name}, {receiver}, listOf({', '.join(call_args)}))"
     else:
-        receiver = "singleton" if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
+        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
         call = f"ObjectCalls.{shape.function}({', '.join([bind_name, receiver, *call_args])})"
     return_expression = render_return_expression(call, method, wrapper_classes)
     return_kind = method.logical_return_kind(object_types)
@@ -1957,7 +2188,8 @@ def render_method(
     guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
     lines = []
     if singleton:
-        (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
+        if _jvm_static():
+            lines.append("    @JvmStatic")
     if collapse_wrapper is not None:
         lines.extend(
             [
@@ -1992,6 +2224,7 @@ def render_vararg_method(
     api_classes: dict[str, ApiClass],
     api_dir: Path,
     singleton: bool = False,
+    singleton_expr: str = "singleton",
 ) -> str:
     function_name = method_function_name(class_name, method.name)
     bind_name = f"{function_name}Bind"
@@ -2026,7 +2259,7 @@ def render_vararg_method(
         call_args = f"listOf({fixed_args}, *extraArgs)"
     else:
         call_args = "listOf(*extraArgs)"
-    receiver = "singleton" if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
+    receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
     # A METHOD_CALL_SHAPE_OVERRIDES entry names an alternate dispatch helper (e.g.
     # callWithVariantArgsOwned for the owned return decode); default is callWithVariantArgs.
     override = METHOD_CALL_SHAPE_OVERRIDES.get((class_name, method.name))
@@ -2037,7 +2270,8 @@ def render_vararg_method(
     if return_kind == "void":
         lines = []
         if singleton:
-            (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
+            if _jvm_static():
+                lines.append("    @JvmStatic")
         lines.extend(
             [
                 f"    fun {function_name}({params}) {{",
@@ -2051,7 +2285,8 @@ def render_vararg_method(
     return_expression = f"({call} as Number).toLong()" if return_kind == "enum" else call
     lines = []
     if singleton:
-        (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
+        if _jvm_static():
+            lines.append("    @JvmStatic")
     lines.extend(
         [
             f"    fun {function_name}({params}): {return_type_text} {{",
@@ -2319,9 +2554,7 @@ NON_NULL_FROM_HANDLE_CLASSES = {"Resource"}
 
 
 def render_wrap_helpers(class_name: str) -> str:
-    # @JvmStatic is a JVM-only annotation; Kotlin/Native (iOS) rejects it. Omit it for
-    # the iOS target — fromHandle works the same without it.
-    lines = [] if IOS_AUDIT_ONLY else ["        @JvmStatic"]
+    lines = ["        @JvmStatic"] if _jvm_static() else []
     if class_name in NON_NULL_FROM_HANDLE_CLASSES:
         lines.extend(
             [
@@ -2346,7 +2579,7 @@ def render_wrap_helpers(class_name: str) -> str:
 
 
 def render_singleton_wrap_helpers(class_name: str) -> str:
-    lines = [] if IOS_AUDIT_ONLY else ["    @JvmStatic"]
+    lines = ["    @JvmStatic"] if _jvm_static() else []
     lines.extend(
         [
             f"    fun fromHandle(handle: MemorySegment): {class_name}? =",
@@ -2359,6 +2592,102 @@ def render_singleton_wrap_helpers(class_name: str) -> str:
     return "\n".join(lines)
 
 
+def _add_kind_imports(kind: str, imports: set[str]) -> None:
+    # Typed Array[<value type>] returns render as List<X>; import X even when no other member of the
+    # file mentions it (a desktop companion may hold only that one method — task 103).
+    if kind.startswith("Typed") and kind.endswith("Array"):
+        element = kind.removeprefix("Typed").removesuffix("Array")
+        if element in DEFAULT_IMPORTS and element not in {"ObjectCalls", "MemorySegment", "JvmName", "JvmStatic"}:
+            imports.add(element)
+    if kind in {
+        "AABB",
+        "Basis",
+        "Callable",
+        "Color",
+        "NodePath",
+        "Plane",
+        "Projection",
+        "PackedVector2Array",
+        "PackedVector3Array",
+        "PackedColorArray",
+        "PackedVector4Array",
+        "TypedRIDArray",
+        "TypedStringArray",
+        "TypedIntArray",
+        "TypedNodePathArray",
+        "TypedPackedVector2Array",
+        "TypedPlaneArray",
+        "TypedTransform3DArray",
+        "TypedVector2Array",
+        "TypedVector3Array",
+        "TypedNodeArray",
+        "TypedNode2DArray",
+        "TypedNode3DArray",
+        "TypedMaterialArray",
+        "TypedVector2iArray",
+        "TypedVector3iArray",
+        "TypedStringNameArray",
+        "TypedDictionaryArray",
+        "Rect2",
+        "Rect2i",
+        "RID",
+        "Quaternion",
+        "Transform2D",
+        "Transform3D",
+        "Vector2",
+        "Vector2i",
+        "Vector3",
+        "Vector3i",
+        "Vector4",
+    }:
+        if kind == "PackedVector2Array":
+            imports.add("Vector2")
+        elif kind == "Callable":
+            pass
+        elif kind == "PackedVector3Array":
+            imports.add("Vector3")
+        elif kind == "PackedColorArray":
+            imports.add("Color")
+        elif kind == "PackedVector4Array":
+            imports.add("Vector4")
+        elif kind == "TypedRIDArray":
+            imports.add("RID")
+        elif kind == "TypedNodePathArray":
+            imports.add("NodePath")
+        elif kind == "TypedPackedVector2Array":
+            imports.add("Vector2")
+        elif kind == "TypedPlaneArray":
+            imports.add("Plane")
+        elif kind == "TypedTransform3DArray":
+            imports.add("Transform3D")
+        elif kind in {"TypedVector2Array", "TypedVector3Array"}:
+            imports.add(kind.removeprefix("Typed").removesuffix("Array"))
+        elif kind in {
+            "TypedNodeArray",
+            "TypedNode2DArray",
+            "TypedNode3DArray",
+            "TypedMaterialArray",
+            "TypedArea2DArray",
+            "TypedArea3DArray",
+            "TypedBaseButtonArray",
+            "TypedPhysicsBody3DArray",
+        }:
+            pass
+        elif kind in {"TypedVector2iArray", "TypedVector3iArray"}:
+            imports.add(kind.removeprefix("Typed").removesuffix("Array"))
+        elif kind in {
+            "TypedStringArray",
+            "TypedIntArray",
+            "TypedStringNameArray",
+            "TypedDictionaryArray",
+        }:
+            pass
+        else:
+            imports.add(kind)
+    if kind == "Object":
+        imports.add("MemorySegment")
+
+
 def render_draft(
     cls: ApiClass,
     object_types: set[str],
@@ -2368,6 +2697,8 @@ def render_draft(
     singleton_names: set[str] | None = None,
 ) -> tuple[str, list[str]]:
     imports = {"ObjectCalls", "MemorySegment"}
+    if _jvm_static():
+        imports.add("JvmStatic")
     singleton = cls.name in (singleton_names or set())
     emitted_methods = rendered_method_names(cls, object_types, wrapper_classes, api_classes, api_dir)
     properties: list[str] = []
@@ -2397,93 +2728,7 @@ def render_draft(
                 skips.append(f"{method.signature} hash={method.hash}: {reason}")
                 continue
             for kind in (*method.logical_arg_kinds(object_types), method.logical_return_kind(object_types)):
-                if kind in {
-                    "AABB",
-                    "Basis",
-                    "Callable",
-                    "Color",
-                    "NodePath",
-                    "Plane",
-                    "Projection",
-                    "PackedVector2Array",
-                    "PackedVector3Array",
-                    "PackedColorArray",
-                    "PackedVector4Array",
-                    "TypedRIDArray",
-                    "TypedStringArray",
-                    "TypedIntArray",
-                    "TypedNodePathArray",
-                    "TypedPackedVector2Array",
-                    "TypedPlaneArray",
-                    "TypedTransform3DArray",
-                    "TypedVector2Array",
-                    "TypedVector3Array",
-                    "TypedNodeArray",
-                    "TypedNode2DArray",
-                    "TypedNode3DArray",
-                    "TypedMaterialArray",
-                    "TypedVector2iArray",
-                    "TypedVector3iArray",
-                    "TypedStringNameArray",
-                    "TypedDictionaryArray",
-                    "Rect2",
-                    "Rect2i",
-                    "RID",
-                    "Quaternion",
-                    "Transform2D",
-                    "Transform3D",
-                    "Vector2",
-                    "Vector2i",
-                    "Vector3",
-                    "Vector3i",
-                    "Vector4",
-                }:
-                    if kind == "PackedVector2Array":
-                        imports.add("Vector2")
-                    elif kind == "Callable":
-                        pass
-                    elif kind == "PackedVector3Array":
-                        imports.add("Vector3")
-                    elif kind == "PackedColorArray":
-                        imports.add("Color")
-                    elif kind == "PackedVector4Array":
-                        imports.add("Vector4")
-                    elif kind == "TypedRIDArray":
-                        imports.add("RID")
-                    elif kind == "TypedNodePathArray":
-                        imports.add("NodePath")
-                    elif kind == "TypedPackedVector2Array":
-                        imports.add("Vector2")
-                    elif kind == "TypedPlaneArray":
-                        imports.add("Plane")
-                    elif kind == "TypedTransform3DArray":
-                        imports.add("Transform3D")
-                    elif kind in {"TypedVector2Array", "TypedVector3Array"}:
-                        imports.add(kind.removeprefix("Typed").removesuffix("Array"))
-                    elif kind in {
-                        "TypedNodeArray",
-                        "TypedNode2DArray",
-                        "TypedNode3DArray",
-                        "TypedMaterialArray",
-                        "TypedArea2DArray",
-                        "TypedArea3DArray",
-                        "TypedBaseButtonArray",
-                        "TypedPhysicsBody3DArray",
-                    }:
-                        pass
-                    elif kind in {"TypedVector2iArray", "TypedVector3iArray"}:
-                        imports.add(kind.removeprefix("Typed").removesuffix("Array"))
-                    elif kind in {
-                        "TypedStringArray",
-                        "TypedIntArray",
-                        "TypedStringNameArray",
-                        "TypedDictionaryArray",
-                    }:
-                        pass
-                    else:
-                        imports.add(kind)
-                if kind == "Object":
-                    imports.add("MemorySegment")
+                _add_kind_imports(kind, imports)
             if method.is_vararg:
                 rendered_method = render_vararg_method(
                     cls.name,
@@ -2534,7 +2779,7 @@ def render_draft(
     # (e.g. AnimationMixer.getStateMachinePlayback -> AnimationNodeStateMachinePlayback,
     # getIndexed/setIndexed). They are not part of the conservative iOS surface, so the
     # iOS target omits them; any iOS equivalent lives in the bespoke sugar layer.
-    custom_members = IOS_CUSTOM_MEMBER_SECTIONS.get(cls.name) if IOS_AUDIT_ONLY else CUSTOM_MEMBER_SECTIONS.get(cls.name)
+    custom_members = _member_section(cls.name)
     if custom_members:
         body_sections.append(custom_members)
     signal_constants = render_signal_constants(cls)
@@ -2575,11 +2820,7 @@ def render_draft(
         if companion_constants:
             companion_sections.append(companion_constants)
         companion_sections.append(render_wrap_helpers(cls.name))
-        custom_companion_members = (
-            IOS_CUSTOM_COMPANION_MEMBER_SECTIONS.get(cls.name)
-            if IOS_AUDIT_ONLY
-            else CUSTOM_COMPANION_MEMBER_SECTIONS.get(cls.name)
-        )
+        custom_companion_members = _companion_section(cls.name)
         if custom_companion_members:
             companion_sections.append(custom_companion_members)
         companion_sections.append("\n\n".join(binds) if binds else "        // No MethodBinds emitted yet.")
@@ -2603,6 +2844,436 @@ def render_draft(
             ],
         )
     return content, skips
+
+
+# --- Shared wrapper tree (task 103) ---------------------------------------------------------------
+#
+# One generated tree, compiled by every native backend. A class not listed in PER_PLATFORM_WRAPPERS
+# is rendered once into SHARED_API_DIR with the METHOD SET iOS can call (IOS_AUDIT_ONLY gate) and the
+# SURFACE desktop expects (@JvmStatic, factory helpers). Members desktop can call but iOS cannot yet
+# (no audited ObjectCalls helper, or a wrapper type iOS does not host) are rendered as extensions
+# into a per-class desktop companion `<Class>.jvm.kt`, each carrying a header that names the
+# helpers it waits on; the gap index (GAP_INDEX_PATH) lists them all so the drift gate can count
+# the gap and a family moves back into the shared file the moment its helper lands on iOS.
+
+IOS_OBJECTCALLS_GENERATED = (
+    ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCallsGenerated.kt"
+)
+GAP_INDEX_PATH = ROOT / "docs/contributing/ios-shape-gap.md"
+IOS_HELPER_IMPORT = "import net.multigesture.kanama.binding.runtime.*\n"
+DESKTOP_COMPANION_SUFFIX = ".jvm.kt"
+IOS_COMPANION_SUFFIX = ".ios.kt"
+
+
+def _inject_ios_helper_import(content: str) -> str:
+    """The iOS ObjectCalls helpers are generated extension functions, so a file compiled on iOS must
+    star-import the binding.runtime package. Same-package wrapper names win over the star import, so
+    the line is inert on desktop/Android."""
+    return content.replace(
+        "import net.multigesture.kanama.binding.runtime.ObjectCalls\n",
+        "import net.multigesture.kanama.binding.runtime.ObjectCalls\n" + IOS_HELPER_IMPORT,
+        1,
+    )
+
+
+def _to_extension(member: str, receiver: str) -> str:
+    """Re-shape a rendered class member (4-space body indent) into a top-level extension."""
+    out: list[str] = []
+    for line in member.splitlines():
+        if line.strip() == "@JvmStatic":
+            continue
+        if line.startswith("    fun "):
+            line = f"fun {receiver}." + line[len("    fun "):]
+        elif line.startswith("    var ") or line.startswith("    val "):
+            line = line[4:8] + f"{receiver}." + line[8:]
+        elif line.startswith("    "):
+            line = line[4:]
+        out.append(line)
+    return "\n".join(out)
+
+
+def _bind_section(class_name: str, method: ApiMethod, indent: int) -> str:
+    pad = " " * indent
+    return "\n".join(
+        [
+            f"{pad}private const val {const_name(method)} = {method.hash}L",
+            f"{pad}private val {method_function_name(class_name, method.name)}Bind by lazy {{",
+            f'{pad}    ObjectCalls.getMethodBind("{class_name}", "{method.name}", {const_name(method)})',
+            f"{pad}}}",
+        ],
+    )
+
+
+def _wrap_comment(prefix: str, items: list[str], width: int = 100) -> list[str]:
+    lines: list[str] = []
+    current = prefix
+    for item in items:
+        candidate = f"{current}{'' if current == prefix else ', '}{item}"
+        if len(candidate) > width and current != prefix:
+            lines.append(current + ",")
+            current = f"//   {item}"
+        else:
+            current = candidate
+    lines.append(current)
+    return lines
+
+
+@dataclass
+class SharedRender:
+    shared: str
+    desktop_companion: str | None
+    ios_companion: str | None
+    desktop_only_members: list[str]
+    waits_on: list[str]
+    readonly_properties: list[str]
+    skips: list[str]
+
+
+def _ios_gap_token(
+    class_name: str,
+    method: ApiMethod,
+    object_types: set[str],
+    ios_universe: set[str],
+) -> str:
+    """What iOS is missing for this method: an ObjectCalls helper shape, or a wrapper class."""
+    with _mode(True, None):
+        supported_without_class_constraint = ios_method_supported(method, object_types, class_name)
+    if supported_without_class_constraint:
+        missing = sorted(
+            {
+                type_name
+                for kind, type_name in zip(
+                    method.logical_arg_kinds(object_types), method.argument_types, strict=True
+                )
+                if kind == "Object" and type_name != "Object" and type_name not in ios_universe
+            }
+            | (
+                {method.return_type}
+                if method.logical_return_kind(object_types) == "Object"
+                and method.return_type != "Object"
+                and method.return_type not in ios_universe
+                else set()
+            )
+        )
+        if missing:
+            return "wrapper " + "/".join(missing)
+    with _mode(False):
+        shape = candidate_for(method, object_types, class_name)
+    return shape.function if shape is not None else "callWithVariantArgs"
+
+
+def render_shared_class(
+    cls: ApiClass,
+    object_types: set[str],
+    wrapper_classes: set[str],
+    api_classes: dict[str, ApiClass],
+    api_dir: Path,
+    singleton_names: set[str],
+    ios_universe: set[str],
+) -> SharedRender:
+    global RENDER_TARGET
+    previous_target = RENDER_TARGET
+    RENDER_TARGET = "shared"
+    try:
+        singleton = cls.name in singleton_names
+        # 1. The shared file: desktop surface over the iOS-callable method set.
+        with _mode(True, ios_universe):
+            shared_content, _ios_skips = render_draft(
+                cls, object_types, wrapper_classes, api_classes, api_dir, singleton_names
+            )
+            shared_ok = {
+                id(method)
+                for method_list in cls.methods.values()
+                for method in method_list
+                if unsupported_reason(cls.name, method, object_types, wrapper_classes, api_classes, api_dir) is None
+            }
+            emitted_shared = rendered_method_names(cls, object_types, wrapper_classes, api_classes, api_dir)
+        shared_content = _inject_ios_helper_import(shared_content)
+
+        # 2. Desktop-only members: desktop-supported, not in the shared set.
+        companion_methods: list[ApiMethod] = []
+        skips: list[str] = []
+        with _mode(False):
+            for method_list in cls.methods.values():
+                for method in method_list:
+                    reason = unsupported_reason(cls.name, method, object_types, wrapper_classes, api_classes, api_dir)
+                    if reason:
+                        skips.append(f"{method.signature} hash={method.hash}: {reason}")
+                        continue
+                    if id(method) not in shared_ok:
+                        companion_methods.append(method)
+            emitted_desktop = rendered_method_names(cls, object_types, wrapper_classes, api_classes, api_dir)
+
+        imports = {"ObjectCalls", "MemorySegment"}
+        members: list[str] = []
+        member_names: list[str] = []
+        waits_on: set[str] = set()
+        singleton_expr = f"{cls.name[0].lower()}{cls.name[1:]}Singleton"
+        with _mode(False):
+            for method in companion_methods:
+                for kind in (*method.logical_arg_kinds(object_types), method.logical_return_kind(object_types)):
+                    _add_kind_imports(kind, imports)
+                if method.is_vararg:
+                    rendered = render_vararg_method(
+                        cls.name, method, object_types, wrapper_classes, api_classes, api_dir,
+                        singleton=singleton, singleton_expr=singleton_expr,
+                    )
+                else:
+                    shape = candidate_for(method, object_types, cls.name)
+                    assert shape is not None
+                    rendered = render_method(
+                        cls.name, method, shape, object_types, wrapper_classes, api_classes, api_dir,
+                        singleton=singleton, singleton_expr=singleton_expr,
+                    )
+                receiver = f"{cls.name}.Companion" if (method.is_static and not singleton) else cls.name
+                members.append(_to_extension(rendered, receiver))
+                member_names.append(method_function_name(cls.name, method.name))
+                waits_on.add(_ios_gap_token(cls.name, method, object_types, ios_universe))
+
+        # 3. Properties whose accessor is desktop-only become extension properties; a property that
+        #    is readable on both but writable only on desktop stays a read-only `val` in the shared
+        #    file (a member always shadows an extension of the same name) and is recorded.
+        readonly: list[str] = []
+        for prop in cls.properties:
+            with _mode(True, ios_universe):
+                shared_prop = render_property(cls, prop, emitted_shared, object_types, wrapper_classes, api_classes, api_dir)
+            with _mode(False):
+                desktop_prop = render_property(cls, prop, emitted_desktop, object_types, wrapper_classes, api_classes, api_dir)
+            if desktop_prop is None:
+                continue
+            if shared_prop is None:
+                imports.add("JvmName")
+                members.append(_to_extension(desktop_prop, cls.name))
+                member_names.append(desktop_prop.splitlines()[0].split()[1].rstrip(":"))
+            elif shared_prop.startswith("    val ") and desktop_prop.startswith("    var "):
+                readonly.append(desktop_prop.splitlines()[0].split()[1].rstrip(":"))
+
+        desktop_companion = None
+        if members:
+            tokens = sorted(waits_on)
+            header = [
+                "package net.multigesture.kanama.api",
+                "",
+                *sorted(f"import {DEFAULT_IMPORTS[name]}" for name in imports),
+                "",
+                f"// GENERATED desktop/Android companion for {cls.name} (scripts/generate_api_wrapper.py --write-tree).",
+                "// DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited",
+                "// ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so",
+                "// they compile for desktop/Android only. Re-run the generator when iOS gains the helper.",
+                *_wrap_comment(f"// KANAMA-IOS-GAP {cls.name} waits on: ", tokens),
+                "// Index: docs/contributing/ios-shape-gap.md",
+                "",
+            ]
+            binds = [_bind_section(cls.name, method, 0) for method in companion_methods]
+            sections = ["\n\n".join(members)]
+            if singleton:
+                sections.append(
+                    f"private val {singleton_expr}: MemorySegment by lazy {{\n"
+                    f'    ObjectCalls.getSingleton("{cls.name}")\n'
+                    "}"
+                )
+            if binds:
+                sections.append("\n\n".join(binds))
+            desktop_companion = "\n".join(header) + "\n" + "\n\n".join(sections) + "\n"
+
+        # 4. iOS-only sugar on a shared class: extension-style section into `<Class>.ios.kt`.
+        ios_companion = None
+        ios_section = IOS_EXTENSION_SECTIONS.get(cls.name)
+        if ios_section is not None:
+            extra_imports, text = ios_section
+            ios_imports = sorted(
+                {DEFAULT_IMPORTS["MemorySegment"], DEFAULT_IMPORTS["ObjectCalls"], *extra_imports}
+            )
+            ios_companion = "\n".join(
+                [
+                    "package net.multigesture.kanama.api",
+                    "",
+                    *(f"import {name}" for name in ios_imports),
+                    IOS_HELPER_IMPORT.rstrip("\n"),
+                    "",
+                    f"// GENERATED iOS companion for {cls.name} (scripts/generate_api_wrapper.py --write-tree, from",
+                    "// IOS_EXTENSION_SECTIONS). DO NOT EDIT BY HAND. iOS-only sugar over the shared wrapper: it",
+                    "// uses C-shim helpers desktop/Android do not have, so it cannot live in the shared file.",
+                    "",
+                    text,
+                    "",
+                ],
+            )
+
+        desktop_section = DESKTOP_EXTENSION_SECTIONS.get(cls.name)
+        if desktop_section is not None:
+            if desktop_companion is None:
+                desktop_companion = "\n".join(
+                    [
+                        "package net.multigesture.kanama.api",
+                        "",
+                        f"import {DEFAULT_IMPORTS['MemorySegment']}",
+                        f"import {DEFAULT_IMPORTS['ObjectCalls']}",
+                        "",
+                        f"// GENERATED desktop/Android companion for {cls.name} (scripts/generate_api_wrapper.py --write-tree).",
+                        "// DO NOT EDIT BY HAND.",
+                        "",
+                    ],
+                ) + "\n"
+            desktop_companion = desktop_companion.rstrip("\n") + "\n\n" + (
+                f"// Desktop/Android-only sugar (DESKTOP_EXTENSION_SECTIONS[{cls.name!r}]).\n" + desktop_section + "\n"
+            )
+
+        return SharedRender(
+            shared=shared_content,
+            desktop_companion=desktop_companion,
+            ios_companion=ios_companion,
+            desktop_only_members=member_names,
+            waits_on=sorted(waits_on),
+            readonly_properties=readonly,
+            skips=skips,
+        )
+    finally:
+        RENDER_TARGET = previous_target
+
+
+@dataclass
+class TreeResult:
+    files: dict[str, str]
+    skips: dict[str, list[str]]
+    shared: list[str]
+    desktop_only: list[str]
+    ios_only: list[str]
+    gap: dict[str, SharedRender]
+
+
+def _rel(path: Path) -> str:
+    return str(path.relative_to(ROOT))
+
+
+def tree_universe(api_classes: dict[str, ApiClass]) -> tuple[list[str], list[str], list[str]]:
+    """Which Godot classes have a committed wrapper, and where each one is generated."""
+    api = set(api_classes)
+    committed = {
+        path.stem
+        for directory in (SHARED_API_DIR, DESKTOP_API_DIR, IOS_API_DIR)
+        for path in directory.glob("*.kt")
+        if not is_companion_file(path)
+    }
+    rot = sorted(set(PER_PLATFORM_WRAPPERS) - api)
+    if rot:
+        raise SystemExit(f"[generate_api_wrapper] PER_PLATFORM_WRAPPERS names classes not in the API: {rot}")
+    shared = sorted((committed & api) - set(PER_PLATFORM_WRAPPERS))
+    return shared, sorted(DESKTOP_ONLY_GENERATED), sorted(IOS_ONLY_GENERATED)
+
+
+def render_gap_index(gap: dict[str, SharedRender], shared_count: int) -> str:
+    rows = [(name, r) for name, r in sorted(gap.items()) if r.desktop_only_members or r.readonly_properties]
+    members = sum(len(r.desktop_only_members) for _, r in rows)
+    helpers = sorted({token for _, r in rows for token in r.waits_on if not token.startswith("wrapper ")})
+    wrappers = sorted({token for _, r in rows for token in r.waits_on if token.startswith("wrapper ")})
+    readonly = sum(len(r.readonly_properties) for _, r in rows)
+    lines = [
+        "# iOS Shape Gap",
+        "",
+        "<!-- GENERATED by scripts/generate_api_wrapper.py --write-tree. DO NOT EDIT BY HAND; the drift gate",
+        "     (scripts/check_wrapper_generator.py) fails when this page is stale. -->",
+        "",
+        "The shared wrapper tree (`src/commonMain/kotlin/net/multigesture/kanama/api`) holds the members",
+        "both native backends can call. Every member below is generated for desktop/Android only, as an",
+        "extension in the class's `<Class>.jvm.kt` companion, because iOS has no audited `ObjectCalls`",
+        "helper for its ptrcall shape yet, or does not host a wrapper type it uses. When the helper lands",
+        "on iOS (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN` / the per-helper gates in `ios_method_supported`), the",
+        "next regen moves the member back into the shared file and it disappears from this page.",
+        "",
+        f"**Gap:** {len(rows)} of {shared_count} shared classes carry a desktop companion; "
+        f"{members} desktop-only members; {len(helpers)} distinct `ObjectCalls` helpers and "
+        f"{len(wrappers)} wrapper types waited on; {readonly} properties read-only in the shared "
+        "tree because only their setter is desktop-only.",
+        "",
+        "| Class | Desktop-only members | Read-only in shared | Waits on |",
+        "|---|---|---|---|",
+    ]
+    for name, r in rows:
+        lines.append(
+            f"| `{name}` | "
+            + ", ".join(f"`{m}`" for m in r.desktop_only_members)
+            + " | "
+            + ", ".join(f"`{p}`" for p in r.readonly_properties)
+            + " | "
+            + ", ".join(f"`{t}`" for t in r.waits_on)
+            + " |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
+    """Render the whole generated wrapper tree into memory, keyed by repository-relative path."""
+    global RENDER_TARGET
+    api_classes = load_api_classes(api_path)
+    singleton_names = load_api_singletons(api_path)
+    object_types = object_type_names(api_classes)
+    shared, desktop_only, ios_only = tree_universe(api_classes)
+    check_section_tables(set(shared))
+    # The iOS class universe is everything iOS hosts as a generated-shape wrapper: the shared tree,
+    # the iOS-only generated classes AND the iOS hand-shaped ones (their hand files still call the
+    # generated helpers and other wrappers return them), i.e. the old "emit union". Collision and
+    # unsupported classes stay out, as before.
+    ios_universe = set(shared) | set(ios_only) | set(IOS_HANDSHAPED)
+    wrapper_classes = scan_wrapper_classes(DESKTOP_API_DIR)
+    api_dir = DESKTOP_API_DIR
+    files: dict[str, str] = {}
+    skips: dict[str, list[str]] = {}
+    gap: dict[str, SharedRender] = {}
+
+    def wanted(name: str) -> bool:
+        return only is None or name in only
+
+    for name in shared:
+        cls = api_classes[name]
+        result = render_shared_class(cls, object_types, wrapper_classes, api_classes, api_dir, singleton_names, ios_universe)
+        gap[name] = result
+        skips[name] = result.skips
+        if not wanted(name):
+            continue
+        files[_rel(SHARED_API_DIR / f"{name}.kt")] = result.shared
+        if result.desktop_companion is not None:
+            files[_rel(DESKTOP_API_DIR / f"{name}{DESKTOP_COMPANION_SUFFIX}")] = result.desktop_companion
+        if result.ios_companion is not None:
+            files[_rel(IOS_API_DIR / f"{name}{IOS_COMPANION_SUFFIX}")] = result.ios_companion
+
+    previous_target = RENDER_TARGET
+    try:
+        RENDER_TARGET = "desktop"
+        with _mode(False):
+            for name in desktop_only:
+                content, class_skips = render_draft(
+                    api_classes[name], object_types, wrapper_classes, api_classes, api_dir, singleton_names
+                )
+                skips[name] = class_skips
+                if wanted(name):
+                    files[_rel(DESKTOP_API_DIR / f"{name}.kt")] = content
+        RENDER_TARGET = "ios"
+        with _mode(True, ios_universe):
+            for name in ios_only:
+                content, class_skips = render_draft(
+                    api_classes[name], object_types, wrapper_classes, api_classes, api_dir, singleton_names
+                )
+                skips.setdefault(name, class_skips)
+                if wanted(name):
+                    files[_rel(IOS_API_DIR / f"{name}.kt")] = _inject_ios_helper_import(content)
+            registry = collect_ios_shapes(
+                [api_classes[name] for name in sorted(ios_universe)], object_types, wrapper_classes, api_classes, api_dir
+            )
+            files[_rel(IOS_OBJECTCALLS_GENERATED)] = render_ios_objectcalls(registry)
+    finally:
+        RENDER_TARGET = previous_target
+    files[_rel(GAP_INDEX_PATH)] = render_gap_index(gap, len(shared))
+    return TreeResult(files=files, skips=skips, shared=shared, desktop_only=desktop_only, ios_only=ios_only, gap=gap)
+
+
+def generated_companion_paths() -> list[Path]:
+    """Committed generated companion files (the ones a regen may delete when the gap closes)."""
+    return [
+        *sorted(DESKTOP_API_DIR.glob(f"*{DESKTOP_COMPANION_SUFFIX}")),
+        *sorted(IOS_API_DIR.glob(f"*{IOS_COMPANION_SUFFIX}")),
+    ]
 
 
 # --- iOS ObjectCalls helper-body generation (T3.1) -----------------------------
@@ -3069,6 +3740,58 @@ def render_ios_objectcalls(registry: dict[str, tuple[tuple[str, ...], str]]) -> 
     return "\n\n".join(sections) + "\n"
 
 
+def tree_main(args: argparse.Namespace) -> int:
+    """--regen-tree / --write-tree: render the whole generated wrapper tree."""
+    tree = regenerate_tree(args.api)
+    companions = sum(1 for rel in tree.files if rel.endswith(DESKTOP_COMPANION_SUFFIX))
+    ios_companions = sum(1 for rel in tree.files if rel.endswith(IOS_COMPANION_SUFFIX))
+    members = sum(len(r.desktop_only_members) for r in tree.gap.values())
+    summary = (
+        f"[generate_api_wrapper] tree: shared={len(tree.shared)} desktop-only={len(tree.desktop_only)} "
+        f"ios-only={len(tree.ios_only)} desktop-companions={companions} ({members} members) "
+        f"ios-companions={ios_companions} files={len(tree.files)}"
+    )
+    if args.skip_report:
+        args.skip_report.parent.mkdir(parents=True, exist_ok=True)
+        lines = [f"{name}: {skip}" for name in sorted(tree.skips) for skip in tree.skips[name]]
+        args.skip_report.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+    if args.regen_tree is not None:
+        for rel_path, content in tree.files.items():
+            target = args.regen_tree / rel_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+        print(f"{summary} -> {args.regen_tree}")
+    if args.write_tree:
+        written = 0
+        helper_name = re.compile(r"fun ObjectCalls\.(\w+)\(")
+        for rel_path, content in tree.files.items():
+            target = ROOT / rel_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target == IOS_OBJECTCALLS_GENERATED and target.exists() and set(
+                helper_name.findall(target.read_text(encoding="utf-8"))
+            ) == set(helper_name.findall(content)):
+                # ktfmt reformats this file after every regen; leave the formatted copy alone when
+                # the helper set is unchanged (the drift gate compares helper sets for the same reason).
+                continue
+            if not target.exists() or target.read_text(encoding="utf-8") != content:
+                target.write_text(content, encoding="utf-8")
+                written += 1
+        stale = [path for path in generated_companion_paths() if _rel(path) not in tree.files]
+        for path in stale:
+            path.unlink()
+        pruned = 0
+        if args.prune_copies:
+            dirs = {"desktop": [DESKTOP_API_DIR], "ios": [IOS_API_DIR], "all": [DESKTOP_API_DIR, IOS_API_DIR]}[args.prune_copies]
+            for name in tree.shared:
+                for directory in dirs:
+                    copy = directory / f"{name}.kt"
+                    if copy.exists():
+                        copy.unlink()
+                        pruned += 1
+        print(f"{summary}; wrote {written} changed files, removed {len(stale)} stale companions, pruned {pruned} copies")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api", type=Path, default=Path("extension_api.json"))
@@ -3115,13 +3838,33 @@ def main() -> int:
         help="Write the generated iOS ObjectCalls helper bodies for the --ios-emit-class shape set to this file.",
     )
     parser.add_argument("--ios-skip-report", type=Path, help="Write iOS unsupported method reasons to this file.")
+    parser.add_argument(
+        "--regen-tree",
+        type=Path,
+        metavar="OUT_DIR",
+        help="Render the whole generated wrapper tree (shared tree, per-platform files, companions, "
+             "iOS ObjectCallsGenerated.kt, gap index) under OUT_DIR, mirroring the repository paths.",
+    )
+    parser.add_argument(
+        "--write-tree",
+        action="store_true",
+        help="Render the whole generated wrapper tree in place (re-adopt) and delete generated "
+             "companion files a fresh regen no longer produces.",
+    )
+    parser.add_argument(
+        "--prune-copies",
+        choices=("desktop", "ios", "all"),
+        help="With --write-tree: delete per-platform copies of classes that live in the shared tree.",
+    )
     args = parser.parse_args()
+    if args.regen_tree is not None or args.write_tree:
+        return tree_main(args)
     if args.class_list_file is not None:
         args.classes += args.class_list_file.read_text(encoding="utf-8").split()
     if args.ios_class_list_file is not None:
         args.ios_classes += args.ios_class_list_file.read_text(encoding="utf-8").split()
     if not args.classes and not args.emit_classes and not args.ios_classes:
-        parser.error("at least one --class, --emit-class, or --ios-emit-class is required")
+        parser.error("at least one --class, --emit-class, --ios-emit-class, --regen-tree, or --write-tree is required")
 
     api_classes = load_api_classes(args.api)
     singleton_names = load_api_singletons(args.api)
@@ -3141,17 +3884,16 @@ def main() -> int:
         else:
             print(content)
 
-    for class_name in args.emit_classes:
-        cls = api_classes.get(class_name)
-        if cls is None:
-            raise SystemExit(f"{class_name}: not found in {args.api}")
-        content, skips = render_draft(cls, object_types, wrapper_classes, api_classes, args.api_dir, singleton_names)
-        skip_lines.extend(f"{class_name}: {skip}" for skip in skips)
-        target = args.api_dir / f"{class_name}.kt"
-        if target.exists() and not args.allow_overwrite and target.read_text(encoding="utf-8") != content:
-            raise SystemExit(f"{target}: exists and differs; pass --allow-overwrite to replace it")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(content, encoding="utf-8")
+    if args.emit_classes:
+        tree = regenerate_tree(args.api, only=set(args.emit_classes))
+        for rel_path, content in sorted(tree.files.items()):
+            target = ROOT / rel_path
+            if target.exists() and not args.allow_overwrite and target.read_text(encoding="utf-8") != content:
+                raise SystemExit(f"{target}: exists and differs; pass --allow-overwrite to replace it")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+        for class_name in args.emit_classes:
+            skip_lines.extend(f"{class_name}: {skip}" for skip in tree.skips.get(class_name, []))
 
     if args.skip_report:
         args.skip_report.parent.mkdir(parents=True, exist_ok=True)
@@ -3162,8 +3904,9 @@ def main() -> int:
             print(f"// - {line}")
 
     if args.ios_classes:
-        global IOS_AUDIT_ONLY, IOS_EMIT_CLASSES
+        global IOS_AUDIT_ONLY, IOS_EMIT_CLASSES, RENDER_TARGET
         IOS_AUDIT_ONLY = True
+        RENDER_TARGET = "ios"
         # Explicit class-collision handling (task 11): a class that is deliberately hand-written on
         # iOS must not also be generated, or the two declarations collide at compile time. Log the
         # collision and drop the request instead of silently emitting a clashing file.

@@ -577,8 +577,40 @@ def scan_wrappers(api_dir: Path) -> dict[str, set[str]]:
     return wrapped
 
 
+# One shared generated wrapper tree, compiled by every native backend (task 103): the root JVM
+# module and :ios-runtime add SHARED_API_DIR as a source root, and the Android plugin copies it
+# next to the desktop sources. The per-platform directories hold only what is not shared: the
+# hand-shaped classes, the classes generated for one platform only, and the generated companion
+# files (`<Class>.jvm.kt` desktop-only members, `<Class>.ios.kt` iOS-only sugar).
+ROOT = Path(__file__).resolve().parents[1]
+SHARED_API_DIR = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api"
+DESKTOP_API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+IOS_API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api"
+PLATFORM_API_DIRS = (DESKTOP_API_DIR, IOS_API_DIR)
+
+
+def is_companion_file(path: Path) -> bool:
+    """`<Class>.jvm.kt` / `<Class>.ios.kt`: generated platform companions, not class files."""
+    return "." in path.stem
+
+
+def wrapper_source_files(api_dir: Path, *, companions: bool = False) -> list[Path]:
+    """Every wrapper source the platform owning `api_dir` compiles: the shared tree plus its own
+    directory. A directory that is not one of the platform roots (a scratch/output dir) is listed
+    alone. Companion files are excluded unless asked for, since most audits expect one class per
+    file."""
+    api_dir = api_dir.resolve() if api_dir.exists() else api_dir
+    dirs = [SHARED_API_DIR, api_dir] if api_dir in PLATFORM_API_DIRS else [api_dir]
+    files: list[Path] = []
+    for directory in dirs:
+        for path in sorted(directory.glob("*.kt")):
+            if companions or not is_companion_file(path):
+                files.append(path)
+    return files
+
+
 def scan_wrapper_classes(api_dir: Path) -> set[str]:
-    return {WRAPPER_CLASS_ALIASES.get(path.stem, path.stem) for path in sorted(api_dir.glob("*.kt"))}
+    return {WRAPPER_CLASS_ALIASES.get(path.stem, path.stem) for path in wrapper_source_files(api_dir)}
 
 
 def ancestors(class_name: str, classes: dict[str, ApiClass]) -> set[str]:
