@@ -8268,10 +8268,6 @@ fun ObjectCalls.ptrcallWithObjectStringIntLongArgs(
   Unit
 }
 
-// issue #81: ptrcallWithObjectStringLongArgsRetLong is hand-written in ObjectCalls.kt
-// (IOS_HANDWRITTEN_HELPERS) so the ResourceSaver.save path carries the RefCounted save guard.
-// It is intentionally NOT emitted here.
-
 fun ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(
   methodBind: MemorySegment,
   instance: MemorySegment,

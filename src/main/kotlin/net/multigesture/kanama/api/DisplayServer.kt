@@ -1348,14 +1348,14 @@ object DisplayServer {
 
     /**
      * Returns the scale factor of the specified screen by index. Returns `1.0` if `screen` is invalid.
-     * Note: One of the following constants can be used as `screen`: `SCREEN_OF_MAIN_WINDOW`,
-     * `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or `SCREEN_WITH_KEYBOARD_FOCUS`. Note: On macOS,
-     * the returned value is `2.0` for hiDPI (Retina) screens, and `1.0` for all other cases. Note: On
-     * Linux (Wayland), the returned value is accurate only when `screen` is `SCREEN_OF_MAIN_WINDOW`.
-     * Due to API limitations, passing a direct index will return a rounded-up integer, if the screen
-     * has a fractional scale (e.g. `1.25` would get rounded up to `2.0`). Note: This method is
-     * implemented on Android, iOS, Web, macOS, and Linux (Wayland). On other platforms, this method
-     * always returns `1.0`.
+     * See also `screen_get_max_scale`. Note: One of the following constants can be used as `screen`:
+     * `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
+     * `SCREEN_WITH_KEYBOARD_FOCUS`. Note: On macOS, the returned value is `2.0` for hiDPI (Retina)
+     * screens, and `1.0` for all other cases. Note: On Linux (Wayland), the returned value is accurate
+     * only when `screen` is `SCREEN_OF_MAIN_WINDOW`. Due to API limitations, passing a direct index
+     * will return a rounded-up integer, if the screen has a fractional scale (e.g. `1.25` would get
+     * rounded up to `2.0`). Note: This method is implemented on Android, iOS, Web, macOS, and Linux
+     * (Wayland). On other platforms, this method always returns `1.0`.
      *
      * Generated from Godot docs: DisplayServer.screen_get_scale
      */
@@ -1376,9 +1376,9 @@ object DisplayServer {
     }
 
     /**
-     * Returns the greatest scale factor of all screens. Note: On macOS returned value is `2.0` if
-     * there is at least one hiDPI (Retina) screen in the system, and `1.0` in all other cases. Note:
-     * This method is implemented only on macOS.
+     * Returns the greatest scale factor of all screens. See also `screen_get_scale`. Note: On macOS,
+     * the returned value is `2.0` if there is at least one hiDPI (Retina) screen in the system, and
+     * `1.0` in all other cases.
      *
      * Generated from Godot docs: DisplayServer.screen_get_max_scale
      */
@@ -3290,7 +3290,6 @@ object DisplayServer {
         return ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode, filters, options, callback.target.handle, callback.method, parentWindowId)
     }
 
-    @JvmStatic
     /**
      * Plays the beep sound from the operative system, if possible. Because it comes from the OS, the
      * beep sound will be audible even if the application is muted. It may also be disabled for the
@@ -3299,6 +3298,7 @@ object DisplayServer {
      *
      * Generated from Godot docs: DisplayServer.beep
      */
+    @JvmStatic
     fun beep() {
         ObjectCalls.ptrcallNoArgs(beepBind, singleton)
     }

@@ -13,7 +13,6 @@ object JavaClassWrapper {
         ObjectCalls.getSingleton("JavaClassWrapper")
     }
 
-    @JvmStatic
     /**
      * Wraps a class defined in Java, and returns it as a `JavaClass` `Object` type that Godot can
      * interact with. When wrapping inner (nested) classes, use `$` instead of `.` to separate them.
@@ -23,6 +22,7 @@ object JavaClassWrapper {
      *
      * Generated from Godot docs: JavaClassWrapper.wrap
      */
+    @JvmStatic
     fun wrap(name: String): JavaClass? {
         return JavaClass.wrap(ObjectCalls.ptrcallWithStringArgRetObject(wrapBind, singleton, name))
     }

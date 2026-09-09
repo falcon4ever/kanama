@@ -4,8 +4,6 @@ import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
- * Base class for script language integrations.
- *
  * Generated from Godot docs: ScriptLanguage
  */
 open class ScriptLanguage(handle: MemorySegment) : GodotObject(handle) {

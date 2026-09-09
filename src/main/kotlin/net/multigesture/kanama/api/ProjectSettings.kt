@@ -164,12 +164,12 @@ object ProjectSettings {
         ObjectCalls.ptrcallWithStringAndBoolArg(setRestartIfChangedBind, singleton, name, restart)
     }
 
-    @JvmStatic
     /**
      * Clears the whole configuration (not recommended, may break things).
      *
      * Generated from Godot docs: ProjectSettings.clear
      */
+    @JvmStatic
     fun clear(name: String) {
         ObjectCalls.ptrcallWithStringArg(clearBind, singleton, name)
     }
@@ -200,7 +200,6 @@ object ProjectSettings {
         return ObjectCalls.ptrcallWithStringArgRetString(globalizePathBind, singleton, path)
     }
 
-    @JvmStatic
     /**
      * Saves the configuration to the `project.godot` file. Note: This method is intended to be used by
      * editor plugins, as modified `ProjectSettings` can't be loaded back in the running app. If you
@@ -209,6 +208,7 @@ object ProjectSettings {
      *
      * Generated from Godot docs: ProjectSettings.save
      */
+    @JvmStatic
     fun save(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(saveBind, singleton)
     }

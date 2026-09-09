@@ -13,22 +13,22 @@ object NavigationMeshGenerator {
         ObjectCalls.getSingleton("NavigationMeshGenerator")
     }
 
-    @JvmStatic
     /**
      * Bakes the `navigation_mesh` with source geometry collected starting from the `root_node`.
      *
      * Generated from Godot docs: NavigationMeshGenerator.bake
      */
+    @JvmStatic
     fun bake(navigationMesh: NavigationMesh?, rootNode: Node) {
         ObjectCalls.ptrcallWithTwoObjectArgs(bakeBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.handle)
     }
 
-    @JvmStatic
     /**
      * Removes all polygons and vertices from the provided `navigation_mesh` resource.
      *
      * Generated from Godot docs: NavigationMeshGenerator.clear
      */
+    @JvmStatic
     fun clear(navigationMesh: NavigationMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(clearBind, singleton, listOf(navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }

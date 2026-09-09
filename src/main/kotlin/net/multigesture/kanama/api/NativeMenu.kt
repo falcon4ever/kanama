@@ -132,13 +132,13 @@ object NativeMenu {
         return ObjectCalls.ptrcallWithRIDArgRetVector2(getSizeBind, singleton, rid)
     }
 
-    @JvmStatic
     /**
      * Shows the global menu at `position` in the screen coordinates. Note: This method is implemented
      * on macOS and Windows.
      *
      * Generated from Godot docs: NativeMenu.popup
      */
+    @JvmStatic
     fun popup(rid: RID, position: Vector2i) {
         ObjectCalls.ptrcallWithRIDAndVector2iArg(popupBind, singleton, rid, position)
     }
@@ -841,13 +841,13 @@ object NativeMenu {
         ObjectCalls.ptrcallWithRIDAndIntArg(removeItemBind, singleton, rid, idx)
     }
 
-    @JvmStatic
     /**
      * Removes all items from the global menu `rid`. Note: This method is implemented on macOS and
      * Windows.
      *
      * Generated from Godot docs: NativeMenu.clear
      */
+    @JvmStatic
     fun clear(rid: RID) {
         ObjectCalls.ptrcallWithRIDArg(clearBind, singleton, rid)
     }
