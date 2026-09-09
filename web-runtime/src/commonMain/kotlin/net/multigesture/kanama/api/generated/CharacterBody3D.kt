@@ -61,11 +61,11 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 
   var velocity: Vector3
     get() = getVelocity()
-    set(value) = setVelocity(value)
+    set(newValue) = setVelocity(newValue)
 
   var upDirection: Vector3
     get() = unsupportedWebGameplayFamily("CharacterBody3D.get_up_direction")
-    set(value) = setUpDirection(value)
+    set(newValue) = setUpDirection(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -98,13 +98,13 @@ fun CharacterBody3D.setUpDirection(upDirection: Vector3) = setUpDirection(upDire
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CharacterBody3D.velocity: Vector3
   get() = velocity
-  set(value) {
-    velocity = value
+  set(newValue) {
+    velocity = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CharacterBody3D.upDirection: Vector3
   get() = upDirection
-  set(value) {
-    upDirection = value
+  set(newValue) {
+    upDirection = newValue
   }

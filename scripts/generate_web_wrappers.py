@@ -360,7 +360,8 @@ def bind_arguments(tree: Tree, call: BackendCallPolicy, method: dict, policy: di
                 continue  # Variant/Array defaults the shape cannot carry are not exposed at all
         else:
             raise GenerationError(f"{label}: argument {name} is not carried and has no default; add `baked`")
-        guard = f'require({name} == {default}) {{ "Web {label} supports only {name} = {default}" }}'
+        shown = default.replace('"', "'")
+        guard = f'require({name} == {default}) {{ "Web {label} supports only {name} = {shown}" }}'
         params.append(Param(name, kotlin_type, default, None, guard))
     if baked_values:
         raise GenerationError(f"{label}: baked policy names unknown arguments {sorted(baked_values)}")
@@ -442,7 +443,8 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
     if expression_body and ret:
         body += signature[:-1] + [signature[-1] + " ="]
         body += wrap_call(invoke, call_args, convert, "    ")
-        return Member(body, _alias(owner, name, params, ret), name, params, ret)
+        alias = [] if policy.get("visibility") in ("internal", "protected", "private") else _alias(owner, name, params, ret)
+        return Member(body, alias, name, params, ret)
     body += signature[:-1] + [signature[-1] + " {"]
     if "body" in policy:
         body += [f"    {line}" for line in policy["body"]]
@@ -1336,8 +1338,8 @@ def emit_properties(tree: Tree, godot_name: str, calls: list[BackendCallPolicy])
         alias = ['@Suppress("EXTENSION_SHADOWED_BY_MEMBER")', f"{'var' if setter else 'val'} {owner}.{kotlin_name}: {kotlin_type}", f"  get() = {kotlin_name}"]
         if setter is not None:
             set_name = member_name(setter, WRAPPER_POLICY.get(setter.opcode, {}))
-            body.append(f"    set(value) = {set_name}(value)")
-            alias += ["  set(value) {", f"    {kotlin_name} = value", "  }"]
+            body.append(f"    set(newValue) = {set_name}(newValue)")
+            alias += ["  set(newValue) {", f"    {kotlin_name} = newValue", "  }"]
         members.append(Member(body, alias, kotlin_name))
     return members
 
@@ -1535,6 +1537,40 @@ def render_all(api: Api) -> dict[str, str]:
 # --------------------------------------------------------------------------------------------------
 
 
+_DESCRIPTOR_REF = re.compile(r"\b(?:D|InitialGodotCallDescriptors)\.([A-Z][A-Z0-9_]+)\b")
+_DECLARATION = re.compile(r"^(?:open |abstract |internal |private )*(?:class|object) ([A-Z][A-Za-z0-9]*)", re.M)
+
+
+def check_hand_written(api_dir: Path, rendered: dict[str, str]) -> list[str]:
+    """The exit-gate half of --check: no hand-written member dispatches an opcode the tree owns.
+
+    Hand-written files under api/ (everything outside generated/) may reference a descriptor only
+    for the WEB_HANDSHAPED facades' allowlisted opcodes, may not redeclare a generated class, and
+    every WEB_HANDSHAPED name must still exist somewhere hand-written (rot check).
+    """
+    failures: list[str] = []
+    generated_names = {
+        m.group(1) for text in rendered.values() for m in _DECLARATION.finditer(text)
+    }
+    declared: set[str] = set()
+    for path in sorted(api_dir.glob("*.kt")):
+        text = path.read_text()
+        for match in _DESCRIPTOR_REF.finditer(text):
+            if match.group(1) not in HANDSHAPED_OPCODES:
+                failures.append(
+                    f"{path.name} dispatches {match.group(1)} by hand; the generated tree owns it "
+                    "(add the member through scripts/generate_web_wrappers.py or allowlist a WEB_HANDSHAPED facade)"
+                )
+        for match in _DECLARATION.finditer(text):
+            declared.add(match.group(1))
+            if match.group(1) in generated_names:
+                failures.append(f"{path.name} redeclares generated class {match.group(1)}")
+    for name in sorted(WEB_HANDSHAPED):
+        if name not in declared:
+            failures.append(f"WEB_HANDSHAPED names {name} but no hand-written file under api/ declares it")
+    return failures
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=GENERATED_DIR)
@@ -1556,6 +1592,7 @@ def main() -> int:
                 failures.append(f"drift in {name}")
         for name in sorted(committed):
             failures.append(f"stray file in generated tree: {name}")
+        failures += check_hand_written(out_dir.parent, rendered)
         if failures:
             for failure in failures:
                 print(f"{TAG} FAIL {failure}", file=sys.stderr)

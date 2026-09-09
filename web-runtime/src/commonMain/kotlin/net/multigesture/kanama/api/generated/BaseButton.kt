@@ -29,15 +29,15 @@ open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
 
   var buttonPressed: Boolean
     get() = isPressed()
-    set(value) = setPressed(value)
+    set(newValue) = setPressed(newValue)
 
   var disabled: Boolean
     get() = unsupportedWebGameplayFamily("BaseButton.is_disabled")
-    set(value) = setDisabled(value)
+    set(newValue) = setDisabled(newValue)
 
   var buttonGroup: ButtonGroup?
     get() = unsupportedWebGameplayFamily("BaseButton.get_button_group")
-    set(value) = setButtonGroup(value)
+    set(newValue) = setButtonGroup(newValue)
 
   object Signals {
     const val pressed: String = "pressed"
@@ -59,20 +59,20 @@ fun BaseButton.setButtonGroup(buttonGroup: ButtonGroup?) = setButtonGroup(button
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var BaseButton.buttonPressed: Boolean
   get() = buttonPressed
-  set(value) {
-    buttonPressed = value
+  set(newValue) {
+    buttonPressed = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var BaseButton.disabled: Boolean
   get() = disabled
-  set(value) {
-    disabled = value
+  set(newValue) {
+    disabled = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var BaseButton.buttonGroup: ButtonGroup?
   get() = buttonGroup
-  set(value) {
-    buttonGroup = value
+  set(newValue) {
+    buttonGroup = newValue
   }

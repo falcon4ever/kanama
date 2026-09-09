@@ -14,7 +14,7 @@ class DirectionalLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
 
   var skyMode: Long
     get() = unsupportedWebGameplayFamily("DirectionalLight3D.get_sky_mode")
-    set(value) = setSkyMode(value)
+    set(newValue) = setSkyMode(newValue)
 
   companion object {
     const val SKY_MODE_LIGHT_AND_SKY: Long = 0L
@@ -29,6 +29,6 @@ fun DirectionalLight3D.setSkyMode(mode: Long) = setSkyMode(mode)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var DirectionalLight3D.skyMode: Long
   get() = skyMode
-  set(value) {
-    skyMode = value
+  set(newValue) {
+    skyMode = newValue
   }

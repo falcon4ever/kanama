@@ -18,7 +18,7 @@ open class Light3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
 
   var shadowEnabled: Boolean
     get() = unsupportedWebGameplayFamily("Light3D.has_shadow")
-    set(value) = setShadow(value)
+    set(newValue) = setShadow(newValue)
 
   /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
   var lightEnergy: Double
@@ -65,6 +65,6 @@ fun Light3D.setShadow(enabled: Boolean) = setShadow(enabled)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Light3D.shadowEnabled: Boolean
   get() = shadowEnabled
-  set(value) {
-    shadowEnabled = value
+  set(newValue) {
+    shadowEnabled = newValue
   }

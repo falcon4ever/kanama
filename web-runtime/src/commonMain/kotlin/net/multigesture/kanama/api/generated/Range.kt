@@ -17,7 +17,7 @@ open class Range(godotObject: GodotHandle) : Control(godotObject) {
 
   var value: Double
     get() = getValue()
-    set(value) = setValue(value)
+    set(newValue) = setValue(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -29,6 +29,6 @@ fun Range.getValue(): Double = getValue()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Range.value: Double
   get() = value
-  set(value) {
-    value = value
+  set(newValue) {
+    value = newValue
   }

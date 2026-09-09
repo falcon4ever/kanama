@@ -14,7 +14,7 @@ class CanvasLayer(godotObject: GodotHandle) : Node(godotObject) {
 
   var visible: Boolean
     get() = unsupportedWebGameplayFamily("CanvasLayer.is_visible")
-    set(value) = setVisible(value)
+    set(newValue) = setVisible(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -23,6 +23,6 @@ fun CanvasLayer.setVisible(visible: Boolean) = setVisible(visible)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CanvasLayer.visible: Boolean
   get() = visible
-  set(value) {
-    visible = value
+  set(newValue) {
+    visible = newValue
   }

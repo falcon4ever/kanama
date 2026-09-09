@@ -36,11 +36,11 @@ class CPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
 
   var emitting: Boolean
     get() = unsupportedWebGameplayFamily("CPUParticles3D.is_emitting")
-    set(value) = setEmitting(value)
+    set(newValue) = setEmitting(newValue)
 
   var emissionBoxExtents: Vector3
     get() = getEmissionBoxExtents()
-    set(value) = setEmissionBoxExtents(value)
+    set(newValue) = setEmissionBoxExtents(newValue)
 
   val lifetime: Double
     get() = getLifetime()
@@ -64,15 +64,15 @@ fun CPUParticles3D.getLifetime(): Double = getLifetime()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CPUParticles3D.emitting: Boolean
   get() = emitting
-  set(value) {
-    emitting = value
+  set(newValue) {
+    emitting = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CPUParticles3D.emissionBoxExtents: Vector3
   get() = emissionBoxExtents
-  set(value) {
-    emissionBoxExtents = value
+  set(newValue) {
+    emissionBoxExtents = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -14,7 +14,7 @@ open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var layers: Long
     get() = unsupportedWebGameplayFamily("VisualInstance3D.get_layer_mask")
-    set(value) = setLayerMask(value)
+    set(newValue) = setLayerMask(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -23,6 +23,6 @@ fun VisualInstance3D.setLayerMask(mask: Long) = setLayerMask(mask)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var VisualInstance3D.layers: Long
   get() = layers
-  set(value) {
-    layers = value
+  set(newValue) {
+    layers = newValue
   }

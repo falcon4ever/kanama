@@ -12,6 +12,3 @@ internal object ClassDB {
   internal fun instantiate(className: String): BackendGodotHandle? =
     GodotBackendCalls.invokeStringNameRetHandle(D.CLASSDB_INSTANTIATE, className)
 }
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ClassDB.instantiate(className: String): BackendGodotHandle? = instantiate(className)

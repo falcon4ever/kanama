@@ -45,7 +45,7 @@ class ShapeCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var targetPosition: Vector3
     get() = getTargetPosition()
-    set(value) = setTargetPosition(value)
+    set(newValue) = setTargetPosition(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -66,6 +66,6 @@ fun ShapeCast3D.getTargetPosition(): Vector3 = getTargetPosition()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var ShapeCast3D.targetPosition: Vector3
   get() = targetPosition
-  set(value) {
-    targetPosition = value
+  set(newValue) {
+    targetPosition = newValue
   }

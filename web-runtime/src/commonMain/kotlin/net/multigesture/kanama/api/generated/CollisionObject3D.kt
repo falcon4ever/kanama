@@ -44,11 +44,11 @@ open class CollisionObject3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var collisionLayer: Long
     get() = unsupportedWebGameplayFamily("CollisionObject3D.get_collision_layer")
-    set(value) = setCollisionLayer(value)
+    set(newValue) = setCollisionLayer(newValue)
 
   var collisionMask: Long
     get() = unsupportedWebGameplayFamily("CollisionObject3D.get_collision_mask")
-    set(value) = setCollisionMask(value)
+    set(newValue) = setCollisionMask(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -66,13 +66,13 @@ fun CollisionObject3D.setCollisionMask(mask: Long) = setCollisionMask(mask)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CollisionObject3D.collisionLayer: Long
   get() = collisionLayer
-  set(value) {
-    collisionLayer = value
+  set(newValue) {
+    collisionLayer = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CollisionObject3D.collisionMask: Long
   get() = collisionMask
-  set(value) {
-    collisionMask = value
+  set(newValue) {
+    collisionMask = newValue
   }

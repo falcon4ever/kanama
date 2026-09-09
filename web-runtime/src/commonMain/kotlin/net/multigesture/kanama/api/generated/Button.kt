@@ -14,7 +14,7 @@ class Button(godotObject: GodotHandle) : BaseButton(godotObject) {
 
   var text: String
     get() = unsupportedWebGameplayFamily("Button.get_text")
-    set(value) = setText(value)
+    set(newValue) = setText(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -23,6 +23,6 @@ fun Button.setText(text: String) = setText(text)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Button.text: String
   get() = text
-  set(value) {
-    text = value
+  set(newValue) {
+    text = newValue
   }

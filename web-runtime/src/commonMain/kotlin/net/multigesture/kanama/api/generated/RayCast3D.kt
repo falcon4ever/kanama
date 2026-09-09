@@ -58,7 +58,7 @@ class RayCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var targetPosition: Vector3
     get() = getTargetPosition()
-    set(value) = setTargetPosition(value)
+    set(newValue) = setTargetPosition(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -88,6 +88,6 @@ fun RayCast3D.addException(node: CollisionObject3D?) = addException(node)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RayCast3D.targetPosition: Vector3
   get() = targetPosition
-  set(value) {
-    targetPosition = value
+  set(newValue) {
+    targetPosition = newValue
   }

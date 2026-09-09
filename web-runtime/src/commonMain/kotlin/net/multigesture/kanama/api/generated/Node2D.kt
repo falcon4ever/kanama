@@ -36,15 +36,15 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject) {
 
   var position: Vector2
     get() = getPosition()
-    set(value) = setPosition(value)
+    set(newValue) = setPosition(newValue)
 
   var scale: Vector2
     get() = getScale()
-    set(value) = setScale(value)
+    set(newValue) = setScale(newValue)
 
   var rotation: Double
     get() = getRotation()
-    set(value) = setRotation(value)
+    set(newValue) = setRotation(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -68,20 +68,20 @@ fun Node2D.getRotation(): Double = getRotation()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node2D.position: Vector2
   get() = position
-  set(value) {
-    position = value
+  set(newValue) {
+    position = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node2D.scale: Vector2
   get() = scale
-  set(value) {
-    scale = value
+  set(newValue) {
+    scale = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node2D.rotation: Double
   get() = rotation
-  set(value) {
-    rotation = value
+  set(newValue) {
+    rotation = newValue
   }

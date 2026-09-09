@@ -24,7 +24,7 @@ class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
   var texture: Texture2D?
     get() = getTexture()
-    set(value) = setTexture(value)
+    set(newValue) = setTexture(newValue)
 
   companion object {
     /** Constructs a new Sprite2D engine-side; the wrapper owns the handle (close what you create). */
@@ -42,6 +42,6 @@ fun Sprite2D.getTexture(): Texture2D? = getTexture()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Sprite2D.texture: Texture2D?
   get() = texture
-  set(value) {
-    texture = value
+  set(newValue) {
+    texture = newValue
   }

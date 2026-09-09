@@ -31,7 +31,7 @@ class NavigationAgent3D(godotObject: GodotHandle) : Node(godotObject) {
 
   var targetPosition: Vector3
     get() = unsupportedWebGameplayFamily("NavigationAgent3D.get_target_position")
-    set(value) = setTargetPosition(value)
+    set(newValue) = setTargetPosition(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -46,6 +46,6 @@ fun NavigationAgent3D.isTargetReached(): Boolean = isTargetReached()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var NavigationAgent3D.targetPosition: Vector3
   get() = targetPosition
-  set(value) {
-    targetPosition = value
+  set(newValue) {
+    targetPosition = newValue
   }

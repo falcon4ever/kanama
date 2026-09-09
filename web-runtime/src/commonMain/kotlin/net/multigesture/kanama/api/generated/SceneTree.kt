@@ -45,7 +45,7 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
 
   var paused: Boolean
     get() = unsupportedWebGameplayFamily("SceneTree.is_paused")
-    set(value) = setPause(value)
+    set(newValue) = setPause(newValue)
 
   /** The root window as its Viewport face (the tps corpus's `getTree().root`). */
   val root: Viewport
@@ -91,8 +91,8 @@ fun SceneTree.getRoot(): GodotHandle = getRoot()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var SceneTree.paused: Boolean
   get() = paused
-  set(value) {
-    paused = value
+  set(newValue) {
+    paused = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

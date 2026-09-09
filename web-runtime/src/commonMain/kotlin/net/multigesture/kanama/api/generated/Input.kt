@@ -77,7 +77,7 @@ object Input {
 
   var mouseMode: Long
     get() = getMouseMode()
-    set(value) = setMouseMode(value)
+    set(newValue) = setMouseMode(newValue)
 
   /**
    * Composed from two get_axis reads (deadzone-normalized identically for digital keys, the only
@@ -145,6 +145,6 @@ fun Input.getActionStrength(action: String, exactMatch: Boolean = false): Double
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Input.mouseMode: Long
   get() = mouseMode
-  set(value) {
-    mouseMode = value
+  set(newValue) {
+    mouseMode = newValue
   }

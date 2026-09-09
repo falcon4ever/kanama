@@ -18,7 +18,7 @@ class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
 
   var emitting: Boolean
     get() = unsupportedWebGameplayFamily("GPUParticles3D.is_emitting")
-    set(value) = setEmitting(value)
+    set(newValue) = setEmitting(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -30,6 +30,6 @@ fun GPUParticles3D.restart(keepSeed: Boolean = false) = restart(keepSeed)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var GPUParticles3D.emitting: Boolean
   get() = emitting
-  set(value) {
-    emitting = value
+  set(newValue) {
+    emitting = newValue
   }

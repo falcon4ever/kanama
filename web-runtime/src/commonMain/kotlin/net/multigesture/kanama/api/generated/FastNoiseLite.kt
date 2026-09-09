@@ -30,15 +30,15 @@ class FastNoiseLite(godotObject: GodotHandle) : Noise(godotObject) {
 
   var seed: Int
     get() = unsupportedWebGameplayFamily("FastNoiseLite.get_seed")
-    set(value) = setSeed(value)
+    set(newValue) = setSeed(newValue)
 
   var fractalOctaves: Int
     get() = unsupportedWebGameplayFamily("FastNoiseLite.get_fractal_octaves")
-    set(value) = setFractalOctaves(value)
+    set(newValue) = setFractalOctaves(newValue)
 
   var fractalLacunarity: Double
     get() = unsupportedWebGameplayFamily("FastNoiseLite.get_fractal_lacunarity")
-    set(value) = setFractalLacunarity(value)
+    set(newValue) = setFractalLacunarity(newValue)
 
   /** Releases the owned handle (already-released is an error). */
   fun close() {
@@ -64,20 +64,20 @@ fun FastNoiseLite.setFractalLacunarity(lacunarity: Double) = setFractalLacunarit
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var FastNoiseLite.seed: Int
   get() = seed
-  set(value) {
-    seed = value
+  set(newValue) {
+    seed = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var FastNoiseLite.fractalOctaves: Int
   get() = fractalOctaves
-  set(value) {
-    fractalOctaves = value
+  set(newValue) {
+    fractalOctaves = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var FastNoiseLite.fractalLacunarity: Double
   get() = fractalLacunarity
-  set(value) {
-    fractalLacunarity = value
+  set(newValue) {
+    fractalLacunarity = newValue
   }

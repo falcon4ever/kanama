@@ -25,7 +25,7 @@ class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
   }
 
   fun play(name: String = "", customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-    require(name == "") { "Web AnimatedSprite2D.play supports only name = """ }
+    require(name == "") { "Web AnimatedSprite2D.play supports only name = ''" }
     require(customSpeed == 1.0) { "Web AnimatedSprite2D.play supports only customSpeed = 1.0" }
     require(fromEnd == false) { "Web AnimatedSprite2D.play supports only fromEnd = false" }
     GodotBackendCalls.invokeNoArgsVoid(D.ANIMATEDSPRITE2D_PLAY, requireOpenHandle())
@@ -43,15 +43,15 @@ class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
   var flipV: Boolean
     get() = unsupportedWebGameplayFamily("AnimatedSprite2D.is_flipped_v")
-    set(value) = setFlipV(value)
+    set(newValue) = setFlipV(newValue)
 
   var flipH: Boolean
     get() = unsupportedWebGameplayFamily("AnimatedSprite2D.is_flipped_h")
-    set(value) = setFlipH(value)
+    set(newValue) = setFlipH(newValue)
 
   var animation: String
     get() = unsupportedWebGameplayFamily("AnimatedSprite2D.get_animation")
-    set(value) = setAnimation(value)
+    set(newValue) = setAnimation(newValue)
 
   val spriteFrames: SpriteFrames?
     get() = getSpriteFrames()
@@ -78,22 +78,22 @@ fun AnimatedSprite2D.getSpriteFrames(): SpriteFrames? = getSpriteFrames()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimatedSprite2D.flipV: Boolean
   get() = flipV
-  set(value) {
-    flipV = value
+  set(newValue) {
+    flipV = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimatedSprite2D.flipH: Boolean
   get() = flipH
-  set(value) {
-    flipH = value
+  set(newValue) {
+    flipH = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimatedSprite2D.animation: String
   get() = animation
-  set(value) {
-    animation = value
+  set(newValue) {
+    animation = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

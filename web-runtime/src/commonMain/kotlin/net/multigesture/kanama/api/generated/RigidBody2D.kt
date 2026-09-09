@@ -19,7 +19,7 @@ class RigidBody2D(godotObject: GodotHandle) : PhysicsBody2D(godotObject) {
 
   var linearVelocity: Vector2
     get() = unsupportedWebGameplayFamily("RigidBody2D.get_linear_velocity")
-    set(value) = setLinearVelocity(value)
+    set(newValue) = setLinearVelocity(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -28,6 +28,6 @@ fun RigidBody2D.setLinearVelocity(linearVelocity: Vector2) = setLinearVelocity(l
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody2D.linearVelocity: Vector2
   get() = linearVelocity
-  set(value) {
-    linearVelocity = value
+  set(newValue) {
+    linearVelocity = newValue
   }

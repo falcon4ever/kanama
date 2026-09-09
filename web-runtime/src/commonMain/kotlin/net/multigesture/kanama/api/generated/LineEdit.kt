@@ -21,11 +21,11 @@ class LineEdit(godotObject: GodotHandle) : Control(godotObject) {
 
   var text: String
     get() = getText()
-    set(value) = setText(value)
+    set(newValue) = setText(newValue)
 
   var editable: Boolean
     get() = unsupportedWebGameplayFamily("LineEdit.is_editable")
-    set(value) = setEditable(value)
+    set(newValue) = setEditable(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -40,13 +40,13 @@ fun LineEdit.setEditable(enabled: Boolean) = setEditable(enabled)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var LineEdit.text: String
   get() = text
-  set(value) {
-    text = value
+  set(newValue) {
+    text = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var LineEdit.editable: Boolean
   get() = editable
-  set(value) {
-    editable = value
+  set(newValue) {
+    editable = newValue
   }

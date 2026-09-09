@@ -17,7 +17,7 @@ class Label(godotObject: GodotHandle) : Control(godotObject) {
 
   var text: String
     get() = getText()
-    set(value) = setText(value)
+    set(newValue) = setText(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -29,6 +29,6 @@ fun Label.getText(): String = getText()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Label.text: String
   get() = text
-  set(value) {
-    text = value
+  set(newValue) {
+    text = newValue
   }

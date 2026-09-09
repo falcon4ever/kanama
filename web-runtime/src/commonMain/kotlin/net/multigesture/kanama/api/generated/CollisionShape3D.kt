@@ -14,7 +14,7 @@ class CollisionShape3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var disabled: Boolean
     get() = unsupportedWebGameplayFamily("CollisionShape3D.is_disabled")
-    set(value) = setDisabled(value)
+    set(newValue) = setDisabled(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -23,6 +23,6 @@ fun CollisionShape3D.setDisabled(enable: Boolean) = setDisabled(enable)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CollisionShape3D.disabled: Boolean
   get() = disabled
-  set(value) {
-    disabled = value
+  set(newValue) {
+    disabled = newValue
   }

@@ -24,7 +24,7 @@ class AnimatedSprite3D(godotObject: GodotHandle) : SpriteBase3D(godotObject) {
 
   var frame: Int
     get() = unsupportedWebGameplayFamily("AnimatedSprite3D.get_frame")
-    set(value) = setFrame(value)
+    set(newValue) = setFrame(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -36,6 +36,6 @@ fun AnimatedSprite3D.setFrame(frame: Int) = setFrame(frame)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimatedSprite3D.frame: Int
   get() = frame
-  set(value) {
-    frame = value
+  set(newValue) {
+    frame = newValue
   }

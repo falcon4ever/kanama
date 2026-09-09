@@ -62,7 +62,7 @@ class GridMap(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var meshLibrary: MeshLibrary?
     get() = unsupportedWebGameplayFamily("GridMap.get_mesh_library")
-    set(value) = setMeshLibrary(value)
+    set(newValue) = setMeshLibrary(newValue)
 
   companion object {
     const val INVALID_CELL_ITEM: Long = -1L
@@ -93,6 +93,6 @@ fun GridMap.getUsedCells(): List<Vector3i> = getUsedCells()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var GridMap.meshLibrary: MeshLibrary?
   get() = meshLibrary
-  set(value) {
-    meshLibrary = value
+  set(newValue) {
+    meshLibrary = newValue
   }

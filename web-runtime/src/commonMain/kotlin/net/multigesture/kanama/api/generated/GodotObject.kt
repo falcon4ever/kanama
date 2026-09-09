@@ -263,22 +263,10 @@ open class GodotObject(godotObject: GodotHandle) {
 fun GodotObject.emitSignal(signal: String, value: Int) = emitSignal(signal, value)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.connect(signal: String, target: GodotObject, method: String, flags: Long = 0L): Long = connect(signal, target, method, flags)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.isClass(className: String): Boolean = isClass(className)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.emitSignal(signal: String, value: Vector2i) = emitSignal(signal, value)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.connectBound(
-  signal: String,
-  target: GodotObject,
-  method: String,
-  boundValue: Long,
-  flags: Long = 0L,
-): Long = connectBound(signal, target, method, boundValue, flags)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.emitSignal(signal: String) = emitSignal(signal)

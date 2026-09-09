@@ -28,11 +28,11 @@ class InputEventKey(godotObject: GodotHandle) : InputEventWithModifiers(godotObj
 
   var keycode: Long
     get() = getKeycode()
-    set(value) = setKeycode(value)
+    set(newValue) = setKeycode(newValue)
 
   var physicalKeycode: Long
     get() = getPhysicalKeycode()
-    set(value) = setPhysicalKeycode(value)
+    set(newValue) = setPhysicalKeycode(newValue)
 
   /** Releases the owned handle (already-released is an error). */
   fun close() {
@@ -258,13 +258,13 @@ fun InputEventKey.getPhysicalKeycode(): Long = getPhysicalKeycode()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var InputEventKey.keycode: Long
   get() = keycode
-  set(value) {
-    keycode = value
+  set(newValue) {
+    keycode = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var InputEventKey.physicalKeycode: Long
   get() = physicalKeycode
-  set(value) {
-    physicalKeycode = value
+  set(newValue) {
+    physicalKeycode = newValue
   }

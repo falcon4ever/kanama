@@ -112,31 +112,31 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject) {
 
   var position: Vector3
     get() = getPosition()
-    set(value) = setPosition(value)
+    set(newValue) = setPosition(newValue)
 
   var rotation: Vector3
     get() = getRotation()
-    set(value) = setRotation(value)
+    set(newValue) = setRotation(newValue)
 
   var scale: Vector3
     get() = getScale()
-    set(value) = setScale(value)
+    set(newValue) = setScale(newValue)
 
   var visible: Boolean
     get() = isVisible()
-    set(value) = setVisible(value)
+    set(newValue) = setVisible(newValue)
 
   var rotationDegrees: Vector3
     get() = getRotationDegrees()
-    set(value) = setRotationDegrees(value)
+    set(newValue) = setRotationDegrees(newValue)
 
   var globalPosition: Vector3
     get() = getGlobalPosition()
-    set(value) = setGlobalPosition(value)
+    set(newValue) = setGlobalPosition(newValue)
 
   var globalRotation: Vector3
     get() = getGlobalRotation()
-    set(value) = setGlobalRotation(value)
+    set(newValue) = setGlobalRotation(newValue)
 
   fun hide() {
     visible = false
@@ -249,50 +249,50 @@ fun Node3D.isVisible(): Boolean = isVisible()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.position: Vector3
   get() = position
-  set(value) {
-    position = value
+  set(newValue) {
+    position = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.rotation: Vector3
   get() = rotation
-  set(value) {
-    rotation = value
+  set(newValue) {
+    rotation = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.scale: Vector3
   get() = scale
-  set(value) {
-    scale = value
+  set(newValue) {
+    scale = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.visible: Boolean
   get() = visible
-  set(value) {
-    visible = value
+  set(newValue) {
+    visible = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.rotationDegrees: Vector3
   get() = rotationDegrees
-  set(value) {
-    rotationDegrees = value
+  set(newValue) {
+    rotationDegrees = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.globalPosition: Vector3
   get() = globalPosition
-  set(value) {
-    globalPosition = value
+  set(newValue) {
+    globalPosition = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node3D.globalRotation: Vector3
   get() = globalRotation
-  set(value) {
-    globalRotation = value
+  set(newValue) {
+    globalRotation = newValue
   }
 
 private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {

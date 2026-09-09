@@ -49,14 +49,14 @@ class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var pitchScale: Double
     get() = getPitchScale()
-    set(value) = setPitchScale(value)
+    set(newValue) = setPitchScale(newValue)
 
   val playing: Boolean
     get() = isPlaying()
 
   var volumeDb: Double
     get() = getVolumeDb()
-    set(value) = setVolumeDb(value)
+    set(newValue) = setVolumeDb(newValue)
 
   object Signals {
     const val finished: String = "finished"
@@ -87,8 +87,8 @@ fun AudioStreamPlayer3D.getPitchScale(): Double = getPitchScale()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer3D.pitchScale: Double
   get() = pitchScale
-  set(value) {
-    pitchScale = value
+  set(newValue) {
+    pitchScale = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -98,6 +98,6 @@ val AudioStreamPlayer3D.playing: Boolean
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer3D.volumeDb: Double
   get() = volumeDb
-  set(value) {
-    volumeDb = value
+  set(newValue) {
+    volumeDb = newValue
   }

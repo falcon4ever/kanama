@@ -57,23 +57,23 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject) {
 
   var stream: AudioStream?
     get() = unsupportedWebGameplayFamily("AudioStreamPlayer.get_stream")
-    set(value) = setStream(value)
+    set(newValue) = setStream(newValue)
 
   var bus: String
     get() = unsupportedWebGameplayFamily("AudioStreamPlayer.get_bus")
-    set(value) = setBus(value)
+    set(newValue) = setBus(newValue)
 
   var volumeDb: Double
     get() = unsupportedWebGameplayFamily("AudioStreamPlayer.get_volume_db")
-    set(value) = setVolumeDb(value)
+    set(newValue) = setVolumeDb(newValue)
 
   var pitchScale: Double
     get() = unsupportedWebGameplayFamily("AudioStreamPlayer.get_pitch_scale")
-    set(value) = setPitchScale(value)
+    set(newValue) = setPitchScale(newValue)
 
   var streamPaused: Boolean
     get() = unsupportedWebGameplayFamily("AudioStreamPlayer.get_stream_paused")
-    set(value) = setStreamPaused(value)
+    set(newValue) = setStreamPaused(newValue)
 
   val playing: Boolean
     get() = isPlaying()
@@ -126,36 +126,36 @@ fun AudioStreamPlayer.isPlaying(): Boolean = isPlaying()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer.stream: AudioStream?
   get() = stream
-  set(value) {
-    stream = value
+  set(newValue) {
+    stream = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer.bus: String
   get() = bus
-  set(value) {
-    bus = value
+  set(newValue) {
+    bus = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer.volumeDb: Double
   get() = volumeDb
-  set(value) {
-    volumeDb = value
+  set(newValue) {
+    volumeDb = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer.pitchScale: Double
   get() = pitchScale
-  set(value) {
-    pitchScale = value
+  set(newValue) {
+    pitchScale = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AudioStreamPlayer.streamPaused: Boolean
   get() = streamPaused
-  set(value) {
-    streamPaused = value
+  set(newValue) {
+    streamPaused = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

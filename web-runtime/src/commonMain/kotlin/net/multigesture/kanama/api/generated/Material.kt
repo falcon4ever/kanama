@@ -24,7 +24,7 @@ open class Material(godotObject: GodotHandle) : Resource(godotObject) {
 
   var nextPass: Material?
     get() = getNextPass()
-    set(value) = setNextPass(value)
+    set(newValue) = setNextPass(newValue)
 
   /** Duplicate this material; the copy is owned (close it, or release it at teardown). */
   override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { Material(it.handle) }
@@ -48,6 +48,6 @@ fun Material.setNextPass(nextPass: Material?) = setNextPass(nextPass)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Material.nextPass: Material?
   get() = nextPass
-  set(value) {
-    nextPass = value
+  set(newValue) {
+    nextPass = newValue
   }

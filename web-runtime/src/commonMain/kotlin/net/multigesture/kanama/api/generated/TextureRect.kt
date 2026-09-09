@@ -18,7 +18,7 @@ class TextureRect(godotObject: GodotHandle) : Control(godotObject) {
 
   var texture: Texture2D?
     get() = unsupportedWebGameplayFamily("TextureRect.get_texture")
-    set(value) = setTexture(value)
+    set(newValue) = setTexture(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -27,6 +27,6 @@ fun TextureRect.setTexture(texture: Texture2D?) = setTexture(texture)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var TextureRect.texture: Texture2D?
   get() = texture
-  set(value) {
-    texture = value
+  set(newValue) {
+    texture = newValue
   }

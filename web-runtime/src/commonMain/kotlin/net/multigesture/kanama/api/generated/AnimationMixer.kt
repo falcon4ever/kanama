@@ -42,7 +42,7 @@ open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
 
   var active: Boolean
     get() = unsupportedWebGameplayFamily("AnimationMixer.is_active")
-    set(value) = setActive(value)
+    set(newValue) = setActive(newValue)
 
   /** Resolve the playback object behind a `parameters/.../playback` property. */
   fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
@@ -79,6 +79,6 @@ fun AnimationMixer.getRootMotionRotation(): Quaternion = getRootMotionRotation()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimationMixer.active: Boolean
   get() = active
-  set(value) {
-    active = value
+  set(newValue) {
+    active = newValue
   }

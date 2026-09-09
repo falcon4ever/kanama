@@ -20,7 +20,7 @@ class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
   var emitting: Boolean
     get() = isEmitting()
-    set(value) = setEmitting(value)
+    set(newValue) = setEmitting(newValue)
 
   val lifetime: Double
     get() = getLifetime()
@@ -38,8 +38,8 @@ fun GPUParticles2D.getLifetime(): Double = getLifetime()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var GPUParticles2D.emitting: Boolean
   get() = emitting
-  set(value) {
-    emitting = value
+  set(newValue) {
+    emitting = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

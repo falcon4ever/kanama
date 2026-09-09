@@ -657,6 +657,12 @@ if [[ $skip_web -eq 0 ]]; then
     --output "$ROOT_DIR/web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt" \
     --check
 
+  # Generated Web wrapper tree drift gate (task 96): the same contract plus the
+  # Web-local wrapper policy must still render api/generated/ byte for byte, and
+  # no hand-written file under api/ may dispatch an opcode the tree owns.
+  stage "web wrapper tree drift gate"
+  python3 "$ROOT_DIR/scripts/generate_web_wrappers.py" --check
+
   # Kotlin/Wasm compile + the fail-loud gameplay coverage gate. The Web build
   # needs the in-process Kotlin compiler; the daemon can exhaust memory here.
   stage "web Wasm compile + coverage gate"

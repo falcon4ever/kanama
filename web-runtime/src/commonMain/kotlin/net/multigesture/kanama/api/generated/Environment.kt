@@ -22,11 +22,11 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
 
   var backgroundEnergyMultiplier: Double
     get() = unsupportedWebGameplayFamily("Environment.get_bg_energy_multiplier")
-    set(value) = setBgEnergyMultiplier(value)
+    set(newValue) = setBgEnergyMultiplier(newValue)
 
   var glowEnabled: Boolean
     get() = unsupportedWebGameplayFamily("Environment.is_glow_enabled")
-    set(value) = setGlowEnabled(value)
+    set(newValue) = setGlowEnabled(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -38,13 +38,13 @@ fun Environment.setGlowEnabled(enabled: Boolean) = setGlowEnabled(enabled)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Environment.backgroundEnergyMultiplier: Double
   get() = backgroundEnergyMultiplier
-  set(value) {
-    backgroundEnergyMultiplier = value
+  set(newValue) {
+    backgroundEnergyMultiplier = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Environment.glowEnabled: Boolean
   get() = glowEnabled
-  set(value) {
-    glowEnabled = value
+  set(newValue) {
+    glowEnabled = newValue
   }

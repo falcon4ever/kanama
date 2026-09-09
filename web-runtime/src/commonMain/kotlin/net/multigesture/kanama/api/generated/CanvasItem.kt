@@ -57,11 +57,11 @@ open class CanvasItem(godotObject: GodotHandle) : Node(godotObject) {
 
   var modulate: Color
     get() = getModulate()
-    set(value) = setModulate(value)
+    set(newValue) = setModulate(newValue)
 
   var visible: Boolean
     get() = isVisible()
-    set(value) = setVisible(value)
+    set(newValue) = setVisible(newValue)
 
   fun show() {
     visible = true
@@ -103,13 +103,13 @@ fun CanvasItem.isVisible(): Boolean = isVisible()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CanvasItem.modulate: Color
   get() = modulate
-  set(value) {
-    modulate = value
+  set(newValue) {
+    modulate = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var CanvasItem.visible: Boolean
   get() = visible
-  set(value) {
-    visible = value
+  set(newValue) {
+    visible = newValue
   }

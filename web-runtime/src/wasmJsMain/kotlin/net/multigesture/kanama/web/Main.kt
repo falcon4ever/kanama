@@ -20,6 +20,7 @@ import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
 import net.multigesture.kanama.api.WebFrameScheduler
 import net.multigesture.kanama.api.WebSignalCallbackRegistry
 import net.multigesture.kanama.api.webFrameSchedulerStateProbe
+import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -873,10 +874,7 @@ fun kanamaWebMatch3Group8SceneTreeQuitProbe(objectId: Int, exitCode: Int): Int =
 @JsExport
 @OptIn(InternalKanamaBackendApi::class)
 fun kanamaWebMatch3Group8SceneTreeStaleProbe(sceneTreeObjectId: Int): Int =
-  if (
-    runCatching { SceneTree(WebObjectId(sceneTreeObjectId)).quit() }
-      .isFailure
-  ) {
+  if (runCatching { SceneTree(WebObjectId(sceneTreeObjectId)).quit() }.isFailure) {
     1
   } else {
     0
@@ -930,7 +928,10 @@ fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {
   val originalTexture = sprite.getTexture()
   // Float arithmetic on purpose: the snapshot stores Float32, so the round trip stays exact.
   val testPosition =
-    Vector2((originalPosition.x.toFloat() + 7.0f).toDouble(), (originalPosition.y.toFloat() - 5.0f).toDouble())
+    Vector2(
+      (originalPosition.x.toFloat() + 7.0f).toDouble(),
+      (originalPosition.y.toFloat() - 5.0f).toDouble(),
+    )
   val testScale = Vector2(1.25, 0.75)
   val testModulate = Color(0.8f, 0.7f, 0.6f, 0.5f)
   tile.position = testPosition

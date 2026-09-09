@@ -14,7 +14,7 @@ class Animation(godotObject: GodotHandle) : Resource(godotObject) {
 
   var loopMode: Long
     get() = unsupportedWebGameplayFamily("Animation.get_loop_mode")
-    set(value) = setLoopMode(value)
+    set(newValue) = setLoopMode(newValue)
 
   companion object {
     const val LOOP_NONE: Long = 0L
@@ -29,6 +29,6 @@ fun Animation.setLoopMode(loopMode: Long) = setLoopMode(loopMode)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Animation.loopMode: Long
   get() = loopMode
-  set(value) {
-    loopMode = value
+  set(newValue) {
+    loopMode = newValue
   }

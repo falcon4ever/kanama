@@ -87,27 +87,27 @@ class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
 
   var freeze: Boolean
     get() = unsupportedWebGameplayFamily("RigidBody3D.is_freeze_enabled")
-    set(value) = setFreezeEnabled(value)
+    set(newValue) = setFreezeEnabled(newValue)
 
   var sleeping: Boolean
     get() = unsupportedWebGameplayFamily("RigidBody3D.is_sleeping")
-    set(value) = setSleeping(value)
+    set(newValue) = setSleeping(newValue)
 
   var gravityScale: Double
     get() = unsupportedWebGameplayFamily("RigidBody3D.get_gravity_scale")
-    set(value) = setGravityScale(value)
+    set(newValue) = setGravityScale(newValue)
 
   var lockRotation: Boolean
     get() = unsupportedWebGameplayFamily("RigidBody3D.is_lock_rotation_enabled")
-    set(value) = setLockRotationEnabled(value)
+    set(newValue) = setLockRotationEnabled(newValue)
 
   var angularVelocity: Vector3
     get() = getAngularVelocity()
-    set(value) = setAngularVelocity(value)
+    set(newValue) = setAngularVelocity(newValue)
 
   var linearVelocity: Vector3
     get() = unsupportedWebGameplayFamily("RigidBody3D.get_linear_velocity")
-    set(value) = setLinearVelocity(value)
+    set(newValue) = setLinearVelocity(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -143,41 +143,41 @@ fun RigidBody3D.setLinearVelocity(linearVelocity: Vector3) = setLinearVelocity(l
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody3D.freeze: Boolean
   get() = freeze
-  set(value) {
-    freeze = value
+  set(newValue) {
+    freeze = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody3D.sleeping: Boolean
   get() = sleeping
-  set(value) {
-    sleeping = value
+  set(newValue) {
+    sleeping = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody3D.gravityScale: Double
   get() = gravityScale
-  set(value) {
-    gravityScale = value
+  set(newValue) {
+    gravityScale = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody3D.lockRotation: Boolean
   get() = lockRotation
-  set(value) {
-    lockRotation = value
+  set(newValue) {
+    lockRotation = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody3D.angularVelocity: Vector3
   get() = angularVelocity
-  set(value) {
-    angularVelocity = value
+  set(newValue) {
+    angularVelocity = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var RigidBody3D.linearVelocity: Vector3
   get() = linearVelocity
-  set(value) {
-    linearVelocity = value
+  set(newValue) {
+    linearVelocity = newValue
   }

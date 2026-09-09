@@ -18,7 +18,7 @@ class LightmapGI(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
 
   var lightData: LightmapGIData?
     get() = unsupportedWebGameplayFamily("LightmapGI.get_light_data")
-    set(value) = setLightData(value)
+    set(newValue) = setLightData(newValue)
 
   companion object {
     /** Constructs a new LightmapGI engine-side; the wrapper owns the handle (close what you create). */
@@ -33,6 +33,6 @@ fun LightmapGI.setLightData(data: LightmapGIData?) = setLightData(data)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var LightmapGI.lightData: LightmapGIData?
   get() = lightData
-  set(value) {
-    lightData = value
+  set(newValue) {
+    lightData = newValue
   }

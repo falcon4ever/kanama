@@ -14,7 +14,7 @@ class PathFollow3D(godotObject: GodotHandle) : Node3D(godotObject) {
 
   var progressRatio: Double
     get() = unsupportedWebGameplayFamily("PathFollow3D.get_progress_ratio")
-    set(value) = setProgressRatio(value)
+    set(newValue) = setProgressRatio(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -23,6 +23,6 @@ fun PathFollow3D.setProgressRatio(ratio: Double) = setProgressRatio(ratio)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var PathFollow3D.progressRatio: Double
   get() = progressRatio
-  set(value) {
-    progressRatio = value
+  set(newValue) {
+    progressRatio = newValue
   }

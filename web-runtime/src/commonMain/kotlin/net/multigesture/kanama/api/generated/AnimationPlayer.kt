@@ -52,11 +52,11 @@ class AnimationPlayer(godotObject: GodotHandle) : AnimationMixer(godotObject) {
 
   var speedScale: Double
     get() = unsupportedWebGameplayFamily("AnimationPlayer.get_speed_scale")
-    set(value) = setSpeedScale(value)
+    set(newValue) = setSpeedScale(newValue)
 
   var playbackDefaultBlendTime: Double
     get() = unsupportedWebGameplayFamily("AnimationPlayer.get_default_blend_time")
-    set(value) = setDefaultBlendTime(value)
+    set(newValue) = setDefaultBlendTime(newValue)
 
   /**
    * The name of the currently playing animation (empty when nothing plays). No typed opcode
@@ -94,13 +94,13 @@ fun AnimationPlayer.setDefaultBlendTime(sec: Double) = setDefaultBlendTime(sec)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimationPlayer.speedScale: Double
   get() = speedScale
-  set(value) {
-    speedScale = value
+  set(newValue) {
+    speedScale = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var AnimationPlayer.playbackDefaultBlendTime: Double
   get() = playbackDefaultBlendTime
-  set(value) {
-    playbackDefaultBlendTime = value
+  set(newValue) {
+    playbackDefaultBlendTime = newValue
   }

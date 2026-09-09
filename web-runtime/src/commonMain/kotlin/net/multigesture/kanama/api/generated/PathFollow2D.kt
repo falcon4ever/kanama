@@ -14,7 +14,7 @@ class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
   var progressRatio: Double
     get() = unsupportedWebGameplayFamily("PathFollow2D.get_progress_ratio")
-    set(value) = setProgressRatio(value)
+    set(newValue) = setProgressRatio(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -23,6 +23,6 @@ fun PathFollow2D.setProgressRatio(ratio: Double) = setProgressRatio(ratio)
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var PathFollow2D.progressRatio: Double
   get() = progressRatio
-  set(value) {
-    progressRatio = value
+  set(newValue) {
+    progressRatio = newValue
   }

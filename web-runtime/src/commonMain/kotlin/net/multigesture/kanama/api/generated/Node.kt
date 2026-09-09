@@ -136,11 +136,11 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
 
   var name: String
     get() = getName()
-    set(value) = setName(value)
+    set(newValue) = setName(newValue)
 
   var processMode: Long
     get() = getProcessMode()
-    set(value) = setProcessMode(value)
+    set(newValue) = setProcessMode(newValue)
 
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
     getNodeOrNull(path)?.let { ctor(it.handle) }
@@ -249,15 +249,15 @@ fun Node.getProcessMode(): Long = getProcessMode()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node.name: String
   get() = name
-  set(value) {
-    name = value
+  set(newValue) {
+    name = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node.processMode: Long
   get() = processMode
-  set(value) {
-    processMode = value
+  set(newValue) {
+    processMode = newValue
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

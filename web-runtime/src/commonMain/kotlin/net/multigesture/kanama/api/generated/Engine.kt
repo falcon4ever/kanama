@@ -17,7 +17,7 @@ object Engine {
 
   var maxFps: Int
     get() = unsupportedWebGameplayFamily("Engine.get_max_fps")
-    set(value) = setMaxFps(value)
+    set(newValue) = setMaxFps(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -29,6 +29,6 @@ fun Engine.getFramesPerSecond(): Long = getFramesPerSecond()
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Engine.maxFps: Int
   get() = maxFps
-  set(value) {
-    maxFps = value
+  set(newValue) {
+    maxFps = newValue
   }
