@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
@@ -58,6 +59,7 @@ class OpenXRSpatialAnchorCapability(handle: MemorySegment) : OpenXRExtensionWrap
         const val PERSISTENCE_SCOPE_SYSTEM_MANAGED: Long = 1L
         const val PERSISTENCE_SCOPE_LOCAL_ANCHORS: Long = 1000781000L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): OpenXRSpatialAnchorCapability? =
             wrap(handle)
 

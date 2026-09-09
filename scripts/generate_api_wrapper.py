@@ -208,9 +208,10 @@ RENDER_TARGET = "desktop"
 
 
 def _jvm_static() -> bool:
-    # @JvmStatic is an @OptionalExpectation annotation: Kotlin/Native ignores it, so the shared tree
-    # carries it for the JVM. The iOS per-platform files keep the old iOS-mode output for now.
-    return RENDER_TARGET != "ios"
+    # @JvmStatic is an @OptionalExpectation annotation: Kotlin/Native ignores it (confirmed by
+    # compileKotlinIosArm64 on the shared tree, task 103), so every render target carries it and
+    # the desktop/iOS files of one class read the same.
+    return True
 
 
 @contextmanager
@@ -618,6 +619,19 @@ KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
 NULLABLE_OBJECT_PARAM_OVERRIDES = {
     ("Node", "set_owner", "owner"),
 }
+# Extra supertypes on a generated class header. The generated iOS RefCounted owns close()
+# (unreference + destroy at zero, custom section) and must declare AutoCloseable itself now that
+# GodotObject is not AutoCloseable on any platform (task 103; desktop RefCounted is hand-shaped and
+# already declares it).
+CLASS_EXTRA_SUPERTYPES = {
+    "RefCounted": ("AutoCloseable",),
+}
+# Visibility prefix for a generated method (default public). RefCounted.unreference() is the
+# close() primitive: generated iOS RefCounted keeps it internal so scripts cannot unbalance the
+# refcount, matching desktop where the hand-shaped RefCounted does not expose it at all.
+METHOD_VISIBILITY_OVERRIDES = {
+    ("RefCounted", "unreference"): "internal ",
+}
 DESKTOP_MEMBER_SECTIONS = {
     "ProjectSettings": """
     @JvmStatic
@@ -747,7 +761,6 @@ IOS_MEMBER_SECTIONS = {
         return handle
     }
 
-    @ManualGodotLifetimeApi
     override fun close() {
         if (wrapperReferenceReleased) return
         wrapperReferenceReleased = true
@@ -2186,6 +2199,7 @@ def render_method(
         class_name, method, object_types, wrapper_classes, api_classes, singleton,
     )
     guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    visibility = METHOD_VISIBILITY_OVERRIDES.get((class_name, method.name), "")
     lines = []
     if singleton:
         if _jvm_static():
@@ -2193,7 +2207,7 @@ def render_method(
     if collapse_wrapper is not None:
         lines.extend(
             [
-                f"    fun {function_name}({params}){return_type_text} {{",
+                f"    {visibility}fun {function_name}({params}){return_type_text} {{",
                 *guard_lines,
                 f"        val ret = {call}",
                 "        if (ret.address() == handle.address()) {",
@@ -2207,7 +2221,7 @@ def render_method(
     else:
         lines.extend(
             [
-                f"    fun {function_name}({params}){return_type_text} {{",
+                f"    {visibility}fun {function_name}({params}){return_type_text} {{",
                 *guard_lines,
                 f"        {call}" if return_type_text == "" else f"        return {return_expression}",
                 "    }",
@@ -2770,6 +2784,7 @@ def render_draft(
     singleton_parent = cls.inherits in (singleton_names or set())
     parent = "GodotObject" if cls.inherits in {"", "Object"} or singleton_parent else cls.inherits
     class_keyword = "open class" if has_api_subclasses(cls.name, api_classes) else "class"
+    extra_supertypes = "".join(f", {name}" for name in CLASS_EXTRA_SUPERTYPES.get(cls.name, ()))
     import_lines = sorted(f"import {DEFAULT_IMPORTS[name]}" for name in imports)
     body_sections = []
     if properties:
@@ -2833,7 +2848,7 @@ def render_draft(
                 "/**",
                 f" * Generated from Godot docs: {cls.name}",
                 " */",
-                f"{class_keyword} {cls.name}(handle: MemorySegment) : {parent}(handle) {{",
+                f"{class_keyword} {cls.name}(handle: MemorySegment) : {parent}(handle){extra_supertypes} {{",
                 "\n\n".join(body_sections),
                 "",
                 "    companion object {",

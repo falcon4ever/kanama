@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -34,6 +35,7 @@ class PackedScene(handle: MemorySegment) : Resource(handle) {
         const val GEN_EDIT_STATE_MAIN: Long = 2L
         const val GEN_EDIT_STATE_MAIN_INHERITED: Long = 3L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): PackedScene? =
             wrap(handle)
 

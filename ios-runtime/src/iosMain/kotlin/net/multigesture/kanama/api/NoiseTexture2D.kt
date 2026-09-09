@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -180,6 +181,7 @@ class NoiseTexture2D(handle: MemorySegment) : Texture2D(handle) {
     }
 
     companion object {
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): NoiseTexture2D? =
             wrap(handle)
 

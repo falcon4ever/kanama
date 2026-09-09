@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
@@ -123,6 +124,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
     }
 
     companion object {
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): InputEventMouseMotion? =
             wrap(handle)
 

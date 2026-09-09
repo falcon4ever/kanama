@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
@@ -306,6 +307,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
         const val ANIMATION_METHOD_CALL_DEFERRED: Long = 0L
         const val ANIMATION_METHOD_CALL_IMMEDIATE: Long = 1L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): AnimationPlayer? =
             wrap(handle)
 

@@ -661,7 +661,9 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.create_tween
      */
-    fun createTween(): Tween? =
+    // `open` on every platform (task 103): the iOS SceneTree is a Node subclass that overrides this
+    // with the SceneTree.create_tween bind, and the two hand-shaped Node files carry one openness.
+    open fun createTween(): Tween? =
         Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, handle))
 
     /**

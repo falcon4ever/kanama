@@ -105,11 +105,11 @@ import kotlin.math.pow
 import kotlin.random.Random
 
 /**
- * Inert marker, no opt-in required (task 97): desktop and Web deprecated this annotation and
- * stopped applying it. The generated iOS `RefCounted.close()` still carries it because the
- * generator's `IOS_CUSTOM_MEMBER_SECTIONS["RefCounted"]` emits it; once that line is dropped
- * (generator work, task 98) this class can be deprecated like its desktop twin.
+ * Deprecated, no longer applied to any Kanama API (task 97; the generated iOS `RefCounted.close()`
+ * dropped it in task 103). Kept so an existing `@OptIn(ManualGodotLifetimeApi::class)` still
+ * compiles; delete the opt-in, nothing replaces it.
  */
+@Deprecated("No longer required; close() is the documented contract (docs/game-dev/godot-api.md#resource-ownership)")
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 annotation class ManualGodotLifetimeApi
@@ -192,7 +192,7 @@ object MainThread {
 
 open class GodotObject(
     val handle: MemorySegment,
-) : AutoCloseable {
+) {
     constructor(handle: Long) : this(MemorySegment.ofAddress(handle))
 
     /**
@@ -315,13 +315,9 @@ open class GodotObject(
         }
     }
 
-    // KANAMA-IOS-HANDWRITTEN: [platform] AutoCloseable no-op base for non-refcounted objects
-    // (nodes/servers return raw pointers with no reference transfer, so there is nothing to
-    // release). The generated RefCounted subclass overrides this with the real release
-    // (unreference + destroy at zero — task 31 ownership mirror). Implementing AutoCloseable
-    // lets shared demo code use `obj.use { ... }` (e.g. getSlideCollision) uniformly.
-    override fun close() {
-    }
+    // Not AutoCloseable, like the desktop GodotObject (task 103, task 97 R10c): nodes and servers
+    // are raw pointers with no reference to release. The generated RefCounted declares
+    // AutoCloseable and owns the real close() (unreference + destroy at zero).
 
     companion object {
         const val CONNECT_DEFAULT = 0L

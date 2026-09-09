@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
@@ -336,6 +337,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         const val CLOSE_BUTTON_SHOW_ALWAYS: Long = 2L
         const val CLOSE_BUTTON_MAX: Long = 3L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): TabBar? =
             wrap(handle)
 

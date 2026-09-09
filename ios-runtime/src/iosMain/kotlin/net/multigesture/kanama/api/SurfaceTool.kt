@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
@@ -170,6 +171,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         const val SKIN_4_WEIGHTS: Long = 0L
         const val SKIN_8_WEIGHTS: Long = 1L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): SurfaceTool? =
             wrap(handle)
 

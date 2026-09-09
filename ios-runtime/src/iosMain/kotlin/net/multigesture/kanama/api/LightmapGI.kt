@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
@@ -345,6 +346,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
         const val ENVIRONMENT_MODE_CUSTOM_SKY: Long = 2L
         const val ENVIRONMENT_MODE_CUSTOM_COLOR: Long = 3L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): LightmapGI? =
             wrap(handle)
 

@@ -1,14 +1,15 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
 /**
  * Generated from Godot docs: RefCounted
  */
-open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
-    fun unreference(): Boolean {
+open class RefCounted(handle: MemorySegment) : GodotObject(handle), AutoCloseable {
+    internal fun unreference(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)
     }
@@ -39,7 +40,6 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
         return handle
     }
 
-    @ManualGodotLifetimeApi
     override fun close() {
         if (wrapperReferenceReleased) return
         wrapperReferenceReleased = true
@@ -50,6 +50,7 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
     }
 
     companion object {
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): RefCounted? =
             wrap(handle)
 

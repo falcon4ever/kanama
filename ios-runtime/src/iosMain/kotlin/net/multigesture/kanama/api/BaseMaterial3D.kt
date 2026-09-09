@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
@@ -1700,6 +1701,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         const val STENCIL_COMPARE_NOT_EQUAL: Long = 5L
         const val STENCIL_COMPARE_GREATER_OR_EQUAL: Long = 6L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): BaseMaterial3D? =
             wrap(handle)
 

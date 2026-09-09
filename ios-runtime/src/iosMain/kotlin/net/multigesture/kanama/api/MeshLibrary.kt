@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
@@ -120,6 +121,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): MeshLibrary? =
             wrap(handle)
 

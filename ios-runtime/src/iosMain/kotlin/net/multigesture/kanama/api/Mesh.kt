@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
@@ -141,6 +142,7 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         const val BLEND_SHAPE_MODE_NORMALIZED: Long = 0L
         const val BLEND_SHAPE_MODE_RELATIVE: Long = 1L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Mesh? =
             wrap(handle)
 

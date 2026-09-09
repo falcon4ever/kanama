@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -659,6 +660,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
         const val EXPAND_MODE_FIT_TO_TEXT: Long = 1L
         const val EXPAND_MODE_FIT_TO_LINE_EDIT: Long = 2L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): LineEdit? =
             wrap(handle)
 
