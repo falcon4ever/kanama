@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Environment(godotObject: GodotHandle) : Resource(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setBgEnergyMultiplier(energy: Double) {
     GodotBackendCalls.invokeDoubleArg(
       D.ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER,

@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Area3D(godotObject: GodotHandle) : CollisionObject3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getOverlappingBodies(): List<Node3D> =
     GodotBackendCalls.invokeNoArgsRetHandleList(
       D.AREA3D_GET_OVERLAPPING_BODIES,

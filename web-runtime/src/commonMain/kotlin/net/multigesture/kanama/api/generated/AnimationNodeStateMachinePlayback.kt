@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AnimationNodeStateMachinePlayback(godotObject: GodotHandle) : Resource(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun travel(toNode: String, resetOnTeleport: Boolean = true) {
     lastTravelled = toNode
     // Children free before parents during scene teardown: a dying skin's playback handle

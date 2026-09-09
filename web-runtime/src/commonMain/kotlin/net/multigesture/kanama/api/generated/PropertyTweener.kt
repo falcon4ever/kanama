@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class PropertyTweener(godotObject: GodotHandle) : Tweener(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setTrans(trans: Long): PropertyTweener {
     val returned = GodotBackendCalls.invokeLongRetHandle(
       D.PROPERTYTWEENER_SET_TRANS,

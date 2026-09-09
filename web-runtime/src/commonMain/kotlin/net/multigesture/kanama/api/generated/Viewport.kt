@@ -4,12 +4,14 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Viewport(godotObject: GodotHandle) : Node(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getVisibleRect(): Rect2 =
     GodotBackendCalls.invokeNoArgsRetRect2(D.VIEWPORT_GET_VISIBLE_RECT, requireOpenHandle()).toApi()
 

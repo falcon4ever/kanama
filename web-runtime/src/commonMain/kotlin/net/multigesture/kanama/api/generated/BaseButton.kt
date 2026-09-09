@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setPressed(pressed: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.BASEBUTTON_SET_PRESSED, requireOpenHandle(), pressed)
   }

@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class RigidBody2D(godotObject: GodotHandle) : PhysicsBody2D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setLinearVelocity(linearVelocity: Vector2) {
     GodotBackendCalls.invokeVector2Arg(
       D.RIGIDBODY2D_SET_LINEAR_VELOCITY,

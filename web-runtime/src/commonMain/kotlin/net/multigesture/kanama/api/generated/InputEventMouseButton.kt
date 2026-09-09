@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getButtonIndex(): Long =
     GodotBackendCalls.invokeNoArgsRetLong(
       D.INPUTEVENTMOUSEBUTTON_GET_BUTTON_INDEX,

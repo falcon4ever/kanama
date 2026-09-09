@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun play(fromPosition: Double = 0.0) {
     GodotBackendCalls.invokeDoubleArg(D.AUDIOSTREAMPLAYER3D_PLAY, requireOpenHandle(), fromPosition)
   }

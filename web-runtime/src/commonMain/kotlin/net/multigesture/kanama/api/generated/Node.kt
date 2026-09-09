@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getChildCount(includeInternal: Boolean = false): Int =
     GodotBackendCalls.invokeBoolRetInt(D.NODE_GET_CHILD_COUNT, requireOpenHandle(), includeInternal)
 

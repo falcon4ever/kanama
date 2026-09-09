@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setFreezeEnabled(freezeMode: Boolean) {
     GodotBackendCalls.invokeBoolArg(
       D.RIGIDBODY3D_SET_FREEZE_ENABLED,

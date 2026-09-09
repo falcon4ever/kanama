@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class FastNoiseLite(godotObject: GodotHandle) : Noise(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setSeed(seed: Int) {
     GodotBackendCalls.invokeLongArg(D.FASTNOISELITE_SET_SEED, requireOpenHandle(), seed.toLong())
   }

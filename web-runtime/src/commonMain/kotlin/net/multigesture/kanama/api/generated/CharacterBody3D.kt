@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setVelocity(velocity: Vector3) {
     GodotBackendCalls.invokeVector3Arg(
       D.CHARACTERBODY3D_SET_VELOCITY,

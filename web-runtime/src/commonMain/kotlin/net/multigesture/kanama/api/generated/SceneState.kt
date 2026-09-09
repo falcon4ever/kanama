@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class SceneState(godotObject: GodotHandle) : RefCounted(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getNodeCount(): Int =
     GodotBackendCalls.invokeNoArgsRetLong(D.SCENESTATE_GET_NODE_COUNT, requireOpenHandle()).toInt()
 

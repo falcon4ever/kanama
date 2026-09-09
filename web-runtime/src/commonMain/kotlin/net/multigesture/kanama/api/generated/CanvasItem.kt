@@ -4,6 +4,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -11,6 +12,7 @@ import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class CanvasItem(godotObject: GodotHandle) : Node(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getViewportRect(): Rect2 =
     GodotBackendCalls.invokeNoArgsRetRect2(
       D.CANVASITEM_GET_VIEWPORT_RECT,

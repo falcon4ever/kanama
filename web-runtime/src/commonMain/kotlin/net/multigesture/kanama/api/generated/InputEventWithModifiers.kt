@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class InputEventWithModifiers(godotObject: GodotHandle) : InputEventFromWindow(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun isAltPressed(): Boolean =
     GodotBackendCalls.invokeNoArgsRetBool(
       D.INPUTEVENTWITHMODIFIERS_IS_ALT_PRESSED,

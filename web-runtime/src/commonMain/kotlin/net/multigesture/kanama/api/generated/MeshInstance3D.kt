@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class MeshInstance3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   /** Web supports only clearing an override (material baked null in the family). */
   fun setSurfaceOverrideMaterial(surface: Int, material: Material? = null) {
     require(material == null) { "Web MeshInstance3D.set_surface_override_material supports only material = null" }

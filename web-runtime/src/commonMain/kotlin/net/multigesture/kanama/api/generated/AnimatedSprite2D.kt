@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setFlipV(flipV: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.ANIMATEDSPRITE2D_SET_FLIP_V, requireOpenHandle(), flipV)
   }

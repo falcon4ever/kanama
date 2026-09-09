@@ -4,6 +4,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Quaternion
@@ -11,6 +12,7 @@ import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setActive(active: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.ANIMATIONMIXER_SET_ACTIVE, requireOpenHandle(), active)
   }

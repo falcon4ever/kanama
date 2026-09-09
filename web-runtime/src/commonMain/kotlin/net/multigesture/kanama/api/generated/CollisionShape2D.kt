@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class CollisionShape2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setDisabled(disabled: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.COLLISIONSHAPE2D_SET_DISABLED, requireOpenHandle(), disabled)
   }

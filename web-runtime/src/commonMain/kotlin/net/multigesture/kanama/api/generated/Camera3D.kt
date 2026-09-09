@@ -4,12 +4,14 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Camera3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun projectRayOrigin(screenPoint: Vector2): Vector3 =
     GodotBackendCalls.invokeVector2RetVector3(
       D.CAMERA3D_PROJECT_RAY_ORIGIN,

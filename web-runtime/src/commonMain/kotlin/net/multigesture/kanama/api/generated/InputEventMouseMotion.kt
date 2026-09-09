@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class InputEventMouseMotion(godotObject: GodotHandle) : InputEventMouse(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getRelative(): Vector2 =
     GodotBackendCalls.invokeNoArgsRetVector2(
       D.INPUTEVENTMOUSEMOTION_GET_RELATIVE,

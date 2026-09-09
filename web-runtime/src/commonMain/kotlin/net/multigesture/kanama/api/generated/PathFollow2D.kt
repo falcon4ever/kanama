@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setProgressRatio(ratio: Double) {
     GodotBackendCalls.invokeDoubleArg(D.PATHFOLLOW2D_SET_PROGRESS_RATIO, requireOpenHandle(), ratio)
   }

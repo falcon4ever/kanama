@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class CanvasLayer(godotObject: GodotHandle) : Node(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setVisible(visible: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.CANVASLAYER_SET_VISIBLE, requireOpenHandle(), visible)
   }

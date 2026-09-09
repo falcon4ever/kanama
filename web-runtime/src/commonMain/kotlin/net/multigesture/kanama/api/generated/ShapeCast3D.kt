@@ -4,16 +4,15 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ShapeCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
-  fun getCollisionCount(): Int =
-    GodotBackendCalls.invokeNoArgsRetLong(
-      D.SHAPECAST3D_GET_COLLISION_COUNT,
-      requireOpenHandle(),
-    ).toInt()
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  fun getCollisionCount(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(D.SHAPECAST3D_GET_COLLISION_COUNT, requireOpenHandle())
 
   fun getCollisionPoint(index: Int): Vector3 =
     GodotBackendCalls.invokeLongRetVector3(
@@ -49,7 +48,7 @@ class ShapeCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ShapeCast3D.getCollisionCount(): Int = getCollisionCount()
+fun ShapeCast3D.getCollisionCount(): Long = getCollisionCount()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun ShapeCast3D.getCollisionPoint(index: Int): Vector3 = getCollisionPoint(index)

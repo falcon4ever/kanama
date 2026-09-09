@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun createItem(id: Int) {
     GodotBackendCalls.invokeLongArg(D.MESHLIBRARY_CREATE_ITEM, requireOpenHandle(), id.toLong())
   }

@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ShaderMaterial(godotObject: GodotHandle) : Material(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setShaderParameter(param: String, value: Double) {
     GodotBackendCalls.invokeStringNameDoubleArg(
       D.SHADERMATERIAL_SET_SHADER_PARAMETER,

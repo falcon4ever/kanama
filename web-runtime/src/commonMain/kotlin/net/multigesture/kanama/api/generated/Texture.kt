@@ -3,7 +3,9 @@
 
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Texture(godotObject: GodotHandle) : Resource(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
 }

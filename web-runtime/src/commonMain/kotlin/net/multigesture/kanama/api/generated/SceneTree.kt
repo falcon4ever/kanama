@@ -7,10 +7,12 @@ import kotlin.coroutines.resume
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun quit(exitCode: Long = 0L) {
     require(exitCode in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) { "SceneTree.quit exit code must fit Godot's int32 ABI" }
     GodotBackendCalls.invokeLongArg(D.SCENETREE_QUIT, requireOpenHandle(), exitCode)

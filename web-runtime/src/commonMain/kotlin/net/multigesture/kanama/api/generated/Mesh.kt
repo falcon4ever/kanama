@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun surfaceGetMaterial(surfIdx: Int): Material? =
     GodotBackendCalls.invokeLongRetHandle(
       D.MESH_SURFACE_GET_MATERIAL,

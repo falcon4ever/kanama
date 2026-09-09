@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Light3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setParam(param: Long, value: Double) {
     GodotBackendCalls.invokeLongDoubleArg(D.LIGHT3D_SET_PARAM, requireOpenHandle(), param, value)
   }

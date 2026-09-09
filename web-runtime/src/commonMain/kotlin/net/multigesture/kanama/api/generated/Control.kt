@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun grabFocus(hideFocus: Boolean = false) {
     require(hideFocus == false) { "Web Control.grab_focus supports only hideFocus = false" }
     GodotBackendCalls.invokeNoArgsVoid(D.CONTROL_GRAB_FOCUS, requireOpenHandle())

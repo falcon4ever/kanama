@@ -3,8 +3,10 @@
 
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ColorRect(godotObject: GodotHandle) : Control(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
 }

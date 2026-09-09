@@ -7,6 +7,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Texture2D(godotObject: GodotHandle) : Texture(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   private var closed = false
 
   override fun requireOpenHandle(): BackendGodotHandle {

@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class CPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setEmitting(emitting: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.CPUPARTICLES3D_SET_EMITTING, requireOpenHandle(), emitting)
   }

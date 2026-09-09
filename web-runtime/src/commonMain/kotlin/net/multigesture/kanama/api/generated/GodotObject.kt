@@ -15,6 +15,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 open class GodotObject(godotObject: GodotHandle) {
   internal val backendHandle: BackendGodotHandle = godotObject.toBackendHandle()
 
+  /** Backend-handle form for the generated proxies and the wrappers' own returns. */
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+
   /** The live backend handle; guarded wrappers (closeable resources) override this. */
   internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle
 

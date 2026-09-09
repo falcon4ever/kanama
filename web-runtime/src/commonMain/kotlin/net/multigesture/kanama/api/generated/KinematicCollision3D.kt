@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class KinematicCollision3D(godotObject: GodotHandle) : RefCounted(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getCollider(collisionIndex: Int = 0): GodotObject? {
     require(collisionIndex == 0) { "Web KinematicCollision3D.get_collider supports only collisionIndex = 0" }
     return GodotBackendCalls.invokeNoArgsRetHandle(

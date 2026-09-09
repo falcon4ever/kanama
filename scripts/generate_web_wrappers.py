@@ -677,6 +677,8 @@ WRAPPER_POLICY: dict[int, dict] = {
             "val engineTarget = if (useModelFront) position - (target - position) else target",
         ],
     },
+    # ShapeCast3D.get_collision_count keeps the Long the ported corpus compares against.
+    172: {"ret": "Long"},
     # RID never crosses the Web seam: the excluded body itself is the argument.
     170: {"bind": [("body", "GodotObject", None, "body.requireOpenHandle()")], "doc": "Web adaptation: exclusion takes the collision OBJECT (the applier derives the RID engine-side)."},
     # Typed ProjectSettings read: the shape fixes Double, so the name says so.
@@ -1328,6 +1330,8 @@ def emit_properties(tree: Tree, godot_name: str, calls: list[BackendCallPolicy])
                 getter_method.get("return_value", {}).get("meta", ""),
                 SIGNATURES[getter.shape][1],
             )
+            if WRAPPER_POLICY.get(getter.opcode, {}).get("nonnull"):
+                kotlin_type = kotlin_type.rstrip("?")
             get_expr = f"{member_name(getter, WRAPPER_POLICY.get(getter.opcode, {}))}()"
         else:
             setter_method = api.method(setter)
@@ -1478,10 +1482,14 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines.append(f"{open_}class GodotObject(godotObject: GodotHandle) {{")
             lines.append("  internal val backendHandle: BackendGodotHandle = godotObject.toBackendHandle()")
             lines.append("")
+            lines.append("  /** Backend-handle form for the generated proxies and the wrappers' own returns. */")
+            lines.append("  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())")
+            lines.append("")
             lines.append("  /** The live backend handle; guarded wrappers (closeable resources) override this. */")
             lines.append("  internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle")
         else:
             lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject) {{")
+            lines.append("  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())")
     sections: list[list[str]] = [m.body for m in members]
     if class_policy.get("custom"):
         sections.append(class_policy["custom"].strip("\n").split("\n"))

@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class WorldEnvironment(godotObject: GodotHandle) : Node(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getEnvironment(): Environment {
     val returned = GodotBackendCalls.invokeNoArgsRetHandle(
       D.WORLDENVIRONMENT_GET_ENVIRONMENT,
@@ -16,7 +18,7 @@ class WorldEnvironment(godotObject: GodotHandle) : Node(godotObject) {
     return checkNotNull(returned) { "WorldEnvironment has no Environment resource" }
   }
 
-  val environment: Environment?
+  val environment: Environment
     get() = getEnvironment()
 }
 
@@ -24,5 +26,5 @@ class WorldEnvironment(godotObject: GodotHandle) : Node(godotObject) {
 fun WorldEnvironment.getEnvironment(): Environment = getEnvironment()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-val WorldEnvironment.environment: Environment?
+val WorldEnvironment.environment: Environment
   get() = environment

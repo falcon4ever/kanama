@@ -4,6 +4,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Transform3D
@@ -11,6 +12,7 @@ import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Node3D(godotObject: GodotHandle) : Node(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setPosition(position: Vector3) {
     GodotBackendCalls.invokeVector3Arg(
       D.NODE3D_SET_POSITION,

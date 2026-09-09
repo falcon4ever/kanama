@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setEmitting(emitting: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.GPUPARTICLES2D_SET_EMITTING, requireOpenHandle(), emitting)
   }

@@ -3,7 +3,9 @@
 
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Marker3D(godotObject: GodotHandle) : Node3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
 }

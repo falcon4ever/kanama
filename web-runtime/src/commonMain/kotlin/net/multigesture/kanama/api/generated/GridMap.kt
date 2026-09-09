@@ -4,6 +4,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Vector3
@@ -11,6 +12,7 @@ import net.multigesture.kanama.types.Vector3i
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class GridMap(godotObject: GodotHandle) : Node3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setMeshLibrary(meshLibrary: MeshLibrary?) {
     GodotBackendCalls.invokeObjectArg(
       D.GRIDMAP_SET_MESH_LIBRARY,

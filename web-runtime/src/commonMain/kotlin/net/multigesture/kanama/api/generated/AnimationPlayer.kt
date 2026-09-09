@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AnimationPlayer(godotObject: GodotHandle) : AnimationMixer(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setSpeedScale(speed: Double) {
     GodotBackendCalls.invokeDoubleArg(D.ANIMATIONPLAYER_SET_SPEED_SCALE, requireOpenHandle(), speed)
   }

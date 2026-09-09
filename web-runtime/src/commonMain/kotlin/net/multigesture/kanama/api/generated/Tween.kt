@@ -4,6 +4,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -11,6 +12,7 @@ import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   /** Desktop parity: kill() on a tween that already finished is a legal no-op (the FPS clears its weapon-swap tween on every swap and at exit_tree). */
   fun kill() {
     if (!isWebBrowserHandleLive(handle.value)) return

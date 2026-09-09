@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Resource(godotObject: GodotHandle) : RefCounted(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   open fun duplicate(deep: Boolean = false): Resource? =
     GodotBackendCalls.invokeBoolRetHandle(
       D.RESOURCE_DUPLICATE,

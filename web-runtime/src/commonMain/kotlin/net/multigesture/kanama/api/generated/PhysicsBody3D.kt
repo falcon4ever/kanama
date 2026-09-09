@@ -4,11 +4,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class PhysicsBody3D(godotObject: GodotHandle) : CollisionObject3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setAxisLock(axis: Long, lock: Boolean) {
     GodotBackendCalls.invokeLongBoolArg(
       D.PHYSICSBODY3D_SET_AXIS_LOCK,

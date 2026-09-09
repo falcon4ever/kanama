@@ -3,6 +3,9 @@ package net.multigesture.kanama.api
 import kotlin.math.ln
 import kotlin.math.pow
 
+/** FPS-era import-compat alias: the pure-Kotlin Basis lives with the value types. */
+typealias Basis = net.multigesture.kanama.types.Basis
+
 /** Pure-Kotlin Godot math helpers (no engine crossing). */
 object Mathf {
   val PI: Double = kotlin.math.PI

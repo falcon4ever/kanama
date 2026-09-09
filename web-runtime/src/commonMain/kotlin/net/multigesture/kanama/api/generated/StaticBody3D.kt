@@ -3,7 +3,9 @@
 
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class StaticBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
 }

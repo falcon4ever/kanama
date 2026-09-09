@@ -4,10 +4,12 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotBackendCalls
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AnimatedSprite3D(godotObject: GodotHandle) : SpriteBase3D(godotObject) {
+  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun play(name: String = "", customSpeed: Double = 1.0, fromEnd: Boolean = false) {
     require(customSpeed == 1.0) { "Web AnimatedSprite3D.play supports only customSpeed = 1.0" }
     require(fromEnd == false) { "Web AnimatedSprite3D.play supports only fromEnd = false" }
