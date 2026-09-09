@@ -78,7 +78,6 @@ class FileAccessHandle internal constructor(handle: MemorySegment) : RefCounted(
         FileAccess.flushHandle(handle)
     }
 
-    @OptIn(ManualGodotLifetimeApi::class)
     override fun close() {
         if (!fileClosed) {
             fileClosed = true

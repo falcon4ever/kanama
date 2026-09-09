@@ -23,7 +23,6 @@ import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
-import net.multigesture.kanama.api.ManualGodotLifetimeApi
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.OS
@@ -174,7 +173,6 @@ class Main(godotObject: GodotHandle) :
    * global-rotation channel; a failed check throws before the aim, so the read-back only matches
    * when everything above it passed (and the throw itself surfaces as a callback fault).
    */
-  @OptIn(ManualGodotLifetimeApi::class)
   @RegisterFunction("parity_probe")
   fun parityProbe() {
     // Item 1: Resource.fromHandle round-trips an already-held handle to the same instance.

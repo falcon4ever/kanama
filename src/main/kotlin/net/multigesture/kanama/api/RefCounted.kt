@@ -48,14 +48,15 @@ open class RefCounted internal constructor(
     }
 
     /**
-     * Releases this Kotlin wrapper's reference to the underlying Godot object.
+     * Releases this Kotlin wrapper's reference to the underlying Godot object:
+     * `unreference()`, and destroy only if that dropped the count to zero.
      *
-     * This is a low-level lifetime operation. Do not use it as general gameplay
-     * cleanup for live Godot-owned values such as `Tween`, `Tweener`, `Material`,
-     * `Mesh`, `PackedScene`, audio streams, or anything assigned to the scene tree
-     * or scheduled to run later.
+     * Every `RefCounted`-typed return you receive — `create()`, `ResourceLoader.load…`,
+     * and plain getters such as `getMesh()` — is a `+1` you own and must close (or `use { }`).
+     * Do not close a wrapper you minted yourself over a handle you already had
+     * (`fromHandle`/`fromObject`) or a live `Tween` (use `kill()`); see
+     * `docs/game-dev/godot-api.md` "Resource Ownership".
      */
-    @ManualGodotLifetimeApi
     override fun close() {
         if (closed || wrapperReferenceReleased) return
         wrapperReferenceReleased = true

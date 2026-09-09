@@ -1,13 +1,17 @@
 package net.multigesture.kanama.api
 
 /**
- * Marks low-level Godot lifetime operations that are easy to misuse in gameplay code.
+ * Deprecated, no longer applied to any Kanama API (task 97).
  *
- * Most game scripts should release objects through Godot lifecycle APIs such as
- * `queueFree()`, `kill()`, clearing a node property, or dropping Kotlin references.
- * Opt in only when the value is known to be caller-owned and Godot will not keep
- * using it after the call.
+ * `RefCounted.close()` used to carry this opt-in requirement. It warned on the one
+ * thing the documented ownership rule tells you to do — close the wrapper you were
+ * handed — so it punished correct code and was opted into blindly (task 93, R6).
+ * The rule itself lives in `docs/game-dev/godot-api.md` "Resource Ownership".
+ *
+ * The class is kept so an existing `@OptIn(ManualGodotLifetimeApi::class)` still
+ * compiles (with a deprecation warning); delete the opt-in, nothing replaces it.
  */
+@Deprecated("No longer required; close() is the documented contract (docs/game-dev/godot-api.md#resource-ownership)")
 @RequiresOptIn(
     message = "Manual Godot lifetime APIs are for low-level interop. Gameplay scripts should use Godot lifecycle APIs unless this value is explicitly caller-owned.",
     level = RequiresOptIn.Level.WARNING,
