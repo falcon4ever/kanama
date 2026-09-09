@@ -184,6 +184,10 @@
         {
           "member": "Main.coroutine_probe",
           "reason": "The task-82 coroutine frame-scheduler conformance probe the driver calls explicitly."
+        },
+        {
+          "member": "Main.input_map_probe",
+          "reason": "The task-64 tier-3 InputMap / InputEventKey / process-mode / Window-mode conformance probe the driver calls explicitly and asserts to the full 255 mask."
         }
       ],
       "todo": [

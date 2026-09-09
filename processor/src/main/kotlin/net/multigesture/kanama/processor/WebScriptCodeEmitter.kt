@@ -134,7 +134,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
      * happened to name.
      */
-    const val PROTOCOL_VERSION = 21
+    const val PROTOCOL_VERSION = 22
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -3155,6 +3155,26 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
+    // Task 64 tier 3: one-int32 queued setters (enum values cross as their integer). The
+    // engine-property spelling matches the sky_mode arm above, which the export accepts.
+    appendLine("\t\telif opcode == 295 and target_object is InputEventKey:")
+    appendLine("\t\t\t(target_object as InputEventKey).keycode = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 297 and target_object is InputEventKey:")
+    appendLine(
+      "\t\t\t(target_object as InputEventKey).physical_keycode = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 301 and target_object is Node:")
+    appendLine("\t\t\t(target_object as Node).process_mode = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 302 and target_object is Window:")
+    appendLine("\t\t\t(target_object as Window).mode = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
     appendLine("\t\telse:")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
@@ -3762,6 +3782,48 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif opcode == 87:")
     appendLine("\t\t\tInput.action_release(StringName(String(args[2])))")
     appendLine("\t\t\tresult = 0")
+    // Task 64 tier 3: the InputMap singleton (third-person's Player registers its own bindings).
+    // Singleton opcodes ride the active script's own query channel, so `value` is `self` here.
+    appendLine("\t\telif opcode == 291:")
+    appendLine("\t\t\tresult = int(InputMap.has_action(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 292:")
+    appendLine("\t\t\tInputMap.add_action(StringName(String(args[2])))")
+    appendLine("\t\t\tresult = 0")
+    appendLine("\t\telif opcode == 293:")
+    // Action name and event handle packed with the unit separator (the emit-signal-object
+    // spelling). The event was constructed under this same owner, so it resolves from this
+    // script's handle table; an unknown handle reports 0 and the Kotlin side fails loud.
+    appendLine("\t\t\tvar add_event_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tvar add_event_handle := int(add_event_parts[1])")
+    appendLine("\t\t\tvar add_event: Object = _kanama_object_handles.get(add_event_handle)")
+    appendLine("\t\t\tif add_event is InputEvent:")
+    appendLine(
+      "\t\t\t\tInputMap.action_add_event(StringName(add_event_parts[0]), add_event as InputEvent)"
+    )
+    appendLine("\t\t\t\tresult = 1")
+    appendLine("\t\t\telse:")
+    appendLine(
+      "\t\t\t\tpush_error(\"Unknown Kanama Web InputMap event handle: %d\" % add_event_handle)"
+    )
+    appendLine("\t\t\t\tresult = 0")
+    appendLine("\t\telif opcode == 294:")
+    appendLine("\t\t\tInputMap.erase_action(StringName(String(args[2])))")
+    appendLine("\t\t\tresult = 0")
+    // Task 64 tier 3: engine-side reads that let a probe prove a queued setter LANDED.
+    appendLine("\t\telif opcode == 296 and value is InputEventKey:")
+    appendLine("\t\t\tresult = int((value as InputEventKey).keycode)")
+    appendLine("\t\telif opcode == 298 and value is InputEventKey:")
+    appendLine("\t\t\tresult = int((value as InputEventKey).physical_keycode)")
+    appendLine("\t\telif opcode == 299 and value is InputEvent:")
+    appendLine("\t\t\tresult = int((value as InputEvent).is_echo())")
+    appendLine("\t\telif opcode == 305 and value is InputEvent:")
+    appendLine("\t\t\tresult = int((value as InputEvent).is_action(StringName(String(args[2]))))")
+    appendLine("\t\telif opcode == 300 and value is InputEventWithModifiers:")
+    appendLine("\t\t\tresult = int((value as InputEventWithModifiers).alt_pressed)")
+    appendLine("\t\telif opcode == 303 and value is Window:")
+    appendLine("\t\t\tresult = int((value as Window).mode)")
+    appendLine("\t\telif opcode == 304 and value is Node:")
+    appendLine("\t\t\tresult = int((value as Node).process_mode)")
     appendLine("\t\telif opcode == 90 and value is CharacterBody3D:")
     appendLine("\t\t\tresult = int((value as CharacterBody3D).move_and_slide())")
     appendLine("\t\telif opcode == 91 and value is CharacterBody3D:")

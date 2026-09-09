@@ -65,7 +65,7 @@ Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 21); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 22); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -316,7 +316,7 @@ a payload can never split the list.
 fixture declares one registered function per shape and drives each through the
 real crossing — Kotlin asks Godot to call it BY NAME, Godot dispatches to the
 generated proxy, the proxy takes the arm — then compares the value that came
-back against the value that went out (`Main.dispatch_probe`, driver method #16,
+back against the value that went out (`Main.dispatch_probe`, resolved by name in the driver,
 must return the full mask — 127). A shape that only the emitter tests cover is a
 shape nothing has ever actually run, and the manifest cannot see a shape that
 dispatches but delivers the WRONG VALUE. The mixed-channel bit carries a

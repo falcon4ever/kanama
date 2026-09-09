@@ -234,6 +234,21 @@ open class Node internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+
+  /** Process mode as its enum integer (task 64 tier 3); see the PROCESS_MODE_* constants. */
+  fun setProcessMode(mode: Long) {
+    NodeBackendContractProbe(backendHandle).setProcessMode(mode)
+  }
+
+  fun getProcessMode(): Long = NodeBackendContractProbe(backendHandle).getProcessMode()
+
+  companion object {
+    const val PROCESS_MODE_INHERIT = 0L
+    const val PROCESS_MODE_PAUSABLE = 1L
+    const val PROCESS_MODE_WHEN_PAUSED = 2L
+    const val PROCESS_MODE_ALWAYS = 3L
+    const val PROCESS_MODE_DISABLED = 4L
+  }
 }
 
 open class CanvasItem internal constructor(backendHandle: BackendGodotHandle) : Node(backendHandle) {

@@ -761,6 +761,7 @@ class InputEventMouseButton private constructor(backendHandle: BackendGodotHandl
 
   companion object {
     const val MOUSE_BUTTON_LEFT = 1L
+    const val MOUSE_BUTTON_RIGHT = 2L
 
     fun from(event: GodotObject): InputEventMouseButton? =
       event
@@ -856,6 +857,16 @@ class SceneTree internal constructor(backendHandle: BackendGodotHandle) : GodotO
   fun callGroup(group: String, method: String) {
     SceneTreeBackendContractProbe(backendHandle).callGroup(group, method)
   }
+
+  /**
+   * Root window as a tracked handle -- desktop's `getRoot()` spelling (task 64 tier 3); wrap it
+   * with [Window] to reach the mode calls. The typed [root] extension stays for the tps corpus.
+   */
+  fun getRoot(): GodotHandle =
+    checkNotNull(SceneTreeBackendContractProbe(backendHandle).getRoot()) {
+        "SceneTree has no root window"
+      }
+      .let { WebObjectId(it.backendToken().toInt()) }
 
   fun setPaused(paused: Boolean) {
     GodotBackendCalls.invokeBoolArg(

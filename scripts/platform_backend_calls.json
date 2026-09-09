@@ -4569,6 +4569,237 @@
       "semantics": "Custom starting value for a property tween, COLOR arm. Icone's fade runs from the opposite alpha rather than from wherever modulate happened to sit; without it the web override had to drop from() and animate differently than desktop.",
       "introducedBy": "64-tier2-property-tweener-from",
       "descriptorName": "PROPERTY_TWEENER_FROM_COLOR"
+    },
+    {
+      "opcode": 291,
+      "scope": "class",
+      "className": "InputMap",
+      "methodName": "has_action",
+      "hash": 2619796661,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Does the InputMap singleton know this action? Third-person's Player registers its own bindings at startup only when they are missing, so the check must answer synchronously before the add.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 292,
+      "scope": "class",
+      "className": "InputMap",
+      "methodName": "add_action",
+      "hash": 1195233573,
+      "arguments": [
+        "StringName",
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Register an empty action on the InputMap singleton. Web bakes Godot's default deadzone 0.2 (the shape carries the name only); a caller wanting another deadzone fails loud in the wrapper rather than silently getting 0.2. Immediate so a following action_add_event sees the action.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 293,
+      "scope": "class",
+      "className": "InputMap",
+      "methodName": "action_add_event",
+      "hash": 518302593,
+      "arguments": [
+        "StringName",
+        "InputEvent"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_OBJECT_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Attach an InputEvent to a named action on the InputMap singleton. Action name and event handle ride one packed query string (unit separator); the applier resolves the event from the owning script's handle table. Immediate, so the caller may close() its event handle right after -- the InputMap holds its own reference by then.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 294,
+      "scope": "class",
+      "className": "InputMap",
+      "methodName": "erase_action",
+      "hash": 3304788590,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "void",
+      "shape": "STRINGNAME_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Remove an action from the InputMap singleton (immediate, so a following has_action reads false).",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 295,
+      "scope": "class",
+      "className": "InputEventKey",
+      "methodName": "set_keycode",
+      "hash": 888074362,
+      "arguments": [
+        "enum::Key"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the logical keycode of a constructed InputEventKey (the Key enum crosses as its integer value). Ordered before the action_add_event that follows because the immediate call flushes the queue first.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 296,
+      "scope": "class",
+      "className": "InputEventKey",
+      "methodName": "get_keycode",
+      "hash": 1585896689,
+      "arguments": [],
+      "returnType": "enum::Key",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the logical keycode of a delivered or constructed InputEventKey (FullScreenHandler matches F11 / alt+Enter).",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 297,
+      "scope": "class",
+      "className": "InputEventKey",
+      "methodName": "set_physical_keycode",
+      "hash": 888074362,
+      "arguments": [
+        "enum::Key"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the physical (layout-independent) keycode of a constructed InputEventKey.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 298,
+      "scope": "class",
+      "className": "InputEventKey",
+      "methodName": "get_physical_keycode",
+      "hash": 1585896689,
+      "arguments": [],
+      "returnType": "enum::Key",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the physical keycode of an InputEventKey.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 299,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "is_echo",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Is this a key-repeat echo? FullScreenHandler ignores echoes so a held F11 toggles once.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 300,
+      "scope": "class",
+      "className": "InputEventWithModifiers",
+      "methodName": "is_alt_pressed",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Alt modifier state of a delivered key/mouse event (alt+Enter fullscreen toggle).",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 301,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "set_process_mode",
+      "hash": 1841290486,
+      "arguments": [
+        "enum::Node.ProcessMode"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a node's process mode (the ProcessMode enum crosses as its integer value). FullScreenHandler sets PROCESS_MODE_ALWAYS so F11 still works while the tree is paused.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 302,
+      "scope": "class",
+      "className": "Window",
+      "methodName": "set_mode",
+      "hash": 3095236531,
+      "arguments": [
+        "enum::Window.Mode"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a window mode change on a tracked Window handle (the root viewport from SceneTree.get_root). The browser decides what fullscreen means; the engine call is still made so the value the script reads back is the engine's, not a Kotlin-side mirror.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 303,
+      "scope": "class",
+      "className": "Window",
+      "methodName": "get_mode",
+      "hash": 2566346114,
+      "arguments": [],
+      "returnType": "enum::Window.Mode",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read a tracked Window's mode (FullScreenHandler toggles between WINDOWED and FULLSCREEN).",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 304,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "get_process_mode",
+      "hash": 739966102,
+      "arguments": [],
+      "returnType": "enum::Node.ProcessMode",
+      "shape": "NOARGS_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read a node's process mode back from the engine. Exists so the web3d probe proves set_process_mode delivered its VALUE rather than trusting a Kotlin-side mirror.",
+      "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 305,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "is_action",
+      "hash": 1558498928,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Does the InputMap bind this event to the named action (exact_match baked to Godot's default false)? Unlike is_action_pressed it ignores the pressed flag, so a freshly constructed, never-pressed InputEventKey answers true right after action_add_event -- the VALUE proof that the attach landed.",
+      "introducedBy": "64-tier3-inputmap"
     }
   ],
   "compositions": [
@@ -4600,6 +4831,13 @@
         288
       ],
       "semantics": "When the query payload carries a non-empty child path, compose Node.get_node_or_null on the receiver with Label.get_text on the resolved child; an empty payload (the shape's own spelling) reads the receiver itself. A missing or non-Label target publishes no string result, so the bridge's immediate string query fails loud rather than returning something that could pass as text."
+    },
+    {
+      "name": "ClassDB.instantiate_InputEventKey",
+      "opcodes": [
+        12
+      ],
+      "semantics": "Compose the existing ClassDB.instantiate call with class name InputEventKey; the returned handle is OWNED (a NODE-kind constructed handle in the Web bookkeeping, released with the constructed-object release, never the resource release). Attach it with InputMap.action_add_event, then close() it -- the InputMap keeps its own reference."
     }
   ]
 }

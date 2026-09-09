@@ -96,6 +96,7 @@ enum class GodotCallShape {
   STRINGNAME_LONG_ARG,
   STRINGNAME_VECTOR2_ARG,
   STRINGNAME_OBJECT_ARG,
+  STRINGNAME_OBJECT_ARG_SINGLETON,
   STRINGNAME_RET_VECTOR2,
   NOARGS_RET_STRING,
   STRINGNAME_RET_STRING,
@@ -865,6 +866,21 @@ interface GodotBackendSpi {
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
+    name: String,
+    value: GodotHandle,
+  ) {
+    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  }
+
+  /**
+   * Singleton call carrying a name and one object handle -- `InputMap.action_add_event(action,
+   * event)` (task 64 tier 3). No receiver: the singleton is reached through the active script
+   * owner, and the object argument is a handle that owner already tracks (the constructed
+   * InputEventKey).
+   */
+  fun invokeStringNameObjectArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
     name: String,
     value: GodotHandle,
   ) {
@@ -1919,6 +1935,22 @@ object GodotBackendCalls {
     )
   }
 
+  fun invokeStringNameObjectArgSingleton(
+    descriptor: GodotCallDescriptor,
+    name: String,
+    value: GodotHandle,
+  ) {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_OBJECT_ARG_SINGLETON)
+    val selected = requireBackend()
+    selected.requireLive(value)
+    selected.invokeStringNameObjectArgSingleton(
+      descriptor,
+      resolve(selected, descriptor),
+      name,
+      value,
+    )
+  }
+
   fun invokeStringNameRetVector2(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
@@ -2316,6 +2348,14 @@ class NodeBackendContractProbe(private val handle: GodotHandle) {
 
   fun getParent(): GodotHandle? =
     GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.NODE_GET_PARENT, handle)
+
+  /** Task 64 tier 3: process mode as its enum integer (FullScreenHandler's PROCESS_MODE_ALWAYS). */
+  fun setProcessMode(mode: Long) {
+    GodotBackendCalls.invokeLongArg(InitialGodotCallDescriptors.NODE_SET_PROCESS_MODE, handle, mode)
+  }
+
+  fun getProcessMode(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(InitialGodotCallDescriptors.NODE_GET_PROCESS_MODE, handle)
 }
 
 /** Typed SceneTree lifecycle slice used by Match3's deterministic smoke exit. */
@@ -2336,6 +2376,12 @@ class SceneTreeBackendContractProbe(private val handle: GodotHandle) {
       method,
     )
   }
+
+  /**
+   * Root window as a tracked node handle (task 64 tier 3: FullScreenHandler wraps it as Window).
+   */
+  fun getRoot(): GodotHandle? =
+    GodotBackendCalls.invokeNoArgsRetHandle(InitialGodotCallDescriptors.SCENETREE_GET_ROOT, handle)
 }
 
 /** Typed Tween slice used by Match3 animation and feedback. */
@@ -2951,6 +2997,64 @@ class InputEventBackendContractProbe(private val handle: GodotHandle) {
       handle,
       action,
     )
+
+  /** Task 64 tier 3: key-repeat echo flag (FullScreenHandler ignores echoes). */
+  fun isEcho(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(InitialGodotCallDescriptors.INPUTEVENT_IS_ECHO, handle)
+
+  /** Task 64 tier 3: is this event bound to [action] (pressed or not)? exact_match baked false. */
+  fun isAction(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBool(
+      InitialGodotCallDescriptors.INPUTEVENT_IS_ACTION,
+      handle,
+      action,
+    )
+}
+
+/** Typed modifier-state read on a key/mouse event (task 64 tier 3: alt+Enter fullscreen). */
+@InternalKanamaBackendApi
+class InputEventWithModifiersBackendContractProbe(private val handle: GodotHandle) {
+  fun isAltPressed(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(
+      InitialGodotCallDescriptors.INPUTEVENTWITHMODIFIERS_IS_ALT_PRESSED,
+      handle,
+    )
+}
+
+/**
+ * Typed InputEventKey slice (task 64 tier 3). The setters are queued mutations on a constructed
+ * event; the getters read the engine value back, so a probe can prove the write LANDED rather than
+ * echo a Kotlin-side mirror.
+ */
+@InternalKanamaBackendApi
+class InputEventKeyBackendContractProbe(private val handle: GodotHandle) {
+  fun setKeycode(keycode: Long) {
+    GodotBackendCalls.invokeLongArg(
+      InitialGodotCallDescriptors.INPUTEVENTKEY_SET_KEYCODE,
+      handle,
+      keycode,
+    )
+  }
+
+  fun getKeycode(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(
+      InitialGodotCallDescriptors.INPUTEVENTKEY_GET_KEYCODE,
+      handle,
+    )
+
+  fun setPhysicalKeycode(physicalKeycode: Long) {
+    GodotBackendCalls.invokeLongArg(
+      InitialGodotCallDescriptors.INPUTEVENTKEY_SET_PHYSICAL_KEYCODE,
+      handle,
+      physicalKeycode,
+    )
+  }
+
+  fun getPhysicalKeycode(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(
+      InitialGodotCallDescriptors.INPUTEVENTKEY_GET_PHYSICAL_KEYCODE,
+      handle,
+    )
 }
 
 /** Typed mouse-button query used by Match3 tile input. */
@@ -3377,4 +3481,53 @@ object InputActionBackendContractProbe {
 
   fun getMouseMode(): Long =
     GodotBackendCalls.invokeNoArgsRetLongSingleton(InitialGodotCallDescriptors.INPUT_GET_MOUSE_MODE)
+}
+
+/**
+ * Typed InputMap singleton slice (task 64 tier 3). Third-person's Player registers its own key
+ * bindings at startup: has_action -> add_action -> action_add_event on a constructed InputEventKey.
+ * Every call is immediate so the sequence composes in order and the caller can close() the event
+ * handle right after attaching it.
+ */
+@InternalKanamaBackendApi
+object InputMapBackendContractProbe {
+  fun hasAction(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBoolSingleton(
+      InitialGodotCallDescriptors.INPUTMAP_HAS_ACTION,
+      action,
+    )
+
+  /** The shape carries the name only; Godot's default deadzone (0.2) is what the engine applies. */
+  fun addAction(action: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(
+      InitialGodotCallDescriptors.INPUTMAP_ADD_ACTION,
+      action,
+    )
+  }
+
+  fun actionAddEvent(action: String, event: GodotHandle) {
+    GodotBackendCalls.invokeStringNameObjectArgSingleton(
+      InitialGodotCallDescriptors.INPUTMAP_ACTION_ADD_EVENT,
+      action,
+      event,
+    )
+  }
+
+  fun eraseAction(action: String) {
+    GodotBackendCalls.invokeStringNameArgSingleton(
+      InitialGodotCallDescriptors.INPUTMAP_ERASE_ACTION,
+      action,
+    )
+  }
+}
+
+/** Typed Window mode slice on a tracked Window handle (task 64 tier 3: F11 fullscreen toggle). */
+@InternalKanamaBackendApi
+class WindowBackendContractProbe(private val handle: GodotHandle) {
+  fun setMode(mode: Long) {
+    GodotBackendCalls.invokeLongArg(InitialGodotCallDescriptors.WINDOW_SET_MODE, handle, mode)
+  }
+
+  fun getMode(): Long =
+    GodotBackendCalls.invokeNoArgsRetLong(InitialGodotCallDescriptors.WINDOW_GET_MODE, handle)
 }

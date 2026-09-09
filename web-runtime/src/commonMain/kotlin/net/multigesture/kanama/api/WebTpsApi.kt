@@ -7,6 +7,7 @@ import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.backend.WindowBackendContractProbe
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector2
@@ -401,9 +402,8 @@ fun Node.getChild(index: Int): GodotObject? =
     GodotObject(WebObjectId(it.backendToken().toInt()))
   }
 
-fun Node3D.show() {
-  visible = true
-}
+/** Import-compat alias for shared demo sources; delegates to the [Node3D] member (task 64). */
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.show() = show()
 
 /** Godot's Node3D.orthonormalize: re-orthonormalize the local basis in place. */
 fun Node3D.orthonormalize() {
@@ -810,9 +810,41 @@ object IP {
 // tps graphics menu, so those writes are no-ops rather than fake successes.
 // ---------------------------------------------------------------------------
 
-/** Window settings facade: mode and 3D scaling are fixed by the browser canvas. */
+/**
+ * Window. Two shapes share the class:
+ * - **Handle-backed** (task 64 tier 3): `Window(getTree().getRoot())` wraps the tracked root
+ *   window, and [setMode] / [getMode] (and the [mode] property) are real engine calls --
+ *   FullScreenHandler's F11 toggle reads the mode the engine reports.
+ * - **Handle-less facade** ([Node.getWindow]): the tps settings menu's target. Mode and 3D
+ *   scaling are fixed by the browser canvas there, so those writes are mirrored Kotlin-side and
+ *   never reach the engine (the pre-existing facade contract, documented here and unchanged).
+ */
 class Window internal constructor() {
-  var mode: Long = MODE_WINDOWED
+  private var windowHandle: GodotHandle? = null
+
+  /** Desktop's handle-taking constructor: wrap a tracked Window handle (the tree root). */
+  constructor(godotObject: GodotHandle) : this() {
+    windowHandle = godotObject
+  }
+
+  /** Facade mirror for the handle-less window; unused when a handle is present. */
+  private var facadeMode: Long = MODE_WINDOWED
+
+  var mode: Long
+    get() = getMode()
+    set(value) = setMode(value)
+
+  fun setMode(mode: Long) {
+    val handle = windowHandle
+    if (handle == null) facadeMode = mode
+    else WindowBackendContractProbe(handle.toBackendHandle()).setMode(mode)
+  }
+
+  fun getMode(): Long {
+    val handle = windowHandle ?: return facadeMode
+    return WindowBackendContractProbe(handle.toBackendHandle()).getMode()
+  }
+
   var scaling3dScale: Double = 1.0
   var scaling3dMode: Long = 0L
   var useTaa: Boolean = false

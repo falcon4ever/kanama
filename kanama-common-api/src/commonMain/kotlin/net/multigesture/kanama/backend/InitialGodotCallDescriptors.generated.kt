@@ -3194,6 +3194,171 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
     )
 
+  val INPUTMAP_HAS_ACTION =
+    GodotCallDescriptor(
+      opcode = 291,
+      className = "InputMap",
+      methodName = "has_action",
+      hash = 2619796661L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTMAP_ADD_ACTION =
+    GodotCallDescriptor(
+      opcode = 292,
+      className = "InputMap",
+      methodName = "add_action",
+      hash = 1195233573L,
+      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTMAP_ACTION_ADD_EVENT =
+    GodotCallDescriptor(
+      opcode = 293,
+      className = "InputMap",
+      methodName = "action_add_event",
+      hash = 518302593L,
+      shape = GodotCallShape.STRINGNAME_OBJECT_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTMAP_ERASE_ACTION =
+    GodotCallDescriptor(
+      opcode = 294,
+      className = "InputMap",
+      methodName = "erase_action",
+      hash = 3304788590L,
+      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTKEY_SET_KEYCODE =
+    GodotCallDescriptor(
+      opcode = 295,
+      className = "InputEventKey",
+      methodName = "set_keycode",
+      hash = 888074362L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTKEY_GET_KEYCODE =
+    GodotCallDescriptor(
+      opcode = 296,
+      className = "InputEventKey",
+      methodName = "get_keycode",
+      hash = 1585896689L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTKEY_SET_PHYSICAL_KEYCODE =
+    GodotCallDescriptor(
+      opcode = 297,
+      className = "InputEventKey",
+      methodName = "set_physical_keycode",
+      hash = 888074362L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTKEY_GET_PHYSICAL_KEYCODE =
+    GodotCallDescriptor(
+      opcode = 298,
+      className = "InputEventKey",
+      methodName = "get_physical_keycode",
+      hash = 1585896689L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENT_IS_ECHO =
+    GodotCallDescriptor(
+      opcode = 299,
+      className = "InputEvent",
+      methodName = "is_echo",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENTWITHMODIFIERS_IS_ALT_PRESSED =
+    GodotCallDescriptor(
+      opcode = 300,
+      className = "InputEventWithModifiers",
+      methodName = "is_alt_pressed",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_SET_PROCESS_MODE =
+    GodotCallDescriptor(
+      opcode = 301,
+      className = "Node",
+      methodName = "set_process_mode",
+      hash = 1841290486L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val WINDOW_SET_MODE =
+    GodotCallDescriptor(
+      opcode = 302,
+      className = "Window",
+      methodName = "set_mode",
+      hash = 3095236531L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val WINDOW_GET_MODE =
+    GodotCallDescriptor(
+      opcode = 303,
+      className = "Window",
+      methodName = "get_mode",
+      hash = 2566346114L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val NODE_GET_PROCESS_MODE =
+    GodotCallDescriptor(
+      opcode = 304,
+      className = "Node",
+      methodName = "get_process_mode",
+      hash = 739966102L,
+      shape = GodotCallShape.NOARGS_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENT_IS_ACTION =
+    GodotCallDescriptor(
+      opcode = 305,
+      className = "InputEvent",
+      methodName = "is_action",
+      hash = 1558498928L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 290
+  const val MAX_OPCODE = 305
 }
