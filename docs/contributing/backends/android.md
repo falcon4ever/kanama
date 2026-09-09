@@ -54,6 +54,34 @@ fork rewrites the affected switch sites to explicit `instanceof` chains and is
 published to the configured local Maven repository for Android exports. Keep the
 fork diff small and retire it when the upstream artifact carries the fix.
 
+The root cause, in full. R8/ProGuard minification is validated only with the
+fork. Root-caused on a Pixel 7 (2026-06-26), upstream PanamaPort `v0.1.3`
+crashes in the FFI bootstrap at `nativeLinker().downcallHandle()` with
+`AssertionError: Should not reach here`; the recurring
+`No loader found for resource: res://kotlin-src/*.kt` and flickering splash
+are downstream of that crash. Deobfuscated, PanamaPort's Android linker
+(`_AndroidLinkerImpl`) builds native stubs with Java pattern-matching
+`switch`es over sealed types (`_LLVMStorageDescriptor` storages and the
+`MemoryLayout` hierarchy), and Godot 4.7's R8 (AGP 8.6.1) mis-optimizes those
+switches so they fall through to `default -> Utils.shouldNotReachHere()`. This
+is unfixable from consumer keep rules: keeping the sealed types blocks the
+optimization PanamaPort's own `@CheckDiscard` rules require, failing the
+build; not keeping them leaves the switch broken at runtime. The fork rewrites
+the affected source switch sites to explicit `instanceof` branches and adds
+targeted R8 annotations/signing mechanics.
+`scripts/android_export_minified.sh` builds, installs, launches, and verifies
+the minified Match3 release APK on Pixel 7 (Android 16) and Moto g 5G 2023
+(Android 14).
+
+A second R8 landmine was fixed in fork r8.4 (2026-07-13): AGP 8.6.1's R8
+collapses a one-element `byte[]...` varargs call into `filled-new-array` of
+`byte[][]`, which the ART interpreter below Android 13 segfaults on; the
+fork's `NativeCodeBlob.makeCodeBlobSingle` removes the only such site. Fork
+r8.3 added the `SDK_INT_FULL` bootstrap guard that every device below
+Android 16 needs. Release builds below Android 13 remain blocked by a
+separate release-mode PanamaPort constraint — the floors and their evidence
+are in [Version Support → Validated Android versions](../../reference/version-support.md#validated-android-versions).
+
 ## Desktop vs Android FFM
 
 Desktop Kanama uses JDK 25 and `java.lang.foreign`.

@@ -9,7 +9,7 @@
       "date": "2026-06-26",
       "where": "Pixel 7 (Android 16): nine-demo debug APK matrix, logcat startup checks, screenshot smoke; R8-minified Match3 release APK on the PanamaPort fork",
       "result": "PASS",
-      "source": "docs/exporting/android.md:23-28; docs/reference/version-support.md:53-55",
+      "source": "docs/reference/version-support.md:31,111-131",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -21,7 +21,7 @@
       "date": "2026-07-10",
       "where": "Pixel 7 (Mali-G710, Android 16): nine-demo matrix under rendering_method.mobile=mobile with a per-demo Vulkan renderer-init assertion",
       "result": "PASS",
-      "source": "docs/exporting/android.md:41-46; docs/reference/version-support.md:90",
+      "source": "docs/reference/version-support.md:31,133-143",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -33,7 +33,7 @@
       "date": "2026-07-13",
       "where": "Pixel 7 (Android 16) / Moto g 5G 2023 (Android 14) / Galaxy S10+ (Android 12) / Pixel 3 XL (Android 9, Vulkan/Mobile): four-model debug matrix; debug floor Android 9, release floor Android 13",
       "result": "PASS",
-      "source": "docs/exporting/android.md:115-123; docs/reference/version-support.md:11",
+      "source": "docs/reference/version-support.md:31,145-158",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -45,7 +45,7 @@
       "date": "2026-07-13",
       "where": "Pixel 7 (Android 16) + Moto g 5G 2023 (Android 14): scripts/android_export_minified.sh minified Match3 release APK on PanamaPort fork 0.1.3-kanama-r8.4",
       "result": "PASS",
-      "source": "docs/exporting/android.md:270-274; docs/reference/version-support.md:11",
+      "source": "docs/reference/version-support.md:31,116-119; docs/contributing/backends/android.md:72-74",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -57,7 +57,7 @@
       "date": "2026-06-25",
       "where": "iPhone 12 (iOS 26.5): full ten-step device gate (fresh-project install path + nine-demo matrix), 0 guardrail hits, ~0.63 ms/frame binding overhead",
       "result": "PASS",
-      "source": "docs/exporting/ios.md:27-30; docs/reference/version-support.md:15",
+      "source": "docs/reference/version-support.md:35,174-178",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -69,7 +69,7 @@
       "date": "2026-07-10",
       "where": "iPhone 15 Pro (iOS 26.5): full ten-step device gate on the full-breadth generated-wrapper runtime",
       "result": "PASS",
-      "source": "docs/exporting/ios.md:31-32; docs/reference/version-support.md:15",
+      "source": "docs/reference/version-support.md:35,174-178",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -81,7 +81,7 @@
       "date": "2026-08-20",
       "where": "Safari 26.5 / WebKit 605.1.15, macOS 26.5.1: 13 of 13 cells (twelve-demo corpus + spike cell), zero console errors, protocol 20",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:160,168",
+      "source": "docs/reference/version-support.md:236,244",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -93,7 +93,7 @@
       "date": "2026-08-03",
       "where": "iPhone 15 Pro, Safari/WebKit 26.5.2/605.1.15 over HTTPS: 11 of 12 corpus demos boot and render with zero console errors; dodge and match3 hand-played; tps-demo exceeds the per-tab memory budget",
       "result": "PARTIAL",
-      "source": "docs/reference/version-support.md:192-200",
+      "source": "docs/reference/version-support.md:269-277",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 decision: desktop gates only on the 4.7.2 re-pin; re-run before quoting 4.7.2 for mobile/Web"
     },
@@ -105,7 +105,7 @@
       "date": "2026-08-10",
       "where": "Real Windows hardware (NVIDIA GTX 670, Vulkan 1.2.175 Forward+): exported game with a jlink runtime cross-built on macOS arm64 booted from its bundled runtime; clean teardown 22/22 scripts, 221/221 StringNames",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:14",
+      "source": "docs/reference/version-support.md:34",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 re-ran desktop gates on macOS arm64 only; Windows not re-run on the 4.7.2 binary (metadata-only bump per upgrade_godot.sh)"
     },
@@ -117,7 +117,7 @@
       "date": "2026-07-13",
       "where": "Windows x86_64, 4.7 stable console binary: demo audits, script builds, imports, nine-demo desktop runtime smoke, TPS smoke, packaged desktop-kit + store-addon install smokes",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:14,55-56",
+      "source": "docs/reference/version-support.md:34,75-76",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 re-ran desktop gates on macOS arm64 only; Windows not re-run on the 4.7.2 binary (metadata-only bump per upgrade_godot.sh)"
     },
@@ -129,7 +129,7 @@
       "date": "2026-07-14",
       "where": "Ubuntu 25.04, Godot 4.7.stable.official.5b4e0cb0f, OpenJDK 25.0.2 (run 2026-07-13/14): full local CI, native bootstrap preflight, strict docs, 11 demo builds, nine-demo desktop smoke matrix, TPS checked smoke, distribution packaging, desktop-kit/store-addon install smokes",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:13,56-58",
+      "source": "docs/reference/version-support.md:33,76-78",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 re-ran desktop gates on macOS arm64 only; Linux not re-run on the 4.7.2 binary (metadata-only bump per upgrade_godot.sh)"
     },
@@ -141,7 +141,7 @@
       "date": "2026-07-14",
       "where": "Ubuntu 26.04 native AArch64, Godot 4.7.stable.official.5b4e0cb0f, OpenJDK 25.0.3: full local CI, native bootstrap preflight, strict docs, 11 demo builds, nine-demo desktop smoke matrix, TPS checked smoke, distribution packaging, desktop-kit/store-addon install smokes",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:12,56-58",
+      "source": "docs/reference/version-support.md:32,76-78",
       "acceptedStaleUntil": "2026-10-31",
       "acceptedStaleReason": "task 91 re-ran desktop gates on macOS arm64 only; Linux not re-run on the 4.7.2 binary (metadata-only bump per upgrade_godot.sh)"
     },
@@ -153,7 +153,7 @@
       "date": "2026-06-21",
       "where": "macOS arm64: scripts/runtime_smoke.sh against 4.7.stable.official.5b4e0cb0f",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:10,49-51"
+      "source": "docs/reference/version-support.md:30,69-71"
     },
     {
       "gate": "macos-local-ci-desktop-smoke",
@@ -163,7 +163,7 @@
       "date": "2026-09-08",
       "where": "macOS arm64, 4.7.2 binary: scripts/local_ci.sh end to end (runtime, @Tool, hot-reload, in-process hot-reload smokes) + demos desktop_smoke_all.sh nine-demo matrix",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:30,35-38"
+      "source": "docs/reference/version-support.md:50,55-58"
     }
   ]
 }

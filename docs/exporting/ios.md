@@ -1,52 +1,27 @@
 # iOS
 
-Kanama's iOS backend is **Supported** on Godot 4.7 stable: it runs full Kanama
-project scripts through the same generated Godot API wrappers as desktop/Android,
-via a C GDExtension shim + a Kotlin/Native static `.xcframework` (no JVM on
-device). Device-validated on iPhone 12 + iPhone 15 Pro.
+Kanama's iOS backend runs full Kanama project scripts through a C GDExtension
+shim plus a Kotlin/Native static `.xcframework` — no JVM, GraalVM, or TeaVM on
+device, and the same generated Godot API wrappers as desktop/Android. This page
+is the export workflow: the toolchain, the build/install/export commands,
+signing, and troubleshooting. The support tier, the device evidence behind it,
+and its caveats (runtime-only packaged addon, no mobile hot reload, the
+tracked non-blocking follow-ups) are recorded once in
+[Version Support → iOS](../reference/version-support.md#ios); the runtime
+design is in [iOS Backend Architecture](../contributing/backends/ios.md).
 
-Use the
-[Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
-for the matching editor binary and iOS export templates.
-
-The design is:
-
-- Godot GDExtension entry point in a small C shim,
-- Kotlin/Native static library linked into the same iOS `.xcframework`,
-- no desktop JVM, GraalVM, or TeaVM in the iOS app, and
-- physical-device validation first; simulator builds are optional compile/link
-  checks and are not used as a performance signal.
-
-## Current Status
-
-The iOS backend builds debug and release iOS `.xcframework` artifacts with
-device `arm64` and optional Apple Silicon simulator `arm64` slices, and runs
-full Kanama project scripts through generated Godot API wrappers over a C-shim
-generic `ptrcall`.
-
-The **full ten-step device gate** (`scripts/ios_device_gate.sh`: the
-fresh-project install path plus the nine-demo matrix) is validated on two
-physical models: **iPhone 12** (iOS 26.5, 2026-06-25; 0 guardrail hits,
-per-frame Kanama binding overhead about 0.63 ms/frame measured there) and
-**iPhone 15 Pro** (iOS 26.5, 2026-07-10, on the full-breadth generated-wrapper
-runtime). The claim names those two models — it is not a device-family
-("recent iPhones") claim.
-
-iOS is **Supported** on 4.7 stable, with caveats: the packaged `.xcframework`
-addon is runtime-only (compiling a project's Kotlin scripts still needs the
-Kanama checkout), there is no mobile hot reload, and one FPS Audio autoload
-follow-up plus task-26 multiplayer UI polish are tracked as non-blocking — see
-[Version Support](../reference/version-support.md).
+Physical-device export and launch are the validation target; simulator builds
+are optional compile/link checks and are not used as a performance signal.
 
 ## Toolchain
 
-Use the current Kanama preview baseline:
+The Godot pin and the desktop JDK that builds Kanama are in
+[Version Support → Requirements](../reference/version-support.md#requirements);
+install the Godot iOS export templates for that same release. This table owns
+the iOS tool versions:
 
 | Tool | Version / Setting |
 |---|---|
-| Godot | 4.7.2 stable |
-| Godot export templates | 4.7.2 stable iOS templates |
-| Desktop runtime/build JDK | JDK 25+ |
 | Xcode | 26.5 or newer enough to provide the installed iOS SDK |
 | iOS runtime | Kotlin/Native static library inside an `.xcframework` |
 | Device architecture | `arm64` |
@@ -63,18 +38,13 @@ team IDs, provisioning profile names, or private maintainer notes.
 
 ## Runtime Shape
 
-```mermaid
-flowchart LR
-    EXPORT["Godot iOS export"] --> SHIM["C shim"]
-    SHIM --> KN["Kotlin/Native runtime"]
-    KN --> WRAP["Generated wrappers"]
-    WRAP --> OC["ObjectCalls"]
-    OC --> PTR["generic ptrcall<br/>dispatch (C shim)"]
-    PTR <--> GODOT["Godot Engine iOS"]
-```
-
-See [Architecture: iOS](../contributing/architecture.md#ios) for
-how this maps onto the desktop/Android runtime model.
+Godot's iOS export loads the C shim, which bridges to the Kotlin/Native runtime;
+the generated wrappers call Godot through `ObjectCalls` over a generic `ptrcall`
+dispatch in the shim. The component diagram, the dispatch contract, and the
+generator rules are in
+[iOS Backend Architecture](../contributing/backends/ios.md); see
+[Architecture: iOS](../contributing/architecture.md#ios) for how this maps onto
+the desktop/Android runtime model.
 
 ## Build The iOS Artifacts
 
@@ -184,8 +154,8 @@ For simulator experiments, add `-PkanamaIosXcframeworkMode=full`.
 An iOS export needs the normal Godot iOS setup plus the installed Kanama iOS
 addon:
 
-- Godot 4.7.2 stable editor or headless binary.
-- Godot 4.7.2 stable iOS export templates installed.
+- The pinned Godot editor or headless binary and its iOS export templates
+  (see [Version Support → Requirements](../reference/version-support.md#requirements)).
 - A Godot export preset named `iOS`, or the equivalent preset name used in your
   command.
 - `architectures/arm64=true` for physical-device builds.
@@ -216,7 +186,7 @@ Common failures:
 
 | Symptom | Likely Cause / Fix |
 |---|---|
-| Godot cannot export for iOS | Install the iOS export templates for the same Godot 4.7.2 stable editor. |
+| Godot cannot export for iOS | Install the iOS export templates for the same Godot release as the editor. |
 | Xcode reports no signing team | Set the Apple Development team in the export preset or Xcode project. |
 | Xcode cannot create a provisioning profile | Sign in to Xcode with an Apple Developer account and allow provisioning updates, or create the profile in the Apple Developer portal. |
 | Device is not a valid destination | Connect and trust the iPhone, enable Developer Mode, and use `xcrun devicectl list devices` to confirm the device identifier. |
@@ -359,13 +329,5 @@ loader/render checks. None of the modes prove hot reload.
   playback semantics should set their own iOS audio session category in native
   platform code after startup.
 - Hot reload is out of scope for the iOS backend.
-- The audited type set and KSP registration path cover the current demo corpus,
-  including the heavy `tps-demo-kanama`. iOS is Supported on 4.7 stable; the mobile
-  promotion record and remaining polish (task-26 multiplayer UI) are tracked in the
-  internal task repo.
-- The runtime calls Godot through backend-neutral generated wrappers and
-  prefers cached typed `ptrcall`s over Variant-heavy or allocation-heavy paths.
-- The current playable demo set matches the Android-enabled public demo set plus
-  Bunnymark; the heavy `tps-demo-kanama` also runs on device (its mobile
-  touch/multiplayer UI polish is tracked separately). FPS is playable but still
-  has an intermittent Audio autoload follow-up.
+- Which demos run on device, and the follow-ups still tracked against them, are
+  in [Version Support → iOS](../reference/version-support.md#ios).
