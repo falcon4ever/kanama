@@ -63,6 +63,7 @@ open class GodotObject(val handle: MemorySegment) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(notificationBind, handle, what, reversed)
     }
 
+    /** Variant-path read: the script comes back as a borrowed view, never `close()` it — see [call]. */
     fun getScript(): Any? =
         ObjectCalls.ptrcallNoArgsRetVariantScalar(getScriptBind, handle)
 
@@ -70,6 +71,7 @@ open class GodotObject(val handle: MemorySegment) {
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setMetaBind, handle, name, value)
     }
 
+    /** Variant-path read: an object result is a borrowed view, never `close()` it — see [call]. */
     fun getMeta(name: String, defaultValue: Any? = null): Any? =
         ObjectCalls.ptrcallWithStringNameAndVariantArgRetVariantScalar(getMetaBind, handle, name, defaultValue)
 
@@ -185,6 +187,24 @@ open class GodotObject(val handle: MemorySegment) {
     fun canTranslateMessages(): Boolean =
         ObjectCalls.ptrcallNoArgsRetBool(canTranslateMessagesBind, handle)
 
+    /**
+     * Dynamic `Object.call`. Scalars come back as Kotlin values. An **object** result comes back
+     * as a *borrowed* `GodotObject` view: the Variant-path decode
+     * (`BuiltinTypes.variantToScalar`, `VariantType.OBJECT`) takes no reference for you, so
+     *
+     * - never `close()` it, and never `close()` a `Resource.fromObject(...)`/`X.fromObject(...)`
+     *   view you mint over it — that releases a reference you never took;
+     * - if the call *minted* the object and the return Variant held its only reference
+     *   (`call("duplicate")`, a static factory), the handle is already dead when you receive it;
+     *   use the typed wrapper method instead (an owned `+1` you close), or `ClassDB.instantiate`,
+     *   whose owned decode path retains before the Variant is destroyed.
+     *
+     * The same applies to every Variant-path read on this class: [callDeferred], [callv], [get],
+     * [getMeta], [getScript]. Typed wrapper getters (`getMesh()`, `getAnimation(...)`) are the
+     * other convention — an owned `+1` the caller closes. Both are spelled out in
+     * `docs/game-dev/godot-api.md` "Resource Ownership" and, for the ABI, in
+     * `docs/contributing/wrapper-maintenance.md` "RefCounted Return Ownership".
+     */
     fun call(method: String, vararg args: Any?): Any? {
         val result = ObjectCalls.callWithVariantArgs(callBind, handle, listOf(method, *args))
         if (method == "set" && args.size == 2) {
@@ -196,12 +216,19 @@ open class GodotObject(val handle: MemorySegment) {
         return result
     }
 
+    /** Variant-path call; an object result is a borrowed view, never `close()` it — see [call]. */
     fun callDeferred(method: String, vararg args: Any?): Any? =
         ObjectCalls.callWithVariantArgs(callDeferredBind, handle, listOf(method, *args))
 
+    /** Variant-path call; an object result is a borrowed view, never `close()` it — see [call]. */
     fun callv(method: String, arguments: List<Any?>): Any? =
         ObjectCalls.ptrcallWithStringNameArrayArgsRetVariantScalar(callvBind, handle, method, arguments)
 
+    /**
+     * Dynamic `Object.get`. A resource read this way (`get("mesh")`) is a *borrowed* view that
+     * lives only while this object keeps the property — never `close()` it (see [call]). The
+     * typed getter (`getMesh()`) is the owned `+1` you close.
+     */
     fun get(property: String): Any? =
         ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(objectGetBind, handle, property)
 
