@@ -129,7 +129,8 @@ Mechanism (b) landed; (a) stays the long-term target and is filed separately.
   the helpers it waits on, all listed in the generated
   [iOS Shape Gap](../reference/generated/ios-shape-gap.md) page. 99 properties are
   read-only in the shared tree because only their setter is desktop-only. A script that
-  calls a companion member needs `import net.multigesture.kanama.api.*`.
+  calls a companion member imports it by name (`import net.multigesture.kanama.api.getUsedCells`);
+  eight demo scripts needed that (kanama-demos#48). No wildcard imports.
 - One platform-tagged table, `PER_PLATFORM_WRAPPERS` (56 classes), replaced the two
   hand-shaped lists and the collision/unsupported registries.
 - The gate is single-tree (`check_single_tree`) and runs in-process: about 5 s instead

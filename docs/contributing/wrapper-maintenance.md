@@ -48,7 +48,7 @@ host) are generated as extensions into a per-class desktop companion
 waits on, and the generated [iOS Shape Gap](../reference/generated/ios-shape-gap.md)
 page lists the whole gap. When a helper lands on iOS the next regen moves the member
 back into the shared file. Because those members are extensions, a script that calls
-one needs `import net.multigesture.kanama.api.*` (or the specific import), not only
+one needs the member imported by name (`import net.multigesture.kanama.api.<member>`), not only
 the class import. iOS-only sugar on a shared class (`IOS_EXTENSION_SECTIONS`) is
 generated the same way into `ios-runtime/.../api/<Class>.ios.kt`.
 

@@ -18,10 +18,13 @@ versioning once public releases begin.
   classes, 1,274 members) whose headers name the helpers they wait on, all listed in
   the new generated page `docs/reference/generated/ios-shape-gap.md`. A helper landing
   on iOS moves its members back into the shared file on the next regen.
-- **Scripts calling a desktop-only member need the package import.** Those members are
-  extension functions now, so `import net.multigesture.kanama.api.*` (or the specific
-  import) is required where a class import alone used to do; two example scripts and
-  the wrapper probe were updated. Call syntax is unchanged.
+- **Scripts calling a desktop-only member import it by name.** Those members are
+  extension functions now, so a class import alone no longer brings them in: add
+  `import net.multigesture.kanama.api.getUsedCells` (one line per member), as the eight
+  affected demo scripts do (kanama-demos#48). Kanama code, demos and templates
+  import by name, never `net.multigesture.kanama.api.*`. Call syntax is unchanged; as
+  iOS helper shapes land (task 100) the members move back into the classes and the
+  imports become ordinary member imports.
 - **Aligned across platforms:** `@JvmStatic` is emitted on iOS too (harmless on
   Kotlin/Native); `Node.createTween()` is `open` on both; the iOS `GodotObject` is no
   longer `AutoCloseable` (like desktop; `RefCounted` still is and owns `close()`); iOS
