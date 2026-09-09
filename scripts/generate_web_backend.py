@@ -8,7 +8,7 @@ Web-local per-opcode policy in this file. Web-only stateful bookkeeping lives ha
 `WebBackendBookkeeping.kt`; the JS bridge externs live hand-written in `WebBackendTransport.kt`.
 Admitting a new call family of an existing shape is a JSON entry plus a `WEB_POLICY` entry (a
 regenerated diff); a genuinely new call shape additionally needs a shape emitter here plus its
-hand-written transport/bookkeeping. See docs/contributing/web-internals.md ("Backend-dispatch
+hand-written transport/bookkeeping. See docs/contributing/backends/web.md ("Backend-dispatch
 codegen").
 
 Drift is gated whitespace-insensitively (`--check`): the generated token stream must match the
@@ -2337,7 +2337,7 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
  * scripts/generate_web_backend.py. Web-only state (property snapshots, browser handle-kind tracking,
  * free-time cache clearing) lives hand-written in WebBackendBookkeeping.kt and is reached through its
  * hooks; the js(...) transport primitives live hand-written in WebBackendTransport.kt. See
- * docs/contributing/web-internals.md ("Backend-dispatch codegen").
+ * docs/contributing/backends/web.md ("Backend-dispatch codegen").
  */
 internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {

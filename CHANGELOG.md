@@ -7,6 +7,37 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — docs consolidation (task 94)
+
+- **One page owns each fact.** Requirements (Godot pin, JDKs, host platforms,
+  per-workflow toolchains) and platform status/evidence are stated once, in
+  `docs/reference/version-support.md` (new "Requirements" table; the Android
+  demo matrix, the validated Android version floors, the iOS device-gate
+  evidence and the Web browser floors moved there from the export guides).
+  README.md and `docs/index.md` carry the badges (a Web badge is new) and a
+  link; the getting-started introduction, the release-kit and store-addon
+  template READMEs, and the export guides link instead of restating. The
+  export guides (`docs/exporting/{android,ios,web}.md`) are now
+  workflow-only: toolchain table, commands, troubleshooting.
+- **Pages moved** (no redirects — update bookmarks; the published site keeps
+  the same section names):
+    - `docs/contributing/android-internals.md` → `docs/contributing/backends/android.md`
+      (also gained the Android R8/PanamaPort root-cause history from the export guide)
+    - `docs/contributing/web-internals.md` → `docs/contributing/backends/web.md`
+    - `docs/internals/reference/ios-backend-architecture.md` → `docs/contributing/backends/ios.md`
+    - `docs/internals/reference/ios-backend-handwritten.md` → `docs/reference/generated/ios-backend-handwritten.md`
+    - `docs/contributing/api-coverage.md` → `docs/reference/generated/api-coverage.md`
+    - `docs/contributing/wrapper-generator-report.md` → `docs/reference/generated/wrapper-generator-report.md`
+    - `docs/contributing/gates.md` → `docs/reference/generated/gates.md`
+    - `docs/internals/README.md` deleted (it only indexed the two files above
+      and listed what had moved out of the folder in July); `docs/internals/`
+      is gone.
+- The generators (`scripts/api_wrapper_coverage.py`,
+  `scripts/api_wrapper_generator_report.py`, `scripts/generate_gates_index.py`,
+  `scripts/ios_handwritten_report.py`) write to the new paths, and the
+  `local_ci.sh` docs-check stages and `scripts/upgrade_godot.sh` check them
+  there. `evidence/gates.json` citations point at the consolidated pages.
+
 ### Fixed — lifetime safety (task 98)
 
 - **`GD.isInstanceValid` no longer reads a freed object.** `GodotObject` captures

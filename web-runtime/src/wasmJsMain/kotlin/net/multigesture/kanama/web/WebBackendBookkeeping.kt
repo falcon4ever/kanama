@@ -17,7 +17,7 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
  * execution-mode guards, and JS-bridge codecs; the genuinely Web-specific state that a Kotlin/Wasm
  * split-module backend needs — read-your-write property snapshots, browser handle-kind tracking,
  * and free-time cache clearing — lives here and is reached through the hooks in this file. See
- * `docs/contributing/web-internals.md` ("Backend-dispatch codegen") for why this is not folded into
+ * `docs/contributing/backends/web.md` ("Backend-dispatch codegen") for why this is not folded into
  * the platform-neutral `platform_backend_calls.json`.
  */
 private val positionSnapshots = mutableMapOf<Int, GodotVector2>()

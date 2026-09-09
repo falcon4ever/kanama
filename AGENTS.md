@@ -51,7 +51,7 @@ task, then use targeted `rg` searches.
 - Generated wrappers, generator policy, ABI helpers, KDoc sync, or wrapper
   coverage: `docs/contributing/wrapper-maintenance.md`.
 - Android runtime/export support: `docs/exporting/android.md` and
-  `docs/contributing/android-internals.md`.
+  `docs/contributing/backends/android.md`.
 - New Kanama game projects: `docs/getting-started/source-checkout.md`,
   `docs/game-dev/scripts.md`, `docs/game-dev/godot-api.md`,
   `docs/game-dev/properties-resources.md`, and `docs/game-dev/signals.md`.
@@ -106,7 +106,7 @@ demo names, or copied notes.
 | `src/main/kotlin/binding/runtime/ObjectCalls.kt` | hand-written (desktop/Android) | The ptrcall helper surface the generated wrappers call. Not generated: `scripts/audit_generator_shape_policy.py` gates its shapes against the generator's call-shape table, and the iOS counterpart `ios-runtime/.../binding/runtime/ObjectCallsGenerated.kt` is the generated one. |
 | Generated wrappers under `src/main/kotlin/` | `scripts/generate_api_wrapper.py` | Public wrappers must be regeneratable unless explicitly marked as hand-authored policy classes. |
 | `src/generated/godot/*` | `scripts/refresh_godot_api.sh` from Godot headers | Generated Panama bindings. |
-| `docs/internals/reference/ios-backend-handwritten.md` | `scripts/ios_handwritten_report.py` | Generated report; do not hand-edit. |
+| `docs/reference/generated/ios-backend-handwritten.md` | `scripts/ios_handwritten_report.py` | Generated report; do not hand-edit. |
 
 Hand-authored policy classes are the exception and are explicitly marked. Prefer
 generated wrappers and focused policy fixes over ad hoc hand wrappers.
@@ -239,8 +239,8 @@ python3 scripts/generate_name_constants.py
 Refresh wrapper reports before release-facing wrapper changes:
 
 ```sh
-python3 scripts/api_wrapper_generator_report.py --markdown docs/contributing/wrapper-generator-report.md
-python3 scripts/api_wrapper_coverage.py --markdown docs/contributing/api-coverage.md
+python3 scripts/api_wrapper_generator_report.py --markdown docs/reference/generated/wrapper-generator-report.md
+python3 scripts/api_wrapper_coverage.py --markdown docs/reference/generated/api-coverage.md
 ```
 
 ### Godot Upgrade

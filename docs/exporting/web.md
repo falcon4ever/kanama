@@ -1,68 +1,36 @@
 # Web
 
-## Current Status
-
-The Web backend is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable
-baseline. It compiles Kanama project scripts to **Kotlin/Wasm** and runs them
-against a Godot 4.7 Web export through a generated per-call proxy and a versioned
-JavaScript bridge (protocol 22). <!-- kanama-claim: protocol --> It is **not a Supported target**: the renderer is
-single-thread Compatibility only, the browser matrix and performance budgets are
-still being hardened, and there is no packaged install path yet.
-
-**Evidence.** The full twelve-demo corpus — Bunnymark, Starter-Kit-Match3, dodge,
-web3d, 3D-Platformer, squash, FPS, character-controller, third-person, Racing,
-City-Builder and tps-demo — passes the automated production export smoke in
-**Chrome** and **Firefox** (both CI cells) and **Safari** (a local gate — it has
-no headless mode), each with a
-play-and-teardown driver run, zero console errors, and live handles draining to
-zero. Every corpus export is also proven to embed no build-machine paths in any
-served file, and to be reproducible from a clean clone (see
-[Fresh-Checkout Gate](#fresh-checkout-gate)).
-
-**Browser version floors.** The declared floors live in one machine-readable
-file, `scripts/web/browser_floors.json`, and every smoke run is checked against
-them — a run on an older browser fails the gate instead of printing the same
-`PASS` line as a declared one.
-
-| Browser | Floor | Basis | Corpus validated at |
-|---|---|---|---|
-| Chrome | **130** | tested | 150 (headless) |
-| Firefox | **141** | tested | 152–153 (headless) |
-| Safari | **26.5** | validated-at | 26.5 / WebKit 605.1.15, macOS 26.5.1 |
-
-"Tested" means the gate was run on that version *and* on the one below it
-(2026-07-28, macOS arm64, protocol-15 export). Chrome 129 never boots the
-Kotlin/Wasm module; 130 runs it — that is where WebAssembly JS String Builtins
-shipped. The Firefox number is a **harness** bound, not an engine verdict: 141,
-143 and 145 all pass, while 140 ESR and older never expose a reachable WebDriver
-BiDi endpoint to the driver's launch recipe, so they cannot be judged either way.
-Safari is "validated-at" only: it ships with the OS and cannot be installed side
-by side, so no lower bound is testable at all.
-
-**iOS and iPadOS are hand-checked only, not gated** — no mobile-WebKit claim is
-made here (see Known Limitations and Testing On A Phone Or Tablet).
-
-This page is the reproducible export workflow. For the architecture — batching,
-snapshots, handle generations, the bridge protocol — see
-[Web Internals](../contributing/web-internals.md).
+The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
+them against a Godot Web export through a generated per-call proxy and a
+versioned JavaScript bridge (protocol 22). <!-- kanama-claim: protocol --> This page is the reproducible export
+workflow: prerequisites, the build/export/serve/smoke/publish commands, the
+browser matrix and budgets you run, and the limitations you meet while
+shipping. The tier, the twelve-demo corpus evidence, the browser floors and
+what "tested" versus "validated-at" mean, and the hand-checked-only status of
+iOS/iPadOS are recorded once in
+[Version Support → Web](../reference/version-support.md#web). For the
+architecture — batching, snapshots, handle generations, the bridge protocol —
+see [Web Internals](../contributing/backends/web.md).
 
 ## How Web Differs
 
 Unlike desktop, Android, and iOS, the Web backend uses **no JVM and no
-FFM/PanamaPort path**. Project gameplay is ahead-of-time compiled to WebAssembly
-(Kotlin/Wasm, which depends on the WasmGC and exception-handling proposals, so it
-targets modern browsers). The Kanama Wasm module and Godot's own Emscripten/Wasm
-runtime are **separate modules** that cannot share a heap, so calls cross as
-typed commands over a JavaScript bridge rather than as direct FFI.
+FFM/PanamaPort path**: the Kanama Wasm module and Godot's own Emscripten/Wasm
+runtime are separate modules that cannot share a heap, so calls cross as typed
+commands over a JavaScript bridge rather than as direct FFI
+([Web Internals → Where Web Sits](../contributing/backends/web.md#where-web-sits-relative-to-the-other-backends)).
+The consequences for your scripts are the next section.
 
 ## Requirements
 
-- **Godot 4.7.2 stable** editor binary (matching the pinned baseline).
+- The **pinned Godot editor binary** from
+  [Version Support → Requirements](../reference/version-support.md#requirements).
 - The **`web_nothreads_release`** export template for that exact Godot version.
   The single-thread template is required: the preview backend does not use
   threads or cross-origin isolation.
 - A **modern browser** with WasmGC + exception handling (recent
-  Chrome/Firefox/Safari).
+  Chrome/Firefox/Safari; the validated floors are in
+  [Version Support → Web](../reference/version-support.md#web)).
 - **Node.js** (only for the export-smoke harness, not for the export itself).
 - Reproducible builds currently require
   `--no-daemon -Pkotlin.compiler.execution.strategy=in-process`; the Kotlin
@@ -321,8 +289,9 @@ producing an artifact nobody could upload. This is the same known exception
 recorded in `scripts/web/budgets.json` — shrinking it is asset work in the
 demo, not a packaging concern.
 
-Publishing changes nothing about the backend's status: Web remains
-Experimental, and exporting a game still requires a Kanama source checkout.
+Publishing changes nothing about the backend's tier (see
+[Version Support → Web](../reference/version-support.md#web)), and exporting a
+game still requires a Kanama source checkout.
 
 ## Browser Matrix
 
@@ -356,19 +325,17 @@ Limitations. Run it with the same script, `--engine safari`, one run at a time.
 
 ### Regression Cadence
 
-Which gate runs when, and where. A gate that is not on this list runs nowhere.
+Which gate runs when, and where, is derived from the workflow files,
+`local_ci.sh`, and the `evidence/gates.json` ledger by the generated
+[Gates Index](../reference/generated/gates.md): the PR subset and the `ci` corpus on
+Chrome + Firefox, the nightly soak and spike cells, and the local-only Safari,
+tps-demo, and fresh-checkout gates each appear there with their cadence and
+last recorded run. Two policies sit on top of that list:
 
-| Gate | Cadence | Where |
-|---|---|---|
-| PR subset × Chrome + Firefox | every Web-relevant pull request | CI (`web` workflow) |
-| `ci` corpus × Chrome + Firefox (everything a runner can build) | push to `main`, and nightly | CI |
-| **tps-demo** | before a release tag | local (OOM-killed on a hosted runner) |
-| Soak (10 min, `--demo soak`) | nightly | CI |
-| Spike transport benchmark (`--demo spike`, in the `ci`/`full` sets) | push to `main`, and nightly | CI |
-| Full corpus on **Safari** | before a release tag, and before any promotion decision | local (no headless mode) |
-| Fresh-checkout gate | before a release tag | local |
-| Browser floor re-bisect | when a floor is claimed to move, or a browser major ships that breaks a cell | local |
-| Everything above | **on a Godot baseline bump** — the export template, generated proxy and bridge protocol all move together | local + CI |
+- **Browser floor re-bisect** — when a floor is claimed to move, or a browser
+  major ships that breaks a cell (local).
+- **Everything above on a Godot baseline bump** — the export template,
+  generated proxy, and bridge protocol all move together (local + CI).
 
 The nightly run matters because two of the inputs change without anyone touching
 the repository: the browsers on the runner image, and the runner itself. A red
@@ -657,5 +624,5 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   The affected cells are quarantined, not hidden (see Quarantined Cells above).
   If enemies accumulate without despawning in a Web export, check that task
   before assuming a project bug.
-- Not a Supported target: no support claim, and the corpus/browser matrix and
-  budgets are still being hardened.
+- Not a Supported target — the tier and what would move it are in
+  [Version Support → Web](../reference/version-support.md#web).

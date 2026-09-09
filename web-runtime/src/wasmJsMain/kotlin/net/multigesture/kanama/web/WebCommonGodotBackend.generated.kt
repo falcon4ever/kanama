@@ -27,7 +27,7 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
  * scripts/generate_web_backend.py. Web-only state (property snapshots, browser handle-kind
  * tracking, free-time cache clearing) lives hand-written in WebBackendBookkeeping.kt and is reached
  * through its hooks; the js(...) transport primitives live hand-written in WebBackendTransport.kt.
- * See docs/contributing/web-internals.md ("Backend-dispatch codegen").
+ * See docs/contributing/backends/web.md ("Backend-dispatch codegen").
  */
 internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {

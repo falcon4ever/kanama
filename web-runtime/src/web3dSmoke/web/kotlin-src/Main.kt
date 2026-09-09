@@ -436,7 +436,7 @@ class Main(godotObject: GodotHandle) :
    * - 128: `Window(getTree().getRoot()).getMode()` is a legal Window.Mode.
    *
    * A healthy run returns 255. The event handle is closed in `finally`, after the attach: the
-   * InputMap keeps its own reference (the create/close contract on Web, see web-internals).
+   * InputMap keeps its own reference (the create/close contract on Web, see docs/contributing/backends/web.md).
    *
    * Ordering: the driver calls this AFTER generic_probe. Bit 128 tracks the root Window through
    * the typed get_root path, and the generic probe's minting check needs that same window still

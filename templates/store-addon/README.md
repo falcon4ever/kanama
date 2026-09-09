@@ -32,8 +32,9 @@ The setup script keeps existing root Gradle files by default. If your project
 already has Gradle files, merge the small template build shape manually or run
 with `--force` only when replacing those files is safe.
 
-Desktop projects require Godot 4.7.2 stable (Kanama's supported Godot version) and
-JDK 25 or newer. Set `JAVA_HOME` if Kanama cannot find `libjvm`.
+The Godot release and JDK this addon targets are listed once, in Kanama's
+[Version Support → Requirements](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
+Set `JAVA_HOME` if Kanama cannot find `libjvm`.
 
 On macOS, downloaded Kanama zips may be quarantined by Gatekeeper. If Godot
 reports `"libkanama_bootstrap.dylib" Not Opened`, clear quarantine on the

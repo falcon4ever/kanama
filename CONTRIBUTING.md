@@ -209,7 +209,7 @@ Known constraints:
   from the APK at startup.
 - `.gdextension` files need Android ABI entries for the bridge library.
 
-See `docs/exporting/android.md` and `docs/contributing/android-internals.md`
+See `docs/exporting/android.md` and `docs/contributing/backends/android.md`
 for the current Android workflow and limitations.
 
 ## Documented Limitations
