@@ -163,11 +163,14 @@ if [[ -z "$kanama_version" ]]; then
 fi
 ensure_gdextension_header "${godot_bins[0]}"
 
-# JVM unit tests across all modules (runtime :test + KSP processor :processor:test). These were not
-# previously gated — the iOS @ScriptProperty get/set parity contract (task 46) lives here, along with
-# the existing type tests.
-stage "JVM unit tests"
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test
+# JVM unit tests across all modules (runtime :test + KSP processor :processor:test) plus the KMP
+# module's JVM tests. `gradlew test` does NOT reach :kanama-common-api -- its tests are `jvmTest`
+# -- so GodotBackendContractTest (1,100 lines) and the checkPlatformBackendContract descriptor
+# check had never run in CI (task 99, review R16). The iOS @ScriptProperty get/set parity
+# contract (task 46) lives in :test alongside the existing type tests.
+stage "JVM unit tests + kanama-common-api contract"
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test \
+  :kanama-common-api:jvmTest :kanama-common-api:checkPlatformBackendContract
 
 stage "public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
