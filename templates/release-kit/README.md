@@ -24,7 +24,7 @@ adds a `Build Scripts` button that runs the same Gradle task.
 
 ## Requirements
 
-- Godot 4.7 stable, matching Kanama's supported Godot version.
+- Godot 4.7.2 stable, matching Kanama's supported Godot version.
 - JDK 25 or newer. Set `JAVA_HOME` if Kanama cannot find `libjvm`.
 
 ## macOS Gatekeeper

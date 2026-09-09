@@ -7,6 +7,26 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — Godot baseline
+
+- **Godot baseline re-pinned to 4.7.2 stable** (task 91). `scripts/upgrade_godot.sh`
+  classifies the 4.7.0 → 4.7.2 dump as **metadata-only**: the `extension_api.json`
+  body and `gdextension_interface.h` are byte-identical apart from the header's
+  version fields, so wrappers, name constants, and struct layouts are unchanged and
+  the regen churn is version strings plus a KDoc re-sync from the 4.7.2
+  `doc/classes` (comment-only). CI now downloads 4.7.2 (`ci.yml`, `web.yml`,
+  `package.yml`); requirements, download links, badges, and templates name 4.7.2;
+  support-tier labels keep naming the 4.7 stable line. Mobile device gates and the
+  Web browser matrix have not been re-run on the 4.7.2 export templates yet — their
+  evidence in Version Support stays dated on the 4.7.0 templates until they are.
+- The upgrade tooling now handles maintenance pins: the docs-tree guard in
+  `upgrade_godot.sh` dropped the patch component (a 4.7.2 tree read as
+  `4.7.stable`), the iOS re-adopt emitted only the non-hand-shaped classes and so
+  stripped every method returning a hand-shaped type (`Image`, …) from 15 wrappers,
+  and `check_godot_version_pin.py` checked only `package.yml` while `ci.yml` and
+  `web.yml` carried their own pins. All three are fixed; `web.yml` derives its
+  template folder from `GODOT_VERSION`.
+
 ### Fixed — Web behaviour (agent-surface audit, tasks 88/89)
 
 An adversarial audit of the Web backend's agent-written surfaces found and closed

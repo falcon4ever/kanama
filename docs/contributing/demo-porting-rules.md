@@ -417,7 +417,7 @@ Validate with the active Godot preview baseline and any compatibility build
 needed by the task:
 
 ```bash
-/path/to/godot-4.7-stable/bin/godot.macos.editor.arm64
+/path/to/godot-4.7.2-stable/bin/godot.macos.editor.arm64
 ```
 
 Headless smoke tests should load the real scene and exercise a small behavior

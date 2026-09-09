@@ -45,7 +45,7 @@ concurrency:
 
 env:
   # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin).
-  GODOT_VERSION: 4.7-stable
+  GODOT_VERSION: 4.7.2-stable
   # The kanama-demos commit the matrix runs against. Pinned on purpose: an
   # unpinned demos checkout means an unrelated demo-repo commit can redden every
   # Kanama PR. Bump it deliberately when a demo port lands (see
@@ -260,10 +260,11 @@ jobs:
       - name: Install the Web export template
         shell: bash
         run: |
-          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.stable"
-          cp "$HOME/godot/web_nothreads_release.zip" \
-            "$HOME/.local/share/godot/export_templates/4.7.stable/"
-          ls -la "$HOME/.local/share/godot/export_templates/4.7.stable/"
+          # Godot reads templates from the DOT form of the version; GODOT_VERSION is the dash form.
+          template_dir="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
+          mkdir -p "$template_dir"
+          cp "$HOME/godot/web_nothreads_release.zip" "$template_dir/"
+          ls -la "$template_dir/"
 
       - name: Export the plain-GDScript probe
         shell: bash

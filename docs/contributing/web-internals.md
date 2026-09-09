@@ -392,7 +392,7 @@ Narrow checks while iterating, then the broader gate:
 node --check web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js
 ./gradlew :web-runtime:compileKotlinWasmJs :web-runtime:generateWebGameplayCoverage
 mkdocs build --strict
-./scripts/local_ci.sh /path/to/godot-4.7-stable
+./scripts/local_ci.sh /path/to/godot-4.7.2-stable
 ```
 
 ## Out of Scope

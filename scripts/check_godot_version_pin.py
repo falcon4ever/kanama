@@ -3,7 +3,8 @@
 
 `gradle.properties` (`kanamaGodotVersion`, dot form e.g. `4.7.stable`) is the single
 source of truth. `build.gradle.kts` and `scripts/ios_template_preflight.sh` read it
-directly; the CI workflow uses the dash form (`4.7-stable`, the GitHub release tag).
+directly; the CI workflows use the dash form (`4.7-stable`, the GitHub release tag), and
+`web.yml` derives the dot-form export-template folder from it.
 This gate fails if any of them drift from the canonical value, so the next baseline
 bump can't land a partial upgrade.
 """
@@ -33,16 +34,27 @@ def main() -> int:
     dash = to_dash(canonical)
     failures: list[str] = []
 
-    # CI workflow: GODOT_VERSION must equal the dash form.
-    pkg = (ROOT / ".github/workflows/package.yml").read_text()
-    m = re.search(r"^\s*GODOT_VERSION:\s*(\S+)\s*$", pkg, re.MULTILINE)
-    if not m:
-        failures.append(".github/workflows/package.yml: GODOT_VERSION not found")
-    elif m.group(1) != dash:
-        failures.append(
-            f".github/workflows/package.yml: GODOT_VERSION={m.group(1)} but expected {dash} "
-            f"(from kanamaGodotVersion={canonical})"
-        )
+    # CI workflows: every GODOT_VERSION must equal the dash form. package.yml is the release
+    # tag; ci.yml and web.yml download the binary and export templates by it, so a stale one
+    # silently gates the whole tree on the previous Godot.
+    for wf in ("package.yml", "ci.yml", "web.yml"):
+        text = (ROOT / ".github/workflows" / wf).read_text()
+        m = re.search(r"^\s*GODOT_VERSION:\s*(\S+)\s*$", text, re.MULTILINE)
+        if not m:
+            failures.append(f".github/workflows/{wf}: GODOT_VERSION not found")
+        elif m.group(1) != dash:
+            failures.append(
+                f".github/workflows/{wf}: GODOT_VERSION={m.group(1)} but expected {dash} "
+                f"(from kanamaGodotVersion={canonical})"
+            )
+        # A literal export-template folder must be the canonical dot form; deriving it from
+        # GODOT_VERSION (`${GODOT_VERSION/-/.}`) is the preferred spelling.
+        for stray in re.findall(r"export_templates/([^/\"'\s]+)/", text):
+            if "$" not in stray and stray != canonical:
+                failures.append(
+                    f".github/workflows/{wf}: stray export_templates/{stray}/ pin "
+                    f"(expected {canonical}, or a GODOT_VERSION-derived form)"
+                )
 
     # build.gradle.kts must not re-hardcode an export-template version (it reads the property).
     bg = (ROOT / "build.gradle.kts").read_text()

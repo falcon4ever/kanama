@@ -17,14 +17,14 @@ page records the platforms and engine versions validated for it.
 
 Validated support is only claimed after the matching smoke path passes.
 Use the
-[Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
+[Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
 for compatible desktop binaries and Android export templates.
 
 ## API Baseline
 
 The checked-in wrapper surface is generated from the current
 `extension_api.json`, `gdextension_interface.h`, generated Panama bindings, and
-Kotlin wrapper sources. For this preview, that API baseline is Godot 4.7
+Kotlin wrapper sources. For this preview, that API baseline is Godot 4.7.2
 stable.
 
 The 4.7 rc 2 → 4.7 stable bump was a metadata-only change: the dumped
@@ -61,7 +61,7 @@ build and the Android plugin build.
 Android is tracked separately from the desktop matrix. The current Android path
 uses:
 
-- Godot 4.7 stable Android export,
+- Godot 4.7.2 stable Android export,
 - Android SDK API 36, build-tools 36.1.0, and NDK 29.0.14206865 for the
   matching Godot export templates,
 - a Godot Android plugin AAR,
@@ -208,14 +208,14 @@ above — mobile WebKit stays outside the validated claim.
 Run the local CI shortcut with one or more Godot binaries:
 
 ```sh
-scripts/local_ci.sh /absolute/path/to/godot-4.7-stable
+scripts/local_ci.sh /absolute/path/to/godot-4.7.2-stable
 ```
 
 Before tagging a release, run the isolated source-and-demo gate from a clean
 temporary clone:
 
 ```sh
-scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-stable
+scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7.2-stable
 ```
 
 For package validation, build the packaged artifacts and smoke them without a
@@ -226,17 +226,17 @@ sibling Kanama checkout:
 scripts/package_install_smoke.sh \
   --desktop-kit \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7-stable
+  /absolute/path/to/godot-4.7.2-stable
 scripts/package_install_smoke.sh \
   --store-addon \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7-stable
+  /absolute/path/to/godot-4.7.2-stable
 ```
 
 ```sh
 scripts/local_ci.sh \
-  /absolute/path/to/godot-4.7-stable \
-  /absolute/path/to/godot-4.7-stable
+  /absolute/path/to/godot-4.7.2-stable \
+  /absolute/path/to/godot-4.7.2-stable
 ```
 
 The script runs about forty stages (see `scripts/local_ci.sh`); the headline
@@ -256,7 +256,7 @@ loads Kotlin scripts, and runs the example project far enough to verify the
 expected markers.
 
 For Linux desktop validation, use a matching Linux Godot binary from the Godot
-4.7 stable archive and set `JAVA_HOME` to JDK 25+:
+4.7.2 stable archive and set `JAVA_HOME` to JDK 25+:
 
 ```sh
 cd /path/to/kanama-demos
@@ -264,15 +264,15 @@ JAVA_HOME=/path/to/jdk-25 \
 XDG_DATA_HOME=/tmp/kanama-godot-state-linux \
 XDG_CONFIG_HOME=/tmp/kanama-godot-config-linux \
 KANAMA_DESKTOP_SMOKE_LOG_DIR=/tmp/kanama-desktop-smokes-linux \
-scripts/desktop_smoke_all.sh /path/to/Godot_v4.7-stable_linux.arm64
+scripts/desktop_smoke_all.sh /path/to/Godot_v4.7.2-stable_linux.arm64
 ```
 
 (`desktop_smoke_all.sh` defaults both XDG variables to those paths on Linux; set
 them explicitly only to relocate the isolated state.)
 
 Use the Godot binary for the architecture under test, such as
-`Godot_v4.7-stable_linux.arm64` or
-`Godot_v4.7-stable_linux.x86_64`. The demo smoke script uses Godot's OpenGL
+`Godot_v4.7.2-stable_linux.arm64` or
+`Godot_v4.7.2-stable_linux.x86_64`. The demo smoke script uses Godot's OpenGL
 Compatibility renderer on desktop. Before refreshing demo addons, rebuild the
 native bootstrap from a clean checkout and preflight `libkanama_bootstrap.so`
 with `file`, `ldd`, and `readelf`.
@@ -295,13 +295,13 @@ environment variable or with `-Pkanama.godot.executable=...` (the root aggregate
 tasks forward the property to nested demo builds):
 
 ```bat
-cmd /c "call ""...\VsDevCmd.bat"" -arch=x64 -host_arch=x64 && .\gradlew.bat importAllGodot -PkanamaRoot=C:\path\to\kanama -Pkanama.godot.executable=C:\path\to\Godot_v4.7-stable_win64_console.exe"
+cmd /c "call ""...\VsDevCmd.bat"" -arch=x64 -host_arch=x64 && .\gradlew.bat importAllGodot -PkanamaRoot=C:\path\to\kanama -Pkanama.godot.executable=C:\path\to\Godot_v4.7.2-stable_win64_console.exe"
 ```
 
 Run the demo smoke matrix through Git Bash:
 
 ```bat
-cmd /c "set KANAMA_DESKTOP_SMOKE_LOG_DIR=%TEMP%\kanama-desktop-smokes&& ""C:\Program Files\Git\bin\bash.exe"" scripts/desktop_smoke_all.sh C:\path\to\Godot_v4.7-stable_win64_console.exe"
+cmd /c "set KANAMA_DESKTOP_SMOKE_LOG_DIR=%TEMP%\kanama-desktop-smokes&& ""C:\Program Files\Git\bin\bash.exe"" scripts/desktop_smoke_all.sh C:\path\to\Godot_v4.7.2-stable_win64_console.exe"
 ```
 
 The Gradle audit tasks resolve Python as `py`/`python` on Windows (the
