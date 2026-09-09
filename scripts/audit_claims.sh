@@ -21,7 +21,20 @@
 set -uo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TASKS_DIR="${KANAMA_TASKS_DIR:-$ROOT_DIR/../kanama-tasks}"
+TASKS_DIR="${KANAMA_TASKS_DIR:-}"
+if [[ -z "$TASKS_DIR" ]]; then
+  # Default to the sibling of the MAIN checkout, not of this directory, so a linked
+  # worktree (e.g. .claude/worktrees/<name>) still finds it -- the same rule
+  # audit_stale_blockers.py uses. `--git-common-dir` is <main>/.git (relative ".git"
+  # when run from the main checkout itself).
+  common_dir="$(git -C "$ROOT_DIR" rev-parse --git-common-dir 2>/dev/null || true)"
+  if [[ -n "$common_dir" ]]; then
+    main_root="$(cd "$ROOT_DIR" && cd "$(dirname "$common_dir")" && pwd)"
+    TASKS_DIR="$main_root/../kanama-tasks"
+  else
+    TASKS_DIR="$ROOT_DIR/../kanama-tasks"
+  fi
+fi
 WITH_PRS=0
 [[ "${1:-}" == "--prs" ]] && WITH_PRS=1
 
