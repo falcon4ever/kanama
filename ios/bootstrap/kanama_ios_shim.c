@@ -262,6 +262,7 @@ static GDExtensionInterfaceGetProcAddress g_get_proc_address = NULL;
 static GDExtensionClassLibraryPtr g_library = NULL;
 static GDExtensionInterfaceCallableCustomCreate2 g_callable_custom_create2 = NULL;
 static GDExtensionInterfaceObjectGetInstanceId g_object_get_instance_id = NULL;
+static GDExtensionInterfaceObjectGetInstanceFromId g_object_get_instance_from_id = NULL;
 
 static GDExtensionInterfaceStringNameNewWithUtf8Chars g_string_name_new = NULL;
 static GDExtensionInterfaceStringNewWithUtf8Chars g_string_new = NULL;
@@ -887,6 +888,10 @@ static int kanama_ios_resolve_godot_api(void) {
     // auto-disconnect the connection when that object is freed. Without it (object_id=0) a freed
     // receiver's signal fires into a stale Callable -> use-after-free (iOS host-disconnect crash).
     g_object_get_instance_id = (GDExtensionInterfaceObjectGetInstanceId)kanama_ios_lookup("object_get_instance_id");
+    // Backs GD.isInstanceValid / isInstanceIdValid on iOS (task 98): the wrapper captures its
+    // instance id at construction and validity is answered by the ObjectDB lookup, never by
+    // dereferencing the possibly-freed object pointer. Optional like the entry above.
+    g_object_get_instance_from_id = (GDExtensionInterfaceObjectGetInstanceFromId)kanama_ios_lookup("object_get_instance_from_id");
     g_variant_new_nil = (GDExtensionInterfaceVariantNewNil)kanama_ios_lookup("variant_new_nil");
     g_global_get_singleton = (GDExtensionInterfaceGlobalGetSingleton)kanama_ios_lookup(
         "global_get_singleton"
@@ -3898,6 +3903,20 @@ int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index) {
         0
     );
     return (int64_t)(intptr_t)child;
+}
+
+int64_t kanama_ios_godot_object_get_instance_id(int64_t object) {
+    if (object == 0 || g_object_get_instance_id == NULL) {
+        return 0;
+    }
+    return (int64_t)g_object_get_instance_id((GDExtensionConstObjectPtr)(intptr_t)object);
+}
+
+int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id) {
+    if (instance_id == 0 || g_object_get_instance_from_id == NULL) {
+        return 0;
+    }
+    return g_object_get_instance_from_id((GDObjectInstanceID)instance_id) != NULL ? 1 : 0;
 }
 
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name) {

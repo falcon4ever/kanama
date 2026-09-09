@@ -78,6 +78,8 @@ object NativeCallSurface {
       "builtin_method_lookup" to FunctionDescriptor.of(ADDRESS, JAVA_INT, ADDRESS, JAVA_LONG),
       // variant_get_type
       "variant_type_probe" to FunctionDescriptor.of(JAVA_INT, ADDRESS),
+      // object_get_instance_id -- captured once per wrapper construction (task 98)
+      "instance_id_probe" to FunctionDescriptor.of(JAVA_LONG, ADDRESS),
       // string_to_utf8_chars
       "string_to_utf8" to FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, JAVA_LONG),
       // get_godot_version2, object_destroy, variant_destroy, variant_new_nil, and every

@@ -32,7 +32,6 @@ object GD {
     private const val RANDFN_HASH: Long = 92296394L
     private const val TYPEOF_HASH: Long = 326422594L
     private const val HASH_HASH: Long = 326422594L
-    private const val IS_INSTANCE_VALID_HASH: Long = 996128841L
     private const val IS_INSTANCE_ID_VALID_HASH: Long = 2232439758L
     private const val ONE_FLOAT_HASH: Long = 2140049587L
     private const val TWO_FLOAT_HASH: Long = 92296394L
@@ -430,21 +429,6 @@ object GD {
         }
     }
 
-    private fun callBoolOneVariantUtility(name: String, hash: Long, value: Any?): Boolean {
-        Arena.ofConfined().use { arena ->
-            val encoded = encodeVariant(arena, value)
-            val args = arena.allocate(ADDRESS, 1)
-            val ret = arena.allocate(JAVA_BYTE)
-            try {
-                args.setAtIndex(ADDRESS, 0, encoded.variant)
-                utilityCall(name, hash).invoke(ret, args, 1)
-                return ret.get(JAVA_BYTE, 0).toInt() != 0
-            } finally {
-                encoded.release()
-            }
-        }
-    }
-
     @JvmStatic
     fun print(vararg values: Any?) = callVoidVarargUtility("print", COMMON_VARARG_HASH, values)
 
@@ -571,15 +555,15 @@ object GD {
      * false for every non-object Variant, so an id or a string would compile and then
      * always return false (task 78). Use [isInstanceIdValid] to check a raw instance id.
      *
-     * Note that building the OBJECT variant reads the object's header, so this asks the
-     * question through the wrapper's raw pointer. GDScript's `is_instance_valid` reads
-     * the instance id its Variant already cached instead. If you are holding a wrapper
-     * across a `free()` you can capture `getInstanceId()` while it is alive and use
-     * [isInstanceIdValid], which never touches the object.
+     * This never dereferences the wrapper's pointer. It asks `is_instance_id_valid` about
+     * the instance id the wrapper captured at construction ([GodotObject.instanceId]) --
+     * the same thing GDScript's `is_instance_valid` does with the id its Variant cached --
+     * so it is safe to call on a wrapper whose object has since been freed (task 98).
+     * Every *other* member of a wrapper still assumes the object is alive.
      */
     @JvmStatic
     fun isInstanceValid(instance: GodotObject?): Boolean =
-        callBoolOneVariantUtility("is_instance_valid", IS_INSTANCE_VALID_HASH, instance)
+        instance != null && isInstanceIdValid(instance.instanceId)
 
     /**
      * Returns true when [id] — an id from `GodotObject.getInstanceId()` — still resolves

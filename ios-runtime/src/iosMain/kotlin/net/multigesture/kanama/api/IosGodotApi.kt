@@ -76,6 +76,8 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect_c
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_is_instance_id_valid
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_get_instance_id
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_class
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_queue_free
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_packed_scene_instantiate
@@ -192,6 +194,14 @@ open class GodotObject(
     val handle: MemorySegment,
 ) : AutoCloseable {
     constructor(handle: Long) : this(MemorySegment.ofAddress(handle))
+
+    /**
+     * The engine instance id, captured once at construction (0 for a NULL handle). Never
+     * re-reads [handle], so it stays valid after the object is freed; `GD.isInstanceValid`
+     * routes through it (task 98, desktop mirror).
+     */
+    val instanceId: Long =
+        if (handle.address() == 0L) 0L else IosGodot.objectGetInstanceId(handle.address())
 
     /** Returns true when both wrappers refer to the same Godot object instance. */
     fun isSameInstance(other: GodotObject): Boolean = handle.address() == other.handle.address()
@@ -940,16 +950,19 @@ object GD {
 
     fun radToDeg(radians: Double): Double = radians * (180.0 / Mathf.PI)
 
-    // @GlobalScope.is_instance_valid. Desktop routes this through the engine is_instance_valid
-    // UtilityFunction; iOS has no utility-function call path (see roadmap), so this is an
-    // APPROXIMATION: non-null, and for an engine object a live (non-zero) handle. It does not detect
-    // an object freed while a non-null wrapper is still held — acceptable for the current demos.
+    // @GlobalScope.is_instance_valid (task 98 mirror). Answered by the ObjectDB lookup of the
+    // instance id the wrapper captured at construction (shim object_get_instance_from_id), so a
+    // wrapper whose object was freed reports false without dereferencing the dead pointer —
+    // the same contract as desktop GD.isInstanceValid. Non-object values are simply non-null.
     fun isInstanceValid(value: Any?): Boolean =
         when (value) {
             null -> false
-            is GodotObject -> value.handle.address() != 0L
+            is GodotObject -> IosGodot.isInstanceIdValid(value.instanceId)
             else -> true
         }
+
+    // @GlobalScope.is_instance_id_valid: the id-shaped counterpart of isInstanceValid.
+    fun isInstanceIdValid(id: Long): Boolean = IosGodot.isInstanceIdValid(id)
 }
 
 inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =
@@ -980,6 +993,12 @@ internal object IosGodot {
 
     fun objectIsClass(objectHandle: Long, className: String): Boolean =
         kanama_ios_godot_object_is_class(objectHandle, className) != 0
+
+    fun objectGetInstanceId(objectHandle: Long): Long =
+        kanama_ios_godot_object_get_instance_id(objectHandle)
+
+    fun isInstanceIdValid(instanceId: Long): Boolean =
+        kanama_ios_godot_is_instance_id_valid(instanceId) != 0
 
     fun nodeIsInGroup(node: Long, groupName: String): Boolean =
         kanama_ios_godot_node_is_in_group(node, groupName) != 0

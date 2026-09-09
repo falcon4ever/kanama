@@ -164,6 +164,10 @@ object ObjectCalls {
     GodotFFI.lookup("object_destroy", FunctionDescriptor.ofVoid(ADDRESS))
   }
 
+  private val objectGetInstanceId by lazy {
+    GodotFFI.lookup("object_get_instance_id", FunctionDescriptor.of(JAVA_LONG, ADDRESS))
+  }
+
   /** Returns the Godot object pointer for a named engine singleton (e.g. "Engine"). */
   fun getSingleton(name: String): MemorySegment =
     globalGetSingleton.invoke(GodotStrings.makeStringName(name)) as MemorySegment
@@ -40102,6 +40106,15 @@ object ObjectCalls {
       }
     }
   }
+
+  /**
+   * Reads the engine instance id of a live Godot object (the `object_get_instance_id` interface
+   * function -- one direct downcall, not a ptrcall). `GodotObject` captures this once at wrapper
+   * construction so `GD.isInstanceValid` can later ask `is_instance_id_valid` without touching the
+   * possibly-freed pointer (task 98). Undefined for a pointer whose object has already been freed.
+   */
+  fun objectGetInstanceId(instance: MemorySegment): Long =
+    objectGetInstanceId.invoke(instance) as Long
 
   /** Destroys a Godot Object pointer allocated via classdb_construct_object3. */
   fun destroyObject(instance: MemorySegment) {
