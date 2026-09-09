@@ -76,7 +76,6 @@ class FileAccessHandle internal constructor(handle: MemorySegment) : RefCounted(
 
     fun storeString(text: String): Boolean = FileAccess.storeStringHandle(handle, text)
 
-    @OptIn(ManualGodotLifetimeApi::class)
     override fun close() {
         if (!fileClosed) {
             fileClosed = true

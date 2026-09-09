@@ -49,7 +49,6 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.LineEdit
 import net.multigesture.kanama.api.MainThread
-import net.multigesture.kanama.api.ManualGodotLifetimeApi
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.MethodName
@@ -103,7 +102,6 @@ enum class SmokeDifficulty {
 @ScriptClass(attachTo = "Node")
 @GlobalClass
 @Tool
-@OptIn(ManualGodotLifetimeApi::class)
 class HelloScript(godotObject: GodotHandle) :
   KanamaScript<Node>(godotObject, ::Node), KanamaCoroutineOwner {
   override val kanamaScope = KanamaScope()

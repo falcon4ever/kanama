@@ -7,6 +7,33 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — one resource-ownership rule, and `close()` no longer needs an opt-in
+
+- **Getters are owned; the docs now say so in one place and nowhere contradicts
+  it** (task 97). Every `RefCounted`-typed return — `create()`,
+  `ResourceLoader.load…`, and plain getters such as `getMesh()`,
+  `getAnimation(...)` or the `Tweener` a `tweenProperty(...)` hands back — is a
+  `+1` the caller closes; a wrapper you mint yourself over a handle you already
+  hold (`fromHandle`/`fromObject`) and a live `Tween` are the only things you never
+  close. `docs/game-dev/godot-api.md` "Resource Ownership" is the rule; the
+  style guide, `properties-resources.md` and the demo-porting rules lost the
+  sentences that still taught the pre-task-62 "do not close what you handed to a
+  setter" exception and link instead. The demos parity audit
+  (`kanama-demos/scripts/demo_parity_audit.py`) used to fail exactly the closes
+  the rule requires; it now enforces the same table.
+- **`@ManualGodotLifetimeApi` is deprecated and no longer applied.**
+  `RefCounted.close()` (desktop) and the Web `Texture2D`/`AudioStream`/
+  `PackedScene`/`ResourceLoader` members carried a `RequiresOptIn(WARNING)`
+  that warned on the one call the ownership rule tells you to make. An existing
+  `@OptIn(ManualGodotLifetimeApi::class)` still compiles, with a deprecation
+  warning; delete it, nothing replaces it. On iOS the annotation is an inert
+  marker until the generator stops emitting it on the generated `RefCounted`.
+- `GodotObject.call()`, `callDeferred()`, `callv()`, `get()`, `getMeta()` and
+  `getScript()` now document that an object result is a **borrowed** view of the
+  Variant-path decode — never `close()` it, and it may already be dead when the
+  call minted the object (`call("duplicate")`); use the typed wrapper getter or
+  `ClassDB.instantiate` to hold one. No behaviour change.
+
 ### Added — Web input-map, key-event, process-mode and window-mode families
 
 - **Web protocol 21 → 22.** The Kotlin/Wasm backend admits the call families the

@@ -488,7 +488,6 @@ open class AudioStream internal constructor(backendHandle: BackendGodotHandle) :
   constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
 
   /** Releases the stream's browser handle (already-released is an error). */
-  @ManualGodotLifetimeApi
   fun close() {
     releaseWebResource(handle.value)
   }
@@ -563,7 +562,6 @@ class PackedScene internal constructor(backendHandle: BackendGodotHandle) : Reso
   constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
 
   /** Harness-grade release of the scene's browser handle (already-released is an error). */
-  @ManualGodotLifetimeApi
   fun close() {
     releaseWebResource(handle.value)
   }

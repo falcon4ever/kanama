@@ -7,7 +7,6 @@ import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.KanamaScript
-import net.multigesture.kanama.api.ManualGodotLifetimeApi
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.ResourceSaver
@@ -23,7 +22,6 @@ import net.multigesture.kanama.api.newScriptInstance
 class ResourceForgeSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
 
   @OnReady
-  @OptIn(ManualGodotLifetimeApi::class)
   fun ready() {
     val path = "user://forged_smoke.tres"
     val owned =

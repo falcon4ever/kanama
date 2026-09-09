@@ -102,10 +102,14 @@ import kotlin.math.PI
 import kotlin.math.pow
 import kotlin.random.Random
 
-@RequiresOptIn(
-    message = "This API exposes a Godot object whose lifetime is owned outside Kotlin.",
-    level = RequiresOptIn.Level.WARNING,
-)
+/**
+ * Inert marker, no opt-in required (task 97): desktop and Web deprecated this annotation and
+ * stopped applying it. The generated iOS `RefCounted.close()` still carries it because the
+ * generator's `IOS_CUSTOM_MEMBER_SECTIONS["RefCounted"]` emits it; once that line is dropped
+ * (generator work, task 98) this class can be deprecated like its desktop twin.
+ */
+@Retention(AnnotationRetention.BINARY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 annotation class ManualGodotLifetimeApi
 
 abstract class KanamaScript<Self : Any>(

@@ -31,6 +31,12 @@ import net.multigesture.kanama.web.KanamaWebScript
 import net.multigesture.kanama.web.WebObjectId
 import net.multigesture.kanama.web.webScriptInstance
 
+/**
+ * Deprecated, no longer applied to any Web API (task 97); kept so an existing
+ * `@OptIn(ManualGodotLifetimeApi::class)` in ported code still compiles. `close()` is the
+ * documented contract — see `docs/game-dev/godot-api.md` "Resource Ownership".
+ */
+@Deprecated("No longer required; close() is the documented contract (docs/game-dev/godot-api.md#resource-ownership)")
 @RequiresOptIn(
   level = RequiresOptIn.Level.WARNING,
   message = "This API exposes manual Godot resource lifetime management.",
@@ -386,7 +392,6 @@ open class Resource internal constructor(backendHandle: BackendGodotHandle) :
   }
 }
 
-@ManualGodotLifetimeApi
 class Texture2D internal constructor(private var resourceHandle: BackendGodotHandle?) :
   Resource(checkNotNull(resourceHandle)) {
   constructor(godotObject: GodotHandle) : this(godotObject.toBackendHandle())
@@ -411,7 +416,6 @@ object ResourceLoader {
     cacheMode: Long = CACHE_MODE_REUSE,
   ): Resource? = ResourceLoaderBackendContractProbe.load(path, typeHint, cacheMode)?.let(::Resource)
 
-  @ManualGodotLifetimeApi
   fun loadTexture2D(path: String, cacheMode: Long = CACHE_MODE_REUSE): Texture2D? =
     ResourceLoaderBackendContractProbe.load(path, "Texture2D", cacheMode)?.let(::Texture2D)
 
@@ -423,7 +427,6 @@ object ResourceLoader {
    * path for `AudioStreamPlayer.setStream` on an already-held stream (task 64). Same admitted
    * loader family (and "AudioStream" type hint) that `setStreamFromPath` already rides.
    */
-  @ManualGodotLifetimeApi
   fun loadAudioStream(path: String, cacheMode: Long = CACHE_MODE_REUSE): AudioStream? =
     ResourceLoaderBackendContractProbe.load(path, "AudioStream", cacheMode)?.let(::AudioStream)
 }
