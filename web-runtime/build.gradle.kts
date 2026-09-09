@@ -252,20 +252,11 @@ val webMatch3ImportOutput = ByteArrayOutputStream()
 val webGameplayCoverage = layout.buildDirectory.file("reports/web-gameplay-coverage.json")
 val webGameplayCoverageSources =
     files(
-        layout.projectDirectory.file(
-            "src/commonMain/kotlin/net/multigesture/kanama/api/WebGodotApi.kt"
-        ),
-        layout.projectDirectory.file(
-            "src/commonMain/kotlin/net/multigesture/kanama/api/WebMatch3Api.kt"
-        ),
-        layout.projectDirectory.file(
-            "src/commonMain/kotlin/net/multigesture/kanama/api/WebDodgeApi.kt"
-        ),
-        // Task 64: AnimationPlayer.getCurrentAnimation rides the generic tier; its marker
-        // lives in the platformer wrapper file.
-        layout.projectDirectory.file(
-            "src/commonMain/kotlin/net/multigesture/kanama/api/WebPlatformerApi.kt"
-        ),
+        // Task 96: every Web wrapper (generated tree + hand-written facades) carries the
+        // coverage markers; scan the whole api/ directory so a re-homed marker cannot drop out.
+        fileTree(layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/api")) {
+            include("**/*.kt")
+        },
         // Task 76: the web3d fixture exercises the generic callv fallback; its
         // genericWebGameplayFallback markers populate the report's slow-path bucket.
         layout.projectDirectory.file("src/web3dSmoke/web/kotlin-src/Main.kt"),
@@ -333,6 +324,40 @@ tasks.register<Exec>("checkWebBackendDispatch") {
 }
 
 tasks.named("check") { dependsOn("checkWebBackendDispatch") }
+
+// Task 96: the Web wrapper tree (api/generated/<Class>.kt) is generated from the same contract
+// plus the Web-local wrapper policy in generate_web_wrappers.py. `checkWebWrappers` fails loud on
+// drift (committed == fresh regen, byte for byte; ktfmt does not touch api/**);
+// `generateWebWrappers` rewrites the committed tree.
+val webWrapperGenerator = rootProject.file("scripts/generate_web_wrappers.py")
+val webWrapperTree =
+    layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/api/generated")
+
+tasks.register<Exec>("generateWebWrappers") {
+    group = "verification"
+    description = "Regenerates the Kotlin/Wasm Web wrapper tree from the Web call contract."
+    inputs.file(webWrapperGenerator)
+    inputs.file(webBackendDispatchGenerator)
+    inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
+    inputs.file(webBackendPolicy)
+    inputs.file(rootProject.file("extension_api.json"))
+    outputs.dir(webWrapperTree)
+    commandLine("python3", webWrapperGenerator.absolutePath)
+}
+
+tasks.register<Exec>("checkWebWrappers") {
+    group = "verification"
+    description = "Fails if the generated Web wrapper tree drifts from the Web call contract."
+    inputs.file(webWrapperGenerator)
+    inputs.file(webBackendDispatchGenerator)
+    inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
+    inputs.file(webBackendPolicy)
+    inputs.file(rootProject.file("extension_api.json"))
+    inputs.dir(layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/api"))
+    commandLine("python3", webWrapperGenerator.absolutePath, "--check")
+}
+
+tasks.named("check") { dependsOn("checkWebWrappers") }
 
 tasks.register("stageWebSpikeGodotProject") {
     group = "verification"
