@@ -1102,5 +1102,345 @@ class GodotBackendContractTest {
         else -> error("Unexpected Vector3 write opcode=${descriptor.opcode}")
       }
     }
+
+    // Every SPI member is abstract (task 95); the shapes below are not exercised by this test.
+    private fun unexercised(descriptor: GodotCallDescriptor): Nothing =
+      error("RecordingBackend does not exercise ${descriptor.className}.${descriptor.methodName}")
+
+    override fun invokeNoArgsRetStringArray(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): List<String> = unexercised(descriptor)
+
+    override fun invokeStringNameBoolArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: Boolean,
+    ) = unexercised(descriptor)
+
+    override fun invokeLongBoolArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      layer: Long,
+      value: Boolean,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameStringNameArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      first: String,
+      second: String,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameDoubleArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: String,
+      doubleValue: Double,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameStringNameRetDoubleSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      first: String,
+      second: String,
+    ): Double = unexercised(descriptor)
+
+    override fun invokeVector3Vector3Arg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      first: GodotVector3,
+      second: GodotVector3,
+    ) = unexercised(descriptor)
+
+    override fun invokeLongArgSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: Long,
+    ) = unexercised(descriptor)
+
+    override fun invokeObjectRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotHandle,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeObjectNodePathVector3DoubleRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      target: GodotHandle,
+      property: String,
+      finalValue: GodotVector3,
+      duration: Double,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeObjectNodePathDoubleDoubleRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      target: GodotHandle,
+      property: String,
+      finalValue: Double,
+      duration: Double,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeColorRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotColor,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeCallableRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      target: GodotHandle,
+      method: String,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeNoArgsRetLongSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): Long = unexercised(descriptor)
+
+    override fun invokeStringNameObjectRetInt(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: GodotHandle,
+    ): Int = unexercised(descriptor)
+
+    override fun invokeVector3RetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotVector3,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeNoArgsRetHandleList(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): List<GodotHandle> = unexercised(descriptor)
+
+    override fun invokeLongRetVector3(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Long,
+    ): GodotVector3 = unexercised(descriptor)
+
+    override fun invokeStringNameRetDoubleSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ): Double = unexercised(descriptor)
+
+    override fun invokeStringNameVector3Vector3Arg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      first: GodotVector3,
+      second: GodotVector3,
+    ) = unexercised(descriptor)
+
+    override fun invokeCallableDoubleRangeRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      target: GodotHandle,
+      method: String,
+      fromValue: Double,
+      toValue: Double,
+      duration: Double,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeStringNameStringRetInt(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: String,
+    ): Int = unexercised(descriptor)
+
+    override fun invokeVector3iLongLongArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotVector3i,
+      first: Long,
+      second: Long,
+    ) = unexercised(descriptor)
+
+    override fun invokeVector3iRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotVector3i,
+    ): Long = unexercised(descriptor)
+
+    override fun invokeBasisRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotBasis,
+    ): Long = unexercised(descriptor)
+
+    override fun invokeNoArgsRetVector3iList(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): List<GodotVector3i> = unexercised(descriptor)
+
+    override fun invokeLongObjectArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      longValue: Long,
+      objectValue: GodotHandle,
+    ) = unexercised(descriptor)
+
+    override fun invokeLongTransform3dArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      longValue: Long,
+      value: GodotTransform3D,
+    ) = unexercised(descriptor)
+
+    override fun invokeLongRetString(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Long,
+    ): String = unexercised(descriptor)
+
+    override fun invokeLongRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Long,
+    ): Long = unexercised(descriptor)
+
+    override fun invokeLongLongRetString(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      first: Long,
+      second: Long,
+    ): String = unexercised(descriptor)
+
+    override fun invokeLongLongRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      first: Long,
+      second: Long,
+    ): GodotHandle? = unexercised(descriptor)
+
+    override fun invokeVector2RetVector3(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: GodotVector2,
+    ): GodotVector3 = unexercised(descriptor)
+
+    override fun invokeObjectStringRetLongSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      resource: GodotHandle,
+      path: String,
+      flags: Long,
+    ): Long = unexercised(descriptor)
+
+    override fun invokeStringStringBoolBoolRetHandleList(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      pattern: String,
+      type: String,
+      recursive: Boolean,
+      owned: Boolean,
+    ): List<GodotHandle> = unexercised(descriptor)
+
+    override fun invokeStringNameLongArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: Long,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameVector2Arg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: GodotVector2,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameObjectArg(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+      value: GodotHandle,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameObjectArgSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      name: String,
+      value: GodotHandle,
+    ) = unexercised(descriptor)
+
+    override fun invokeStringNameRetVector2(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+    ): GodotVector2 = unexercised(descriptor)
+
+    override fun invokeNoArgsRetString(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+    ): String = unexercised(descriptor)
+
+    override fun invokeStringNameRetString(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      name: String,
+    ): String = unexercised(descriptor)
+
+    override fun invokeDoubleRetDouble(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Double,
+    ): Double = unexercised(descriptor)
+
+    override fun invokeVector3Vector3LongObjectRetString(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      from: GodotVector3,
+      to: GodotVector3,
+      collisionMask: Long,
+      exclude: GodotHandle?,
+    ): String = unexercised(descriptor)
   }
 }

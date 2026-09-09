@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Generate the Kotlin/Wasm Web backend dispatch from the shared backend contract.
+"""Generate the Kotlin/Wasm Web backend dispatch from the Web backend call contract.
 
 Task 60a ("Option A"): the mechanical opcode dispatch, execution-mode guards, and codec calls of
-`WebCommonGodotBackend` are generated from the platform-neutral
-`scripts/platform_backend_calls.json` (shared with desktop/Android/iOS) joined with the Web-local
-per-opcode policy in this file. Web-only stateful bookkeeping lives hand-written in
+`WebCommonGodotBackend` are generated from `scripts/platform_backend_calls.json` (the Web call
+table, hash-validated against `extension_api.json`; native backends do not use it) joined with the
+Web-local per-opcode policy in this file. Web-only stateful bookkeeping lives hand-written in
 `WebBackendBookkeeping.kt`; the JS bridge externs live hand-written in `WebBackendTransport.kt`.
 Admitting a new call family of an existing shape is a JSON entry plus a `WEB_POLICY` entry (a
 regenerated diff); a genuinely new call shape additionally needs a shape emitter here plus its
@@ -25,9 +25,9 @@ from pathlib import Path
 from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy
 
 # --------------------------------------------------------------------------------------------------
-# Web-local per-opcode policy. NOT part of the shared platform-neutral model: these are the Web
-# transport/bookkeeping leaves the shared JSON deliberately does not carry (see the module docstring).
-# Every opcode in the shared contract must have an entry here or generation fails loud.
+# Web-local per-opcode policy. NOT part of the call table: these are the Web transport/bookkeeping
+# leaves the JSON deliberately does not carry (see the module docstring).
+# Every opcode in the contract must have an entry here or generation fails loud.
 # --------------------------------------------------------------------------------------------------
 
 # Snapshot slots for the mirrored Vector2 properties.

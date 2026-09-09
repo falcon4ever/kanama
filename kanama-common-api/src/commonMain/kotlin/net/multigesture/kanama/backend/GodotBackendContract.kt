@@ -1,9 +1,13 @@
 package net.multigesture.kanama.backend
 
-/** Internal platform seam. Game code never installs or selects a backend. */
+/**
+ * Internal seam between the Web call contract and its one implementer, the generated Kotlin/Wasm
+ * backend. Game code never installs or selects a backend.
+ */
 @RequiresOptIn(
   level = RequiresOptIn.Level.ERROR,
-  message = "This API is reserved for Kanama platform backends.",
+  message =
+    "This API is reserved for the Kanama Web backend and the wrappers built on its contract.",
 )
 @Retention(AnnotationRetention.BINARY)
 annotation class InternalKanamaBackendApi
@@ -129,34 +133,39 @@ data class GodotCallDescriptor(
   }
 }
 
-/** Platform-neutral immutable value used by the first promoted call-shape family. */
+/** Immutable contract value used by the first promoted call-shape family. */
 @InternalKanamaBackendApi data class GodotVector2(val x: Float, val y: Float)
 
-/** Platform-neutral immutable integer vector used by typed input signals. */
+/** Immutable contract integer vector used by typed input signals. */
 @InternalKanamaBackendApi data class GodotVector2i(val x: Int, val y: Int)
 
-/** Platform-neutral immutable 3D vector used by the 3D node transform families. */
+/** Immutable contract 3D vector used by the 3D node transform families. */
 @InternalKanamaBackendApi data class GodotVector3(val x: Float, val y: Float, val z: Float)
 
-/** Platform-neutral immutable rectangle snapshot. */
+/** Immutable contract rectangle snapshot. */
 @InternalKanamaBackendApi data class GodotRect2(val position: GodotVector2, val size: GodotVector2)
 
-/** Platform-neutral immutable RGBA value used by typed draw commands. */
+/** Immutable contract RGBA value used by typed draw commands. */
 @InternalKanamaBackendApi
 data class GodotColor(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f)
 
-/** Platform-neutral immutable integer 3D vector used by the grid-cell families. */
+/** Immutable contract integer 3D vector used by the grid-cell families. */
 @InternalKanamaBackendApi data class GodotVector3i(val x: Int, val y: Int, val z: Int)
 
-/** Platform-neutral immutable basis as the three axis (column) vectors. */
+/** Immutable contract basis as the three axis (column) vectors. */
 @InternalKanamaBackendApi
 data class GodotBasis(val x: GodotVector3, val y: GodotVector3, val z: GodotVector3)
 
-/** Platform-neutral immutable 3D transform (basis plus origin). */
+/** Immutable contract 3D transform (basis plus origin). */
 @InternalKanamaBackendApi
 data class GodotTransform3D(val basis: GodotBasis, val origin: GodotVector3)
 
-/** Typed backend SPI. No reflective or `List<Any?>` dispatch is permitted here. */
+/**
+ * Typed backend SPI. Its only implementer is the generated Kotlin/Wasm `WebCommonGodotBackend`
+ * (`scripts/generate_web_backend.py`), which overrides every member, so every member is abstract: a
+ * shape the generator stops emitting fails at compile time rather than at the first call. No
+ * reflective or `List<Any?>` dispatch is permitted here.
+ */
 @InternalKanamaBackendApi
 interface GodotBackendSpi {
   fun requireLive(handle: GodotHandle)
@@ -182,18 +191,14 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Boolean,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeDoubleArg(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Double,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeNoArgsRetVector2(
     descriptor: GodotCallDescriptor,
@@ -285,9 +290,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Long,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeLongRetHandle(
     descriptor: GodotCallDescriptor,
@@ -345,13 +348,12 @@ interface GodotBackendSpi {
     value: String,
   ): Boolean
 
-  /** Singleton query (no receiver): the platform backend supplies the calling context itself. */
+  /** Singleton query (no receiver): the backend supplies the calling context itself. */
   fun invokeStringNameRetBoolSingleton(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     value: String,
-  ): Boolean =
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  ): Boolean
 
   fun invokeNoArgsRetBool(
     descriptor: GodotCallDescriptor,
@@ -363,8 +365,7 @@ interface GodotBackendSpi {
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-  ): Double =
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  ): Double
 
   fun invokeNoArgsRetLong(
     descriptor: GodotCallDescriptor,
@@ -376,17 +377,14 @@ interface GodotBackendSpi {
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-  ): List<String> =
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
+  ): List<String>
 
   fun invokeStringNameArg(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: String,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeStringNameBoolArg(
     descriptor: GodotCallDescriptor,
@@ -394,9 +392,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: Boolean,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeLongBoolArg(
     descriptor: GodotCallDescriptor,
@@ -404,9 +400,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     layer: Long,
     value: Boolean,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeStringNameStringNameArg(
     descriptor: GodotCallDescriptor,
@@ -414,9 +408,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     first: String,
     second: String,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeStringNameVector2iRetInt(
     descriptor: GodotCallDescriptor,
@@ -478,26 +470,20 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     longValue: Long,
     doubleValue: Double,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
-  /** Singleton String query (no receiver): the platform backend supplies the calling context. */
+  /** Singleton String query (no receiver): the backend supplies the calling context. */
   fun invokeNoArgsRetStringSingleton(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
-  ): String {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): String
 
   /** Singleton String-argument void call (no receiver): e.g. Input.action_press/action_release. */
   fun invokeStringNameArgSingleton(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     value: String,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   fun invokeStringNameDoubleArg(
     descriptor: GodotCallDescriptor,
@@ -505,9 +491,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: String,
     doubleValue: Double,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Singleton two-StringName → Double query (no receiver): e.g. Input.get_axis. */
   fun invokeStringNameStringNameRetDoubleSingleton(
@@ -515,9 +499,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     first: String,
     second: String,
-  ): Double {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Double
 
   /** Two-Vector3 void call: e.g. Node3D.look_at_from_position with baked up/use_model_front. */
   fun invokeVector3Vector3Arg(
@@ -526,18 +508,10 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     first: GodotVector3,
     second: GodotVector3,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Singleton Long-argument void call (no receiver): e.g. RenderingServer shadow tuning. */
-  fun invokeLongArgSingleton(
-    descriptor: GodotCallDescriptor,
-    callSite: GodotCallSite,
-    value: Long,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  fun invokeLongArgSingleton(descriptor: GodotCallDescriptor, callSite: GodotCallSite, value: Long)
 
   /** Object-argument fluent call returning a handle: e.g. Tween.bind_node self-return. */
   fun invokeObjectRetHandle(
@@ -545,9 +519,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotHandle,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /** Vector3 property tweener (mirrors the Vector2/Color variants). */
   fun invokeObjectNodePathVector3DoubleRetHandle(
@@ -558,9 +530,7 @@ interface GodotBackendSpi {
     property: String,
     finalValue: GodotVector3,
     duration: Double,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /**
    * SCALAR property tweener -- `tween_property(node, "position:y", 4.0, 0.5)`.
@@ -578,9 +548,7 @@ interface GodotBackendSpi {
     property: String,
     finalValue: Double,
     duration: Double,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /**
    * A fluent call taking a COLOR and returning the receiver -- `PropertyTweener.from(Color)`.
@@ -594,9 +562,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotColor,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /** Callable-argument fluent call: e.g. Tween.tween_callback(Callable(target, method)). */
   fun invokeCallableRetHandle(
@@ -605,14 +571,10 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     target: GodotHandle,
     method: String,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /** Singleton no-args Long query (no receiver): e.g. Input.get_mouse_mode. */
-  fun invokeNoArgsRetLongSingleton(descriptor: GodotCallDescriptor, callSite: GodotCallSite): Long {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  fun invokeNoArgsRetLongSingleton(descriptor: GodotCallDescriptor, callSite: GodotCallSite): Long
 
   /** Signal emission carrying one Godot-object argument. */
   fun invokeStringNameObjectRetInt(
@@ -621,9 +583,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: GodotHandle,
-  ): Int {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Int
 
   /** Motion sweep returning the first collision as a closeable handle. */
   fun invokeVector3RetHandle(
@@ -631,18 +591,14 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotVector3,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /** Handle-list query (overlapping scripted bodies). */
   fun invokeNoArgsRetHandleList(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-  ): List<GodotHandle> {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): List<GodotHandle>
 
   /** Indexed Vector3 query (shape-cast collision points). */
   fun invokeLongRetVector3(
@@ -650,18 +606,14 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Long,
-  ): GodotVector3 {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotVector3
 
   /** Singleton double query keyed by one name (raw strength, float settings). */
   fun invokeStringNameRetDoubleSingleton(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     value: String,
-  ): Double {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Double
 
   /** Dynamic method dispatch carrying two Vector3 arguments. */
   fun invokeStringNameVector3Vector3Arg(
@@ -671,9 +623,7 @@ interface GodotBackendSpi {
     name: String,
     first: GodotVector3,
     second: GodotVector3,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Method tween over an interpolated double range. */
   fun invokeCallableDoubleRangeRetHandle(
@@ -685,9 +635,7 @@ interface GodotBackendSpi {
     fromValue: Double,
     toValue: Double,
     duration: Double,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /** Signal emission carrying one String argument. */
   fun invokeStringNameStringRetInt(
@@ -696,9 +644,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: String,
-  ): Int {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Int
 
   /** Grid-cell write carrying a Vector3i position plus item and orientation indices. */
   fun invokeVector3iLongLongArg(
@@ -708,9 +654,7 @@ interface GodotBackendSpi {
     value: GodotVector3i,
     first: Long,
     second: Long,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Grid-cell integer query keyed by a Vector3i position. */
   fun invokeVector3iRetLong(
@@ -718,9 +662,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotVector3i,
-  ): Long {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Long
 
   /** Integer query keyed by a rotation basis (orthogonal orientation index). */
   fun invokeBasisRetLong(
@@ -728,18 +670,14 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotBasis,
-  ): Long {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Long
 
   /** Vector3i-list query (occupied grid cells). */
   fun invokeNoArgsRetVector3iList(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-  ): List<GodotVector3i> {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): List<GodotVector3i>
 
   /** Indexed object write (mesh-library item mesh). */
   fun invokeLongObjectArg(
@@ -748,9 +686,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     longValue: Long,
     objectValue: GodotHandle,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Indexed transform write (mesh-library item transform). */
   fun invokeLongTransform3dArg(
@@ -759,9 +695,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     longValue: Long,
     value: GodotTransform3D,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Indexed string query (scene-state node type). */
   fun invokeLongRetString(
@@ -769,9 +703,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Long,
-  ): String {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): String
 
   /** Indexed integer query (scene-state property count). */
   fun invokeLongRetLong(
@@ -779,9 +711,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Long,
-  ): Long {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Long
 
   /** Doubly indexed string query (scene-state property name). */
   fun invokeLongLongRetString(
@@ -790,9 +720,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     first: Long,
     second: Long,
-  ): String {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): String
 
   /** Doubly indexed object query (scene-state property value; non-objects resolve null). */
   fun invokeLongLongRetHandle(
@@ -801,9 +729,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     first: Long,
     second: Long,
-  ): GodotHandle? {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotHandle?
 
   /** Screen-point to world-space Vector3 query (camera ray projection). */
   fun invokeVector2RetVector3(
@@ -811,9 +737,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: GodotVector2,
-  ): GodotVector3 {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotVector3
 
   /** Singleton resource persist (ResourceSaver.save). */
   fun invokeObjectStringRetLongSingleton(
@@ -822,9 +746,7 @@ interface GodotBackendSpi {
     resource: GodotHandle,
     path: String,
     flags: Long,
-  ): Long {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Long
 
   /** Descendant search returning tracked handles (Node.find_children). */
   fun invokeStringStringBoolBoolRetHandleList(
@@ -835,9 +757,7 @@ interface GodotBackendSpi {
     type: String,
     recursive: Boolean,
     owned: Boolean,
-  ): List<GodotHandle> {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): List<GodotHandle>
 
   /** Named int-valued property write (AnimationTree one-shot requests). */
   fun invokeStringNameLongArg(
@@ -846,9 +766,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: Long,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Named Vector2-valued property write (AnimationTree blend positions). */
   fun invokeStringNameVector2Arg(
@@ -857,9 +775,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: GodotVector2,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Named object-valued call (one-object deferred dispatch). */
   fun invokeStringNameObjectArg(
@@ -868,9 +784,7 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     name: String,
     value: GodotHandle,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /**
    * Singleton call carrying a name and one object handle -- `InputMap.action_add_event(action,
@@ -883,9 +797,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     name: String,
     value: GodotHandle,
-  ) {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  )
 
   /** Named Vector2-valued property read (AnimationTree blend positions). */
   fun invokeStringNameRetVector2(
@@ -893,18 +805,14 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     name: String,
-  ): GodotVector2 {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): GodotVector2
 
   /** No-argument String read (Node.get_name, LineEdit.get_text). */
   fun invokeNoArgsRetString(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-  ): String {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): String
 
   /** Named String read (ConfigFile.get_value's tagged transport). */
   fun invokeStringNameRetString(
@@ -912,9 +820,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     name: String,
-  ): String {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): String
 
   /** Double-argument Double query (Noise.get_noise_1d). */
   fun invokeDoubleRetDouble(
@@ -922,9 +828,7 @@ interface GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     value: Double,
-  ): Double {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): Double
 
   /**
    * Space-state ray query. The receiver is a node in the target world: the backend derives the
@@ -938,17 +842,14 @@ interface GodotBackendSpi {
     to: GodotVector3,
     collisionMask: Long,
     exclude: GodotHandle?,
-  ): String {
-    error("Platform backend has not implemented ${descriptor.className}.${descriptor.methodName}")
-  }
+  ): String
 }
 
 /**
- * Shared typed facade used by generated wrappers.
+ * Typed facade the Web wrappers call into; the Wasm entry point installs the one generated backend.
  *
- * The selected platform bootstrap installs exactly one target SPI. Call sites resolve once into an
- * opcode-indexed array, so the steady-state path does not dispatch by string or allocate argument
- * lists.
+ * Call sites resolve once into an opcode-indexed array, so the steady-state path does not dispatch
+ * by string or allocate argument lists.
  */
 @InternalKanamaBackendApi
 @OptIn(InternalKanamaBackendApi::class)
@@ -2150,7 +2051,7 @@ object GodotBackendCalls {
   }
 
   private fun requireBackend(): GodotBackendSpi =
-    backend ?: error("Kanama platform backend was not installed by platform bootstrap")
+    backend ?: error("Kanama Web backend was not installed by the Wasm entry point")
 
   private fun requireShape(descriptor: GodotCallDescriptor, expected: GodotCallShape) {
     require(descriptor.shape == expected) {

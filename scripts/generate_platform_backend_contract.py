@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Generate and drift-check the first neutral Godot backend call descriptors."""
+"""Generate and drift-check the Web backend's Godot call descriptors.
+
+`InitialGodotCallDescriptors` is the Kotlin form of `scripts/platform_backend_calls.json`: the
+call table the Kotlin/Wasm backend dispatches through. Every entry's hash and signature is
+validated against the same `extension_api.json` the native wrapper generator reads, so Web's
+typed commands and the native ptrcall wrappers pin the same engine methods. Only the Web backend
+consumes the output (task 95); native backends never dispatch through the contract.
+"""
 
 from __future__ import annotations
 

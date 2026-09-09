@@ -1,4 +1,9 @@
-"""Generator-owned execution policy for the platform-neutral backend seam."""
+"""Generator-owned execution policy for the Web backend call contract.
+
+Loads `platform_backend_calls.json`, the opcode table the Kotlin/Wasm backend dispatches through
+(consumed by `generate_platform_backend_contract.py` and `generate_web_backend.py`). Native
+backends call Godot in-process from generated ptrcall wrappers and do not use this table.
+"""
 
 from __future__ import annotations
 
