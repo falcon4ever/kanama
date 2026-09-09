@@ -90,6 +90,15 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject.toBackendHandle()
     visible = false
   }
 
+  fun show() {
+    visible = true
+  }
+
+  /** Desktop's setter spelling (task 64 tier 3: Player toggles the grenade aim controller). */
+  fun setVisible(value: Boolean) {
+    visible = value
+  }
+
   /**
    * Position the node and orient the forward axis at [target]: -Z (camera forward) by default,
    * +Z (asset front) when [useModelFront] is true — the desktop/Godot signature (task 64). Web

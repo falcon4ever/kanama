@@ -194,10 +194,6 @@ open class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
       )
     }
 
-  fun show() {
-    visible = true
-  }
-
   /** Fresh engine-side angular velocity (the sphere racer's drive train). */
   var angularVelocity: Vector3
     get() =

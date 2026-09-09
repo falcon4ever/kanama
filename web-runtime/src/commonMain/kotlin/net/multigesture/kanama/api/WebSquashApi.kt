@@ -55,11 +55,22 @@ class KinematicCollision3D internal constructor(private var collisionHandle: Bac
     checkNotNull(collisionHandle) { "KinematicCollision3D is closed" }
 }
 
-/** Generic input event wrapper: squash retries on ui_accept from _unhandled_input. */
-class InputEvent(godotObject: GodotHandle) : GodotObject(godotObject) {
+/**
+ * Generic input event wrapper: squash retries on ui_accept from _unhandled_input. Open since task
+ * 64 tier 3 so the key / modifier events ([InputEventWithModifiers], [InputEventKey]) subclass it
+ * the way desktop's do.
+ */
+open class InputEvent(godotObject: GodotHandle) : GodotObject(godotObject) {
   /** allow_echo/exact_match are baked to Godot defaults (false), the only values demos pass. */
   fun isActionPressed(action: String): Boolean =
     InputEventBackendContractProbe(backendHandle).isActionPressed(action)
+
+  fun isPressed(): Boolean = InputEventBackendContractProbe(backendHandle).isPressed()
+
+  fun isReleased(): Boolean = InputEventBackendContractProbe(backendHandle).isReleased()
+
+  /** Key-repeat echo (task 64 tier 3: FullScreenHandler ignores echoes so a held F11 toggles once). */
+  fun isEcho(): Boolean = InputEventBackendContractProbe(backendHandle).isEcho()
 }
 
 internal expect fun releaseWebCollision(collisionHandle: Int)
