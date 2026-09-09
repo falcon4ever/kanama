@@ -81,8 +81,9 @@ task, then use targeted `rg` searches.
 - `ios` and `ios-runtime`: the iOS C shim and the Kotlin/Native runtime with
   its per-platform wrappers (hand-shaped, iOS-only generated, collision classes,
   `<Class>.ios.kt` companions); the shared tree comes from `src/commonMain`.
-- `web-runtime`: the Kotlin/Wasm Web backend, generated proxies, JS bridge,
-  and export tasks.
+- `web-runtime`: the Kotlin/Wasm Web backend, the Web API wrappers (one
+  generated file per Godot class under `api/generated/`, plus the hand-shaped
+  facades beside them), generated proxies, JS bridge, and export tasks.
 - `annotations`: public KSP annotation definitions for game scripts.
 - `processor`: KSP processor that emits script registrars and metadata.
 - `project-scripts`: Gradle support for compiling consumer project scripts.
@@ -112,6 +113,8 @@ demo names, or copied notes.
 | `src/main/kotlin/binding/runtime/ObjectCalls.kt` | hand-written (desktop/Android) | The ptrcall helper surface the generated wrappers call. Not generated: `scripts/audit_generator_shape_policy.py` gates its shapes against the generator's call-shape table, and the iOS counterpart `ios-runtime/.../binding/runtime/ObjectCallsGenerated.kt` is the generated one. |
 | The generated wrapper tree: `src/commonMain/kotlin/.../api/*.kt` (shared), `src/main/kotlin/.../api/<Class>.jvm.kt` companions and the desktop-only classes, `ios-runtime/.../api/<Class>.ios.kt` companions and the iOS-only classes, `docs/reference/generated/ios-shape-gap.md` | `scripts/generate_api_wrapper.py --write-tree` (then `sync_kdoc_from_godot_docs.py --write`) | Public wrappers must be regeneratable unless listed as hand-shaped in `PER_PLATFORM_WRAPPERS`; `check_wrapper_generator.py` fails on any hand edit. |
 | `src/generated/godot/*` | `scripts/refresh_godot_api.sh` from Godot headers | Generated Panama bindings. |
+| `web-runtime/src/commonMain/.../api/generated/*.kt` | `scripts/generate_web_wrappers.py` | The Web API wrappers, one class per file, from `scripts/platform_backend_calls.json` + `extension_api.json`. `--check` (in `local_ci.sh` and `:web-runtime:check`) fails on drift and on any hand-written dispatch outside the `WEB_HANDSHAPED` facades. Hand-shaped members live in the generator's `CLASS_POLICY`, not in the output. |
+| `web-runtime/src/wasmJsMain/.../WebCommonGodotBackend.generated.kt` | `scripts/generate_web_backend.py` | The Web backend opcode dispatch from the same contract. |
 | `docs/reference/generated/ios-backend-handwritten.md` | `scripts/ios_handwritten_report.py` | Generated report; do not hand-edit. |
 
 Hand-authored policy classes are the exception and are explicitly marked. Prefer

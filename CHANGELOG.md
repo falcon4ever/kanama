@@ -58,6 +58,37 @@ versioning once public releases begin.
   companions), warm 4.6 s → 5.7 s; iOS `compileKotlinIosArm64` from clean 46.5 s → 46.3 s;
   `linkDebugStaticIosArm64` 106 s → 103 s.
 
+### Changed — Web wrappers generated from the call contract (task 96)
+
+- **The Web API surface is generated.** Every opcode in
+  `scripts/platform_backend_calls.json` now renders one member on the Godot
+  class that owns it, in `web-runtime/.../api/generated/<Class>.kt` (107
+  classes, one file each), with names, parameter widths and defaults taken
+  from `extension_api.json` and properties derived from Godot's property
+  table. The eleven demo-named `Web*Api.kt` files and the ~1,360 lines of
+  probe classes in `GodotBackendContract.kt` are gone; what stays hand-written
+  is explicit (`WEB_HANDSHAPED`: the handle-less `Window` mirror and the
+  owner-bound ray query) or lives in the generator's per-class policy.
+  `python3 scripts/generate_web_wrappers.py --check` gates drift in
+  `local_ci.sh` and `:web-runtime:check`; the wire protocol is unchanged
+  (still 22).
+- **Source compatibility.** Existing call-site spellings keep compiling: every
+  generated member also carries an import-compat extension (`import
+  net.multigesture.kanama.api.setProcess` still resolves), so the 25
+  hand-written `@Suppress("EXTENSION_SHADOWED_BY_MEMBER")` aliases are
+  replaced, not dropped. Members now use Godot's argument names and desktop's
+  int widths (`int32` → `Int`), and inherited members surface on their Godot
+  owner (`Node.getLocalMousePosition` on `CanvasItem`, collision layers on
+  `CollisionObject3D`, root motion on `AnimationMixer`); a few getters that
+  used to throw as write-only now read the engine (`Node3D.visible`,
+  `Label.text`).
+- **Growth metric redefined** (`scripts/web_hand_metric.py`): the Option-B
+  reconsider line in `docs/contributing/backends/web.md` now sums every
+  hand-written Web family (wrappers, wrapper policy, contract, dispatch
+  companion, runtime, script emitter, bridge) against the generated code —
+  20,931 / 5,181 (4.04) before, 17,875 / 11,108 (1.61) after — and admission
+  PRs paste it.
+
 ### Changed — docs consolidation (task 94)
 
 - **One page owns each fact.** Requirements (Godot pin, JDKs, host platforms,

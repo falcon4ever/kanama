@@ -16,7 +16,7 @@ kanama/
 ├── android/                # Godot Android plugin (AAR)
 ├── ios/                    # iOS C shim + headers
 ├── ios-runtime/            # Kotlin/Native iOS runtime + generated iOS wrappers
-├── web-runtime/            # Kotlin/Wasm Web backend, generated proxies, JS bridge
+├── web-runtime/            # Kotlin/Wasm Web backend, generated wrappers (api/generated/), proxies, JS bridge
 ├── kanama-common-api/      # Web call contract (opcodes, shapes, descriptors) from extension_api.json
 ├── example_project/        # Godot smoke-test project
 ├── templates/              # starter, starter_project, consumer-gradle, release-kit, store-addon

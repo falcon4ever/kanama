@@ -26,10 +26,11 @@ iOS, not with the JVM platforms:
   bridge** rather than as direct FFI.
 
 Web therefore exposes the same Godot classes as the other platforms but does not
-share their generated ptrcall wrappers: its wrappers are hand-written today
-(task 96 will generate them from the Web call contract described below) and pay
-the highest marshalling cost, which shapes everything below: it batches
-crossings, mirrors state in snapshots, and tracks handles by generation.
+share their generated ptrcall wrappers: its wrappers are generated from the Web
+call contract described below (one file per Godot class under
+`web-runtime/.../api/generated/`, task 96) and pay the highest marshalling cost,
+which shapes everything below: it batches crossings, mirrors state in snapshots,
+and tracks handles by generation.
 
 ## What Works
 
@@ -55,13 +56,17 @@ teardown to baseline, and fails on stale-handle use.
 ### Kotlin/Wasm backend
 
 Gameplay and the Kanama Web runtime live in `web-runtime/` and compile to the
-`wasmJs` target. The Web API wrappers and gameplay proxies are in
-`src/commonMain`; the Wasm entry point, command interop, and the Godot-facing
-backend are in `src/wasmJsMain` (`Main.kt`, `WebCommandInterop.kt`). The backend
-is split three ways: `WebCommonGodotBackend.generated.kt` (generated opcode
-dispatch), `WebBackendBookkeeping.kt` (hand-written Web-only state + hooks), and
-`WebBackendTransport.kt` (hand-written `js(...)` bridge externs) — see the
-Backend-dispatch codegen section below.
+`wasmJs` target. The Web API wrappers are in `src/commonMain/.../api/`: the
+Godot classes are generated into `api/generated/<Class>.kt` (see "Generated
+wrapper tree" below) and the hand-shaped remainder sits beside them by concern
+(`WebGodotApi.kt` base + coverage markers, `WebSignals.kt`, `WebCoroutines.kt`,
+`WebMath.kt`, `WebFacades.kt`, `WebPhysicsQuery.kt`, `WebScriptResources.kt`,
+`WebFrameScheduler.kt`). The Wasm entry point, command interop, and the
+Godot-facing backend are in `src/wasmJsMain` (`Main.kt`, `WebCommandInterop.kt`).
+The backend is split three ways: `WebCommonGodotBackend.generated.kt` (generated
+opcode dispatch), `WebBackendBookkeeping.kt` (hand-written Web-only state +
+hooks), and `WebBackendTransport.kt` (hand-written `js(...)` bridge externs) —
+see the Backend-dispatch codegen section below.
 
 ### Versioned JavaScript bridge
 
@@ -134,14 +139,80 @@ table neutral for native backends that "also consume" it — no longer applies:
 task 95 recorded that no native backend ever dispatched through it.) Option A
 keeps the call table a call table.
 
-**When to reconsider Option B:** if the hand-written bookkeeping companion grows
-faster than the generated dispatch — i.e. if "admitting a family" routinely means
-non-trivial new hand-written state rather than a near-mechanical hook wiring —
-revisit encoding a policy layer beside the call table so more of the
-bookkeeping generates. Through the full twelve-demo corpus (protocol 15, 286
-opcodes) that did not happen: the largest single admission (tps-demo) brought in
-61 opcodes with exactly one new extern, so Option A stands. Record any change
-here.
+**When to reconsider Option B — the growth metric (task 96, review R3/R13).**
+The trigger used to watch one file pair (the bookkeeping companion against the
+generated dispatch, a 0.21 ratio) and missed four fifths of the hand-written Web
+code. It is now the **sum of every hand-written Web family** against everything
+generated from the contract, printed by
+
+```sh
+python3 scripts/web_hand_metric.py --ref origin/main --ref HEAD
+```
+
+and **pasted into every admission PR** (an admission is any PR that adds an
+opcode to `platform_backend_calls.json`). The families are: hand-written
+wrappers (`api/*.kt` outside `generated/`), the wrapper policy
+(`generate_web_wrappers.py`, per-opcode/per-class policy and custom sections),
+the contract (`GodotBackendContract.kt`), the dispatch companion
+(`WebBackendBookkeeping.kt` + `WebBackendTransport.kt` + `generate_web_backend.py`),
+the rest of the runtime (`Main.kt`, interop, generic call, `web/`), the script
+emitter (`WebScriptCodeEmitter.kt`, tracked on its own line because it is the
+one hand file that was still growing: 5,006 lines, +1,430 in Jul→Aug), and the
+bridge (`kanama-web-bridge.js`). Task 96 itself moved the metric from
+20,931 hand / 5,181 generated (4.04) to 17,875 hand / 11,108 generated (1.61):
+the probe classes and the eleven demo-named wrapper files are gone, and what
+replaced them is 1,285 lines of hand-shaped facades plus the generator's policy.
+
+Reconsider lines: revisit encoding a policy layer beside the call table (Option
+B) when an admission adds more hand-written lines than generated ones, or when
+the emitter grows by more than a few hundred lines in a parcel without a new
+dispatched shape to show for it. Record the numbers and the decision here.
+
+### Generated wrapper tree: one class, one file, from the same contract (task 96)
+
+The Web API classes under `web-runtime/src/commonMain/.../api/generated/` are
+generated by `scripts/generate_web_wrappers.py` from the same
+`platform_backend_calls.json` the dispatch generator reads, joined with
+`extension_api.json` for names, argument widths, defaults, the class hierarchy
+and the property table:
+
+- **One member per opcode, on the Godot class that owns it.** `Node.get_child`
+  becomes `Node.getChild(idx: Int, includeInternal: Boolean = false)`; an
+  argument the shape does not carry is exposed with Godot's default and a
+  `require(...)` guard, so Web says "supports only the default" loudly instead
+  of dropping it silently. Int widths follow the desktop generator (`int32`
+  meta → `Int`, else `Long`, enums `Long`); handle returns wrap into the
+  nearest generated class (`Node?`, `Tween?`, `Material?`).
+- **Properties come from Godot's property table.** Both accessors admitted →
+  `var`; setter only → a write-only `var` whose getter is the
+  `unsupportedWebGameplayFamily("Class.getter")` coverage marker; getter only →
+  `val`. Enums and class constants (`Node.PROCESS_MODE_*`,
+  `Tween.TRANS_*`, `InputEventKey.KEY_*`) render from the API with their values.
+- **Every member has an import-compat extension** (`fun Node.setProcess(...)
+  = setProcess(...)`, suppressed shadowing), because the Web-only override
+  sources in the demos import members by name; the 25 hand-written aliases
+  this replaces are gone.
+- **Hand-shaped content is explicit.** `CLASS_POLICY[...]["custom"]` in the
+  generator carries the members the contract cannot express (Variant-style
+  `emitSignal`/`tweenProperty` dispatchers over the typed arms, Node3D's
+  composed `basis`/`transform`, `getChildren`, `setStreamFromPath`, factories,
+  `close()` lifetimes), so a regen is lossless. `WEB_HANDSHAPED` names the two
+  facades that stay hand-written under `api/` and dispatch opcodes directly:
+  the handle-less `Window` mirror (`Node.getWindow()`) and the owner-bound
+  `PhysicsDirectSpaceState3D` ray query. Everything else under `api/`
+  (`WebSignals.kt`, `WebCoroutines.kt`, `WebMath.kt`, `WebFacades.kt`,
+  `WebScriptResources.kt`, `WebFrameScheduler.kt`) is glue with no opcode.
+
+Regenerate with `./gradlew :web-runtime:generateWebWrappers` (or
+`python3 scripts/generate_web_wrappers.py`). The gate,
+`python3 scripts/generate_web_wrappers.py --check` (`local_ci.sh` stage "web
+wrapper tree drift gate", `:web-runtime:checkWebWrappers`, wired into `check`),
+fails byte-for-byte drift (ktfmt does not touch `api/**`), a stray or missing
+file, a hand-written file under `api/` that dispatches an opcode outside the
+`WEB_HANDSHAPED` allowlist, a hand-written redeclaration of a generated class,
+and a `WEB_HANDSHAPED` entry that no longer exists. Admitting a call family is
+therefore a JSON entry, a `WEB_POLICY` entry, and a regen: the wrapper member,
+its property and its alias appear without hand-writing.
 
 ### Batching, snapshots, and handle generations
 

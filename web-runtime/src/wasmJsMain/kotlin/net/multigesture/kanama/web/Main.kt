@@ -7,27 +7,21 @@ import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.api.AudioStreamPlayer
+import net.multigesture.kanama.api.GPUParticles2D
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node2D
 import net.multigesture.kanama.api.SceneTree
+import net.multigesture.kanama.api.Sprite2D
 import net.multigesture.kanama.api.Tween
 import net.multigesture.kanama.api.WebFrameCoroutineDispatcher
 import net.multigesture.kanama.api.WebFrameScheduler
 import net.multigesture.kanama.api.WebSignalCallbackRegistry
 import net.multigesture.kanama.api.webFrameSchedulerStateProbe
-import net.multigesture.kanama.backend.CanvasItemBackendContractProbe
-import net.multigesture.kanama.backend.GPUParticles2DBackendContractProbe
-import net.multigesture.kanama.backend.GodotColor
-import net.multigesture.kanama.backend.GodotHandle
-import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
-import net.multigesture.kanama.backend.Node2DBackendContractProbe
-import net.multigesture.kanama.backend.NodeLookupBackendContractProbe
-import net.multigesture.kanama.backend.Sprite2DBackendContractProbe
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.web.generated.KanamaWebProjectRegistry
@@ -880,10 +874,7 @@ fun kanamaWebMatch3Group8SceneTreeQuitProbe(objectId: Int, exitCode: Int): Int =
 @JsExport
 @OptIn(InternalKanamaBackendApi::class)
 fun kanamaWebMatch3Group8SceneTreeStaleProbe(sceneTreeObjectId: Int): Int =
-  if (
-    runCatching { SceneTree(GodotHandle.fromBackendToken(sceneTreeObjectId.toLong())).quit() }
-      .isFailure
-  ) {
+  if (runCatching { SceneTree(WebObjectId(sceneTreeObjectId)).quit() }.isFailure) {
     1
   } else {
     0
@@ -909,11 +900,9 @@ fun kanamaWebMatch3Group7AudioOwnerTeardownProbe(audioObjectId: Int): Int =
 fun kanamaWebMatch3Group7AudioStaleProbe(playerObjectId: Int): Int =
   if (runCatching { AudioStreamPlayer(WebObjectId(playerObjectId)).play() }.isFailure) 1 else 0
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebMatch3Group7ParticleProbe(particleObjectId: Int): Int {
-  val particle =
-    GPUParticles2DBackendContractProbe(GodotHandle.fromBackendToken(particleObjectId.toLong()))
+  val particle = GPUParticles2D(WebObjectId(particleObjectId))
   var result = 0
   if (particle.emitting) result = result or 1
   particle.emitting = false
@@ -925,60 +914,45 @@ fun kanamaWebMatch3Group7ParticleProbe(particleObjectId: Int): Int {
   return result
 }
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebMatch3Group7ParticleStaleProbe(particleObjectId: Int): Int =
-  if (
-    runCatching {
-        GPUParticles2DBackendContractProbe(GodotHandle.fromBackendToken(particleObjectId.toLong()))
-          .emitting
-      }
-      .isFailure
-  ) {
-    1
-  } else {
-    0
-  }
+  if (runCatching { GPUParticles2D(WebObjectId(particleObjectId)).emitting }.isFailure) 1 else 0
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {
-  val tileHandle = GodotHandle.fromBackendToken(tileObjectId.toLong())
-  val tile = Node2DBackendContractProbe(tileHandle)
-  val spriteHandle =
-    checkNotNull(NodeLookupBackendContractProbe(tileHandle).getNodeOrNull("Sprite2D"))
-  val sprite = Node2DBackendContractProbe(spriteHandle)
-  val canvas = CanvasItemBackendContractProbe(spriteHandle)
-  val texture = Sprite2DBackendContractProbe(spriteHandle)
+  val tile = Node2D(WebObjectId(tileObjectId))
+  val sprite = Sprite2D(checkNotNull(tile.getNodeOrNull("Sprite2D")).handle)
   val originalPosition = tile.position
   val originalScale = sprite.scale
-  val originalModulate = canvas.modulate
-  val originalTexture = texture.getTexture()
-  val testPosition = GodotVector2(originalPosition.x + 7.0f, originalPosition.y - 5.0f)
-  val testScale = GodotVector2(1.25f, 0.75f)
-  val testModulate = GodotColor(0.8f, 0.7f, 0.6f, 0.5f)
+  val originalModulate = sprite.modulate
+  val originalTexture = sprite.getTexture()
+  // Float arithmetic on purpose: the snapshot stores Float32, so the round trip stays exact.
+  val testPosition =
+    Vector2(
+      (originalPosition.x.toFloat() + 7.0f).toDouble(),
+      (originalPosition.y.toFloat() - 5.0f).toDouble(),
+    )
+  val testScale = Vector2(1.25, 0.75)
+  val testModulate = Color(0.8f, 0.7f, 0.6f, 0.5f)
   tile.position = testPosition
   sprite.scale = testScale
-  canvas.modulate = testModulate
+  sprite.modulate = testModulate
 
   var result = 0
   if (tile.position == testPosition) result = result or 1
   if (sprite.scale == testScale) result = result or 2
-  if (canvas.modulate == testModulate) result = result or 4
-  if (
-    originalTexture != null &&
-      texture.getTexture()?.backendToken() == originalTexture.backendToken()
-  ) {
+  if (sprite.modulate == testModulate) result = result or 4
+  if (originalTexture != null && sprite.getTexture()?.isSameInstance(originalTexture) == true) {
     result = result or 8
   }
 
   tile.position = originalPosition
   sprite.scale = originalScale
-  canvas.modulate = originalModulate
+  sprite.modulate = originalModulate
   if (
     tile.position == originalPosition &&
       sprite.scale == originalScale &&
-      canvas.modulate == originalModulate
+      sprite.modulate == originalModulate
   ) {
     result = result or 16
   }
@@ -986,13 +960,10 @@ fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {
   return result
 }
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebMatch3Group4Probe(tileObjectId: Int): Int {
-  val tile = GodotObject(WebObjectId(tileObjectId))
-  val signalSourceHandle =
-    NodeLookupBackendContractProbe(tile.backendHandle).getNodeOrNull("Sprite2D") ?: return 0
-  val signalSource = GodotObject(WebObjectId(signalSourceHandle.backendToken().toInt()))
+  val tile = Node(WebObjectId(tileObjectId))
+  val signalSource = tile.getNodeOrNull("Sprite2D") ?: return 0
   val callbacksBefore = WebSignalCallbackRegistry.size
   var callbackCalls = 0
   val connectResult =
@@ -1017,13 +988,10 @@ fun kanamaWebMatch3Group4Probe(tileObjectId: Int): Int {
   return result
 }
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebMatch3Group5Probe(tileObjectId: Int): Int {
   val tile = Node(WebObjectId(tileObjectId))
-  val spriteHandle =
-    NodeLookupBackendContractProbe(tile.backendHandle).getNodeOrNull("Sprite2D") ?: return 0
-  val sprite = Node2D(WebObjectId(spriteHandle.backendToken().toInt()))
+  val sprite = Node2D((tile.getNodeOrNull("Sprite2D") ?: return 0).handle)
 
   var result = 0
   val tween = tile.createTween() ?: return result
@@ -1076,7 +1044,6 @@ fun kanamaWebMatch3Group5Probe(tileObjectId: Int): Int {
   return result
 }
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebMatch3Group5SnapshotProbe(
   tileObjectId: Int,
@@ -1088,9 +1055,7 @@ fun kanamaWebMatch3Group5SnapshotProbe(
   expectedA: Double,
 ): Int {
   val tile = Node(WebObjectId(tileObjectId))
-  val spriteHandle =
-    NodeLookupBackendContractProbe(tile.backendHandle).getNodeOrNull("Sprite2D") ?: return 0
-  val sprite = Node2D(WebObjectId(spriteHandle.backendToken().toInt()))
+  val sprite = Node2D((tile.getNodeOrNull("Sprite2D") ?: return 0).handle)
   val scale = sprite.scale
   val modulate = sprite.modulate
   var result = 0
@@ -1111,21 +1076,19 @@ fun kanamaWebMatch3Group5SnapshotProbe(
   return result
 }
 
-@OptIn(InternalKanamaBackendApi::class)
 @JsExport
 fun kanamaWebBenchmarkBackendContract(objectId: Int, operations: Int): Int {
   require(operations in 1..WebCommandBuffer.BENCHMARK_COMMAND_CAPACITY)
-  val handle = GodotHandle.fromBackendToken(objectId.toLong())
-  val node = Node2DBackendContractProbe(handle)
+  val node = Node2D(WebObjectId(objectId))
   val initial = node.position
   repeat(operations) { check(node.position == initial) }
-  val viewportRect = node.viewportRect
-  repeat(operations) { check(node.viewportRect == viewportRect) }
-  val finalPosition = GodotVector2((operations - 1).toFloat(), initial.y)
+  val viewportRect = node.getViewportRect()
+  repeat(operations) { check(node.getViewportRect() == viewportRect) }
+  val finalPosition = Vector2((operations - 1).toDouble(), initial.y)
   repeat(operations) { node.position = finalPosition }
   node.queueRedraw()
   check(node.position == finalPosition)
-  return node.getChildCount(false).toInt()
+  return node.getChildCount(false)
 }
 
 @JsExport

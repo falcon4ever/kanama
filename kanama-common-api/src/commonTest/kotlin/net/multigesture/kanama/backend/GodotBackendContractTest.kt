@@ -362,170 +362,318 @@ class GodotBackendContractTest {
   }
 
   @Test
-  fun node3dProbeMirrorsTransformProperties() {
-    val backend = RecordingBackend()
-    GodotBackendCalls.install(backend)
-    val probe = Node3DBackendContractProbe(GodotHandle.fromBackendToken(17))
-
-    assertEquals(GodotVector3(0.0f, 0.0f, 0.0f), probe.position)
-    probe.position = GodotVector3(1.0f, 2.0f, 3.0f)
-    assertEquals(GodotVector3(1.0f, 2.0f, 3.0f), probe.position)
-    assertEquals(GodotVector3(0.0f, 0.0f, 0.0f), probe.rotation)
-    probe.rotation = GodotVector3(0.1f, 0.2f, 0.3f)
-    assertEquals(GodotVector3(0.1f, 0.2f, 0.3f), probe.rotation)
-    assertEquals(GodotVector3(1.0f, 1.0f, 1.0f), probe.scale)
-    probe.scale = GodotVector3(2.0f, 2.0f, 2.0f)
-    assertEquals(GodotVector3(2.0f, 2.0f, 2.0f), probe.scale)
-  }
-
-  @Test
-  fun platformerFamilyProbesUseTypedCalls() {
+  fun node3dTransformFamilyRoundTripsThroughTheFacade() {
     val backend = RecordingBackend()
     GodotBackendCalls.install(backend)
     val handle = GodotHandle.fromBackendToken(17)
+    val d = InitialGodotCallDescriptors
 
-    CanvasLayerBackendContractProbe(handle).setVisible(true)
+    assertEquals(
+      GodotVector3(0.0f, 0.0f, 0.0f),
+      GodotBackendCalls.invokeNoArgsRetVector3(d.NODE3D_GET_POSITION, handle),
+    )
+    GodotBackendCalls.invokeVector3Arg(
+      d.NODE3D_SET_POSITION,
+      handle,
+      GodotVector3(1.0f, 2.0f, 3.0f),
+    )
+    assertEquals(
+      GodotVector3(1.0f, 2.0f, 3.0f),
+      GodotBackendCalls.invokeNoArgsRetVector3(d.NODE3D_GET_POSITION, handle),
+    )
+    assertEquals(
+      GodotVector3(0.0f, 0.0f, 0.0f),
+      GodotBackendCalls.invokeNoArgsRetVector3(d.NODE3D_GET_ROTATION, handle),
+    )
+    GodotBackendCalls.invokeVector3Arg(
+      d.NODE3D_SET_ROTATION,
+      handle,
+      GodotVector3(0.1f, 0.2f, 0.3f),
+    )
+    assertEquals(
+      GodotVector3(0.1f, 0.2f, 0.3f),
+      GodotBackendCalls.invokeNoArgsRetVector3(d.NODE3D_GET_ROTATION, handle),
+    )
+    assertEquals(
+      GodotVector3(1.0f, 1.0f, 1.0f),
+      GodotBackendCalls.invokeNoArgsRetVector3(d.NODE3D_GET_SCALE, handle),
+    )
+    GodotBackendCalls.invokeVector3Arg(d.NODE3D_SET_SCALE, handle, GodotVector3(2.0f, 2.0f, 2.0f))
+    assertEquals(
+      GodotVector3(2.0f, 2.0f, 2.0f),
+      GodotBackendCalls.invokeNoArgsRetVector3(d.NODE3D_GET_SCALE, handle),
+    )
+  }
+
+  @Test
+  fun platformerFamiliesUseTypedCalls() {
+    val backend = RecordingBackend()
+    GodotBackendCalls.install(backend)
+    val handle = GodotHandle.fromBackendToken(17)
+    val d = InitialGodotCallDescriptors
+
+    GodotBackendCalls.invokeBoolArg(d.CANVASLAYER_SET_VISIBLE, handle, true)
     assertEquals(true, backend.canvasLayerVisible)
-    assertEquals(true, OSBackendContractProbe.hasFeature("android"))
-    assertEquals(false, OSBackendContractProbe.hasFeature("ios"))
-    val environment = WorldEnvironmentBackendContractProbe(handle).getEnvironment()
+    assertEquals(
+      true,
+      GodotBackendCalls.invokeStringNameRetBoolSingleton(d.OS_HAS_FEATURE, "android"),
+    )
+    assertEquals(false, GodotBackendCalls.invokeStringNameRetBoolSingleton(d.OS_HAS_FEATURE, "ios"))
+    val environment =
+      GodotBackendCalls.invokeNoArgsRetHandle(d.WORLDENVIRONMENT_GET_ENVIRONMENT, handle)
     assertEquals(52L, environment?.backendToken())
-    EnvironmentBackendContractProbe(checkNotNull(environment)).setBgEnergyMultiplier(0.25)
+    GodotBackendCalls.invokeDoubleArg(
+      d.ENVIRONMENT_SET_BG_ENERGY_MULTIPLIER,
+      checkNotNull(environment),
+      0.25,
+    )
     assertEquals(82 to 0.25, backend.doubleArguments.last())
-    Light3DBackendContractProbe(handle).setParam(0L, 0.24)
-    Light3DBackendContractProbe(handle).setParam(17L, 0.85)
+    GodotBackendCalls.invokeLongDoubleArg(d.LIGHT3D_SET_PARAM, handle, 0L, 0.24)
+    GodotBackendCalls.invokeLongDoubleArg(d.LIGHT3D_SET_PARAM, handle, 17L, 0.85)
     assertEquals(listOf(Triple(84, 0L, 0.24), Triple(84, 17L, 0.85)), backend.longDoubleArgs)
     assertEquals(
       "gl_compatibility",
-      RenderingServerBackendContractProbe.getCurrentRenderingMethod(),
+      GodotBackendCalls.invokeNoArgsRetStringSingleton(
+        d.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD
+      ),
     )
-    InputActionBackendContractProbe.actionPress("jump")
-    InputActionBackendContractProbe.actionRelease("jump")
+    GodotBackendCalls.invokeStringNameArgSingleton(d.INPUT_ACTION_PRESS, "jump")
+    GodotBackendCalls.invokeStringNameArgSingleton(d.INPUT_ACTION_RELEASE, "jump")
     assertEquals(listOf(86 to "jump", 87 to "jump"), backend.singletonStringArgs)
   }
 
   @Test
-  fun commonProbeUsesTypedCallsAndCachesResolvedCallSites() {
+  fun facadeUsesTypedCallsAndCachesResolvedCallSites() {
     val backend = RecordingBackend()
     GodotBackendCalls.install(backend)
-    val probe = Node2DBackendContractProbe(GodotHandle.fromBackendToken(17))
+    val handle = GodotHandle.fromBackendToken(17)
+    val d = InitialGodotCallDescriptors
 
-    assertEquals(GodotVector2(1.0f, 2.0f), probe.position)
-    assertEquals(GodotVector2(1.0f, 2.0f), probe.position)
-    probe.position = GodotVector2(3.0f, 4.0f)
-    assertEquals(GodotVector2(3.0f, 4.0f), probe.position)
-    assertEquals(GodotVector2(1.0f, 1.0f), probe.scale)
-    probe.scale = GodotVector2(1.25f, 0.75f)
-    assertEquals(GodotVector2(1.25f, 0.75f), probe.scale)
-    val canvas = CanvasItemBackendContractProbe(probe.handle)
-    assertEquals(GodotColor(1.0f, 1.0f, 1.0f, 1.0f), canvas.modulate)
-    canvas.modulate = GodotColor(0.8f, 0.7f, 0.6f, 0.5f)
-    assertEquals(GodotColor(0.8f, 0.7f, 0.6f, 0.5f), canvas.modulate)
+    assertEquals(
+      GodotVector2(1.0f, 2.0f),
+      GodotBackendCalls.invokeNoArgsRetVector2(d.NODE2D_GET_POSITION, handle),
+    )
+    assertEquals(
+      GodotVector2(1.0f, 2.0f),
+      GodotBackendCalls.invokeNoArgsRetVector2(d.NODE2D_GET_POSITION, handle),
+    )
+    GodotBackendCalls.invokeVector2Arg(d.NODE2D_SET_POSITION, handle, GodotVector2(3.0f, 4.0f))
+    assertEquals(
+      GodotVector2(3.0f, 4.0f),
+      GodotBackendCalls.invokeNoArgsRetVector2(d.NODE2D_GET_POSITION, handle),
+    )
+    assertEquals(
+      GodotVector2(1.0f, 1.0f),
+      GodotBackendCalls.invokeNoArgsRetVector2(d.NODE2D_GET_SCALE, handle),
+    )
+    GodotBackendCalls.invokeVector2Arg(d.NODE2D_SET_SCALE, handle, GodotVector2(1.25f, 0.75f))
+    assertEquals(
+      GodotVector2(1.25f, 0.75f),
+      GodotBackendCalls.invokeNoArgsRetVector2(d.NODE2D_GET_SCALE, handle),
+    )
+    assertEquals(
+      GodotColor(1.0f, 1.0f, 1.0f, 1.0f),
+      GodotBackendCalls.invokeNoArgsRetColor(d.CANVASITEM_GET_MODULATE, handle),
+    )
+    GodotBackendCalls.invokeColorArg(
+      d.CANVASITEM_SET_MODULATE,
+      handle,
+      GodotColor(0.8f, 0.7f, 0.6f, 0.5f),
+    )
+    assertEquals(
+      GodotColor(0.8f, 0.7f, 0.6f, 0.5f),
+      GodotBackendCalls.invokeNoArgsRetColor(d.CANVASITEM_GET_MODULATE, handle),
+    )
     assertEquals(
       GodotRect2(GodotVector2(0.0f, 0.0f), GodotVector2(640.0f, 480.0f)),
-      probe.viewportRect,
+      GodotBackendCalls.invokeNoArgsRetRect2(d.CANVASITEM_GET_VIEWPORT_RECT, handle),
     )
-    probe.queueRedraw()
-    probe.drawTexture(
+    GodotBackendCalls.invokeNoArgsVoid(d.CANVASITEM_QUEUE_REDRAW, handle)
+    GodotBackendCalls.invokeTexture2DVector2ColorArgs(
+      d.CANVASITEM_DRAW_TEXTURE,
+      handle,
       GodotHandle.fromBackendToken(23),
       GodotVector2(12.0f, 34.0f),
       GodotColor(1.0f, 0.5f, 0.25f),
     )
-    val texture = ResourceLoaderBackendContractProbe.load("res://bunny.svg", "Texture2D")
+    val texture =
+      GodotBackendCalls.invokeStringStringLongRetHandle(
+        d.RESOURCELOADER_LOAD,
+        "res://bunny.svg",
+        "Texture2D",
+        1L,
+      )
     assertEquals(31L, texture?.backendToken())
-    val sprite = ClassDBBackendContractProbe.instantiate("Sprite2D")
+    val sprite = GodotBackendCalls.invokeStringNameRetHandle(d.CLASSDB_INSTANTIATE, "Sprite2D")
     assertEquals(41L, sprite?.backendToken())
-    val node = NodeBackendContractProbe(probe.handle)
-    node.addChild(checkNotNull(sprite))
-    val sceneTree = checkNotNull(node.getTree())
+    GodotBackendCalls.invokeObjectBoolLongArgs(
+      d.NODE_ADD_CHILD,
+      handle,
+      checkNotNull(sprite),
+      false,
+      0L,
+    )
+    val sceneTree = checkNotNull(GodotBackendCalls.invokeNoArgsRetHandle(d.NODE_GET_TREE, handle))
     assertEquals(71L, sceneTree.backendToken())
-    SceneTreeBackendContractProbe(sceneTree).quit(7L)
-    assertFailsWith<IllegalArgumentException> {
-      SceneTreeBackendContractProbe(sceneTree).quit(Int.MAX_VALUE.toLong() + 1L)
-    }
-    Sprite2DBackendContractProbe(sprite).setTexture(texture)
-    assertEquals(31L, Sprite2DBackendContractProbe(sprite).getTexture()?.backendToken())
-    node.removeChild(sprite)
-    NodeBackendContractProbe(sprite).queueFree()
-    val board = NodeLookupBackendContractProbe(probe.handle).getNodeOrNull("Board")
+    GodotBackendCalls.invokeLongArg(d.SCENETREE_QUIT, sceneTree, 7L)
+    GodotBackendCalls.invokeObjectArg(d.SPRITE2D_SET_TEXTURE, sprite, texture)
+    assertEquals(
+      31L,
+      GodotBackendCalls.invokeNoArgsRetHandle(d.SPRITE2D_GET_TEXTURE, sprite)?.backendToken(),
+    )
+    GodotBackendCalls.invokeObjectArg(d.NODE_REMOVE_CHILD, handle, sprite)
+    GodotBackendCalls.invokeNoArgsVoid(d.NODE_QUEUE_FREE, sprite)
+    val board = GodotBackendCalls.invokeNodePathRetHandle(d.NODE_GET_NODE_OR_NULL, handle, "Board")
     assertEquals(51L, board?.backendToken())
-    val viewport = NodeLookupBackendContractProbe(probe.handle).getViewport()
+    val viewport = GodotBackendCalls.invokeNoArgsRetHandle(d.NODE_GET_VIEWPORT, handle)
     assertEquals(52L, viewport?.backendToken())
     assertEquals(
       GodotRect2(GodotVector2(0.0f, 0.0f), GodotVector2(640.0f, 480.0f)),
-      ViewportBackendContractProbe(checkNotNull(viewport)).visibleRect,
+      GodotBackendCalls.invokeNoArgsRetRect2(d.VIEWPORT_GET_VISIBLE_RECT, checkNotNull(viewport)),
     )
-    val tile = PackedSceneBackendContractProbe(checkNotNull(texture)).instantiate()
+    val tile =
+      GodotBackendCalls.invokeLongRetHandle(d.PACKEDSCENE_INSTANTIATE, checkNotNull(texture), 0L)
     assertEquals(53L, tile?.backendToken())
-    InputBackendContractProbe.setCustomMouseCursor(texture)
+    GodotBackendCalls.invokeObjectLongVector2Args(
+      d.INPUT_SET_CUSTOM_MOUSE_CURSOR,
+      texture,
+      0L,
+      GodotVector2(0.0f, 0.0f),
+    )
     assertEquals(
       0L,
-      SignalBackendContractProbe(checkNotNull(tile))
-        .connect(probe.handle, "tile_pressed", "_on_tile_pressed"),
+      GodotBackendCalls.invokeStringNameCallableLongRetLong(
+        d.OBJECT_CONNECT,
+        checkNotNull(tile),
+        "tile_pressed",
+        handle,
+        "_on_tile_pressed",
+        0L,
+      ),
     )
-    assertEquals(true, GodotObjectBackendContractProbe(tile).isClass("InputEventMouseButton"))
-    assertEquals(true, InputEventBackendContractProbe(tile).isPressed())
-    assertEquals(false, InputEventBackendContractProbe(tile).isReleased())
-    assertEquals(1L, InputEventMouseButtonBackendContractProbe(tile).getButtonIndex())
+    assertEquals(
+      true,
+      GodotBackendCalls.invokeStringNameRetBool(d.OBJECT_IS_CLASS, tile, "InputEventMouseButton"),
+    )
+    assertEquals(true, GodotBackendCalls.invokeNoArgsRetBool(d.INPUTEVENT_IS_PRESSED, tile))
+    assertEquals(false, GodotBackendCalls.invokeNoArgsRetBool(d.INPUTEVENT_IS_RELEASED, tile))
+    assertEquals(
+      1L,
+      GodotBackendCalls.invokeNoArgsRetLong(d.INPUTEVENTMOUSEBUTTON_GET_BUTTON_INDEX, tile),
+    )
     assertEquals(
       GodotVector2(320.0f, 240.0f),
-      CanvasItemInputBackendContractProbe(checkNotNull(board)).getLocalMousePosition(),
+      GodotBackendCalls.invokeNoArgsRetVector2(
+        d.CANVASITEM_GET_LOCAL_MOUSE_POSITION,
+        checkNotNull(board),
+      ),
     )
     assertEquals(
       0,
-      SignalBackendContractProbe(tile).emitVector2i("tile_pressed", GodotVector2i(3, 4)),
+      GodotBackendCalls.invokeStringNameVector2iRetInt(
+        d.OBJECT_EMIT_SIGNAL_VECTOR2I,
+        tile,
+        "tile_pressed",
+        GodotVector2i(3, 4),
+      ),
     )
     assertEquals(
       0L,
-      SignalBackendContractProbe(tile)
-        .connectBound(tile, "finished", "_kanama_web_signal_dispatch0", 71L, 4L),
+      GodotBackendCalls.invokeStringNameBoundCallableLongRetLong(
+        d.OBJECT_CONNECT_BOUND_LONG,
+        tile,
+        "finished",
+        tile,
+        "_kanama_web_signal_dispatch0",
+        71L,
+        4L,
+      ),
     )
-    assertEquals(0, SignalBackendContractProbe(tile).emitNoArgs("finished"))
-    val tween = checkNotNull(NodeBackendContractProbe(probe.handle).createTween())
+    assertEquals(
+      0,
+      GodotBackendCalls.invokeStringNameRetInt(d.OBJECT_EMIT_SIGNAL_NOARGS, tile, "finished"),
+    )
+    val tween = checkNotNull(GodotBackendCalls.invokeNoArgsRetHandle(d.NODE_CREATE_TWEEN, handle))
     assertEquals(61L, tween.backendToken())
-    val tweenProbe = TweenBackendContractProbe(tween)
-    assertEquals(61L, tweenProbe.setParallel()?.backendToken())
+    assertEquals(
+      61L,
+      GodotBackendCalls.invokeBoolRetHandle(d.TWEEN_SET_PARALLEL, tween, true)?.backendToken(),
+    )
     val vectorTweener =
       checkNotNull(
-        tweenProbe.tweenProperty(probe.handle, "position", GodotVector2(12.0f, 34.0f), 0.3)
+        GodotBackendCalls.invokeObjectNodePathVector2DoubleRetHandle(
+          d.TWEEN_TWEEN_PROPERTY_VECTOR2,
+          tween,
+          handle,
+          "position",
+          GodotVector2(12.0f, 34.0f),
+          0.3,
+        )
       )
     assertEquals(62L, vectorTweener.backendToken())
     assertEquals(
       63L,
-      tweenProbe
-        .tweenProperty(probe.handle, "modulate", GodotColor(0.5f, 0.6f, 0.7f, 0.8f), 0.1)
+      GodotBackendCalls.invokeObjectNodePathColorDoubleRetHandle(
+          d.TWEEN_TWEEN_PROPERTY_COLOR,
+          tween,
+          handle,
+          "modulate",
+          GodotColor(0.5f, 0.6f, 0.7f, 0.8f),
+          0.1,
+        )
         ?.backendToken(),
     )
-    val propertyTweener = PropertyTweenerBackendContractProbe(vectorTweener)
-    assertEquals(62L, propertyTweener.setTrans(10L)?.backendToken())
-    assertEquals(62L, propertyTweener.setEase(1L)?.backendToken())
-    tweenProbe.kill()
-    val particles = GPUParticles2DBackendContractProbe(tile)
-    assertEquals(false, particles.emitting)
-    particles.emitting = true
-    assertEquals(true, particles.emitting)
-    assertEquals(true, particles.emitting)
-    assertEquals(1.0, particles.lifetime)
-    assertEquals(1.0, particles.lifetime)
+    assertEquals(
+      62L,
+      GodotBackendCalls.invokeLongRetHandle(d.PROPERTYTWEENER_SET_TRANS, vectorTweener, 10L)
+        ?.backendToken(),
+    )
+    assertEquals(
+      62L,
+      GodotBackendCalls.invokeLongRetHandle(d.PROPERTYTWEENER_SET_EASE, vectorTweener, 1L)
+        ?.backendToken(),
+    )
+    GodotBackendCalls.invokeNoArgsVoid(d.TWEEN_KILL, tween)
+    assertEquals(false, GodotBackendCalls.invokeNoArgsRetBool(d.GPUPARTICLES2D_IS_EMITTING, tile))
+    GodotBackendCalls.invokeBoolArg(d.GPUPARTICLES2D_SET_EMITTING, tile, true)
+    assertEquals(true, GodotBackendCalls.invokeNoArgsRetBool(d.GPUPARTICLES2D_IS_EMITTING, tile))
+    assertEquals(true, GodotBackendCalls.invokeNoArgsRetBool(d.GPUPARTICLES2D_IS_EMITTING, tile))
+    assertEquals(1.0, GodotBackendCalls.invokeNoArgsRetDouble(d.GPUPARTICLES2D_GET_LIFETIME, tile))
+    assertEquals(1.0, GodotBackendCalls.invokeNoArgsRetDouble(d.GPUPARTICLES2D_GET_LIFETIME, tile))
     val audioStream =
-      ResourceLoaderBackendContractProbe.load("res://sounds/tile-swap.ogg", "AudioStream")
+      GodotBackendCalls.invokeStringStringLongRetHandle(
+        d.RESOURCELOADER_LOAD,
+        "res://sounds/tile-swap.ogg",
+        "AudioStream",
+        1L,
+      )
     assertEquals(31L, audioStream?.backendToken())
     val audio =
-      AudioStreamPlayerBackendContractProbe(
-        checkNotNull(AudioStreamPlayerBackendContractProbe.create())
+      checkNotNull(
+        GodotBackendCalls.invokeStringNameRetHandle(d.CLASSDB_INSTANTIATE, "AudioStreamPlayer")
       )
-    audio.setStream(audioStream)
-    audio.setStream(null)
-    audio.setBus("master")
-    audio.setVolumeDb(-10.0)
-    audio.setPitchScale(1.2)
-    audio.play()
-    assertFailsWith<IllegalArgumentException> { audio.setPitchScale(Double.NaN) }
-    GDBackendContractProbe.randomize()
-    assertEquals(4_294_967_295L, GDBackendContractProbe.randi())
-    assertEquals(0.75, GDBackendContractProbe.randf())
-    assertEquals(0, probe.emitSignal("benchmark_finished", 42))
-    assertEquals(7L, probe.getChildCount())
+    GodotBackendCalls.invokeObjectArg(d.AUDIOSTREAMPLAYER_SET_STREAM, audio, audioStream)
+    GodotBackendCalls.invokeObjectArg(d.AUDIOSTREAMPLAYER_SET_STREAM, audio, null)
+    GodotBackendCalls.invokeStringNameArg(d.AUDIOSTREAMPLAYER_SET_BUS, audio, "master")
+    GodotBackendCalls.invokeDoubleArg(d.AUDIOSTREAMPLAYER_SET_VOLUME_DB, audio, -10.0)
+    GodotBackendCalls.invokeDoubleArg(d.AUDIOSTREAMPLAYER_SET_PITCH_SCALE, audio, 1.2)
+    GodotBackendCalls.invokeDoubleArg(d.AUDIOSTREAMPLAYER_PLAY, audio, 0.0)
+    assertFailsWith<IllegalArgumentException> {
+      GodotBackendCalls.invokeDoubleArg(d.AUDIOSTREAMPLAYER_SET_PITCH_SCALE, audio, Double.NaN)
+    }
+    GodotBackendCalls.invokeUtilityNoArgsVoid(d.UTILITY_RANDOMIZE)
+    assertEquals(4_294_967_295L, GodotBackendCalls.invokeUtilityNoArgsRetLong(d.UTILITY_RANDI))
+    assertEquals(0.75, GodotBackendCalls.invokeUtilityNoArgsRetDouble(d.UTILITY_RANDF))
+    assertEquals(
+      0,
+      GodotBackendCalls.invokeStringNameIntRetInt(
+        d.OBJECT_EMIT_SIGNAL,
+        handle,
+        "benchmark_finished",
+        42,
+      ),
+    )
+    assertEquals(7, GodotBackendCalls.invokeBoolRetInt(d.NODE_GET_CHILD_COUNT, handle, false))
 
     assertEquals(
       mapOf(
