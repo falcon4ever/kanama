@@ -103,7 +103,14 @@ else
     python3 "$ROOT_DIR/scripts/check_unapplied_annotations.py" "$ROOT_DIR"
 fi
 
-# 5. The task repo's own links and PR statuses. Local-only, no CI, so this is the ONLY
+# 5. Gate evidence vs the Godot pin. The device matrices, the Safari corpus and the
+#    Windows/Linux revalidations run by hand and left their dates in prose only; when the
+#    pin moved to 4.7.2 nothing could go red. evidence/gates.json is the ledger, and a
+#    stale entry passes only with an explicit, dated, reasoned acceptance (WARN, not silence).
+require_script "gate evidence vs Godot pin" "$ROOT_DIR/scripts/check_gate_evidence.py" && \
+  check "gate evidence vs Godot pin" python3 "$ROOT_DIR/scripts/check_gate_evidence.py"
+
+# 6. The task repo's own links and PR statuses. Local-only, no CI, so this is the ONLY
 #    thing that ever checks it -- and it is where the worst rot was found (18 dead links,
 #    5 statuses that outlived their PRs, two of which sent a session at the wrong task).
 if [[ -f "$TASKS_DIR/check_task_index.py" ]]; then

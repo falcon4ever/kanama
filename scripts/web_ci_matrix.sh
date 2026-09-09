@@ -478,4 +478,12 @@ fi
 if [[ "$CREATED_RESULT_DIR" -eq 1 ]]; then
   echo "[web_ci_matrix] results kept at $RESULT_DIR"
 fi
+# Safari is the local-only cell (see the header): ledger a passing Safari run (task 99) so
+# the Godot pin it passed on is machine-checkable. Chrome/Firefox runs are CI's evidence.
+if [[ " ${ENGINES[*]} " == *" safari "* ]]; then
+  python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate web-safari-local-corpus \
+    --claim "Web Experimental (Safari validated-at, spot-checked not gated)" --result PASS \
+    --where "Safari: ${#DEMOS[@]} demo(s), demo-set ${DEMO_SET:-explicit}; evidence ${EVIDENCE:-$RESULT_DIR}" \
+    --source scripts/web_ci_matrix.sh
+fi
 echo "[web_ci_matrix] PASS -- ${#DEMOS[@]} demo(s) x ${#ENGINES[@]} engine(s)"
