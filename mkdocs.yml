@@ -64,6 +64,7 @@ nav:
       - Godot Upgrade Runbook: contributing/godot-upgrade.md
       - API Coverage: contributing/api-coverage.md
       - Wrapper Generator Report: contributing/wrapper-generator-report.md
+      - Gates Index: contributing/gates.md
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Demo Porting Rules: contributing/demo-porting-rules.md
       - Android Internals: contributing/android-internals.md
