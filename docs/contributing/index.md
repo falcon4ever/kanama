@@ -12,9 +12,10 @@ you are changing:
   wrappers, generator policy, ABI helpers, or generated KDoc.
 - [Godot Upgrade Runbook](godot-upgrade.md) before bumping the Godot engine
   baseline.
-- [API Coverage](api-coverage.md) and
-  [Wrapper Generator Report](wrapper-generator-report.md) before promoting
-  wrapper coverage or changing generator skip policy.
+- [API Coverage](../reference/generated/api-coverage.md) and
+  [Wrapper Generator Report](../reference/generated/wrapper-generator-report.md)
+  (generated, under Reference → Generated Reports) before promoting wrapper
+  coverage or changing generator skip policy.
 - [Hot Reload Internals](hot-reload-internals.md) before changing script reload
   behavior or reload smoke checks.
 - [Demo Porting Rules](demo-porting-rules.md) before changing demo ports or
@@ -26,10 +27,11 @@ you are changing:
   [Web Internals](backends/web.md) (the Kotlin/Wasm backend, its generated
   proxy, and the versioned JS bridge). The user-facing export workflow for
   each lives under Exporting; these pages hold the design and the gates.
-- [Gates Index](gates.md) to find what each `local_ci.sh` stage, CI job, and
-  local-only device/browser gate proves and where it runs, and to see the
-  `evidence/gates.json` ledger of when those local gates last ran on the
-  current Godot pin.
+- [Gates Index](../reference/generated/gates.md) (generated from
+  `local_ci.sh`, the workflows, and the ledger) to find what each `local_ci.sh`
+  stage, CI job, and local-only device/browser gate proves and where it runs,
+  and to see the `evidence/gates.json` ledger of when those local gates last
+  ran on the current Godot pin.
 
 Landing a change that **removes** a limitation is its own kind of change: the
 comments asserting that limitation are now false and nothing else will notice.

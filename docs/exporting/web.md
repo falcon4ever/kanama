@@ -327,7 +327,7 @@ Limitations. Run it with the same script, `--engine safari`, one run at a time.
 
 Which gate runs when, and where, is derived from the workflow files,
 `local_ci.sh`, and the `evidence/gates.json` ledger by the generated
-[Gates Index](../contributing/gates.md): the PR subset and the `ci` corpus on
+[Gates Index](../reference/generated/gates.md): the PR subset and the `ci` corpus on
 Chrome + Firefox, the nightly soak and spike cells, and the local-only Safari,
 tps-demo, and fresh-checkout gates each appear there with their cadence and
 last recorded run. Two policies sit on top of that list:

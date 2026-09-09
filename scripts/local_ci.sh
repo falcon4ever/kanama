@@ -246,15 +246,15 @@ stage "API wrapper coverage report"
 python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py"
 
 stage "API wrapper coverage docs check"
-python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/contributing/api-coverage.md" --check
+python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md" --check
 
 stage "API wrapper generator report docs check"
-python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md" --check
+python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md" --check
 
 stage "gates index docs check"
-# docs/contributing/gates.md is derived from this file's stage lines, the workflows and the
+# docs/reference/generated/gates.md is derived from this file's stage lines, the workflows and the
 # gate ledger (task 99); regenerate with the same command minus --check.
-python3 "$ROOT_DIR/scripts/generate_gates_index.py" --markdown "$ROOT_DIR/docs/contributing/gates.md" --check
+python3 "$ROOT_DIR/scripts/generate_gates_index.py" --markdown "$ROOT_DIR/docs/reference/generated/gates.md" --check
 
 stage "wrapper KDoc staleness check (4.7-stable)"
 # Guarded: KDoc is synced from Godot's doc/classes (see docs/contributing/wrapper-maintenance.md

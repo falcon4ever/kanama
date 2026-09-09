@@ -245,8 +245,8 @@ every platform, so that class of drift cannot silently return.
 For wrapper work, use the coverage reports as the baseline instead of
 waiting for another demo to expose a gap:
 
-1. Refresh `docs/contributing/api-coverage.md` and
-   `docs/contributing/wrapper-generator-report.md`.
+1. Refresh `docs/reference/generated/api-coverage.md` and
+   `docs/reference/generated/wrapper-generator-report.md`.
 2. Start from the generator skip categories and missing helper shapes.
 3. Rank gaps by common Godot workflows: scene tree, resources, physics queries,
    animation, UI, input, materials, signals, RPC, and export-facing APIs.
@@ -449,7 +449,7 @@ the reviewed list with focused parity evidence.
 
 For scalar Godot `float` method arguments, the ptrcall helper layout audit is
 the ABI guard (it absorbed the narrower `audit_scalar_float_abi.py`, retired in
-task 99 — see the [Gates Index](gates.md)):
+task 99 — see the [Gates Index](../reference/generated/gates.md)):
 
 ```sh
 python3 scripts/audit_ptrcall_helper_layouts.py

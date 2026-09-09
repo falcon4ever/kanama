@@ -339,12 +339,12 @@ fi
 # ---------------------------------------------------------------------------
 if [[ $DRY_RUN -eq 1 ]]; then
   echo "[upgrade_godot] step 6: reports (--check)"
-  python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/contributing/api-coverage.md" --check
-  python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md" --check
+  python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md" --check
+  python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md" --check
 else
   echo "[upgrade_godot] step 6: refresh coverage + generator reports"
-  python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/contributing/api-coverage.md"
-  python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md"
+  python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md"
+  python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md"
 fi
 
 # ---------------------------------------------------------------------------

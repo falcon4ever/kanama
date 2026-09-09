@@ -149,7 +149,7 @@ The latest public documentation is published at
 - [Android](docs/exporting/android.md)
 - [iOS](docs/exporting/ios.md)
 - [Version Support](docs/reference/version-support.md)
-- [API Coverage](docs/contributing/api-coverage.md)
+- [API Coverage](docs/reference/generated/api-coverage.md)
 - [C# Comparison](docs/reference/c-sharp-compat.md)
 - [Changelog](CHANGELOG.md)
 - [Contributor Guide](docs/contributing/index.md)

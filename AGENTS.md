@@ -239,8 +239,8 @@ python3 scripts/generate_name_constants.py
 Refresh wrapper reports before release-facing wrapper changes:
 
 ```sh
-python3 scripts/api_wrapper_generator_report.py --markdown docs/contributing/wrapper-generator-report.md
-python3 scripts/api_wrapper_coverage.py --markdown docs/contributing/api-coverage.md
+python3 scripts/api_wrapper_generator_report.py --markdown docs/reference/generated/wrapper-generator-report.md
+python3 scripts/api_wrapper_coverage.py --markdown docs/reference/generated/api-coverage.md
 ```
 
 ### Godot Upgrade
