@@ -53,6 +53,24 @@ versioning once public releases begin.
   **Existing Web exports must be rebuilt**: a protocol-21 export refuses to load
   against a protocol-22 bridge, and vice versa.
 
+### Changed — Backend call contract is Web-local
+
+- **`kanama-common-api` is the Web backend's call table, not a shared platform
+  seam** (task 95). The desktop (JVM/Panama) and iOS (Kotlin/Native)
+  `CommonGodotBackend` adapters were installed at bootstrap but no native wrapper
+  ever dispatched through them; they are removed, together with the native
+  modules' dependency on `kanama-common-api` and the Android plugin's source copy
+  of it. The module keeps its name and its `jvm` (KSP Web emitter, contract test)
+  and `wasmJs` (Web runtime) targets; its unused iOS targets are gone. Every
+  `GodotBackendSpi` member is now abstract — the generated Kotlin/Wasm backend
+  implements all 87 — so a call shape the generator stops emitting fails at
+  compile time instead of at the first call. No user-visible behaviour change on
+  any platform; the desktop runtime jar shrinks by about 170 KB (12,106,707 →
+  11,936,181 bytes). `docs/contributing/web-internals.md` now describes one
+  source (`extension_api.json`) feeding two mechanisms — the native ptrcall
+  wrapper generator and the Web contract, whose hashes are validated against the
+  same file — instead of claiming native backends consume the contract.
+
 ### Changed — Verification hygiene (task 99)
 
 - **The `kanama-common-api` tests now run.** `local_ci.sh` names
