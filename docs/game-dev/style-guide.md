@@ -322,12 +322,14 @@ fun fadeOut() {
 }
 ```
 
-The same ownership rule applies to generated meshes, materials, audio streams,
-and other `Resource`/`RefCounted` values. If a node property stores the object,
-for example `meshInstance.setMesh(mesh)`, do not immediately close that same
-resource unless you have verified the setter retained its own reference.
+Everything else — generated meshes, materials, audio streams, and every other
+`Resource`/`RefCounted` value you create or read back, plain getters included —
+follows the one rule in
+[Godot API → Resource Ownership](godot-api.md#resource-ownership): the wrapper
+is yours, so `close()` it (or `use { }`) once you are done. Handing it to a
+node first does not change that: after `meshInstance.setMesh(mesh)` the node
+holds its own reference and `mesh.close()` releases only yours (tasks 61/62).
 
-Kanama marks manual Godot lifetime APIs with `@ManualGodotLifetimeApi`. If a
-game script triggers that warning, treat it as a design review: either replace
-the call with a Godot lifecycle API, or add an explicit `@OptIn` only when the
-value is documented as caller-owned.
+`RefCounted.close()` carries no opt-in annotation. `@ManualGodotLifetimeApi`
+is deprecated and no longer applied anywhere; an `@OptIn` for it in a script
+compiles with a deprecation warning and can simply be deleted.

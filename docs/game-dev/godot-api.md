@@ -172,11 +172,17 @@ Same call, different outcome, because the number of other owners differs.
 |---|---|---|
 | **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, and `@ScriptProperty` reads of resource-typed fields and collections | `close()` it, or `use { }` |
 | **Borrowed view** | A wrapper *you* mint around a handle you already have: `Resource.fromHandle(...)`, `Resource.fromObject(...)`, a script-class constructor wrapping an existing handle | **Never** `close()` — it releases a reference you never took |
-| **Engine-owned, live** | A `createTween()` still running, anything assigned into the scene tree, a resource handed to a sink that took its own reference | Use the Godot lifecycle (`kill()`, `queueFree()`), not `close()` |
+| **Engine-owned, live** | A `createTween()` still running, anything living in the scene tree | Use the Godot lifecycle (`kill()`, `queueFree()`), not `close()` |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
 
 The awkward-looking case — a getter you must close — is the common one, and it is
-safe precisely because the node still holds its own reference.
+safe precisely because the node still holds its own reference. Handing an owned
+wrapper to a sink (`setMesh`, `setStream`, `ResourceSaver.save`) does not move
+it into the engine-owned row: the sink takes its own reference and yours is
+still yours to close. In the demos corpus this table is what
+`scripts/demo_parity_audit.py` enforces — it fails a `close()` on a borrowed
+view or a live tween and never flags closing an owned return; the audit
+conforms to this page, not the other way round.
 
 `@ScriptProperty` reads are **owned**: the generated registrar takes its own
 reference when it reads a resource out of a property, an `Array`, or a

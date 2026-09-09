@@ -211,9 +211,11 @@ Handing a created resource to a node is safe to follow with `close()`: the
 setter takes its own reference, so after `meshInstance.setMesh(mesh)` a
 `mesh.close()` (or `use { }` around the whole handoff) releases only yours
 (tasks 61/62; issue #91 is what happened before that contract held).
-`RefCounted.close()` is annotated `@ManualGodotLifetimeApi` so every release is
-a visible decision: opt in where the wrapper is owned by the rules above, never
-for a borrowed view or a live engine-owned object.
+`RefCounted.close()` needs no opt-in: `@ManualGodotLifetimeApi` is deprecated
+and no longer applied, so drop any `@OptIn` for it from a port. The rule above
+is what `scripts/demo_parity_audit.py` in the demos repository enforces — it
+fails a `close()` on a borrowed view (`fromHandle`/`fromObject`) or on a live
+`Tween`, and never flags closing an owned return.
 
 ## Signals And Callbacks
 

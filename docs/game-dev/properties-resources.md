@@ -418,9 +418,10 @@ already imposes.
 Ownership mirrors GDScript `.new()`: the returned resource comes back with one
 owning reference, so it survives the `ResourceSaver.save` call above (which wraps
 it in a transient `Ref<>` internally). **Release that reference** with
-`owned.close()` — or `use { }` as above — once you are done, unless you have
-handed ownership on by assigning `owned.resource` into a node/scene or an
-exported `Resource` slot (then the engine keeps it alive). Pass `owned.resource`
+`owned.close()` — or `use { }` as above — once you are done, including after
+assigning `owned.resource` into a node/scene or an exported `Resource` slot: the
+engine takes its own reference there and `close()` drops only yours (the one
+rule in [Resource Ownership](godot-api.md#resource-ownership)). Pass `owned.resource`
 directly to `Resource`-typed APIs such as `ResourceSaver.save`; there is no
 `Resource.fromHandle` view to manage.
 
