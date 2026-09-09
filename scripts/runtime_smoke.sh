@@ -251,6 +251,13 @@ check "vret control rid_type=true"
 # a native fault); removing the id capture turns instance_valid_after_free into UB.
 check "LifetimeSmoke instance_valid_alive=true instance_valid_after_free=false id_after_free_valid=false id_matches_ptrcall=true closed_receiver=IllegalStateException:RefCounted handle is closed closed_inherited=IllegalStateException:RefCounted handle is closed closed_generated=IllegalStateException:RefCounted handle is closed closed_argument=IllegalStateException:RefCounted handle is closed"
 check_absent "Leaked instance: Image"
+# task 98 — structural upcall containment (Upcalls.stub wraps every stub in
+# MethodHandles.catchException). A @RegisterFunction that throws is logged with the site label
+# and the engine receives the zero default; GDScript sees null and keeps running. Removing the
+# containment makes the exception unwind through native frames and abort Godot (exit 134)
+# before the survived= line is printed.
+check "\[kanama\] upcall [A-Za-z0-9_]+\.call_smoke_throw threw: java\.lang\.IllegalStateException: kanama smoke: deliberate upcall failure"
+check "upcall containment survived=true result_null=true"
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

@@ -542,6 +542,12 @@ func _kanama_virtual_return_families_smoke() -> void:
 	lifetime_host.run_lifetime_smoke()
 	lifetime_host.free()
 
+	# task 98 — a throwing @RegisterFunction on a @RegisterClass escapes into the generated FFM
+	# upcall stub (no bespoke catch there). Upcalls.stub's structural containment must log it and
+	# hand the engine the zero default (a NIL return) instead of aborting the process.
+	var thrown_result = $HelloKanama.smoke_throw()
+	print("[kanama:gd] upcall containment survived=true result_null=", thrown_result == null)
+
 func _process(_delta: float) -> void:
 	if OS.get_environment("KANAMA_IN_PROCESS_HOT_RELOAD_SMOKE") != "1":
 		return
