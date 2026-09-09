@@ -16,7 +16,9 @@ versioning once public releases begin.
   the regen churn is version strings plus a KDoc re-sync from the 4.7.2
   `doc/classes` (comment-only). CI now downloads 4.7.2 (`ci.yml`, `web.yml`,
   `package.yml`); requirements, download links, badges, and templates name 4.7.2;
-  support-tier labels keep naming the 4.7 stable line. Mobile device gates and the
+  support-tier labels keep naming the 4.7 stable line. Desktop gates re-ran green on
+  the 4.7.2 binary (`local_ci.sh` on macOS arm64 and the nine-demo desktop smoke
+  matrix). Mobile device gates and the
   Web browser matrix have not been re-run on the 4.7.2 export templates yet — their
   evidence in Version Support stays dated on the 4.7.0 templates until they are.
 - The upgrade tooling now handles maintenance pins: the docs-tree guard in

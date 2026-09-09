@@ -27,6 +27,21 @@ The checked-in wrapper surface is generated from the current
 Kotlin wrapper sources. For this preview, that API baseline is Godot 4.7.2
 stable.
 
+Kanama re-pinned from 4.7.0 to **4.7.2 stable on 2026-09-08** (task 91).
+`scripts/upgrade_godot.sh` classified the bump as **metadata-only**: only the
+`extension_api.json` header changed (`version_patch` 0 → 2); the API body and
+`gdextension_interface.h` are byte-identical, so wrappers, name constants, and
+struct layouts are unchanged and the regen churn was version strings plus a
+KDoc re-sync from the 4.7.2 `doc/classes`. Desktop gates re-ran on the 4.7.2
+binary the same day: `scripts/local_ci.sh` passed end to end on macOS arm64
+(runtime, `@Tool`, hot-reload, and in-process hot-reload smokes included), and
+the demos `desktop_smoke_all.sh` nine-demo matrix passed. **Not re-run on 4.7.2
+templates:** the Android and iOS device gates and the Web browser matrix; the
+mobile and Web evidence below stays dated on the 4.7.0 templates until they
+are. Godot's Android export-template toolchain (`config.gradle`) is identical
+between the two tags, so the toolchain table in [Android](../exporting/android.md)
+holds for 4.7.2.
+
 The 4.7 rc 2 → 4.7 stable bump was a metadata-only change: the dumped
 `extension_api.json` (excluding the `version_status` header field) and
 `gdextension_interface.h` are **byte-identical** between the two builds, so the
