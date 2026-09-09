@@ -6,6 +6,12 @@ set -Eeuo pipefail
 
 bootstrap_build_dir=""
 current_stage=""
+# Per-stage wall time (task 99, review R15): nothing recorded how long any gate took, so a
+# slowdown had nowhere to show up. `stage` closes the previous stage; the summary prints at
+# the end and in the failure banner, and lands in build/local-ci-timings.json.
+stage_names=()
+stage_secs=()
+stage_started=0
 
 cleanup() {
   if [[ -n "$bootstrap_build_dir" && -d "$bootstrap_build_dir" ]]; then
@@ -36,6 +42,9 @@ ci_failed() {
   echo "  failing stage was a smoke, its diagnostic is repeated at the end of its" >&2
   echo "  own log dump." >&2
   echo "========================================================================" >&2
+  close_stage
+  print_timings >&2
+  write_timings_json FAIL || true
 }
 
 # Installed before any real work, including the version probe below: a failure there used to
@@ -45,8 +54,59 @@ trap cleanup EXIT
 
 # Announce a stage and record it, so the failure banner can name what was running.
 stage() {
+  close_stage
   current_stage="$1"
+  stage_started=$SECONDS
   echo "[local_ci] $1"
+}
+
+# Record the elapsed seconds of the stage that is currently open (if any).
+close_stage() {
+  if [[ -n "$current_stage" ]]; then
+    stage_names+=("$current_stage")
+    stage_secs+=("$((SECONDS - stage_started))")
+    current_stage=""
+  fi
+}
+
+print_timings() {
+  local i total=0
+  echo "[local_ci] stage timings (seconds):"
+  for i in "${!stage_names[@]}"; do
+    printf '  %5ds  %s\n' "${stage_secs[$i]}" "${stage_names[$i]}"
+    total=$((total + stage_secs[i]))
+  done
+  printf '  %5ds  total (stages)\n' "$total"
+  printf '  %5ds  total (wall)\n' "$SECONDS"
+}
+
+# build/local-ci-timings.json: {"stages": [{"stage", "seconds"}...], "status", ...}. Stage
+# names carry Godot binary paths, so python3 (already required by the gates) does the JSON.
+write_timings_json() {
+  local status="$1" path="$ROOT_DIR/build/local-ci-timings.json" i
+  mkdir -p "$ROOT_DIR/build"
+  for i in "${!stage_names[@]}"; do
+    printf '%s\t%s\n' "${stage_secs[$i]}" "${stage_names[$i]}"
+  done | python3 -c '
+import datetime, json, sys
+path, status, wall = sys.argv[1:4]
+stages = []
+for line in sys.stdin:
+    secs, _, name = line.rstrip("\n").partition("\t")
+    stages.append({"stage": name, "seconds": int(secs)})
+with open(path, "w") as handle:
+    json.dump({
+        "schemaVersion": 1,
+        "gate": "local_ci",
+        "status": status,
+        "generatedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+        "wallSeconds": int(wall),
+        "totalStageSeconds": sum(s["seconds"] for s in stages),
+        "stages": stages,
+    }, handle, indent=2)
+    handle.write("\n")
+' "$path" "$status" "$SECONDS"
+  echo "[local_ci] stage timings written to $path"
 }
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -163,11 +223,14 @@ if [[ -z "$kanama_version" ]]; then
 fi
 ensure_gdextension_header "${godot_bins[0]}"
 
-# JVM unit tests across all modules (runtime :test + KSP processor :processor:test). These were not
-# previously gated — the iOS @ScriptProperty get/set parity contract (task 46) lives here, along with
-# the existing type tests.
-stage "JVM unit tests"
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test
+# JVM unit tests across all modules (runtime :test + KSP processor :processor:test) plus the KMP
+# module's JVM tests. `gradlew test` does NOT reach :kanama-common-api -- its tests are `jvmTest`
+# -- so GodotBackendContractTest (1,100 lines) and the checkPlatformBackendContract descriptor
+# check had never run in CI (task 99, review R16). The iOS @ScriptProperty get/set parity
+# contract (task 46) lives in :test alongside the existing type tests.
+stage "JVM unit tests + kanama-common-api contract"
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test \
+  :kanama-common-api:jvmTest :kanama-common-api:checkPlatformBackendContract
 
 stage "public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
@@ -187,6 +250,11 @@ python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/c
 
 stage "API wrapper generator report docs check"
 python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/contributing/wrapper-generator-report.md" --check
+
+stage "gates index docs check"
+# docs/contributing/gates.md is derived from this file's stage lines, the workflows and the
+# gate ledger (task 99); regenerate with the same command minus --check.
+python3 "$ROOT_DIR/scripts/generate_gates_index.py" --markdown "$ROOT_DIR/docs/contributing/gates.md" --check
 
 stage "wrapper KDoc staleness check (4.7-stable)"
 # Guarded: KDoc is synced from Godot's doc/classes (see docs/contributing/wrapper-maintenance.md
@@ -259,9 +327,6 @@ PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_generator_shape_
 
 stage "generator object policy audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_generator_object_policy.py"
-
-stage "scalar float ABI audit"
-python3 "$ROOT_DIR/scripts/audit_scalar_float_abi.py"
 
 stage "ptrcall helper layout ABI audit"
 python3 "$ROOT_DIR/scripts/audit_ptrcall_helper_layouts.py"
@@ -616,4 +681,7 @@ for godot_bin in "${godot_bins[@]}"; do
   "$ROOT_DIR/scripts/hot_reload_in_process_smoke.sh" "$godot_bin"
 done
 
+close_stage
+print_timings
+write_timings_json PASS
 echo "[local_ci] PASS"

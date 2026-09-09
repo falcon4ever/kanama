@@ -315,7 +315,15 @@ print(json.load(open(sys.argv[1])).get("protocolVersion", ""))
     esac
 
     quarantine="$(kanama_web_quarantine_reason "$demo:$engine")"
+    quarantine_until="$(kanama_web_quarantine_until "$demo:$engine")"
     echo "[web_ci_matrix] --- $demo on $engine (budget ${budget}s)${quarantine:+ [QUARANTINED]} ---"
+    if [[ -n "$quarantine" && -z "$quarantine_until" ]]; then
+      echo "[web_ci_matrix] WARNING: quarantine for $demo:$engine has no expiry date; add it to kanama_web_quarantine_until in scripts/web/demos.sh" >&2
+    elif [[ -n "$quarantine" && "$(date +%F)" > "$quarantine_until" ]]; then
+      # Non-fatal by decision (task 99): the cell still reports as quarantined, but the
+      # expiry is said out loud every run so a parked task cannot hide a cell forever.
+      echo "[web_ci_matrix] QUARANTINE EXPIRED: $demo:$engine was quarantined until $quarantine_until ($quarantine) -- lift it or renew the date in scripts/web/demos.sh" >&2
+    fi
     started="$(date +%s)"
     cell_pass="false"
     if "$ROOT_DIR/scripts/web_export_smoke.sh" "${smoke_args[@]}"; then
@@ -477,5 +485,13 @@ fi
 
 if [[ "$CREATED_RESULT_DIR" -eq 1 ]]; then
   echo "[web_ci_matrix] results kept at $RESULT_DIR"
+fi
+# Safari is the local-only cell (see the header): ledger a passing Safari run (task 99) so
+# the Godot pin it passed on is machine-checkable. Chrome/Firefox runs are CI's evidence.
+if [[ " ${ENGINES[*]} " == *" safari "* ]]; then
+  python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate web-safari-local-corpus \
+    --claim "Web Experimental (Safari validated-at, spot-checked not gated)" --result PASS \
+    --where "Safari: ${#DEMOS[@]} demo(s), demo-set ${DEMO_SET:-explicit}; evidence ${EVIDENCE:-$RESULT_DIR}" \
+    --source scripts/web_ci_matrix.sh
 fi
 echo "[web_ci_matrix] PASS -- ${#DEMOS[@]} demo(s) x ${#ENGINES[@]} engine(s)"

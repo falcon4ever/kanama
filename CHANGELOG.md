@@ -26,6 +26,33 @@ versioning once public releases begin.
   **Existing Web exports must be rebuilt**: a protocol-21 export refuses to load
   against a protocol-22 bridge, and vice versa.
 
+### Changed — Verification hygiene (task 99)
+
+- **The `kanama-common-api` tests now run.** `local_ci.sh` names
+  `:kanama-common-api:jvmTest` and `checkPlatformBackendContract` explicitly;
+  `gradlew test` never reached the KMP module, so `GodotBackendContractTest` had
+  not executed in any CI run since it landed.
+- **Gates ledger.** `evidence/gates.json` records each run of the local-only
+  gates (device matrices, Safari corpus, host revalidations) with the Godot pin
+  and Kanama commit it ran on. `scripts/check_gate_evidence.py`, inside
+  `scripts/audit_claims.sh`, fails when a gate's latest run predates the current
+  pin unless the entry carries a dated, reasoned `acceptedStaleUntil`. Seeded
+  from the dated evidence in Version Support; the 4.7.0-template entries are
+  accepted stale until 2026-10-31 and say so on every run. `ios_device_gate.sh`
+  and Safari `web_ci_matrix.sh` runs append to the ledger on PASS.
+- **Gates index.** `docs/contributing/gates.md` lists every `local_ci.sh`
+  stage, CI job and local-only gate — what it proves, where it runs, when it
+  landed — generated from the scripts and workflows, with `--check` as a
+  local-CI stage.
+- **`audit_scalar_float_abi.py` retired**: `audit_ptrcall_helper_layouts.py`
+  checks the same float/Color slot rules across every helper, not 30
+  name-matched ones. `audit_wrapper_signatures.py` was reviewed for the same
+  fate and kept — its `java.lang.Object`/`AutoCloseable`/`GodotObject`
+  name-collision checks have no successor.
+- `local_ci.sh` prints per-stage seconds (also in the failure banner) and
+  writes `build/local-ci-timings.json`. Web quarantine entries carry an expiry
+  date; the matrix prints `QUARANTINE EXPIRED` past it (non-fatal for now).
+
 ### Changed — Godot baseline
 
 - **Godot baseline re-pinned to 4.7.2 stable** (task 91). `scripts/upgrade_godot.sh`

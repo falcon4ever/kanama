@@ -23,6 +23,10 @@ you are changing:
   export support.
 - [Web Internals](web-internals.md) before changing the in-development
   Kotlin/Wasm Web backend, its generated proxy, or the versioned JS bridge.
+- [Gates Index](gates.md) to find what each `local_ci.sh` stage, CI job, and
+  local-only device/browser gate proves and where it runs, and to see the
+  `evidence/gates.json` ledger of when those local gates last ran on the
+  current Godot pin.
 
 Landing a change that **removes** a limitation is its own kind of change: the
 comments asserting that limitation are now false and nothing else will notice.
