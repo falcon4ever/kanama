@@ -178,6 +178,26 @@ LOCAL_ONLY_GATES = (
     },
 )
 
+# Gates removed on purpose, with the evidence that something else covers them. A retired
+# check that is simply deleted looks like a check that never existed.
+RETIRED_GATES = (
+    {
+        "script": "scripts/audit_scalar_float_abi.py",
+        "retired": "2026-09-09 (task 99)",
+        "subsumed_by": "scripts/audit_ptrcall_helper_layouts.py",
+        "evidence": "The layout audit fails any helper without a Color slot that uses JAVA_FLOAT and any float-slot helper that does not use JAVA_DOUBLE (`audit_helper`), across all 1,500 parsed helpers; the retired script name-matched 30 `ptrcall*Float*` helpers (20 of them packed-array helpers) and a ±10-line \"Color\" text window. Measured at retirement: all 30 helpers and all 464 JAVA_FLOAT sites in ObjectCalls.kt lie inside layout-audited bodies. Not carried over: the KDoc-wording check that those 30 helpers say \"scalar float\".",
+    },
+)
+
+# Considered for retirement and KEPT, with the gap that keeps them.
+KEPT_AFTER_REVIEW = (
+    {
+        "script": "scripts/audit_wrapper_signatures.py",
+        "candidate": "scripts/audit_wrapper_abi_policy.py",
+        "gap": "The ABI policy audit re-checks arity, argument and return storage kinds with the exact `value_policy` model (stricter than the coarse `compatible()`), but has no counterpart for the three name-collision checks: generated methods colliding with `java.lang.Object` (`wait`/`notify`/`getClass`), a Godot `close` shadowing `AutoCloseable.close()`, and collisions with final `GodotObject` API. Both the policy audit and the layout audit also import `helper_shape`, `BIND_RE`, `CALL_RE` and friends from it.",
+    },
+)
+
 
 @dataclass(frozen=True)
 class Stage:
@@ -491,6 +511,23 @@ def render(carried: dict[str, str] | None) -> str:
         proves = gate["proves"] or describe_script(ROOT / gate["script"]) or "(no header in the script)"
         landed = first_landed(gate["script"], date_cache, carried)
         out(f"| {md_cell(gate['gate'])} | {md_cell(proves)} | {md_cell(gate['where'])} | {code(gate['script'])} | {landed} |")
+    out("")
+
+    out("## Retired gates")
+    out("")
+    out("Removed on purpose, with the evidence that another gate covers the same ground. Hand-maintained in `scripts/generate_gates_index.py` (`RETIRED_GATES`, `KEPT_AFTER_REVIEW`).")
+    out("")
+    out("| Script | Retired | Subsumed by | Evidence |")
+    out("| --- | --- | --- | --- |")
+    for gate in RETIRED_GATES:
+        out(f"| {code(gate['script'])} | {md_cell(gate['retired'])} | {code(gate['subsumed_by'])} | {md_cell(gate['evidence'])} |")
+    out("")
+    out("Reviewed as a retirement candidate and kept:")
+    out("")
+    out("| Script | Candidate successor | Why it stays |")
+    out("| --- | --- | --- |")
+    for gate in KEPT_AFTER_REVIEW:
+        out(f"| {code(gate['script'])} | {code(gate['candidate'])} | {md_cell(gate['gap'])} |")
     out("")
 
     out("## Gate evidence ledger")

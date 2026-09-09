@@ -10,6 +10,10 @@ easy to reintroduce while adding generator shapes:
 - `int64`/enum/bitfield/RID helpers must not write 32-bit integer slots,
 - scalar Godot `float` helpers use the 64-bit ptrcall float slot,
 - `Color` component helpers remain fixed 32-bit component storage.
+
+The float/Color rules absorbed `audit_scalar_float_abi.py` (retired in task 99): that
+script name-matched 30 `ptrcall*Float*` helpers, 20 of them packed-array helpers, while
+this one checks every helper with a float or Color slot in either direction.
 """
 
 from __future__ import annotations

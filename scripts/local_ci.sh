@@ -268,9 +268,6 @@ PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_generator_shape_
 stage "generator object policy audit"
 PYTHONPATH="$ROOT_DIR/scripts" python3 "$ROOT_DIR/scripts/audit_generator_object_policy.py"
 
-stage "scalar float ABI audit"
-python3 "$ROOT_DIR/scripts/audit_scalar_float_abi.py"
-
 stage "ptrcall helper layout ABI audit"
 python3 "$ROOT_DIR/scripts/audit_ptrcall_helper_layouts.py"
 

@@ -450,11 +450,15 @@ Godot-named value helper that does not call the builtin should be treated as
 suspicious until it is either bound to Godot's builtin or deliberately added to
 the reviewed list with focused parity evidence.
 
-For scalar Godot `float` method arguments, keep using the separate ABI guard:
+For scalar Godot `float` method arguments, the ptrcall helper layout audit is
+the ABI guard (it absorbed the narrower `audit_scalar_float_abi.py`, retired in
+task 99 — see the [Gates Index](gates.md)):
 
 ```sh
-python3 scripts/audit_scalar_float_abi.py
+python3 scripts/audit_ptrcall_helper_layouts.py
 ```
 
 Godot's scalar `float` ptrcall slot is 64-bit (`JAVA_DOUBLE`) even when
-single-precision `real_t` value components are `Float`.
+single-precision `real_t` value components are `Float`; every helper with a
+scalar float slot must use `JAVA_DOUBLE`, and only `Color` component storage may
+use `JAVA_FLOAT`.

@@ -10,7 +10,7 @@ Every check that decides whether Kanama is green, in one place: what each one pr
 
 A green PR means the first two tiers passed. It does not mean the third tier was run — that is what the ledger is for.
 
-## Local CI stages (55)
+## Local CI stages (54)
 
 In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the script's docstring or header where a script exists, otherwise the stage's own comment.
 
@@ -41,36 +41,35 @@ In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the sc
 | 23 | `type marshal coverage audit` | Cross-reference every Kotlin type under src/main/kotlin/net/multigesture/kanama/types/ against the four coverage tables maintained elsewhere | PR + push to main (ci.yml `local-ci`); local | `scripts/type_coverage_audit.py` | 2026-05-20 |
 | 24 | `generator call-shape policy audit` | Audit conservative wrapper-generator call-shape policy. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_generator_shape_policy.py` | 2026-05-20 |
 | 25 | `generator object policy audit` | Audit conservative wrapper-generator object typing policy. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_generator_object_policy.py` | 2026-05-20 |
-| 26 | `scalar float ABI audit` | Audit ObjectCalls scalar float ptrcall helpers. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_scalar_float_abi.py` | 2026-05-20 |
-| 27 | `ptrcall helper layout ABI audit` | Audit ObjectCalls ptrcall helper bodies for obvious ABI layout drift. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_ptrcall_helper_layouts.py` | 2026-05-20 |
-| 28 | `builtin storage size ABI audit` | Audit builtin storage allocations against extension_api.json. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_builtin_storage_sizes.py` | 2026-05-20 |
-| 29 | `Variant marshalling policy audit` | Audit generic Variant marshalling policy. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_variant_marshalling_policy.py` | 2026-05-20 |
-| 30 | `GodotObject script-path audit` | Guard GodotObject convenience APIs that must preserve script semantics. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_godot_object_script_paths.py` | 2026-05-20 |
-| 31 | `runtime node/RPC guardrail audit` | Audit Kotlin scripts for risky runtime node lookups and string calls. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_runtime_node_lookups.py` | 2026-05-22 |
-| 32 | `replicated script-property guardrail audit` | Audit SceneReplicationConfig root properties against Kotlin script properties. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_replicated_script_properties.py` | 2026-05-22 |
-| 33 | `value-type builtin parity audit` | Audit hand-written Kanama value-type wrappers against Godot builtins. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_value_type_wrappers.py` | 2026-05-20 |
-| 34 | `shell script lint (shellcheck)` | shellcheck gate over the repo's gate/smoke shell scripts. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_shell_lint.sh` | 2026-08-11 |
-| 35 | `JDWP bootstrap/project-setting guard` | The JDWP debug settings, the libjvm diagnostic and the editor/game-runner split are wired through bootstrap.c and both editor plugins. | PR + push to main (ci.yml `local-ci`); local | `if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/examp…` | — |
-| 36 | `gradle sync` | `syncExampleAddonJar` builds the addon jar and copies it into example_project. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar` | — |
-| 37 | `ktfmt formatting check` | Formats hand-written Kotlin; generated api/ wrappers are excluded in build.gradle.kts. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" ktfmtCheck` | — |
-| 38 | `KSP script-property default literals` | The KSP-generated registrars carry the source default literals, export metadata, cleanup hooks and method/RPC helpers the example project expects. | PR + push to main (ci.yml `local-ci`); local | `find_project_script_registrar() {` | — |
-| 39 | `external addon install` | `installAddonJar` into a fresh project yields kanama.jar, kanama-scripts.jar, the .gdextension and the native bootstrap, and enables the extension. | PR + push to main (ci.yml `local-ci`); local | `install_check_dir="${TMPDIR:-/tmp}/kanama_local_ci_install"` | — |
-| 40 | `Linux native bootstrap preflight: file` | The installed Linux bootstrap is an ELF shared object. | PR + push to main (Linux runner); Linux hosts only | `if ! file "$linux_native" \| grep -Eq 'ELF .*shared object'; then` | — |
-| 41 | `Linux native bootstrap preflight: ldd` | The installed Linux bootstrap has no missing dynamic dependencies. | PR + push to main (Linux runner); Linux hosts only | `if ldd "$linux_native" \| grep -Eq 'not found'; then` | — |
-| 42 | `Linux native bootstrap preflight: readelf` | The installed Linux bootstrap's dynamic section carries no build-machine absolute paths. | PR + push to main (Linux runner); Linux hosts only | `readelf -d "$linux_native" >/dev/null` | — |
-| 43 | `publish to mavenLocal` | `publishKanamaToMavenLocal` succeeds. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" publishKanamaToMavenLocal` | — |
-| 44 | `mavenLocal publication` | The kanama, annotations and processor jars and sources jars exist at the published version in mavenLocal. | PR + push to main (ci.yml `local-ci`); local | `maven_local="${KANAMA_MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}/net/multigestur…` | — |
-| 45 | `bootstrap cmake build` | The native bootstrap configures and builds in Release with CMake. | PR + push to main; local when cmake is installed (`--skip-bootstrap` skips) | `bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX…` | — |
-| 46 | `mkdocs strict build` | `mkdocs build --strict` passes (a broken link or a page missing from the nav fails). | PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed | `(cd "$ROOT_DIR" && mkdocs build --strict)` | — |
-| 47 | `web bridge + driver syntax` | `node --check` parses the JS bridge and every Web driver. | PR + push to main; local when node is installed (`--skip-web` skips) | `node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.…` | — |
-| 48 | `web driver lint (eslint)` | Correctness lint over the same drivers (task 86: an unused variable held the Safari envelope's performance section back for two weeks). | PR + push to main; local when node is installed (`--skip-web` skips) | `(` | — |
-| 49 | `web export-smoke scaffold self-test` | exercises web_export_smoke.sh against a static fake fixture (Task 57f1 scaffold validation). | PR + push to main (ci.yml `local-ci`); local | `scripts/web/scaffold_selftest.sh` | 2026-07-23 |
-| 50 | `web backend dispatch drift gate` | Generate the Kotlin/Wasm Web backend dispatch from the shared backend contract. | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_backend.py` | 2026-07-23 |
-| 51 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -Pkotlin.compiler.execution.stra…` | — |
-| 52 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
-| 53 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
-| 54 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
-| 55 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
+| 26 | `ptrcall helper layout ABI audit` | Audit ObjectCalls ptrcall helper bodies for obvious ABI layout drift. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_ptrcall_helper_layouts.py` | 2026-05-20 |
+| 27 | `builtin storage size ABI audit` | Audit builtin storage allocations against extension_api.json. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_builtin_storage_sizes.py` | 2026-05-20 |
+| 28 | `Variant marshalling policy audit` | Audit generic Variant marshalling policy. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_variant_marshalling_policy.py` | 2026-05-20 |
+| 29 | `GodotObject script-path audit` | Guard GodotObject convenience APIs that must preserve script semantics. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_godot_object_script_paths.py` | 2026-05-20 |
+| 30 | `runtime node/RPC guardrail audit` | Audit Kotlin scripts for risky runtime node lookups and string calls. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_runtime_node_lookups.py` | 2026-05-22 |
+| 31 | `replicated script-property guardrail audit` | Audit SceneReplicationConfig root properties against Kotlin script properties. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_replicated_script_properties.py` | 2026-05-22 |
+| 32 | `value-type builtin parity audit` | Audit hand-written Kanama value-type wrappers against Godot builtins. | PR + push to main (ci.yml `local-ci`); local | `scripts/audit_value_type_wrappers.py` | 2026-05-20 |
+| 33 | `shell script lint (shellcheck)` | shellcheck gate over the repo's gate/smoke shell scripts. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_shell_lint.sh` | 2026-08-11 |
+| 34 | `JDWP bootstrap/project-setting guard` | The JDWP debug settings, the libjvm diagnostic and the editor/game-runner split are wired through bootstrap.c and both editor plugins. | PR + push to main (ci.yml `local-ci`); local | `if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/examp…` | — |
+| 35 | `gradle sync` | `syncExampleAddonJar` builds the addon jar and copies it into example_project. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar` | — |
+| 36 | `ktfmt formatting check` | Formats hand-written Kotlin; generated api/ wrappers are excluded in build.gradle.kts. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" ktfmtCheck` | — |
+| 37 | `KSP script-property default literals` | The KSP-generated registrars carry the source default literals, export metadata, cleanup hooks and method/RPC helpers the example project expects. | PR + push to main (ci.yml `local-ci`); local | `find_project_script_registrar() {` | — |
+| 38 | `external addon install` | `installAddonJar` into a fresh project yields kanama.jar, kanama-scripts.jar, the .gdextension and the native bootstrap, and enables the extension. | PR + push to main (ci.yml `local-ci`); local | `install_check_dir="${TMPDIR:-/tmp}/kanama_local_ci_install"` | — |
+| 39 | `Linux native bootstrap preflight: file` | The installed Linux bootstrap is an ELF shared object. | PR + push to main (Linux runner); Linux hosts only | `if ! file "$linux_native" \| grep -Eq 'ELF .*shared object'; then` | — |
+| 40 | `Linux native bootstrap preflight: ldd` | The installed Linux bootstrap has no missing dynamic dependencies. | PR + push to main (Linux runner); Linux hosts only | `if ldd "$linux_native" \| grep -Eq 'not found'; then` | — |
+| 41 | `Linux native bootstrap preflight: readelf` | The installed Linux bootstrap's dynamic section carries no build-machine absolute paths. | PR + push to main (Linux runner); Linux hosts only | `readelf -d "$linux_native" >/dev/null` | — |
+| 42 | `publish to mavenLocal` | `publishKanamaToMavenLocal` succeeds. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" publishKanamaToMavenLocal` | — |
+| 43 | `mavenLocal publication` | The kanama, annotations and processor jars and sources jars exist at the published version in mavenLocal. | PR + push to main (ci.yml `local-ci`); local | `maven_local="${KANAMA_MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}/net/multigestur…` | — |
+| 44 | `bootstrap cmake build` | The native bootstrap configures and builds in Release with CMake. | PR + push to main; local when cmake is installed (`--skip-bootstrap` skips) | `bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX…` | — |
+| 45 | `mkdocs strict build` | `mkdocs build --strict` passes (a broken link or a page missing from the nav fails). | PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed | `(cd "$ROOT_DIR" && mkdocs build --strict)` | — |
+| 46 | `web bridge + driver syntax` | `node --check` parses the JS bridge and every Web driver. | PR + push to main; local when node is installed (`--skip-web` skips) | `node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.…` | — |
+| 47 | `web driver lint (eslint)` | Correctness lint over the same drivers (task 86: an unused variable held the Safari envelope's performance section back for two weeks). | PR + push to main; local when node is installed (`--skip-web` skips) | `(` | — |
+| 48 | `web export-smoke scaffold self-test` | exercises web_export_smoke.sh against a static fake fixture (Task 57f1 scaffold validation). | PR + push to main (ci.yml `local-ci`); local | `scripts/web/scaffold_selftest.sh` | 2026-07-23 |
+| 49 | `web backend dispatch drift gate` | Generate the Kotlin/Wasm Web backend dispatch from the shared backend contract. | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_backend.py` | 2026-07-23 |
+| 50 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -Pkotlin.compiler.execution.stra…` | — |
+| 51 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
+| 52 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
+| 53 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
+| 54 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
 
 ## CI workflow jobs
 
@@ -116,6 +115,20 @@ Hand-maintained in `scripts/generate_gates_index.py` (`LOCAL_ONLY_GATES`); descr
 | Exported-game smoke | Task 63 (issue #102) — exported-game smoke: prove the unpack-and-play story. | tag / manual (package.yml `exported-game`); local | `scripts/export_game_smoke.sh` | 2026-08-03 |
 | Package install smoke | Unzips a packaged Kanama desktop kit or store addon into a temporary project, builds the starter Kotlin script without a sibling Kanama source checkout, and optionally launches Godot. | tag / manual (package.yml `desktop-kit`, `store-addon`); local | `scripts/package_install_smoke.sh` | 2026-05-27 |
 | Desktop demo smoke matrix | Nine-demo desktop runtime smoke on a host Godot binary; the demos repo has no CI, so this is the desktop gameplay evidence for every host | local only; ledger by hand per host (`macos-local-ci-desktop-smoke`, `windows-local-revalidation`, `linux-*-full-gate`) | `kanama-demos/scripts/desktop_smoke_all.sh` | — |
+
+## Retired gates
+
+Removed on purpose, with the evidence that another gate covers the same ground. Hand-maintained in `scripts/generate_gates_index.py` (`RETIRED_GATES`, `KEPT_AFTER_REVIEW`).
+
+| Script | Retired | Subsumed by | Evidence |
+| --- | --- | --- | --- |
+| `scripts/audit_scalar_float_abi.py` | 2026-09-09 (task 99) | `scripts/audit_ptrcall_helper_layouts.py` | The layout audit fails any helper without a Color slot that uses JAVA_FLOAT and any float-slot helper that does not use JAVA_DOUBLE (`audit_helper`), across all 1,500 parsed helpers; the retired script name-matched 30 `ptrcall*Float*` helpers (20 of them packed-array helpers) and a ±10-line "Color" text window. Measured at retirement: all 30 helpers and all 464 JAVA_FLOAT sites in ObjectCalls.kt lie inside layout-audited bodies. Not carried over: the KDoc-wording check that those 30 helpers say "scalar float". |
+
+Reviewed as a retirement candidate and kept:
+
+| Script | Candidate successor | Why it stays |
+| --- | --- | --- |
+| `scripts/audit_wrapper_signatures.py` | `scripts/audit_wrapper_abi_policy.py` | The ABI policy audit re-checks arity, argument and return storage kinds with the exact `value_policy` model (stricter than the coarse `compatible()`), but has no counterpart for the three name-collision checks: generated methods colliding with `java.lang.Object` (`wait`/`notify`/`getClass`), a Godot `close` shadowing `AutoCloseable.close()`, and collisions with final `GodotObject` API. Both the policy audit and the layout audit also import `helper_shape`, `BIND_RE`, `CALL_RE` and friends from it. |
 
 ## Gate evidence ledger
 
