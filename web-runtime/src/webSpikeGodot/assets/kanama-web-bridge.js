@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 21;
+  const KANAMA_WEB_PROTOCOL_VERSION = 22;
 
   function commandWordCount(opcode) {
     if (
@@ -58,6 +58,12 @@
       opcode === 284 ||
       opcode === 285 ||
       opcode === 286 ||
+      // Task 64 tier 3: InputEventKey.set_keycode / set_physical_keycode, Node.set_process_mode,
+      // Window.set_mode -- one int32 argument each (opcode, handle, value).
+      opcode === 295 ||
+      opcode === 297 ||
+      opcode === 301 ||
+      opcode === 302 ||
       opcode === 66
     ) return 3;
     if (
