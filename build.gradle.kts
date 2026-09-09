@@ -1920,8 +1920,8 @@ tasks.register("installAndroidPluginAar") {
   }
 }
 
-// --- Packaged mobile add-on, iOS (task 25 B3; design + exit criteria in
-// docs/internals/release-support-decision.md §7). Maintainer-built on macOS
+// --- Packaged mobile add-on, iOS (task 25 B3; design + exit criteria in the
+// release-support decision record §7, task 15 in the task repo). Maintainer-built on macOS
 // (needs Xcode), so it does not join packageDistributions or the CI package
 // workflow. Validate with scripts/package_install_smoke.sh --ios-addon.
 
