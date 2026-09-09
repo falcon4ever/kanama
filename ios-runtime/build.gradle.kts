@@ -76,6 +76,20 @@ kotlin {
     }
 }
 
+// ios-runtime ships as a static xcframework, never as a Maven/KMP library. The intermediate
+// `iosMain` source set (shared by the device and simulator targets) would otherwise be compiled
+// to Kotlin *metadata* for a publication nobody consumes, and that compilation rejects the
+// `@JvmName`/`@JvmStatic` annotations the generated wrappers carry ("Declaration annotated with
+// '@OptionalExpectation' can only be used in common module sources"), so a root
+// `./gradlew build` or `publishToMavenLocal` failed here while every platform compile, the
+// static link and the xcframework lane were green. The platform compilations are untouched.
+tasks.matching {
+    it.name == "compileIosMainKotlinMetadata" ||
+        it.name == "allMetadataJar" ||
+        it.name == "generateProjectStructureMetadata" ||
+        it.name.startsWith("publish")
+}.configureEach { enabled = false }
+
 tasks.configureEach {
     if (name.startsWith("compileKotlinIos")) {
         inputs.property("kanamaPrecision", kanamaPrecision)

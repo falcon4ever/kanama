@@ -7,6 +7,19 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — root `build` / `publishToMavenLocal` no longer compile ios-runtime metadata
+
+- `ios-runtime` ships as a static xcframework and is not a Maven/KMP library, but the
+  Kotlin Multiplatform plugin still registered a publication for it, and a root `./gradlew
+  build` or `publishToMavenLocal` compiled its intermediate `iosMain` source set to Kotlin
+  metadata for that publication. That compilation rejects the `@JvmName`/`@JvmStatic` the
+  generated wrappers carry ("Declaration annotated with '@OptionalExpectation' can only be
+  used in common module sources"), so those two root commands failed while every platform
+  compile, the static link and the xcframework lane were green. Pre-existing (the iOS tree
+  carried `@JvmName` before the shared tree); found while republishing after #220. The unused
+  metadata compilation and publications are disabled; `publishKanamaToMavenLocal` (the gate's
+  task) was never affected.
+
 ### Changed — one shared generated wrapper tree (task 103)
 
 - **The generated Godot API wrappers are emitted once.** The shared tree
