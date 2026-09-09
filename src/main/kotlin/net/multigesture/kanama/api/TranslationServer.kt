@@ -157,13 +157,13 @@ object TranslationServer {
         return ObjectCalls.ptrcallWithStringArgRetString(getPluralRulesBind, singleton, locale)
     }
 
-    @JvmStatic
     /**
      * Returns the current locale's translation for the given message and context. Note: This method
      * always uses the main translation domain.
      *
      * Generated from Godot docs: TranslationServer.translate
      */
+    @JvmStatic
     fun translate(message: String, context: String = ""): String {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, singleton, message, context)
     }
@@ -289,12 +289,12 @@ object TranslationServer {
         ObjectCalls.ptrcallWithStringNameArg(removeDomainBind, singleton, domain)
     }
 
-    @JvmStatic
     /**
      * Removes all translations from the main translation domain.
      *
      * Generated from Godot docs: TranslationServer.clear
      */
+    @JvmStatic
     fun clear() {
         ObjectCalls.ptrcallNoArgs(clearBind, singleton)
     }
@@ -372,13 +372,13 @@ object TranslationServer {
         ObjectCalls.ptrcallNoArgs(reloadPseudolocalizationBind, singleton)
     }
 
-    @JvmStatic
     /**
      * Returns the pseudolocalized string based on the `message` passed in. Note: This method always
      * uses the main translation domain.
      *
      * Generated from Godot docs: TranslationServer.pseudolocalize
      */
+    @JvmStatic
     fun pseudolocalize(message: String): String {
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(pseudolocalizeBind, singleton, message)
     }

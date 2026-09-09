@@ -69,12 +69,12 @@ object CameraServer {
         return ObjectCalls.ptrcallNoArgsRetInt(getFeedCountBind, singleton)
     }
 
-    @JvmStatic
     /**
      * Returns an array of `CameraFeed`s.
      *
      * Generated from Godot docs: CameraServer.feeds
      */
+    @JvmStatic
     fun feeds(): List<CameraFeed> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::fromHandle)
     }

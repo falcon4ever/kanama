@@ -399,8 +399,8 @@ imported from Godot's `doc/classes/*.xml` files. The generated blocks include a
 `Generated from Godot docs:` marker so they can be refreshed safely instead of
 hand-edited.
 
-**Docs version pin:** wrapper KDoc is synced from the **Godot 4.7-stable**
-`doc/classes` (commit `5b4e0cb0fd`), matching the shipped runtime baseline. Do
+**Docs version pin:** wrapper KDoc is synced from the **Godot 4.7.2-stable**
+`doc/classes` (commit `ed1daf0bf0`), matching the shipped runtime baseline. Do
 not sync from a `-rc` / `latest` tree — a mismatched docs tree reintroduces
 version skew. Bump this pin when the Godot runtime baseline moves, and re-run the
 full refresh (part of the [Godot Upgrade Runbook](godot-upgrade.md)).
@@ -409,14 +409,14 @@ To check whether KDoc is current against a local Godot source tree:
 
 ```sh
 python3 scripts/sync_kdoc_from_godot_docs.py \
-  --godot-docs /path/to/godot-4.7-stable/doc/classes --check
+  --godot-docs /path/to/godot-4.7.2-stable/doc/classes --check
 ```
 
 To refresh the whole tree (the 4.7-stable baseline refresh, task 23):
 
 ```sh
 python3 scripts/sync_kdoc_from_godot_docs.py \
-  --godot-docs /path/to/godot-4.7-stable/doc/classes --write
+  --godot-docs /path/to/godot-4.7.2-stable/doc/classes --write
 ```
 
 The script uses `$GODOT_DOCS` when set, otherwise it defaults to

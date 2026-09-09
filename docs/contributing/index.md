@@ -37,12 +37,12 @@ before release-facing changes:
 mkdocs build --strict
 python3 scripts/check_wrapper_generator.py
 ./gradlew jar
-./scripts/local_ci.sh /path/to/godot-4.7-stable
+./scripts/local_ci.sh /path/to/godot-4.7.2-stable
 ```
 
 For release-facing changes, prefer the fresh-clone gate so the result does not
 depend on your active development checkout or old local build state:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /path/to/godot-4.7-stable
+./scripts/fresh_clone_smoke.sh /path/to/godot-4.7.2-stable
 ```

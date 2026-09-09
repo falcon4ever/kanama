@@ -4,8 +4,6 @@ import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
- * Base resource for OpenXR haptic feedback definitions.
- *
  * Generated from Godot docs: OpenXRHapticBase
  */
 open class OpenXRHapticBase(handle: MemorySegment) : Resource(handle) {

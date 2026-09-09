@@ -7,17 +7,32 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
 
 # We need jni.h for compile, but libjvm is dlopen'd at runtime so there's
 # nothing to link against. CMake's FindJNI insists on locating AWT, which
-# Temurin doesn't ship on macOS, so we resolve the include dirs directly
-# from /usr/libexec/java_home instead.
+# Temurin doesn't ship on macOS, so we resolve the include dirs directly.
+#
+# Prefer an explicit JAVA_HOME (what setup-java in CI and the docs tell users to
+# set); fall back to the macOS JDK registry. `/usr/libexec/java_home -v 25` is NOT
+# a hard match: with no JDK 25 registered it prints the default JVM and exits 0,
+# which once compiled bootstrap.c against a JDK 8 jni.h and failed on
+# JNI_VERSION_21 with nothing naming the real cause. So verify the header.
 if(APPLE)
-    execute_process(
-        COMMAND /usr/libexec/java_home -v 25
-        OUTPUT_VARIABLE JAVA_HOME_DIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE JAVA_HOME_RC
-    )
-    if(NOT JAVA_HOME_RC EQUAL 0 OR NOT JAVA_HOME_DIR)
-        message(FATAL_ERROR "Could not locate JDK 25 via /usr/libexec/java_home -v 25")
+    set(JAVA_HOME_DIR "$ENV{JAVA_HOME}")
+    if(NOT JAVA_HOME_DIR OR NOT EXISTS "${JAVA_HOME_DIR}/include/jni.h")
+        execute_process(
+            COMMAND /usr/libexec/java_home -v 25
+            OUTPUT_VARIABLE JAVA_HOME_DIR
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            RESULT_VARIABLE JAVA_HOME_RC
+        )
+        if(NOT JAVA_HOME_RC EQUAL 0 OR NOT JAVA_HOME_DIR)
+            message(FATAL_ERROR "Could not locate a JDK: set JAVA_HOME to a JDK 25+ (or register one so /usr/libexec/java_home -v 25 finds it)")
+        endif()
+    endif()
+    if(NOT EXISTS "${JAVA_HOME_DIR}/include/jni.h")
+        message(FATAL_ERROR "No include/jni.h under ${JAVA_HOME_DIR}; set JAVA_HOME to a JDK 25+")
+    endif()
+    file(STRINGS "${JAVA_HOME_DIR}/include/jni.h" JNI_HAS_VERSION_21 REGEX "JNI_VERSION_21")
+    if(NOT JNI_HAS_VERSION_21)
+        message(FATAL_ERROR "jni.h under ${JAVA_HOME_DIR} predates JDK 21 (no JNI_VERSION_21). Kanama needs a JDK 25+ header: set JAVA_HOME to one, or register it so /usr/libexec/java_home -v 25 resolves to it (it returns the default JVM when no JDK 25 is registered).")
     endif()
     set(JNI_INCLUDE_DIRS "${JAVA_HOME_DIR}/include" "${JAVA_HOME_DIR}/include/darwin")
 else()

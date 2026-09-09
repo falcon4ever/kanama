@@ -6,7 +6,7 @@ via a C GDExtension shim + a Kotlin/Native static `.xcframework` (no JVM on
 device). Device-validated on iPhone 12 + iPhone 15 Pro.
 
 Use the
-[Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
+[Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
 for the matching editor binary and iOS export templates.
 
 The design is:
@@ -44,8 +44,8 @@ Use the current Kanama preview baseline:
 
 | Tool | Version / Setting |
 |---|---|
-| Godot | 4.7 stable |
-| Godot export templates | 4.7 stable iOS templates |
+| Godot | 4.7.2 stable |
+| Godot export templates | 4.7.2 stable iOS templates |
 | Desktop runtime/build JDK | JDK 25+ |
 | Xcode | 26.5 or newer enough to provide the installed iOS SDK |
 | iOS runtime | Kotlin/Native static library inside an `.xcframework` |
@@ -184,8 +184,8 @@ For simulator experiments, add `-PkanamaIosXcframeworkMode=full`.
 An iOS export needs the normal Godot iOS setup plus the installed Kanama iOS
 addon:
 
-- Godot 4.7 stable editor or headless binary.
-- Godot 4.7 stable iOS export templates installed.
+- Godot 4.7.2 stable editor or headless binary.
+- Godot 4.7.2 stable iOS export templates installed.
 - A Godot export preset named `iOS`, or the equivalent preset name used in your
   command.
 - `architectures/arm64=true` for physical-device builds.
@@ -216,7 +216,7 @@ Common failures:
 
 | Symptom | Likely Cause / Fix |
 |---|---|
-| Godot cannot export for iOS | Install the iOS export templates for the same Godot 4.7 stable editor. |
+| Godot cannot export for iOS | Install the iOS export templates for the same Godot 4.7.2 stable editor. |
 | Xcode reports no signing team | Set the Apple Development team in the export preset or Xcode project. |
 | Xcode cannot create a provisioning profile | Sign in to Xcode with an Apple Developer account and allow provisioning updates, or create the profile in the Apple Developer portal. |
 | Device is not a valid destination | Connect and trust the iPhone, enable Developer Mode, and use `xcrun devicectl list devices` to confirm the device identifier. |

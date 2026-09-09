@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="Godot 4.7 stable" src="https://img.shields.io/badge/Godot-4.7_stable-478cbf.svg">
+  <img alt="Godot 4.7.2 stable" src="https://img.shields.io/badge/Godot-4.7.2_stable-478cbf.svg">
   <img alt="JDK 25+" src="https://img.shields.io/badge/JDK-25%2B-f89820.svg">
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
@@ -34,9 +34,9 @@ separate project with a different runtime and export model.
 ## Status
 
 Kanama is desktop-first. The `0.4.0` preview baseline is
-Godot 4.7 stable. macOS arm64, Windows x86_64, and Linux x86_64/arm64 are
+Godot 4.7.2 stable. macOS arm64, Windows x86_64, and Linux x86_64/arm64 are
 **supported** on 4.7 stable. Use the
-[Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
+[Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
 for compatible editor/player binaries and Android export templates. Desktop
 release kits and store add-ons are package artifacts that can be built from
 source today and are the intended release path. Exported games are
@@ -103,8 +103,8 @@ the `0.4.0` public preview criteria.
 
 Desktop/editor workflow:
 
-- Godot 4.7 stable from the
-  [Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/)
+- Godot 4.7.2 stable from the
+  [Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
 - JDK 25+ (Temurin 25 recommended)
 - CMake 3.22.1+ and a platform C toolchain for source checkout workflows that
   build the desktop native bootstrap locally; release kits already include the
@@ -114,8 +114,8 @@ Desktop/editor workflow:
 
 Android export workflow:
 
-- Godot 4.7 stable Android export templates from the
-  [Godot 4.7 stable archive](https://godotengine.org/download/archive/4.7-stable/);
+- Godot 4.7.2 stable Android export templates from the
+  [Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/);
   Kanama's stable emulator smoke path and the Pixel 7 device gate (debug demo
   matrix + R8-minified Match3 release APK) have both passed
 - Android SDK API 36, build-tools 36.1.0, and NDK 29.0.14206865 for Godot export

@@ -8,7 +8,7 @@ release shape.
 ## Current Baseline
 
 - Kanama release line: `0.4.0` (tagged 2026-07-24; a pre-1.0 preview baseline).
-- Godot baseline: Godot `4.7 stable` (re-pin only on stable releases; bumps
+- Godot baseline: Godot `4.7.2 stable` (re-pin only on stable releases; bumps
   follow `docs/contributing/godot-upgrade.md`).
 - Desktop runtime/build JDK: JDK `25+`.
 - Mobile is Supported (4.7 stable), promoted from Experimental 2026-07-14 once
@@ -204,11 +204,11 @@ Validate package install flows without a sibling Kanama checkout:
 scripts/package_install_smoke.sh \
   --desktop-kit \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7-stable
+  /absolute/path/to/godot-4.7.2-stable
 scripts/package_install_smoke.sh \
   --store-addon \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7-stable
+  /absolute/path/to/godot-4.7.2-stable
 ```
 
 Desktop kits are complete starter projects for one platform. Store add-ons are
@@ -289,7 +289,7 @@ python3 scripts/check_wrapper_generator.py
 mkdocs build --strict
 ./gradlew ktfmtFormat            # format hand-written Kotlin (ktfmtCheck gates CI)
 ./gradlew jar
-./scripts/local_ci.sh /absolute/path/to/godot-4.7-stable
+./scripts/local_ci.sh /absolute/path/to/godot-4.7.2-stable
 ```
 
 Hand-written Kotlin is formatted with ktfmt (googleStyle, 2-space) via the root
@@ -316,7 +316,7 @@ desktop runtime behaves — not that it is device-safe on mobile.
 Before a release tag, prefer an isolated clone gate:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7-stable
+./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7.2-stable
 ```
 
 The Web analog is `scripts/web_fresh_checkout_smoke.sh`: it exports from a clean

@@ -387,22 +387,22 @@ object AudioServer {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackSpeedScaleBind, singleton)
     }
 
-    @JvmStatic
     /**
      * Locks the audio driver's main loop. Note: Remember to unlock it afterwards.
      *
      * Generated from Godot docs: AudioServer.lock
      */
+    @JvmStatic
     fun lock() {
         ObjectCalls.ptrcallNoArgs(lockBind, singleton)
     }
 
-    @JvmStatic
     /**
      * Unlocks the audio driver's main loop. (After locking it, you should always unlock it.)
      *
      * Generated from Godot docs: AudioServer.unlock
      */
+    @JvmStatic
     fun unlock() {
         ObjectCalls.ptrcallNoArgs(unlockBind, singleton)
     }

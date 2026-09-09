@@ -14,11 +14,14 @@ pin. When a new stable ships, the bump is planned work, not an automatic
 follow — wrapper-coverage pushes in flight should ideally land first.
 
 The baseline has exactly one source of truth: `kanamaGodotVersion` in
-`gradle.properties` (dot form, e.g. `4.8.stable`). The CI packaging workflow
-carries the same version in dash form (`GODOT_VERSION: 4.8-stable` in
-`.github/workflows/package.yml`, the GitHub release tag). Everything else
-reads the property; `scripts/check_godot_version_pin.py` fails the build if
-any pin drifts.
+`gradle.properties` (dot form, Godot's own spelling: `4.8.stable` for a `.0`
+release, `4.7.2.stable` for a maintenance release). The CI workflows carry the
+same version in dash form (`GODOT_VERSION: 4.8-stable` in
+`.github/workflows/package.yml`, `ci.yml`, and `web.yml`, the GitHub release
+tag), and `web.yml` derives the dot-form export-template folder from it.
+Everything else reads the property; `scripts/check_godot_version_pin.py` fails
+the build if any pin drifts. Maintenance releases are adopted the same way as
+minor releases — the runbook below is identical, only smaller.
 
 ## What a Bump Regenerates
 
@@ -44,8 +47,8 @@ any pin drifts.
 ## The Runbook
 
 1. **Edit the pin — and only the pin.** Change `kanamaGodotVersion` in
-   `gradle.properties` and `GODOT_VERSION` in `.github/workflows/package.yml`
-   (dash form). No other hand edits; scattered version literals are what the
+   `gradle.properties` and `GODOT_VERSION` in `.github/workflows/package.yml`,
+   `ci.yml`, and `web.yml` (dash form). No other hand edits; scattered version literals are what the
    pin check guards against.
 
 2. **Run the mechanical pipeline:**
@@ -82,6 +85,9 @@ any pin drifts.
 4. **Human-judgment steps** (the script prints this list and exits; it never
    performs them):
 
+    - Run `./gradlew ktfmtFormat`. Step 5 re-emits the iOS
+      `ObjectCallsGenerated.kt` unformatted (it is not ktfmt-exempt, unlike the
+      `api/**` wrappers), and `ktfmtCheck` in `local_ci.sh` gates it.
     - Run local CI against the new binary:
       `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
     - Re-run the platform smoke/device gates per the release-gate matrix (§6) in

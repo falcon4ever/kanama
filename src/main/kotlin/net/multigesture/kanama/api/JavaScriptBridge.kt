@@ -13,7 +13,6 @@ object JavaScriptBridge {
         ObjectCalls.getSingleton("JavaScriptBridge")
     }
 
-    @JvmStatic
     /**
      * Execute the string `code` as JavaScript code within the browser window. This is a call to the
      * actual global JavaScript function `eval()`. If `use_global_execution_context` is `true`, the
@@ -22,6 +21,7 @@ object JavaScriptBridge {
      *
      * Generated from Godot docs: JavaScriptBridge.eval
      */
+    @JvmStatic
     fun eval(code: String, useGlobalExecutionContext: Boolean = false): Any? {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(evalBind, singleton, code, useGlobalExecutionContext)
     }

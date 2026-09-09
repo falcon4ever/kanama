@@ -140,13 +140,13 @@ object EngineDebugger {
         ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, singleton, message, data)
     }
 
-    @JvmStatic
     /**
      * Starts a debug break in script execution, optionally specifying whether the program can continue
      * based on `can_continue` and whether the break was due to a breakpoint.
      *
      * Generated from Godot docs: EngineDebugger.debug
      */
+    @JvmStatic
     fun debug(canContinue: Boolean = true, isErrorBreakpoint: Boolean = false) {
         ObjectCalls.ptrcallWithTwoBoolArgs(debugBind, singleton, canContinue, isErrorBreakpoint)
     }

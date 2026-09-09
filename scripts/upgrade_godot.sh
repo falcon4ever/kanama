@@ -129,8 +129,14 @@ if [[ -f "$DOCS_VERSION_PY" ]]; then
   DOCS_VERSION="$(python3 - "$DOCS_VERSION_PY" <<'EOF'
 import re, sys
 text = open(sys.argv[1]).read()
-fields = {k: v.strip('"') for k, v in re.findall(r'^(major|minor|status)\s*=\s*(.+)$', text, re.MULTILINE)}
-print(f"{fields.get('major','?')}.{fields.get('minor','?')}.{fields.get('status','?')}")
+fields = {k: v.strip('"') for k, v in re.findall(r'^(major|minor|patch|status)\s*=\s*(.+)$', text, re.MULTILINE)}
+# Godot spells a .0 release without the patch component (4.7.stable) and a maintenance
+# release with it (4.7.2.stable); the pin follows the same convention.
+patch = fields.get('patch', '0')
+version = f"{fields.get('major','?')}.{fields.get('minor','?')}"
+if patch not in ('0', '?'):
+    version += f".{patch}"
+print(f"{version}.{fields.get('status','?')}")
 EOF
 )"
   if [[ "$DOCS_VERSION" != "$PIN" ]]; then
@@ -250,7 +256,7 @@ if [[ $DRY_RUN -eq 1 ]]; then
 else
   echo "[upgrade_godot] step 5: re-adopt generated wrappers (desktop + iOS)"
   (cd "$ROOT_DIR" && PYTHONPATH="$ROOT_DIR/scripts" python3 - <<'EOF'
-import subprocess, sys
+import json, shutil, subprocess, sys
 from check_wrapper_generator import (
     ROOT, API_DIR, IOS_API_DIR, DESKTOP_HANDSHAPED, IOS_HANDSHAPED, _api_class_names,
 )
@@ -268,20 +274,51 @@ def batch(flag: str, classes: list[str], *extra: str) -> None:
 
 
 api = _api_class_names()
+# "Removed from the API" means it was a class in the PREVIOUS dump and is not one now —
+# not "a .kt file in api/ that is not a Godot class" (GD, GodotObject, the handle aliases
+# are hand-written non-API files and are not removals).
+old_dump = subprocess.run(
+    ["git", "-C", str(ROOT), "show", "HEAD:extension_api.json"],
+    check=True, capture_output=True, text=True,
+).stdout
+old_api = {c["name"] for c in json.loads(old_dump).get("classes", [])}
 
 committed = {p.stem for p in API_DIR.glob("*.kt")}
-removed = sorted(committed - api)
+removed = sorted((committed & old_api) - api)
 targets = sorted((committed & api) - DESKTOP_HANDSHAPED)
 print(f"[upgrade_godot] desktop re-adopt: {len(targets)} classes "
       f"(hand-shaped exempt: {len(DESKTOP_HANDSHAPED & committed)})")
 batch("--emit-class", targets, "--allow-overwrite")
 
+# iOS: the emit UNION must include IOS_HANDSHAPED. The generator emits a method returning a
+# wrapper type only when that class is in the active set (AGENTS.md "Looks Wrong But Isn't"),
+# so emitting just the non-hand-shaped targets silently drops every method returning Image
+# & co. and shrinks ObjectCallsGenerated.kt. Do what the drift-gate does: emit the full union
+# into a scratch dir, then copy back only the files that are ours to overwrite.
 ios_committed = {p.stem for p in IOS_API_DIR.glob("*.kt")}
-ios_removed = sorted(ios_committed - api)
-ios_targets = sorted((ios_committed & api) - IOS_HANDSHAPED - set(IOS_HANDWRITTEN_COLLISION_CLASSES))
-print(f"[upgrade_godot] iOS re-adopt: {len(ios_targets)} classes + ObjectCallsGenerated.kt")
-batch("--ios-emit-class", ios_targets,
-      "--ios-output-dir", str(IOS_API_DIR), "--ios-objectcalls", str(IOS_OBJECTCALLS))
+ios_removed = sorted((ios_committed & old_api) - api)
+ios_emit = sorted((ios_committed & api) - set(IOS_HANDWRITTEN_COLLISION_CLASSES))
+ios_targets = sorted(set(ios_emit) - IOS_HANDSHAPED)
+scratch = ROOT / "build/upgrade-godot/ios-regen"
+shutil.rmtree(scratch, ignore_errors=True)
+scratch.mkdir(parents=True)
+class_list = scratch / "_class_list.txt"
+class_list.write_text("\n".join(ios_emit) + "\n", encoding="utf-8")
+print(f"[upgrade_godot] iOS re-adopt: {len(ios_targets)} classes + ObjectCallsGenerated.kt "
+      f"(emit union {len(ios_emit)}, incl. {len(IOS_HANDSHAPED)} hand-shaped kept as committed)")
+subprocess.run(
+    [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py"),
+     "--ios-class-list-file", str(class_list),
+     "--ios-output-dir", str(scratch),
+     "--ios-objectcalls", str(scratch / "ObjectCallsGenerated.kt")],
+    cwd=ROOT, check=True, stdout=subprocess.DEVNULL,
+)
+missing = [c for c in ios_targets if not (scratch / f"{c}.kt").exists()]
+if missing:
+    sys.exit(f"[upgrade_godot] FAIL: the iOS regen did not emit {missing[:20]} (unexpected collision/skip)")
+for c in ios_targets:
+    shutil.copyfile(scratch / f"{c}.kt", IOS_API_DIR / f"{c}.kt")
+shutil.copyfile(scratch / "ObjectCallsGenerated.kt", IOS_OBJECTCALLS)
 
 new_classes = sorted(api - committed)
 print(f"[upgrade_godot] classes in the new API without a committed wrapper: {len(new_classes)} "
@@ -340,14 +377,16 @@ cat <<EOF
 [upgrade_godot] Remaining steps (full runbook: docs/contributing/godot-upgrade.md):
   1. Review the API diff classification above. New classes are coverage/policy
      work (generator policy, audits, adoption) — never bulk-adopt them blindly.
-  2. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
-  3. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
+  2. Run ./gradlew ktfmtFormat: step 5 re-emits ios-runtime/.../ObjectCallsGenerated.kt
+     unformatted (it is not ktfmt-exempt, unlike the api/** wrappers) and ktfmtCheck gates it.
+  3. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
+  4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
      the internal task repo. This script does NOT change support claims; support
      wording moves only after the matching gate passes.
-  4. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
+  5. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
      version badges/wording, templates, companion demo defaults. Review the
      .gdextension compatibility_minimum invariant before touching it
      (see AGENTS.md "Looks Wrong But Isn't").
-  5. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
-  6. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
+  6. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
+  7. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF
