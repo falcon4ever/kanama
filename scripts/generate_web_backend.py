@@ -1808,13 +1808,18 @@ def body_STRINGNAME_OBJECT_ARG_SINGLETON(calls):
         "commands.flush()",
         "// Task 64 tier 3: action name and event handle packed into one query string (unit",
         "// separator) on the active script's own query channel; the applier resolves the event",
-        "// from that script's handle table. Immediate so the queued keycode writes land first and",
-        "// the caller may close() the event right after.",
+        "// from that script's handle table and reports 1 only when it attached. Immediate so the",
+        "// queued keycode writes land first and the caller may close() the event right after.",
+        "check(",
         "immediateWebObjectQuery(",
         "descriptor.opcode,",
         "requireActiveWebScriptHandle(),",
         'name + "\u001f" + value.webId().toString(),',
-        ")",
+        ") == 1",
+        ") {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} did not attach the event '
+        '(handle ${value.webId()} unknown to the active script)"',
+        "}",
     ]
 
 
