@@ -139,6 +139,12 @@ Mechanism (b) landed; (a) stays the long-term target and is filed separately.
   `GodotObject` no longer `AutoCloseable` (the generated iOS `RefCounted` declares it),
   iOS `RefCounted.unreference()` `internal`, `@ManualGodotLifetimeApi` gone from the
   generated iOS `close()`.
+- Measured before → after (one run each, same machine, clean builds, Gradle build cache
+  off): wrapper sources 2 trees / 2,082 files / 483,249 lines → 3 directories / 1,384
+  files / 326,999 lines (shared 233,944; desktop 73,482 of which companions 22,189; iOS
+  19,573); drift gate 57.5 s → 4.7 s; clean desktop `installAddonJar` 60 s → 73 s (277
+  more Kotlin files), warm 4.6 s → 5.7 s; iOS klib 46.5 s → 46.3 s; iOS debug static link
+  106 s → 103 s.
 - Not done, by decision: the audit of the missing iOS helper shapes (its own task; each
   family that lands moves its members back into the shared file on the next regen), and
   the KMP `expect/actual` move, which still needs everything listed under (a) above.

@@ -34,6 +34,13 @@ versioning once public releases begin.
   `generate_api_wrapper.py --write-tree` re-adopts the whole tree (`upgrade_godot.sh`
   step 5 uses it); the wrapper audits, property coverage, KDoc sync and iOS stub check
   read the shared tree.
+- **Measured (one run each, same laptop, clean builds with the Gradle build cache off):**
+  wrapper sources 1,053 + 1,029 files / 302,193 + 181,056 lines in two trees →
+  979 shared + 351 desktop + 54 iOS files / 233,944 + 73,482 + 19,573 lines (the
+  desktop figure includes the 277 companions, 22,189 lines); drift gate 57.5 s → 4.7 s;
+  clean desktop `installAddonJar` 60 s → 73 s (24 % more Kotlin files to compile: the
+  companions), warm 4.6 s → 5.7 s; iOS `compileKotlinIosArm64` from clean 46.5 s → 46.3 s;
+  `linkDebugStaticIosArm64` 106 s → 103 s.
 
 ### Changed — docs consolidation (task 94)
 
