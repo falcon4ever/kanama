@@ -158,7 +158,6 @@ internal object KanamaIosRuntime {
       return 1
     }
     initialized = true
-    net.multigesture.kanama.binding.runtime.installCommonGodotBackend()
     log(
       "entry: get_proc_address=0x${getProcAddress.toULong().toString(16)} " +
         "library=0x${library.toULong().toString(16)} " +

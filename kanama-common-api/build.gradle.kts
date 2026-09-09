@@ -1,27 +1,26 @@
+// The Web call contract: opcodes, call shapes, and the generated `InitialGodotCallDescriptors`
+// derived from `extension_api.json` (via `scripts/platform_backend_calls.json`). Only the Web
+// backend dispatches through it — native backends (desktop/Android JVM, iOS Kotlin/Native) call
+// Godot in-process from generated ptrcall wrappers and never depended on this module beyond two
+// adapters that were removed in task 95. Targets: `wasmJs` for `web-runtime`, `jvm` for the KSP
+// processor's Web emitter and for the contract test (`jvmTest`).
 plugins { kotlin("multiplatform") }
 
 kotlin {
   jvm()
   jvmToolchain(25)
-  iosArm64()
-  iosSimulatorArm64()
 
   @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
   wasmJs { browser() }
 
-  sourceSets {
-    val commonMain by getting
-    val iosMain by creating { dependsOn(commonMain) }
-    val iosArm64Main by getting { dependsOn(iosMain) }
-    val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
-    commonTest.dependencies { implementation(kotlin("test")) }
-  }
+  sourceSets { commonTest.dependencies { implementation(kotlin("test")) } }
 }
 
 val checkPlatformBackendContract by
   tasks.registering(Exec::class) {
     group = "verification"
-    description = "Checks the generated initial platform-backend call descriptors."
+    description =
+      "Checks the generated Web call descriptors against extension_api.json (hash and signature drift)."
     commandLine(
       "python3",
       rootProject.file("scripts/generate_platform_backend_contract.py").absolutePath,
