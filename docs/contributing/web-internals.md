@@ -316,7 +316,7 @@ a payload can never split the list.
 fixture declares one registered function per shape and drives each through the
 real crossing — Kotlin asks Godot to call it BY NAME, Godot dispatches to the
 generated proxy, the proxy takes the arm — then compares the value that came
-back against the value that went out (`Main.dispatch_probe`, driver method #16,
+back against the value that went out (`Main.dispatch_probe`, resolved by name in the driver,
 must return the full mask — 127). A shape that only the emitter tests cover is a
 shape nothing has ever actually run, and the manifest cannot see a shape that
 dispatches but delivers the WRONG VALUE. The mixed-channel bit carries a
