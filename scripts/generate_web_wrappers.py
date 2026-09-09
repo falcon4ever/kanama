@@ -365,12 +365,26 @@ def bind_arguments(tree: Tree, call: BackendCallPolicy, method: dict, policy: di
     return params
 
 
-def render_signature(name: str, params: list[Param], ret: str, modifiers: str = "") -> str:
-    rendered = ", ".join(
+MAX_WIDTH = 100
+
+
+def wrap_call(prefix: str, args: list[str], suffix: str, indent: str) -> list[str]:
+    """`prefix(args)suffix` on one line when it fits, else one argument per line (ktfmt shape)."""
+    one_line = f"{indent}{prefix}({', '.join(args)}){suffix}"
+    if len(one_line) <= MAX_WIDTH or not args:
+        return [one_line]
+    lines = [f"{indent}{prefix}("]
+    lines += [f"{indent}  {arg}," for arg in args]
+    lines.append(f"{indent}){suffix}")
+    return lines
+
+
+def render_signature(name: str, params: list[Param], ret: str, modifiers: str = "", indent: str = "  ") -> list[str]:
+    rendered = [
         f"{p.name}: {p.kotlin_type}" + (f" = {p.default}" if p.default is not None else "") for p in params
-    )
+    ]
     suffix = f": {ret}" if ret else ""
-    return f"{modifiers}fun {name}({rendered}){suffix}"
+    return wrap_call(f"{modifiers}fun {name}", rendered, suffix, indent)
 
 
 def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
@@ -402,12 +416,16 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
     else:
         call_args += [p.backend_expr for p in params if p.backend_expr is not None]
     call_args += list(policy.get("extra_args", ()))
-    invocation = f"GodotBackendCalls.{invoke_name(call.shape)}({', '.join(call_args)}){convert}"
-    if nonnull:
-        invocation = f'checkNotNull({invocation}) {{ "{nonnull}" }}'
-        ret = ret.rstrip("?")
+    invoke = f"GodotBackendCalls.{invoke_name(call.shape)}"
     guards = [p.guard for p in params if p.guard] + list(policy.get("guards", ()))
     pre = list(policy.get("pre", ()))
+    post = list(policy.get("post", ()))
+    fluent = policy.get("fluent")
+    owner = kotlin_class_name(call.class_name) if call.class_name != "@GlobalScope" else "GD"
+    if fluent:
+        ret = owner
+    if nonnull:
+        ret = ret.rstrip("?")
     modifiers = ""
     if policy.get("visibility"):
         modifiers += f"{policy['visibility']} "
@@ -418,31 +436,45 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
     if doc:
         body.append(f"  /** {doc} */")
     signature = render_signature(name, params, ret, modifiers)
+    expression_body = not (guards or pre or post or fluent or nonnull or "body" in policy)
+    if expression_body and ret:
+        body += signature[:-1] + [signature[-1] + " ="]
+        body += wrap_call(invoke, call_args, convert, "    ")
+        return Member(body, _alias(owner, name, params, ret), name)
+    body += signature[:-1] + [signature[-1] + " {"]
     if "body" in policy:
-        body.append(f"  {signature} {{")
         body += [f"    {line}" for line in policy["body"]]
-        body.append("  }")
-    elif not guards and not pre:
-        if ret:
-            body.append(f"  {signature} =")
-            body.append(f"    {invocation}")
-        else:
-            body.append(f"  {signature} {{")
-            body.append(f"    {invocation}")
-            body.append("  }")
     else:
-        body.append(f"  {signature} {{")
         body += [f"    {line}" for line in pre]
         body += [f"    {g}" for g in guards]
-        body.append(f"    {'return ' if ret else ''}{invocation}")
-        body.append("  }")
-    alias: list[str] = []
-    if policy.get("visibility") not in ("internal", "protected", "private"):
-        owner = kotlin_class_name(call.class_name) if call.class_name != "@GlobalScope" else "GD"
-        forward = ", ".join(p.name for p in params)
-        alias.append('@Suppress("EXTENSION_SHADOWED_BY_MEMBER")')
-        alias.append(f"{render_signature(f'{owner}.{name}', params, ret)} = {name}({forward})")
+        if fluent:
+            body += wrap_call(invoke, call_args, "", "    val returned = ")
+            same = "returned.backendToken() == backendHandle.backendToken()"
+            if fluent == "self":
+                body.append(f"    check(returned != null && {same}) {{ \"{owner}.{name} did not return its receiver\" }}")
+                body.append("    return this")
+            else:
+                body.append(f"    return if (returned == null || {same}) this else {owner}(returned.toWebId())")
+        elif nonnull:
+            body += wrap_call(invoke, call_args, convert, "    val returned = ")
+            body.append(f'    return checkNotNull(returned) {{ "{nonnull}" }}')
+        elif post:
+            body += wrap_call(invoke, call_args, convert, "    ")
+            body += [f"    {line}" for line in post]
+        else:
+            body += wrap_call(invoke, call_args, convert, "    return " if ret else "    ")
+    body.append("  }")
+    alias = [] if policy.get("visibility") in ("internal", "protected", "private") else _alias(owner, name, params, ret)
     return Member(body, alias, name)
+
+
+def _alias(owner: str, name: str, params: list[Param], ret: str) -> list[str]:
+    """Import-compat extension so `import net.multigesture.kanama.api.<name>` keeps resolving."""
+    forward = ", ".join(p.name for p in params)
+    lines = ['@Suppress("EXTENSION_SHADOWED_BY_MEMBER")']
+    signature = render_signature(f"{owner}.{name}", params, ret, indent="")
+    lines += signature[:-1] + [f"{signature[-1]} = {name}({forward})"]
+    return lines
 
 
 # --------------------------------------------------------------------------------------------------
@@ -608,12 +640,166 @@ def file_text(body_lines: list[str], extra_imports: list[str]) -> str:
     return "\n".join(parts)
 
 
+def emit_properties(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) -> list[Member]:
+    """Kotlin properties for every API property whose getter or setter is an admitted opcode.
+
+    Both accessors admitted -> `var`; setter only -> write-only `var` whose getter names the
+    missing engine getter through the coverage marker; getter only -> `val`. Accessors delegate to
+    the generated methods, so conversions live in one place.
+    """
+    api = tree.api
+    if godot_name not in api.classes:
+        return []  # @GlobalScope utilities have no property table
+    owner = kotlin_class_name(godot_name)
+    by_method = {call.method_name: call for call in calls if not WRAPPER_POLICY.get(call.opcode, {}).get("no_property")}
+    props: dict[str, dict] = {}
+    for call in calls:
+        prop = api.property_for(godot_name, call.method_name)
+        if prop is not None and not WRAPPER_POLICY.get(call.opcode, {}).get("no_property"):
+            props.setdefault(prop["name"], prop)
+    members: list[Member] = []
+    for prop_name, prop in props.items():
+        getter = by_method.get(prop.get("getter", ""))
+        setter = by_method.get(prop.get("setter", ""))
+        kotlin_name = camel(prop_name)
+        if getter is not None:
+            getter_method = api.method(getter)
+            kotlin_type, _ = api_return(
+                tree,
+                getter_method.get("return_value", {}).get("type", "void"),
+                getter_method.get("return_value", {}).get("meta", ""),
+                SIGNATURES[getter.shape][1],
+            )
+            get_expr = f"{member_name(getter, WRAPPER_POLICY.get(getter.opcode, {}))}()"
+        else:
+            setter_method = api.method(setter)
+            arg = setter_method["arguments"][0]
+            kotlin_type = api_param_type(tree, arg["type"], arg.get("meta", ""), spi_slots(setter.shape)[1][0][1])
+            get_expr = f'unsupportedWebGameplayFamily("{godot_name}.{prop.get("getter", "get_" + prop_name)}")'
+        body = [f"  {'var' if setter else 'val'} {kotlin_name}: {kotlin_type}", f"    get() = {get_expr}"]
+        alias = ['@Suppress("EXTENSION_SHADOWED_BY_MEMBER")', f"{'var' if setter else 'val'} {owner}.{kotlin_name}: {kotlin_type}", f"  get() = {kotlin_name}"]
+        if setter is not None:
+            set_name = member_name(setter, WRAPPER_POLICY.get(setter.opcode, {}))
+            body.append(f"    set(value) = {set_name}(value)")
+            alias += ["  set(value) {", f"    {kotlin_name} = value", "  }"]
+        members.append(Member(body, alias, kotlin_name))
+    return members
+
+
+def emit_constants(api: Api, godot_name: str, class_policy: dict) -> list[str]:
+    """`const val` lines: whole enums (`enums`), single class constants, from extension_api.json."""
+    lines: list[str] = []
+    for spec in class_policy.get("enums", ()):
+        owner, enum = spec.split(".") if "." in spec else (godot_name, spec)
+        for const_name, value in api.enum_values(owner, enum).items():
+            lines.append(f"    const val {const_name}: Long = {value}L")
+    for const_name in class_policy.get("constants", ()):
+        lines.append(f"    const val {const_name}: Long = {api.constant(godot_name, const_name)}L")
+    return lines
+
+
+def emit_signals(api: Api, godot_name: str, class_policy: dict) -> list[str]:
+    names = class_policy.get("signals", ())
+    if not names:
+        return []
+    lines = ["  object Signals {"]
+    for signal in names:
+        if not api.has_signal(godot_name, signal):
+            raise GenerationError(f"{godot_name} has no signal {signal}")
+        lines.append(f'    const val {camel(signal)}: String = "{signal}"')
+    lines.append("  }")
+    return lines
+
+
+def emit_companion(godot_name: str, class_policy: dict, constants: list[str]) -> list[str]:
+    """Companion: factories (`instantiable`, `from_*`), constants, and the policy's own text."""
+    name = kotlin_class_name(godot_name)
+    lines: list[str] = []
+    if class_policy.get("instantiable"):
+        lines += [
+            f"    /** Constructs a new {godot_name} engine-side; the wrapper owns the handle (close what you create). */",
+            f"    fun create(): {name} =",
+            f'      {name}(checkNotNull(ClassDB.instantiate("{godot_name}")) {{ "Godot could not instantiate {godot_name}" }}.toWebId())',
+        ]
+    if class_policy.get("from_class_check"):
+        lines += [
+            f"    /** Engine-side class check: null when [value] is not a {godot_name}. */",
+            f"    fun from(value: GodotObject): {name}? =",
+            f'      value.takeIf {{ it.isClass("{godot_name}") }}?.let {{ {name}(it.handle) }}',
+        ]
+    if class_policy.get("from_object"):
+        lines += [
+            f"    /** Re-types any Godot object as a {godot_name} (the Web bridge carries no class metadata). */",
+            f"    fun fromObject(value: GodotObject?): {name}? = value?.let {{ {name}(it.handle) }}",
+        ]
+    if class_policy.get("from_object_checked"):
+        lines += [
+            f"    fun fromObject(value: GodotObject?): {name}? =",
+            f'      value?.takeIf {{ it.isClass("{godot_name}") }}?.let {{ {name}(it.handle) }}',
+        ]
+    if class_policy.get("from_resource"):
+        lines += [f"    fun fromResource(resource: Resource?): {name}? = resource?.let {{ {name}(it.handle) }}"]
+    if class_policy.get("from_handle"):
+        lines += [f"    fun fromHandle(handle: GodotHandle): {name} = {name}(handle)"]
+    if constants:
+        if lines:
+            lines.append("")
+        lines += constants
+    if class_policy.get("companion"):
+        if lines:
+            lines.append("")
+        lines += class_policy["companion"].rstrip("\n").split("\n")
+    if not lines:
+        return []
+    return ["  companion object {", *lines, "  }"]
+
+
+RELEASE_CALLS = {
+    "resource": "releaseWebResource",
+    "constructed": "releaseWebConstructedObject",
+    "tracked": "releaseWebTrackedObject",
+    "collision": "releaseWebCollision",
+}
+
+
+def emit_release(godot_name: str, class_policy: dict) -> list[str]:
+    """`close()` for owning wrappers; `guard` adds the closed flag + receiver guard (use-after-close)."""
+    kind = class_policy.get("release")
+    if not kind:
+        return []
+    name = kotlin_class_name(godot_name)
+    release = RELEASE_CALLS[kind]
+    if class_policy.get("guard"):
+        return [
+            "  private var closed = false",
+            "",
+            "  override fun requireOpenHandle(): BackendGodotHandle {",
+            f'    check(!closed) {{ "{name} is closed" }}',
+            "    return backendHandle",
+            "  }",
+            "",
+            "  /** Releases the owned handle; a second close is a no-op, any later call fails loud. */",
+            "  fun close() {",
+            "    if (closed) return",
+            "    closed = true",
+            f"    {release}(handle.value)",
+            "  }",
+        ]
+    return [
+        "  /** Releases the owned handle (already-released is an error). */",
+        "  fun close() {",
+        f"    {release}(handle.value)",
+        "  }",
+    ]
+
+
 def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) -> str:
     api = tree.api
     name = kotlin_class_name(godot_name)
     class_policy = CLASS_POLICY.get(godot_name, {})
     singleton = godot_name in api.singletons or godot_name == "@GlobalScope"
     members = [emit_opcode(tree, call, WRAPPER_POLICY.get(call.opcode, {})) for call in calls]
+    members += emit_properties(tree, godot_name, calls)
     lines: list[str] = []
     if singleton:
         object_name = "GD" if godot_name == "@GlobalScope" else name
@@ -634,16 +820,36 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines.append("")
         else:
             lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject) {{")
-    for i, member in enumerate(members):
-        if i or godot_name == "Object":
+    sections: list[list[str]] = [m.body for m in members]
+    if class_policy.get("custom"):
+        sections.append(class_policy["custom"].rstrip("\n").split("\n"))
+    sections.append(emit_release(godot_name, class_policy))
+    sections.append(emit_signals(api, godot_name, class_policy))
+    constants = emit_constants(api, godot_name, class_policy)
+    if singleton:
+        # An `object` has no companion: constants and factories sit directly in its body.
+        sections.append([line[2:] for line in constants])
+        if class_policy.get("companion"):
+            sections.append(class_policy["companion"].rstrip("\n").split("\n"))
+    else:
+        sections.append(emit_companion(godot_name, class_policy, constants))
+    first = True
+    for section in sections:
+        if not section:
+            continue
+        if not first or godot_name == "Object":
             lines.append("")
-        lines += member.body
+        first = False
+        lines += section
     lines.append("}")
     for member in members:
         if member.alias:
             lines.append("")
             lines += member.alias
-    return file_text(lines, [])
+    if class_policy.get("top_level"):
+        lines.append("")
+        lines += class_policy["top_level"].rstrip("\n").split("\n")
+    return file_text(lines, list(class_policy.get("imports", ())))
 
 
 def render_all(api: Api) -> dict[str, str]:
