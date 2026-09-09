@@ -17,6 +17,7 @@ class UDSServer(handle: MemorySegment) : SocketServer(handle) {
      * Generated from Godot docs: UDSServer.listen
      */
     fun listen(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(listenBind, handle, path)
     }
 
@@ -26,6 +27,7 @@ class UDSServer(handle: MemorySegment) : SocketServer(handle) {
      * Generated from Godot docs: UDSServer.take_connection
      */
     fun takeConnection(): StreamPeerUDS? {
+        checkOpen()
         return StreamPeerUDS.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 

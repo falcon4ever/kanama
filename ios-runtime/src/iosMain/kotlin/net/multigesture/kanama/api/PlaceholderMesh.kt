@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.AABB
  */
 class PlaceholderMesh(handle: MemorySegment) : Mesh(handle) {
     fun setAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
     }
 

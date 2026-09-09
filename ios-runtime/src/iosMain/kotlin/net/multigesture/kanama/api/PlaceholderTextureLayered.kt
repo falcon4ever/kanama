@@ -17,14 +17,17 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
         set(value) = setSize(value)
 
     fun setSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
     fun setLayers(layers: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLayersBind, handle, layers)
     }
 

@@ -35,34 +35,42 @@ class BoxMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setSubdivideDepth(value)
 
     fun setSize(size: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
     fun setSubdivideWidth(subdivide: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivide)
     }
 
     fun getSubdivideWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
     fun setSubdivideHeight(divisions: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, divisions)
     }
 
     fun getSubdivideHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle)
     }
 
     fun setSubdivideDepth(divisions: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, divisions)
     }
 
     fun getSubdivideDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }
 

@@ -23,18 +23,22 @@ class VisualShaderNodeVec2Parameter(handle: MemorySegment) : VisualShaderNodePar
         set(value) = setDefaultValue(value)
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 
     fun setDefaultValue(value: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setDefaultValueBind, handle, value)
     }
 
     fun getDefaultValue(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getDefaultValueBind, handle)
     }
 

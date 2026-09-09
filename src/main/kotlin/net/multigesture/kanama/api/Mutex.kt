@@ -16,6 +16,7 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Mutex.lock
      */
     fun lock() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(lockBind, handle)
     }
 
@@ -26,6 +27,7 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Mutex.try_lock
      */
     fun tryLock(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, handle)
     }
 
@@ -39,6 +41,7 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Mutex.unlock
      */
     fun unlock() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(unlockBind, handle)
     }
 

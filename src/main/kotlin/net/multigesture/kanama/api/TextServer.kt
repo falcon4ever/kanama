@@ -22,6 +22,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.has_feature
      */
     fun hasFeature(feature: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, handle, feature)
     }
 
@@ -31,6 +32,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.get_name
      */
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
     }
 
@@ -40,6 +42,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.get_features
      */
     fun getFeatures(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFeaturesBind, handle)
     }
 
@@ -51,6 +54,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.load_support_data
      */
     fun loadSupportData(filename: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(loadSupportDataBind, handle, filename)
     }
 
@@ -60,6 +64,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.get_support_data_filename
      */
     fun getSupportDataFilename(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSupportDataFilenameBind, handle)
     }
 
@@ -69,6 +74,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.get_support_data_info
      */
     fun getSupportDataInfo(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSupportDataInfoBind, handle)
     }
 
@@ -79,6 +85,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.save_support_data
      */
     fun saveSupportData(filename: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(saveSupportDataBind, handle, filename)
     }
 
@@ -88,6 +95,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.get_support_data
      */
     fun getSupportData(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getSupportDataBind, handle)
     }
 
@@ -97,6 +105,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.is_locale_using_support_data
      */
     fun isLocaleUsingSupportData(locale: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleUsingSupportDataBind, handle, locale)
     }
 
@@ -106,6 +115,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.is_locale_right_to_left
      */
     fun isLocaleRightToLeft(locale: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleRightToLeftBind, handle, locale)
     }
 
@@ -116,6 +126,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.name_to_tag
      */
     fun nameToTag(name: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(nameToTagBind, handle, name)
     }
 
@@ -126,6 +137,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.tag_to_name
      */
     fun tagToName(tag: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(tagToNameBind, handle, tag)
     }
 
@@ -135,6 +147,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.has
      */
     fun has(rid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(hasBind, handle, rid)
     }
 
@@ -144,6 +157,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.free_rid
      */
     fun freeRid(rid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(freeRidBind, handle, rid)
     }
 
@@ -154,6 +168,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.create_font
      */
     fun createFont(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(createFontBind, handle)
     }
 
@@ -164,6 +179,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.create_font_linked_variation
      */
     fun createFontLinkedVariation(fontRid: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(createFontLinkedVariationBind, handle, fontRid)
     }
 
@@ -173,6 +189,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_data
      */
     fun fontSetData(fontRid: RID, data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndByteArrayArg(fontSetDataBind, handle, fontRid, data)
     }
 
@@ -182,6 +199,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_face_index
      */
     fun fontSetFaceIndex(fontRid: RID, faceIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFaceIndexBind, handle, fontRid, faceIndex)
     }
 
@@ -191,6 +209,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_face_index
      */
     fun fontGetFaceIndex(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceIndexBind, handle, fontRid)
     }
 
@@ -200,6 +219,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_face_count
      */
     fun fontGetFaceCount(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceCountBind, handle, fontRid)
     }
 
@@ -211,6 +231,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_style
      */
     fun fontSetStyle(fontRid: RID, style: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStyleBind, handle, fontRid, style)
     }
 
@@ -220,6 +241,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_style
      */
     fun fontGetStyle(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStyleBind, handle, fontRid)
     }
 
@@ -229,6 +251,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_name
      */
     fun fontSetName(fontRid: RID, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontSetNameBind, handle, fontRid, name)
     }
 
@@ -238,6 +261,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_name
      */
     fun fontGetName(fontRid: RID): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetString(fontGetNameBind, handle, fontRid)
     }
 
@@ -248,6 +272,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_ot_name_strings
      */
     fun fontGetOtNameStrings(fontRid: RID): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOtNameStringsBind, handle, fontRid)
     }
 
@@ -257,6 +282,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_style_name
      */
     fun fontSetStyleName(fontRid: RID, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontSetStyleNameBind, handle, fontRid, name)
     }
 
@@ -266,6 +292,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_style_name
      */
     fun fontGetStyleName(fontRid: RID): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetString(fontGetStyleNameBind, handle, fontRid)
     }
 
@@ -278,6 +305,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_weight
      */
     fun fontSetWeight(fontRid: RID, weight: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetWeightBind, handle, fontRid, weight)
     }
 
@@ -288,6 +316,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_weight
      */
     fun fontGetWeight(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetWeightBind, handle, fontRid)
     }
 
@@ -299,6 +328,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_stretch
      */
     fun fontSetStretch(fontRid: RID, weight: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStretchBind, handle, fontRid, weight)
     }
 
@@ -309,6 +339,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_stretch
      */
     fun fontGetStretch(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStretchBind, handle, fontRid)
     }
 
@@ -318,6 +349,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_antialiasing
      */
     fun fontSetAntialiasing(fontRid: RID, antialiasing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetAntialiasingBind, handle, fontRid, antialiasing)
     }
 
@@ -327,6 +359,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_antialiasing
      */
     fun fontGetAntialiasing(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetAntialiasingBind, handle, fontRid)
     }
 
@@ -337,6 +370,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_disable_embedded_bitmaps
      */
     fun fontSetDisableEmbeddedBitmaps(fontRid: RID, disableEmbeddedBitmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetDisableEmbeddedBitmapsBind, handle, fontRid, disableEmbeddedBitmaps)
     }
 
@@ -346,6 +380,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_disable_embedded_bitmaps
      */
     fun fontGetDisableEmbeddedBitmaps(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetDisableEmbeddedBitmapsBind, handle, fontRid)
     }
 
@@ -355,6 +390,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_generate_mipmaps
      */
     fun fontSetGenerateMipmaps(fontRid: RID, generateMipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetGenerateMipmapsBind, handle, fontRid, generateMipmaps)
     }
 
@@ -364,6 +400,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_generate_mipmaps
      */
     fun fontGetGenerateMipmaps(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetGenerateMipmapsBind, handle, fontRid)
     }
 
@@ -382,6 +419,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_multichannel_signed_distance_field
      */
     fun fontSetMultichannelSignedDistanceField(fontRid: RID, msdf: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetMultichannelSignedDistanceFieldBind, handle, fontRid, msdf)
     }
 
@@ -392,6 +430,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_is_multichannel_signed_distance_field
      */
     fun fontIsMultichannelSignedDistanceField(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsMultichannelSignedDistanceFieldBind, handle, fontRid)
     }
 
@@ -402,6 +441,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_msdf_pixel_range
      */
     fun fontSetMsdfPixelRange(fontRid: RID, msdfPixelRange: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfPixelRangeBind, handle, fontRid, msdfPixelRange)
     }
 
@@ -412,6 +452,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_msdf_pixel_range
      */
     fun fontGetMsdfPixelRange(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfPixelRangeBind, handle, fontRid)
     }
 
@@ -421,6 +462,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_msdf_size
      */
     fun fontSetMsdfSize(fontRid: RID, msdfSize: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfSizeBind, handle, fontRid, msdfSize)
     }
 
@@ -430,6 +472,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_msdf_size
      */
     fun fontGetMsdfSize(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfSizeBind, handle, fontRid)
     }
 
@@ -440,6 +483,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_fixed_size
      */
     fun fontSetFixedSize(fontRid: RID, fixedSize: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeBind, handle, fontRid, fixedSize)
     }
 
@@ -449,6 +493,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_fixed_size
      */
     fun fontGetFixedSize(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeBind, handle, fontRid)
     }
 
@@ -458,6 +503,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_fixed_size_scale_mode
      */
     fun fontSetFixedSizeScaleMode(fontRid: RID, fixedSizeScaleMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeScaleModeBind, handle, fontRid, fixedSizeScaleMode)
     }
 
@@ -467,6 +513,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_fixed_size_scale_mode
      */
     fun fontGetFixedSizeScaleMode(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeScaleModeBind, handle, fontRid)
     }
 
@@ -476,6 +523,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_allow_system_fallback
      */
     fun fontSetAllowSystemFallback(fontRid: RID, allowSystemFallback: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetAllowSystemFallbackBind, handle, fontRid, allowSystemFallback)
     }
 
@@ -485,6 +533,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_is_allow_system_fallback
      */
     fun fontIsAllowSystemFallback(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsAllowSystemFallbackBind, handle, fontRid)
     }
 
@@ -494,6 +543,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_clear_system_fallback_cache
      */
     fun fontClearSystemFallbackCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(fontClearSystemFallbackCacheBind, handle)
     }
 
@@ -503,6 +553,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_force_autohinter
      */
     fun fontSetForceAutohinter(fontRid: RID, forceAutohinter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetForceAutohinterBind, handle, fontRid, forceAutohinter)
     }
 
@@ -513,6 +564,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_is_force_autohinter
      */
     fun fontIsForceAutohinter(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsForceAutohinterBind, handle, fontRid)
     }
 
@@ -523,6 +575,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_modulate_color_glyphs
      */
     fun fontSetModulateColorGlyphs(fontRid: RID, modulate: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetModulateColorGlyphsBind, handle, fontRid, modulate)
     }
 
@@ -532,6 +585,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_is_modulate_color_glyphs
      */
     fun fontIsModulateColorGlyphs(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsModulateColorGlyphsBind, handle, fontRid)
     }
 
@@ -542,6 +596,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_palette_count
      */
     fun fontGetPaletteCount(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetPaletteCountBind, handle, fontRid)
     }
 
@@ -552,6 +607,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_palette_name
      */
     fun fontGetPaletteName(fontRid: RID, index: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetString(fontGetPaletteNameBind, handle, fontRid, index)
     }
 
@@ -563,6 +619,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_palette_colors
      */
     fun fontGetPaletteColors(fontRid: RID, index: Long): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(fontGetPaletteColorsBind, handle, fontRid, index)
     }
 
@@ -573,6 +630,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_palette_custom_colors
      */
     fun fontSetPaletteCustomColors(fontRid: RID, colors: List<Color>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(fontSetPaletteCustomColorsBind, handle, fontRid, colors)
     }
 
@@ -582,6 +640,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_palette_custom_colors
      */
     fun fontGetPaletteCustomColors(fontRid: RID): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(fontGetPaletteCustomColorsBind, handle, fontRid)
     }
 
@@ -591,6 +650,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_used_palette
      */
     fun fontGetUsedPalette(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetUsedPaletteBind, handle, fontRid)
     }
 
@@ -600,6 +660,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_used_palette
      */
     fun fontSetUsedPalette(fontRid: RID, index: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetUsedPaletteBind, handle, fontRid, index)
     }
 
@@ -609,6 +670,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_hinting
      */
     fun fontSetHinting(fontRid: RID, hinting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetHintingBind, handle, fontRid, hinting)
     }
 
@@ -618,6 +680,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_hinting
      */
     fun fontGetHinting(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetHintingBind, handle, fontRid)
     }
 
@@ -627,6 +690,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_subpixel_positioning
      */
     fun fontSetSubpixelPositioning(fontRid: RID, subpixelPositioning: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetSubpixelPositioningBind, handle, fontRid, subpixelPositioning)
     }
 
@@ -636,6 +700,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_subpixel_positioning
      */
     fun fontGetSubpixelPositioning(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetSubpixelPositioningBind, handle, fontRid)
     }
 
@@ -647,6 +712,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_keep_rounding_remainders
      */
     fun fontSetKeepRoundingRemainders(fontRid: RID, keepRoundingRemainders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetKeepRoundingRemaindersBind, handle, fontRid, keepRoundingRemainders)
     }
 
@@ -658,6 +724,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_keep_rounding_remainders
      */
     fun fontGetKeepRoundingRemainders(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetKeepRoundingRemaindersBind, handle, fontRid)
     }
 
@@ -668,6 +735,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_embolden
      */
     fun fontSetEmbolden(fontRid: RID, strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetEmboldenBind, handle, fontRid, strength)
     }
 
@@ -677,6 +745,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_embolden
      */
     fun fontGetEmbolden(fontRid: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetEmboldenBind, handle, fontRid)
     }
 
@@ -686,6 +755,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_spacing
      */
     fun fontSetSpacing(fontRid: RID, spacing: Long, value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndTwoLongArgs(fontSetSpacingBind, handle, fontRid, spacing, value)
     }
 
@@ -695,6 +765,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_spacing
      */
     fun fontGetSpacing(fontRid: RID, spacing: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(fontGetSpacingBind, handle, fontRid, spacing)
     }
 
@@ -704,6 +775,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_baseline_offset
      */
     fun fontSetBaselineOffset(fontRid: RID, baselineOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetBaselineOffsetBind, handle, fontRid, baselineOffset)
     }
 
@@ -713,6 +785,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_baseline_offset
      */
     fun fontGetBaselineOffset(fontRid: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetBaselineOffsetBind, handle, fontRid)
     }
 
@@ -724,6 +797,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_transform
      */
     fun fontSetTransform(fontRid: RID, transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndTransform2DArg(fontSetTransformBind, handle, fontRid, transform)
     }
 
@@ -733,6 +807,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_transform
      */
     fun fontGetTransform(fontRid: RID): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetTransform2D(fontGetTransformBind, handle, fontRid)
     }
 
@@ -743,6 +818,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_variation_coordinates
      */
     fun fontSetVariationCoordinates(fontRid: RID, variationCoordinates: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetVariationCoordinatesBind, handle, fontRid, variationCoordinates)
     }
 
@@ -753,6 +829,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_variation_coordinates
      */
     fun fontGetVariationCoordinates(fontRid: RID): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetVariationCoordinatesBind, handle, fontRid)
     }
 
@@ -764,6 +841,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_oversampling
      */
     fun fontSetOversampling(fontRid: RID, oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetOversamplingBind, handle, fontRid, oversampling)
     }
 
@@ -775,6 +853,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_oversampling
      */
     fun fontGetOversampling(fontRid: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetOversamplingBind, handle, fontRid)
     }
 
@@ -785,6 +864,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_size_cache_list
      */
     fun fontGetSizeCacheList(fontRid: RID): List<Vector2i> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetVector2iList(fontGetSizeCacheListBind, handle, fontRid)
     }
 
@@ -794,6 +874,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_clear_size_cache
      */
     fun fontClearSizeCache(fontRid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(fontClearSizeCacheBind, handle, fontRid)
     }
 
@@ -803,6 +884,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_remove_size_cache
      */
     fun fontRemoveSizeCache(fontRid: RID, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontRemoveSizeCacheBind, handle, fontRid, size)
     }
 
@@ -815,6 +897,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_size_cache_info
      */
     fun fontGetSizeCacheInfo(fontRid: RID): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(fontGetSizeCacheInfoBind, handle, fontRid)
     }
 
@@ -824,6 +907,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_ascent
      */
     fun fontSetAscent(fontRid: RID, size: Long, ascent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetAscentBind, handle, fontRid, size, ascent)
     }
 
@@ -833,6 +917,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_ascent
      */
     fun fontGetAscent(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetAscentBind, handle, fontRid, size)
     }
 
@@ -842,6 +927,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_descent
      */
     fun fontSetDescent(fontRid: RID, size: Long, descent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetDescentBind, handle, fontRid, size, descent)
     }
 
@@ -851,6 +937,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_descent
      */
     fun fontGetDescent(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetDescentBind, handle, fontRid, size)
     }
 
@@ -860,6 +947,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_underline_position
      */
     fun fontSetUnderlinePosition(fontRid: RID, size: Long, underlinePosition: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlinePositionBind, handle, fontRid, size, underlinePosition)
     }
 
@@ -869,6 +957,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_underline_position
      */
     fun fontGetUnderlinePosition(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlinePositionBind, handle, fontRid, size)
     }
 
@@ -878,6 +967,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_underline_thickness
      */
     fun fontSetUnderlineThickness(fontRid: RID, size: Long, underlineThickness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlineThicknessBind, handle, fontRid, size, underlineThickness)
     }
 
@@ -887,6 +977,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_underline_thickness
      */
     fun fontGetUnderlineThickness(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlineThicknessBind, handle, fontRid, size)
     }
 
@@ -896,6 +987,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_scale
      */
     fun fontSetScale(fontRid: RID, size: Long, scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetScaleBind, handle, fontRid, size, scale)
     }
 
@@ -905,6 +997,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_scale
      */
     fun fontGetScale(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetScaleBind, handle, fontRid, size)
     }
 
@@ -914,6 +1007,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_texture_count
      */
     fun fontGetTextureCount(fontRid: RID, size: Vector2i): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVector2iArgRetLong(fontGetTextureCountBind, handle, fontRid, size)
     }
 
@@ -924,6 +1018,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_clear_textures
      */
     fun fontClearTextures(fontRid: RID, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearTexturesBind, handle, fontRid, size)
     }
 
@@ -934,6 +1029,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_remove_texture
      */
     fun fontRemoveTexture(fontRid: RID, size: Vector2i, textureIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveTextureBind, handle, fontRid, size, textureIndex)
     }
 
@@ -943,6 +1039,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_texture_image
      */
     fun fontSetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long, image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(fontSetTextureImageBind, handle, fontRid, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -952,6 +1049,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_texture_image
      */
     fun fontGetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, handle, fontRid, size, textureIndex))
     }
 
@@ -961,6 +1059,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_texture_offsets
      */
     fun fontSetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long, offset: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongPackedInt32ListArgs(fontSetTextureOffsetsBind, handle, fontRid, size, textureIndex, offset)
     }
 
@@ -970,6 +1069,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_texture_offsets
      */
     fun fontGetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(fontGetTextureOffsetsBind, handle, fontRid, size, textureIndex)
     }
 
@@ -979,6 +1079,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_list
      */
     fun fontGetGlyphList(fontRid: RID, size: Vector2i): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(fontGetGlyphListBind, handle, fontRid, size)
     }
 
@@ -989,6 +1090,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_clear_glyphs
      */
     fun fontClearGlyphs(fontRid: RID, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearGlyphsBind, handle, fontRid, size)
     }
 
@@ -999,6 +1101,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_remove_glyph
      */
     fun fontRemoveGlyph(fontRid: RID, size: Vector2i, glyph: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveGlyphBind, handle, fontRid, size, glyph)
     }
 
@@ -1009,6 +1112,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_advance
      */
     fun fontGetGlyphAdvance(fontRid: RID, size: Long, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetVector2(fontGetGlyphAdvanceBind, handle, fontRid, size, glyph)
     }
 
@@ -1019,6 +1123,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_glyph_advance
      */
     fun fontSetGlyphAdvance(fontRid: RID, size: Long, glyph: Long, advance: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDTwoLongAndVector2Args(fontSetGlyphAdvanceBind, handle, fontRid, size, glyph, advance)
     }
 
@@ -1028,6 +1133,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_offset
      */
     fun fontGetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphOffsetBind, handle, fontRid, size, glyph)
     }
 
@@ -1037,6 +1143,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_glyph_offset
      */
     fun fontSetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long, offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphOffsetBind, handle, fontRid, size, glyph, offset)
     }
 
@@ -1046,6 +1153,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_size
      */
     fun fontGetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphSizeBind, handle, fontRid, size, glyph)
     }
 
@@ -1055,6 +1163,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_glyph_size
      */
     fun fontSetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long, glSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphSizeBind, handle, fontRid, size, glyph, glSize)
     }
 
@@ -1064,6 +1173,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_uv_rect
      */
     fun fontGetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRect2(fontGetGlyphUvRectBind, handle, fontRid, size, glyph)
     }
 
@@ -1073,6 +1183,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_glyph_uv_rect
      */
     fun fontSetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long, uvRect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongRect2Args(fontSetGlyphUvRectBind, handle, fontRid, size, glyph, uvRect)
     }
 
@@ -1082,6 +1193,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_texture_idx
      */
     fun fontGetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetLong(fontGetGlyphTextureIdxBind, handle, fontRid, size, glyph)
     }
 
@@ -1091,6 +1203,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_glyph_texture_idx
      */
     fun fontSetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long, textureIdx: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontSetGlyphTextureIdxBind, handle, fontRid, size, glyph, textureIdx)
     }
 
@@ -1101,6 +1214,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_texture_rid
      */
     fun fontGetGlyphTextureRid(fontRid: RID, size: Vector2i, glyph: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRID(fontGetGlyphTextureRidBind, handle, fontRid, size, glyph)
     }
 
@@ -1111,6 +1225,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_texture_size
      */
     fun fontGetGlyphTextureSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphTextureSizeBind, handle, fontRid, size, glyph)
     }
 
@@ -1131,6 +1246,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_contours
      */
     fun fontGetGlyphContours(font: RID, size: Long, index: Long): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetDictionary(fontGetGlyphContoursBind, handle, font, size, index)
     }
 
@@ -1140,6 +1256,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_kerning_list
      */
     fun fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(fontGetKerningListBind, handle, fontRid, size)
     }
 
@@ -1149,6 +1266,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_clear_kerning_map
      */
     fun fontClearKerningMap(fontRid: RID, size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontClearKerningMapBind, handle, fontRid, size)
     }
 
@@ -1158,6 +1276,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_remove_kerning
      */
     fun fontRemoveKerning(fontRid: RID, size: Long, glyphPair: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2iArgs(fontRemoveKerningBind, handle, fontRid, size, glyphPair)
     }
 
@@ -1167,6 +1286,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_kerning
      */
     fun fontSetKerning(fontRid: RID, size: Long, glyphPair: Vector2i, kerning: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2iAndVector2Args(fontSetKerningBind, handle, fontRid, size, glyphPair, kerning)
     }
 
@@ -1176,6 +1296,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_kerning
      */
     fun fontGetKerning(fontRid: RID, size: Long, glyphPair: Vector2i): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDLongVector2iArgsRetVector2(fontGetKerningBind, handle, fontRid, size, glyphPair)
     }
 
@@ -1186,6 +1307,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_glyph_index
      */
     fun fontGetGlyphIndex(fontRid: RID, size: Long, char: Long, variationSelector: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndThreeLongArgsRetLong(fontGetGlyphIndexBind, handle, fontRid, size, char, variationSelector)
     }
 
@@ -1196,6 +1318,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_char_from_glyph_index
      */
     fun fontGetCharFromGlyphIndex(fontRid: RID, size: Long, glyphIndex: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(fontGetCharFromGlyphIndexBind, handle, fontRid, size, glyphIndex)
     }
 
@@ -1205,6 +1328,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_has_char
      */
     fun fontHasChar(fontRid: RID, char: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(fontHasCharBind, handle, fontRid, char)
     }
 
@@ -1214,6 +1338,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_supported_chars
      */
     fun fontGetSupportedChars(fontRid: RID): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetString(fontGetSupportedCharsBind, handle, fontRid)
     }
 
@@ -1223,6 +1348,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_supported_glyphs
      */
     fun fontGetSupportedGlyphs(fontRid: RID): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(fontGetSupportedGlyphsBind, handle, fontRid)
     }
 
@@ -1232,6 +1358,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_render_range
      */
     fun fontRenderRange(fontRid: RID, size: Vector2i, start: Long, end: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontRenderRangeBind, handle, fontRid, size, start, end)
     }
 
@@ -1241,6 +1368,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_render_glyph
      */
     fun fontRenderGlyph(fontRid: RID, size: Vector2i, index: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRenderGlyphBind, handle, fontRid, size, index)
     }
 
@@ -1254,6 +1382,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_draw_glyph
      */
     fun fontDrawGlyph(fontRid: RID, canvas: RID, size: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(fontDrawGlyphBind, handle, fontRid, canvas, size, pos, index, color, oversampling)
     }
 
@@ -1268,6 +1397,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_draw_glyph_outline
      */
     fun fontDrawGlyphOutline(fontRid: RID, canvas: RID, size: Long, outlineSize: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(fontDrawGlyphOutlineBind, handle, fontRid, canvas, size, outlineSize, pos, index, color, oversampling)
     }
 
@@ -1278,6 +1408,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_is_language_supported
      */
     fun fontIsLanguageSupported(fontRid: RID, language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsLanguageSupportedBind, handle, fontRid, language)
     }
 
@@ -1287,6 +1418,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_language_support_override
      */
     fun fontSetLanguageSupportOverride(fontRid: RID, language: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetLanguageSupportOverrideBind, handle, fontRid, language, supported)
     }
 
@@ -1296,6 +1428,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_language_support_override
      */
     fun fontGetLanguageSupportOverride(fontRid: RID, language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetLanguageSupportOverrideBind, handle, fontRid, language)
     }
 
@@ -1305,6 +1438,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_remove_language_support_override
      */
     fun fontRemoveLanguageSupportOverride(fontRid: RID, language: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveLanguageSupportOverrideBind, handle, fontRid, language)
     }
 
@@ -1314,6 +1448,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_language_support_overrides
      */
     fun fontGetLanguageSupportOverrides(fontRid: RID): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetLanguageSupportOverridesBind, handle, fontRid)
     }
 
@@ -1324,6 +1459,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_is_script_supported
      */
     fun fontIsScriptSupported(fontRid: RID, script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsScriptSupportedBind, handle, fontRid, script)
     }
 
@@ -1333,6 +1469,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_script_support_override
      */
     fun fontSetScriptSupportOverride(fontRid: RID, script: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetScriptSupportOverrideBind, handle, fontRid, script, supported)
     }
 
@@ -1342,6 +1479,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_script_support_override
      */
     fun fontGetScriptSupportOverride(fontRid: RID, script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetScriptSupportOverrideBind, handle, fontRid, script)
     }
 
@@ -1351,6 +1489,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_remove_script_support_override
      */
     fun fontRemoveScriptSupportOverride(fontRid: RID, script: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveScriptSupportOverrideBind, handle, fontRid, script)
     }
 
@@ -1360,6 +1499,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_script_support_overrides
      */
     fun fontGetScriptSupportOverrides(fontRid: RID): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetScriptSupportOverridesBind, handle, fontRid)
     }
 
@@ -1369,6 +1509,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_opentype_feature_overrides
      */
     fun fontSetOpentypeFeatureOverrides(fontRid: RID, overrides: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetOpentypeFeatureOverridesBind, handle, fontRid, overrides)
     }
 
@@ -1378,6 +1519,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_opentype_feature_overrides
      */
     fun fontGetOpentypeFeatureOverrides(fontRid: RID): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOpentypeFeatureOverridesBind, handle, fontRid)
     }
 
@@ -1387,6 +1529,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_supported_feature_list
      */
     fun fontSupportedFeatureList(fontRid: RID): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedFeatureListBind, handle, fontRid)
     }
 
@@ -1396,6 +1539,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_supported_variation_list
      */
     fun fontSupportedVariationList(fontRid: RID): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedVariationListBind, handle, fontRid)
     }
 
@@ -1405,6 +1549,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_get_global_oversampling
      */
     fun fontGetGlobalOversampling(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(fontGetGlobalOversamplingBind, handle)
     }
 
@@ -1414,6 +1559,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.font_set_global_oversampling
      */
     fun fontSetGlobalOversampling(oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(fontSetGlobalOversamplingBind, handle, oversampling)
     }
 
@@ -1424,6 +1570,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.get_hex_code_box_size
      */
     fun getHexCodeBoxSize(size: Long, index: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongArgsRetVector2(getHexCodeBoxSizeBind, handle, size, index)
     }
 
@@ -1433,6 +1580,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.draw_hex_code_box
      */
     fun drawHexCodeBox(canvas: RID, size: Long, pos: Vector2, index: Long, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2LongColorArgs(drawHexCodeBoxBind, handle, canvas, size, pos, index, color)
     }
 
@@ -1446,6 +1594,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.create_shaped_text
      */
     fun createShapedText(direction: Long = 0L, orientation: Long = 0L): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongArgsRetRID(createShapedTextBind, handle, direction, orientation)
     }
 
@@ -1455,6 +1604,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_clear
      */
     fun shapedTextClear(rid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(shapedTextClearBind, handle, rid)
     }
 
@@ -1464,6 +1614,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_duplicate
      */
     fun shapedTextDuplicate(rid: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextDuplicateBind, handle, rid)
     }
 
@@ -1475,6 +1626,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_direction
      */
     fun shapedTextSetDirection(shaped: RID, direction: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetDirectionBind, handle, shaped, direction)
     }
 
@@ -1484,6 +1636,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_direction
      */
     fun shapedTextGetDirection(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetDirectionBind, handle, shaped)
     }
 
@@ -1493,6 +1646,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_inferred_direction
      */
     fun shapedTextGetInferredDirection(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetInferredDirectionBind, handle, shaped)
     }
 
@@ -1503,6 +1657,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_bidi_override
      */
     fun shapedTextSetBidiOverride(shaped: RID, override: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndArrayArg(shapedTextSetBidiOverrideBind, handle, shaped, override)
     }
 
@@ -1513,6 +1668,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_custom_punctuation
      */
     fun shapedTextSetCustomPunctuation(shaped: RID, punct: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(shapedTextSetCustomPunctuationBind, handle, shaped, punct)
     }
 
@@ -1523,6 +1679,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_custom_punctuation
      */
     fun shapedTextGetCustomPunctuation(shaped: RID): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetString(shapedTextGetCustomPunctuationBind, handle, shaped)
     }
 
@@ -1532,6 +1689,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_custom_ellipsis
      */
     fun shapedTextSetCustomEllipsis(shaped: RID, char: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetCustomEllipsisBind, handle, shaped, char)
     }
 
@@ -1541,6 +1699,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_custom_ellipsis
      */
     fun shapedTextGetCustomEllipsis(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetCustomEllipsisBind, handle, shaped)
     }
 
@@ -1551,6 +1710,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_orientation
      */
     fun shapedTextSetOrientation(shaped: RID, orientation: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetOrientationBind, handle, shaped, orientation)
     }
 
@@ -1560,6 +1720,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_orientation
      */
     fun shapedTextGetOrientation(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetOrientationBind, handle, shaped)
     }
 
@@ -1570,6 +1731,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_preserve_invalid
      */
     fun shapedTextSetPreserveInvalid(shaped: RID, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveInvalidBind, handle, shaped, enabled)
     }
 
@@ -1580,6 +1742,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_preserve_invalid
      */
     fun shapedTextGetPreserveInvalid(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveInvalidBind, handle, shaped)
     }
 
@@ -1589,6 +1752,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_preserve_control
      */
     fun shapedTextSetPreserveControl(shaped: RID, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveControlBind, handle, shaped, enabled)
     }
 
@@ -1598,6 +1762,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_preserve_control
      */
     fun shapedTextGetPreserveControl(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveControlBind, handle, shaped)
     }
 
@@ -1607,6 +1772,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_set_spacing
      */
     fun shapedTextSetSpacing(shaped: RID, spacing: Long, value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndTwoLongArgs(shapedTextSetSpacingBind, handle, shaped, spacing, value)
     }
 
@@ -1616,6 +1782,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_spacing
      */
     fun shapedTextGetSpacing(shaped: RID, spacing: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, handle, shaped, spacing)
     }
 
@@ -1625,6 +1792,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_add_string
      */
     fun shapedTextAddString(shaped: RID, text: String, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap(), language: String = "", meta: Any? = null): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(shapedTextAddStringBind, handle, shaped, text, fonts, size, opentypeFeatures, language, meta)
     }
 
@@ -1635,6 +1803,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_add_object
      */
     fun shapedTextAddObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Long = 1L, baseline: Double = 0.0): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(shapedTextAddObjectBind, handle, shaped, key, size, inlineAlign, length, baseline)
     }
 
@@ -1644,6 +1813,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_resize_object
      */
     fun shapedTextResizeObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(shapedTextResizeObjectBind, handle, shaped, key, size, inlineAlign, baseline)
     }
 
@@ -1653,6 +1823,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_has_object
      */
     fun shapedTextHasObject(shaped: RID, key: Any?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVariantArgRetBool(shapedTextHasObjectBind, handle, shaped, key)
     }
 
@@ -1662,6 +1833,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_text
      */
     fun shapedGetText(shaped: RID): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetString(shapedGetTextBind, handle, shaped)
     }
 
@@ -1671,6 +1843,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_span_count
      */
     fun shapedGetSpanCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetSpanCountBind, handle, shaped)
     }
 
@@ -1680,6 +1853,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_span_meta
      */
     fun shapedGetSpanMeta(shaped: RID, index: Long): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanMetaBind, handle, shaped, index)
     }
 
@@ -1689,6 +1863,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_span_embedded_object
      */
     fun shapedGetSpanEmbeddedObject(shaped: RID, index: Long): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanEmbeddedObjectBind, handle, shaped, index)
     }
 
@@ -1698,6 +1873,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_span_text
      */
     fun shapedGetSpanText(shaped: RID, index: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetSpanTextBind, handle, shaped, index)
     }
 
@@ -1707,6 +1883,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_span_object
      */
     fun shapedGetSpanObject(shaped: RID, index: Long): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanObjectBind, handle, shaped, index)
     }
 
@@ -1716,6 +1893,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_set_span_update_font
      */
     fun shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap()) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(shapedSetSpanUpdateFontBind, handle, shaped, index, fonts, size, opentypeFeatures)
     }
 
@@ -1725,6 +1903,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_count
      */
     fun shapedGetRunCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetRunCountBind, handle, shaped)
     }
 
@@ -1734,6 +1913,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_text
      */
     fun shapedGetRunText(shaped: RID, index: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunTextBind, handle, shaped, index)
     }
 
@@ -1743,6 +1923,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_range
      */
     fun shapedGetRunRange(shaped: RID, index: Long): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunRangeBind, handle, shaped, index)
     }
 
@@ -1752,6 +1933,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_glyph_range
      */
     fun shapedGetRunGlyphRange(shaped: RID, index: Long): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunGlyphRangeBind, handle, shaped, index)
     }
 
@@ -1761,6 +1943,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_font_rid
      */
     fun shapedGetRunFontRid(shaped: RID, index: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(shapedGetRunFontRidBind, handle, shaped, index)
     }
 
@@ -1770,6 +1953,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_font_size
      */
     fun shapedGetRunFontSize(shaped: RID, index: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetInt(shapedGetRunFontSizeBind, handle, shaped, index)
     }
 
@@ -1779,6 +1963,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_language
      */
     fun shapedGetRunLanguage(shaped: RID, index: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunLanguageBind, handle, shaped, index)
     }
 
@@ -1788,6 +1973,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_direction
      */
     fun shapedGetRunDirection(shaped: RID, index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, handle, shaped, index)
     }
 
@@ -1797,6 +1983,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_get_run_object
      */
     fun shapedGetRunObject(shaped: RID, index: Long): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetRunObjectBind, handle, shaped, index)
     }
 
@@ -1807,6 +1994,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_substr
      */
     fun shapedTextSubstr(shaped: RID, start: Long, length: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(shapedTextSubstrBind, handle, shaped, start, length)
     }
 
@@ -1816,6 +2004,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_parent
      */
     fun shapedTextGetParent(shaped: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextGetParentBind, handle, shaped)
     }
 
@@ -1825,6 +2014,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_fit_to_width
      */
     fun shapedTextFitToWidth(shaped: RID, width: Double, justificationFlags: Long = 3L): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(shapedTextFitToWidthBind, handle, shaped, width, justificationFlags)
     }
 
@@ -1834,6 +2024,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_tab_align
      */
     fun shapedTextTabAlign(shaped: RID, tabStops: List<Float>): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(shapedTextTabAlignBind, handle, shaped, tabStops)
     }
 
@@ -1845,6 +2036,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_shape
      */
     fun shapedTextShape(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextShapeBind, handle, shaped)
     }
 
@@ -1854,6 +2046,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_is_ready
      */
     fun shapedTextIsReady(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextIsReadyBind, handle, shaped)
     }
 
@@ -1863,6 +2056,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_has_visible_chars
      */
     fun shapedTextHasVisibleChars(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextHasVisibleCharsBind, handle, shaped)
     }
 
@@ -1872,6 +2066,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_glyphs
      */
     fun shapedTextGetGlyphs(shaped: RID): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetGlyphsBind, handle, shaped)
     }
 
@@ -1881,6 +2076,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_sort_logical
      */
     fun shapedTextSortLogical(shaped: RID): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextSortLogicalBind, handle, shaped)
     }
 
@@ -1890,6 +2086,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_glyph_count
      */
     fun shapedTextGetGlyphCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetGlyphCountBind, handle, shaped)
     }
 
@@ -1899,6 +2096,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_range
      */
     fun shapedTextGetRange(shaped: RID): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetVector2i(shapedTextGetRangeBind, handle, shaped)
     }
 
@@ -1908,6 +2106,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_line_breaks_adv
      */
     fun shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: Long = 3L): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, handle, shaped, width, start, once, breakFlags)
     }
 
@@ -1917,6 +2116,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_line_breaks
      */
     fun shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: Long = 3L): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, handle, shaped, width, start, breakFlags)
     }
 
@@ -1927,6 +2127,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_word_breaks
      */
     fun shapedTextGetWordBreaks(shaped: RID, graphemeFlags: Long = 264L, skipGraphemeFlags: Long = 4L): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, handle, shaped, graphemeFlags, skipGraphemeFlags)
     }
 
@@ -1936,6 +2137,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_trim_pos
      */
     fun shapedTextGetTrimPos(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetTrimPosBind, handle, shaped)
     }
 
@@ -1945,6 +2147,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_ellipsis_pos
      */
     fun shapedTextGetEllipsisPos(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisPosBind, handle, shaped)
     }
 
@@ -1954,6 +2157,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_ellipsis_glyphs
      */
     fun shapedTextGetEllipsisGlyphs(shaped: RID): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetEllipsisGlyphsBind, handle, shaped)
     }
 
@@ -1963,6 +2167,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_ellipsis_glyph_count
      */
     fun shapedTextGetEllipsisGlyphCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisGlyphCountBind, handle, shaped)
     }
 
@@ -1972,6 +2177,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_overrun_trim_to_width
      */
     fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, handle, shaped, width, overrunTrimFlags)
     }
 
@@ -1981,6 +2187,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_objects
      */
     fun shapedTextGetObjects(shaped: RID): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetArray(shapedTextGetObjectsBind, handle, shaped)
     }
 
@@ -1990,6 +2197,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_object_rect
      */
     fun shapedTextGetObjectRect(shaped: RID, key: Any?): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVariantArgRetRect2(shapedTextGetObjectRectBind, handle, shaped, key)
     }
 
@@ -1999,6 +2207,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_object_range
      */
     fun shapedTextGetObjectRange(shaped: RID, key: Any?): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVariantArgRetVector2i(shapedTextGetObjectRangeBind, handle, shaped, key)
     }
 
@@ -2008,6 +2217,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_object_glyph
      */
     fun shapedTextGetObjectGlyph(shaped: RID, key: Any?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVariantArgRetLong(shapedTextGetObjectGlyphBind, handle, shaped, key)
     }
 
@@ -2017,6 +2227,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_size
      */
     fun shapedTextGetSize(shaped: RID): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetVector2(shapedTextGetSizeBind, handle, shaped)
     }
 
@@ -2028,6 +2239,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_ascent
      */
     fun shapedTextGetAscent(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetAscentBind, handle, shaped)
     }
 
@@ -2039,6 +2251,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_descent
      */
     fun shapedTextGetDescent(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetDescentBind, handle, shaped)
     }
 
@@ -2048,6 +2261,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_width
      */
     fun shapedTextGetWidth(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetWidthBind, handle, shaped)
     }
 
@@ -2057,6 +2271,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_underline_position
      */
     fun shapedTextGetUnderlinePosition(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlinePositionBind, handle, shaped)
     }
 
@@ -2066,6 +2281,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_underline_thickness
      */
     fun shapedTextGetUnderlineThickness(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlineThicknessBind, handle, shaped)
     }
 
@@ -2076,6 +2292,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_carets
      */
     fun shapedTextGetCarets(shaped: RID, position: Long): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDictionary(shapedTextGetCaretsBind, handle, shaped, position)
     }
 
@@ -2085,6 +2302,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_selection
      */
     fun shapedTextGetSelection(shaped: RID, start: Long, end: Long): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(shapedTextGetSelectionBind, handle, shaped, start, end)
     }
 
@@ -2094,6 +2312,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_hit_test_grapheme
      */
     fun shapedTextHitTestGrapheme(shaped: RID, coords: Double): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestGraphemeBind, handle, shaped, coords)
     }
 
@@ -2104,6 +2323,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_hit_test_position
      */
     fun shapedTextHitTestPosition(shaped: RID, coords: Double): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestPositionBind, handle, shaped, coords)
     }
 
@@ -2113,6 +2333,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_grapheme_bounds
      */
     fun shapedTextGetGraphemeBounds(shaped: RID, pos: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(shapedTextGetGraphemeBoundsBind, handle, shaped, pos)
     }
 
@@ -2122,6 +2343,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_next_grapheme_pos
      */
     fun shapedTextNextGraphemePos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextGraphemePosBind, handle, shaped, pos)
     }
 
@@ -2131,6 +2353,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_prev_grapheme_pos
      */
     fun shapedTextPrevGraphemePos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevGraphemePosBind, handle, shaped, pos)
     }
 
@@ -2140,6 +2363,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_character_breaks
      */
     fun shapedTextGetCharacterBreaks(shaped: RID): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(shapedTextGetCharacterBreaksBind, handle, shaped)
     }
 
@@ -2149,6 +2373,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_next_character_pos
      */
     fun shapedTextNextCharacterPos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextCharacterPosBind, handle, shaped, pos)
     }
 
@@ -2158,6 +2383,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_prev_character_pos
      */
     fun shapedTextPrevCharacterPos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevCharacterPosBind, handle, shaped, pos)
     }
 
@@ -2167,6 +2393,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_closest_character_pos
      */
     fun shapedTextClosestCharacterPos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextClosestCharacterPosBind, handle, shaped, pos)
     }
 
@@ -2182,6 +2409,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_draw
      */
     fun shapedTextDraw(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(shapedTextDrawBind, handle, shaped, canvas, pos, clipL, clipR, color, oversampling)
     }
 
@@ -2197,6 +2425,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_draw_outline
      */
     fun shapedTextDrawOutline(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, outlineSize: Long = 1L, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(shapedTextDrawOutlineBind, handle, shaped, canvas, pos, clipL, clipR, outlineSize, color, oversampling)
     }
 
@@ -2206,6 +2435,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.shaped_text_get_dominant_direction_in_range
      */
     fun shapedTextGetDominantDirectionInRange(shaped: RID, start: Long, end: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(shapedTextGetDominantDirectionInRangeBind, handle, shaped, start, end)
     }
 
@@ -2216,6 +2446,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.format_number
      */
     fun formatNumber(number: String, language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, handle, number, language)
     }
 
@@ -2226,6 +2457,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.parse_number
      */
     fun parseNumber(number: String, language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, handle, number, language)
     }
 
@@ -2236,6 +2468,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.percent_sign
      */
     fun percentSign(language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(percentSignBind, handle, language)
     }
 
@@ -2247,6 +2480,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.string_get_word_breaks
      */
     fun stringGetWordBreaks(string: String, language: String = "", charsPerLine: Long = 0L): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(stringGetWordBreaksBind, handle, string, language, charsPerLine)
     }
 
@@ -2256,6 +2490,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.string_get_character_breaks
      */
     fun stringGetCharacterBreaks(string: String, language: String = ""): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(stringGetCharacterBreaksBind, handle, string, language)
     }
 
@@ -2268,6 +2503,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.is_confusable
      */
     fun isConfusable(string: String, dict: List<String>): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(isConfusableBind, handle, string, dict)
     }
 
@@ -2278,6 +2514,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.spoof_check
      */
     fun spoofCheck(string: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(spoofCheckBind, handle, string)
     }
 
@@ -2287,6 +2524,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.strip_diacritics
      */
     fun stripDiacritics(string: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(stripDiacriticsBind, handle, string)
     }
 
@@ -2302,6 +2540,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.is_valid_identifier
      */
     fun isValidIdentifier(string: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isValidIdentifierBind, handle, string)
     }
 
@@ -2312,6 +2551,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.is_valid_letter
      */
     fun isValidLetter(unicode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isValidLetterBind, handle, unicode)
     }
 
@@ -2323,6 +2563,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.string_to_upper
      */
     fun stringToUpper(string: String, language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToUpperBind, handle, string, language)
     }
 
@@ -2334,6 +2575,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.string_to_lower
      */
     fun stringToLower(string: String, language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToLowerBind, handle, string, language)
     }
 
@@ -2345,6 +2587,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.string_to_title
      */
     fun stringToTitle(string: String, language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToTitleBind, handle, string, language)
     }
 
@@ -2354,6 +2597,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextServer.parse_structured_text
      */
     fun parseStructuredText(parserType: Long, args: List<Any?>, text: String): List<Vector3i> {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, handle, parserType, args, text)
     }
 

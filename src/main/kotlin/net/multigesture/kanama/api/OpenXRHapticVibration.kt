@@ -27,26 +27,32 @@ class OpenXRHapticVibration(handle: MemorySegment) : OpenXRHapticBase(handle) {
         set(value) = setAmplitude(value)
 
     fun setDuration(duration: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDurationBind, handle, duration)
     }
 
     fun getDuration(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDurationBind, handle)
     }
 
     fun setFrequency(frequency: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, handle, frequency)
     }
 
     fun getFrequency(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, handle)
     }
 
     fun setAmplitude(amplitude: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAmplitudeBind, handle, amplitude)
     }
 
     fun getAmplitude(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAmplitudeBind, handle)
     }
 

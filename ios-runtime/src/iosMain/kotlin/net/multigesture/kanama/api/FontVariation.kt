@@ -76,10 +76,12 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         get() = getPaletteCustomColors()
 
     fun setBaseFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getBaseFont(): Font? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseFontBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -89,50 +91,62 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
     }
 
     fun setVariationEmbolden(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVariationEmboldenBind, handle, strength)
     }
 
     fun getVariationEmbolden(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVariationEmboldenBind, handle)
     }
 
     fun setVariationFaceIndex(faceIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVariationFaceIndexBind, handle, faceIndex)
     }
 
     fun getVariationFaceIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVariationFaceIndexBind, handle)
     }
 
     fun setVariationTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setVariationTransformBind, handle, transform)
     }
 
     fun getVariationTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getVariationTransformBind, handle)
     }
 
     fun setSpacing(spacing: Long, value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, handle, spacing, value)
     }
 
     fun setBaselineOffset(baselineOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBaselineOffsetBind, handle, baselineOffset)
     }
 
     fun getBaselineOffset(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBaselineOffsetBind, handle)
     }
 
     fun getPaletteIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPaletteIndexBind, handle)
     }
 
     fun setPaletteIndex(paletteIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPaletteIndexBind, handle, paletteIndex)
     }
 
     fun getPaletteCustomColors(): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPaletteCustomColorsBind, handle)
     }
 

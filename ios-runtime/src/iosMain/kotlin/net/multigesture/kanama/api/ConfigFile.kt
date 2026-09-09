@@ -9,50 +9,62 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
     fun hasSection(section: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, handle, section)
     }
 
     fun hasSectionKey(section: String, key: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, handle, section, key)
     }
 
     fun getSections(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, handle)
     }
 
     fun eraseSection(section: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(eraseSectionBind, handle, section)
     }
 
     fun eraseSectionKey(section: String, key: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, handle, section, key)
     }
 
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
     fun parse(data: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, handle, data)
     }
 
     fun save(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
     }
 
     fun encodeToText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, handle)
     }
 
     fun loadEncryptedPass(path: String, password: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, handle, path, password)
     }
 
     fun saveEncryptedPass(path: String, password: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, handle, path, password)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

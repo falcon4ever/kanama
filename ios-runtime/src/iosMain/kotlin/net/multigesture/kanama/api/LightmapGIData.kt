@@ -32,38 +32,47 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
         set(value) = setLightTexture(value)
 
     fun getLightmapTextures(): List<TextureLayered> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, handle, TextureLayered::fromHandle)
     }
 
     fun getShadowmaskTextures(): List<TextureLayered> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, handle, TextureLayered::fromHandle)
     }
 
     fun setUsesSphericalHarmonics(usesSphericalHarmonics: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUsesSphericalHarmonicsBind, handle, usesSphericalHarmonics)
     }
 
     fun isUsingSphericalHarmonics(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSphericalHarmonicsBind, handle)
     }
 
     fun addUser(path: NodePath, uvScale: Rect2, sliceIndex: Int, subInstance: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(addUserBind, handle, path, uvScale, sliceIndex, subInstance)
     }
 
     fun getUserCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUserCountBind, handle)
     }
 
     fun clearUsers() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearUsersBind, handle)
     }
 
     fun setLightTexture(lightTexture: TextureLayered?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, handle, listOf(lightTexture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getLightTexture(): TextureLayered? {
+        checkOpen()
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, handle))
     }
 

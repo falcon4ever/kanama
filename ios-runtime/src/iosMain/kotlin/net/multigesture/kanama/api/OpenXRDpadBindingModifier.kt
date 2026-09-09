@@ -64,74 +64,92 @@ class OpenXRDpadBindingModifier(handle: MemorySegment) : OpenXRIPBindingModifier
         set(value) = setOffHaptic(value)
 
     fun setActionSet(actionSet: OpenXRActionSet?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getActionSet(): OpenXRActionSet? {
+        checkOpen()
         return OpenXRActionSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionSetBind, handle))
     }
 
     fun setInputPath(inputPath: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setInputPathBind, handle, inputPath)
     }
 
     fun getInputPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getInputPathBind, handle)
     }
 
     fun setThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, handle, threshold)
     }
 
     fun getThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, handle)
     }
 
     fun setThresholdReleased(thresholdReleased: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setThresholdReleasedBind, handle, thresholdReleased)
     }
 
     fun getThresholdReleased(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdReleasedBind, handle)
     }
 
     fun setCenterRegion(centerRegion: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCenterRegionBind, handle, centerRegion)
     }
 
     fun getCenterRegion(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCenterRegionBind, handle)
     }
 
     fun setWedgeAngle(wedgeAngle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWedgeAngleBind, handle, wedgeAngle)
     }
 
     fun getWedgeAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWedgeAngleBind, handle)
     }
 
     fun setIsSticky(isSticky: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsStickyBind, handle, isSticky)
     }
 
     fun getIsSticky(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsStickyBind, handle)
     }
 
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, handle, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getOnHaptic(): OpenXRHapticBase? {
+        checkOpen()
         return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, handle))
     }
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, handle, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getOffHaptic(): OpenXRHapticBase? {
+        checkOpen()
         return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, handle))
     }
 

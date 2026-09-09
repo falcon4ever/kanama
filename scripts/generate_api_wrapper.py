@@ -584,12 +584,26 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
     // fromHandle casts borrow — do not close those (see wrapper-maintenance.md
     // "RefCounted Return Ownership").
     private var wrapperReferenceReleased = false
+    private var closed = false
+
+    // Receiver-side use-after-close guard (task 98, desktop RefCounted.checkOpen mirror): every
+    // generated method on a RefCounted-derived wrapper calls this first, so a call through a
+    // handle whose close() destroyed the object is an IllegalStateException, not a native fault.
+    internal fun checkOpen() {
+        check(!closed) { "RefCounted handle is closed" }
+    }
+
+    override fun requireOpenHandle(): MemorySegment {
+        checkOpen()
+        return handle
+    }
 
     @ManualGodotLifetimeApi
     override fun close() {
         if (wrapperReferenceReleased) return
         wrapperReferenceReleased = true
         if (unreference()) {
+            closed = true
             ObjectCalls.destroyObject(handle)
         }
     }
@@ -687,6 +701,7 @@ IOS_CUSTOM_MEMBER_SECTIONS = {
     // The RID list excluded from collisions (e.g. the caster's own body). Marshalled to a Godot
     // Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
     fun setExclude(exclude: List<net.multigesture.kanama.types.RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 """.strip("\n"),
@@ -1003,6 +1018,20 @@ IOS_WIRED_TYPED_OBJECT_LIST_HELPERS = {
     "ptrcallWithBoolArgRetTypedObjectList",
     "ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList",
 }
+
+
+def emits_receiver_guard(class_name: str, method: ApiMethod, singleton: bool, api_classes: dict[str, ApiClass]) -> bool:
+    """Whether a rendered method body starts with `checkOpen()` (task 98).
+
+    A RefCounted-derived wrapper owns a `+1` and `close()` may destroy the object, so every
+    receiver-bound call first refuses a closed handle -- the same `checkOpen()` primitive the
+    hand-shaped Tween/Mesh/Resource family already uses, so a use-after-close surfaces as an
+    IllegalStateException instead of a native fault. Static methods and singleton facades have no
+    owned receiver and are not guarded.
+    """
+    if singleton or method.is_static:
+        return False
+    return class_name == "RefCounted" or "RefCounted" in ancestors(class_name, api_classes)
 
 
 def is_resource_like(type_name: str, api_classes: dict[str, ApiClass]) -> bool:
@@ -1925,6 +1954,7 @@ def render_method(
     collapse_wrapper = self_return_collapse_wrapper(
         class_name, method, object_types, wrapper_classes, api_classes, singleton,
     )
+    guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
     lines = []
     if singleton:
         (None if IOS_AUDIT_ONLY else lines.append("    @JvmStatic"))
@@ -1932,6 +1962,7 @@ def render_method(
         lines.extend(
             [
                 f"    fun {function_name}({params}){return_type_text} {{",
+                *guard_lines,
                 f"        val ret = {call}",
                 "        if (ret.address() == handle.address()) {",
                 "            RefCounted.releaseHandle(ret)",
@@ -1945,6 +1976,7 @@ def render_method(
         lines.extend(
             [
                 f"    fun {function_name}({params}){return_type_text} {{",
+                *guard_lines,
                 f"        {call}" if return_type_text == "" else f"        return {return_expression}",
                 "    }",
             ],
@@ -2001,6 +2033,7 @@ def render_vararg_method(
     helper = override.function if override is not None else "callWithVariantArgs"
     call = f"ObjectCalls.{helper}({bind_name}, {receiver}, {call_args})"
     return_kind = method.logical_return_kind(object_types)
+    guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
     if return_kind == "void":
         lines = []
         if singleton:
@@ -2008,6 +2041,7 @@ def render_vararg_method(
         lines.extend(
             [
                 f"    fun {function_name}({params}) {{",
+                *guard_lines,
                 f"        {call}",
                 "    }",
             ],
@@ -2021,6 +2055,7 @@ def render_vararg_method(
     lines.extend(
         [
             f"    fun {function_name}({params}): {return_type_text} {{",
+            *guard_lines,
             f"        return {return_expression}",
             "    }",
         ],

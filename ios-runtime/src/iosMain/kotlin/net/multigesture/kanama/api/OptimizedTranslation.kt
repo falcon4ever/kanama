@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class OptimizedTranslation(handle: MemorySegment) : Translation(handle) {
     fun generate(from: Translation?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, handle, from?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 

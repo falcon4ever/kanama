@@ -18,6 +18,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.create
      */
     fun create(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(createBind, handle, size)
     }
 
@@ -29,6 +30,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.create_from_image_alpha
      */
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, threshold)
     }
 
@@ -38,6 +40,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.set_bitv
      */
     fun setBitv(position: Vector2i, bit: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(setBitvBind, handle, position, bit)
     }
 
@@ -47,6 +50,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.set_bit
      */
     fun setBit(x: Int, y: Int, bit: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setBitBind, handle, x, y, bit)
     }
 
@@ -56,6 +60,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.get_bitv
      */
     fun getBitv(position: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(getBitvBind, handle, position)
     }
 
@@ -65,6 +70,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.get_bit
      */
     fun getBit(x: Int, y: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getBitBind, handle, x, y)
     }
 
@@ -74,6 +80,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.set_bit_rect
      */
     fun setBitRect(rect: Rect2i, bit: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iAndBoolArg(setBitRectBind, handle, rect, bit)
     }
 
@@ -83,6 +90,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.get_true_bit_count
      */
     fun getTrueBitCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTrueBitCountBind, handle)
     }
 
@@ -92,6 +100,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.get_size
      */
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
@@ -101,6 +110,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.resize
      */
     fun resize(newSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(resizeBind, handle, newSize)
     }
 
@@ -113,6 +123,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.grow_mask
      */
     fun growMask(pixels: Int, rect: Rect2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndRect2iArg(growMaskBind, handle, pixels, rect)
     }
 
@@ -124,6 +135,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.convert_to_image
      */
     fun convertToImage(): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, handle))
     }
 
@@ -136,6 +148,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BitMap.opaque_to_polygons
      */
     fun opaqueToPolygons(rect: Rect2i, epsilon: Double = 2.0): List<List<Vector2>> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(opaqueToPolygonsBind, handle, rect, epsilon)
     }
 

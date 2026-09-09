@@ -43,6 +43,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.set_transfer_channel
      */
     fun setTransferChannel(channel: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setTransferChannelBind, handle, channel)
     }
 
@@ -61,6 +62,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_transfer_channel
      */
     fun getTransferChannel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTransferChannelBind, handle)
     }
 
@@ -70,6 +72,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.set_transfer_mode
      */
     fun setTransferMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTransferModeBind, handle, mode)
     }
 
@@ -79,6 +82,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_transfer_mode
      */
     fun getTransferMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, handle)
     }
 
@@ -91,6 +95,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.set_target_peer
      */
     fun setTargetPeer(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setTargetPeerBind, handle, id)
     }
 
@@ -101,6 +106,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_packet_peer
      */
     fun getPacketPeer(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketPeerBind, handle)
     }
 
@@ -111,6 +117,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_packet_channel
      */
     fun getPacketChannel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketChannelBind, handle)
     }
 
@@ -121,6 +128,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_packet_mode
      */
     fun getPacketMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, handle)
     }
 
@@ -130,10 +138,12 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.poll
      */
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
@@ -144,6 +154,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.disconnect_peer
      */
     fun disconnectPeer(peer: Int, force: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(disconnectPeerBind, handle, peer, force)
     }
 
@@ -153,6 +164,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_connection_status
      */
     fun getConnectionStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, handle)
     }
 
@@ -162,6 +174,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.get_unique_id
      */
     fun getUniqueId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
     }
 
@@ -171,6 +184,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.generate_unique_id
      */
     fun generateUniqueId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(generateUniqueIdBind, handle)
     }
 
@@ -180,6 +194,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.set_refuse_new_connections
      */
     fun setRefuseNewConnections(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, handle, enable)
     }
 
@@ -189,6 +204,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.is_refusing_new_connections
      */
     fun isRefusingNewConnections(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, handle)
     }
 
@@ -200,6 +216,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: MultiplayerPeer.is_server_relay_supported
      */
     fun isServerRelaySupported(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, handle)
     }
 

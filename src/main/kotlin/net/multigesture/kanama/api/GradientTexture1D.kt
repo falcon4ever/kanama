@@ -28,6 +28,7 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture1D.set_gradient
      */
     fun setGradient(gradient: Gradient?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -37,6 +38,7 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture1D.get_gradient
      */
     fun getGradient(): Gradient? {
+        checkOpen()
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
     }
 
@@ -46,6 +48,7 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture1D.set_width
      */
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
@@ -58,6 +61,7 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture1D.set_use_hdr
      */
     fun setUseHdr(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
     }
 
@@ -70,6 +74,7 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture1D.is_using_hdr
      */
     fun isUsingHdr(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
     }
 

@@ -16,6 +16,7 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
      * Generated from Godot docs: MethodTweener.set_delay
      */
     fun setDelay(delay: Double): MethodTweener? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -31,6 +32,7 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
      * Generated from Godot docs: MethodTweener.set_trans
      */
     fun setTrans(trans: Long): MethodTweener? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, handle, trans)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -46,6 +48,7 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
      * Generated from Godot docs: MethodTweener.set_ease
      */
     fun setEase(ease: Long): MethodTweener? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

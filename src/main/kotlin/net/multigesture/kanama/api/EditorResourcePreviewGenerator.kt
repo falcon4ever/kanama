@@ -16,6 +16,7 @@ class EditorResourcePreviewGenerator(handle: MemorySegment) : RefCounted(handle)
      * Generated from Godot docs: EditorResourcePreviewGenerator.request_draw_and_wait
      */
     fun requestDrawAndWait(viewport: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(requestDrawAndWaitBind, handle, viewport)
     }
 

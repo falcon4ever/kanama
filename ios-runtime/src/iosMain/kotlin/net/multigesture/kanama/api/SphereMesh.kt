@@ -40,42 +40,52 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setIsHemisphere(value)
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
     fun setRadialSegments(radialSegments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, radialSegments)
     }
 
     fun getRadialSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
     fun setIsHemisphere(isHemisphere: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsHemisphereBind, handle, isHemisphere)
     }
 
     fun getIsHemisphere(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsHemisphereBind, handle)
     }
 

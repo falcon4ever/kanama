@@ -9,14 +9,17 @@ import net.multigesture.kanama.types.RID
  */
 class OpenXRSpatialContextPersistenceConfig(handle: MemorySegment) : OpenXRStructureBase(handle) {
     fun addPersistenceContext(persistenceContext: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(addPersistenceContextBind, handle, persistenceContext)
     }
 
     fun removePersistenceContext(persistenceContext: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(removePersistenceContextBind, handle, persistenceContext)
     }
 
     fun getPersistenceContexts(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getPersistenceContextsBind, handle)
     }
 

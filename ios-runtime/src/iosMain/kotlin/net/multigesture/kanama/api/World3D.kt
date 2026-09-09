@@ -45,42 +45,52 @@ class World3D(handle: MemorySegment) : Resource(handle) {
         get() = getDirectSpaceState()
 
     fun getSpace(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
     }
 
     fun getNavigationMap(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
     fun getScenario(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getScenarioBind, handle)
     }
 
     fun setEnvironment(env: Environment?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEnvironment(): Environment? {
+        checkOpen()
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
     }
 
     fun setFallbackEnvironment(env: Environment?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getFallbackEnvironment(): Environment? {
+        checkOpen()
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, handle))
     }
 
     fun setCameraAttributes(attributes: CameraAttributes?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(attributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCameraAttributes(): CameraAttributes? {
+        checkOpen()
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
     }
 
     fun getDirectSpaceState(): PhysicsDirectSpaceState3D? {
+        checkOpen()
         return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
     }
 

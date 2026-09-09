@@ -40,42 +40,52 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setSwizzleA(value)
 
     fun setFormatOverride(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, handle, pMember)
     }
 
     fun getFormatOverride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, handle)
     }
 
     fun setSwizzleR(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, handle, pMember)
     }
 
     fun getSwizzleR(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, handle)
     }
 
     fun setSwizzleG(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, handle, pMember)
     }
 
     fun getSwizzleG(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, handle)
     }
 
     fun setSwizzleB(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, handle, pMember)
     }
 
     fun getSwizzleB(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, handle)
     }
 
     fun setSwizzleA(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleABind, handle, pMember)
     }
 
     fun getSwizzleA(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, handle)
     }
 

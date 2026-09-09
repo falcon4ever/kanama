@@ -16,6 +16,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PCKPacker.pck_start
      */
     fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, handle, pckPath, alignment, key, encryptDirectory)
     }
 
@@ -27,6 +28,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PCKPacker.add_file
      */
     fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, handle, targetPath, sourcePath, encrypt)
     }
 
@@ -38,6 +40,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PCKPacker.add_file_from_buffer
      */
     fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, handle, targetPath, data, encrypt)
     }
 
@@ -49,6 +52,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PCKPacker.add_file_removal
      */
     fun addFileRemoval(targetPath: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, handle, targetPath)
     }
 
@@ -62,6 +66,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PCKPacker.flush
      */
     fun flush(verbose: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, handle, verbose)
     }
 

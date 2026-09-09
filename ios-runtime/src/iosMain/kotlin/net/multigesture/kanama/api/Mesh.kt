@@ -18,30 +18,37 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         set(value) = setLightmapSizeHint(value)
 
     fun setLightmapSizeHint(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, handle, size)
     }
 
     fun getLightmapSizeHint(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, handle)
     }
 
     fun getAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
     }
 
     fun getSurfaceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, handle)
     }
 
     fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(surfaceSetMaterialBind, handle, surfIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun surfaceGetMaterial(surfIdx: Int): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, handle, surfIdx))
     }
 
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -51,14 +58,17 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
     }
 
     fun createTrimeshShape(): ConcavePolygonShape3D? {
+        checkOpen()
         return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, handle))
     }
 
     fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
+        checkOpen()
         return ConvexPolygonShape3D.wrap(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, handle, clean, simplify))
     }
 
     fun createOutline(margin: Double): Mesh? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(createOutlineBind, handle, margin)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -68,6 +78,7 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
     }
 
     fun generateTriangleMesh(): TriangleMesh? {
+        checkOpen()
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, handle))
     }
 

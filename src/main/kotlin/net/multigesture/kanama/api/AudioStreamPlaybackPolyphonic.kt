@@ -21,6 +21,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      * Generated from Godot docs: AudioStreamPlaybackPolyphonic.play_stream
      */
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: Long = 0L, bus: String = "Master"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, fromOffset, volumeDb, pitchScale, playbackType, bus)
     }
 
@@ -31,6 +32,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      * Generated from Godot docs: AudioStreamPlaybackPolyphonic.set_stream_volume
      */
     fun setStreamVolume(stream: Long, volumeDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamVolumeBind, handle, stream, volumeDb)
     }
 
@@ -40,6 +42,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      * Generated from Godot docs: AudioStreamPlaybackPolyphonic.set_stream_pitch_scale
      */
     fun setStreamPitchScale(stream: Long, pitchScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamPitchScaleBind, handle, stream, pitchScale)
     }
 
@@ -50,6 +53,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      * Generated from Godot docs: AudioStreamPlaybackPolyphonic.is_stream_playing
      */
     fun isStreamPlaying(stream: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isStreamPlayingBind, handle, stream)
     }
 
@@ -60,6 +64,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      * Generated from Godot docs: AudioStreamPlaybackPolyphonic.stop_stream
      */
     fun stopStream(stream: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(stopStreamBind, handle, stream)
     }
 

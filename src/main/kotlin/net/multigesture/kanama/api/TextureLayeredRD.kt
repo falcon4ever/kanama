@@ -23,6 +23,7 @@ open class TextureLayeredRD(handle: MemorySegment) : TextureLayered(handle) {
      * Generated from Godot docs: TextureLayeredRD.set_texture_rd_rid
      */
     fun setTextureRdRid(textureRdRid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, handle, textureRdRid)
     }
 
@@ -32,6 +33,7 @@ open class TextureLayeredRD(handle: MemorySegment) : TextureLayered(handle) {
      * Generated from Godot docs: TextureLayeredRD.get_texture_rd_rid
      */
     fun getTextureRdRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, handle)
     }
 

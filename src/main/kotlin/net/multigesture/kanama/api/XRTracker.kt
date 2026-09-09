@@ -34,6 +34,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRTracker.get_tracker_type
      */
     fun getTrackerType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, handle)
     }
 
@@ -43,6 +44,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRTracker.set_tracker_type
      */
     fun setTrackerType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, handle, type)
     }
 
@@ -60,6 +62,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRTracker.get_tracker_name
      */
     fun getTrackerName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerNameBind, handle)
     }
 
@@ -77,6 +80,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRTracker.set_tracker_name
      */
     fun setTrackerName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setTrackerNameBind, handle, name)
     }
 
@@ -86,6 +90,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRTracker.get_tracker_desc
      */
     fun getTrackerDesc(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTrackerDescBind, handle)
     }
 
@@ -95,6 +100,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRTracker.set_tracker_desc
      */
     fun setTrackerDesc(description: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTrackerDescBind, handle, description)
     }
 

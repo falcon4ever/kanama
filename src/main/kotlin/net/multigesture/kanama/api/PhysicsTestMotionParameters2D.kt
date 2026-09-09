@@ -62,6 +62,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.get_from
      */
     fun getFrom(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getFromBind, handle)
     }
 
@@ -72,6 +73,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_from
      */
     fun setFrom(from: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setFromBind, handle, from)
     }
 
@@ -81,6 +83,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.get_motion
      */
     fun getMotion(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, handle)
     }
 
@@ -90,6 +93,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_motion
      */
     fun setMotion(motion: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setMotionBind, handle, motion)
     }
 
@@ -99,6 +103,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.get_margin
      */
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
@@ -108,6 +113,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_margin
      */
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
@@ -120,6 +126,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.is_collide_separation_ray_enabled
      */
     fun isCollideSeparationRayEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
     }
 
@@ -132,6 +139,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_collide_separation_ray_enabled
      */
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
     }
 
@@ -142,6 +150,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.get_exclude_bodies
      */
     fun getExcludeBodies(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, handle)
     }
 
@@ -152,6 +161,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_exclude_bodies
      */
     fun setExcludeBodies(excludeList: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, handle, excludeList)
     }
 
@@ -162,6 +172,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.get_exclude_objects
      */
     fun getExcludeObjects(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
     }
 
@@ -172,6 +183,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_exclude_objects
      */
     fun setExcludeObjects(excludeList: List<Long>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, handle, excludeList)
     }
 
@@ -184,6 +196,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.is_recovery_as_collision_enabled
      */
     fun isRecoveryAsCollisionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
     }
 
@@ -196,6 +209,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_recovery_as_collision_enabled
      */
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
     }
 

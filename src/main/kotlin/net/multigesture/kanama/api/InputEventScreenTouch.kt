@@ -35,6 +35,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.set_index
      */
     fun setIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
     }
 
@@ -44,6 +45,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.get_index
      */
     fun getIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
     }
 
@@ -53,6 +55,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.set_position
      */
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
@@ -62,6 +65,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.get_position
      */
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
@@ -71,6 +75,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.set_pressed
      */
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
@@ -80,6 +85,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.set_canceled
      */
     fun setCanceled(canceled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCanceledBind, handle, canceled)
     }
 
@@ -89,6 +95,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.set_double_tap
      */
     fun setDoubleTap(doubleTap: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDoubleTapBind, handle, doubleTap)
     }
 
@@ -98,6 +105,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      * Generated from Godot docs: InputEventScreenTouch.is_double_tap
      */
     fun isDoubleTap(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDoubleTapBind, handle)
     }
 

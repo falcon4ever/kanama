@@ -15,34 +15,42 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setCompressionLevel(value)
 
     fun open(path: String, append: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndLongArgRetLong(openBind, handle, path, append)
     }
 
     fun setCompressionLevel(compressionLevel: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCompressionLevelBind, handle, compressionLevel)
     }
 
     fun getCompressionLevel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCompressionLevelBind, handle)
     }
 
     fun addDirectory(path: String, permissions: Long = 493L, modifiedTime: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, handle, path, permissions, modifiedTime)
     }
 
     fun startFile(path: String, permissions: Long = 420L, modifiedTime: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, handle, path, permissions, modifiedTime)
     }
 
     fun writeFile(data: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, handle, data)
     }
 
     fun closeFile(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, handle)
     }
 
     fun closeArchive(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, handle)
     }
 

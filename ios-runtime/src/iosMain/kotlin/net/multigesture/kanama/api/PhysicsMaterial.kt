@@ -34,34 +34,42 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
         set(value) = setAbsorbent(value)
 
     fun setFriction(friction: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, handle, friction)
     }
 
     fun getFriction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, handle)
     }
 
     fun setRough(rough: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRoughBind, handle, rough)
     }
 
     fun isRough(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRoughBind, handle)
     }
 
     fun setBounce(bounce: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBounceBind, handle, bounce)
     }
 
     fun getBounce(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, handle)
     }
 
     fun setAbsorbent(absorbent: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAbsorbentBind, handle, absorbent)
     }
 
     fun isAbsorbent(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAbsorbentBind, handle)
     }
 

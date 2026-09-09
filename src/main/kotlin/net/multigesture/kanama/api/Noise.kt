@@ -10,38 +10,47 @@ import net.multigesture.kanama.types.Vector3
  */
 open class Noise(handle: MemorySegment) : Resource(handle) {
     fun getNoise1d(x: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetFloat(getNoise1dBind, handle, x)
     }
 
     fun getNoise2d(x: Double, y: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(getNoise2dBind, handle, x, y)
     }
 
     fun getNoise2dv(v: Vector2): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getNoise2dvBind, handle, v)
     }
 
     fun getNoise3d(x: Double, y: Double, z: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(getNoise3dBind, handle, x, y, z)
     }
 
     fun getNoise3dv(v: Vector3): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector3ArgRetDouble(getNoise3dvBind, handle, v)
     }
 
     fun getImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, normalize: Boolean = true): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getImageBind, handle, width, height, invert, in3dSpace, normalize))
     }
 
     fun getSeamlessImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(getSeamlessImageBind, handle, width, height, invert, in3dSpace, skirt, normalize))
     }
 
     fun getImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, normalize: Boolean = true): List<Image> {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(getImage3dBind, handle, width, height, depth, invert, normalize, Image::fromHandle)
     }
 
     fun getSeamlessImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): List<Image> {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(getSeamlessImage3dBind, handle, width, height, depth, invert, skirt, normalize, Image::fromHandle)
     }
 

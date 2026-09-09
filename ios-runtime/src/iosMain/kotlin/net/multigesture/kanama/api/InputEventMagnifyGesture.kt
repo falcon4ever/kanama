@@ -16,10 +16,12 @@ class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle
         set(value) = setFactor(value)
 
     fun setFactor(factor: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFactorBind, handle, factor)
     }
 
     fun getFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, handle)
     }
 

@@ -807,6 +807,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_albedo
      */
     fun setAlbedo(albedo: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setAlbedoBind, handle, albedo)
     }
 
@@ -819,6 +820,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_albedo
      */
     fun getAlbedo(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, handle)
     }
 
@@ -830,6 +832,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_transparency
      */
     fun setTransparency(transparency: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTransparencyBind, handle, transparency)
     }
 
@@ -841,6 +844,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_transparency
      */
     fun getTransparency(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, handle)
     }
 
@@ -850,6 +854,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_alpha_antialiasing
      */
     fun setAlphaAntialiasing(alphaAa: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, handle, alphaAa)
     }
 
@@ -859,6 +864,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_alpha_antialiasing
      */
     fun getAlphaAntialiasing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, handle)
     }
 
@@ -868,6 +874,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_alpha_antialiasing_edge
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, handle, edge)
     }
 
@@ -877,6 +884,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_alpha_antialiasing_edge
      */
     fun getAlphaAntialiasingEdge(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, handle)
     }
 
@@ -888,6 +896,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_shading_mode
      */
     fun setShadingMode(shadingMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setShadingModeBind, handle, shadingMode)
     }
 
@@ -899,6 +908,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_shading_mode
      */
     fun getShadingMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, handle)
     }
 
@@ -913,6 +923,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_specular
      */
     fun setSpecular(specular: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpecularBind, handle, specular)
     }
 
@@ -927,6 +938,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_specular
      */
     fun getSpecular(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularBind, handle)
     }
 
@@ -942,6 +954,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_metallic
      */
     fun setMetallic(metallic: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMetallicBind, handle, metallic)
     }
 
@@ -957,6 +970,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_metallic
      */
     fun getMetallic(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMetallicBind, handle)
     }
 
@@ -967,6 +981,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_roughness
      */
     fun setRoughness(roughness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRoughnessBind, handle, roughness)
     }
 
@@ -977,6 +992,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_roughness
      */
     fun getRoughness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRoughnessBind, handle)
     }
 
@@ -986,6 +1002,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_emission
      */
     fun setEmission(emission: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setEmissionBind, handle, emission)
     }
 
@@ -995,6 +1012,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_emission
      */
     fun getEmission(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, handle)
     }
 
@@ -1004,6 +1022,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_emission_energy_multiplier
      */
     fun setEmissionEnergyMultiplier(emissionEnergyMultiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyMultiplierBind, handle, emissionEnergyMultiplier)
     }
 
@@ -1013,6 +1032,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_emission_energy_multiplier
      */
     fun getEmissionEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyMultiplierBind, handle)
     }
 
@@ -1024,6 +1044,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_emission_intensity
      */
     fun setEmissionIntensity(emissionEnergyMultiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionIntensityBind, handle, emissionEnergyMultiplier)
     }
 
@@ -1035,6 +1056,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_emission_intensity
      */
     fun getEmissionIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionIntensityBind, handle)
     }
 
@@ -1044,6 +1066,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_normal_scale
      */
     fun setNormalScale(normalScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setNormalScaleBind, handle, normalScale)
     }
 
@@ -1053,6 +1076,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_normal_scale
      */
     fun getNormalScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getNormalScaleBind, handle)
     }
 
@@ -1062,6 +1086,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_rim
      */
     fun setRim(rim: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRimBind, handle, rim)
     }
 
@@ -1071,6 +1096,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_rim
      */
     fun getRim(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRimBind, handle)
     }
 
@@ -1081,6 +1107,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_rim_tint
      */
     fun setRimTint(rimTint: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRimTintBind, handle, rimTint)
     }
 
@@ -1091,6 +1118,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_rim_tint
      */
     fun getRimTint(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRimTintBind, handle)
     }
 
@@ -1101,6 +1129,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_clearcoat
      */
     fun setClearcoat(clearcoat: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setClearcoatBind, handle, clearcoat)
     }
 
@@ -1111,6 +1140,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_clearcoat
      */
     fun getClearcoat(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatBind, handle)
     }
 
@@ -1121,6 +1151,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_clearcoat_roughness
      */
     fun setClearcoatRoughness(clearcoatRoughness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setClearcoatRoughnessBind, handle, clearcoatRoughness)
     }
 
@@ -1131,6 +1162,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_clearcoat_roughness
      */
     fun getClearcoatRoughness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatRoughnessBind, handle)
     }
 
@@ -1141,6 +1173,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_anisotropy
      */
     fun setAnisotropy(anisotropy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAnisotropyBind, handle, anisotropy)
     }
 
@@ -1151,6 +1184,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_anisotropy
      */
     fun getAnisotropy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyBind, handle)
     }
 
@@ -1170,6 +1204,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_heightmap_scale
      */
     fun setHeightmapScale(heightmapScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightmapScaleBind, handle, heightmapScale)
     }
 
@@ -1189,6 +1224,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_heightmap_scale
      */
     fun getHeightmapScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightmapScaleBind, handle)
     }
 
@@ -1200,6 +1236,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_subsurface_scattering_strength
      */
     fun setSubsurfaceScatteringStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSubsurfaceScatteringStrengthBind, handle, strength)
     }
 
@@ -1211,6 +1248,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_subsurface_scattering_strength
      */
     fun getSubsurfaceScatteringStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSubsurfaceScatteringStrengthBind, handle)
     }
 
@@ -1221,6 +1259,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_transmittance_color
      */
     fun setTransmittanceColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setTransmittanceColorBind, handle, color)
     }
 
@@ -1231,6 +1270,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_transmittance_color
      */
     fun getTransmittanceColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getTransmittanceColorBind, handle)
     }
 
@@ -1240,6 +1280,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_transmittance_depth
      */
     fun setTransmittanceDepth(depth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTransmittanceDepthBind, handle, depth)
     }
 
@@ -1249,6 +1290,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_transmittance_depth
      */
     fun getTransmittanceDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceDepthBind, handle)
     }
 
@@ -1258,6 +1300,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_transmittance_boost
      */
     fun setTransmittanceBoost(boost: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTransmittanceBoostBind, handle, boost)
     }
 
@@ -1267,6 +1310,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_transmittance_boost
      */
     fun getTransmittanceBoost(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceBoostBind, handle)
     }
 
@@ -1276,6 +1320,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_backlight
      */
     fun setBacklight(backlight: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBacklightBind, handle, backlight)
     }
 
@@ -1285,6 +1330,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_backlight
      */
     fun getBacklight(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBacklightBind, handle)
     }
 
@@ -1294,6 +1340,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_refraction
      */
     fun setRefraction(refraction: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRefractionBind, handle, refraction)
     }
 
@@ -1303,6 +1350,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_refraction
      */
     fun getRefraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRefractionBind, handle)
     }
 
@@ -1312,6 +1360,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_point_size
      */
     fun setPointSize(pointSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPointSizeBind, handle, pointSize)
     }
 
@@ -1321,6 +1370,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_point_size
      */
     fun getPointSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPointSizeBind, handle)
     }
 
@@ -1330,6 +1380,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_detail_uv
      */
     fun setDetailUv(detailUv: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDetailUvBind, handle, detailUv)
     }
 
@@ -1339,6 +1390,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_detail_uv
      */
     fun getDetailUv(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, handle)
     }
 
@@ -1349,6 +1401,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_blend_mode
      */
     fun setBlendMode(blendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
     }
 
@@ -1359,6 +1412,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_blend_mode
      */
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
@@ -1368,6 +1422,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_depth_draw_mode
      */
     fun setDepthDrawMode(depthDrawMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, handle, depthDrawMode)
     }
 
@@ -1377,6 +1432,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_depth_draw_mode
      */
     fun getDepthDrawMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, handle)
     }
 
@@ -1388,6 +1444,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_depth_test
      */
     fun setDepthTest(depthTest: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDepthTestBind, handle, depthTest)
     }
 
@@ -1399,6 +1456,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_depth_test
      */
     fun getDepthTest(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, handle)
     }
 
@@ -1409,6 +1467,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_cull_mode
      */
     fun setCullMode(cullMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
     }
 
@@ -1419,6 +1478,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_cull_mode
      */
     fun getCullMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
@@ -1428,6 +1488,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_diffuse_mode
      */
     fun setDiffuseMode(diffuseMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, handle, diffuseMode)
     }
 
@@ -1437,6 +1498,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_diffuse_mode
      */
     fun getDiffuseMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, handle)
     }
 
@@ -1449,6 +1511,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_specular_mode
      */
     fun setSpecularMode(specularMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, handle, specularMode)
     }
 
@@ -1461,6 +1524,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_specular_mode
      */
     fun getSpecularMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, handle)
     }
 
@@ -1470,6 +1534,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_flag
      */
     fun setFlag(flag: Long, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, handle, flag, enable)
     }
 
@@ -1479,6 +1544,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_flag
      */
     fun getFlag(flag: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, handle, flag)
     }
 
@@ -1491,6 +1557,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_texture_filter
      */
     fun setTextureFilter(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
     }
 
@@ -1503,6 +1570,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_texture_filter
      */
     fun getTextureFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
@@ -1513,6 +1581,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_feature
      */
     fun setFeature(feature: Long, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, handle, feature, enable)
     }
 
@@ -1523,6 +1592,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_feature
      */
     fun getFeature(feature: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, handle, feature)
     }
 
@@ -1533,6 +1603,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_texture
      */
     fun setTexture(param: Long, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, handle, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -1543,6 +1614,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_texture
      */
     fun getTexture(param: Long): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, handle, param))
     }
 
@@ -1552,6 +1624,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_detail_blend_mode
      */
     fun setDetailBlendMode(detailBlendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, handle, detailBlendMode)
     }
 
@@ -1561,6 +1634,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_detail_blend_mode
      */
     fun getDetailBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, handle)
     }
 
@@ -1571,6 +1645,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_uv1_scale
      */
     fun setUv1Scale(scale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv1ScaleBind, handle, scale)
     }
 
@@ -1581,6 +1656,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_uv1_scale
      */
     fun getUv1Scale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv1ScaleBind, handle)
     }
 
@@ -1592,6 +1668,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_uv1_offset
      */
     fun setUv1Offset(offset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv1OffsetBind, handle, offset)
     }
 
@@ -1603,6 +1680,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_uv1_offset
      */
     fun getUv1Offset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv1OffsetBind, handle)
     }
 
@@ -1614,6 +1692,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_uv1_triplanar_blend_sharpness
      */
     fun setUv1TriplanarBlendSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setUv1TriplanarBlendSharpnessBind, handle, sharpness)
     }
 
@@ -1625,6 +1704,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_uv1_triplanar_blend_sharpness
      */
     fun getUv1TriplanarBlendSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv1TriplanarBlendSharpnessBind, handle)
     }
 
@@ -1635,6 +1715,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_uv2_scale
      */
     fun setUv2Scale(scale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv2ScaleBind, handle, scale)
     }
 
@@ -1645,6 +1726,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_uv2_scale
      */
     fun getUv2Scale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv2ScaleBind, handle)
     }
 
@@ -1656,6 +1738,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_uv2_offset
      */
     fun setUv2Offset(offset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv2OffsetBind, handle, offset)
     }
 
@@ -1667,6 +1750,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_uv2_offset
      */
     fun getUv2Offset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv2OffsetBind, handle)
     }
 
@@ -1678,6 +1762,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_uv2_triplanar_blend_sharpness
      */
     fun setUv2TriplanarBlendSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setUv2TriplanarBlendSharpnessBind, handle, sharpness)
     }
 
@@ -1689,6 +1774,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_uv2_triplanar_blend_sharpness
      */
     fun getUv2TriplanarBlendSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv2TriplanarBlendSharpnessBind, handle)
     }
 
@@ -1701,6 +1787,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_billboard_mode
      */
     fun setBillboardMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, handle, mode)
     }
 
@@ -1713,6 +1800,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_billboard_mode
      */
     fun getBillboardMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, handle)
     }
 
@@ -1723,6 +1811,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_h_frames
      */
     fun setParticlesAnimHFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, handle, frames)
     }
 
@@ -1733,6 +1822,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_h_frames
      */
     fun getParticlesAnimHFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, handle)
     }
 
@@ -1743,6 +1833,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_v_frames
      */
     fun setParticlesAnimVFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, handle, frames)
     }
 
@@ -1753,6 +1844,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_v_frames
      */
     fun getParticlesAnimVFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, handle)
     }
 
@@ -1763,6 +1855,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_loop
      */
     fun setParticlesAnimLoop(loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, handle, loop)
     }
 
@@ -1773,6 +1866,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_loop
      */
     fun getParticlesAnimLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, handle)
     }
 
@@ -1785,6 +1879,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_heightmap_deep_parallax
      */
     fun setHeightmapDeepParallax(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxBind, handle, enable)
     }
 
@@ -1797,6 +1892,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.is_heightmap_deep_parallax_enabled
      */
     fun isHeightmapDeepParallaxEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHeightmapDeepParallaxEnabledBind, handle)
     }
 
@@ -1810,6 +1906,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_heightmap_deep_parallax_min_layers
      */
     fun setHeightmapDeepParallaxMinLayers(layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMinLayersBind, handle, layer)
     }
 
@@ -1823,6 +1920,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_heightmap_deep_parallax_min_layers
      */
     fun getHeightmapDeepParallaxMinLayers(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMinLayersBind, handle)
     }
 
@@ -1836,6 +1934,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_heightmap_deep_parallax_max_layers
      */
     fun setHeightmapDeepParallaxMaxLayers(layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMaxLayersBind, handle, layer)
     }
 
@@ -1849,6 +1948,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_heightmap_deep_parallax_max_layers
      */
     fun getHeightmapDeepParallaxMaxLayers(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMaxLayersBind, handle)
     }
 
@@ -1860,6 +1960,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_heightmap_deep_parallax_flip_tangent
      */
     fun setHeightmapDeepParallaxFlipTangent(flip: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipTangentBind, handle, flip)
     }
 
@@ -1871,6 +1972,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_heightmap_deep_parallax_flip_tangent
      */
     fun getHeightmapDeepParallaxFlipTangent(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipTangentBind, handle)
     }
 
@@ -1882,6 +1984,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_heightmap_deep_parallax_flip_binormal
      */
     fun setHeightmapDeepParallaxFlipBinormal(flip: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipBinormalBind, handle, flip)
     }
 
@@ -1893,6 +1996,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_heightmap_deep_parallax_flip_binormal
      */
     fun getHeightmapDeepParallaxFlipBinormal(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipBinormalBind, handle)
     }
 
@@ -1902,6 +2006,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_grow
      */
     fun setGrow(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGrowBind, handle, amount)
     }
 
@@ -1911,6 +2016,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_grow
      */
     fun getGrow(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBind, handle)
     }
 
@@ -1920,6 +2026,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_emission_operator
      */
     fun setEmissionOperator(operator: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, handle, operator)
     }
 
@@ -1929,6 +2036,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_emission_operator
      */
     fun getEmissionOperator(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, handle)
     }
 
@@ -1941,6 +2049,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_ao_light_affect
      */
     fun setAoLightAffect(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAoLightAffectBind, handle, amount)
     }
 
@@ -1953,6 +2062,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_ao_light_affect
      */
     fun getAoLightAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAoLightAffectBind, handle)
     }
 
@@ -1965,6 +2075,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_alpha_scissor_threshold
      */
     fun setAlphaScissorThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, handle, threshold)
     }
 
@@ -1977,6 +2088,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_alpha_scissor_threshold
      */
     fun getAlphaScissorThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, handle)
     }
 
@@ -1986,6 +2098,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_alpha_hash_scale
      */
     fun setAlphaHashScale(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, handle, threshold)
     }
 
@@ -1995,6 +2108,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_alpha_hash_scale
      */
     fun getAlphaHashScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, handle)
     }
 
@@ -2010,6 +2124,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_grow_enabled
      */
     fun setGrowEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGrowEnabledBind, handle, enable)
     }
 
@@ -2025,6 +2140,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.is_grow_enabled
      */
     fun isGrowEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGrowEnabledBind, handle)
     }
 
@@ -2037,6 +2153,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_metallic_texture_channel
      */
     fun setMetallicTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, handle, channel)
     }
 
@@ -2049,6 +2166,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_metallic_texture_channel
      */
     fun getMetallicTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, handle)
     }
 
@@ -2061,6 +2179,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_roughness_texture_channel
      */
     fun setRoughnessTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, handle, channel)
     }
 
@@ -2073,6 +2192,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_roughness_texture_channel
      */
     fun getRoughnessTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, handle)
     }
 
@@ -2085,6 +2205,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_ao_texture_channel
      */
     fun setAoTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, handle, channel)
     }
 
@@ -2097,6 +2218,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_ao_texture_channel
      */
     fun getAoTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, handle)
     }
 
@@ -2109,6 +2231,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_refraction_texture_channel
      */
     fun setRefractionTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, handle, channel)
     }
 
@@ -2121,6 +2244,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_refraction_texture_channel
      */
     fun getRefractionTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, handle)
     }
 
@@ -2131,6 +2255,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_proximity_fade_enabled
      */
     fun setProximityFadeEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setProximityFadeEnabledBind, handle, enabled)
     }
 
@@ -2141,6 +2266,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.is_proximity_fade_enabled
      */
     fun isProximityFadeEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isProximityFadeEnabledBind, handle)
     }
 
@@ -2151,6 +2277,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_proximity_fade_distance
      */
     fun setProximityFadeDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setProximityFadeDistanceBind, handle, distance)
     }
 
@@ -2161,6 +2288,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_proximity_fade_distance
      */
     fun getProximityFadeDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getProximityFadeDistanceBind, handle)
     }
 
@@ -2171,6 +2299,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_msdf_pixel_range
      */
     fun setMsdfPixelRange(range: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMsdfPixelRangeBind, handle, range)
     }
 
@@ -2181,6 +2310,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_msdf_pixel_range
      */
     fun getMsdfPixelRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfPixelRangeBind, handle)
     }
 
@@ -2190,6 +2320,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_msdf_outline_size
      */
     fun setMsdfOutlineSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMsdfOutlineSizeBind, handle, size)
     }
 
@@ -2199,6 +2330,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_msdf_outline_size
      */
     fun getMsdfOutlineSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfOutlineSizeBind, handle)
     }
 
@@ -2208,6 +2340,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_distance_fade
      */
     fun setDistanceFade(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, handle, mode)
     }
 
@@ -2217,6 +2350,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_distance_fade
      */
     fun getDistanceFade(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, handle)
     }
 
@@ -2229,6 +2363,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_distance_fade_max_distance
      */
     fun setDistanceFadeMaxDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMaxDistanceBind, handle, distance)
     }
 
@@ -2241,6 +2376,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_distance_fade_max_distance
      */
     fun getDistanceFadeMaxDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMaxDistanceBind, handle)
     }
 
@@ -2254,6 +2390,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_distance_fade_min_distance
      */
     fun setDistanceFadeMinDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMinDistanceBind, handle, distance)
     }
 
@@ -2267,6 +2404,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_distance_fade_min_distance
      */
     fun getDistanceFadeMinDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMinDistanceBind, handle)
     }
 
@@ -2280,6 +2418,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_z_clip_scale
      */
     fun setZClipScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setZClipScaleBind, handle, scale)
     }
 
@@ -2293,6 +2432,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_z_clip_scale
      */
     fun getZClipScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getZClipScaleBind, handle)
     }
 
@@ -2305,6 +2445,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_fov_override
      */
     fun setFovOverride(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFovOverrideBind, handle, scale)
     }
 
@@ -2317,6 +2458,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_fov_override
      */
     fun getFovOverride(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFovOverrideBind, handle)
     }
 
@@ -2326,6 +2468,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_stencil_mode
      */
     fun setStencilMode(stencilMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStencilModeBind, handle, stencilMode)
     }
 
@@ -2335,6 +2478,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_stencil_mode
      */
     fun getStencilMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, handle)
     }
 
@@ -2344,6 +2488,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_stencil_flags
      */
     fun setStencilFlags(stencilFlags: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStencilFlagsBind, handle, stencilFlags)
     }
 
@@ -2353,6 +2498,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_stencil_flags
      */
     fun getStencilFlags(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStencilFlagsBind, handle)
     }
 
@@ -2362,6 +2508,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_stencil_compare
      */
     fun setStencilCompare(stencilCompare: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, handle, stencilCompare)
     }
 
@@ -2371,6 +2518,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_stencil_compare
      */
     fun getStencilCompare(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, handle)
     }
 
@@ -2380,6 +2528,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_stencil_reference
      */
     fun setStencilReference(stencilReference: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStencilReferenceBind, handle, stencilReference)
     }
 
@@ -2389,6 +2538,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_stencil_reference
      */
     fun getStencilReference(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStencilReferenceBind, handle)
     }
 
@@ -2398,6 +2548,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_stencil_effect_color
      */
     fun setStencilEffectColor(stencilColor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setStencilEffectColorBind, handle, stencilColor)
     }
 
@@ -2407,6 +2558,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_stencil_effect_color
      */
     fun getStencilEffectColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getStencilEffectColorBind, handle)
     }
 
@@ -2416,6 +2568,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.set_stencil_effect_outline_thickness
      */
     fun setStencilEffectOutlineThickness(stencilOutlineThickness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStencilEffectOutlineThicknessBind, handle, stencilOutlineThickness)
     }
 
@@ -2425,6 +2578,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BaseMaterial3D.get_stencil_effect_outline_thickness
      */
     fun getStencilEffectOutlineThickness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, handle)
     }
 

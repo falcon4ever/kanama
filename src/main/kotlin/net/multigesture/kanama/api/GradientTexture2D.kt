@@ -53,6 +53,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_gradient
      */
     fun setGradient(gradient: Gradient?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -62,6 +63,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.get_gradient
      */
     fun getGradient(): Gradient? {
+        checkOpen()
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
     }
 
@@ -72,6 +74,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_width
      */
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
@@ -82,6 +85,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_height
      */
     fun setHeight(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
     }
 
@@ -94,6 +98,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_use_hdr
      */
     fun setUseHdr(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
     }
 
@@ -106,6 +111,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.is_using_hdr
      */
     fun isUsingHdr(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
     }
 
@@ -115,6 +121,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_fill
      */
     fun setFill(fill: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFillBind, handle, fill)
     }
 
@@ -124,6 +131,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.get_fill
      */
     fun getFill(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFillBind, handle)
     }
 
@@ -133,6 +141,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_fill_from
      */
     fun setFillFrom(fillFrom: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setFillFromBind, handle, fillFrom)
     }
 
@@ -142,6 +151,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.get_fill_from
      */
     fun getFillFrom(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getFillFromBind, handle)
     }
 
@@ -151,6 +161,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_fill_to
      */
     fun setFillTo(fillTo: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setFillToBind, handle, fillTo)
     }
 
@@ -160,6 +171,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.get_fill_to
      */
     fun getFillTo(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getFillToBind, handle)
     }
 
@@ -169,6 +181,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.set_repeat
      */
     fun setRepeat(repeat: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatBind, handle, repeat)
     }
 
@@ -178,6 +191,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: GradientTexture2D.get_repeat
      */
     fun getRepeat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, handle)
     }
 

@@ -42,6 +42,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_target_node
      */
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
@@ -52,6 +53,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_target_node
      */
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
@@ -63,6 +65,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_target_minimum_distance
      */
     fun setTargetMinimumDistance(minimumDistance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTargetMinimumDistanceBind, handle, minimumDistance)
     }
 
@@ -74,6 +77,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_target_minimum_distance
      */
     fun getTargetMinimumDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMinimumDistanceBind, handle)
     }
 
@@ -85,6 +89,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_target_maximum_distance
      */
     fun setTargetMaximumDistance(maximumDistance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTargetMaximumDistanceBind, handle, maximumDistance)
     }
 
@@ -96,6 +101,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_target_maximum_distance
      */
     fun getTargetMaximumDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMaximumDistanceBind, handle)
     }
 
@@ -106,6 +112,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_flip_bend_direction
      */
     fun setFlipBendDirection(flipDirection: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFlipBendDirectionBind, handle, flipDirection)
     }
 
@@ -116,6 +123,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_flip_bend_direction
      */
     fun getFlipBendDirection(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipBendDirectionBind, handle)
     }
 
@@ -125,6 +133,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_joint_one_bone2d_node
      */
     fun setJointOneBone2dNode(bone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setJointOneBone2dNodeBind, handle, bone2dNode)
     }
 
@@ -134,6 +143,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_joint_one_bone2d_node
      */
     fun getJointOneBone2dNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getJointOneBone2dNodeBind, handle)
     }
 
@@ -144,6 +154,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_joint_one_bone_idx
      */
     fun setJointOneBoneIdx(boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setJointOneBoneIdxBind, handle, boneIdx)
     }
 
@@ -154,6 +165,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_joint_one_bone_idx
      */
     fun getJointOneBoneIdx(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getJointOneBoneIdxBind, handle)
     }
 
@@ -163,6 +175,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_joint_two_bone2d_node
      */
     fun setJointTwoBone2dNode(bone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setJointTwoBone2dNodeBind, handle, bone2dNode)
     }
 
@@ -172,6 +185,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_joint_two_bone2d_node
      */
     fun getJointTwoBone2dNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getJointTwoBone2dNodeBind, handle)
     }
 
@@ -182,6 +196,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.set_joint_two_bone_idx
      */
     fun setJointTwoBoneIdx(boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setJointTwoBoneIdxBind, handle, boneIdx)
     }
 
@@ -192,6 +207,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      * Generated from Godot docs: SkeletonModification2DTwoBoneIK.get_joint_two_bone_idx
      */
     fun getJointTwoBoneIdx(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getJointTwoBoneIdxBind, handle)
     }
 

@@ -23,6 +23,7 @@ open class VideoStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VideoStream.set_file
      */
     fun setFile(file: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFileBind, handle, file)
     }
 
@@ -33,6 +34,7 @@ open class VideoStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VideoStream.get_file
      */
     fun getFile(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFileBind, handle)
     }
 

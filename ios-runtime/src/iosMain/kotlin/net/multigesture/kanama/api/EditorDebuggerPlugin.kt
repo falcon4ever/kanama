@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
     fun getSession(id: Int): EditorDebuggerSession? {
+        checkOpen()
         return EditorDebuggerSession.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, handle, id))
     }
 
     fun getSessions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getSessionsBind, handle)
     }
 

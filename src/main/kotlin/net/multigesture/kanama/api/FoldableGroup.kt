@@ -23,6 +23,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: FoldableGroup.get_expanded_container
      */
     fun getExpandedContainer(): FoldableContainer? {
+        checkOpen()
         return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExpandedContainerBind, handle))
     }
 
@@ -34,6 +35,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: FoldableGroup.get_containers
      */
     fun getContainers(): List<FoldableContainer> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getContainersBind, handle, FoldableContainer::fromHandle)
     }
 
@@ -43,6 +45,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: FoldableGroup.set_allow_folding_all
      */
     fun setAllowFoldingAll(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowFoldingAllBind, handle, enabled)
     }
 
@@ -52,6 +55,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: FoldableGroup.is_allow_folding_all
      */
     fun isAllowFoldingAll(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, handle)
     }
 

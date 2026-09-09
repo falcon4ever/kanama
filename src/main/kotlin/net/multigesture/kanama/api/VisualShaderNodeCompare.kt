@@ -27,26 +27,32 @@ class VisualShaderNodeCompare(handle: MemorySegment) : VisualShaderNode(handle) 
         set(value) = setCondition(value)
 
     fun setComparisonType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setComparisonTypeBind, handle, type)
     }
 
     fun getComparisonType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getComparisonTypeBind, handle)
     }
 
     fun setFunction(func: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
     }
 
     fun getFunction(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
     }
 
     fun setCondition(condition: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setConditionBind, handle, condition)
     }
 
     fun getCondition(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getConditionBind, handle)
     }
 

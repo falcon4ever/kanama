@@ -15,6 +15,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.has_setting
      */
     fun hasSetting(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasSettingBind, handle, name)
     }
 
@@ -25,6 +26,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.set_setting
      */
     fun setSetting(name: String, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, handle, name, value)
     }
 
@@ -35,6 +37,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_setting
      */
     fun getSetting(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getSettingBind, handle, name)
     }
 
@@ -44,6 +47,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.erase
      */
     fun erase(property: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(eraseBind, handle, property)
     }
 
@@ -55,6 +59,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.set_initial_value
      */
     fun setInitialValue(name: String, value: Any?, updateCurrent: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameVariantBoolArgs(setInitialValueBind, handle, name, value, updateCurrent)
     }
 
@@ -66,6 +71,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.add_property_info
      */
     fun addPropertyInfo(info: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(addPropertyInfoBind, handle, info)
     }
 
@@ -77,6 +83,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.set_project_metadata
      */
     fun setProjectMetadata(section: String, key: String, data: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringAndVariantArg(setProjectMetadataBind, handle, section, key, data)
     }
 
@@ -87,6 +94,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_project_metadata
      */
     fun getProjectMetadata(section: String, key: String, default: Any? = null): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getProjectMetadataBind, handle, section, key, default)
     }
 
@@ -96,6 +104,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.set_favorites
      */
     fun setFavorites(dirs: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(setFavoritesBind, handle, dirs)
     }
 
@@ -105,6 +114,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_favorites
      */
     fun getFavorites(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoritesBind, handle)
     }
 
@@ -114,6 +124,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.set_recent_dirs
      */
     fun setRecentDirs(dirs: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(setRecentDirsBind, handle, dirs)
     }
 
@@ -123,6 +134,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_recent_dirs
      */
     fun getRecentDirs(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentDirsBind, handle)
     }
 
@@ -132,6 +144,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.set_builtin_action_override
      */
     fun setBuiltinActionOverride(name: String, actionsList: List<InputEvent>) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectListArgs(setBuiltinActionOverrideBind, handle, name, actionsList)
     }
 
@@ -150,6 +163,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.add_shortcut
      */
     fun addShortcut(path: String, shortcut: Shortcut?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, handle, path, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -159,6 +173,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.remove_shortcut
      */
     fun removeShortcut(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeShortcutBind, handle, path)
     }
 
@@ -169,6 +184,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.is_shortcut
      */
     fun isShortcut(path: String, event: InputEvent?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, handle, path, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -178,6 +194,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.has_shortcut
      */
     fun hasShortcut(path: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasShortcutBind, handle, path)
     }
 
@@ -189,6 +206,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_shortcut
      */
     fun getShortcut(path: String): Shortcut? {
+        checkOpen()
         return Shortcut.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, handle, path))
     }
 
@@ -198,6 +216,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_shortcut_list
      */
     fun getShortcutList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getShortcutListBind, handle)
     }
 
@@ -208,6 +227,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.check_changed_settings_in_group
      */
     fun checkChangedSettingsInGroup(settingPrefix: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(checkChangedSettingsInGroupBind, handle, settingPrefix)
     }
 
@@ -219,6 +239,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.get_changed_settings
      */
     fun getChangedSettings(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getChangedSettingsBind, handle)
     }
 
@@ -229,6 +250,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorSettings.mark_setting_changed
      */
     fun markSettingChanged(setting: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(markSettingChangedBind, handle, setting)
     }
 

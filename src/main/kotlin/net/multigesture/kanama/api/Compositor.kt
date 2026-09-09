@@ -23,6 +23,7 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Compositor.set_compositor_effects
      */
     fun setCompositorEffects(compositorEffects: List<CompositorEffect>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setCompositorEffectsBind, handle, compositorEffects)
     }
 
@@ -33,6 +34,7 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Compositor.get_compositor_effects
      */
     fun getCompositorEffects(): List<CompositorEffect> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, handle, CompositorEffect::fromHandle)
     }
 

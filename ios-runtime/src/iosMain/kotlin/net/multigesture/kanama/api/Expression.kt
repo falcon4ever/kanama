@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Expression(handle: MemorySegment) : RefCounted(handle) {
     fun hasExecuteFailed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasExecuteFailedBind, handle)
     }
 
     fun getErrorText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getErrorTextBind, handle)
     }
 

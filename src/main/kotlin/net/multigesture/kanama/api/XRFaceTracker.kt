@@ -22,6 +22,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRFaceTracker.get_blend_shape
      */
     fun getBlendShape(blendShape: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, handle, blendShape)
     }
 
@@ -31,6 +32,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRFaceTracker.set_blend_shape
      */
     fun setBlendShape(blendShape: Long, weight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, handle, blendShape, weight)
     }
 
@@ -40,6 +42,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRFaceTracker.get_blend_shapes
      */
     fun getBlendShapes(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendShapesBind, handle)
     }
 
@@ -49,6 +52,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRFaceTracker.set_blend_shapes
      */
     fun setBlendShapes(weights: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, handle, weights)
     }
 

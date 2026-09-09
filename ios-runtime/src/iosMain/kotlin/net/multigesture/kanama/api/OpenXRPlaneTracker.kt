@@ -30,42 +30,52 @@ class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(han
         set(value) = setPlaneLabel(value)
 
     fun setBoundsSize(boundsSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, handle, boundsSize)
     }
 
     fun getBoundsSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, handle)
     }
 
     fun setPlaneAlignment(planeAlignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPlaneAlignmentBind, handle, planeAlignment)
     }
 
     fun getPlaneAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlaneAlignmentBind, handle)
     }
 
     fun setPlaneLabel(planeLabel: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPlaneLabelBind, handle, planeLabel)
     }
 
     fun getPlaneLabel(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPlaneLabelBind, handle)
     }
 
     fun clearMeshData() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMeshDataBind, handle)
     }
 
     fun getMeshOffset(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getMeshOffsetBind, handle)
     }
 
     fun getMesh(): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
     fun getShape(thickness: Double = 0.01): Shape3D? {
+        checkOpen()
         return Shape3D.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(getShapeBind, handle, thickness))
     }
 

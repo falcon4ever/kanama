@@ -15,6 +15,7 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorInspectorPlugin.add_custom_control
      */
     fun addCustomControl(control: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addCustomControlBind, handle, listOf(control.handle))
     }
 
@@ -30,6 +31,7 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorInspectorPlugin.add_property_editor
      */
     fun addPropertyEditor(property: String, editor: Control, addToEnd: Boolean = false, label: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithStringObjectBoolStringArgs(addPropertyEditorBind, handle, property, editor.handle, addToEnd, label)
     }
 
@@ -40,6 +42,7 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorInspectorPlugin.add_property_editor_for_multiple_properties
      */
     fun addPropertyEditorForMultipleProperties(label: String, properties: List<String>, editor: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(addPropertyEditorForMultiplePropertiesBind, handle, label, properties, editor.handle)
     }
 

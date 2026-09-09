@@ -18,62 +18,77 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
         set(value) = setDevice(value)
 
     fun setDevice(device: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDeviceBind, handle, device)
     }
 
     fun getDevice(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDeviceBind, handle)
     }
 
     fun isAction(action: String, exactMatch: Boolean = false): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionBind, handle, action, exactMatch)
     }
 
     fun isActionPressed(action: String, allowEcho: Boolean = false, exactMatch: Boolean = false): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(isActionPressedBind, handle, action, allowEcho, exactMatch)
     }
 
     fun isActionReleased(action: String, exactMatch: Boolean = false): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionReleasedBind, handle, action, exactMatch)
     }
 
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionStrengthBind, handle, action, exactMatch)
     }
 
     fun isCanceled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCanceledBind, handle)
     }
 
     fun isPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
     }
 
     fun isReleased(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isReleasedBind, handle)
     }
 
     fun isEcho(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEchoBind, handle)
     }
 
     fun asText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(asTextBind, handle)
     }
 
     fun isMatch(event: InputEvent?, exactMatch: Boolean = true): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(isMatchBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
     }
 
     fun isActionType(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActionTypeBind, handle)
     }
 
     fun accumulate(withEvent: InputEvent?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(accumulateBind, handle, withEvent?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, handle, xform, localOfs)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

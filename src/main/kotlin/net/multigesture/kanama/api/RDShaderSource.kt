@@ -82,6 +82,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDShaderSource.set_stage_source
      */
     fun setStageSource(stage: Long, source: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, handle, stage, source)
     }
 
@@ -91,6 +92,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDShaderSource.get_stage_source
      */
     fun getStageSource(stage: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, handle, stage)
     }
 
@@ -100,6 +102,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDShaderSource.set_language
      */
     fun setLanguage(language: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLanguageBind, handle, language)
     }
 
@@ -109,6 +112,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDShaderSource.get_language
      */
     fun getLanguage(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, handle)
     }
 

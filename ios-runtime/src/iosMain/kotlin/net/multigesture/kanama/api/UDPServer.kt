@@ -16,38 +16,47 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setMaxPendingConnections(value)
 
     fun listen(port: Int, bindAddress: String = "*"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
     }
 
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
     fun isConnectionAvailable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
     fun isListening(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
 
     fun takeConnection(): PacketPeerUDP? {
+        checkOpen()
         return PacketPeerUDP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
     fun setMaxPendingConnections(maxPendingConnections: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxPendingConnectionsBind, handle, maxPendingConnections)
     }
 
     fun getMaxPendingConnections(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxPendingConnectionsBind, handle)
     }
 

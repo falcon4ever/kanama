@@ -60,6 +60,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_from
      */
     fun setFrom(from: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setFromBind, handle, from)
     }
 
@@ -69,6 +70,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.get_from
      */
     fun getFrom(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getFromBind, handle)
     }
 
@@ -78,6 +80,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_to
      */
     fun setTo(to: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setToBind, handle, to)
     }
 
@@ -87,6 +90,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.get_to
      */
     fun getTo(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getToBind, handle)
     }
 
@@ -99,6 +103,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_collision_mask
      */
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
@@ -111,6 +116,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.get_collision_mask
      */
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
@@ -123,6 +129,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_exclude
      */
     fun setExclude(exclude: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
@@ -135,6 +142,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.get_exclude
      */
     fun getExclude(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
@@ -144,6 +152,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
@@ -153,6 +162,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
@@ -162,6 +172,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
@@ -171,6 +182,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
@@ -181,6 +193,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.set_hit_from_inside
      */
     fun setHitFromInside(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
     }
 
@@ -191,6 +204,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters2D.is_hit_from_inside_enabled
      */
     fun isHitFromInsideEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
     }
 

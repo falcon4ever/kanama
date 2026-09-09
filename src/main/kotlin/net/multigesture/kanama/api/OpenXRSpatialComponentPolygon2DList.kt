@@ -11,10 +11,12 @@ import net.multigesture.kanama.types.Vector2
  */
 class OpenXRSpatialComponentPolygon2DList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getTransform(index: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, handle, index)
     }
 
     fun getVertices(snapshot: RID, index: Long): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVerticesBind, handle, snapshot, index)
     }
 

@@ -40,22 +40,27 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setStreamsCount(value)
 
     fun addStream(index: Int, stream: AudioStream?, weight: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, handle, index, stream?.requireOpenHandle() ?: MemorySegment.NULL, weight)
     }
 
     fun moveStream(indexFrom: Int, indexTo: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveStreamBind, handle, indexFrom, indexTo)
     }
 
     fun removeStream(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeStreamBind, handle, index)
     }
 
     fun setStream(index: Int, stream: AudioStream?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, handle, index, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getStream(index: Int): AudioStream? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getStreamBind, handle, index)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -65,50 +70,62 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
     }
 
     fun setStreamProbabilityWeight(index: Int, weight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setStreamProbabilityWeightBind, handle, index, weight)
     }
 
     fun getStreamProbabilityWeight(index: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getStreamProbabilityWeightBind, handle, index)
     }
 
     fun setStreamsCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStreamsCountBind, handle, count)
     }
 
     fun getStreamsCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStreamsCountBind, handle)
     }
 
     fun setRandomPitch(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRandomPitchBind, handle, scale)
     }
 
     fun getRandomPitch(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchBind, handle)
     }
 
     fun setRandomPitchSemitones(semitones: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRandomPitchSemitonesBind, handle, semitones)
     }
 
     fun getRandomPitchSemitones(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchSemitonesBind, handle)
     }
 
     fun setRandomVolumeOffsetDb(dbOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRandomVolumeOffsetDbBind, handle, dbOffset)
     }
 
     fun getRandomVolumeOffsetDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomVolumeOffsetDbBind, handle)
     }
 
     fun setPlaybackMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, handle, mode)
     }
 
     fun getPlaybackMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, handle)
     }
 

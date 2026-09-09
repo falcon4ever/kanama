@@ -28,30 +28,37 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setCurveZ(value)
 
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
     fun setCurveX(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCurveX(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, handle))
     }
 
     fun setCurveY(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCurveY(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, handle))
     }
 
     fun setCurveZ(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCurveZ(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, handle))
     }
 

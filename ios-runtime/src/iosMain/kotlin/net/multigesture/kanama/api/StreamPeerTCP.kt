@@ -9,26 +9,32 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
     fun bind(port: Int, host: String = "*"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, handle, port, host)
     }
 
     fun connectToHost(host: String, port: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
     }
 
     fun getConnectedHost(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, handle)
     }
 
     fun getConnectedPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, handle)
     }
 
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
     fun setNoDelay(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, handle, enabled)
     }
 

@@ -15,6 +15,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.read
      */
     fun read(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(readBind, handle)
     }
 
@@ -24,6 +25,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_node_type
      */
     fun getNodeType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, handle)
     }
 
@@ -35,6 +37,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_node_name
      */
     fun getNodeName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNodeNameBind, handle)
     }
 
@@ -45,6 +48,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_node_data
      */
     fun getNodeData(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNodeDataBind, handle)
     }
 
@@ -55,6 +59,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_node_offset
      */
     fun getNodeOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getNodeOffsetBind, handle)
     }
 
@@ -66,6 +71,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_attribute_count
      */
     fun getAttributeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAttributeCountBind, handle)
     }
 
@@ -75,6 +81,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_attribute_name
      */
     fun getAttributeName(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getAttributeNameBind, handle, idx)
     }
 
@@ -84,6 +91,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_attribute_value
      */
     fun getAttributeValue(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getAttributeValueBind, handle, idx)
     }
 
@@ -93,6 +101,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.has_attribute
      */
     fun hasAttribute(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasAttributeBind, handle, name)
     }
 
@@ -103,6 +112,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_named_attribute_value
      */
     fun getNamedAttributeValue(name: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueBind, handle, name)
     }
 
@@ -113,6 +123,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_named_attribute_value_safe
      */
     fun getNamedAttributeValueSafe(name: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueSafeBind, handle, name)
     }
 
@@ -122,6 +133,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.is_empty
      */
     fun isEmpty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
@@ -131,6 +143,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.get_current_line
      */
     fun getCurrentLine(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentLineBind, handle)
     }
 
@@ -141,6 +154,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.skip_section
      */
     fun skipSection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(skipSectionBind, handle)
     }
 
@@ -151,6 +165,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.seek
      */
     fun seek(position: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(seekBind, handle, position)
     }
 
@@ -160,6 +175,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.open
      */
     fun open(file: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, file)
     }
 
@@ -169,6 +185,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XMLParser.open_buffer
      */
     fun openBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, handle, buffer)
     }
 

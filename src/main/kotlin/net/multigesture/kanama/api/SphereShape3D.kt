@@ -22,6 +22,7 @@ class SphereShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: SphereShape3D.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -31,6 +32,7 @@ class SphereShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: SphereShape3D.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 

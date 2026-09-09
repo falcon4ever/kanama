@@ -88,106 +88,132 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setFeedbackLowpass(value)
 
     fun setDry(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
     fun getDry(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 
     fun setTap1Active(amount: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTap1ActiveBind, handle, amount)
     }
 
     fun isTap1Active(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isTap1ActiveBind, handle)
     }
 
     fun setTap1DelayMs(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap1DelayMsBind, handle, amount)
     }
 
     fun getTap1DelayMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1DelayMsBind, handle)
     }
 
     fun setTap1LevelDb(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap1LevelDbBind, handle, amount)
     }
 
     fun getTap1LevelDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1LevelDbBind, handle)
     }
 
     fun setTap1Pan(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap1PanBind, handle, amount)
     }
 
     fun getTap1Pan(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1PanBind, handle)
     }
 
     fun setTap2Active(amount: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTap2ActiveBind, handle, amount)
     }
 
     fun isTap2Active(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isTap2ActiveBind, handle)
     }
 
     fun setTap2DelayMs(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap2DelayMsBind, handle, amount)
     }
 
     fun getTap2DelayMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2DelayMsBind, handle)
     }
 
     fun setTap2LevelDb(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap2LevelDbBind, handle, amount)
     }
 
     fun getTap2LevelDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2LevelDbBind, handle)
     }
 
     fun setTap2Pan(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap2PanBind, handle, amount)
     }
 
     fun getTap2Pan(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2PanBind, handle)
     }
 
     fun setFeedbackActive(amount: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFeedbackActiveBind, handle, amount)
     }
 
     fun isFeedbackActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFeedbackActiveBind, handle)
     }
 
     fun setFeedbackDelayMs(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackDelayMsBind, handle, amount)
     }
 
     fun getFeedbackDelayMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackDelayMsBind, handle)
     }
 
     fun setFeedbackLevelDb(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackLevelDbBind, handle, amount)
     }
 
     fun getFeedbackLevelDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLevelDbBind, handle)
     }
 
     fun setFeedbackLowpass(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackLowpassBind, handle, amount)
     }
 
     fun getFeedbackLowpass(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLowpassBind, handle)
     }
 

@@ -74,6 +74,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_far_enabled
      */
     fun setDofBlurFarEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDofBlurFarEnabledBind, handle, enabled)
     }
 
@@ -87,6 +88,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.is_dof_blur_far_enabled
      */
     fun isDofBlurFarEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurFarEnabledBind, handle)
     }
 
@@ -97,6 +99,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_far_distance
      */
     fun setDofBlurFarDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarDistanceBind, handle, distance)
     }
 
@@ -107,6 +110,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_dof_blur_far_distance
      */
     fun getDofBlurFarDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarDistanceBind, handle)
     }
 
@@ -119,6 +123,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_far_transition
      */
     fun setDofBlurFarTransition(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarTransitionBind, handle, distance)
     }
 
@@ -131,6 +136,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_dof_blur_far_transition
      */
     fun getDofBlurFarTransition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarTransitionBind, handle)
     }
 
@@ -144,6 +150,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_near_enabled
      */
     fun setDofBlurNearEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDofBlurNearEnabledBind, handle, enabled)
     }
 
@@ -157,6 +164,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.is_dof_blur_near_enabled
      */
     fun isDofBlurNearEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurNearEnabledBind, handle)
     }
 
@@ -167,6 +175,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_near_distance
      */
     fun setDofBlurNearDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearDistanceBind, handle, distance)
     }
 
@@ -177,6 +186,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_dof_blur_near_distance
      */
     fun getDofBlurNearDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearDistanceBind, handle)
     }
 
@@ -189,6 +199,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_near_transition
      */
     fun setDofBlurNearTransition(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearTransitionBind, handle, distance)
     }
 
@@ -201,6 +212,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_dof_blur_near_transition
      */
     fun getDofBlurNearTransition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearTransitionBind, handle)
     }
 
@@ -212,6 +224,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_dof_blur_amount
      */
     fun setDofBlurAmount(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurAmountBind, handle, amount)
     }
 
@@ -223,6 +236,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_dof_blur_amount
      */
     fun getDofBlurAmount(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurAmountBind, handle)
     }
 
@@ -235,6 +249,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_auto_exposure_max_sensitivity
      */
     fun setAutoExposureMaxSensitivity(maxSensitivity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxSensitivityBind, handle, maxSensitivity)
     }
 
@@ -247,6 +262,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_auto_exposure_max_sensitivity
      */
     fun getAutoExposureMaxSensitivity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxSensitivityBind, handle)
     }
 
@@ -259,6 +275,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.set_auto_exposure_min_sensitivity
      */
     fun setAutoExposureMinSensitivity(minSensitivity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinSensitivityBind, handle, minSensitivity)
     }
 
@@ -271,6 +288,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      * Generated from Godot docs: CameraAttributesPractical.get_auto_exposure_min_sensitivity
      */
     fun getAutoExposureMinSensitivity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinSensitivityBind, handle)
     }
 

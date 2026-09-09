@@ -47,6 +47,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.add_stream
      */
     fun addStream(index: Int, stream: AudioStream?, weight: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, handle, index, stream?.requireOpenHandle() ?: MemorySegment.NULL, weight)
     }
 
@@ -56,6 +57,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.move_stream
      */
     fun moveStream(indexFrom: Int, indexTo: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveStreamBind, handle, indexFrom, indexTo)
     }
 
@@ -65,6 +67,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.remove_stream
      */
     fun removeStream(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeStreamBind, handle, index)
     }
 
@@ -74,6 +77,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_stream
      */
     fun setStream(index: Int, stream: AudioStream?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, handle, index, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -83,6 +87,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_stream
      */
     fun getStream(index: Int): AudioStream? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getStreamBind, handle, index)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -98,6 +103,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_stream_probability_weight
      */
     fun setStreamProbabilityWeight(index: Int, weight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setStreamProbabilityWeightBind, handle, index, weight)
     }
 
@@ -107,6 +113,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_stream_probability_weight
      */
     fun getStreamProbabilityWeight(index: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getStreamProbabilityWeightBind, handle, index)
     }
 
@@ -116,6 +123,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_streams_count
      */
     fun setStreamsCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStreamsCountBind, handle, count)
     }
 
@@ -125,6 +133,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_streams_count
      */
     fun getStreamsCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStreamsCountBind, handle)
     }
 
@@ -137,6 +146,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_random_pitch
      */
     fun setRandomPitch(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRandomPitchBind, handle, scale)
     }
 
@@ -149,6 +159,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_random_pitch
      */
     fun getRandomPitch(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchBind, handle)
     }
 
@@ -159,6 +170,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_random_pitch_semitones
      */
     fun setRandomPitchSemitones(semitones: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRandomPitchSemitonesBind, handle, semitones)
     }
 
@@ -169,6 +181,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_random_pitch_semitones
      */
     fun getRandomPitchSemitones(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchSemitonesBind, handle)
     }
 
@@ -180,6 +193,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_random_volume_offset_db
      */
     fun setRandomVolumeOffsetDb(dbOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRandomVolumeOffsetDbBind, handle, dbOffset)
     }
 
@@ -191,6 +205,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_random_volume_offset_db
      */
     fun getRandomVolumeOffsetDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRandomVolumeOffsetDbBind, handle)
     }
 
@@ -200,6 +215,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.set_playback_mode
      */
     fun setPlaybackMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, handle, mode)
     }
 
@@ -209,6 +225,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamRandomizer.get_playback_mode
      */
     fun getPlaybackMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, handle)
     }
 

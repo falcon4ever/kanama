@@ -34,34 +34,42 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setRings(value)
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
     fun setRadialSegments(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
     }
 
     fun getRadialSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 

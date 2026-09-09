@@ -18,6 +18,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.travel
      */
     fun travel(toNode: String, resetOnTeleport: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(travelBind, handle, toNode, resetOnTeleport)
     }
 
@@ -28,6 +29,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.start
      */
     fun start(node: String, reset: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(startBind, handle, node, reset)
     }
 
@@ -38,6 +40,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.next
      */
     fun next() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(nextBind, handle)
     }
 
@@ -47,6 +50,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.stop
      */
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
@@ -56,6 +60,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.is_playing
      */
     fun isPlaying(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
 
@@ -66,6 +71,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_current_node
      */
     fun getCurrentNode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentNodeBind, handle)
     }
 
@@ -75,6 +81,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_current_play_position
      */
     fun getCurrentPlayPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentPlayPositionBind, handle)
     }
 
@@ -87,6 +94,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_current_length
      */
     fun getCurrentLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentLengthBind, handle)
     }
 
@@ -96,6 +104,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_from_node
      */
     fun getFadingFromNode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getFadingFromNodeBind, handle)
     }
 
@@ -106,6 +115,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_from_play_position
      */
     fun getFadingFromPlayPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromPlayPositionBind, handle)
     }
 
@@ -116,6 +126,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_from_length
      */
     fun getFadingFromLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromLengthBind, handle)
     }
 
@@ -126,6 +137,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_position
      */
     fun getFadingPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingPositionBind, handle)
     }
 
@@ -135,6 +147,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_fading_length
      */
     fun getFadingLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingLengthBind, handle)
     }
 
@@ -144,6 +157,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      * Generated from Godot docs: AnimationNodeStateMachinePlayback.get_travel_path
      */
     fun getTravelPath(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, handle)
     }
 

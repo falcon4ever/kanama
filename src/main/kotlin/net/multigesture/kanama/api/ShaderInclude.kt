@@ -23,6 +23,7 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ShaderInclude.set_code
      */
     fun setCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
@@ -33,6 +34,7 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ShaderInclude.get_code
      */
     fun getCode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }
 

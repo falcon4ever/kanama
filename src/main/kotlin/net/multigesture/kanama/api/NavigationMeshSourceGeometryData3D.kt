@@ -39,6 +39,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_vertices
      */
     fun setVertices(vertices: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setVerticesBind, handle, vertices)
     }
 
@@ -48,6 +49,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_vertices
      */
     fun getVertices(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getVerticesBind, handle)
     }
 
@@ -59,6 +61,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_indices
      */
     fun setIndices(indices: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, handle, indices)
     }
 
@@ -68,6 +71,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_indices
      */
     fun getIndices(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }
 
@@ -78,6 +82,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.append_arrays
      */
     fun appendArrays(vertices: List<Float>, indices: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(appendArraysBind, handle, vertices, indices)
     }
 
@@ -87,6 +92,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -96,6 +102,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.has_data
      */
     fun hasData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
     }
 
@@ -107,6 +114,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_mesh
      */
     fun addMesh(mesh: Mesh?, xform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndTransform3DArg(addMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, xform)
     }
 
@@ -119,6 +127,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_mesh_array
      */
     fun addMeshArray(meshArray: List<Any?>, xform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayTransform3DArgs(addMeshArrayBind, handle, meshArray, xform)
     }
 
@@ -131,6 +140,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_faces
      */
     fun addFaces(faces: List<Vector3>, xform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListAndTransform3DArg(addFacesBind, handle, faces, xform)
     }
 
@@ -141,6 +151,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.merge
      */
     fun merge(otherGeometry: NavigationMeshSourceGeometryData3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -153,6 +164,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_projected_obstruction
      */
     fun addProjectedObstruction(vertices: List<Vector3>, elevation: Double, height: Double, carve: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(addProjectedObstructionBind, handle, vertices, elevation, height, carve)
     }
 
@@ -162,6 +174,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.clear_projected_obstructions
      */
     fun clearProjectedObstructions() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
     }
 
@@ -172,6 +185,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_projected_obstructions
      */
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, handle, projectedObstructions)
     }
 
@@ -186,6 +200,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_projected_obstructions
      */
     fun getProjectedObstructions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, handle)
     }
 
@@ -197,6 +212,7 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_bounds
      */
     fun getBounds(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
     }
 

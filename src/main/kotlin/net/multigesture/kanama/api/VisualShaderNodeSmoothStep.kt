@@ -15,10 +15,12 @@ class VisualShaderNodeSmoothStep(handle: MemorySegment) : VisualShaderNode(handl
         set(value) = setOpType(value)
 
     fun setOpType(opType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, opType)
     }
 
     fun getOpType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
     }
 

@@ -71,6 +71,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_flags
      */
     fun setFlags(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
     }
 
@@ -80,6 +81,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_flags
      */
     fun getFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
@@ -89,6 +91,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_buffer
      */
     fun setVertexBuffer(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setVertexBufferBind, handle, pMember)
     }
 
@@ -98,6 +101,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_buffer
      */
     fun getVertexBuffer(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getVertexBufferBind, handle)
     }
 
@@ -107,6 +111,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_offset
      */
     fun setVertexOffset(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setVertexOffsetBind, handle, pMember)
     }
 
@@ -116,6 +121,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_offset
      */
     fun getVertexOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexOffsetBind, handle)
     }
 
@@ -125,6 +131,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_stride
      */
     fun setVertexStride(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setVertexStrideBind, handle, pMember)
     }
 
@@ -134,6 +141,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_stride
      */
     fun getVertexStride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexStrideBind, handle)
     }
 
@@ -143,6 +151,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_count
      */
     fun setVertexCount(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setVertexCountBind, handle, pMember)
     }
 
@@ -152,6 +161,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_count
      */
     fun getVertexCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexCountBind, handle)
     }
 
@@ -161,6 +171,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_format
      */
     fun setVertexFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, handle, pMember)
     }
 
@@ -170,6 +181,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_format
      */
     fun getVertexFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, handle)
     }
 
@@ -179,6 +191,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_index_buffer
      */
     fun setIndexBuffer(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setIndexBufferBind, handle, pMember)
     }
 
@@ -188,6 +201,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_index_buffer
      */
     fun getIndexBuffer(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getIndexBufferBind, handle)
     }
 
@@ -197,6 +211,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_index_offset
      */
     fun setIndexOffset(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setIndexOffsetBind, handle, pMember)
     }
 
@@ -206,6 +221,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_index_offset
      */
     fun getIndexOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexOffsetBind, handle)
     }
 
@@ -215,6 +231,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_index_count
      */
     fun setIndexCount(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setIndexCountBind, handle, pMember)
     }
 
@@ -224,6 +241,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_index_count
      */
     fun getIndexCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexCountBind, handle)
     }
 

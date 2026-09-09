@@ -64,74 +64,92 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
         set(value) = setAdvanceExpression(value)
 
     fun setSwitchMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, handle, mode)
     }
 
     fun getSwitchMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, handle)
     }
 
     fun setAdvanceMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, handle, mode)
     }
 
     fun getAdvanceMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, handle)
     }
 
     fun setAdvanceCondition(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setAdvanceConditionBind, handle, name)
     }
 
     fun getAdvanceCondition(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getAdvanceConditionBind, handle)
     }
 
     fun setXfadeTime(secs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, secs)
     }
 
     fun getXfadeTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
     }
 
     fun setXfadeCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getXfadeCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
     }
 
     fun setBreakLoopAtEnd(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
     }
 
     fun isLoopBrokenAtEnd(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
     }
 
     fun setReset(reset: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setResetBind, handle, reset)
     }
 
     fun isReset(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isResetBind, handle)
     }
 
     fun setPriority(priority: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
     }
 
     fun getPriority(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
     }
 
     fun setAdvanceExpression(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setAdvanceExpressionBind, handle, text)
     }
 
     fun getAdvanceExpression(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, handle)
     }
 

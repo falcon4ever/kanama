@@ -34,34 +34,42 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setDb(value)
 
     fun setCutoff(freq: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCutoffBind, handle, freq)
     }
 
     fun getCutoff(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCutoffBind, handle)
     }
 
     fun setResonance(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setResonanceBind, handle, amount)
     }
 
     fun getResonance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getResonanceBind, handle)
     }
 
     fun setGain(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, amount)
     }
 
     fun getGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
     }
 
     fun setDb(amount: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDbBind, handle, amount)
     }
 
     fun getDb(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDbBind, handle)
     }
 

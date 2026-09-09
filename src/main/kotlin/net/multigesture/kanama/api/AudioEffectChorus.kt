@@ -34,6 +34,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_count
      */
     fun setVoiceCount(voices: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVoiceCountBind, handle, voices)
     }
 
@@ -43,6 +44,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_count
      */
     fun getVoiceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVoiceCountBind, handle)
     }
 
@@ -52,6 +54,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_delay_ms
      */
     fun setVoiceDelayMs(voiceIdx: Int, delayMs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceDelayMsBind, handle, voiceIdx, delayMs)
     }
 
@@ -61,6 +64,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_delay_ms
      */
     fun getVoiceDelayMs(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceDelayMsBind, handle, voiceIdx)
     }
 
@@ -70,6 +74,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_rate_hz
      */
     fun setVoiceRateHz(voiceIdx: Int, rateHz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceRateHzBind, handle, voiceIdx, rateHz)
     }
 
@@ -79,6 +84,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_rate_hz
      */
     fun getVoiceRateHz(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceRateHzBind, handle, voiceIdx)
     }
 
@@ -88,6 +94,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_depth_ms
      */
     fun setVoiceDepthMs(voiceIdx: Int, depthMs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceDepthMsBind, handle, voiceIdx, depthMs)
     }
 
@@ -97,6 +104,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_depth_ms
      */
     fun getVoiceDepthMs(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceDepthMsBind, handle, voiceIdx)
     }
 
@@ -106,6 +114,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_level_db
      */
     fun setVoiceLevelDb(voiceIdx: Int, levelDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceLevelDbBind, handle, voiceIdx, levelDb)
     }
 
@@ -115,6 +124,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_level_db
      */
     fun getVoiceLevelDb(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceLevelDbBind, handle, voiceIdx)
     }
 
@@ -124,6 +134,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_cutoff_hz
      */
     fun setVoiceCutoffHz(voiceIdx: Int, cutoffHz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceCutoffHzBind, handle, voiceIdx, cutoffHz)
     }
 
@@ -133,6 +144,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_cutoff_hz
      */
     fun getVoiceCutoffHz(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceCutoffHzBind, handle, voiceIdx)
     }
 
@@ -142,6 +154,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_voice_pan
      */
     fun setVoicePan(voiceIdx: Int, pan: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoicePanBind, handle, voiceIdx, pan)
     }
 
@@ -151,6 +164,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_voice_pan
      */
     fun getVoicePan(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoicePanBind, handle, voiceIdx)
     }
 
@@ -160,6 +174,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_wet
      */
     fun setWet(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWetBind, handle, amount)
     }
 
@@ -169,6 +184,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_wet
      */
     fun getWet(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, handle)
     }
 
@@ -178,6 +194,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.set_dry
      */
     fun setDry(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
@@ -187,6 +204,7 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectChorus.get_dry
      */
     fun getDry(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 

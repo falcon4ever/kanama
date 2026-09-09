@@ -29,6 +29,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectAmplify.set_volume_db
      */
     fun setVolumeDb(volume: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, volume)
     }
 
@@ -39,6 +40,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectAmplify.get_volume_db
      */
     fun getVolumeDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
     }
 
@@ -51,6 +53,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectAmplify.set_volume_linear
      */
     fun setVolumeLinear(volume: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, handle, volume)
     }
 
@@ -63,6 +66,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectAmplify.get_volume_linear
      */
     fun getVolumeLinear(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, handle)
     }
 

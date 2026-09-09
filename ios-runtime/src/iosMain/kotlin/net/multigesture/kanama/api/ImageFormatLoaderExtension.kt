@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(handle) {
     fun addFormatLoader() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(addFormatLoaderBind, handle)
     }
 
     fun removeFormatLoader() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(removeFormatLoaderBind, handle)
     }
 

@@ -30,6 +30,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_point_count
      */
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
@@ -39,6 +40,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.set_point_count
      */
     fun setPointCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
@@ -53,6 +55,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.add_point
      */
     fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0f, 0f), out: Vector2 = Vector2(0f, 0f), index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, handle, position, inValue, out, index)
     }
 
@@ -63,6 +66,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.set_point_position
      */
     fun setPointPosition(idx: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, handle, idx, position)
     }
 
@@ -73,6 +77,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_point_position
      */
     fun getPointPosition(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, idx)
     }
 
@@ -83,6 +88,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.set_point_in
      */
     fun setPointIn(idx: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointInBind, handle, idx, position)
     }
 
@@ -94,6 +100,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_point_in
      */
     fun getPointIn(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointInBind, handle, idx)
     }
 
@@ -104,6 +111,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.set_point_out
      */
     fun setPointOut(idx: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointOutBind, handle, idx, position)
     }
 
@@ -115,6 +123,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_point_out
      */
     fun getPointOut(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointOutBind, handle, idx)
     }
 
@@ -124,6 +133,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.remove_point
      */
     fun removePoint(idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, idx)
     }
 
@@ -133,6 +143,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.clear_points
      */
     fun clearPoints() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
 
@@ -146,6 +157,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.sample
      */
     fun sample(idx: Int, t: Double): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(sampleBind, handle, idx, t)
     }
 
@@ -156,6 +168,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.samplef
      */
     fun samplef(fofs: Double): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetVector2(samplefBind, handle, fofs)
     }
 
@@ -168,6 +181,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.set_bake_interval
      */
     fun setBakeInterval(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, handle, distance)
     }
 
@@ -180,6 +194,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_bake_interval
      */
     fun getBakeInterval(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, handle)
     }
 
@@ -190,6 +205,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_baked_length
      */
     fun getBakedLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, handle)
     }
 
@@ -203,6 +219,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.sample_baked
      */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(sampleBakedBind, handle, offset, cubic)
     }
 
@@ -215,6 +232,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.sample_baked_with_rotation
      */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(sampleBakedWithRotationBind, handle, offset, cubic)
     }
 
@@ -224,6 +242,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_baked_points
      */
     fun getBakedPoints(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getBakedPointsBind, handle)
     }
 
@@ -234,6 +253,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_closest_point
      */
     fun getClosestPoint(toPoint: Vector2): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, toPoint)
     }
 
@@ -244,6 +264,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.get_closest_offset
      */
     fun getClosestOffset(toPoint: Vector2): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getClosestOffsetBind, handle, toPoint)
     }
 
@@ -260,6 +281,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.tessellate
      */
     fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(tessellateBind, handle, maxStages, toleranceDegrees)
     }
 
@@ -273,6 +295,7 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve2D.tessellate_even_length
      */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 20.0): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(tessellateEvenLengthBind, handle, maxStages, toleranceLength)
     }
 

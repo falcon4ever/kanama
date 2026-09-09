@@ -28,26 +28,32 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setFftSize(value)
 
     fun setPitchScale(rate: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, rate)
     }
 
     fun getPitchScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
     }
 
     fun setOversampling(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOversamplingBind, handle, amount)
     }
 
     fun getOversampling(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, handle)
     }
 
     fun setFftSize(size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
     fun getFftSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }
 

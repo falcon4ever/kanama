@@ -68,118 +68,147 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
         set(value) = setPhysicsInterpolationQuality(value)
 
     fun setMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMesh(): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
     fun setUseColors(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseColorsBind, handle, enable)
     }
 
     fun isUsingColors(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingColorsBind, handle)
     }
 
     fun setUseCustomData(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseCustomDataBind, handle, enable)
     }
 
     fun isUsingCustomData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomDataBind, handle)
     }
 
     fun setTransformFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, handle, format)
     }
 
     fun getTransformFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, handle)
     }
 
     fun setInstanceCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInstanceCountBind, handle, count)
     }
 
     fun getInstanceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInstanceCountBind, handle)
     }
 
     fun setVisibleInstanceCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVisibleInstanceCountBind, handle, count)
     }
 
     fun getVisibleInstanceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleInstanceCountBind, handle)
     }
 
     fun setPhysicsInterpolationQuality(quality: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, handle, quality)
     }
 
     fun getPhysicsInterpolationQuality(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, handle)
     }
 
     fun setInstanceTransform(instance: Int, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setInstanceTransformBind, handle, instance, transform)
     }
 
     fun setInstanceTransform2d(instance: Int, transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform2DArg(setInstanceTransform2dBind, handle, instance, transform)
     }
 
     fun getInstanceTransform(instance: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getInstanceTransformBind, handle, instance)
     }
 
     fun getInstanceTransform2d(instance: Int): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform2D(getInstanceTransform2dBind, handle, instance)
     }
 
     fun setInstanceColor(instance: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setInstanceColorBind, handle, instance, color)
     }
 
     fun getInstanceColor(instance: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceColorBind, handle, instance)
     }
 
     fun setInstanceCustomData(instance: Int, customData: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setInstanceCustomDataBind, handle, instance, customData)
     }
 
     fun getInstanceCustomData(instance: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceCustomDataBind, handle, instance)
     }
 
     fun resetInstancePhysicsInterpolation(instance: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(resetInstancePhysicsInterpolationBind, handle, instance)
     }
 
     fun resetInstancesPhysicsInterpolation() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetInstancesPhysicsInterpolationBind, handle)
     }
 
     fun setCustomAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
     fun getCustomAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
     fun getAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
     }
 
     fun getBuffer(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBufferBind, handle)
     }
 
     fun setBuffer(buffer: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBufferBind, handle, buffer)
     }
 

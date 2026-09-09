@@ -29,6 +29,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      * Generated from Godot docs: RDPipelineSpecializationConstant.set_value
      */
     fun setValue(value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(setValueBind, handle, value)
     }
 
@@ -39,6 +40,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      * Generated from Godot docs: RDPipelineSpecializationConstant.get_value
      */
     fun getValue(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getValueBind, handle)
     }
 
@@ -49,6 +51,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      * Generated from Godot docs: RDPipelineSpecializationConstant.set_constant_id
      */
     fun setConstantId(constantId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setConstantIdBind, handle, constantId)
     }
 
@@ -59,6 +62,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      * Generated from Godot docs: RDPipelineSpecializationConstant.get_constant_id
      */
     fun getConstantId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getConstantIdBind, handle)
     }
 

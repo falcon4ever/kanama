@@ -15,6 +15,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -24,6 +25,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.get_width
      */
     fun getWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
@@ -33,6 +35,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.get_height
      */
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
@@ -43,6 +46,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.get_depth
      */
     fun getDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, handle)
     }
 
@@ -52,6 +56,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.has_mipmaps
      */
     fun hasMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
@@ -62,6 +67,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.get_data
      */
     fun getData(): List<Image> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, handle, Image::fromHandle)
     }
 
@@ -71,6 +77,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture3D.create_placeholder
      */
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

@@ -66,6 +66,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_predelay_msec
      */
     fun setPredelayMsec(msec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPredelayMsecBind, handle, msec)
     }
 
@@ -76,6 +77,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_predelay_msec
      */
     fun getPredelayMsec(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayMsecBind, handle)
     }
 
@@ -86,6 +88,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_predelay_feedback
      */
     fun setPredelayFeedback(feedback: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPredelayFeedbackBind, handle, feedback)
     }
 
@@ -96,6 +99,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_predelay_feedback
      */
     fun getPredelayFeedback(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayFeedbackBind, handle)
     }
 
@@ -105,6 +109,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_room_size
      */
     fun setRoomSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRoomSizeBind, handle, size)
     }
 
@@ -114,6 +119,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_room_size
      */
     fun getRoomSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRoomSizeBind, handle)
     }
 
@@ -124,6 +130,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_damping
      */
     fun setDamping(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, amount)
     }
 
@@ -134,6 +141,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_damping
      */
     fun getDamping(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
     }
 
@@ -144,6 +152,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_spread
      */
     fun setSpread(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, amount)
     }
 
@@ -154,6 +163,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_spread
      */
     fun getSpread(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
     }
 
@@ -164,6 +174,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_dry
      */
     fun setDry(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
@@ -174,6 +185,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_dry
      */
     fun getDry(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 
@@ -184,6 +196,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_wet
      */
     fun setWet(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWetBind, handle, amount)
     }
 
@@ -194,6 +207,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_wet
      */
     fun getWet(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, handle)
     }
 
@@ -204,6 +218,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.set_hpf
      */
     fun setHpf(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHpfBind, handle, amount)
     }
 
@@ -214,6 +229,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectReverb.get_hpf
      */
     fun getHpf(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHpfBind, handle)
     }
 

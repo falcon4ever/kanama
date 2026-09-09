@@ -42,342 +42,427 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
         set(value) = setUvClipping(value)
 
     fun getNextSourceId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNextSourceIdBind, handle)
     }
 
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, handle, source?.requireOpenHandle() ?: MemorySegment.NULL, atlasSourceIdOverride)
     }
 
     fun removeSource(sourceId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeSourceBind, handle, sourceId)
     }
 
     fun setSourceId(sourceId: Int, newSourceId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setSourceIdBind, handle, sourceId, newSourceId)
     }
 
     fun getSourceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSourceCountBind, handle)
     }
 
     fun getSourceId(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSourceIdBind, handle, index)
     }
 
     fun hasSource(sourceId: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceBind, handle, sourceId)
     }
 
     fun getSource(sourceId: Int): TileSetSource? {
+        checkOpen()
         return TileSetSource.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, handle, sourceId))
     }
 
     fun setTileShape(shape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTileShapeBind, handle, shape)
     }
 
     fun getTileShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, handle)
     }
 
     fun setTileLayout(layout: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, handle, layout)
     }
 
     fun getTileLayout(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, handle)
     }
 
     fun setTileOffsetAxis(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, handle, alignment)
     }
 
     fun getTileOffsetAxis(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, handle)
     }
 
     fun setTileSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setTileSizeBind, handle, size)
     }
 
     fun getTileSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTileSizeBind, handle)
     }
 
     fun setUvClipping(uvClipping: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUvClippingBind, handle, uvClipping)
     }
 
     fun isUvClipping(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUvClippingBind, handle)
     }
 
     fun getOcclusionLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOcclusionLayersCountBind, handle)
     }
 
     fun addOcclusionLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addOcclusionLayerBind, handle, toPosition)
     }
 
     fun moveOcclusionLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveOcclusionLayerBind, handle, layerIndex, toPosition)
     }
 
     fun removeOcclusionLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeOcclusionLayerBind, handle, layerIndex)
     }
 
     fun setOcclusionLayerLightMask(layerIndex: Int, lightMask: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setOcclusionLayerLightMaskBind, handle, layerIndex, lightMask)
     }
 
     fun getOcclusionLayerLightMask(layerIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getOcclusionLayerLightMaskBind, handle, layerIndex)
     }
 
     fun setOcclusionLayerSdfCollision(layerIndex: Int, sdfCollision: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setOcclusionLayerSdfCollisionBind, handle, layerIndex, sdfCollision)
     }
 
     fun getOcclusionLayerSdfCollision(layerIndex: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getOcclusionLayerSdfCollisionBind, handle, layerIndex)
     }
 
     fun getPhysicsLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsLayersCountBind, handle)
     }
 
     fun addPhysicsLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addPhysicsLayerBind, handle, toPosition)
     }
 
     fun movePhysicsLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(movePhysicsLayerBind, handle, layerIndex, toPosition)
     }
 
     fun removePhysicsLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePhysicsLayerBind, handle, layerIndex)
     }
 
     fun setPhysicsLayerCollisionLayer(layerIndex: Int, layer: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionLayerBind, handle, layerIndex, layer)
     }
 
     fun getPhysicsLayerCollisionLayer(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionLayerBind, handle, layerIndex)
     }
 
     fun setPhysicsLayerCollisionMask(layerIndex: Int, mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionMaskBind, handle, layerIndex, mask)
     }
 
     fun getPhysicsLayerCollisionMask(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionMaskBind, handle, layerIndex)
     }
 
     fun setPhysicsLayerCollisionPriority(layerIndex: Int, priority: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPhysicsLayerCollisionPriorityBind, handle, layerIndex, priority)
     }
 
     fun getPhysicsLayerCollisionPriority(layerIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPhysicsLayerCollisionPriorityBind, handle, layerIndex)
     }
 
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, handle, layerIndex, physicsMaterial?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
+        checkOpen()
         return PhysicsMaterial.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, handle, layerIndex))
     }
 
     fun getTerrainSetsCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetsCountBind, handle)
     }
 
     fun addTerrainSet(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addTerrainSetBind, handle, toPosition)
     }
 
     fun moveTerrainSet(terrainSet: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveTerrainSetBind, handle, terrainSet, toPosition)
     }
 
     fun removeTerrainSet(terrainSet: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeTerrainSetBind, handle, terrainSet)
     }
 
     fun setTerrainSetMode(terrainSet: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, handle, terrainSet, mode)
     }
 
     fun getTerrainSetMode(terrainSet: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, handle, terrainSet)
     }
 
     fun getTerrainsCount(terrainSet: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getTerrainsCountBind, handle, terrainSet)
     }
 
     fun addTerrain(terrainSet: Int, toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(addTerrainBind, handle, terrainSet, toPosition)
     }
 
     fun moveTerrain(terrainSet: Int, terrainIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(moveTerrainBind, handle, terrainSet, terrainIndex, toPosition)
     }
 
     fun removeTerrain(terrainSet: Int, terrainIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(removeTerrainBind, handle, terrainSet, terrainIndex)
     }
 
     fun clearTerrains(terrainSet: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(clearTerrainsBind, handle, terrainSet)
     }
 
     fun setTerrainName(terrainSet: Int, terrainIndex: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(setTerrainNameBind, handle, terrainSet, terrainIndex, name)
     }
 
     fun setTerrainColor(terrainSet: Int, terrainIndex: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndColorArg(setTerrainColorBind, handle, terrainSet, terrainIndex, color)
     }
 
     fun getTerrainColor(terrainSet: Int, terrainIndex: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getTerrainColorBind, handle, terrainSet, terrainIndex)
     }
 
     fun getNavigationLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNavigationLayersCountBind, handle)
     }
 
     fun addNavigationLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addNavigationLayerBind, handle, toPosition)
     }
 
     fun moveNavigationLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveNavigationLayerBind, handle, layerIndex, toPosition)
     }
 
     fun removeNavigationLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeNavigationLayerBind, handle, layerIndex)
     }
 
     fun setNavigationLayerLayers(layerIndex: Int, layers: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setNavigationLayerLayersBind, handle, layerIndex, layers)
     }
 
     fun getNavigationLayerLayers(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getNavigationLayerLayersBind, handle, layerIndex)
     }
 
     fun setNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int, value: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setNavigationLayerLayerValueBind, handle, layerIndex, layerNumber, value)
     }
 
     fun getNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getNavigationLayerLayerValueBind, handle, layerIndex, layerNumber)
     }
 
     fun getCustomDataLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCustomDataLayersCountBind, handle)
     }
 
     fun addCustomDataLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addCustomDataLayerBind, handle, toPosition)
     }
 
     fun moveCustomDataLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveCustomDataLayerBind, handle, layerIndex, toPosition)
     }
 
     fun removeCustomDataLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeCustomDataLayerBind, handle, layerIndex)
     }
 
     fun getCustomDataLayerByName(layerName: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(getCustomDataLayerByNameBind, handle, layerName)
     }
 
     fun setCustomDataLayerName(layerIndex: Int, layerName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setCustomDataLayerNameBind, handle, layerIndex, layerName)
     }
 
     fun hasCustomDataLayerByName(layerName: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, handle, layerName)
     }
 
     fun setCustomDataLayerType(layerIndex: Int, layerType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, handle, layerIndex, layerType)
     }
 
     fun getCustomDataLayerType(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, handle, layerIndex)
     }
 
     fun setSourceLevelTileProxy(sourceFrom: Int, sourceTo: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setSourceLevelTileProxyBind, handle, sourceFrom, sourceTo)
     }
 
     fun getSourceLevelTileProxy(sourceFrom: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
     fun hasSourceLevelTileProxy(sourceFrom: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
     fun removeSourceLevelTileProxy(sourceFrom: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
     fun setCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, sourceTo: Int, coordsTo: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(setCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom, sourceTo, coordsTo)
     }
 
     fun hasCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(hasCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
     fun removeCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
     fun setAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int, sourceTo: Int, coordsTo: Vector2i, alternativeTo: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(setAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
     }
 
     fun hasAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(hasAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     fun removeAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     fun cleanupInvalidTileProxies() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(cleanupInvalidTileProxiesBind, handle)
     }
 
     fun clearTileProxies() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearTileProxiesBind, handle)
     }
 
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, handle, pattern?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
     fun getPattern(index: Int = -1): TileMapPattern? {
+        checkOpen()
         return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, handle, index))
     }
 
     fun removePattern(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePatternBind, handle, index)
     }
 
     fun getPatternsCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, handle)
     }
 

@@ -30,10 +30,12 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
         set(value) = setPolygon(value)
 
     fun setPolygonClosed(closed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPolygonClosedBind, handle, closed)
     }
 
     fun isPolygonClosed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPolygonClosedBind, handle)
     }
 
@@ -43,6 +45,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: OccluderPolygon2D.set_cull_mode
      */
     fun setCullMode(cullMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
     }
 
@@ -52,6 +55,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: OccluderPolygon2D.get_cull_mode
      */
     fun getCullMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
@@ -61,6 +65,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: OccluderPolygon2D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
@@ -70,6 +75,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: OccluderPolygon2D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 

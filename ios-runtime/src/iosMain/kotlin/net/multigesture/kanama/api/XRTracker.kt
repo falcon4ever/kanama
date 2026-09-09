@@ -28,26 +28,32 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setTrackerDesc(value)
 
     fun getTrackerType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, handle)
     }
 
     fun setTrackerType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, handle, type)
     }
 
     fun getTrackerName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerNameBind, handle)
     }
 
     fun setTrackerName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setTrackerNameBind, handle, name)
     }
 
     fun getTrackerDesc(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTrackerDescBind, handle)
     }
 
     fun setTrackerDesc(description: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTrackerDescBind, handle, description)
     }
 

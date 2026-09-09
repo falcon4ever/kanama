@@ -763,6 +763,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_direction
      */
     fun setDirection(degrees: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, handle, degrees)
     }
 
@@ -772,6 +773,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_direction
      */
     fun getDirection(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, handle)
     }
 
@@ -782,6 +784,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_inherit_velocity_ratio
      */
     fun setInheritVelocityRatio(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setInheritVelocityRatioBind, handle, ratio)
     }
 
@@ -792,6 +795,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_inherit_velocity_ratio
      */
     fun getInheritVelocityRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getInheritVelocityRatioBind, handle)
     }
 
@@ -801,6 +805,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_spread
      */
     fun setSpread(degrees: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, degrees)
     }
 
@@ -810,6 +815,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_spread
      */
     fun getSpread(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
     }
 
@@ -819,6 +825,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_flatness
      */
     fun setFlatness(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, handle, amount)
     }
 
@@ -828,6 +835,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_flatness
      */
     fun getFlatness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, handle)
     }
 
@@ -838,6 +846,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_param
      */
     fun setParam(param: Long, value: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, handle, param, value)
     }
 
@@ -848,6 +857,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_param
      */
     fun getParam(param: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, handle, param)
     }
 
@@ -859,6 +869,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_param_min
      */
     fun setParamMin(param: Long, value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, handle, param, value)
     }
 
@@ -870,6 +881,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_param_min
      */
     fun getParamMin(param: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, handle, param)
     }
 
@@ -881,6 +893,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_param_max
      */
     fun setParamMax(param: Long, value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, handle, param, value)
     }
 
@@ -892,6 +905,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_param_max
      */
     fun getParamMax(param: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, handle, param)
     }
 
@@ -902,6 +916,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_param_texture
      */
     fun setParamTexture(param: Long, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, handle, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -912,6 +927,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_param_texture
      */
     fun getParamTexture(param: Long): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, handle, param))
     }
 
@@ -925,6 +941,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_color
      */
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
@@ -938,6 +955,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_color
      */
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
@@ -947,6 +965,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_use_scale_3d
      */
     fun setUseScale3d(usingScale3d: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseScale3dBind, handle, usingScale3d)
     }
 
@@ -956,6 +975,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.is_using_scale_3d
      */
     fun isUsingScale3d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingScale3dBind, handle)
     }
 
@@ -966,6 +986,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_scale_3d_min
      */
     fun setScale3dMin(scale3dMin: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setScale3dMinBind, handle, scale3dMin)
     }
 
@@ -976,6 +997,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_scale_3d_min
      */
     fun getScale3dMin(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMinBind, handle)
     }
 
@@ -986,6 +1008,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_scale_3d_max
      */
     fun setScale3dMax(scale3dMax: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setScale3dMaxBind, handle, scale3dMax)
     }
 
@@ -996,6 +1019,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_scale_3d_max
      */
     fun getScale3dMax(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMaxBind, handle)
     }
 
@@ -1005,6 +1029,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_use_rotation_3d
      */
     fun setUseRotation3d(usingRotation3d: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseRotation3dBind, handle, usingRotation3d)
     }
 
@@ -1014,6 +1039,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.is_using_rotation_3d
      */
     fun isUsingRotation3d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotation3dBind, handle)
     }
 
@@ -1023,6 +1049,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_rotation_3d_min
      */
     fun setRotation3dMin(rotation3dMin: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotation3dMinBind, handle, rotation3dMin)
     }
 
@@ -1032,6 +1059,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_rotation_3d_min
      */
     fun getRotation3dMin(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMinBind, handle)
     }
 
@@ -1041,6 +1069,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_rotation_3d_max
      */
     fun setRotation3dMax(rotation3dMax: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotation3dMaxBind, handle, rotation3dMax)
     }
 
@@ -1050,6 +1079,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_rotation_3d_max
      */
     fun getRotation3dMax(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMaxBind, handle)
     }
 
@@ -1063,6 +1093,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_color_ramp
      */
     fun setColorRamp(ramp: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1076,6 +1107,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_color_ramp
      */
     fun getColorRamp(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
     }
 
@@ -1089,6 +1121,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_alpha_curve
      */
     fun setAlphaCurve(curve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAlphaCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1102,6 +1135,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_alpha_curve
      */
     fun getAlphaCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, handle))
     }
 
@@ -1115,6 +1149,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_curve
      */
     fun setEmissionCurve(curve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1128,6 +1163,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_curve
      */
     fun getEmissionCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, handle))
     }
 
@@ -1141,6 +1177,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_color_initial_ramp
      */
     fun setColorInitialRamp(ramp: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1154,6 +1191,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_color_initial_ramp
      */
     fun getColorInitialRamp(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, handle))
     }
 
@@ -1163,6 +1201,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_velocity_limit_curve
      */
     fun setVelocityLimitCurve(curve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setVelocityLimitCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1172,6 +1211,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_velocity_limit_curve
      */
     fun getVelocityLimitCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, handle))
     }
 
@@ -1181,6 +1221,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_particle_flag
      */
     fun setParticleFlag(particleFlag: Long, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, handle, particleFlag, enable)
     }
 
@@ -1190,6 +1231,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_particle_flag
      */
     fun getParticleFlag(particleFlag: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, handle, particleFlag)
     }
 
@@ -1199,6 +1241,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_velocity_pivot
      */
     fun setVelocityPivot(pivot: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setVelocityPivotBind, handle, pivot)
     }
 
@@ -1208,6 +1251,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_velocity_pivot
      */
     fun getVelocityPivot(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityPivotBind, handle)
     }
 
@@ -1217,6 +1261,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_shape
      */
     fun setEmissionShape(shape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, handle, shape)
     }
 
@@ -1226,6 +1271,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_shape
      */
     fun getEmissionShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, handle)
     }
 
@@ -1235,6 +1281,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_sphere_radius
      */
     fun setEmissionSphereRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, handle, radius)
     }
 
@@ -1244,6 +1291,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_sphere_radius
      */
     fun getEmissionSphereRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, handle)
     }
 
@@ -1255,6 +1303,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_box_extents
      */
     fun setEmissionBoxExtents(extents: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, handle, extents)
     }
 
@@ -1266,6 +1315,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_box_extents
      */
     fun getEmissionBoxExtents(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, handle)
     }
 
@@ -1278,6 +1328,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_point_texture
      */
     fun setEmissionPointTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionPointTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1290,6 +1341,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_point_texture
      */
     fun getEmissionPointTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, handle))
     }
 
@@ -1302,6 +1354,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_normal_texture
      */
     fun setEmissionNormalTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1314,6 +1367,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_normal_texture
      */
     fun getEmissionNormalTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, handle))
     }
 
@@ -1328,6 +1382,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_color_texture
      */
     fun setEmissionColorTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionColorTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1342,6 +1397,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_color_texture
      */
     fun getEmissionColorTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, handle))
     }
 
@@ -1352,6 +1408,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_point_count
      */
     fun setEmissionPointCount(pointCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setEmissionPointCountBind, handle, pointCount)
     }
 
@@ -1362,6 +1419,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_point_count
      */
     fun getEmissionPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEmissionPointCountBind, handle)
     }
 
@@ -1371,6 +1429,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_axis
      */
     fun setEmissionRingAxis(axis: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, handle, axis)
     }
 
@@ -1380,6 +1439,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_axis
      */
     fun getEmissionRingAxis(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, handle)
     }
 
@@ -1389,6 +1449,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_height
      */
     fun setEmissionRingHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, handle, height)
     }
 
@@ -1398,6 +1459,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_height
      */
     fun getEmissionRingHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, handle)
     }
 
@@ -1407,6 +1469,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_radius
      */
     fun setEmissionRingRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, handle, radius)
     }
 
@@ -1416,6 +1479,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_radius
      */
     fun getEmissionRingRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, handle)
     }
 
@@ -1425,6 +1489,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_inner_radius
      */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, handle, innerRadius)
     }
 
@@ -1434,6 +1499,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_inner_radius
      */
     fun getEmissionRingInnerRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, handle)
     }
 
@@ -1447,6 +1513,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_cone_angle
      */
     fun setEmissionRingConeAngle(coneAngle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, handle, coneAngle)
     }
 
@@ -1460,6 +1527,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_cone_angle
      */
     fun getEmissionRingConeAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, handle)
     }
 
@@ -1469,6 +1537,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_shape_offset
      */
     fun setEmissionShapeOffset(emissionShapeOffset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeOffsetBind, handle, emissionShapeOffset)
     }
 
@@ -1478,6 +1547,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_shape_offset
      */
     fun getEmissionShapeOffset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeOffsetBind, handle)
     }
 
@@ -1487,6 +1557,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_shape_scale
      */
     fun setEmissionShapeScale(emissionShapeScale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeScaleBind, handle, emissionShapeScale)
     }
 
@@ -1496,6 +1567,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_shape_scale
      */
     fun getEmissionShapeScale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeScaleBind, handle)
     }
 
@@ -1511,6 +1583,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_turbulence_enabled
      */
     fun getTurbulenceEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getTurbulenceEnabledBind, handle)
     }
 
@@ -1526,6 +1599,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_turbulence_enabled
      */
     fun setTurbulenceEnabled(turbulenceEnabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTurbulenceEnabledBind, handle, turbulenceEnabled)
     }
 
@@ -1536,6 +1610,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_turbulence_noise_strength
      */
     fun getTurbulenceNoiseStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseStrengthBind, handle)
     }
 
@@ -1546,6 +1621,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_turbulence_noise_strength
      */
     fun setTurbulenceNoiseStrength(turbulenceNoiseStrength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseStrengthBind, handle, turbulenceNoiseStrength)
     }
 
@@ -1557,6 +1633,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_turbulence_noise_scale
      */
     fun getTurbulenceNoiseScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseScaleBind, handle)
     }
 
@@ -1568,6 +1645,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_turbulence_noise_scale
      */
     fun setTurbulenceNoiseScale(turbulenceNoiseScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseScaleBind, handle, turbulenceNoiseScale)
     }
 
@@ -1578,6 +1656,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_turbulence_noise_speed_random
      */
     fun getTurbulenceNoiseSpeedRandom(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseSpeedRandomBind, handle)
     }
 
@@ -1588,6 +1667,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_turbulence_noise_speed_random
      */
     fun setTurbulenceNoiseSpeedRandom(turbulenceNoiseSpeedRandom: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseSpeedRandomBind, handle, turbulenceNoiseSpeedRandom)
     }
 
@@ -1598,6 +1678,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_turbulence_noise_speed
      */
     fun getTurbulenceNoiseSpeed(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getTurbulenceNoiseSpeedBind, handle)
     }
 
@@ -1608,6 +1689,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_turbulence_noise_speed
      */
     fun setTurbulenceNoiseSpeed(turbulenceNoiseSpeed: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setTurbulenceNoiseSpeedBind, handle, turbulenceNoiseSpeed)
     }
 
@@ -1617,6 +1699,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_gravity
      */
     fun getGravity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, handle)
     }
 
@@ -1626,6 +1709,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_gravity
      */
     fun setGravity(accelVec: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setGravityBind, handle, accelVec)
     }
 
@@ -1637,6 +1721,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_lifetime_randomness
      */
     fun setLifetimeRandomness(randomness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, handle, randomness)
     }
 
@@ -1648,6 +1733,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_lifetime_randomness
      */
     fun getLifetimeRandomness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, handle)
     }
 
@@ -1658,6 +1744,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_mode
      */
     fun getSubEmitterMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, handle)
     }
 
@@ -1668,6 +1755,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_mode
      */
     fun setSubEmitterMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, handle, mode)
     }
 
@@ -1681,6 +1769,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_frequency
      */
     fun getSubEmitterFrequency(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSubEmitterFrequencyBind, handle)
     }
 
@@ -1694,6 +1783,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_frequency
      */
     fun setSubEmitterFrequency(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSubEmitterFrequencyBind, handle, hz)
     }
 
@@ -1707,6 +1797,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_amount_at_end
      */
     fun getSubEmitterAmountAtEnd(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtEndBind, handle)
     }
 
@@ -1720,6 +1811,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_amount_at_end
      */
     fun setSubEmitterAmountAtEnd(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtEndBind, handle, amount)
     }
 
@@ -1734,6 +1826,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_amount_at_collision
      */
     fun getSubEmitterAmountAtCollision(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtCollisionBind, handle)
     }
 
@@ -1748,6 +1841,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_amount_at_collision
      */
     fun setSubEmitterAmountAtCollision(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtCollisionBind, handle, amount)
     }
 
@@ -1761,6 +1855,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_amount_at_start
      */
     fun getSubEmitterAmountAtStart(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtStartBind, handle)
     }
 
@@ -1774,6 +1869,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_amount_at_start
      */
     fun setSubEmitterAmountAtStart(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtStartBind, handle, amount)
     }
 
@@ -1783,6 +1879,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_keep_velocity
      */
     fun getSubEmitterKeepVelocity(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSubEmitterKeepVelocityBind, handle)
     }
 
@@ -1792,6 +1889,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_keep_velocity
      */
     fun setSubEmitterKeepVelocity(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSubEmitterKeepVelocityBind, handle, enable)
     }
 
@@ -1802,6 +1900,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_attractor_interaction_enabled
      */
     fun setAttractorInteractionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAttractorInteractionEnabledBind, handle, enabled)
     }
 
@@ -1812,6 +1911,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.is_attractor_interaction_enabled
      */
     fun isAttractorInteractionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAttractorInteractionEnabledBind, handle)
     }
 
@@ -1826,6 +1926,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_mode
      */
     fun setCollisionMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, handle, mode)
     }
 
@@ -1840,6 +1941,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_collision_mode
      */
     fun getCollisionMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, handle)
     }
 
@@ -1850,6 +1952,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_use_scale
      */
     fun setCollisionUseScale(radius: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollisionUseScaleBind, handle, radius)
     }
 
@@ -1860,6 +1963,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.is_collision_using_scale
      */
     fun isCollisionUsingScale(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollisionUsingScaleBind, handle)
     }
 
@@ -1870,6 +1974,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_friction
      */
     fun setCollisionFriction(friction: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCollisionFrictionBind, handle, friction)
     }
 
@@ -1880,6 +1985,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_collision_friction
      */
     fun getCollisionFriction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionFrictionBind, handle)
     }
 
@@ -1890,6 +1996,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_bounce
      */
     fun setCollisionBounce(bounce: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCollisionBounceBind, handle, bounce)
     }
 
@@ -1900,6 +2007,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_collision_bounce
      */
     fun getCollisionBounce(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBounceBind, handle)
     }
 
@@ -1909,6 +2017,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_using_rotation_velocity_3d
      */
     fun setUsingRotationVelocity3d(useRotationVelocity3d: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUsingRotationVelocity3dBind, handle, useRotationVelocity3d)
     }
 
@@ -1918,6 +2027,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.is_using_rotation_velocity_3d
      */
     fun isUsingRotationVelocity3d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotationVelocity3dBind, handle)
     }
 
@@ -1928,6 +2038,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_rotation_velocity_3d_max
      */
     fun setRotationVelocity3dMax(rotationVelocity3dMax: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMaxBind, handle, rotationVelocity3dMax)
     }
 
@@ -1938,6 +2049,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_rotation_velocity_3d_max
      */
     fun getRotationVelocity3dMax(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMaxBind, handle)
     }
 
@@ -1948,6 +2060,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_rotation_velocity_3d_min
      */
     fun setRotationVelocity3dMin(rotationVelocity3dMin: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMinBind, handle, rotationVelocity3dMin)
     }
 
@@ -1958,6 +2071,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_rotation_velocity_3d_min
      */
     fun getRotationVelocity3dMin(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMinBind, handle)
     }
 
@@ -1967,6 +2081,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.set_rotation_velocity_3d_curve
      */
     fun setRotationVelocity3dCurve(rotationVelocity3dCurve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setRotationVelocity3dCurveBind, handle, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -1976,6 +2091,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ParticleProcessMaterial.get_rotation_velocity_3d_curve
      */
     fun getRotationVelocity3dCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, handle))
     }
 

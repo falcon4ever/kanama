@@ -17,6 +17,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.set_format
      */
     fun setFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
@@ -26,6 +27,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.set_use_mipmaps
      */
     fun setUseMipmaps(mipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, handle, mipmaps)
     }
 
@@ -35,6 +37,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.get_use_mipmaps
      */
     fun getUseMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseMipmapsBind, handle)
     }
 
@@ -44,6 +47,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.setup
      */
     fun setup(width: Int, height: Int, format: Long, color: Color, useMipmaps: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, handle, width, height, format, color, useMipmaps)
     }
 
@@ -56,6 +60,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.blit_rect
      */
     fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, handle, rect, source?.requireOpenHandle() ?: MemorySegment.NULL, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -68,6 +73,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.blit_rect_multi
      */
     fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = 0, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(blitRectMultiBind, handle, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -77,6 +83,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DrawableTexture2D.generate_mipmaps
      */
     fun generateMipmaps() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(generateMipmapsBind, handle)
     }
 

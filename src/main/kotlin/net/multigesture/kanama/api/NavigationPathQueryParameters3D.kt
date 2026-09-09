@@ -108,6 +108,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_pathfinding_algorithm
      */
     fun setPathfindingAlgorithm(pathfindingAlgorithm: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, handle, pathfindingAlgorithm)
     }
 
@@ -117,6 +118,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_pathfinding_algorithm
      */
     fun getPathfindingAlgorithm(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, handle)
     }
 
@@ -126,6 +128,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_path_postprocessing
      */
     fun setPathPostprocessing(pathPostprocessing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, handle, pathPostprocessing)
     }
 
@@ -135,6 +138,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_path_postprocessing
      */
     fun getPathPostprocessing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, handle)
     }
 
@@ -144,6 +148,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_map
      */
     fun setMap(map: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setMapBind, handle, map)
     }
 
@@ -153,6 +158,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_map
      */
     fun getMap(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getMapBind, handle)
     }
 
@@ -162,6 +168,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_start_position
      */
     fun setStartPosition(startPosition: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setStartPositionBind, handle, startPosition)
     }
 
@@ -171,6 +178,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_start_position
      */
     fun getStartPosition(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getStartPositionBind, handle)
     }
 
@@ -180,6 +188,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_target_position
      */
     fun setTargetPosition(targetPosition: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setTargetPositionBind, handle, targetPosition)
     }
 
@@ -189,6 +198,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_target_position
      */
     fun getTargetPosition(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getTargetPositionBind, handle)
     }
 
@@ -198,6 +208,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
     }
 
@@ -207,6 +218,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
     }
 
@@ -216,6 +228,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_metadata_flags
      */
     fun setMetadataFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, handle, flags)
     }
 
@@ -225,6 +238,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_metadata_flags
      */
     fun getMetadataFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, handle)
     }
 
@@ -238,6 +252,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_simplify_path
      */
     fun setSimplifyPath(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, handle, enabled)
     }
 
@@ -251,6 +266,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_simplify_path
      */
     fun getSimplifyPath(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, handle)
     }
 
@@ -260,6 +276,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_simplify_epsilon
      */
     fun setSimplifyEpsilon(epsilon: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, handle, epsilon)
     }
 
@@ -269,6 +286,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_simplify_epsilon
      */
     fun getSimplifyEpsilon(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, handle)
     }
 
@@ -283,6 +301,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_included_regions
      */
     fun setIncludedRegions(regions: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setIncludedRegionsBind, handle, regions)
     }
 
@@ -297,6 +316,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_included_regions
      */
     fun getIncludedRegions(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getIncludedRegionsBind, handle)
     }
 
@@ -310,6 +330,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_excluded_regions
      */
     fun setExcludedRegions(regions: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludedRegionsBind, handle, regions)
     }
 
@@ -323,6 +344,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_excluded_regions
      */
     fun getExcludedRegions(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludedRegionsBind, handle)
     }
 
@@ -333,6 +355,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_path_return_max_length
      */
     fun setPathReturnMaxLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, handle, length)
     }
 
@@ -343,6 +366,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_path_return_max_length
      */
     fun getPathReturnMaxLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, handle)
     }
 
@@ -355,6 +379,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_path_return_max_radius
      */
     fun setPathReturnMaxRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, handle, radius)
     }
 
@@ -367,6 +392,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_path_return_max_radius
      */
     fun getPathReturnMaxRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, handle)
     }
 
@@ -381,6 +407,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_path_search_max_polygons
      */
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, handle, maxPolygons)
     }
 
@@ -395,6 +422,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_path_search_max_polygons
      */
     fun getPathSearchMaxPolygons(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, handle)
     }
 
@@ -410,6 +438,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_path_search_max_distance
      */
     fun setPathSearchMaxDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, handle, distance)
     }
 
@@ -425,6 +454,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_path_search_max_distance
      */
     fun getPathSearchMaxDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, handle)
     }
 

@@ -29,6 +29,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
@@ -39,6 +40,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.get_enabled
      */
     fun getEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
@@ -49,6 +51,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.get_modification_stack
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
+        checkOpen()
         return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, handle))
     }
 
@@ -60,6 +63,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.set_is_setup
      */
     fun setIsSetup(isSetup: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, handle, isSetup)
     }
 
@@ -69,6 +73,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.get_is_setup
      */
     fun getIsSetup(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
     }
 
@@ -80,6 +85,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.set_execution_mode
      */
     fun setExecutionMode(executionMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, handle, executionMode)
     }
 
@@ -91,6 +97,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.get_execution_mode
      */
     fun getExecutionMode(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, handle)
     }
 
@@ -101,6 +108,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.clamp_angle
      */
     fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, handle, angle, min, max, invert)
     }
 
@@ -111,6 +119,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.set_editor_draw_gizmo
      */
     fun setEditorDrawGizmo(drawGizmo: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, handle, drawGizmo)
     }
 
@@ -121,6 +130,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModification2D.get_editor_draw_gizmo
      */
     fun getEditorDrawGizmo(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, handle)
     }
 

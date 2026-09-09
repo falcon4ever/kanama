@@ -23,6 +23,7 @@ class BoneMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BoneMap.get_profile
      */
     fun getProfile(): SkeletonProfile? {
+        checkOpen()
         return SkeletonProfile.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, handle))
     }
 
@@ -32,6 +33,7 @@ class BoneMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BoneMap.set_profile
      */
     fun setProfile(profile: SkeletonProfile?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setProfileBind, handle, listOf(profile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -42,6 +44,7 @@ class BoneMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BoneMap.get_skeleton_bone_name
      */
     fun getSkeletonBoneName(profileBoneName: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(getSkeletonBoneNameBind, handle, profileBoneName)
     }
 
@@ -52,6 +55,7 @@ class BoneMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BoneMap.set_skeleton_bone_name
      */
     fun setSkeletonBoneName(profileBoneName: String, skeletonBoneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(setSkeletonBoneNameBind, handle, profileBoneName, skeletonBoneName)
     }
 
@@ -63,6 +67,7 @@ class BoneMap(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: BoneMap.find_profile_bone_name
      */
     fun findProfileBoneName(skeletonBoneName: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(findProfileBoneNameBind, handle, skeletonBoneName)
     }
 

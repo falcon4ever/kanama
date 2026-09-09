@@ -58,22 +58,27 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
         set(value) = setCyclicLength(value)
 
     fun addBlendPoint(node: AnimationRootNode?, pos: Double, atIndex: Int = -1, name: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(addBlendPointBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
     }
 
     fun setBlendPointPosition(point: Int, pos: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendPointPositionBind, handle, point, pos)
     }
 
     fun getBlendPointPosition(point: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendPointPositionBind, handle, point)
     }
 
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, handle, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getBlendPointNode(point: Int): AnimationRootNode? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, handle, point)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -83,86 +88,107 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
     }
 
     fun setBlendPointName(point: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, handle, point, name)
     }
 
     fun findBlendPointByName(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, handle, name)
     }
 
     fun removeBlendPoint(point: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, handle, point)
     }
 
     fun getBlendPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, handle)
     }
 
     fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, handle, fromIndex, toIndex)
     }
 
     fun setMinSpace(minSpace: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinSpaceBind, handle, minSpace)
     }
 
     fun getMinSpace(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinSpaceBind, handle)
     }
 
     fun setMaxSpace(maxSpace: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxSpaceBind, handle, maxSpace)
     }
 
     fun getMaxSpace(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpaceBind, handle)
     }
 
     fun setSnap(snap: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSnapBind, handle, snap)
     }
 
     fun getSnap(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, handle)
     }
 
     fun setValueLabel(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setValueLabelBind, handle, text)
     }
 
     fun getValueLabel(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getValueLabelBind, handle)
     }
 
     fun setBlendMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, mode)
     }
 
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
     fun setUseSync(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
     fun isUsingSync(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
     }
 
     fun setSyncMode(syncMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSyncModeBind, handle, syncMode)
     }
 
     fun getSyncMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, handle)
     }
 
     fun setCyclicLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, handle, length)
     }
 
     fun getCyclicLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, handle)
     }
 

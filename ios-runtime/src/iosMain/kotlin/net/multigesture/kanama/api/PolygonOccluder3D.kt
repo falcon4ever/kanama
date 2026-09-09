@@ -15,6 +15,7 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
         get() = getPolygon()
 
     fun getPolygon(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 

@@ -150,130 +150,162 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
         set(value) = setAaSize(value)
 
     fun setBgColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBgColorBind, handle, color)
     }
 
     fun getBgColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, handle)
     }
 
     fun setBorderColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBorderColorBind, handle, color)
     }
 
     fun getBorderColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
     }
 
     fun setBorderWidthAll(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBorderWidthAllBind, handle, width)
     }
 
     fun getBorderWidthMin(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBorderWidthMinBind, handle)
     }
 
     fun setBorderWidth(margin: Long, width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, handle, margin, width)
     }
 
     fun getBorderWidth(margin: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, handle, margin)
     }
 
     fun setBorderBlend(blend: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBorderBlendBind, handle, blend)
     }
 
     fun getBorderBlend(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getBorderBlendBind, handle)
     }
 
     fun setCornerRadiusAll(radius: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCornerRadiusAllBind, handle, radius)
     }
 
     fun setCornerRadius(corner: Long, radius: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, handle, corner, radius)
     }
 
     fun getCornerRadius(corner: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, handle, corner)
     }
 
     fun setExpandMargin(margin: Long, size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
     }
 
     fun setExpandMarginAll(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
     }
 
     fun getExpandMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
     }
 
     fun setDrawCenter(drawCenter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, drawCenter)
     }
 
     fun isDrawCenterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
     }
 
     fun setSkew(skew: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSkewBind, handle, skew)
     }
 
     fun getSkew(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSkewBind, handle)
     }
 
     fun setShadowColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, color)
     }
 
     fun getShadowColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
     }
 
     fun setShadowSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, handle, size)
     }
 
     fun getShadowSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, handle)
     }
 
     fun setShadowOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, handle, offset)
     }
 
     fun getShadowOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, handle)
     }
 
     fun setAntiAliased(antiAliased: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAntiAliasedBind, handle, antiAliased)
     }
 
     fun isAntiAliased(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAntiAliasedBind, handle)
     }
 
     fun setAaSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAaSizeBind, handle, size)
     }
 
     fun getAaSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAaSizeBind, handle)
     }
 
     fun setCornerDetail(detail: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCornerDetailBind, handle, detail)
     }
 
     fun getCornerDetail(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCornerDetailBind, handle)
     }
 

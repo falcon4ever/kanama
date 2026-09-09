@@ -28,26 +28,32 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setIntersectionShader(value)
 
     fun setClosestHitShader(pMember: RDPipelineShader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getClosestHitShader(): RDPipelineShader? {
+        checkOpen()
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, handle))
     }
 
     fun setAnyHitShader(pMember: RDPipelineShader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getAnyHitShader(): RDPipelineShader? {
+        checkOpen()
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, handle))
     }
 
     fun setIntersectionShader(pMember: RDPipelineShader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getIntersectionShader(): RDPipelineShader? {
+        checkOpen()
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, handle))
     }
 

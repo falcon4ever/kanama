@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class SubtweenTweener(handle: MemorySegment) : Tweener(handle) {
     fun setDelay(delay: Double): SubtweenTweener? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

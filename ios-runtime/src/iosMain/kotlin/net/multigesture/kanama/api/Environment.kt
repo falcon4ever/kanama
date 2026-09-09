@@ -570,754 +570,942 @@ class Environment(handle: MemorySegment) : Resource(handle) {
         set(value) = setAdjustmentColorCorrection(value)
 
     fun setBackground(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackgroundBind, handle, mode)
     }
 
     fun getBackground(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, handle)
     }
 
     fun setSky(sky: Sky?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSkyBind, handle, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getSky(): Sky? {
+        checkOpen()
         return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, handle))
     }
 
     fun setSkyCustomFov(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSkyCustomFovBind, handle, scale)
     }
 
     fun getSkyCustomFov(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCustomFovBind, handle)
     }
 
     fun setSkyRotation(eulerRadians: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSkyRotationBind, handle, eulerRadians)
     }
 
     fun getSkyRotation(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSkyRotationBind, handle)
     }
 
     fun setBgColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBgColorBind, handle, color)
     }
 
     fun getBgColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, handle)
     }
 
     fun setBgEnergyMultiplier(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBgEnergyMultiplierBind, handle, energy)
     }
 
     fun getBgEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBgEnergyMultiplierBind, handle)
     }
 
     fun setBgIntensity(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBgIntensityBind, handle, energy)
     }
 
     fun getBgIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBgIntensityBind, handle)
     }
 
     fun setCanvasMaxLayer(layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCanvasMaxLayerBind, handle, layer)
     }
 
     fun getCanvasMaxLayer(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCanvasMaxLayerBind, handle)
     }
 
     fun setCameraFeedId(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, id)
     }
 
     fun getCameraFeedId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
     fun setAmbientLightColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setAmbientLightColorBind, handle, color)
     }
 
     fun getAmbientLightColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getAmbientLightColorBind, handle)
     }
 
     fun setAmbientSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, handle, source)
     }
 
     fun getAmbientSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, handle)
     }
 
     fun setAmbientLightEnergy(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAmbientLightEnergyBind, handle, energy)
     }
 
     fun getAmbientLightEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightEnergyBind, handle)
     }
 
     fun setAmbientLightSkyContribution(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAmbientLightSkyContributionBind, handle, ratio)
     }
 
     fun getAmbientLightSkyContribution(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightSkyContributionBind, handle)
     }
 
     fun setReflectionSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, handle, source)
     }
 
     fun getReflectionSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, handle)
     }
 
     fun setTonemapper(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTonemapperBind, handle, mode)
     }
 
     fun getTonemapper(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, handle)
     }
 
     fun setTonemapExposure(exposure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapExposureBind, handle, exposure)
     }
 
     fun getTonemapExposure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapExposureBind, handle)
     }
 
     fun setTonemapWhite(white: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapWhiteBind, handle, white)
     }
 
     fun getTonemapWhite(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapWhiteBind, handle)
     }
 
     fun setTonemapAgxWhite(white: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxWhiteBind, handle, white)
     }
 
     fun getTonemapAgxWhite(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxWhiteBind, handle)
     }
 
     fun setTonemapAgxContrast(contrast: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxContrastBind, handle, contrast)
     }
 
     fun getTonemapAgxContrast(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxContrastBind, handle)
     }
 
     fun setSsrEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSsrEnabledBind, handle, enabled)
     }
 
     fun isSsrEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSsrEnabledBind, handle)
     }
 
     fun setSsrMaxSteps(maxSteps: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSsrMaxStepsBind, handle, maxSteps)
     }
 
     fun getSsrMaxSteps(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSsrMaxStepsBind, handle)
     }
 
     fun setSsrFadeIn(fadeIn: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsrFadeInBind, handle, fadeIn)
     }
 
     fun getSsrFadeIn(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeInBind, handle)
     }
 
     fun setSsrFadeOut(fadeOut: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsrFadeOutBind, handle, fadeOut)
     }
 
     fun getSsrFadeOut(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeOutBind, handle)
     }
 
     fun setSsrDepthTolerance(depthTolerance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsrDepthToleranceBind, handle, depthTolerance)
     }
 
     fun getSsrDepthTolerance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsrDepthToleranceBind, handle)
     }
 
     fun setSsaoEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSsaoEnabledBind, handle, enabled)
     }
 
     fun isSsaoEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSsaoEnabledBind, handle)
     }
 
     fun setSsaoRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoRadiusBind, handle, radius)
     }
 
     fun getSsaoRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoRadiusBind, handle)
     }
 
     fun setSsaoIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoIntensityBind, handle, intensity)
     }
 
     fun getSsaoIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoIntensityBind, handle)
     }
 
     fun setSsaoPower(power: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoPowerBind, handle, power)
     }
 
     fun getSsaoPower(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoPowerBind, handle)
     }
 
     fun setSsaoDetail(detail: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoDetailBind, handle, detail)
     }
 
     fun getSsaoDetail(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDetailBind, handle)
     }
 
     fun setSsaoHorizon(horizon: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoHorizonBind, handle, horizon)
     }
 
     fun getSsaoHorizon(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoHorizonBind, handle)
     }
 
     fun setSsaoSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoSharpnessBind, handle, sharpness)
     }
 
     fun getSsaoSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoSharpnessBind, handle)
     }
 
     fun setSsaoDirectLightAffect(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoDirectLightAffectBind, handle, amount)
     }
 
     fun getSsaoDirectLightAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDirectLightAffectBind, handle)
     }
 
     fun setSsaoAoChannelAffect(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoAoChannelAffectBind, handle, amount)
     }
 
     fun getSsaoAoChannelAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoAoChannelAffectBind, handle)
     }
 
     fun setSsilEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSsilEnabledBind, handle, enabled)
     }
 
     fun isSsilEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSsilEnabledBind, handle)
     }
 
     fun setSsilRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilRadiusBind, handle, radius)
     }
 
     fun getSsilRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilRadiusBind, handle)
     }
 
     fun setSsilIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilIntensityBind, handle, intensity)
     }
 
     fun getSsilIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilIntensityBind, handle)
     }
 
     fun setSsilSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilSharpnessBind, handle, sharpness)
     }
 
     fun getSsilSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilSharpnessBind, handle)
     }
 
     fun setSsilNormalRejection(normalRejection: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilNormalRejectionBind, handle, normalRejection)
     }
 
     fun getSsilNormalRejection(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilNormalRejectionBind, handle)
     }
 
     fun setSdfgiEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSdfgiEnabledBind, handle, enabled)
     }
 
     fun isSdfgiEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiEnabledBind, handle)
     }
 
     fun setSdfgiCascades(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSdfgiCascadesBind, handle, amount)
     }
 
     fun getSdfgiCascades(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSdfgiCascadesBind, handle)
     }
 
     fun setSdfgiMinCellSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiMinCellSizeBind, handle, size)
     }
 
     fun getSdfgiMinCellSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMinCellSizeBind, handle)
     }
 
     fun setSdfgiMaxDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiMaxDistanceBind, handle, distance)
     }
 
     fun getSdfgiMaxDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMaxDistanceBind, handle)
     }
 
     fun setSdfgiCascade0Distance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiCascade0DistanceBind, handle, distance)
     }
 
     fun getSdfgiCascade0Distance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiCascade0DistanceBind, handle)
     }
 
     fun setSdfgiYScale(scale: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, handle, scale)
     }
 
     fun getSdfgiYScale(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, handle)
     }
 
     fun setSdfgiUseOcclusion(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSdfgiUseOcclusionBind, handle, enable)
     }
 
     fun isSdfgiUsingOcclusion(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiUsingOcclusionBind, handle)
     }
 
     fun setSdfgiBounceFeedback(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiBounceFeedbackBind, handle, amount)
     }
 
     fun getSdfgiBounceFeedback(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiBounceFeedbackBind, handle)
     }
 
     fun setSdfgiReadSkyLight(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSdfgiReadSkyLightBind, handle, enable)
     }
 
     fun isSdfgiReadingSkyLight(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiReadingSkyLightBind, handle)
     }
 
     fun setSdfgiEnergy(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiEnergyBind, handle, amount)
     }
 
     fun getSdfgiEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiEnergyBind, handle)
     }
 
     fun setSdfgiNormalBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiNormalBiasBind, handle, bias)
     }
 
     fun getSdfgiNormalBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiNormalBiasBind, handle)
     }
 
     fun setSdfgiProbeBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiProbeBiasBind, handle, bias)
     }
 
     fun getSdfgiProbeBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiProbeBiasBind, handle)
     }
 
     fun setGlowEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGlowEnabledBind, handle, enabled)
     }
 
     fun isGlowEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGlowEnabledBind, handle)
     }
 
     fun setGlowLevel(idx: Int, intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setGlowLevelBind, handle, idx, intensity)
     }
 
     fun getGlowLevel(idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getGlowLevelBind, handle, idx)
     }
 
     fun setGlowNormalized(normalize: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGlowNormalizedBind, handle, normalize)
     }
 
     fun isGlowNormalized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGlowNormalizedBind, handle)
     }
 
     fun setGlowIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowIntensityBind, handle, intensity)
     }
 
     fun getGlowIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowIntensityBind, handle)
     }
 
     fun setGlowStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowStrengthBind, handle, strength)
     }
 
     fun getGlowStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowStrengthBind, handle)
     }
 
     fun setGlowMix(mix: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowMixBind, handle, mix)
     }
 
     fun getGlowMix(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMixBind, handle)
     }
 
     fun setGlowBloom(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowBloomBind, handle, amount)
     }
 
     fun getGlowBloom(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowBloomBind, handle)
     }
 
     fun setGlowBlendMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, handle, mode)
     }
 
     fun getGlowBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, handle)
     }
 
     fun setGlowHdrBleedThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedThresholdBind, handle, threshold)
     }
 
     fun getGlowHdrBleedThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedThresholdBind, handle)
     }
 
     fun setGlowHdrBleedScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedScaleBind, handle, scale)
     }
 
     fun getGlowHdrBleedScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedScaleBind, handle)
     }
 
     fun setGlowHdrLuminanceCap(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowHdrLuminanceCapBind, handle, amount)
     }
 
     fun getGlowHdrLuminanceCap(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrLuminanceCapBind, handle)
     }
 
     fun setGlowMapStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowMapStrengthBind, handle, strength)
     }
 
     fun getGlowMapStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMapStrengthBind, handle)
     }
 
     fun setGlowMap(mode: Texture?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, handle, listOf(mode?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getGlowMap(): Texture? {
+        checkOpen()
         return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, handle))
     }
 
     fun setFogEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFogEnabledBind, handle, enabled)
     }
 
     fun isFogEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFogEnabledBind, handle)
     }
 
     fun setFogMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFogModeBind, handle, mode)
     }
 
     fun getFogMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, handle)
     }
 
     fun setFogLightColor(lightColor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setFogLightColorBind, handle, lightColor)
     }
 
     fun getFogLightColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getFogLightColorBind, handle)
     }
 
     fun setFogLightEnergy(lightEnergy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogLightEnergyBind, handle, lightEnergy)
     }
 
     fun getFogLightEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogLightEnergyBind, handle)
     }
 
     fun setFogSunScatter(sunScatter: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogSunScatterBind, handle, sunScatter)
     }
 
     fun getFogSunScatter(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogSunScatterBind, handle)
     }
 
     fun setFogDensity(density: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDensityBind, handle, density)
     }
 
     fun getFogDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDensityBind, handle)
     }
 
     fun setFogHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogHeightBind, handle, height)
     }
 
     fun getFogHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightBind, handle)
     }
 
     fun setFogHeightDensity(heightDensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogHeightDensityBind, handle, heightDensity)
     }
 
     fun getFogHeightDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightDensityBind, handle)
     }
 
     fun setFogAerialPerspective(aerialPerspective: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogAerialPerspectiveBind, handle, aerialPerspective)
     }
 
     fun getFogAerialPerspective(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogAerialPerspectiveBind, handle)
     }
 
     fun setFogSkyAffect(skyAffect: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogSkyAffectBind, handle, skyAffect)
     }
 
     fun getFogSkyAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogSkyAffectBind, handle)
     }
 
     fun setFogDepthCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDepthCurveBind, handle, curve)
     }
 
     fun getFogDepthCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthCurveBind, handle)
     }
 
     fun setFogDepthBegin(begin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDepthBeginBind, handle, begin)
     }
 
     fun getFogDepthBegin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthBeginBind, handle)
     }
 
     fun setFogDepthEnd(end: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDepthEndBind, handle, end)
     }
 
     fun getFogDepthEnd(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthEndBind, handle)
     }
 
     fun setVolumetricFogEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVolumetricFogEnabledBind, handle, enabled)
     }
 
     fun isVolumetricFogEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogEnabledBind, handle)
     }
 
     fun setVolumetricFogEmission(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setVolumetricFogEmissionBind, handle, color)
     }
 
     fun getVolumetricFogEmission(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogEmissionBind, handle)
     }
 
     fun setVolumetricFogAlbedo(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setVolumetricFogAlbedoBind, handle, color)
     }
 
     fun getVolumetricFogAlbedo(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogAlbedoBind, handle)
     }
 
     fun setVolumetricFogDensity(density: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDensityBind, handle, density)
     }
 
     fun getVolumetricFogDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDensityBind, handle)
     }
 
     fun setVolumetricFogEmissionEnergy(begin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogEmissionEnergyBind, handle, begin)
     }
 
     fun getVolumetricFogEmissionEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogEmissionEnergyBind, handle)
     }
 
     fun setVolumetricFogAnisotropy(anisotropy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAnisotropyBind, handle, anisotropy)
     }
 
     fun getVolumetricFogAnisotropy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAnisotropyBind, handle)
     }
 
     fun setVolumetricFogLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogLengthBind, handle, length)
     }
 
     fun getVolumetricFogLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogLengthBind, handle)
     }
 
     fun setVolumetricFogDetailSpread(detailSpread: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDetailSpreadBind, handle, detailSpread)
     }
 
     fun getVolumetricFogDetailSpread(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDetailSpreadBind, handle)
     }
 
     fun setVolumetricFogGiInject(giInject: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogGiInjectBind, handle, giInject)
     }
 
     fun getVolumetricFogGiInject(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogGiInjectBind, handle)
     }
 
     fun setVolumetricFogAmbientInject(enabled: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAmbientInjectBind, handle, enabled)
     }
 
     fun getVolumetricFogAmbientInject(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAmbientInjectBind, handle)
     }
 
     fun setVolumetricFogSkyAffect(skyAffect: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogSkyAffectBind, handle, skyAffect)
     }
 
     fun getVolumetricFogSkyAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogSkyAffectBind, handle)
     }
 
     fun setVolumetricFogTemporalReprojectionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVolumetricFogTemporalReprojectionEnabledBind, handle, enabled)
     }
 
     fun isVolumetricFogTemporalReprojectionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogTemporalReprojectionEnabledBind, handle)
     }
 
     fun setVolumetricFogTemporalReprojectionAmount(temporalReprojectionAmount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogTemporalReprojectionAmountBind, handle, temporalReprojectionAmount)
     }
 
     fun getVolumetricFogTemporalReprojectionAmount(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogTemporalReprojectionAmountBind, handle)
     }
 
     fun setAdjustmentEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAdjustmentEnabledBind, handle, enabled)
     }
 
     fun isAdjustmentEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAdjustmentEnabledBind, handle)
     }
 
     fun setAdjustmentBrightness(brightness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdjustmentBrightnessBind, handle, brightness)
     }
 
     fun getAdjustmentBrightness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentBrightnessBind, handle)
     }
 
     fun setAdjustmentContrast(contrast: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdjustmentContrastBind, handle, contrast)
     }
 
     fun getAdjustmentContrast(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentContrastBind, handle)
     }
 
     fun setAdjustmentSaturation(saturation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdjustmentSaturationBind, handle, saturation)
     }
 
     fun getAdjustmentSaturation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentSaturationBind, handle)
     }
 
     fun setAdjustmentColorCorrection(colorCorrection: Texture?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, handle, listOf(colorCorrection?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getAdjustmentColorCorrection(): Texture? {
+        checkOpen()
         return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, handle))
     }
 

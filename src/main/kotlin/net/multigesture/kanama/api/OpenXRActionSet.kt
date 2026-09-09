@@ -27,38 +27,47 @@ class OpenXRActionSet(handle: MemorySegment) : Resource(handle) {
         set(value) = setActions(value)
 
     fun setLocalizedName(localizedName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, handle, localizedName)
     }
 
     fun getLocalizedName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, handle)
     }
 
     fun setPriority(priority: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
     }
 
     fun getPriority(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
     }
 
     fun getActionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getActionCountBind, handle)
     }
 
     fun setActions(actions: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setActionsBind, handle, actions)
     }
 
     fun getActions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getActionsBind, handle)
     }
 
     fun addAction(action: OpenXRAction?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeAction(action: OpenXRAction?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

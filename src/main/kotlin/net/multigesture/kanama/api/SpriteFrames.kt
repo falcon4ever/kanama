@@ -15,6 +15,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.add_animation
      */
     fun addAnimation(anim: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(addAnimationBind, handle, anim)
     }
 
@@ -24,6 +25,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.has_animation
      */
     fun hasAnimation(anim: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, anim)
     }
 
@@ -34,6 +36,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.duplicate_animation
      */
     fun duplicateAnimation(animFrom: String, animTo: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(duplicateAnimationBind, handle, animFrom, animTo)
     }
 
@@ -43,6 +46,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.remove_animation
      */
     fun removeAnimation(anim: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, anim)
     }
 
@@ -52,6 +56,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.rename_animation
      */
     fun renameAnimation(anim: String, newname: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, anim, newname)
     }
 
@@ -62,6 +67,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_animation_names
      */
     fun getAnimationNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationNamesBind, handle)
     }
 
@@ -71,6 +77,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.set_animation_speed
      */
     fun setAnimationSpeed(anim: String, fps: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(setAnimationSpeedBind, handle, anim, fps)
     }
 
@@ -80,6 +87,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_animation_speed
      */
     fun getAnimationSpeed(anim: String): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(getAnimationSpeedBind, handle, anim)
     }
 
@@ -90,6 +98,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.set_animation_loop
      */
     fun setAnimationLoop(anim: String, loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(setAnimationLoopBind, handle, anim, loop)
     }
 
@@ -99,6 +108,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_animation_loop
      */
     fun getAnimationLoop(anim: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(getAnimationLoopBind, handle, anim)
     }
 
@@ -108,6 +118,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.set_animation_loop_mode
      */
     fun setAnimationLoopMode(anim: String, loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, handle, anim, loopMode)
     }
 
@@ -117,6 +128,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_animation_loop_mode
      */
     fun getAnimationLoopMode(anim: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, handle, anim)
     }
 
@@ -128,6 +140,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.add_frame
      */
     fun addFrame(anim: String, texture: Texture2D?, duration: Double = 1.0, atPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, handle, anim, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration, atPosition)
     }
 
@@ -138,6 +151,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.set_frame
      */
     fun setFrame(anim: String, idx: Int, texture: Texture2D?, duration: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, handle, anim, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration)
     }
 
@@ -147,6 +161,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.remove_frame
      */
     fun removeFrame(anim: String, idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndIntArg(removeFrameBind, handle, anim, idx)
     }
 
@@ -156,6 +171,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_frame_count
      */
     fun getFrameCount(anim: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetInt(getFrameCountBind, handle, anim)
     }
 
@@ -165,6 +181,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_frame_texture
      */
     fun getFrameTexture(anim: String, idx: Int): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, handle, anim, idx))
     }
 
@@ -177,6 +194,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.get_frame_duration
      */
     fun getFrameDuration(anim: String, idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(getFrameDurationBind, handle, anim, idx)
     }
 
@@ -186,6 +204,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.clear
      */
     fun clear(anim: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(clearBind, handle, anim)
     }
 
@@ -195,6 +214,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SpriteFrames.clear_all
      */
     fun clearAll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearAllBind, handle)
     }
 

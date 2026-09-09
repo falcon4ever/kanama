@@ -52,54 +52,67 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
         set(value) = setRecoveryAsCollisionEnabled(value)
 
     fun getFrom(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getFromBind, handle)
     }
 
     fun setFrom(from: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setFromBind, handle, from)
     }
 
     fun getMotion(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, handle)
     }
 
     fun setMotion(motion: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setMotionBind, handle, motion)
     }
 
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
     fun getMaxCollisions(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxCollisionsBind, handle)
     }
 
     fun setMaxCollisions(maxCollisions: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxCollisionsBind, handle, maxCollisions)
     }
 
     fun isCollideSeparationRayEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
     }
 
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
     }
 
     fun getExcludeObjects(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
     }
 
     fun isRecoveryAsCollisionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
     }
 
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
     }
 

@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class CryptoKey(handle: MemorySegment) : Resource(handle) {
     fun save(path: String, publicOnly: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(saveBind, handle, path, publicOnly)
     }
 
     fun load(path: String, publicOnly: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, handle, path, publicOnly)
     }
 
     fun isPublicOnly(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPublicOnlyBind, handle)
     }
 
     fun loadFromString(stringKey: String, publicOnly: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, handle, stringKey, publicOnly)
     }
 

@@ -49,6 +49,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_next_source_id
      */
     fun getNextSourceId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNextSourceIdBind, handle)
     }
 
@@ -62,6 +63,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_source
      */
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, handle, source?.requireOpenHandle() ?: MemorySegment.NULL, atlasSourceIdOverride)
     }
 
@@ -71,6 +73,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_source
      */
     fun removeSource(sourceId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeSourceBind, handle, sourceId)
     }
 
@@ -80,6 +83,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_source_id
      */
     fun setSourceId(sourceId: Int, newSourceId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setSourceIdBind, handle, sourceId, newSourceId)
     }
 
@@ -89,6 +93,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_source_count
      */
     fun getSourceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSourceCountBind, handle)
     }
 
@@ -98,6 +103,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_source_id
      */
     fun getSourceId(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSourceIdBind, handle, index)
     }
 
@@ -107,6 +113,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.has_source
      */
     fun hasSource(sourceId: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceBind, handle, sourceId)
     }
 
@@ -116,6 +123,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_source
      */
     fun getSource(sourceId: Int): TileSetSource? {
+        checkOpen()
         return TileSetSource.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, handle, sourceId))
     }
 
@@ -125,6 +133,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_tile_shape
      */
     fun setTileShape(shape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTileShapeBind, handle, shape)
     }
 
@@ -134,6 +143,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_tile_shape
      */
     fun getTileShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, handle)
     }
 
@@ -144,6 +154,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_tile_layout
      */
     fun setTileLayout(layout: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, handle, layout)
     }
 
@@ -154,6 +165,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_tile_layout
      */
     fun getTileLayout(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, handle)
     }
 
@@ -164,6 +176,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_tile_offset_axis
      */
     fun setTileOffsetAxis(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, handle, alignment)
     }
 
@@ -174,6 +187,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_tile_offset_axis
      */
     fun getTileOffsetAxis(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, handle)
     }
 
@@ -184,6 +198,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_tile_size
      */
     fun setTileSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setTileSizeBind, handle, size)
     }
 
@@ -194,6 +209,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_tile_size
      */
     fun getTileSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTileSizeBind, handle)
     }
 
@@ -203,6 +219,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_uv_clipping
      */
     fun setUvClipping(uvClipping: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUvClippingBind, handle, uvClipping)
     }
 
@@ -212,6 +229,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.is_uv_clipping
      */
     fun isUvClipping(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUvClippingBind, handle)
     }
 
@@ -221,6 +239,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_occlusion_layers_count
      */
     fun getOcclusionLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOcclusionLayersCountBind, handle)
     }
 
@@ -232,6 +251,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_occlusion_layer
      */
     fun addOcclusionLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addOcclusionLayerBind, handle, toPosition)
     }
 
@@ -242,6 +262,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.move_occlusion_layer
      */
     fun moveOcclusionLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveOcclusionLayerBind, handle, layerIndex, toPosition)
     }
 
@@ -251,6 +272,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_occlusion_layer
      */
     fun removeOcclusionLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeOcclusionLayerBind, handle, layerIndex)
     }
 
@@ -261,6 +283,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_occlusion_layer_light_mask
      */
     fun setOcclusionLayerLightMask(layerIndex: Int, lightMask: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setOcclusionLayerLightMaskBind, handle, layerIndex, lightMask)
     }
 
@@ -270,6 +293,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_occlusion_layer_light_mask
      */
     fun getOcclusionLayerLightMask(layerIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getOcclusionLayerLightMaskBind, handle, layerIndex)
     }
 
@@ -279,6 +303,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_occlusion_layer_sdf_collision
      */
     fun setOcclusionLayerSdfCollision(layerIndex: Int, sdfCollision: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setOcclusionLayerSdfCollisionBind, handle, layerIndex, sdfCollision)
     }
 
@@ -288,6 +313,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_occlusion_layer_sdf_collision
      */
     fun getOcclusionLayerSdfCollision(layerIndex: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getOcclusionLayerSdfCollisionBind, handle, layerIndex)
     }
 
@@ -297,6 +323,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_physics_layers_count
      */
     fun getPhysicsLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsLayersCountBind, handle)
     }
 
@@ -308,6 +335,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_physics_layer
      */
     fun addPhysicsLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addPhysicsLayerBind, handle, toPosition)
     }
 
@@ -318,6 +346,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.move_physics_layer
      */
     fun movePhysicsLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(movePhysicsLayerBind, handle, layerIndex, toPosition)
     }
 
@@ -327,6 +356,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_physics_layer
      */
     fun removePhysicsLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePhysicsLayerBind, handle, layerIndex)
     }
 
@@ -337,6 +367,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_physics_layer_collision_layer
      */
     fun setPhysicsLayerCollisionLayer(layerIndex: Int, layer: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionLayerBind, handle, layerIndex, layer)
     }
 
@@ -347,6 +378,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_physics_layer_collision_layer
      */
     fun getPhysicsLayerCollisionLayer(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionLayerBind, handle, layerIndex)
     }
 
@@ -356,6 +388,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_physics_layer_collision_mask
      */
     fun setPhysicsLayerCollisionMask(layerIndex: Int, mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionMaskBind, handle, layerIndex, mask)
     }
 
@@ -365,6 +398,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_physics_layer_collision_mask
      */
     fun getPhysicsLayerCollisionMask(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionMaskBind, handle, layerIndex)
     }
 
@@ -374,6 +408,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_physics_layer_collision_priority
      */
     fun setPhysicsLayerCollisionPriority(layerIndex: Int, priority: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPhysicsLayerCollisionPriorityBind, handle, layerIndex, priority)
     }
 
@@ -383,6 +418,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_physics_layer_collision_priority
      */
     fun getPhysicsLayerCollisionPriority(layerIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPhysicsLayerCollisionPriorityBind, handle, layerIndex)
     }
 
@@ -392,6 +428,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_physics_layer_physics_material
      */
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, handle, layerIndex, physicsMaterial?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -401,6 +438,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_physics_layer_physics_material
      */
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
+        checkOpen()
         return PhysicsMaterial.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, handle, layerIndex))
     }
 
@@ -410,6 +448,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_terrain_sets_count
      */
     fun getTerrainSetsCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetsCountBind, handle)
     }
 
@@ -420,6 +459,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_terrain_set
      */
     fun addTerrainSet(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addTerrainSetBind, handle, toPosition)
     }
 
@@ -430,6 +470,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.move_terrain_set
      */
     fun moveTerrainSet(terrainSet: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveTerrainSetBind, handle, terrainSet, toPosition)
     }
 
@@ -439,6 +480,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_terrain_set
      */
     fun removeTerrainSet(terrainSet: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeTerrainSetBind, handle, terrainSet)
     }
 
@@ -449,6 +491,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_terrain_set_mode
      */
     fun setTerrainSetMode(terrainSet: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, handle, terrainSet, mode)
     }
 
@@ -458,6 +501,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_terrain_set_mode
      */
     fun getTerrainSetMode(terrainSet: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, handle, terrainSet)
     }
 
@@ -467,6 +511,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_terrains_count
      */
     fun getTerrainsCount(terrainSet: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getTerrainsCountBind, handle, terrainSet)
     }
 
@@ -477,6 +522,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_terrain
      */
     fun addTerrain(terrainSet: Int, toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(addTerrainBind, handle, terrainSet, toPosition)
     }
 
@@ -487,6 +533,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.move_terrain
      */
     fun moveTerrain(terrainSet: Int, terrainIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(moveTerrainBind, handle, terrainSet, terrainIndex, toPosition)
     }
 
@@ -497,6 +544,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_terrain
      */
     fun removeTerrain(terrainSet: Int, terrainIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(removeTerrainBind, handle, terrainSet, terrainIndex)
     }
 
@@ -506,6 +554,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.clear_terrains
      */
     fun clearTerrains(terrainSet: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(clearTerrainsBind, handle, terrainSet)
     }
 
@@ -515,6 +564,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_terrain_name
      */
     fun setTerrainName(terrainSet: Int, terrainIndex: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(setTerrainNameBind, handle, terrainSet, terrainIndex, name)
     }
 
@@ -524,6 +574,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_terrain_name
      */
     fun getTerrainName(terrainSet: Int, terrainIndex: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, handle, terrainSet, terrainIndex)
     }
 
@@ -534,6 +585,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_terrain_color
      */
     fun setTerrainColor(terrainSet: Int, terrainIndex: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndColorArg(setTerrainColorBind, handle, terrainSet, terrainIndex, color)
     }
 
@@ -543,6 +595,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_terrain_color
      */
     fun getTerrainColor(terrainSet: Int, terrainIndex: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getTerrainColorBind, handle, terrainSet, terrainIndex)
     }
 
@@ -552,6 +605,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_navigation_layers_count
      */
     fun getNavigationLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNavigationLayersCountBind, handle)
     }
 
@@ -563,6 +617,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_navigation_layer
      */
     fun addNavigationLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addNavigationLayerBind, handle, toPosition)
     }
 
@@ -573,6 +628,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.move_navigation_layer
      */
     fun moveNavigationLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveNavigationLayerBind, handle, layerIndex, toPosition)
     }
 
@@ -582,6 +638,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_navigation_layer
      */
     fun removeNavigationLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeNavigationLayerBind, handle, layerIndex)
     }
 
@@ -592,6 +649,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_navigation_layer_layers
      */
     fun setNavigationLayerLayers(layerIndex: Int, layers: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setNavigationLayerLayersBind, handle, layerIndex, layers)
     }
 
@@ -602,6 +660,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_navigation_layer_layers
      */
     fun getNavigationLayerLayers(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getNavigationLayerLayersBind, handle, layerIndex)
     }
 
@@ -613,6 +672,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_navigation_layer_layer_value
      */
     fun setNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int, value: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setNavigationLayerLayerValueBind, handle, layerIndex, layerNumber, value)
     }
 
@@ -624,6 +684,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_navigation_layer_layer_value
      */
     fun getNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getNavigationLayerLayerValueBind, handle, layerIndex, layerNumber)
     }
 
@@ -633,6 +694,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_custom_data_layers_count
      */
     fun getCustomDataLayersCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCustomDataLayersCountBind, handle)
     }
 
@@ -644,6 +706,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_custom_data_layer
      */
     fun addCustomDataLayer(toPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addCustomDataLayerBind, handle, toPosition)
     }
 
@@ -654,6 +717,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.move_custom_data_layer
      */
     fun moveCustomDataLayer(layerIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveCustomDataLayerBind, handle, layerIndex, toPosition)
     }
 
@@ -663,6 +727,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_custom_data_layer
      */
     fun removeCustomDataLayer(layerIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeCustomDataLayerBind, handle, layerIndex)
     }
 
@@ -672,6 +737,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_custom_data_layer_by_name
      */
     fun getCustomDataLayerByName(layerName: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(getCustomDataLayerByNameBind, handle, layerName)
     }
 
@@ -682,6 +748,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_custom_data_layer_name
      */
     fun setCustomDataLayerName(layerIndex: Int, layerName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setCustomDataLayerNameBind, handle, layerIndex, layerName)
     }
 
@@ -691,6 +758,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.has_custom_data_layer_by_name
      */
     fun hasCustomDataLayerByName(layerName: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, handle, layerName)
     }
 
@@ -700,6 +768,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_custom_data_layer_name
      */
     fun getCustomDataLayerName(layerIndex: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, handle, layerIndex)
     }
 
@@ -709,6 +778,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_custom_data_layer_type
      */
     fun setCustomDataLayerType(layerIndex: Int, layerType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, handle, layerIndex, layerType)
     }
 
@@ -718,6 +788,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_custom_data_layer_type
      */
     fun getCustomDataLayerType(layerIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, handle, layerIndex)
     }
 
@@ -730,6 +801,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_source_level_tile_proxy
      */
     fun setSourceLevelTileProxy(sourceFrom: Int, sourceTo: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setSourceLevelTileProxyBind, handle, sourceFrom, sourceTo)
     }
 
@@ -740,6 +812,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_source_level_tile_proxy
      */
     fun getSourceLevelTileProxy(sourceFrom: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
@@ -749,6 +822,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.has_source_level_tile_proxy
      */
     fun hasSourceLevelTileProxy(sourceFrom: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
@@ -758,6 +832,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_source_level_tile_proxy
      */
     fun removeSourceLevelTileProxy(sourceFrom: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeSourceLevelTileProxyBind, handle, sourceFrom)
     }
 
@@ -770,6 +845,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_coords_level_tile_proxy
      */
     fun setCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, sourceTo: Int, coordsTo: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(setCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom, sourceTo, coordsTo)
     }
 
@@ -781,6 +857,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_coords_level_tile_proxy
      */
     fun getCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(getCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
@@ -790,6 +867,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.has_coords_level_tile_proxy
      */
     fun hasCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(hasCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
@@ -799,6 +877,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_coords_level_tile_proxy
      */
     fun removeCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
     }
 
@@ -810,6 +889,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.set_alternative_level_tile_proxy
      */
     fun setAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int, sourceTo: Int, coordsTo: Vector2i, alternativeTo: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(setAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
     }
 
@@ -821,6 +901,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_alternative_level_tile_proxy
      */
     fun getAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(getAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
@@ -830,6 +911,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.has_alternative_level_tile_proxy
      */
     fun hasAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(hasAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
@@ -839,6 +921,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_alternative_level_tile_proxy
      */
     fun removeAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
@@ -852,6 +935,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.map_tile_proxy
      */
     fun mapTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(mapTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
     }
 
@@ -861,6 +945,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.cleanup_invalid_tile_proxies
      */
     fun cleanupInvalidTileProxies() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(cleanupInvalidTileProxiesBind, handle)
     }
 
@@ -870,6 +955,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.clear_tile_proxies
      */
     fun clearTileProxies() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearTileProxiesBind, handle)
     }
 
@@ -880,6 +966,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.add_pattern
      */
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, handle, pattern?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
@@ -889,6 +976,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_pattern
      */
     fun getPattern(index: Int = -1): TileMapPattern? {
+        checkOpen()
         return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, handle, index))
     }
 
@@ -898,6 +986,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.remove_pattern
      */
     fun removePattern(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePatternBind, handle, index)
     }
 
@@ -907,6 +996,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSet.get_patterns_count
      */
     fun getPatternsCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, handle)
     }
 

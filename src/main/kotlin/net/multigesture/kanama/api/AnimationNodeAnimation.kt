@@ -65,6 +65,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_animation
      */
     fun setAnimation(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
     }
 
@@ -75,6 +76,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.get_animation
      */
     fun getAnimation(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
     }
 
@@ -84,6 +86,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_play_mode
      */
     fun setPlayMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPlayModeBind, handle, mode)
     }
 
@@ -93,6 +96,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.get_play_mode
      */
     fun getPlayMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, handle)
     }
 
@@ -104,6 +108,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_advance_on_start
      */
     fun setAdvanceOnStart(advanceOnStart: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAdvanceOnStartBind, handle, advanceOnStart)
     }
 
@@ -115,6 +120,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.is_advance_on_start
      */
     fun isAdvanceOnStart(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAdvanceOnStartBind, handle)
     }
 
@@ -125,6 +131,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_use_custom_timeline
      */
     fun setUseCustomTimeline(useCustomTimeline: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseCustomTimelineBind, handle, useCustomTimeline)
     }
 
@@ -135,6 +142,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.is_using_custom_timeline
      */
     fun isUsingCustomTimeline(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomTimelineBind, handle)
     }
 
@@ -145,6 +153,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_timeline_length
      */
     fun setTimelineLength(timelineLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTimelineLengthBind, handle, timelineLength)
     }
 
@@ -155,6 +164,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.get_timeline_length
      */
     fun getTimelineLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimelineLengthBind, handle)
     }
 
@@ -167,6 +177,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_stretch_time_scale
      */
     fun setStretchTimeScale(stretchTimeScale: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setStretchTimeScaleBind, handle, stretchTimeScale)
     }
 
@@ -179,6 +190,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.is_stretching_time_scale
      */
     fun isStretchingTimeScale(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isStretchingTimeScaleBind, handle)
     }
 
@@ -189,6 +201,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_start_offset
      */
     fun setStartOffset(startOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStartOffsetBind, handle, startOffset)
     }
 
@@ -199,6 +212,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.get_start_offset
      */
     fun getStartOffset(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStartOffsetBind, handle)
     }
 
@@ -212,6 +226,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.set_loop_mode
      */
     fun setLoopMode(loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
@@ -225,6 +240,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      * Generated from Godot docs: AnimationNodeAnimation.get_loop_mode
      */
     fun getLoopMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }
 

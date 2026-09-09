@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class DTLSServer(handle: MemorySegment) : RefCounted(handle) {
     fun setup(serverOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, handle, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
+        checkOpen()
         return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, handle, udpPeer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

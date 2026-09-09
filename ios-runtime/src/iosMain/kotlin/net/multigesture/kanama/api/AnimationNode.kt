@@ -17,62 +17,77 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
         set(value) = setFilterEnabled(value)
 
     fun addInput(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(addInputBind, handle, name)
     }
 
     fun removeInput(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeInputBind, handle, index)
     }
 
     fun setInputName(input: Int, name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetBool(setInputNameBind, handle, input, name)
     }
 
     fun getInputCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInputCountBind, handle)
     }
 
     fun findInput(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(findInputBind, handle, name)
     }
 
     fun setFilterPath(path: NodePath, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(setFilterPathBind, handle, path, enable)
     }
 
     fun isPathFiltered(path: NodePath): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetBool(isPathFilteredBind, handle, path)
     }
 
     fun setFilterEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterEnabledBind, handle, enable)
     }
 
     fun isFilterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFilterEnabledBind, handle)
     }
 
     fun getProcessingAnimationTreeInstanceId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessingAnimationTreeInstanceIdBind, handle)
     }
 
     fun isProcessTesting(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isProcessTestingBind, handle)
     }
 
     fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, handle, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag)
     }
 
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
     fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, handle, inputIndex, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
     fun getParameter(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, handle, name)
     }
 

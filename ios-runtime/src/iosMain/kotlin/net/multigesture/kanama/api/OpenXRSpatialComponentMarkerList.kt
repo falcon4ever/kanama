@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class OpenXRSpatialComponentMarkerList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getMarkerType(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getMarkerTypeBind, handle, index)
     }
 
     fun getMarkerId(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetUInt32(getMarkerIdBind, handle, index)
     }
 

@@ -22,18 +22,22 @@ class VisualShaderNodeTransformParameter(handle: MemorySegment) : VisualShaderNo
         set(value) = setDefaultValue(value)
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 
     fun setDefaultValue(value: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setDefaultValueBind, handle, value)
     }
 
     fun getDefaultValue(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getDefaultValueBind, handle)
     }
 

@@ -9,54 +9,67 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorSettings(handle: MemorySegment) : Resource(handle) {
     fun hasSetting(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasSettingBind, handle, name)
     }
 
     fun erase(property: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(eraseBind, handle, property)
     }
 
     fun getFavorites(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoritesBind, handle)
     }
 
     fun getRecentDirs(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentDirsBind, handle)
     }
 
     fun addShortcut(path: String, shortcut: Shortcut?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, handle, path, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun removeShortcut(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeShortcutBind, handle, path)
     }
 
     fun isShortcut(path: String, event: InputEvent?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, handle, path, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun hasShortcut(path: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasShortcutBind, handle, path)
     }
 
     fun getShortcut(path: String): Shortcut? {
+        checkOpen()
         return Shortcut.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, handle, path))
     }
 
     fun getShortcutList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getShortcutListBind, handle)
     }
 
     fun checkChangedSettingsInGroup(settingPrefix: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(checkChangedSettingsInGroupBind, handle, settingPrefix)
     }
 
     fun getChangedSettings(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getChangedSettingsBind, handle)
     }
 
     fun markSettingChanged(setting: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(markSettingChangedBind, handle, setting)
     }
 

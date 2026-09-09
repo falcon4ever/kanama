@@ -74,6 +74,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_region
      */
     fun setRegion(region: Rect2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iArg(setRegionBind, handle, region)
     }
 
@@ -84,6 +85,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_region
      */
     fun getRegion(): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2i(getRegionBind, handle)
     }
 
@@ -94,6 +96,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_size
      */
     fun setSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
@@ -104,6 +107,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_size
      */
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
@@ -114,6 +118,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_offset
      */
     fun setOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
@@ -124,6 +129,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_offset
      */
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
@@ -135,6 +141,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_cell_size
      */
     fun setCellSize(cellSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setCellSizeBind, handle, cellSize)
     }
 
@@ -146,6 +153,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_cell_size
      */
     fun getCellSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getCellSizeBind, handle)
     }
 
@@ -156,6 +164,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_cell_shape
      */
     fun setCellShape(cellShape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCellShapeBind, handle, cellShape)
     }
 
@@ -166,6 +175,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_cell_shape
      */
     fun getCellShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, handle)
     }
 
@@ -176,6 +186,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.is_in_bounds
      */
     fun isInBounds(x: Int, y: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isInBoundsBind, handle, x, y)
     }
 
@@ -186,6 +197,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.is_in_boundsv
      */
     fun isInBoundsv(id: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(isInBoundsvBind, handle, id)
     }
 
@@ -195,6 +207,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.is_dirty
      */
     fun isDirty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDirtyBind, handle)
     }
 
@@ -207,6 +220,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.update
      */
     fun update() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(updateBind, handle)
     }
 
@@ -218,6 +232,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_jumping_enabled
      */
     fun setJumpingEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setJumpingEnabledBind, handle, enabled)
     }
 
@@ -229,6 +244,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.is_jumping_enabled
      */
     fun isJumpingEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isJumpingEnabledBind, handle)
     }
 
@@ -239,6 +255,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_diagonal_mode
      */
     fun setDiagonalMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, handle, mode)
     }
 
@@ -249,6 +266,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_diagonal_mode
      */
     fun getDiagonalMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, handle)
     }
 
@@ -259,6 +277,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_default_compute_heuristic
      */
     fun setDefaultComputeHeuristic(heuristic: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, handle, heuristic)
     }
 
@@ -269,6 +288,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_default_compute_heuristic
      */
     fun getDefaultComputeHeuristic(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, handle)
     }
 
@@ -279,6 +299,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_default_estimate_heuristic
      */
     fun setDefaultEstimateHeuristic(heuristic: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, handle, heuristic)
     }
 
@@ -289,6 +310,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_default_estimate_heuristic
      */
     fun getDefaultEstimateHeuristic(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, handle)
     }
 
@@ -300,6 +322,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_point_solid
      */
     fun setPointSolid(id: Vector2i, solid: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(setPointSolidBind, handle, id, solid)
     }
 
@@ -309,6 +332,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.is_point_solid
      */
     fun isPointSolid(id: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(isPointSolidBind, handle, id)
     }
 
@@ -321,6 +345,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.set_point_weight_scale
      */
     fun setPointWeightScale(id: Vector2i, weightScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
     }
 
@@ -330,6 +355,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_point_weight_scale
      */
     fun getPointWeightScale(id: Vector2i): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getPointWeightScaleBind, handle, id)
     }
 
@@ -340,6 +366,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.fill_solid_region
      */
     fun fillSolidRegion(region: Rect2i, solid: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iAndBoolArg(fillSolidRegionBind, handle, region, solid)
     }
 
@@ -350,6 +377,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.fill_weight_scale_region
      */
     fun fillWeightScaleRegion(region: Rect2i, weightScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iAndDoubleArg(fillWeightScaleRegionBind, handle, region, weightScale)
     }
 
@@ -359,6 +387,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -368,6 +397,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_point_position
      */
     fun getPointPosition(id: Vector2i): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, handle, id)
     }
 
@@ -378,6 +408,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_point_data_in_region
      */
     fun getPointDataInRegion(region: Rect2i): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(getPointDataInRegionBind, handle, region)
     }
 
@@ -395,6 +426,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_point_path
      */
     fun getPointPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(getPointPathBind, handle, fromId, toId, allowPartialPath)
     }
 
@@ -410,6 +442,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStarGrid2D.get_id_path
      */
     fun getIdPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2i> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, handle, fromId, toId, allowPartialPath)
     }
 

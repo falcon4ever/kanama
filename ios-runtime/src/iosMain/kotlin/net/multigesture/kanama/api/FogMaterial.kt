@@ -47,50 +47,62 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setDensityTexture(value)
 
     fun setDensity(density: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDensityBind, handle, density)
     }
 
     fun getDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDensityBind, handle)
     }
 
     fun setAlbedo(albedo: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setAlbedoBind, handle, albedo)
     }
 
     fun getAlbedo(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, handle)
     }
 
     fun setEmission(emission: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setEmissionBind, handle, emission)
     }
 
     fun getEmission(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, handle)
     }
 
     fun setHeightFalloff(heightFalloff: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightFalloffBind, handle, heightFalloff)
     }
 
     fun getHeightFalloff(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightFalloffBind, handle)
     }
 
     fun setEdgeFade(edgeFade: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEdgeFadeBind, handle, edgeFade)
     }
 
     fun getEdgeFade(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeFadeBind, handle)
     }
 
     fun setDensityTexture(densityTexture: Texture3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDensityTextureBind, handle, listOf(densityTexture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getDensityTexture(): Texture3D? {
+        checkOpen()
         return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDensityTextureBind, handle))
     }
 

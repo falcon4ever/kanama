@@ -17,114 +17,142 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         get() = getFallbacks()
 
     fun getFallbacks(): List<Font> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, handle, Font::fromHandle)
     }
 
     fun getHeight(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getHeightBind, handle, fontSize)
     }
 
     fun getAscent(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getAscentBind, handle, fontSize)
     }
 
     fun getDescent(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getDescentBind, handle, fontSize)
     }
 
     fun getUnderlinePosition(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlinePositionBind, handle, fontSize)
     }
 
     fun getUnderlineThickness(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlineThicknessBind, handle, fontSize)
     }
 
     fun getFontName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFontNameBind, handle)
     }
 
     fun getFontStyleName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFontStyleNameBind, handle)
     }
 
     fun getFontStyle(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, handle)
     }
 
     fun getFontWeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontWeightBind, handle)
     }
 
     fun getFontStretch(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontStretchBind, handle)
     }
 
     fun getPaletteCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPaletteCountBind, handle)
     }
 
     fun getSpacing(spacing: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, handle, spacing)
     }
 
     fun setCacheCapacity(singleLine: Int, multiLine: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setCacheCapacityBind, handle, singleLine, multiLine)
     }
 
     fun getStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, handle, text, alignment, width, fontSize, justificationFlags, direction, orientation)
     }
 
     fun getMultilineStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, handle, text, alignment, width, fontSize, maxLines, brkFlags, justificationFlags, direction, orientation)
     }
 
     fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, handle, canvasItem, pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
     fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, handle, canvasItem, pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
     fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, handle, canvasItem, pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
     fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, handle, canvasItem, pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
     fun getCharSize(char: Int, fontSize: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getCharSizeBind, handle, char, fontSize)
     }
 
     fun drawChar(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, modulate: Color, oversampling: Double = 0.0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(drawCharBind, handle, canvasItem, pos, char, fontSize, modulate, oversampling)
     }
 
     fun drawCharOutline(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, size: Int = -1, modulate: Color, oversampling: Double = 0.0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(drawCharOutlineBind, handle, canvasItem, pos, char, fontSize, size, modulate, oversampling)
     }
 
     fun hasChar(char: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasCharBind, handle, char)
     }
 
     fun getSupportedChars(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSupportedCharsBind, handle)
     }
 
     fun isLanguageSupported(language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isLanguageSupportedBind, handle, language)
     }
 
     fun isScriptSupported(script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isScriptSupportedBind, handle, script)
     }
 
     fun getFaceCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFaceCountBind, handle)
     }
 

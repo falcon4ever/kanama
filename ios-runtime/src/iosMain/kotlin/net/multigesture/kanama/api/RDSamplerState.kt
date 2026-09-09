@@ -100,122 +100,152 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setUnnormalizedUvw(value)
 
     fun setMagFilter(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMagFilterBind, handle, pMember)
     }
 
     fun getMagFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, handle)
     }
 
     fun setMinFilter(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMinFilterBind, handle, pMember)
     }
 
     fun getMinFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, handle)
     }
 
     fun setMipFilter(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMipFilterBind, handle, pMember)
     }
 
     fun getMipFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, handle)
     }
 
     fun setRepeatU(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatUBind, handle, pMember)
     }
 
     fun getRepeatU(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, handle)
     }
 
     fun setRepeatV(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatVBind, handle, pMember)
     }
 
     fun getRepeatV(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, handle)
     }
 
     fun setRepeatW(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatWBind, handle, pMember)
     }
 
     fun getRepeatW(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, handle)
     }
 
     fun setLodBias(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, handle, pMember)
     }
 
     fun getLodBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, handle)
     }
 
     fun setUseAnisotropy(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseAnisotropyBind, handle, pMember)
     }
 
     fun getUseAnisotropy(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseAnisotropyBind, handle)
     }
 
     fun setAnisotropyMax(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAnisotropyMaxBind, handle, pMember)
     }
 
     fun getAnisotropyMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyMaxBind, handle)
     }
 
     fun setEnableCompare(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableCompareBind, handle, pMember)
     }
 
     fun getEnableCompare(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableCompareBind, handle)
     }
 
     fun setCompareOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCompareOpBind, handle, pMember)
     }
 
     fun getCompareOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, handle)
     }
 
     fun setMinLod(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinLodBind, handle, pMember)
     }
 
     fun getMinLod(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinLodBind, handle)
     }
 
     fun setMaxLod(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxLodBind, handle, pMember)
     }
 
     fun getMaxLod(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxLodBind, handle)
     }
 
     fun setBorderColor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBorderColorBind, handle, pMember)
     }
 
     fun getBorderColor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, handle)
     }
 
     fun setUnnormalizedUvw(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUnnormalizedUvwBind, handle, pMember)
     }
 
     fun getUnnormalizedUvw(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUnnormalizedUvwBind, handle)
     }
 

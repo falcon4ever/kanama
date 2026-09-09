@@ -18,6 +18,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TriangleMesh.create_from_faces
      */
     fun createFromFaces(faces: List<Vector3>): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(createFromFacesBind, handle, faces)
     }
 
@@ -28,6 +29,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TriangleMesh.get_faces
      */
     fun getFaces(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
     }
 
@@ -41,6 +43,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TriangleMesh.intersect_segment
      */
     fun intersectSegment(begin: Vector3, end: Vector3): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectSegmentBind, handle, begin, end)
     }
 
@@ -55,6 +58,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TriangleMesh.intersect_ray
      */
     fun intersectRay(begin: Vector3, dir: Vector3): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectRayBind, handle, begin, dir)
     }
 

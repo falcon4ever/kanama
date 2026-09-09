@@ -78,6 +78,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_render_target
      */
     fun getRenderTarget(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, handle)
     }
 
@@ -87,6 +88,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_render_target
      */
     fun setRenderTarget(renderTarget: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setRenderTargetBind, handle, renderTarget)
     }
 
@@ -96,6 +98,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_internal_size
      */
     fun getInternalSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, handle)
     }
 
@@ -105,6 +108,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_internal_size
      */
     fun setInternalSize(internalSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setInternalSizeBind, handle, internalSize)
     }
 
@@ -114,6 +118,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_target_size
      */
     fun getTargetSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, handle)
     }
 
@@ -123,6 +128,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_target_size
      */
     fun setTargetSize(targetSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setTargetSizeBind, handle, targetSize)
     }
 
@@ -132,6 +138,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_view_count
      */
     fun getViewCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
@@ -141,6 +148,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_view_count
      */
     fun setViewCount(viewCount: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setViewCountBind, handle, viewCount)
     }
 
@@ -151,6 +159,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_scaling_3d_mode
      */
     fun getScaling3dMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
     }
 
@@ -161,6 +170,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_scaling_3d_mode
      */
     fun setScaling3dMode(scaling3dMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, handle, scaling3dMode)
     }
 
@@ -170,6 +180,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_msaa_3d
      */
     fun getMsaa3d(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
     }
 
@@ -179,6 +190,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_msaa_3d
      */
     fun setMsaa3d(msaa3d: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, handle, msaa3d)
     }
 
@@ -188,6 +200,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_screen_space_aa
      */
     fun getScreenSpaceAa(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
     }
 
@@ -197,6 +210,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_screen_space_aa
      */
     fun setScreenSpaceAa(screenSpaceAa: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, handle, screenSpaceAa)
     }
 
@@ -206,6 +220,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_fsr_sharpness
      */
     fun getFsrSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
     }
 
@@ -215,6 +230,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_fsr_sharpness
      */
     fun setFsrSharpness(fsrSharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, handle, fsrSharpness)
     }
 
@@ -226,6 +242,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_texture_mipmap_bias
      */
     fun getTextureMipmapBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, handle)
     }
 
@@ -237,6 +254,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_texture_mipmap_bias
      */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, handle, textureMipmapBias)
     }
 
@@ -246,6 +264,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_anisotropic_filtering_level
      */
     fun getAnisotropicFilteringLevel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, handle)
     }
 
@@ -255,6 +274,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_anisotropic_filtering_level
      */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, handle, anisotropicFilteringLevel)
     }
 

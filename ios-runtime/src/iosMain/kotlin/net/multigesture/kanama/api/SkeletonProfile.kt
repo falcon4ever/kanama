@@ -36,98 +36,122 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
         set(value) = setBoneSize(value)
 
     fun setRootBone(boneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, handle, boneName)
     }
 
     fun getRootBone(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, handle)
     }
 
     fun setScaleBaseBone(boneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setScaleBaseBoneBind, handle, boneName)
     }
 
     fun getScaleBaseBone(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getScaleBaseBoneBind, handle)
     }
 
     fun setGroupSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setGroupSizeBind, handle, size)
     }
 
     fun getGroupSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupSizeBind, handle)
     }
 
     fun setGroupName(groupIdx: Int, groupName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupNameBind, handle, groupIdx, groupName)
     }
 
     fun getTexture(groupIdx: Int): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, handle, groupIdx))
     }
 
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, handle, groupIdx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setBoneSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBoneSizeBind, handle, size)
     }
 
     fun getBoneSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneSizeBind, handle)
     }
 
     fun findBone(boneName: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetInt(findBoneBind, handle, boneName)
     }
 
     fun setBoneName(boneIdx: Int, boneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, handle, boneIdx, boneName)
     }
 
     fun setBoneParent(boneIdx: Int, boneParent: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneParentBind, handle, boneIdx, boneParent)
     }
 
     fun getTailDirection(boneIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, handle, boneIdx)
     }
 
     fun setTailDirection(boneIdx: Int, tailDirection: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, handle, boneIdx, tailDirection)
     }
 
     fun setBoneTail(boneIdx: Int, boneTail: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneTailBind, handle, boneIdx, boneTail)
     }
 
     fun getReferencePose(boneIdx: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getReferencePoseBind, handle, boneIdx)
     }
 
     fun setReferencePose(boneIdx: Int, boneName: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setReferencePoseBind, handle, boneIdx, boneName)
     }
 
     fun getHandleOffset(boneIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getHandleOffsetBind, handle, boneIdx)
     }
 
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, handle, boneIdx, handleOffset)
     }
 
     fun setGroup(boneIdx: Int, group: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupBind, handle, boneIdx, group)
     }
 
     fun isRequired(boneIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isRequiredBind, handle, boneIdx)
     }
 
     fun setRequired(boneIdx: Int, required: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, handle, boneIdx, required)
     }
 

@@ -40,42 +40,52 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setPostGain(value)
 
     fun setMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
     fun setPreGain(preGain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPreGainBind, handle, preGain)
     }
 
     fun getPreGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainBind, handle)
     }
 
     fun setKeepHfHz(keepHfHz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setKeepHfHzBind, handle, keepHfHz)
     }
 
     fun getKeepHfHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getKeepHfHzBind, handle)
     }
 
     fun setDrive(drive: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDriveBind, handle, drive)
     }
 
     fun getDrive(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDriveBind, handle)
     }
 
     fun setPostGain(postGain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPostGainBind, handle, postGain)
     }
 
     fun getPostGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, handle)
     }
 

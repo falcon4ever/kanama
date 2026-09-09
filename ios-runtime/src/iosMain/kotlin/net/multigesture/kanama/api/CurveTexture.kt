@@ -22,22 +22,27 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setCurve(value)
 
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
     fun setCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 
     fun setTextureMode(textureMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureModeBind, handle, textureMode)
     }
 
     fun getTextureMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, handle)
     }
 

@@ -102,6 +102,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_texture
      */
     fun setTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -111,6 +112,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_texture
      */
     fun getTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
@@ -122,6 +124,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_texture_margin
      */
     fun setTextureMargin(margin: Long, size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, handle, margin, size)
     }
 
@@ -131,6 +134,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_texture_margin_all
      */
     fun setTextureMarginAll(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTextureMarginAllBind, handle, size)
     }
 
@@ -142,6 +146,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_texture_margin
      */
     fun getTextureMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, handle, margin)
     }
 
@@ -152,6 +157,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_expand_margin
      */
     fun setExpandMargin(margin: Long, size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
     }
 
@@ -161,6 +167,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_expand_margin_all
      */
     fun setExpandMarginAll(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
     }
 
@@ -171,6 +178,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_expand_margin
      */
     fun getExpandMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
     }
 
@@ -182,6 +190,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_region_rect
      */
     fun setRegionRect(region: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, region)
     }
 
@@ -193,6 +202,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_region_rect
      */
     fun getRegionRect(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
     }
 
@@ -202,6 +212,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_draw_center
      */
     fun setDrawCenter(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, enable)
     }
 
@@ -211,6 +222,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.is_draw_center_enabled
      */
     fun isDrawCenterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
     }
 
@@ -220,6 +232,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_modulate
      */
     fun setModulate(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, color)
     }
 
@@ -229,6 +242,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_modulate
      */
     fun getModulate(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
     }
 
@@ -238,6 +252,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_h_axis_stretch_mode
      */
     fun setHAxisStretchMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, handle, mode)
     }
 
@@ -247,6 +262,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_h_axis_stretch_mode
      */
     fun getHAxisStretchMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, handle)
     }
 
@@ -256,6 +272,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.set_v_axis_stretch_mode
      */
     fun setVAxisStretchMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, handle, mode)
     }
 
@@ -265,6 +282,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxTexture.get_v_axis_stretch_mode
      */
     fun getVAxisStretchMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, handle)
     }
 

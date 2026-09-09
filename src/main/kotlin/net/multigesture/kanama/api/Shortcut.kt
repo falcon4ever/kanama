@@ -23,6 +23,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shortcut.set_events
      */
     fun setEvents(events: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setEventsBind, handle, events)
     }
 
@@ -33,6 +34,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shortcut.get_events
      */
     fun getEvents(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getEventsBind, handle)
     }
 
@@ -42,6 +44,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shortcut.has_valid_event
      */
     fun hasValidEvent(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasValidEventBind, handle)
     }
 
@@ -52,6 +55,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shortcut.matches_event
      */
     fun matchesEvent(event: InputEvent?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -61,6 +65,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shortcut.get_as_text
      */
     fun getAsText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getAsTextBind, handle)
     }
 

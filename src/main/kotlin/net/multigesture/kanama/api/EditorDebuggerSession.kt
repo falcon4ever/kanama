@@ -16,6 +16,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.send_message
      */
     fun sendMessage(message: String, data: List<Any?> = emptyList()) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, handle, message, data)
     }
 
@@ -26,6 +27,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.toggle_profiler
      */
     fun toggleProfiler(profiler: String, enable: Boolean, data: List<Any?> = emptyList()) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringBoolArrayArgs(toggleProfilerBind, handle, profiler, enable, data)
     }
 
@@ -35,6 +37,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.is_breaked
      */
     fun isBreaked(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBreakedBind, handle)
     }
 
@@ -44,6 +47,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.is_debuggable
      */
     fun isDebuggable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDebuggableBind, handle)
     }
 
@@ -53,6 +57,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.is_active
      */
     fun isActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
@@ -63,6 +68,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.add_session_tab
      */
     fun addSessionTab(control: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addSessionTabBind, handle, listOf(control.handle))
     }
 
@@ -72,6 +78,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.remove_session_tab
      */
     fun removeSessionTab(control: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeSessionTabBind, handle, listOf(control.handle))
     }
 
@@ -82,6 +89,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerSession.set_breakpoint
      */
     fun setBreakpoint(path: String, line: Int, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, handle, path, line, enabled)
     }
 

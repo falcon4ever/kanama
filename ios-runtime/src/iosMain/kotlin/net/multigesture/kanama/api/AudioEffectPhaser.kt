@@ -40,42 +40,52 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setDepth(value)
 
     fun setRangeMinHz(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRangeMinHzBind, handle, hz)
     }
 
     fun getRangeMinHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMinHzBind, handle)
     }
 
     fun setRangeMaxHz(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRangeMaxHzBind, handle, hz)
     }
 
     fun getRangeMaxHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMaxHzBind, handle)
     }
 
     fun setRateHz(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRateHzBind, handle, hz)
     }
 
     fun getRateHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRateHzBind, handle)
     }
 
     fun setFeedback(fbk: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackBind, handle, fbk)
     }
 
     fun getFeedback(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackBind, handle)
     }
 
     fun setDepth(depth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
     }
 
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 

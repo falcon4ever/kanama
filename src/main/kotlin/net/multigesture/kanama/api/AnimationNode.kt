@@ -24,6 +24,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.add_input
      */
     fun addInput(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(addInputBind, handle, name)
     }
 
@@ -33,6 +34,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.remove_input
      */
     fun removeInput(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeInputBind, handle, index)
     }
 
@@ -42,6 +44,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.set_input_name
      */
     fun setInputName(input: Int, name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetBool(setInputNameBind, handle, input, name)
     }
 
@@ -51,6 +54,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.get_input_name
      */
     fun getInputName(input: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, handle, input)
     }
 
@@ -61,6 +65,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.get_input_count
      */
     fun getInputCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInputCountBind, handle)
     }
 
@@ -70,6 +75,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.find_input
      */
     fun findInput(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(findInputBind, handle, name)
     }
 
@@ -79,6 +85,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.set_filter_path
      */
     fun setFilterPath(path: NodePath, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(setFilterPathBind, handle, path, enable)
     }
 
@@ -88,6 +95,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.is_path_filtered
      */
     fun isPathFiltered(path: NodePath): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetBool(isPathFilteredBind, handle, path)
     }
 
@@ -97,6 +105,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.set_filter_enabled
      */
     fun setFilterEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterEnabledBind, handle, enable)
     }
 
@@ -106,6 +115,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.is_filter_enabled
      */
     fun isFilterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFilterEnabledBind, handle)
     }
 
@@ -117,6 +127,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.get_processing_animation_tree_instance_id
      */
     fun getProcessingAnimationTreeInstanceId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessingAnimationTreeInstanceIdBind, handle)
     }
 
@@ -126,6 +137,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.is_process_testing
      */
     fun isProcessTesting(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isProcessTestingBind, handle)
     }
 
@@ -137,6 +149,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.blend_animation
      */
     fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, handle, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag)
     }
 
@@ -148,6 +161,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.blend_node
      */
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
@@ -159,6 +173,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.blend_input
      */
     fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, handle, inputIndex, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
@@ -169,6 +184,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.set_parameter
      */
     fun setParameter(name: String, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, handle, name, value)
     }
 
@@ -179,6 +195,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationNode.get_parameter
      */
     fun getParameter(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, handle, name)
     }
 

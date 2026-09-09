@@ -16,6 +16,7 @@ class WeakRef(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: WeakRef.get_ref
      */
     fun getRef(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRefBind, handle)
     }
 

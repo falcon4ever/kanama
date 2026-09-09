@@ -331,466 +331,582 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setSubEmitterKeepVelocity(value)
 
     fun setDirection(degrees: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, handle, degrees)
     }
 
     fun getDirection(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, handle)
     }
 
     fun setInheritVelocityRatio(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setInheritVelocityRatioBind, handle, ratio)
     }
 
     fun getInheritVelocityRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getInheritVelocityRatioBind, handle)
     }
 
     fun setSpread(degrees: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, degrees)
     }
 
     fun getSpread(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
     }
 
     fun setFlatness(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, handle, amount)
     }
 
     fun getFlatness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, handle)
     }
 
     fun setParam(param: Long, value: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, handle, param, value)
     }
 
     fun getParam(param: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, handle, param)
     }
 
     fun setParamMin(param: Long, value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, handle, param, value)
     }
 
     fun getParamMin(param: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, handle, param)
     }
 
     fun setParamMax(param: Long, value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, handle, param, value)
     }
 
     fun getParamMax(param: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, handle, param)
     }
 
     fun setParamTexture(param: Long, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, handle, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getParamTexture(param: Long): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, handle, param))
     }
 
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
     fun setUseScale3d(usingScale3d: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseScale3dBind, handle, usingScale3d)
     }
 
     fun isUsingScale3d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingScale3dBind, handle)
     }
 
     fun setScale3dMin(scale3dMin: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setScale3dMinBind, handle, scale3dMin)
     }
 
     fun getScale3dMin(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMinBind, handle)
     }
 
     fun setScale3dMax(scale3dMax: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setScale3dMaxBind, handle, scale3dMax)
     }
 
     fun getScale3dMax(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMaxBind, handle)
     }
 
     fun setUseRotation3d(usingRotation3d: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseRotation3dBind, handle, usingRotation3d)
     }
 
     fun isUsingRotation3d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotation3dBind, handle)
     }
 
     fun setRotation3dMin(rotation3dMin: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotation3dMinBind, handle, rotation3dMin)
     }
 
     fun getRotation3dMin(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMinBind, handle)
     }
 
     fun setRotation3dMax(rotation3dMax: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotation3dMaxBind, handle, rotation3dMax)
     }
 
     fun getRotation3dMax(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMaxBind, handle)
     }
 
     fun setColorRamp(ramp: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getColorRamp(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
     }
 
     fun setAlphaCurve(curve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAlphaCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getAlphaCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, handle))
     }
 
     fun setEmissionCurve(curve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEmissionCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, handle))
     }
 
     fun setColorInitialRamp(ramp: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getColorInitialRamp(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, handle))
     }
 
     fun setVelocityLimitCurve(curve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setVelocityLimitCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getVelocityLimitCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, handle))
     }
 
     fun setParticleFlag(particleFlag: Long, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, handle, particleFlag, enable)
     }
 
     fun getParticleFlag(particleFlag: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, handle, particleFlag)
     }
 
     fun setVelocityPivot(pivot: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setVelocityPivotBind, handle, pivot)
     }
 
     fun getVelocityPivot(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityPivotBind, handle)
     }
 
     fun setEmissionShape(shape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, handle, shape)
     }
 
     fun getEmissionShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, handle)
     }
 
     fun setEmissionSphereRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, handle, radius)
     }
 
     fun getEmissionSphereRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, handle)
     }
 
     fun setEmissionBoxExtents(extents: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, handle, extents)
     }
 
     fun getEmissionBoxExtents(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, handle)
     }
 
     fun setEmissionPointTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionPointTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEmissionPointTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, handle))
     }
 
     fun setEmissionNormalTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEmissionNormalTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, handle))
     }
 
     fun setEmissionColorTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEmissionColorTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEmissionColorTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, handle))
     }
 
     fun setEmissionPointCount(pointCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setEmissionPointCountBind, handle, pointCount)
     }
 
     fun getEmissionPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEmissionPointCountBind, handle)
     }
 
     fun setEmissionRingAxis(axis: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, handle, axis)
     }
 
     fun getEmissionRingAxis(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, handle)
     }
 
     fun setEmissionRingHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, handle, height)
     }
 
     fun getEmissionRingHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, handle)
     }
 
     fun setEmissionRingRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, handle, radius)
     }
 
     fun getEmissionRingRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, handle)
     }
 
     fun setEmissionRingInnerRadius(innerRadius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, handle, innerRadius)
     }
 
     fun getEmissionRingInnerRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, handle)
     }
 
     fun setEmissionRingConeAngle(coneAngle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, handle, coneAngle)
     }
 
     fun getEmissionRingConeAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, handle)
     }
 
     fun setEmissionShapeOffset(emissionShapeOffset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeOffsetBind, handle, emissionShapeOffset)
     }
 
     fun getEmissionShapeOffset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeOffsetBind, handle)
     }
 
     fun setEmissionShapeScale(emissionShapeScale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeScaleBind, handle, emissionShapeScale)
     }
 
     fun getEmissionShapeScale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeScaleBind, handle)
     }
 
     fun getTurbulenceEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getTurbulenceEnabledBind, handle)
     }
 
     fun setTurbulenceEnabled(turbulenceEnabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTurbulenceEnabledBind, handle, turbulenceEnabled)
     }
 
     fun getTurbulenceNoiseStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseStrengthBind, handle)
     }
 
     fun setTurbulenceNoiseStrength(turbulenceNoiseStrength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseStrengthBind, handle, turbulenceNoiseStrength)
     }
 
     fun getTurbulenceNoiseScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseScaleBind, handle)
     }
 
     fun setTurbulenceNoiseScale(turbulenceNoiseScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseScaleBind, handle, turbulenceNoiseScale)
     }
 
     fun getTurbulenceNoiseSpeedRandom(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseSpeedRandomBind, handle)
     }
 
     fun setTurbulenceNoiseSpeedRandom(turbulenceNoiseSpeedRandom: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseSpeedRandomBind, handle, turbulenceNoiseSpeedRandom)
     }
 
     fun getTurbulenceNoiseSpeed(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getTurbulenceNoiseSpeedBind, handle)
     }
 
     fun setTurbulenceNoiseSpeed(turbulenceNoiseSpeed: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setTurbulenceNoiseSpeedBind, handle, turbulenceNoiseSpeed)
     }
 
     fun getGravity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, handle)
     }
 
     fun setGravity(accelVec: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setGravityBind, handle, accelVec)
     }
 
     fun setLifetimeRandomness(randomness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, handle, randomness)
     }
 
     fun getLifetimeRandomness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, handle)
     }
 
     fun getSubEmitterMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, handle)
     }
 
     fun setSubEmitterMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, handle, mode)
     }
 
     fun getSubEmitterFrequency(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSubEmitterFrequencyBind, handle)
     }
 
     fun setSubEmitterFrequency(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSubEmitterFrequencyBind, handle, hz)
     }
 
     fun getSubEmitterAmountAtEnd(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtEndBind, handle)
     }
 
     fun setSubEmitterAmountAtEnd(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtEndBind, handle, amount)
     }
 
     fun getSubEmitterAmountAtCollision(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtCollisionBind, handle)
     }
 
     fun setSubEmitterAmountAtCollision(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtCollisionBind, handle, amount)
     }
 
     fun getSubEmitterAmountAtStart(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtStartBind, handle)
     }
 
     fun setSubEmitterAmountAtStart(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtStartBind, handle, amount)
     }
 
     fun getSubEmitterKeepVelocity(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSubEmitterKeepVelocityBind, handle)
     }
 
     fun setSubEmitterKeepVelocity(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSubEmitterKeepVelocityBind, handle, enable)
     }
 
     fun setAttractorInteractionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAttractorInteractionEnabledBind, handle, enabled)
     }
 
     fun isAttractorInteractionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAttractorInteractionEnabledBind, handle)
     }
 
     fun setCollisionMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, handle, mode)
     }
 
     fun getCollisionMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, handle)
     }
 
     fun setCollisionUseScale(radius: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollisionUseScaleBind, handle, radius)
     }
 
     fun isCollisionUsingScale(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollisionUsingScaleBind, handle)
     }
 
     fun setCollisionFriction(friction: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCollisionFrictionBind, handle, friction)
     }
 
     fun getCollisionFriction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionFrictionBind, handle)
     }
 
     fun setCollisionBounce(bounce: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCollisionBounceBind, handle, bounce)
     }
 
     fun getCollisionBounce(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBounceBind, handle)
     }
 
     fun setUsingRotationVelocity3d(useRotationVelocity3d: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUsingRotationVelocity3dBind, handle, useRotationVelocity3d)
     }
 
     fun isUsingRotationVelocity3d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotationVelocity3dBind, handle)
     }
 
     fun setRotationVelocity3dMax(rotationVelocity3dMax: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMaxBind, handle, rotationVelocity3dMax)
     }
 
     fun getRotationVelocity3dMax(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMaxBind, handle)
     }
 
     fun setRotationVelocity3dMin(rotationVelocity3dMin: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMinBind, handle, rotationVelocity3dMin)
     }
 
     fun getRotationVelocity3dMin(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMinBind, handle)
     }
 
     fun setRotationVelocity3dCurve(rotationVelocity3dCurve: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setRotationVelocity3dCurveBind, handle, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getRotationVelocity3dCurve(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, handle))
     }
 

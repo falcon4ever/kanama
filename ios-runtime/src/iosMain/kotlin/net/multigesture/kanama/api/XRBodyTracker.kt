@@ -23,34 +23,42 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
         set(value) = setBodyFlags(value)
 
     fun setHasTrackingData(hasData: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
     }
 
     fun getHasTrackingData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
     fun setBodyFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, handle, flags)
     }
 
     fun getBodyFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, handle)
     }
 
     fun setJointFlags(joint: Long, flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, handle, joint, flags)
     }
 
     fun getJointFlags(joint: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, handle, joint)
     }
 
     fun setJointTransform(joint: Long, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, handle, joint, transform)
     }
 
     fun getJointTransform(joint: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, handle, joint)
     }
 

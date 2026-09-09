@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
     fun setBandGainDb(bandIdx: Int, volumeDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBandGainDbBind, handle, bandIdx, volumeDb)
     }
 
     fun getBandGainDb(bandIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getBandGainDbBind, handle, bandIdx)
     }
 
     fun getBandCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBandCountBind, handle)
     }
 

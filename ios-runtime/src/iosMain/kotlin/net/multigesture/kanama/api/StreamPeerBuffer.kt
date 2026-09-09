@@ -9,26 +9,32 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
     fun seek(position: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(seekBind, handle, position)
     }
 
     fun getSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSizeBind, handle)
     }
 
     fun getPosition(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPositionBind, handle)
     }
 
     fun resize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(resizeBind, handle, size)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun duplicate(): StreamPeerBuffer? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

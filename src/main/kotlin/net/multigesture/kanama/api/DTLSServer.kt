@@ -15,6 +15,7 @@ class DTLSServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: DTLSServer.setup
      */
     fun setup(serverOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, handle, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -27,6 +28,7 @@ class DTLSServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: DTLSServer.take_connection
      */
     fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
+        checkOpen()
         return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, handle, udpPeer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

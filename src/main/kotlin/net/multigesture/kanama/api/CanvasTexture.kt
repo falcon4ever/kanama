@@ -59,6 +59,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_diffuse_texture
      */
     fun setDiffuseTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -68,6 +69,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_diffuse_texture
      */
     fun getDiffuseTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getDiffuseTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -85,6 +87,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_normal_texture
      */
     fun setNormalTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -97,6 +100,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_normal_texture
      */
     fun getNormalTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getNormalTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -114,6 +118,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_specular_texture
      */
     fun setSpecularTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -126,6 +131,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_specular_texture
      */
     fun getSpecularTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getSpecularTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -142,6 +148,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_specular_color
      */
     fun setSpecularColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSpecularColorBind, handle, color)
     }
 
@@ -153,6 +160,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_specular_color
      */
     fun getSpecularColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSpecularColorBind, handle)
     }
 
@@ -165,6 +173,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_specular_shininess
      */
     fun setSpecularShininess(shininess: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpecularShininessBind, handle, shininess)
     }
 
@@ -177,6 +186,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_specular_shininess
      */
     fun getSpecularShininess(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularShininessBind, handle)
     }
 
@@ -186,6 +196,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_texture_filter
      */
     fun setTextureFilter(filter: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, filter)
     }
 
@@ -195,6 +206,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_texture_filter
      */
     fun getTextureFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
@@ -204,6 +216,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.set_texture_repeat
      */
     fun setTextureRepeat(repeat: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, repeat)
     }
 
@@ -213,6 +226,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CanvasTexture.get_texture_repeat
      */
     fun getTextureRepeat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
     }
 

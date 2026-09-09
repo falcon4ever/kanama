@@ -29,6 +29,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineShader.set_shader
      */
     fun setShader(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setShaderBind, handle, pMember)
     }
 
@@ -38,6 +39,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineShader.get_shader
      */
     fun getShader(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, handle)
     }
 
@@ -47,6 +49,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineShader.set_specialization_constants
      */
     fun setSpecializationConstants(specializationConstants: List<RDPipelineSpecializationConstant>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setSpecializationConstantsBind, handle, specializationConstants)
     }
 
@@ -56,6 +59,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineShader.get_specialization_constants
      */
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, handle, RDPipelineSpecializationConstant::fromHandle)
     }
 

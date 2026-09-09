@@ -48,6 +48,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_frames
      */
     fun setFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFramesBind, handle, frames)
     }
 
@@ -59,6 +60,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_frames
      */
     fun getFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesBind, handle)
     }
 
@@ -69,6 +71,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_current_frame
      */
     fun setCurrentFrame(frame: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCurrentFrameBind, handle, frame)
     }
 
@@ -79,6 +82,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_current_frame
      */
     fun getCurrentFrame(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentFrameBind, handle)
     }
 
@@ -89,6 +93,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_pause
      */
     fun setPause(pause: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPauseBind, handle, pause)
     }
 
@@ -99,6 +104,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_pause
      */
     fun getPause(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPauseBind, handle)
     }
 
@@ -109,6 +115,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_one_shot
      */
     fun setOneShot(oneShot: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, oneShot)
     }
 
@@ -119,6 +126,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_one_shot
      */
     fun getOneShot(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
     }
 
@@ -129,6 +137,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_speed_scale
      */
     fun setSpeedScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
     }
 
@@ -139,6 +148,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_speed_scale
      */
     fun getSpeedScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
@@ -151,6 +161,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_frame_texture
      */
     fun setFrameTexture(frame: Int, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setFrameTextureBind, handle, frame, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -160,6 +171,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_frame_texture
      */
     fun getFrameTexture(frame: Int): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getFrameTextureBind, handle, frame)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -175,6 +187,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.set_frame_duration
      */
     fun setFrameDuration(frame: Int, duration: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameDurationBind, handle, frame, duration)
     }
 
@@ -184,6 +197,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AnimatedTexture.get_frame_duration
      */
     fun getFrameDuration(frame: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getFrameDurationBind, handle, frame)
     }
 

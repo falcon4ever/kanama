@@ -35,6 +35,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.setup
      */
     fun setup() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(setupBind, handle)
     }
 
@@ -47,6 +48,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.execute
      */
     fun execute(delta: Double, executionMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleAndIntArgs(executeBind, handle, delta, executionMode)
     }
 
@@ -56,6 +58,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.enable_all_modifications
      */
     fun enableAllModifications(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(enableAllModificationsBind, handle, enabled)
     }
 
@@ -65,6 +68,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.get_modification
      */
     fun getModification(modIdx: Int): SkeletonModification2D? {
+        checkOpen()
         return SkeletonModification2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, handle, modIdx))
     }
 
@@ -74,6 +78,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.add_modification
      */
     fun addModification(modification: SkeletonModification2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addModificationBind, handle, listOf(modification?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -83,6 +88,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.delete_modification
      */
     fun deleteModification(modIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(deleteModificationBind, handle, modIdx)
     }
 
@@ -92,6 +98,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.set_modification
      */
     fun setModification(modIdx: Int, modification: SkeletonModification2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, handle, modIdx, modification?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -101,6 +108,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.set_modification_count
      */
     fun setModificationCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setModificationCountBind, handle, count)
     }
 
@@ -110,6 +118,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.get_modification_count
      */
     fun getModificationCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getModificationCountBind, handle)
     }
 
@@ -119,6 +128,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.get_is_setup
      */
     fun getIsSetup(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
     }
 
@@ -129,6 +139,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
@@ -139,6 +150,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.get_enabled
      */
     fun getEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
@@ -150,6 +162,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.set_strength
      */
     fun setStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
     }
 
@@ -161,6 +174,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.get_strength
      */
     fun getStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
     }
 
@@ -170,6 +184,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonModificationStack2D.get_skeleton
      */
     fun getSkeleton(): Skeleton2D? {
+        checkOpen()
         return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
     }
 

@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorResourceTooltipPlugin(handle: MemorySegment) : RefCounted(handle) {
     fun requestThumbnail(path: String, control: TextureRect) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(requestThumbnailBind, handle, path, control.handle)
     }
 

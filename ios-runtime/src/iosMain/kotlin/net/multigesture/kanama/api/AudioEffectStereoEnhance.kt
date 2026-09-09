@@ -28,26 +28,32 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setSurround(value)
 
     fun setPanPullout(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPanPulloutBind, handle, amount)
     }
 
     fun getPanPullout(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPanPulloutBind, handle)
     }
 
     fun setTimePullout(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTimePulloutBind, handle, amount)
     }
 
     fun getTimePullout(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimePulloutBind, handle)
     }
 
     fun setSurround(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSurroundBind, handle, amount)
     }
 
     fun getSurround(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSurroundBind, handle)
     }
 

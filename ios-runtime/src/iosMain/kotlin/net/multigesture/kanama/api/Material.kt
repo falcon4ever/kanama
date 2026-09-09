@@ -22,10 +22,12 @@ open class Material(handle: MemorySegment) : Resource(handle) {
         set(value) = setNextPass(value)
 
     fun setNextPass(nextPass: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, handle, listOf(nextPass?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNextPass(): Material? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -35,18 +37,22 @@ open class Material(handle: MemorySegment) : Resource(handle) {
     }
 
     fun setRenderPriority(priority: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, handle, priority)
     }
 
     fun getRenderPriority(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, handle)
     }
 
     fun inspectNativeShaderCode() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
     }
 
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

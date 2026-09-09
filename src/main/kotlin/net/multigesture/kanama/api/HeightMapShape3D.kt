@@ -34,6 +34,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.set_map_width
      */
     fun setMapWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMapWidthBind, handle, width)
     }
 
@@ -43,6 +44,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.get_map_width
      */
     fun getMapWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMapWidthBind, handle)
     }
 
@@ -52,6 +54,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.set_map_depth
      */
     fun setMapDepth(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMapDepthBind, handle, height)
     }
 
@@ -61,6 +64,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.get_map_depth
      */
     fun getMapDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMapDepthBind, handle)
     }
 
@@ -70,6 +74,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.set_map_data
      */
     fun setMapData(data: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setMapDataBind, handle, data)
     }
 
@@ -79,6 +84,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.get_map_data
      */
     fun getMapData(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getMapDataBind, handle)
     }
 
@@ -89,6 +95,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.get_min_height
      */
     fun getMinHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinHeightBind, handle)
     }
 
@@ -98,6 +105,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.get_max_height
      */
     fun getMaxHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxHeightBind, handle)
     }
 
@@ -114,6 +122,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: HeightMapShape3D.update_map_data_from_image
      */
     fun updateMapDataFromImage(image: Image?, heightMin: Double, heightMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, heightMin, heightMax)
     }
 

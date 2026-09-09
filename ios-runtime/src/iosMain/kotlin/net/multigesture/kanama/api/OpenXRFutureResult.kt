@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class OpenXRFutureResult(handle: MemorySegment) : RefCounted(handle) {
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
     fun getFuture(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFutureBind, handle)
     }
 
     fun cancelFuture() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(cancelFutureBind, handle)
     }
 
     fun getResultValue(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getResultValueBind, handle)
     }
 

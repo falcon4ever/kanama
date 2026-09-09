@@ -34,6 +34,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDAttachmentFormat.set_format
      */
     fun setFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
@@ -43,6 +44,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDAttachmentFormat.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -52,6 +54,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDAttachmentFormat.set_samples
      */
     fun setSamples(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
     }
 
@@ -61,6 +64,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDAttachmentFormat.get_samples
      */
     fun getSamples(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
     }
 
@@ -70,6 +74,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDAttachmentFormat.set_usage_flags
      */
     fun setUsageFlags(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setUsageFlagsBind, handle, pMember)
     }
 
@@ -79,6 +84,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDAttachmentFormat.get_usage_flags
      */
     fun getUsageFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getUsageFlagsBind, handle)
     }
 

@@ -9,22 +9,27 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class ZIPReader(handle: MemorySegment) : RefCounted(handle) {
     fun open(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, path)
     }
 
     fun closeArchive(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, handle)
     }
 
     fun getFiles(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesBind, handle)
     }
 
     fun fileExists(path: String, caseSensitive: Boolean = true): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(fileExistsBind, handle, path, caseSensitive)
     }
 
     fun getCompressionLevel(path: String, caseSensitive: Boolean = true): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetInt(getCompressionLevelBind, handle, path, caseSensitive)
     }
 

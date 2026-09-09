@@ -75,6 +75,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -85,6 +86,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_mesh
      */
     fun getMesh(): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
@@ -96,6 +98,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_use_colors
      */
     fun setUseColors(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseColorsBind, handle, enable)
     }
 
@@ -107,6 +110,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.is_using_colors
      */
     fun isUsingColors(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingColorsBind, handle)
     }
 
@@ -118,6 +122,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_use_custom_data
      */
     fun setUseCustomData(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseCustomDataBind, handle, enable)
     }
 
@@ -129,6 +134,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.is_using_custom_data
      */
     fun isUsingCustomData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomDataBind, handle)
     }
 
@@ -138,6 +144,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_transform_format
      */
     fun setTransformFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, handle, format)
     }
 
@@ -147,6 +154,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_transform_format
      */
     fun getTransformFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, handle)
     }
 
@@ -158,6 +166,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_instance_count
      */
     fun setInstanceCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInstanceCountBind, handle, count)
     }
 
@@ -169,6 +178,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_instance_count
      */
     fun getInstanceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInstanceCountBind, handle)
     }
 
@@ -179,6 +189,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_visible_instance_count
      */
     fun setVisibleInstanceCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVisibleInstanceCountBind, handle, count)
     }
 
@@ -189,6 +200,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_visible_instance_count
      */
     fun getVisibleInstanceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVisibleInstanceCountBind, handle)
     }
 
@@ -201,6 +213,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_physics_interpolation_quality
      */
     fun setPhysicsInterpolationQuality(quality: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, handle, quality)
     }
 
@@ -213,6 +226,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_physics_interpolation_quality
      */
     fun getPhysicsInterpolationQuality(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, handle)
     }
 
@@ -222,6 +236,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_instance_transform
      */
     fun setInstanceTransform(instance: Int, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setInstanceTransformBind, handle, instance, transform)
     }
 
@@ -231,6 +246,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_instance_transform_2d
      */
     fun setInstanceTransform2d(instance: Int, transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform2DArg(setInstanceTransform2dBind, handle, instance, transform)
     }
 
@@ -240,6 +256,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_instance_transform
      */
     fun getInstanceTransform(instance: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getInstanceTransformBind, handle, instance)
     }
 
@@ -249,6 +266,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_instance_transform_2d
      */
     fun getInstanceTransform2d(instance: Int): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform2D(getInstanceTransform2dBind, handle, instance)
     }
 
@@ -264,6 +282,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_instance_color
      */
     fun setInstanceColor(instance: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setInstanceColorBind, handle, instance, color)
     }
 
@@ -273,6 +292,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_instance_color
      */
     fun getInstanceColor(instance: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceColorBind, handle, instance)
     }
 
@@ -286,6 +306,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_instance_custom_data
      */
     fun setInstanceCustomData(instance: Int, customData: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setInstanceCustomDataBind, handle, instance, customData)
     }
 
@@ -295,6 +316,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_instance_custom_data
      */
     fun getInstanceCustomData(instance: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceCustomDataBind, handle, instance)
     }
 
@@ -307,6 +329,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.reset_instance_physics_interpolation
      */
     fun resetInstancePhysicsInterpolation(instance: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(resetInstancePhysicsInterpolationBind, handle, instance)
     }
 
@@ -318,6 +341,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.reset_instances_physics_interpolation
      */
     fun resetInstancesPhysicsInterpolation() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetInstancesPhysicsInterpolationBind, handle)
     }
 
@@ -328,6 +352,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_custom_aabb
      */
     fun setCustomAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
@@ -338,6 +363,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_custom_aabb
      */
     fun getCustomAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
@@ -347,14 +373,17 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.get_aabb
      */
     fun getAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
     }
 
     fun getBuffer(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBufferBind, handle)
     }
 
     fun setBuffer(buffer: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBufferBind, handle, buffer)
     }
 
@@ -369,6 +398,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MultiMesh.set_buffer_interpolated
      */
     fun setBufferInterpolated(bufferCurr: List<Float>, bufferPrev: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, handle, bufferCurr, bufferPrev)
     }
 

@@ -16,34 +16,42 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setMultiplayerPeer(value)
 
     fun hasMultiplayerPeer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMultiplayerPeerBind, handle)
     }
 
     fun getMultiplayerPeer(): MultiplayerPeer? {
+        checkOpen()
         return MultiplayerPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, handle))
     }
 
     fun setMultiplayerPeer(peer: MultiplayerPeer?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getUniqueId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
     }
 
     fun isServer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
     }
 
     fun getRemoteSenderId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRemoteSenderIdBind, handle)
     }
 
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
     fun getPeers(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPeersBind, handle)
     }
 

@@ -22,6 +22,7 @@ class CircleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CircleShape2D.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -31,6 +32,7 @@ class CircleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CircleShape2D.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 

@@ -16,10 +16,12 @@ open class VideoStream(handle: MemorySegment) : Resource(handle) {
         set(value) = setFile(value)
 
     fun setFile(file: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFileBind, handle, file)
     }
 
     fun getFile(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFileBind, handle)
     }
 

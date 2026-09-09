@@ -16,10 +16,12 @@ open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
         set(value) = setWindowId(value)
 
     fun setWindowId(id: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setWindowIdBind, handle, id)
     }
 
     fun getWindowId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWindowIdBind, handle)
     }
 

@@ -9,86 +9,107 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class VisualShaderNodeGroupBase(handle: MemorySegment) : VisualShaderNodeResizableBase(handle) {
     fun setInputs(inputs: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setInputsBind, handle, inputs)
     }
 
     fun getInputs(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getInputsBind, handle)
     }
 
     fun setOutputs(outputs: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOutputsBind, handle, outputs)
     }
 
     fun getOutputs(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOutputsBind, handle)
     }
 
     fun isValidPortName(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isValidPortNameBind, handle, name)
     }
 
     fun addInputPort(id: Int, type: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(addInputPortBind, handle, id, type, name)
     }
 
     fun removeInputPort(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeInputPortBind, handle, id)
     }
 
     fun getInputPortCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInputPortCountBind, handle)
     }
 
     fun hasInputPort(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasInputPortBind, handle, id)
     }
 
     fun clearInputPorts() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearInputPortsBind, handle)
     }
 
     fun addOutputPort(id: Int, type: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(addOutputPortBind, handle, id, type, name)
     }
 
     fun removeOutputPort(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeOutputPortBind, handle, id)
     }
 
     fun getOutputPortCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortCountBind, handle)
     }
 
     fun hasOutputPort(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasOutputPortBind, handle, id)
     }
 
     fun clearOutputPorts() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearOutputPortsBind, handle)
     }
 
     fun setInputPortName(id: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setInputPortNameBind, handle, id, name)
     }
 
     fun setInputPortType(id: Int, type: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setInputPortTypeBind, handle, id, type)
     }
 
     fun setOutputPortName(id: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setOutputPortNameBind, handle, id, name)
     }
 
     fun setOutputPortType(id: Int, type: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setOutputPortTypeBind, handle, id, type)
     }
 
     fun getFreeInputPortId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFreeInputPortIdBind, handle)
     }
 
     fun getFreeOutputPortId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFreeOutputPortIdBind, handle)
     }
 

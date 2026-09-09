@@ -15,10 +15,12 @@ open class VisualShaderNodeVectorBase(handle: MemorySegment) : VisualShaderNode(
         set(value) = setOpType(value)
 
     fun setOpType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, type)
     }
 
     fun getOpType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
     }
 

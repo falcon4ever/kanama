@@ -23,6 +23,7 @@ class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle
      * Generated from Godot docs: InputEventMagnifyGesture.set_factor
      */
     fun setFactor(factor: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFactorBind, handle, factor)
     }
 
@@ -33,6 +34,7 @@ class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle
      * Generated from Godot docs: InputEventMagnifyGesture.get_factor
      */
     fun getFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, handle)
     }
 

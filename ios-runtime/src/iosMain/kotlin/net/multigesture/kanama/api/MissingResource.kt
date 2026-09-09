@@ -22,18 +22,22 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
         set(value) = setRecordingProperties(value)
 
     fun setOriginalClass(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, handle, name)
     }
 
     fun getOriginalClass(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, handle)
     }
 
     fun setRecordingProperties(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, handle, enable)
     }
 
     fun isRecordingProperties(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, handle)
     }
 

@@ -15,10 +15,12 @@ class FBXState(handle: MemorySegment) : GLTFState(handle) {
         set(value) = setAllowGeometryHelperNodes(value)
 
     fun getAllowGeometryHelperNodes(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAllowGeometryHelperNodesBind, handle)
     }
 
     fun setAllowGeometryHelperNodes(allow: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowGeometryHelperNodesBind, handle, allow)
     }
 

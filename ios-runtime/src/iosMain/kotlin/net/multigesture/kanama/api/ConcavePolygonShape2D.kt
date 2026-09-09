@@ -15,6 +15,7 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
         get() = getSegments()
 
     fun getSegments(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getSegmentsBind, handle)
     }
 

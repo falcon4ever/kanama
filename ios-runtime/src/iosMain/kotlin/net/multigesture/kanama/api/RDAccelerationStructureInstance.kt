@@ -48,50 +48,62 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
         set(value) = setBlas(value)
 
     fun setTransform(pMember: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, pMember)
     }
 
     fun getTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
     fun setId(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setIdBind, handle, pMember)
     }
 
     fun getId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIdBind, handle)
     }
 
     fun setMask(pMember: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaskBind, handle, pMember)
     }
 
     fun getMask(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaskBind, handle)
     }
 
     fun setHitSbtRange(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHitSbtRangeBind, handle, pMember)
     }
 
     fun getHitSbtRange(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHitSbtRangeBind, handle)
     }
 
     fun setFlags(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
     }
 
     fun getFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
     fun setBlas(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setBlasBind, handle, pMember)
     }
 
     fun getBlas(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getBlasBind, handle)
     }
 

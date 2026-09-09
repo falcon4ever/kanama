@@ -15,6 +15,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SocketServer.is_connection_available
      */
     fun isConnectionAvailable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
@@ -24,6 +25,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SocketServer.is_listening
      */
     fun isListening(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
 
@@ -33,6 +35,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SocketServer.stop
      */
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
@@ -42,6 +45,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SocketServer.take_socket_connection
      */
     fun takeSocketConnection(): StreamPeerSocket? {
+        checkOpen()
         return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, handle))
     }
 

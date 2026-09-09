@@ -30,6 +30,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: WorldBoundaryShape2D.set_normal
      */
     fun setNormal(normal: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setNormalBind, handle, normal)
     }
 
@@ -40,6 +41,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: WorldBoundaryShape2D.get_normal
      */
     fun getNormal(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, handle)
     }
 
@@ -52,6 +54,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: WorldBoundaryShape2D.set_distance
      */
     fun setDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDistanceBind, handle, distance)
     }
 
@@ -64,6 +67,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: WorldBoundaryShape2D.get_distance
      */
     fun getDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceBind, handle)
     }
 

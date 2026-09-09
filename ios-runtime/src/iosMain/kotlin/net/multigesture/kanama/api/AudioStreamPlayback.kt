@@ -9,34 +9,42 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
     fun setSamplePlayback(playbackSample: AudioSamplePlayback?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, handle, listOf(playbackSample?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getSamplePlayback(): AudioSamplePlayback? {
+        checkOpen()
         return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, handle))
     }
 
     fun start(fromPos: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(startBind, handle, fromPos)
     }
 
     fun seek(time: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(seekBind, handle, time)
     }
 
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
     fun getLoopCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopCountBind, handle)
     }
 
     fun getPlaybackPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, handle)
     }
 
     fun isPlaying(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
 

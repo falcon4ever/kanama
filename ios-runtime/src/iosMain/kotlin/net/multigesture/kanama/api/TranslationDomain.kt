@@ -70,122 +70,152 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setPseudolocalizationSuffix(value)
 
     fun getTranslationObject(locale: String): Translation? {
+        checkOpen()
         return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, handle, locale))
     }
 
     fun addTranslation(translation: Translation?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeTranslation(translation: Translation?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun getTranslations(): List<Translation> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, handle, Translation::fromHandle)
     }
 
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, handle, locale, exact)
     }
 
     fun hasTranslation(translation: Translation?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, handle, translation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getLocaleOverride(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleOverrideBind, handle)
     }
 
     fun setLocaleOverride(locale: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLocaleOverrideBind, handle, locale)
     }
 
     fun isEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
     }
 
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
     fun isPseudolocalizationEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, handle)
     }
 
     fun setPseudolocalizationEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, handle, enabled)
     }
 
     fun isPseudolocalizationAccentsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationAccentsEnabledBind, handle)
     }
 
     fun setPseudolocalizationAccentsEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationAccentsEnabledBind, handle, enabled)
     }
 
     fun isPseudolocalizationDoubleVowelsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationDoubleVowelsEnabledBind, handle)
     }
 
     fun setPseudolocalizationDoubleVowelsEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationDoubleVowelsEnabledBind, handle, enabled)
     }
 
     fun isPseudolocalizationFakeBidiEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationFakeBidiEnabledBind, handle)
     }
 
     fun setPseudolocalizationFakeBidiEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationFakeBidiEnabledBind, handle, enabled)
     }
 
     fun isPseudolocalizationOverrideEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationOverrideEnabledBind, handle)
     }
 
     fun setPseudolocalizationOverrideEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationOverrideEnabledBind, handle, enabled)
     }
 
     fun isPseudolocalizationSkipPlaceholdersEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationSkipPlaceholdersEnabledBind, handle)
     }
 
     fun setPseudolocalizationSkipPlaceholdersEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationSkipPlaceholdersEnabledBind, handle, enabled)
     }
 
     fun getPseudolocalizationExpansionRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPseudolocalizationExpansionRatioBind, handle)
     }
 
     fun setPseudolocalizationExpansionRatio(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPseudolocalizationExpansionRatioBind, handle, ratio)
     }
 
     fun getPseudolocalizationPrefix(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationPrefixBind, handle)
     }
 
     fun setPseudolocalizationPrefix(prefix: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPseudolocalizationPrefixBind, handle, prefix)
     }
 
     fun getPseudolocalizationSuffix(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationSuffixBind, handle)
     }
 
     fun setPseudolocalizationSuffix(suffix: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPseudolocalizationSuffixBind, handle, suffix)
     }
 
     fun pseudolocalize(message: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(pseudolocalizeBind, handle, message)
     }
 

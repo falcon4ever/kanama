@@ -44,42 +44,52 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         set(value) = setGodotSkin(value)
 
     fun getSkinRoot(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkinRootBind, handle)
     }
 
     fun setSkinRoot(skinRoot: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkinRootBind, handle, skinRoot)
     }
 
     fun getJointsOriginal(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsOriginalBind, handle)
     }
 
     fun getJoints(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
     }
 
     fun getNonJoints(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getNonJointsBind, handle)
     }
 
     fun getRoots(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
     }
 
     fun getSkeleton(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, handle)
     }
 
     fun setSkeleton(skeleton: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkeletonBind, handle, skeleton)
     }
 
     fun getGodotSkin(): Skin? {
+        checkOpen()
         return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, handle))
     }
 
     fun setGodotSkin(godotSkin: Skin?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, handle, listOf(godotSkin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

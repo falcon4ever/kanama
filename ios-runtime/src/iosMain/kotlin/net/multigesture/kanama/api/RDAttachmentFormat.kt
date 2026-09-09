@@ -28,26 +28,32 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setUsageFlags(value)
 
     fun setFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun setSamples(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
     }
 
     fun getSamples(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
     }
 
     fun setUsageFlags(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setUsageFlagsBind, handle, pMember)
     }
 
     fun getUsageFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getUsageFlagsBind, handle)
     }
 

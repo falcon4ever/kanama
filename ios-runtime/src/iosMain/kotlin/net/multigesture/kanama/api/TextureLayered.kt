@@ -9,30 +9,37 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class TextureLayered(handle: MemorySegment) : Texture(handle) {
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun getLayeredType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, handle)
     }
 
     fun getWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
     fun getLayers(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLayersBind, handle)
     }
 
     fun hasMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
     fun getLayerData(layer: Int): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, handle, layer))
     }
 

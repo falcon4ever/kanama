@@ -24,6 +24,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.listen
      */
     fun listen(port: Int, bindAddress: String = "*"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
     }
 
@@ -37,6 +38,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.poll
      */
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
@@ -46,6 +48,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.is_connection_available
      */
     fun isConnectionAvailable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
@@ -55,6 +58,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.get_local_port
      */
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
@@ -64,6 +68,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.is_listening
      */
     fun isListening(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
 
@@ -75,6 +80,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.take_connection
      */
     fun takeConnection(): PacketPeerUDP? {
+        checkOpen()
         return PacketPeerUDP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 
@@ -85,6 +91,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.stop
      */
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
@@ -96,6 +103,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.set_max_pending_connections
      */
     fun setMaxPendingConnections(maxPendingConnections: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxPendingConnectionsBind, handle, maxPendingConnections)
     }
 
@@ -107,6 +115,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: UDPServer.get_max_pending_connections
      */
     fun getMaxPendingConnections(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxPendingConnectionsBind, handle)
     }
 

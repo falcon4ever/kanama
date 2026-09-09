@@ -46,46 +46,57 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
         set(value) = setRecoveryAsCollisionEnabled(value)
 
     fun getFrom(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getFromBind, handle)
     }
 
     fun setFrom(from: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setFromBind, handle, from)
     }
 
     fun getMotion(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, handle)
     }
 
     fun setMotion(motion: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setMotionBind, handle, motion)
     }
 
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
     fun isCollideSeparationRayEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
     }
 
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
     }
 
     fun getExcludeObjects(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
     }
 
     fun isRecoveryAsCollisionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
     }
 
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
     }
 

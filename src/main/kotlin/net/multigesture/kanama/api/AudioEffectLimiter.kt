@@ -40,6 +40,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.set_ceiling_db
      */
     fun setCeilingDb(ceiling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
     }
 
@@ -49,6 +50,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.get_ceiling_db
      */
     fun getCeilingDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
     }
 
@@ -59,6 +61,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.set_threshold_db
      */
     fun setThresholdDb(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setThresholdDbBind, handle, threshold)
     }
 
@@ -69,6 +72,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.get_threshold_db
      */
     fun getThresholdDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdDbBind, handle)
     }
 
@@ -78,6 +82,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.set_soft_clip_db
      */
     fun setSoftClipDb(softClip: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSoftClipDbBind, handle, softClip)
     }
 
@@ -87,6 +92,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.get_soft_clip_db
      */
     fun getSoftClipDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipDbBind, handle)
     }
 
@@ -97,6 +103,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.set_soft_clip_ratio
      */
     fun setSoftClipRatio(softClip: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSoftClipRatioBind, handle, softClip)
     }
 
@@ -107,6 +114,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectLimiter.get_soft_clip_ratio
      */
     fun getSoftClipRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipRatioBind, handle)
     }
 

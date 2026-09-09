@@ -15,6 +15,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_language_name
      */
     fun getLanguageName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageNameBind, handle)
     }
 
@@ -24,6 +25,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.is_empty
      */
     fun isEmpty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
@@ -33,6 +35,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_frame_count
      */
     fun getFrameCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFrameCountBind, handle)
     }
 
@@ -42,6 +45,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_frame_function
      */
     fun getFrameFunction(index: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getFrameFunctionBind, handle, index)
     }
 
@@ -51,6 +55,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_frame_file
      */
     fun getFrameFile(index: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getFrameFileBind, handle, index)
     }
 
@@ -60,6 +65,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_frame_line
      */
     fun getFrameLine(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getFrameLineBind, handle, index)
     }
 
@@ -71,6 +77,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_global_variable_count
      */
     fun getGlobalVariableCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGlobalVariableCountBind, handle)
     }
 
@@ -80,6 +87,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_global_variable_name
      */
     fun getGlobalVariableName(variableIndex: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getGlobalVariableNameBind, handle, variableIndex)
     }
 
@@ -92,6 +100,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_global_variable_value
      */
     fun getGlobalVariableValue(variableIndex: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getGlobalVariableValueBind, handle, variableIndex)
     }
 
@@ -103,6 +112,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_local_variable_count
      */
     fun getLocalVariableCount(frameIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getLocalVariableCountBind, handle, frameIndex)
     }
 
@@ -113,6 +123,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_local_variable_name
      */
     fun getLocalVariableName(frameIndex: Int, variableIndex: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLocalVariableNameBind, handle, frameIndex, variableIndex)
     }
 
@@ -126,6 +137,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_local_variable_value
      */
     fun getLocalVariableValue(frameIndex: Int, variableIndex: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLocalVariableValueBind, handle, frameIndex, variableIndex)
     }
 
@@ -137,6 +149,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_member_variable_count
      */
     fun getMemberVariableCount(frameIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, handle, frameIndex)
     }
 
@@ -147,6 +160,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_member_variable_name
      */
     fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, handle, frameIndex, variableIndex)
     }
 
@@ -160,6 +174,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.get_member_variable_value
      */
     fun getMemberVariableValue(frameIndex: Int, variableIndex: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getMemberVariableValueBind, handle, frameIndex, variableIndex)
     }
 
@@ -172,6 +187,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ScriptBacktrace.format
      */
     fun format(indentAll: Int = 0, indentFrames: Int = 4): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(formatBind, handle, indentAll, indentFrames)
     }
 

@@ -70,82 +70,102 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
         set(value) = setAutorestartRandomDelay(value)
 
     fun setFadeinTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFadeinTimeBind, handle, time)
     }
 
     fun getFadeinTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeinTimeBind, handle)
     }
 
     fun setFadeinCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getFadeinCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, handle))
     }
 
     fun setFadeoutTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFadeoutTimeBind, handle, time)
     }
 
     fun getFadeoutTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeoutTimeBind, handle)
     }
 
     fun setFadeoutCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getFadeoutCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, handle))
     }
 
     fun setBreakLoopAtEnd(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
     }
 
     fun isLoopBrokenAtEnd(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
     }
 
     fun setAbortOnReset(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAbortOnResetBind, handle, enable)
     }
 
     fun isAbortedOnReset(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAbortedOnResetBind, handle)
     }
 
     fun setAutorestart(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAutorestartBind, handle, active)
     }
 
     fun hasAutorestart(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutorestartBind, handle)
     }
 
     fun setAutorestartDelay(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutorestartDelayBind, handle, time)
     }
 
     fun getAutorestartDelay(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartDelayBind, handle)
     }
 
     fun setAutorestartRandomDelay(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutorestartRandomDelayBind, handle, time)
     }
 
     fun getAutorestartRandomDelay(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartRandomDelayBind, handle)
     }
 
     fun setMixMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMixModeBind, handle, mode)
     }
 
     fun getMixMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, handle)
     }
 

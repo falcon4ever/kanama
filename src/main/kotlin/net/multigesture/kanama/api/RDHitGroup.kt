@@ -34,6 +34,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDHitGroup.set_closest_hit_shader
      */
     fun setClosestHitShader(pMember: RDPipelineShader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -43,6 +44,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDHitGroup.get_closest_hit_shader
      */
     fun getClosestHitShader(): RDPipelineShader? {
+        checkOpen()
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, handle))
     }
 
@@ -52,6 +54,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDHitGroup.set_any_hit_shader
      */
     fun setAnyHitShader(pMember: RDPipelineShader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -61,6 +64,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDHitGroup.get_any_hit_shader
      */
     fun getAnyHitShader(): RDPipelineShader? {
+        checkOpen()
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, handle))
     }
 
@@ -71,6 +75,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDHitGroup.set_intersection_shader
      */
     fun setIntersectionShader(pMember: RDPipelineShader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -81,6 +86,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDHitGroup.get_intersection_shader
      */
     fun getIntersectionShader(): RDPipelineShader? {
+        checkOpen()
         return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, handle))
     }
 

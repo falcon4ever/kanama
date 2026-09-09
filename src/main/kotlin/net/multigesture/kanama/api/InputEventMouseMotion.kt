@@ -61,6 +61,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_tilt
      */
     fun setTilt(tilt: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setTiltBind, handle, tilt)
     }
 
@@ -72,6 +73,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_tilt
      */
     fun getTilt(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, handle)
     }
 
@@ -81,6 +83,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_pressure
      */
     fun setPressure(pressure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
     }
 
@@ -90,6 +93,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_pressure
      */
     fun getPressure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
     }
 
@@ -100,6 +104,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_pen_inverted
      */
     fun setPenInverted(penInverted: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, handle, penInverted)
     }
 
@@ -110,6 +115,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_pen_inverted
      */
     fun getPenInverted(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, handle)
     }
 
@@ -126,6 +132,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_relative
      */
     fun setRelative(relative: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, handle, relative)
     }
 
@@ -142,6 +149,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_relative
      */
     fun getRelative(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, handle)
     }
 
@@ -157,6 +165,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_screen_relative
      */
     fun setScreenRelative(relative: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, handle, relative)
     }
 
@@ -172,6 +181,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_screen_relative
      */
     fun getScreenRelative(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, handle)
     }
 
@@ -186,6 +196,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
     }
 
@@ -200,6 +211,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_velocity
      */
     fun getVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
     }
 
@@ -213,6 +225,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.set_screen_velocity
      */
     fun setScreenVelocity(velocity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, handle, velocity)
     }
 
@@ -226,6 +239,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseMotion.get_screen_velocity
      */
     fun getScreenVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, handle)
     }
 

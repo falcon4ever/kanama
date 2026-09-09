@@ -36,6 +36,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectStereoEnhance.set_pan_pullout
      */
     fun setPanPullout(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPanPulloutBind, handle, amount)
     }
 
@@ -46,6 +47,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectStereoEnhance.get_pan_pullout
      */
     fun getPanPullout(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPanPulloutBind, handle)
     }
 
@@ -56,6 +58,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectStereoEnhance.set_time_pullout
      */
     fun setTimePullout(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTimePulloutBind, handle, amount)
     }
 
@@ -66,6 +69,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectStereoEnhance.get_time_pullout
      */
     fun getTimePullout(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimePulloutBind, handle)
     }
 
@@ -76,6 +80,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectStereoEnhance.set_surround
      */
     fun setSurround(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSurroundBind, handle, amount)
     }
 
@@ -86,6 +91,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectStereoEnhance.get_surround
      */
     fun getSurround(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSurroundBind, handle)
     }
 

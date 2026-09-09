@@ -28,54 +28,67 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
         set(value) = setAllowTransitionToSelf(value)
 
     fun setInputCount(inputCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInputCountBind, handle, inputCount)
     }
 
     fun setInputAsAutoAdvance(input: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputAsAutoAdvanceBind, handle, input, enable)
     }
 
     fun isInputSetAsAutoAdvance(input: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputSetAsAutoAdvanceBind, handle, input)
     }
 
     fun setInputBreakLoopAtEnd(input: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputBreakLoopAtEndBind, handle, input, enable)
     }
 
     fun isInputLoopBrokenAtEnd(input: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputLoopBrokenAtEndBind, handle, input)
     }
 
     fun setInputReset(input: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputResetBind, handle, input, enable)
     }
 
     fun isInputReset(input: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputResetBind, handle, input)
     }
 
     fun setXfadeTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, time)
     }
 
     fun getXfadeTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
     }
 
     fun setXfadeCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getXfadeCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
     }
 
     fun setAllowTransitionToSelf(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
     }
 
     fun isAllowTransitionToSelf(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
     }
 

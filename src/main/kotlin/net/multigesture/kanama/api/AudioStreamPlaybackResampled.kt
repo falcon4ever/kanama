@@ -16,6 +16,7 @@ open class AudioStreamPlaybackResampled(handle: MemorySegment) : AudioStreamPlay
      * Generated from Godot docs: AudioStreamPlaybackResampled.begin_resample
      */
     fun beginResample() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(beginResampleBind, handle)
     }
 

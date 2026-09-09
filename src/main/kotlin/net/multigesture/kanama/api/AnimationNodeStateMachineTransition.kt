@@ -70,6 +70,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_switch_mode
      */
     fun setSwitchMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, handle, mode)
     }
 
@@ -79,6 +80,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_switch_mode
      */
     fun getSwitchMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, handle)
     }
 
@@ -90,6 +92,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_mode
      */
     fun setAdvanceMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, handle, mode)
     }
 
@@ -101,6 +104,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_mode
      */
     fun getAdvanceMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, handle)
     }
 
@@ -114,6 +118,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_condition
      */
     fun setAdvanceCondition(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setAdvanceConditionBind, handle, name)
     }
 
@@ -127,6 +132,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_condition
      */
     fun getAdvanceCondition(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getAdvanceConditionBind, handle)
     }
 
@@ -140,6 +146,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_xfade_time
      */
     fun setXfadeTime(secs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, secs)
     }
 
@@ -153,6 +160,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_xfade_time
      */
     fun getXfadeTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
     }
 
@@ -163,6 +171,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_xfade_curve
      */
     fun setXfadeCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -173,6 +182,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_xfade_curve
      */
     fun getXfadeCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
     }
 
@@ -183,6 +193,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_break_loop_at_end
      */
     fun setBreakLoopAtEnd(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
     }
 
@@ -193,6 +204,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.is_loop_broken_at_end
      */
     fun isLoopBrokenAtEnd(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
     }
 
@@ -202,6 +214,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_reset
      */
     fun setReset(reset: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setResetBind, handle, reset)
     }
 
@@ -211,6 +224,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.is_reset
      */
     fun isReset(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isResetBind, handle)
     }
 
@@ -221,6 +235,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_priority
      */
     fun setPriority(priority: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
     }
 
@@ -231,6 +246,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_priority
      */
     fun getPriority(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
     }
 
@@ -242,6 +258,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_expression
      */
     fun setAdvanceExpression(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setAdvanceExpressionBind, handle, text)
     }
 
@@ -253,6 +270,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_expression
      */
     fun getAdvanceExpression(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, handle)
     }
 

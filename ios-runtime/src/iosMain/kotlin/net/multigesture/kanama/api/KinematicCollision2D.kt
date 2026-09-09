@@ -11,54 +11,67 @@ import net.multigesture.kanama.types.Vector2
  */
 class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
     fun getNormal(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, handle)
     }
 
     fun getTravel(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTravelBind, handle)
     }
 
     fun getRemainder(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRemainderBind, handle)
     }
 
     fun getAngle(upDirection: Vector2): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleBind, handle, upDirection)
     }
 
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
     fun getLocalShape(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalShapeBind, handle))
     }
 
     fun getCollider(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, handle))
     }
 
     fun getColliderId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getColliderIdBind, handle)
     }
 
     fun getColliderRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, handle)
     }
 
     fun getColliderShape(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderShapeBind, handle))
     }
 
     fun getColliderShapeIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeIndexBind, handle)
     }
 
     fun getColliderVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getColliderVelocityBind, handle)
     }
 

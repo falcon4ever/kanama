@@ -9,54 +9,67 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
     fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, handle, port, bindAddress, recvBufSize)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
     fun waitBlocking(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, handle)
     }
 
     fun isBound(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBoundBind, handle)
     }
 
     fun connectToHost(host: String, port: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
     }
 
     fun isSocketConnected(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSocketConnectedBind, handle)
     }
 
     fun getPacketIp(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPacketIpBind, handle)
     }
 
     fun getPacketPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketPortBind, handle)
     }
 
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
     fun setDestAddress(host: String, port: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, handle, host, port)
     }
 
     fun setBroadcastEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBroadcastEnabledBind, handle, enabled)
     }
 
     fun joinMulticastGroup(multicastAddress: String, interfaceName: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, handle, multicastAddress, interfaceName)
     }
 
     fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, handle, multicastAddress, interfaceName)
     }
 

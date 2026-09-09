@@ -23,6 +23,7 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
      * Generated from Godot docs: PlaceholderTextureLayered.set_size
      */
     fun setSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
@@ -32,6 +33,7 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
      * Generated from Godot docs: PlaceholderTextureLayered.get_size
      */
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
@@ -41,6 +43,7 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
      * Generated from Godot docs: PlaceholderTextureLayered.set_layers
      */
     fun setLayers(layers: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLayersBind, handle, layers)
     }
 

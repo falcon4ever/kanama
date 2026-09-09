@@ -798,618 +798,772 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         set(value) = setStencilEffectOutlineThickness(value)
 
     fun setAlbedo(albedo: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setAlbedoBind, handle, albedo)
     }
 
     fun getAlbedo(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, handle)
     }
 
     fun setTransparency(transparency: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTransparencyBind, handle, transparency)
     }
 
     fun getTransparency(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, handle)
     }
 
     fun setAlphaAntialiasing(alphaAa: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, handle, alphaAa)
     }
 
     fun getAlphaAntialiasing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, handle)
     }
 
     fun setAlphaAntialiasingEdge(edge: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, handle, edge)
     }
 
     fun getAlphaAntialiasingEdge(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, handle)
     }
 
     fun setShadingMode(shadingMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setShadingModeBind, handle, shadingMode)
     }
 
     fun getShadingMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, handle)
     }
 
     fun setSpecular(specular: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpecularBind, handle, specular)
     }
 
     fun getSpecular(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularBind, handle)
     }
 
     fun setMetallic(metallic: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMetallicBind, handle, metallic)
     }
 
     fun getMetallic(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMetallicBind, handle)
     }
 
     fun setRoughness(roughness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRoughnessBind, handle, roughness)
     }
 
     fun getRoughness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRoughnessBind, handle)
     }
 
     fun setEmission(emission: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setEmissionBind, handle, emission)
     }
 
     fun getEmission(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, handle)
     }
 
     fun setEmissionEnergyMultiplier(emissionEnergyMultiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyMultiplierBind, handle, emissionEnergyMultiplier)
     }
 
     fun getEmissionEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyMultiplierBind, handle)
     }
 
     fun setEmissionIntensity(emissionEnergyMultiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEmissionIntensityBind, handle, emissionEnergyMultiplier)
     }
 
     fun getEmissionIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionIntensityBind, handle)
     }
 
     fun setNormalScale(normalScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setNormalScaleBind, handle, normalScale)
     }
 
     fun getNormalScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getNormalScaleBind, handle)
     }
 
     fun setRim(rim: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRimBind, handle, rim)
     }
 
     fun getRim(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRimBind, handle)
     }
 
     fun setRimTint(rimTint: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRimTintBind, handle, rimTint)
     }
 
     fun getRimTint(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRimTintBind, handle)
     }
 
     fun setClearcoat(clearcoat: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setClearcoatBind, handle, clearcoat)
     }
 
     fun getClearcoat(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatBind, handle)
     }
 
     fun setClearcoatRoughness(clearcoatRoughness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setClearcoatRoughnessBind, handle, clearcoatRoughness)
     }
 
     fun getClearcoatRoughness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatRoughnessBind, handle)
     }
 
     fun setAnisotropy(anisotropy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAnisotropyBind, handle, anisotropy)
     }
 
     fun getAnisotropy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyBind, handle)
     }
 
     fun setHeightmapScale(heightmapScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightmapScaleBind, handle, heightmapScale)
     }
 
     fun getHeightmapScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightmapScaleBind, handle)
     }
 
     fun setSubsurfaceScatteringStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSubsurfaceScatteringStrengthBind, handle, strength)
     }
 
     fun getSubsurfaceScatteringStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSubsurfaceScatteringStrengthBind, handle)
     }
 
     fun setTransmittanceColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setTransmittanceColorBind, handle, color)
     }
 
     fun getTransmittanceColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getTransmittanceColorBind, handle)
     }
 
     fun setTransmittanceDepth(depth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTransmittanceDepthBind, handle, depth)
     }
 
     fun getTransmittanceDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceDepthBind, handle)
     }
 
     fun setTransmittanceBoost(boost: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTransmittanceBoostBind, handle, boost)
     }
 
     fun getTransmittanceBoost(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceBoostBind, handle)
     }
 
     fun setBacklight(backlight: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBacklightBind, handle, backlight)
     }
 
     fun getBacklight(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBacklightBind, handle)
     }
 
     fun setRefraction(refraction: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRefractionBind, handle, refraction)
     }
 
     fun getRefraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRefractionBind, handle)
     }
 
     fun setPointSize(pointSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPointSizeBind, handle, pointSize)
     }
 
     fun getPointSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPointSizeBind, handle)
     }
 
     fun setDetailUv(detailUv: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDetailUvBind, handle, detailUv)
     }
 
     fun getDetailUv(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, handle)
     }
 
     fun setBlendMode(blendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
     }
 
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
     fun setDepthDrawMode(depthDrawMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, handle, depthDrawMode)
     }
 
     fun getDepthDrawMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, handle)
     }
 
     fun setDepthTest(depthTest: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDepthTestBind, handle, depthTest)
     }
 
     fun getDepthTest(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, handle)
     }
 
     fun setCullMode(cullMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
     }
 
     fun getCullMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
     fun setDiffuseMode(diffuseMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, handle, diffuseMode)
     }
 
     fun getDiffuseMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, handle)
     }
 
     fun setSpecularMode(specularMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, handle, specularMode)
     }
 
     fun getSpecularMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, handle)
     }
 
     fun setFlag(flag: Long, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, handle, flag, enable)
     }
 
     fun getFlag(flag: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, handle, flag)
     }
 
     fun setTextureFilter(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
     }
 
     fun getTextureFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
     fun setFeature(feature: Long, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, handle, feature, enable)
     }
 
     fun getFeature(feature: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, handle, feature)
     }
 
     fun setTexture(param: Long, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, handle, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getTexture(param: Long): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, handle, param))
     }
 
     fun setDetailBlendMode(detailBlendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, handle, detailBlendMode)
     }
 
     fun getDetailBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, handle)
     }
 
     fun setUv1Scale(scale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv1ScaleBind, handle, scale)
     }
 
     fun getUv1Scale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv1ScaleBind, handle)
     }
 
     fun setUv1Offset(offset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv1OffsetBind, handle, offset)
     }
 
     fun getUv1Offset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv1OffsetBind, handle)
     }
 
     fun setUv1TriplanarBlendSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setUv1TriplanarBlendSharpnessBind, handle, sharpness)
     }
 
     fun getUv1TriplanarBlendSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv1TriplanarBlendSharpnessBind, handle)
     }
 
     fun setUv2Scale(scale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv2ScaleBind, handle, scale)
     }
 
     fun getUv2Scale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv2ScaleBind, handle)
     }
 
     fun setUv2Offset(offset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setUv2OffsetBind, handle, offset)
     }
 
     fun getUv2Offset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getUv2OffsetBind, handle)
     }
 
     fun setUv2TriplanarBlendSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setUv2TriplanarBlendSharpnessBind, handle, sharpness)
     }
 
     fun getUv2TriplanarBlendSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv2TriplanarBlendSharpnessBind, handle)
     }
 
     fun setBillboardMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, handle, mode)
     }
 
     fun getBillboardMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, handle)
     }
 
     fun setParticlesAnimHFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, handle, frames)
     }
 
     fun getParticlesAnimHFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, handle)
     }
 
     fun setParticlesAnimVFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, handle, frames)
     }
 
     fun getParticlesAnimVFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, handle)
     }
 
     fun setParticlesAnimLoop(loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, handle, loop)
     }
 
     fun getParticlesAnimLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, handle)
     }
 
     fun setHeightmapDeepParallax(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxBind, handle, enable)
     }
 
     fun isHeightmapDeepParallaxEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHeightmapDeepParallaxEnabledBind, handle)
     }
 
     fun setHeightmapDeepParallaxMinLayers(layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMinLayersBind, handle, layer)
     }
 
     fun getHeightmapDeepParallaxMinLayers(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMinLayersBind, handle)
     }
 
     fun setHeightmapDeepParallaxMaxLayers(layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMaxLayersBind, handle, layer)
     }
 
     fun getHeightmapDeepParallaxMaxLayers(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMaxLayersBind, handle)
     }
 
     fun setHeightmapDeepParallaxFlipTangent(flip: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipTangentBind, handle, flip)
     }
 
     fun getHeightmapDeepParallaxFlipTangent(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipTangentBind, handle)
     }
 
     fun setHeightmapDeepParallaxFlipBinormal(flip: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipBinormalBind, handle, flip)
     }
 
     fun getHeightmapDeepParallaxFlipBinormal(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipBinormalBind, handle)
     }
 
     fun setGrow(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGrowBind, handle, amount)
     }
 
     fun getGrow(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBind, handle)
     }
 
     fun setEmissionOperator(operator: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, handle, operator)
     }
 
     fun getEmissionOperator(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, handle)
     }
 
     fun setAoLightAffect(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAoLightAffectBind, handle, amount)
     }
 
     fun getAoLightAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAoLightAffectBind, handle)
     }
 
     fun setAlphaScissorThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, handle, threshold)
     }
 
     fun getAlphaScissorThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, handle)
     }
 
     fun setAlphaHashScale(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, handle, threshold)
     }
 
     fun getAlphaHashScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, handle)
     }
 
     fun setGrowEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGrowEnabledBind, handle, enable)
     }
 
     fun isGrowEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGrowEnabledBind, handle)
     }
 
     fun setMetallicTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, handle, channel)
     }
 
     fun getMetallicTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, handle)
     }
 
     fun setRoughnessTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, handle, channel)
     }
 
     fun getRoughnessTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, handle)
     }
 
     fun setAoTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, handle, channel)
     }
 
     fun getAoTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, handle)
     }
 
     fun setRefractionTextureChannel(channel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, handle, channel)
     }
 
     fun getRefractionTextureChannel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, handle)
     }
 
     fun setProximityFadeEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setProximityFadeEnabledBind, handle, enabled)
     }
 
     fun isProximityFadeEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isProximityFadeEnabledBind, handle)
     }
 
     fun setProximityFadeDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setProximityFadeDistanceBind, handle, distance)
     }
 
     fun getProximityFadeDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getProximityFadeDistanceBind, handle)
     }
 
     fun setMsdfPixelRange(range: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMsdfPixelRangeBind, handle, range)
     }
 
     fun getMsdfPixelRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfPixelRangeBind, handle)
     }
 
     fun setMsdfOutlineSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMsdfOutlineSizeBind, handle, size)
     }
 
     fun getMsdfOutlineSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfOutlineSizeBind, handle)
     }
 
     fun setDistanceFade(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, handle, mode)
     }
 
     fun getDistanceFade(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, handle)
     }
 
     fun setDistanceFadeMaxDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMaxDistanceBind, handle, distance)
     }
 
     fun getDistanceFadeMaxDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMaxDistanceBind, handle)
     }
 
     fun setDistanceFadeMinDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMinDistanceBind, handle, distance)
     }
 
     fun getDistanceFadeMinDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMinDistanceBind, handle)
     }
 
     fun setZClipScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setZClipScaleBind, handle, scale)
     }
 
     fun getZClipScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getZClipScaleBind, handle)
     }
 
     fun setFovOverride(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFovOverrideBind, handle, scale)
     }
 
     fun getFovOverride(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFovOverrideBind, handle)
     }
 
     fun setStencilMode(stencilMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStencilModeBind, handle, stencilMode)
     }
 
     fun getStencilMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, handle)
     }
 
     fun setStencilFlags(stencilFlags: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStencilFlagsBind, handle, stencilFlags)
     }
 
     fun getStencilFlags(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStencilFlagsBind, handle)
     }
 
     fun setStencilCompare(stencilCompare: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, handle, stencilCompare)
     }
 
     fun getStencilCompare(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, handle)
     }
 
     fun setStencilReference(stencilReference: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStencilReferenceBind, handle, stencilReference)
     }
 
     fun getStencilReference(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStencilReferenceBind, handle)
     }
 
     fun setStencilEffectColor(stencilColor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setStencilEffectColorBind, handle, stencilColor)
     }
 
     fun getStencilEffectColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getStencilEffectColorBind, handle)
     }
 
     fun setStencilEffectOutlineThickness(stencilOutlineThickness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStencilEffectOutlineThicknessBind, handle, stencilOutlineThickness)
     }
 
     fun getStencilEffectOutlineThickness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, handle)
     }
 

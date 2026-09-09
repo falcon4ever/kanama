@@ -15,718 +15,897 @@ import net.multigesture.kanama.types.Vector2i
  */
 open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun hasFeature(feature: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, handle, feature)
     }
 
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
     }
 
     fun getFeatures(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFeaturesBind, handle)
     }
 
     fun loadSupportData(filename: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(loadSupportDataBind, handle, filename)
     }
 
     fun getSupportDataFilename(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSupportDataFilenameBind, handle)
     }
 
     fun getSupportDataInfo(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSupportDataInfoBind, handle)
     }
 
     fun saveSupportData(filename: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(saveSupportDataBind, handle, filename)
     }
 
     fun isLocaleUsingSupportData(locale: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleUsingSupportDataBind, handle, locale)
     }
 
     fun isLocaleRightToLeft(locale: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleRightToLeftBind, handle, locale)
     }
 
     fun nameToTag(name: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(nameToTagBind, handle, name)
     }
 
     fun has(rid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(hasBind, handle, rid)
     }
 
     fun freeRid(rid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(freeRidBind, handle, rid)
     }
 
     fun createFont(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(createFontBind, handle)
     }
 
     fun createFontLinkedVariation(fontRid: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(createFontLinkedVariationBind, handle, fontRid)
     }
 
     fun fontSetFaceIndex(fontRid: RID, faceIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFaceIndexBind, handle, fontRid, faceIndex)
     }
 
     fun fontGetFaceIndex(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceIndexBind, handle, fontRid)
     }
 
     fun fontGetFaceCount(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceCountBind, handle, fontRid)
     }
 
     fun fontSetStyle(fontRid: RID, style: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStyleBind, handle, fontRid, style)
     }
 
     fun fontGetStyle(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStyleBind, handle, fontRid)
     }
 
     fun fontSetName(fontRid: RID, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontSetNameBind, handle, fontRid, name)
     }
 
     fun fontSetStyleName(fontRid: RID, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontSetStyleNameBind, handle, fontRid, name)
     }
 
     fun fontSetWeight(fontRid: RID, weight: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetWeightBind, handle, fontRid, weight)
     }
 
     fun fontGetWeight(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetWeightBind, handle, fontRid)
     }
 
     fun fontSetStretch(fontRid: RID, weight: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStretchBind, handle, fontRid, weight)
     }
 
     fun fontGetStretch(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStretchBind, handle, fontRid)
     }
 
     fun fontSetAntialiasing(fontRid: RID, antialiasing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetAntialiasingBind, handle, fontRid, antialiasing)
     }
 
     fun fontGetAntialiasing(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetAntialiasingBind, handle, fontRid)
     }
 
     fun fontSetDisableEmbeddedBitmaps(fontRid: RID, disableEmbeddedBitmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetDisableEmbeddedBitmapsBind, handle, fontRid, disableEmbeddedBitmaps)
     }
 
     fun fontGetDisableEmbeddedBitmaps(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetDisableEmbeddedBitmapsBind, handle, fontRid)
     }
 
     fun fontSetGenerateMipmaps(fontRid: RID, generateMipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetGenerateMipmapsBind, handle, fontRid, generateMipmaps)
     }
 
     fun fontGetGenerateMipmaps(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetGenerateMipmapsBind, handle, fontRid)
     }
 
     fun fontSetMultichannelSignedDistanceField(fontRid: RID, msdf: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetMultichannelSignedDistanceFieldBind, handle, fontRid, msdf)
     }
 
     fun fontIsMultichannelSignedDistanceField(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsMultichannelSignedDistanceFieldBind, handle, fontRid)
     }
 
     fun fontSetMsdfPixelRange(fontRid: RID, msdfPixelRange: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfPixelRangeBind, handle, fontRid, msdfPixelRange)
     }
 
     fun fontGetMsdfPixelRange(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfPixelRangeBind, handle, fontRid)
     }
 
     fun fontSetMsdfSize(fontRid: RID, msdfSize: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfSizeBind, handle, fontRid, msdfSize)
     }
 
     fun fontGetMsdfSize(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfSizeBind, handle, fontRid)
     }
 
     fun fontSetFixedSize(fontRid: RID, fixedSize: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeBind, handle, fontRid, fixedSize)
     }
 
     fun fontGetFixedSize(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeBind, handle, fontRid)
     }
 
     fun fontSetFixedSizeScaleMode(fontRid: RID, fixedSizeScaleMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeScaleModeBind, handle, fontRid, fixedSizeScaleMode)
     }
 
     fun fontGetFixedSizeScaleMode(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeScaleModeBind, handle, fontRid)
     }
 
     fun fontSetAllowSystemFallback(fontRid: RID, allowSystemFallback: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetAllowSystemFallbackBind, handle, fontRid, allowSystemFallback)
     }
 
     fun fontIsAllowSystemFallback(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsAllowSystemFallbackBind, handle, fontRid)
     }
 
     fun fontClearSystemFallbackCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(fontClearSystemFallbackCacheBind, handle)
     }
 
     fun fontSetForceAutohinter(fontRid: RID, forceAutohinter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetForceAutohinterBind, handle, fontRid, forceAutohinter)
     }
 
     fun fontIsForceAutohinter(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsForceAutohinterBind, handle, fontRid)
     }
 
     fun fontSetModulateColorGlyphs(fontRid: RID, modulate: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetModulateColorGlyphsBind, handle, fontRid, modulate)
     }
 
     fun fontIsModulateColorGlyphs(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsModulateColorGlyphsBind, handle, fontRid)
     }
 
     fun fontGetPaletteCount(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetPaletteCountBind, handle, fontRid)
     }
 
     fun fontGetUsedPalette(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetUsedPaletteBind, handle, fontRid)
     }
 
     fun fontSetUsedPalette(fontRid: RID, index: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetUsedPaletteBind, handle, fontRid, index)
     }
 
     fun fontSetHinting(fontRid: RID, hinting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetHintingBind, handle, fontRid, hinting)
     }
 
     fun fontGetHinting(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetHintingBind, handle, fontRid)
     }
 
     fun fontSetSubpixelPositioning(fontRid: RID, subpixelPositioning: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontSetSubpixelPositioningBind, handle, fontRid, subpixelPositioning)
     }
 
     fun fontGetSubpixelPositioning(fontRid: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetSubpixelPositioningBind, handle, fontRid)
     }
 
     fun fontSetKeepRoundingRemainders(fontRid: RID, keepRoundingRemainders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetKeepRoundingRemaindersBind, handle, fontRid, keepRoundingRemainders)
     }
 
     fun fontGetKeepRoundingRemainders(fontRid: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetKeepRoundingRemaindersBind, handle, fontRid)
     }
 
     fun fontSetEmbolden(fontRid: RID, strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetEmboldenBind, handle, fontRid, strength)
     }
 
     fun fontGetEmbolden(fontRid: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetEmboldenBind, handle, fontRid)
     }
 
     fun fontSetSpacing(fontRid: RID, spacing: Long, value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndTwoLongArgs(fontSetSpacingBind, handle, fontRid, spacing, value)
     }
 
     fun fontGetSpacing(fontRid: RID, spacing: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(fontGetSpacingBind, handle, fontRid, spacing)
     }
 
     fun fontSetBaselineOffset(fontRid: RID, baselineOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetBaselineOffsetBind, handle, fontRid, baselineOffset)
     }
 
     fun fontGetBaselineOffset(fontRid: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetBaselineOffsetBind, handle, fontRid)
     }
 
     fun fontSetTransform(fontRid: RID, transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndTransform2DArg(fontSetTransformBind, handle, fontRid, transform)
     }
 
     fun fontGetTransform(fontRid: RID): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetTransform2D(fontGetTransformBind, handle, fontRid)
     }
 
     fun fontSetOversampling(fontRid: RID, oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetOversamplingBind, handle, fontRid, oversampling)
     }
 
     fun fontGetOversampling(fontRid: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetOversamplingBind, handle, fontRid)
     }
 
     fun fontClearSizeCache(fontRid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(fontClearSizeCacheBind, handle, fontRid)
     }
 
     fun fontRemoveSizeCache(fontRid: RID, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontRemoveSizeCacheBind, handle, fontRid, size)
     }
 
     fun fontSetAscent(fontRid: RID, size: Long, ascent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetAscentBind, handle, fontRid, size, ascent)
     }
 
     fun fontGetAscent(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetAscentBind, handle, fontRid, size)
     }
 
     fun fontSetDescent(fontRid: RID, size: Long, descent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetDescentBind, handle, fontRid, size, descent)
     }
 
     fun fontGetDescent(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetDescentBind, handle, fontRid, size)
     }
 
     fun fontSetUnderlinePosition(fontRid: RID, size: Long, underlinePosition: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlinePositionBind, handle, fontRid, size, underlinePosition)
     }
 
     fun fontGetUnderlinePosition(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlinePositionBind, handle, fontRid, size)
     }
 
     fun fontSetUnderlineThickness(fontRid: RID, size: Long, underlineThickness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlineThicknessBind, handle, fontRid, size, underlineThickness)
     }
 
     fun fontGetUnderlineThickness(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlineThicknessBind, handle, fontRid, size)
     }
 
     fun fontSetScale(fontRid: RID, size: Long, scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetScaleBind, handle, fontRid, size, scale)
     }
 
     fun fontGetScale(fontRid: RID, size: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetScaleBind, handle, fontRid, size)
     }
 
     fun fontGetTextureCount(fontRid: RID, size: Vector2i): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndVector2iArgRetLong(fontGetTextureCountBind, handle, fontRid, size)
     }
 
     fun fontClearTextures(fontRid: RID, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearTexturesBind, handle, fontRid, size)
     }
 
     fun fontRemoveTexture(fontRid: RID, size: Vector2i, textureIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveTextureBind, handle, fontRid, size, textureIndex)
     }
 
     fun fontSetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long, image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(fontSetTextureImageBind, handle, fontRid, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun fontGetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, handle, fontRid, size, textureIndex))
     }
 
     fun fontClearGlyphs(fontRid: RID, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearGlyphsBind, handle, fontRid, size)
     }
 
     fun fontRemoveGlyph(fontRid: RID, size: Vector2i, glyph: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveGlyphBind, handle, fontRid, size, glyph)
     }
 
     fun fontGetGlyphAdvance(fontRid: RID, size: Long, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetVector2(fontGetGlyphAdvanceBind, handle, fontRid, size, glyph)
     }
 
     fun fontSetGlyphAdvance(fontRid: RID, size: Long, glyph: Long, advance: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDTwoLongAndVector2Args(fontSetGlyphAdvanceBind, handle, fontRid, size, glyph, advance)
     }
 
     fun fontGetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphOffsetBind, handle, fontRid, size, glyph)
     }
 
     fun fontSetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long, offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphOffsetBind, handle, fontRid, size, glyph, offset)
     }
 
     fun fontGetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphSizeBind, handle, fontRid, size, glyph)
     }
 
     fun fontSetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long, glSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphSizeBind, handle, fontRid, size, glyph, glSize)
     }
 
     fun fontGetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRect2(fontGetGlyphUvRectBind, handle, fontRid, size, glyph)
     }
 
     fun fontSetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long, uvRect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongRect2Args(fontSetGlyphUvRectBind, handle, fontRid, size, glyph, uvRect)
     }
 
     fun fontGetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetLong(fontGetGlyphTextureIdxBind, handle, fontRid, size, glyph)
     }
 
     fun fontSetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long, textureIdx: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontSetGlyphTextureIdxBind, handle, fontRid, size, glyph, textureIdx)
     }
 
     fun fontGetGlyphTextureRid(fontRid: RID, size: Vector2i, glyph: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRID(fontGetGlyphTextureRidBind, handle, fontRid, size, glyph)
     }
 
     fun fontGetGlyphTextureSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphTextureSizeBind, handle, fontRid, size, glyph)
     }
 
     fun fontClearKerningMap(fontRid: RID, size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(fontClearKerningMapBind, handle, fontRid, size)
     }
 
     fun fontRemoveKerning(fontRid: RID, size: Long, glyphPair: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2iArgs(fontRemoveKerningBind, handle, fontRid, size, glyphPair)
     }
 
     fun fontSetKerning(fontRid: RID, size: Long, glyphPair: Vector2i, kerning: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2iAndVector2Args(fontSetKerningBind, handle, fontRid, size, glyphPair, kerning)
     }
 
     fun fontGetKerning(fontRid: RID, size: Long, glyphPair: Vector2i): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDLongVector2iArgsRetVector2(fontGetKerningBind, handle, fontRid, size, glyphPair)
     }
 
     fun fontGetGlyphIndex(fontRid: RID, size: Long, char: Long, variationSelector: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndThreeLongArgsRetLong(fontGetGlyphIndexBind, handle, fontRid, size, char, variationSelector)
     }
 
     fun fontGetCharFromGlyphIndex(fontRid: RID, size: Long, glyphIndex: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(fontGetCharFromGlyphIndexBind, handle, fontRid, size, glyphIndex)
     }
 
     fun fontHasChar(fontRid: RID, char: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(fontHasCharBind, handle, fontRid, char)
     }
 
     fun fontRenderRange(fontRid: RID, size: Vector2i, start: Long, end: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontRenderRangeBind, handle, fontRid, size, start, end)
     }
 
     fun fontRenderGlyph(fontRid: RID, size: Vector2i, index: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRenderGlyphBind, handle, fontRid, size, index)
     }
 
     fun fontDrawGlyph(fontRid: RID, canvas: RID, size: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(fontDrawGlyphBind, handle, fontRid, canvas, size, pos, index, color, oversampling)
     }
 
     fun fontDrawGlyphOutline(fontRid: RID, canvas: RID, size: Long, outlineSize: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(fontDrawGlyphOutlineBind, handle, fontRid, canvas, size, outlineSize, pos, index, color, oversampling)
     }
 
     fun fontIsLanguageSupported(fontRid: RID, language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsLanguageSupportedBind, handle, fontRid, language)
     }
 
     fun fontSetLanguageSupportOverride(fontRid: RID, language: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetLanguageSupportOverrideBind, handle, fontRid, language, supported)
     }
 
     fun fontGetLanguageSupportOverride(fontRid: RID, language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetLanguageSupportOverrideBind, handle, fontRid, language)
     }
 
     fun fontRemoveLanguageSupportOverride(fontRid: RID, language: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveLanguageSupportOverrideBind, handle, fontRid, language)
     }
 
     fun fontIsScriptSupported(fontRid: RID, script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsScriptSupportedBind, handle, fontRid, script)
     }
 
     fun fontSetScriptSupportOverride(fontRid: RID, script: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetScriptSupportOverrideBind, handle, fontRid, script, supported)
     }
 
     fun fontGetScriptSupportOverride(fontRid: RID, script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetScriptSupportOverrideBind, handle, fontRid, script)
     }
 
     fun fontRemoveScriptSupportOverride(fontRid: RID, script: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveScriptSupportOverrideBind, handle, fontRid, script)
     }
 
     fun fontGetGlobalOversampling(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(fontGetGlobalOversamplingBind, handle)
     }
 
     fun fontSetGlobalOversampling(oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(fontSetGlobalOversamplingBind, handle, oversampling)
     }
 
     fun getHexCodeBoxSize(size: Long, index: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongArgsRetVector2(getHexCodeBoxSizeBind, handle, size, index)
     }
 
     fun drawHexCodeBox(canvas: RID, size: Long, pos: Vector2, index: Long, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2LongColorArgs(drawHexCodeBoxBind, handle, canvas, size, pos, index, color)
     }
 
     fun createShapedText(direction: Long = 0L, orientation: Long = 0L): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongArgsRetRID(createShapedTextBind, handle, direction, orientation)
     }
 
     fun shapedTextClear(rid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(shapedTextClearBind, handle, rid)
     }
 
     fun shapedTextDuplicate(rid: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextDuplicateBind, handle, rid)
     }
 
     fun shapedTextSetDirection(shaped: RID, direction: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetDirectionBind, handle, shaped, direction)
     }
 
     fun shapedTextGetDirection(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetDirectionBind, handle, shaped)
     }
 
     fun shapedTextGetInferredDirection(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetInferredDirectionBind, handle, shaped)
     }
 
     fun shapedTextSetCustomPunctuation(shaped: RID, punct: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(shapedTextSetCustomPunctuationBind, handle, shaped, punct)
     }
 
     fun shapedTextSetCustomEllipsis(shaped: RID, char: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetCustomEllipsisBind, handle, shaped, char)
     }
 
     fun shapedTextGetCustomEllipsis(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetCustomEllipsisBind, handle, shaped)
     }
 
     fun shapedTextSetOrientation(shaped: RID, orientation: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetOrientationBind, handle, shaped, orientation)
     }
 
     fun shapedTextGetOrientation(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetOrientationBind, handle, shaped)
     }
 
     fun shapedTextSetPreserveInvalid(shaped: RID, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveInvalidBind, handle, shaped, enabled)
     }
 
     fun shapedTextGetPreserveInvalid(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveInvalidBind, handle, shaped)
     }
 
     fun shapedTextSetPreserveControl(shaped: RID, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveControlBind, handle, shaped, enabled)
     }
 
     fun shapedTextGetPreserveControl(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveControlBind, handle, shaped)
     }
 
     fun shapedTextSetSpacing(shaped: RID, spacing: Long, value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndTwoLongArgs(shapedTextSetSpacingBind, handle, shaped, spacing, value)
     }
 
     fun shapedTextGetSpacing(shaped: RID, spacing: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, handle, shaped, spacing)
     }
 
     fun shapedGetSpanCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetSpanCountBind, handle, shaped)
     }
 
     fun shapedGetRunCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetRunCountBind, handle, shaped)
     }
 
     fun shapedGetRunRange(shaped: RID, index: Long): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunRangeBind, handle, shaped, index)
     }
 
     fun shapedGetRunGlyphRange(shaped: RID, index: Long): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunGlyphRangeBind, handle, shaped, index)
     }
 
     fun shapedGetRunFontRid(shaped: RID, index: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(shapedGetRunFontRidBind, handle, shaped, index)
     }
 
     fun shapedGetRunFontSize(shaped: RID, index: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetInt(shapedGetRunFontSizeBind, handle, shaped, index)
     }
 
     fun shapedGetRunDirection(shaped: RID, index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, handle, shaped, index)
     }
 
     fun shapedTextSubstr(shaped: RID, start: Long, length: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(shapedTextSubstrBind, handle, shaped, start, length)
     }
 
     fun shapedTextGetParent(shaped: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextGetParentBind, handle, shaped)
     }
 
     fun shapedTextFitToWidth(shaped: RID, width: Double, justificationFlags: Long = 3L): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(shapedTextFitToWidthBind, handle, shaped, width, justificationFlags)
     }
 
     fun shapedTextShape(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextShapeBind, handle, shaped)
     }
 
     fun shapedTextIsReady(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextIsReadyBind, handle, shaped)
     }
 
     fun shapedTextHasVisibleChars(shaped: RID): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextHasVisibleCharsBind, handle, shaped)
     }
 
     fun shapedTextGetGlyphCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetGlyphCountBind, handle, shaped)
     }
 
     fun shapedTextGetRange(shaped: RID): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetVector2i(shapedTextGetRangeBind, handle, shaped)
     }
 
     fun shapedTextGetTrimPos(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetTrimPosBind, handle, shaped)
     }
 
     fun shapedTextGetEllipsisPos(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisPosBind, handle, shaped)
     }
 
     fun shapedTextGetEllipsisGlyphCount(shaped: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisGlyphCountBind, handle, shaped)
     }
 
     fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, handle, shaped, width, overrunTrimFlags)
     }
 
     fun shapedTextGetSize(shaped: RID): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetVector2(shapedTextGetSizeBind, handle, shaped)
     }
 
     fun shapedTextGetAscent(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetAscentBind, handle, shaped)
     }
 
     fun shapedTextGetDescent(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetDescentBind, handle, shaped)
     }
 
     fun shapedTextGetWidth(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetWidthBind, handle, shaped)
     }
 
     fun shapedTextGetUnderlinePosition(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlinePositionBind, handle, shaped)
     }
 
     fun shapedTextGetUnderlineThickness(shaped: RID): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlineThicknessBind, handle, shaped)
     }
 
     fun shapedTextHitTestGrapheme(shaped: RID, coords: Double): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestGraphemeBind, handle, shaped, coords)
     }
 
     fun shapedTextHitTestPosition(shaped: RID, coords: Double): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestPositionBind, handle, shaped, coords)
     }
 
     fun shapedTextGetGraphemeBounds(shaped: RID, pos: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(shapedTextGetGraphemeBoundsBind, handle, shaped, pos)
     }
 
     fun shapedTextNextGraphemePos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextGraphemePosBind, handle, shaped, pos)
     }
 
     fun shapedTextPrevGraphemePos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevGraphemePosBind, handle, shaped, pos)
     }
 
     fun shapedTextNextCharacterPos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextCharacterPosBind, handle, shaped, pos)
     }
 
     fun shapedTextPrevCharacterPos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevCharacterPosBind, handle, shaped, pos)
     }
 
     fun shapedTextClosestCharacterPos(shaped: RID, pos: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextClosestCharacterPosBind, handle, shaped, pos)
     }
 
     fun shapedTextDraw(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(shapedTextDrawBind, handle, shaped, canvas, pos, clipL, clipR, color, oversampling)
     }
 
     fun shapedTextDrawOutline(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, outlineSize: Long = 1L, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(shapedTextDrawOutlineBind, handle, shaped, canvas, pos, clipL, clipR, outlineSize, color, oversampling)
     }
 
     fun shapedTextGetDominantDirectionInRange(shaped: RID, start: Long, end: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(shapedTextGetDominantDirectionInRangeBind, handle, shaped, start, end)
     }
 
     fun percentSign(language: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(percentSignBind, handle, language)
     }
 
     fun spoofCheck(string: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(spoofCheckBind, handle, string)
     }
 
     fun stripDiacritics(string: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(stripDiacriticsBind, handle, string)
     }
 
     fun isValidIdentifier(string: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isValidIdentifierBind, handle, string)
     }
 
     fun isValidLetter(unicode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isValidLetterBind, handle, unicode)
     }
 

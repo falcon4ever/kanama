@@ -18,6 +18,7 @@ class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorNode3DGizmoPlugin.create_material
      */
     fun createMaterial(name: String, color: Color, billboard: Boolean = false, onTop: Boolean = false, useVertexColor: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringColorThreeBoolArgs(createMaterialBind, handle, name, color, billboard, onTop, useVertexColor)
     }
 
@@ -29,6 +30,7 @@ class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorNode3DGizmoPlugin.create_icon_material
      */
     fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = false, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringObjectBoolColorArgs(createIconMaterialBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, onTop, color)
     }
 
@@ -41,6 +43,7 @@ class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorNode3DGizmoPlugin.create_handle_material
      */
     fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringBoolObjectArgs(createHandleMaterialBind, handle, name, billboard, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -51,6 +54,7 @@ class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorNode3DGizmoPlugin.add_material
      */
     fun addMaterial(name: String, material: StandardMaterial3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(addMaterialBind, handle, name, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -61,6 +65,7 @@ class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: EditorNode3DGizmoPlugin.get_material
      */
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
+        checkOpen()
         return StandardMaterial3D.wrap(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, handle, name, gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

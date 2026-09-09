@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class HashingContext(handle: MemorySegment) : RefCounted(handle) {
     fun start(type: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(startBind, handle, type)
     }
 

@@ -22,6 +22,7 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneTreeTimer.set_time_left
      */
     fun setTimeLeft(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, handle, time)
     }
 
@@ -31,6 +32,7 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneTreeTimer.get_time_left
      */
     fun getTimeLeft(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, handle)
     }
 

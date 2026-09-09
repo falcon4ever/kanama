@@ -74,6 +74,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -83,6 +84,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.duplicate
      */
     fun duplicate(): TextLine? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -97,6 +99,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_direction
      */
     fun setDirection(direction: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDirectionBind, handle, direction)
     }
 
@@ -106,6 +109,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_direction
      */
     fun getDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, handle)
     }
 
@@ -115,6 +119,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_inferred_direction
      */
     fun getInferredDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, handle)
     }
 
@@ -124,6 +129,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_orientation
      */
     fun setOrientation(orientation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
@@ -133,6 +139,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_orientation
      */
     fun getOrientation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 
@@ -142,6 +149,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_preserve_invalid
      */
     fun setPreserveInvalid(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, handle, enabled)
     }
 
@@ -151,6 +159,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_preserve_invalid
      */
     fun getPreserveInvalid(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, handle)
     }
 
@@ -160,6 +169,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_preserve_control
      */
     fun setPreserveControl(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, handle, enabled)
     }
 
@@ -169,6 +179,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_preserve_control
      */
     fun getPreserveControl(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, handle)
     }
 
@@ -179,6 +190,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_bidi_override
      */
     fun setBidiOverride(override: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
     }
 
@@ -188,6 +200,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.add_string
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
     }
 
@@ -198,6 +211,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.add_object
      */
     fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
     }
 
@@ -207,6 +221,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.resize_object
      */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
     }
 
@@ -216,6 +231,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.has_object
      */
     fun hasObject(key: Any?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
     }
 
@@ -225,6 +241,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_width
      */
     fun setWidth(width: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
@@ -234,6 +251,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_width
      */
     fun getWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
@@ -243,6 +261,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
@@ -252,6 +271,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
@@ -261,6 +281,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.tab_align
      */
     fun tabAlign(tabStops: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, handle, tabStops)
     }
 
@@ -270,6 +291,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_flags
      */
     fun setFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, flags)
     }
 
@@ -279,6 +301,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_flags
      */
     fun getFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
@@ -288,6 +311,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
@@ -297,6 +321,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
@@ -306,6 +331,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.set_ellipsis_char
      */
     fun setEllipsisChar(char: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
@@ -315,6 +341,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_ellipsis_char
      */
     fun getEllipsisChar(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
@@ -324,6 +351,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_objects
      */
     fun getObjects(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getObjectsBind, handle)
     }
 
@@ -333,6 +361,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_object_rect
      */
     fun getObjectRect(key: Any?): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetRect2(getObjectRectBind, handle, key)
     }
 
@@ -342,6 +371,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_size
      */
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
@@ -351,6 +381,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_rid
      */
     fun getRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
@@ -361,6 +392,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_line_ascent
      */
     fun getLineAscent(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineAscentBind, handle)
     }
 
@@ -371,6 +403,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_line_descent
      */
     fun getLineDescent(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineDescentBind, handle)
     }
 
@@ -380,6 +413,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_line_width
      */
     fun getLineWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
     }
 
@@ -389,6 +423,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_line_underline_position
      */
     fun getLineUnderlinePosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlinePositionBind, handle)
     }
 
@@ -398,6 +433,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.get_line_underline_thickness
      */
     fun getLineUnderlineThickness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlineThicknessBind, handle)
     }
 
@@ -409,6 +445,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.draw
      */
     fun draw(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawBind, handle, canvas, pos, color, oversampling)
     }
 
@@ -420,6 +457,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.draw_outline
      */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawOutlineBind, handle, canvas, pos, outlineSize, color, oversampling)
     }
 
@@ -430,6 +468,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextLine.hit_test
      */
     fun hitTest(coords: Double): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetInt(hitTestBind, handle, coords)
     }
 

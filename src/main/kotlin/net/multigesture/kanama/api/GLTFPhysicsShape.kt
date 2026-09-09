@@ -52,70 +52,87 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
         set(value) = setImporterMesh(value)
 
     fun toNode(cacheShapes: Boolean = false): CollisionShape3D? {
+        checkOpen()
         return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toNodeBind, handle, cacheShapes))
     }
 
     fun toResource(cacheShapes: Boolean = false): Shape3D? {
+        checkOpen()
         return Shape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, handle, cacheShapes))
     }
 
     fun toDictionary(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
     }
 
     fun getShapeType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getShapeTypeBind, handle)
     }
 
     fun setShapeType(shapeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setShapeTypeBind, handle, shapeType)
     }
 
     fun getSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
     fun setSize(size: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
     fun getIsTrigger(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsTriggerBind, handle)
     }
 
     fun setIsTrigger(isTrigger: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsTriggerBind, handle, isTrigger)
     }
 
     fun getMeshIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMeshIndexBind, handle)
     }
 
     fun setMeshIndex(meshIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMeshIndexBind, handle, meshIndex)
     }
 
     fun getImporterMesh(): ImporterMesh? {
+        checkOpen()
         return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImporterMeshBind, handle))
     }
 
     fun setImporterMesh(importerMesh: ImporterMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setImporterMeshBind, handle, listOf(importerMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

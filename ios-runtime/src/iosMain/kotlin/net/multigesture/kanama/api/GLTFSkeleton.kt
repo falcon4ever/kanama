@@ -18,22 +18,27 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         get() = getRoots()
 
     fun getJoints(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
     }
 
     fun getRoots(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
     }
 
     fun getGodotSkeleton(): Skeleton3D? {
+        checkOpen()
         return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkeletonBind, handle))
     }
 
     fun getBoneAttachmentCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneAttachmentCountBind, handle)
     }
 
     fun getBoneAttachment(idx: Int): BoneAttachment3D? {
+        checkOpen()
         return BoneAttachment3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneAttachmentBind, handle, idx))
     }
 

@@ -16,18 +16,22 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
         set(value) = setBlendShapes(value)
 
     fun getBlendShape(blendShape: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, handle, blendShape)
     }
 
     fun setBlendShape(blendShape: Long, weight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, handle, blendShape, weight)
     }
 
     fun getBlendShapes(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendShapesBind, handle)
     }
 
     fun setBlendShapes(weights: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, handle, weights)
     }
 

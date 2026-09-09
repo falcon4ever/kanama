@@ -26,42 +26,52 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         get() = getProjectedObstructions()
 
     fun setVertices(vertices: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setVerticesBind, handle, vertices)
     }
 
     fun getVertices(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getVerticesBind, handle)
     }
 
     fun getIndices(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun hasData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
     }
 
     fun addMesh(mesh: Mesh?, xform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndTransform3DArg(addMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, xform)
     }
 
     fun merge(otherGeometry: NavigationMeshSourceGeometryData3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun clearProjectedObstructions() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
     }
 
     fun getProjectedObstructions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, handle)
     }
 
     fun getBounds(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
     }
 

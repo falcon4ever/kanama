@@ -26,34 +26,42 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         set(value) = setFrame(value)
 
     fun getDefaultInputPort(type: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getDefaultInputPortBind, handle, type)
     }
 
     fun setOutputPortForPreview(port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOutputPortForPreviewBind, handle, port)
     }
 
     fun getOutputPortForPreview(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortForPreviewBind, handle)
     }
 
     fun removeInputPortDefaultValue(port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeInputPortDefaultValueBind, handle, port)
     }
 
     fun clearDefaultInputValues() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearDefaultInputValuesBind, handle)
     }
 
     fun getDefaultInputValues(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getDefaultInputValuesBind, handle)
     }
 
     fun setFrame(frame: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
     }
 
     fun getFrame(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
     }
 

@@ -23,6 +23,7 @@ class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPanner.set_pan
      */
     fun setPan(cpanume: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPanBind, handle, cpanume)
     }
 
@@ -33,6 +34,7 @@ class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPanner.get_pan
      */
     fun getPan(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, handle)
     }
 

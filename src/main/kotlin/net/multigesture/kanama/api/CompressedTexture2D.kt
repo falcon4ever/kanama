@@ -20,6 +20,7 @@ class CompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CompressedTexture2D.load
      */
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
@@ -29,6 +30,7 @@ class CompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CompressedTexture2D.get_load_path
      */
     fun getLoadPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }
 

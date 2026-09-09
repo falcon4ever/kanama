@@ -52,58 +52,72 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setSidechain(value)
 
     fun setThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, handle, threshold)
     }
 
     fun getThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, handle)
     }
 
     fun setRatio(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRatioBind, handle, ratio)
     }
 
     fun getRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, handle)
     }
 
     fun setGain(gain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, gain)
     }
 
     fun getGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
     }
 
     fun setAttackUs(attackUs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAttackUsBind, handle, attackUs)
     }
 
     fun getAttackUs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAttackUsBind, handle)
     }
 
     fun setReleaseMs(releaseMs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setReleaseMsBind, handle, releaseMs)
     }
 
     fun getReleaseMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseMsBind, handle)
     }
 
     fun setMix(mix: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMixBind, handle, mix)
     }
 
     fun getMix(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMixBind, handle)
     }
 
     fun setSidechain(sidechain: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setSidechainBind, handle, sidechain)
     }
 
     fun getSidechain(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getSidechainBind, handle)
     }
 

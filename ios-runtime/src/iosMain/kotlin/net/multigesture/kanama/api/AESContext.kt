@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class AESContext(handle: MemorySegment) : RefCounted(handle) {
     fun finish() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(finishBind, handle)
     }
 

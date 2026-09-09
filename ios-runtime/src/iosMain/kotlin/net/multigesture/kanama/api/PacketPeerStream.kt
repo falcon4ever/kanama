@@ -28,26 +28,32 @@ class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
         set(value) = setStreamPeer(value)
 
     fun setStreamPeer(peer: StreamPeer?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setStreamPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getStreamPeer(): StreamPeer? {
+        checkOpen()
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, handle))
     }
 
     fun setInputBufferMaxSize(maxSizeBytes: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInputBufferMaxSizeBind, handle, maxSizeBytes)
     }
 
     fun setOutputBufferMaxSize(maxSizeBytes: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOutputBufferMaxSizeBind, handle, maxSizeBytes)
     }
 
     fun getInputBufferMaxSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInputBufferMaxSizeBind, handle)
     }
 
     fun getOutputBufferMaxSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutputBufferMaxSizeBind, handle)
     }
 

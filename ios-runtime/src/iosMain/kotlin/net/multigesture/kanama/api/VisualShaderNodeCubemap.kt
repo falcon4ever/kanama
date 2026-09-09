@@ -28,26 +28,32 @@ class VisualShaderNodeCubemap(handle: MemorySegment) : VisualShaderNode(handle) 
         set(value) = setTextureType(value)
 
     fun setSource(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceBind, handle, value)
     }
 
     fun getSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, handle)
     }
 
     fun setCubeMap(value: TextureLayered?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCubeMapBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCubeMap(): TextureLayered? {
+        checkOpen()
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCubeMapBind, handle))
     }
 
     fun setTextureType(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, value)
     }
 
     fun getTextureType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
     }
 

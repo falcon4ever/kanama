@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class JavaObject(handle: MemorySegment) : RefCounted(handle) {
     fun getJavaClass(): JavaClass? {
+        checkOpen()
         return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, handle))
     }
 
     fun hasJavaMethod(method: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
     }
 

@@ -8,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class OpenXRSpatialCapabilityConfigurationQrCode(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     fun getEnabledComponents(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
     }
 

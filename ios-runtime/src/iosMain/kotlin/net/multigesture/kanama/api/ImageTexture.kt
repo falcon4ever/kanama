@@ -10,14 +10,17 @@ import net.multigesture.kanama.types.Vector2i
  */
 class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
     fun setImage(image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setImageBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun update(image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(updateBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setSizeOverride(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
     }
 

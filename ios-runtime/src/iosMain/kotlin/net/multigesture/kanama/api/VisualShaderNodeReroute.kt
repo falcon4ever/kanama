@@ -14,6 +14,7 @@ class VisualShaderNodeReroute(handle: MemorySegment) : VisualShaderNode(handle) 
         get() = getPortType()
 
     fun getPortType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPortTypeBind, handle)
     }
 

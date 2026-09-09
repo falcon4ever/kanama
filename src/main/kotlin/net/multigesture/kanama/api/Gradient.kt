@@ -41,6 +41,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.add_point
      */
     fun addPoint(offset: Double, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleAndColorArg(addPointBind, handle, offset, color)
     }
 
@@ -50,6 +51,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.remove_point
      */
     fun removePoint(point: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, point)
     }
 
@@ -59,6 +61,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.set_offset
      */
     fun setOffset(point: Int, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setOffsetBind, handle, point, offset)
     }
 
@@ -68,6 +71,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_offset
      */
     fun getOffset(point: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getOffsetBind, handle, point)
     }
 
@@ -79,6 +83,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.reverse
      */
     fun reverse() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(reverseBind, handle)
     }
 
@@ -88,6 +93,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.set_color
      */
     fun setColor(point: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setColorBind, handle, point, color)
     }
 
@@ -97,6 +103,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_color
      */
     fun getColor(point: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getColorBind, handle, point)
     }
 
@@ -110,6 +117,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.sample
      */
     fun sample(offset: Double): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetColor(sampleBind, handle, offset)
     }
 
@@ -119,6 +127,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_point_count
      */
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
@@ -129,6 +138,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.set_offsets
      */
     fun setOffsets(offsets: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setOffsetsBind, handle, offsets)
     }
 
@@ -139,6 +149,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_offsets
      */
     fun getOffsets(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, handle)
     }
 
@@ -149,6 +160,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.set_colors
      */
     fun setColors(colors: List<Color>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
     }
 
@@ -159,6 +171,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_colors
      */
     fun getColors(): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
     }
 
@@ -168,6 +181,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.set_interpolation_mode
      */
     fun setInterpolationMode(interpolationMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, handle, interpolationMode)
     }
 
@@ -177,6 +191,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_interpolation_mode
      */
     fun getInterpolationMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, handle)
     }
 
@@ -188,6 +203,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.set_interpolation_color_space
      */
     fun setInterpolationColorSpace(interpolationColorSpace: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, handle, interpolationColorSpace)
     }
 
@@ -199,6 +215,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Gradient.get_interpolation_color_space
      */
     fun getInterpolationColorSpace(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, handle)
     }
 

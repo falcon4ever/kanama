@@ -46,66 +46,82 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         set(value) = setOuterConeAngle(value)
 
     fun toNode(): Light3D? {
+        checkOpen()
         return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
     }
 
     fun toDictionary(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
     }
 
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
     fun getIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, handle)
     }
 
     fun setIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, handle, intensity)
     }
 
     fun getLightType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLightTypeBind, handle)
     }
 
     fun setLightType(lightType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLightTypeBind, handle, lightType)
     }
 
     fun getRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRangeBind, handle)
     }
 
     fun setRange(range: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRangeBind, handle, range)
     }
 
     fun getInnerConeAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getInnerConeAngleBind, handle)
     }
 
     fun setInnerConeAngle(innerConeAngle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setInnerConeAngleBind, handle, innerConeAngle)
     }
 
     fun getOuterConeAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOuterConeAngleBind, handle)
     }
 
     fun setOuterConeAngle(outerConeAngle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOuterConeAngleBind, handle, outerConeAngle)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
     }
 

@@ -18,6 +18,7 @@ class EditorContextMenuPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorContextMenuPlugin.add_menu_shortcut
      */
     fun addMenuShortcut(shortcut: Shortcut?, callback: GodotCallable) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectCallableArgs(addMenuShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.handle, callback.method)
     }
 
@@ -29,6 +30,7 @@ class EditorContextMenuPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_menu_item
      */
     fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringCallableObjectArgs(addContextMenuItemBind, handle, name, callback.target.handle, callback.method, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -40,6 +42,7 @@ class EditorContextMenuPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_menu_item_from_shortcut
      */
     fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextMenuItemFromShortcutBind, handle, name, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -51,6 +54,7 @@ class EditorContextMenuPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_submenu_item
      */
     fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextSubmenuItemBind, handle, name, menu.handle, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 

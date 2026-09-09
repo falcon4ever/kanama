@@ -9,30 +9,37 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
     fun addAnimation(name: String, animation: Animation?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, handle, name, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun removeAnimation(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, name)
     }
 
     fun renameAnimation(name: String, newname: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, name, newname)
     }
 
     fun hasAnimation(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, name)
     }
 
     fun getAnimation(name: String): Animation? {
+        checkOpen()
         return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, handle, name))
     }
 
     fun getAnimationList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationListBind, handle)
     }
 
     fun getAnimationListSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, handle)
     }
 

@@ -136,6 +136,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderSPIRV.set_stage_bytecode
      */
     fun setStageBytecode(stage: Long, bytecode: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, handle, stage, bytecode)
     }
 
@@ -145,6 +146,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderSPIRV.get_stage_bytecode
      */
     fun getStageBytecode(stage: Long): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, handle, stage)
     }
 
@@ -155,6 +157,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderSPIRV.set_stage_compile_error
      */
     fun setStageCompileError(stage: Long, compileError: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, handle, stage, compileError)
     }
 
@@ -165,6 +168,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderSPIRV.get_stage_compile_error
      */
     fun getStageCompileError(stage: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, handle, stage)
     }
 

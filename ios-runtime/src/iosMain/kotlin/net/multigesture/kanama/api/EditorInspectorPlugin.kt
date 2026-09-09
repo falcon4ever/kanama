@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
     fun addCustomControl(control: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addCustomControlBind, handle, listOf(control.handle))
     }
 
     fun addPropertyEditor(property: String, editor: Control, addToEnd: Boolean = false, label: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithStringObjectBoolStringArgs(addPropertyEditorBind, handle, property, editor.handle, addToEnd, label)
     }
 

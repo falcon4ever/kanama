@@ -47,6 +47,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.set_mode
      */
     fun setMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
@@ -56,6 +57,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.get_mode
      */
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
@@ -65,6 +67,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.set_pre_gain
      */
     fun setPreGain(preGain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPreGainBind, handle, preGain)
     }
 
@@ -74,6 +77,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.get_pre_gain
      */
     fun getPreGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainBind, handle)
     }
 
@@ -84,6 +88,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.set_keep_hf_hz
      */
     fun setKeepHfHz(keepHfHz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setKeepHfHzBind, handle, keepHfHz)
     }
 
@@ -94,6 +99,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.get_keep_hf_hz
      */
     fun getKeepHfHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getKeepHfHzBind, handle)
     }
 
@@ -104,6 +110,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.set_drive
      */
     fun setDrive(drive: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDriveBind, handle, drive)
     }
 
@@ -114,6 +121,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.get_drive
      */
     fun getDrive(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDriveBind, handle)
     }
 
@@ -123,6 +131,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.set_post_gain
      */
     fun setPostGain(postGain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPostGainBind, handle, postGain)
     }
 
@@ -132,6 +141,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDistortion.get_post_gain
      */
     fun getPostGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, handle)
     }
 

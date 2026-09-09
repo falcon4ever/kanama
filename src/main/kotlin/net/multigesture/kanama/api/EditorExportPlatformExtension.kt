@@ -17,6 +17,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      * Generated from Godot docs: EditorExportPlatformExtension.set_config_error
      */
     fun setConfigError(errorText: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setConfigErrorBind, handle, errorText)
     }
 
@@ -28,6 +29,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      * Generated from Godot docs: EditorExportPlatformExtension.get_config_error
      */
     fun getConfigError(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConfigErrorBind, handle)
     }
 
@@ -39,6 +41,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      * Generated from Godot docs: EditorExportPlatformExtension.set_config_missing_templates
      */
     fun setConfigMissingTemplates(missingTemplates: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConfigMissingTemplatesBind, handle, missingTemplates)
     }
 
@@ -50,6 +53,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      * Generated from Godot docs: EditorExportPlatformExtension.get_config_missing_templates
      */
     fun getConfigMissingTemplates(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConfigMissingTemplatesBind, handle)
     }
 

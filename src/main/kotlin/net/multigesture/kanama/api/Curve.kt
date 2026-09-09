@@ -53,6 +53,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_point_count
      */
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
@@ -62,6 +63,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_count
      */
     fun setPointCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
@@ -73,6 +75,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.add_point
      */
     fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Long = 0L, rightMode: Long = 0L): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, handle, position, leftTangent, rightTangent, leftMode, rightMode)
     }
 
@@ -82,6 +85,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.remove_point
      */
     fun removePoint(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, index)
     }
 
@@ -91,6 +95,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.clear_points
      */
     fun clearPoints() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
 
@@ -100,6 +105,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_point_position
      */
     fun getPointPosition(index: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, index)
     }
 
@@ -109,6 +115,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_value
      */
     fun setPointValue(index: Int, y: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointValueBind, handle, index, y)
     }
 
@@ -118,6 +125,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_offset
      */
     fun setPointOffset(index: Int, offset: Double): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(setPointOffsetBind, handle, index, offset)
     }
 
@@ -127,6 +135,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.sample
      */
     fun sample(offset: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBind, handle, offset)
     }
 
@@ -137,6 +146,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.sample_baked
      */
     fun sampleBaked(offset: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBakedBind, handle, offset)
     }
 
@@ -146,6 +156,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_point_left_tangent
      */
     fun getPointLeftTangent(index: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointLeftTangentBind, handle, index)
     }
 
@@ -155,6 +166,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_point_right_tangent
      */
     fun getPointRightTangent(index: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointRightTangentBind, handle, index)
     }
 
@@ -164,6 +176,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_point_left_mode
      */
     fun getPointLeftMode(index: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, handle, index)
     }
 
@@ -173,6 +186,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_point_right_mode
      */
     fun getPointRightMode(index: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, handle, index)
     }
 
@@ -182,6 +196,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_left_tangent
      */
     fun setPointLeftTangent(index: Int, tangent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointLeftTangentBind, handle, index, tangent)
     }
 
@@ -191,6 +206,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_right_tangent
      */
     fun setPointRightTangent(index: Int, tangent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointRightTangentBind, handle, index, tangent)
     }
 
@@ -200,6 +216,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_left_mode
      */
     fun setPointLeftMode(index: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, handle, index, mode)
     }
 
@@ -209,6 +226,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_point_right_mode
      */
     fun setPointRightMode(index: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, handle, index, mode)
     }
 
@@ -219,6 +237,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_min_value
      */
     fun getMinValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinValueBind, handle)
     }
 
@@ -229,6 +248,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_min_value
      */
     fun setMinValue(min: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinValueBind, handle, min)
     }
 
@@ -239,6 +259,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_max_value
      */
     fun getMaxValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxValueBind, handle)
     }
 
@@ -249,6 +270,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_max_value
      */
     fun setMaxValue(max: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxValueBind, handle, max)
     }
 
@@ -258,6 +280,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_value_range
      */
     fun getValueRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getValueRangeBind, handle)
     }
 
@@ -267,6 +290,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_min_domain
      */
     fun getMinDomain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinDomainBind, handle)
     }
 
@@ -276,6 +300,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_min_domain
      */
     fun setMinDomain(min: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinDomainBind, handle, min)
     }
 
@@ -285,6 +310,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_max_domain
      */
     fun getMaxDomain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDomainBind, handle)
     }
 
@@ -294,6 +320,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_max_domain
      */
     fun setMaxDomain(max: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxDomainBind, handle, max)
     }
 
@@ -303,6 +330,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_domain_range
      */
     fun getDomainRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDomainRangeBind, handle)
     }
 
@@ -313,6 +341,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.clean_dupes
      */
     fun cleanDupes() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(cleanDupesBind, handle)
     }
 
@@ -322,6 +351,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.bake
      */
     fun bake() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(bakeBind, handle)
     }
 
@@ -331,6 +361,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.get_bake_resolution
      */
     fun getBakeResolution(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBakeResolutionBind, handle)
     }
 
@@ -340,6 +371,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve.set_bake_resolution
      */
     fun setBakeResolution(resolution: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, handle, resolution)
     }
 

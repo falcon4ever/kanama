@@ -58,66 +58,82 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setWet(value)
 
     fun setPredelayMsec(msec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPredelayMsecBind, handle, msec)
     }
 
     fun getPredelayMsec(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayMsecBind, handle)
     }
 
     fun setPredelayFeedback(feedback: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPredelayFeedbackBind, handle, feedback)
     }
 
     fun getPredelayFeedback(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayFeedbackBind, handle)
     }
 
     fun setRoomSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRoomSizeBind, handle, size)
     }
 
     fun getRoomSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRoomSizeBind, handle)
     }
 
     fun setDamping(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, amount)
     }
 
     fun getDamping(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
     }
 
     fun setSpread(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, amount)
     }
 
     fun getSpread(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
     }
 
     fun setDry(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
     fun getDry(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 
     fun setWet(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWetBind, handle, amount)
     }
 
     fun getWet(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, handle)
     }
 
     fun setHpf(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHpfBind, handle, amount)
     }
 
     fun getHpf(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHpfBind, handle)
     }
 

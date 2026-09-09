@@ -82,6 +82,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.add_blend_point
      */
     fun addBlendPoint(node: AnimationRootNode?, pos: Vector2, atIndex: Int = -1, name: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectVector2IntStringNameArgs(addBlendPointBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
     }
 
@@ -91,6 +92,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_position
      */
     fun setBlendPointPosition(point: Int, pos: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setBlendPointPositionBind, handle, point, pos)
     }
 
@@ -100,6 +102,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_position
      */
     fun getBlendPointPosition(point: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getBlendPointPositionBind, handle, point)
     }
 
@@ -109,6 +112,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_node
      */
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, handle, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -118,6 +122,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_node
      */
     fun getBlendPointNode(point: Int): AnimationRootNode? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, handle, point)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -133,6 +138,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_point_name
      */
     fun setBlendPointName(point: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, handle, point, name)
     }
 
@@ -142,6 +148,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_name
      */
     fun getBlendPointName(point: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, handle, point)
     }
 
@@ -152,6 +159,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.find_blend_point_by_name
      */
     fun findBlendPointByName(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, handle, name)
     }
 
@@ -161,6 +169,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.remove_blend_point
      */
     fun removeBlendPoint(point: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, handle, point)
     }
 
@@ -170,6 +179,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_count
      */
     fun getBlendPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, handle)
     }
 
@@ -180,6 +190,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.reorder_blend_point
      */
     fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, handle, fromIndex, toIndex)
     }
 
@@ -191,6 +202,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.add_triangle
      */
     fun addTriangle(x: Int, y: Int, z: Int, atIndex: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithFourIntArgs(addTriangleBind, handle, x, y, z, atIndex)
     }
 
@@ -200,6 +212,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_triangle_point
      */
     fun getTrianglePoint(triangle: Int, point: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTrianglePointBind, handle, triangle, point)
     }
 
@@ -209,6 +222,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.remove_triangle
      */
     fun removeTriangle(triangle: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeTriangleBind, handle, triangle)
     }
 
@@ -218,6 +232,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_triangle_count
      */
     fun getTriangleCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTriangleCountBind, handle)
     }
 
@@ -227,6 +242,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_min_space
      */
     fun setMinSpace(minSpace: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setMinSpaceBind, handle, minSpace)
     }
 
@@ -236,6 +252,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_min_space
      */
     fun getMinSpace(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getMinSpaceBind, handle)
     }
 
@@ -245,6 +262,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_max_space
      */
     fun setMaxSpace(maxSpace: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setMaxSpaceBind, handle, maxSpace)
     }
 
@@ -254,6 +272,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_max_space
      */
     fun getMaxSpace(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getMaxSpaceBind, handle)
     }
 
@@ -263,6 +282,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_snap
      */
     fun setSnap(snap: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSnapBind, handle, snap)
     }
 
@@ -272,6 +292,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_snap
      */
     fun getSnap(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSnapBind, handle)
     }
 
@@ -281,6 +302,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_x_label
      */
     fun setXLabel(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setXLabelBind, handle, text)
     }
 
@@ -290,6 +312,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_x_label
      */
     fun getXLabel(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getXLabelBind, handle)
     }
 
@@ -299,6 +322,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_y_label
      */
     fun setYLabel(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setYLabelBind, handle, text)
     }
 
@@ -308,6 +332,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_y_label
      */
     fun getYLabel(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getYLabelBind, handle)
     }
 
@@ -318,6 +343,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_auto_triangles
      */
     fun setAutoTriangles(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAutoTrianglesBind, handle, enable)
     }
 
@@ -328,6 +354,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_auto_triangles
      */
     fun getAutoTriangles(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAutoTrianglesBind, handle)
     }
 
@@ -337,6 +364,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_blend_mode
      */
     fun setBlendMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, mode)
     }
 
@@ -346,6 +374,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_mode
      */
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
@@ -356,6 +385,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_use_sync
      */
     fun setUseSync(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
@@ -366,6 +396,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.is_using_sync
      */
     fun isUsingSync(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
     }
 
@@ -375,6 +406,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_sync_mode
      */
     fun setSyncMode(syncMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSyncModeBind, handle, syncMode)
     }
 
@@ -384,6 +416,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_sync_mode
      */
     fun getSyncMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, handle)
     }
 
@@ -395,6 +428,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_cyclic_length
      */
     fun setCyclicLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, handle, length)
     }
 
@@ -406,6 +440,7 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeBlendSpace2D.get_cyclic_length
      */
     fun getCyclicLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, handle)
     }
 

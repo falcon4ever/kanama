@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
     fun isConnectionAvailable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
     }
 
     fun isListening(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
     }
 
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
     fun takeSocketConnection(): StreamPeerSocket? {
+        checkOpen()
         return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, handle))
     }
 

@@ -93,10 +93,12 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setLineSpacing(value)
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun duplicate(): TextParagraph? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -106,214 +108,267 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
     }
 
     fun setDirection(direction: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDirectionBind, handle, direction)
     }
 
     fun getDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, handle)
     }
 
     fun getInferredDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, handle)
     }
 
     fun setCustomPunctuation(customPunctuation: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCustomPunctuationBind, handle, customPunctuation)
     }
 
     fun getCustomPunctuation(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCustomPunctuationBind, handle)
     }
 
     fun setOrientation(orientation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
     fun getOrientation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 
     fun setPreserveInvalid(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, handle, enabled)
     }
 
     fun getPreserveInvalid(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, handle)
     }
 
     fun setPreserveControl(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, handle, enabled)
     }
 
     fun getPreserveControl(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, handle)
     }
 
     fun setDropcap(text: String, font: Font?, fontSize: Int, dropcapMargins: Rect2, language: String = ""): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(setDropcapBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, dropcapMargins, language)
     }
 
     fun clearDropcap() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearDropcapBind, handle)
     }
 
     fun setAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
     }
 
     fun getAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
     }
 
     fun tabAlign(tabStops: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, handle, tabStops)
     }
 
     fun setBreakFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBreakFlagsBind, handle, flags)
     }
 
     fun getBreakFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBreakFlagsBind, handle)
     }
 
     fun setJustificationFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, flags)
     }
 
     fun getJustificationFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
     fun setTextOverrunBehavior(overrunBehavior: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
     fun getTextOverrunBehavior(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
     fun setEllipsisChar(char: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
     fun getEllipsisChar(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
     fun setWidth(width: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
     fun getWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
     fun getNonWrappedSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getNonWrappedSizeBind, handle)
     }
 
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
     fun getRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
     fun getLineRid(line: Int): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetRID(getLineRidBind, handle, line)
     }
 
     fun getDropcapRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getDropcapRidBind, handle)
     }
 
     fun getRange(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, handle)
     }
 
     fun getLineCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
     fun setMaxLinesVisible(maxLinesVisible: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, handle, maxLinesVisible)
     }
 
     fun getMaxLinesVisible(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, handle)
     }
 
     fun setLineSpacing(lineSpacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
     fun getLineSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
     fun getLineSize(line: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getLineSizeBind, handle, line)
     }
 
     fun getLineRange(line: Int): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, handle, line)
     }
 
     fun getLineAscent(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineAscentBind, handle, line)
     }
 
     fun getLineDescent(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineDescentBind, handle, line)
     }
 
     fun getLineWidth(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineWidthBind, handle, line)
     }
 
     fun getLineUnderlinePosition(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlinePositionBind, handle, line)
     }
 
     fun getLineUnderlineThickness(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlineThicknessBind, handle, line)
     }
 
     fun getDropcapSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getDropcapSizeBind, handle)
     }
 
     fun getDropcapLines(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDropcapLinesBind, handle)
     }
 
     fun draw(canvas: RID, pos: Vector2, color: Color, dcColor: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2TwoColorDoubleArgs(drawBind, handle, canvas, pos, color, dcColor, oversampling)
     }
 
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, dcColor: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntTwoColorDoubleArgs(drawOutlineBind, handle, canvas, pos, outlineSize, color, dcColor, oversampling)
     }
 
     fun drawLine(canvas: RID, pos: Vector2, line: Int, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawLineBind, handle, canvas, pos, line, color, oversampling)
     }
 
     fun drawLineOutline(canvas: RID, pos: Vector2, line: Int, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgs(drawLineOutlineBind, handle, canvas, pos, line, outlineSize, color, oversampling)
     }
 
     fun drawDropcap(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawDropcapBind, handle, canvas, pos, color, oversampling)
     }
 
     fun drawDropcapOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawDropcapOutlineBind, handle, canvas, pos, outlineSize, color, oversampling)
     }
 
     fun hitTest(coords: Vector2): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetInt(hitTestBind, handle, coords)
     }
 

@@ -87,98 +87,122 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setFont(value)
 
     fun getTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
     fun setTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
     fun getRange(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, handle)
     }
 
     fun setRange(range: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setRangeBind, handle, range)
     }
 
     fun getElapsedTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getElapsedTimeBind, handle)
     }
 
     fun setElapsedTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setElapsedTimeBind, handle, time)
     }
 
     fun isVisible(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
     }
 
     fun setVisibility(visibility: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVisibilityBind, handle, visibility)
     }
 
     fun isOutline(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isOutlineBind, handle)
     }
 
     fun setOutline(outline: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setOutlineBind, handle, outline)
     }
 
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
     fun setOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
     fun getGlyphIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getGlyphIndexBind, handle)
     }
 
     fun setGlyphIndex(glyphIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setGlyphIndexBind, handle, glyphIndex)
     }
 
     fun getRelativeIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRelativeIndexBind, handle)
     }
 
     fun setRelativeIndex(relativeIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRelativeIndexBind, handle, relativeIndex)
     }
 
     fun getGlyphCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGlyphCountBind, handle)
     }
 
     fun setGlyphCount(glyphCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setGlyphCountBind, handle, glyphCount)
     }
 
     fun getGlyphFlags(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGlyphFlagsBind, handle)
     }
 
     fun setGlyphFlags(glyphFlags: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setGlyphFlagsBind, handle, glyphFlags)
     }
 
     fun getFont(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getFontBind, handle)
     }
 
     fun setFont(font: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setFontBind, handle, font)
     }
 

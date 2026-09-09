@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class AudioStreamPlaybackInteractive(handle: MemorySegment) : AudioStreamPlayback(handle) {
     fun switchToClipByName(clipName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(switchToClipByNameBind, handle, clipName)
     }
 
     fun switchToClip(clipIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(switchToClipBind, handle, clipIndex)
     }
 
     fun getCurrentClipIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentClipIndexBind, handle)
     }
 

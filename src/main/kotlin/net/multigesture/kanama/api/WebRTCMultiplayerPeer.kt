@@ -8,34 +8,42 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class WebRTCMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
     fun createServer(channelsConfig: List<Any?> = emptyList()): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithArrayArgRetLong(createServerBind, handle, channelsConfig)
     }
 
     fun createClient(peerId: Int, channelsConfig: List<Any?> = emptyList()): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createClientBind, handle, peerId, channelsConfig)
     }
 
     fun createMesh(peerId: Int, channelsConfig: List<Any?> = emptyList()): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createMeshBind, handle, peerId, channelsConfig)
     }
 
     fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, handle, peer?.requireOpenHandle() ?: MemorySegment.NULL, peerId, unreliableLifetime)
     }
 
     fun removePeer(peerId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePeerBind, handle, peerId)
     }
 
     fun hasPeer(peerId: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasPeerBind, handle, peerId)
     }
 
     fun getPeer(peerId: Int): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDictionary(getPeerBind, handle, peerId)
     }
 
     fun getPeers(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getPeersBind, handle)
     }
 

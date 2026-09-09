@@ -17,6 +17,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Thread.start
      */
     fun start(callable: GodotCallable, priority: Long = 1L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, handle, callable.target.handle, callable.method, priority)
     }
 
@@ -27,6 +28,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Thread.get_id
      */
     fun getId(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIdBind, handle)
     }
 
@@ -38,6 +40,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Thread.is_started
      */
     fun isStarted(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, handle)
     }
 
@@ -49,6 +52,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Thread.is_alive
      */
     fun isAlive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAliveBind, handle)
     }
 
@@ -61,6 +65,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Thread.wait_to_finish
      */
     fun waitToFinish(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, handle)
     }
 

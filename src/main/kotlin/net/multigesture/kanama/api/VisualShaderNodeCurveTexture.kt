@@ -15,10 +15,12 @@ class VisualShaderNodeCurveTexture(handle: MemorySegment) : VisualShaderNodeResi
         set(value) = setTexture(value)
 
     fun setTexture(texture: CurveTexture?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): CurveTexture? {
+        checkOpen()
         return CurveTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 

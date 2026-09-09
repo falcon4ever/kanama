@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorScenePostImport(handle: MemorySegment) : RefCounted(handle) {
     fun getSourceFile(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSourceFileBind, handle)
     }
 

@@ -59,6 +59,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.add_keyword_color
      */
     fun addKeywordColor(keyword: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndColorArg(addKeywordColorBind, handle, keyword, color)
     }
 
@@ -68,6 +69,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.remove_keyword_color
      */
     fun removeKeywordColor(keyword: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeKeywordColorBind, handle, keyword)
     }
 
@@ -77,6 +79,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.has_keyword_color
      */
     fun hasKeywordColor(keyword: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasKeywordColorBind, handle, keyword)
     }
 
@@ -86,6 +89,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_keyword_color
      */
     fun getKeywordColor(keyword: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetColor(getKeywordColorBind, handle, keyword)
     }
 
@@ -96,6 +100,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_keyword_colors
      */
     fun setKeywordColors(keywords: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setKeywordColorsBind, handle, keywords)
     }
 
@@ -105,6 +110,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.clear_keyword_colors
      */
     fun clearKeywordColors() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearKeywordColorsBind, handle)
     }
 
@@ -115,6 +121,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_keyword_colors
      */
     fun getKeywordColors(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getKeywordColorsBind, handle)
     }
 
@@ -125,6 +132,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.add_member_keyword_color
      */
     fun addMemberKeywordColor(memberKeyword: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndColorArg(addMemberKeywordColorBind, handle, memberKeyword, color)
     }
 
@@ -134,6 +142,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.remove_member_keyword_color
      */
     fun removeMemberKeywordColor(memberKeyword: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeMemberKeywordColorBind, handle, memberKeyword)
     }
 
@@ -143,6 +152,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.has_member_keyword_color
      */
     fun hasMemberKeywordColor(memberKeyword: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasMemberKeywordColorBind, handle, memberKeyword)
     }
 
@@ -152,6 +162,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_member_keyword_color
      */
     fun getMemberKeywordColor(memberKeyword: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetColor(getMemberKeywordColorBind, handle, memberKeyword)
     }
 
@@ -162,6 +173,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_member_keyword_colors
      */
     fun setMemberKeywordColors(memberKeyword: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setMemberKeywordColorsBind, handle, memberKeyword)
     }
 
@@ -171,6 +183,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.clear_member_keyword_colors
      */
     fun clearMemberKeywordColors() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMemberKeywordColorsBind, handle)
     }
 
@@ -181,6 +194,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_member_keyword_colors
      */
     fun getMemberKeywordColors(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getMemberKeywordColorsBind, handle)
     }
 
@@ -192,6 +206,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.add_color_region
      */
     fun addColorRegion(startKey: String, endKey: String, color: Color, lineOnly: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringColorBoolArgs(addColorRegionBind, handle, startKey, endKey, color, lineOnly)
     }
 
@@ -201,6 +216,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.remove_color_region
      */
     fun removeColorRegion(startKey: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeColorRegionBind, handle, startKey)
     }
 
@@ -210,6 +226,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.has_color_region
      */
     fun hasColorRegion(startKey: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasColorRegionBind, handle, startKey)
     }
 
@@ -220,6 +237,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_color_regions
      */
     fun setColorRegions(colorRegions: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setColorRegionsBind, handle, colorRegions)
     }
 
@@ -229,6 +247,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.clear_color_regions
      */
     fun clearColorRegions() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearColorRegionsBind, handle)
     }
 
@@ -239,6 +258,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_color_regions
      */
     fun getColorRegions(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getColorRegionsBind, handle)
     }
 
@@ -248,6 +268,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_function_color
      */
     fun setFunctionColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setFunctionColorBind, handle, color)
     }
 
@@ -257,6 +278,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_function_color
      */
     fun getFunctionColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getFunctionColorBind, handle)
     }
 
@@ -266,6 +288,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_number_color
      */
     fun setNumberColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setNumberColorBind, handle, color)
     }
 
@@ -275,6 +298,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_number_color
      */
     fun getNumberColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getNumberColorBind, handle)
     }
 
@@ -284,6 +308,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_symbol_color
      */
     fun setSymbolColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSymbolColorBind, handle, color)
     }
 
@@ -293,6 +318,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_symbol_color
      */
     fun getSymbolColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSymbolColorBind, handle)
     }
 
@@ -303,6 +329,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.set_member_variable_color
      */
     fun setMemberVariableColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setMemberVariableColorBind, handle, color)
     }
 
@@ -313,6 +340,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      * Generated from Godot docs: CodeHighlighter.get_member_variable_color
      */
     fun getMemberVariableColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getMemberVariableColorBind, handle)
     }
 

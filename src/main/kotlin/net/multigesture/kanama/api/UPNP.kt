@@ -27,70 +27,87 @@ class UPNP(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setDiscoverIpv6(value)
 
     fun getDeviceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDeviceCountBind, handle)
     }
 
     fun getDevice(index: Int): UPNPDevice? {
+        checkOpen()
         return UPNPDevice.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDeviceBind, handle, index))
     }
 
     fun addDevice(device: UPNPDevice?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addDeviceBind, handle, listOf(device?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setDevice(index: Int, device: UPNPDevice?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setDeviceBind, handle, index, device?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun removeDevice(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeDeviceBind, handle, index)
     }
 
     fun clearDevices() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearDevicesBind, handle)
     }
 
     fun getGateway(): UPNPDevice? {
+        checkOpen()
         return UPNPDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGatewayBind, handle))
     }
 
     fun discover(timeout: Int = 2000, ttl: Int = 2, deviceFilter: String = "InternetGatewayDevice"): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(discoverBind, handle, timeout, ttl, deviceFilter)
     }
 
     fun queryExternalAddress(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, handle)
     }
 
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, handle, port, portInternal, desc, proto, duration)
     }
 
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, handle, port, proto)
     }
 
     fun setDiscoverMulticastIf(mIf: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setDiscoverMulticastIfBind, handle, mIf)
     }
 
     fun getDiscoverMulticastIf(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getDiscoverMulticastIfBind, handle)
     }
 
     fun setDiscoverLocalPort(port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDiscoverLocalPortBind, handle, port)
     }
 
     fun getDiscoverLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDiscoverLocalPortBind, handle)
     }
 
     fun setDiscoverIpv6(ipv6: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDiscoverIpv6Bind, handle, ipv6)
     }
 
     fun isDiscoverIpv6(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDiscoverIpv6Bind, handle)
     }
 

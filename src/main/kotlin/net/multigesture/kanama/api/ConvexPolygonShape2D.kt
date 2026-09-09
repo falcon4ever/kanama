@@ -24,6 +24,7 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: ConvexPolygonShape2D.set_point_cloud
      */
     fun setPointCloud(pointCloud: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPointCloudBind, handle, pointCloud)
     }
 
@@ -35,6 +36,7 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: ConvexPolygonShape2D.set_points
      */
     fun setPoints(points: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, handle, points)
     }
 
@@ -46,6 +48,7 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: ConvexPolygonShape2D.get_points
      */
     fun getPoints(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, handle)
     }
 

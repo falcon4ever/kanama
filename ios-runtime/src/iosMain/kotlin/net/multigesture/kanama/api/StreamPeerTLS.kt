@@ -9,22 +9,27 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, commonName, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
     fun getStream(): StreamPeer? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -34,6 +39,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
     }
 
     fun disconnectFromStream() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, handle)
     }
 

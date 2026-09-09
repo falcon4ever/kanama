@@ -35,90 +35,112 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
         set(value) = setMemberVariableColor(value)
 
     fun addKeywordColor(keyword: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndColorArg(addKeywordColorBind, handle, keyword, color)
     }
 
     fun removeKeywordColor(keyword: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeKeywordColorBind, handle, keyword)
     }
 
     fun hasKeywordColor(keyword: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasKeywordColorBind, handle, keyword)
     }
 
     fun getKeywordColor(keyword: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetColor(getKeywordColorBind, handle, keyword)
     }
 
     fun clearKeywordColors() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearKeywordColorsBind, handle)
     }
 
     fun addMemberKeywordColor(memberKeyword: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndColorArg(addMemberKeywordColorBind, handle, memberKeyword, color)
     }
 
     fun removeMemberKeywordColor(memberKeyword: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeMemberKeywordColorBind, handle, memberKeyword)
     }
 
     fun hasMemberKeywordColor(memberKeyword: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasMemberKeywordColorBind, handle, memberKeyword)
     }
 
     fun getMemberKeywordColor(memberKeyword: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetColor(getMemberKeywordColorBind, handle, memberKeyword)
     }
 
     fun clearMemberKeywordColors() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMemberKeywordColorsBind, handle)
     }
 
     fun addColorRegion(startKey: String, endKey: String, color: Color, lineOnly: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringColorBoolArgs(addColorRegionBind, handle, startKey, endKey, color, lineOnly)
     }
 
     fun removeColorRegion(startKey: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeColorRegionBind, handle, startKey)
     }
 
     fun hasColorRegion(startKey: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasColorRegionBind, handle, startKey)
     }
 
     fun clearColorRegions() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearColorRegionsBind, handle)
     }
 
     fun setFunctionColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setFunctionColorBind, handle, color)
     }
 
     fun getFunctionColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getFunctionColorBind, handle)
     }
 
     fun setNumberColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setNumberColorBind, handle, color)
     }
 
     fun getNumberColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getNumberColorBind, handle)
     }
 
     fun setSymbolColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSymbolColorBind, handle, color)
     }
 
     fun getSymbolColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSymbolColorBind, handle)
     }
 
     fun setMemberVariableColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setMemberVariableColorBind, handle, color)
     }
 
     fun getMemberVariableColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getMemberVariableColorBind, handle)
     }
 

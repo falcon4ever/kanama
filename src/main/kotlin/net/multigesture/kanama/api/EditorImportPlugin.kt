@@ -23,6 +23,7 @@ class EditorImportPlugin(handle: MemorySegment) : ResourceImporter(handle) {
      * Generated from Godot docs: EditorImportPlugin.append_import_external_resource
      */
     fun appendImportExternalResource(path: String, customOptions: Map<String, Any?> = emptyMap(), customImporter: String = "", generatorParameters: Any? = null): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(appendImportExternalResourceBind, handle, path, customOptions, customImporter, generatorParameters)
     }
 

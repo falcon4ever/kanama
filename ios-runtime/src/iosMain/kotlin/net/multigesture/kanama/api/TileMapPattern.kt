@@ -10,38 +10,47 @@ import net.multigesture.kanama.types.Vector2i
  */
 class TileMapPattern(handle: MemorySegment) : Resource(handle) {
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, handle, coords, sourceId, atlasCoords, alternativeTile)
     }
 
     fun hasCell(coords: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(hasCellBind, handle, coords)
     }
 
     fun removeCell(coords: Vector2i, updateSize: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(removeCellBind, handle, coords, updateSize)
     }
 
     fun getCellSourceId(coords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, handle, coords)
     }
 
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, handle, coords)
     }
 
     fun getCellAlternativeTile(coords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, handle, coords)
     }
 
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
     fun setSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
     fun isEmpty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 

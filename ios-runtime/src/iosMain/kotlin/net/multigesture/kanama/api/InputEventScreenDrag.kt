@@ -65,74 +65,92 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
         set(value) = setScreenVelocity(value)
 
     fun setIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
     }
 
     fun getIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
     }
 
     fun setTilt(tilt: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setTiltBind, handle, tilt)
     }
 
     fun getTilt(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, handle)
     }
 
     fun setPressure(pressure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
     }
 
     fun getPressure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
     }
 
     fun setPenInverted(penInverted: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, handle, penInverted)
     }
 
     fun getPenInverted(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, handle)
     }
 
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
     fun setRelative(relative: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, handle, relative)
     }
 
     fun getRelative(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, handle)
     }
 
     fun setScreenRelative(relative: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, handle, relative)
     }
 
     fun getScreenRelative(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, handle)
     }
 
     fun setVelocity(velocity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
     }
 
     fun getVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
     }
 
     fun setScreenVelocity(velocity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, handle, velocity)
     }
 
     fun getScreenVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, handle)
     }
 

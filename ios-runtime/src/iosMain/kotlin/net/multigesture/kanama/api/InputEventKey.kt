@@ -40,78 +40,97 @@ class InputEventKey(handle: MemorySegment) : InputEventWithModifiers(handle) {
         set(value) = setLocation(value)
 
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
     fun setKeycode(keycode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setKeycodeBind, handle, keycode)
     }
 
     fun getKeycode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeBind, handle)
     }
 
     fun setPhysicalKeycode(physicalKeycode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPhysicalKeycodeBind, handle, physicalKeycode)
     }
 
     fun getPhysicalKeycode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeBind, handle)
     }
 
     fun setKeyLabel(keyLabel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setKeyLabelBind, handle, keyLabel)
     }
 
     fun getKeyLabel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelBind, handle)
     }
 
     fun setUnicode(unicode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setUnicodeBind, handle, unicode)
     }
 
     fun getUnicode(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUnicodeBind, handle)
     }
 
     fun setLocation(location: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLocationBind, handle, location)
     }
 
     fun getLocation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLocationBind, handle)
     }
 
     fun setEcho(echo: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEchoBind, handle, echo)
     }
 
     fun getKeycodeWithModifiers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeWithModifiersBind, handle)
     }
 
     fun getPhysicalKeycodeWithModifiers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeWithModifiersBind, handle)
     }
 
     fun getKeyLabelWithModifiers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelWithModifiersBind, handle)
     }
 
     fun asTextKeycode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(asTextKeycodeBind, handle)
     }
 
     fun asTextPhysicalKeycode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(asTextPhysicalKeycodeBind, handle)
     }
 
     fun asTextKeyLabel(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(asTextKeyLabelBind, handle)
     }
 
     fun asTextLocation(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(asTextLocationBind, handle)
     }
 

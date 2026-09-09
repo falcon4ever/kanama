@@ -78,6 +78,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_fadein_time
      */
     fun setFadeinTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFadeinTimeBind, handle, time)
     }
 
@@ -89,6 +90,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_fadein_time
      */
     fun getFadeinTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeinTimeBind, handle)
     }
 
@@ -99,6 +101,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_fadein_curve
      */
     fun setFadeinCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -109,6 +112,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_fadein_curve
      */
     fun getFadeinCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, handle))
     }
 
@@ -120,6 +124,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_fadeout_time
      */
     fun setFadeoutTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFadeoutTimeBind, handle, time)
     }
 
@@ -131,6 +136,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_fadeout_time
      */
     fun getFadeoutTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeoutTimeBind, handle)
     }
 
@@ -141,6 +147,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_fadeout_curve
      */
     fun setFadeoutCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -151,6 +158,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_fadeout_curve
      */
     fun getFadeoutCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, handle))
     }
 
@@ -161,6 +169,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_break_loop_at_end
      */
     fun setBreakLoopAtEnd(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
     }
 
@@ -171,6 +180,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.is_loop_broken_at_end
      */
     fun isLoopBrokenAtEnd(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
     }
 
@@ -180,6 +190,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_abort_on_reset
      */
     fun setAbortOnReset(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAbortOnResetBind, handle, enable)
     }
 
@@ -189,6 +200,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.is_aborted_on_reset
      */
     fun isAbortedOnReset(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAbortedOnResetBind, handle)
     }
 
@@ -202,6 +214,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_autorestart
      */
     fun setAutorestart(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAutorestartBind, handle, active)
     }
 
@@ -215,6 +228,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.has_autorestart
      */
     fun hasAutorestart(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasAutorestartBind, handle)
     }
 
@@ -224,6 +238,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_autorestart_delay
      */
     fun setAutorestartDelay(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutorestartDelayBind, handle, time)
     }
 
@@ -233,6 +248,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_autorestart_delay
      */
     fun getAutorestartDelay(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartDelayBind, handle)
     }
 
@@ -243,6 +259,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_autorestart_random_delay
      */
     fun setAutorestartRandomDelay(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutorestartRandomDelayBind, handle, time)
     }
 
@@ -253,6 +270,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_autorestart_random_delay
      */
     fun getAutorestartRandomDelay(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartRandomDelayBind, handle)
     }
 
@@ -262,6 +280,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.set_mix_mode
      */
     fun setMixMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMixModeBind, handle, mode)
     }
 
@@ -271,6 +290,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      * Generated from Godot docs: AnimationNodeOneShot.get_mix_mode
      */
     fun getMixMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, handle)
     }
 

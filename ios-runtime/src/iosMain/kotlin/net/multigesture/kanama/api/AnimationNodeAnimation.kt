@@ -58,66 +58,82 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
         set(value) = setLoopMode(value)
 
     fun setAnimation(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
     }
 
     fun getAnimation(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
     }
 
     fun setPlayMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPlayModeBind, handle, mode)
     }
 
     fun getPlayMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, handle)
     }
 
     fun setAdvanceOnStart(advanceOnStart: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAdvanceOnStartBind, handle, advanceOnStart)
     }
 
     fun isAdvanceOnStart(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAdvanceOnStartBind, handle)
     }
 
     fun setUseCustomTimeline(useCustomTimeline: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseCustomTimelineBind, handle, useCustomTimeline)
     }
 
     fun isUsingCustomTimeline(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomTimelineBind, handle)
     }
 
     fun setTimelineLength(timelineLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTimelineLengthBind, handle, timelineLength)
     }
 
     fun getTimelineLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimelineLengthBind, handle)
     }
 
     fun setStretchTimeScale(stretchTimeScale: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setStretchTimeScaleBind, handle, stretchTimeScale)
     }
 
     fun isStretchingTimeScale(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isStretchingTimeScaleBind, handle)
     }
 
     fun setStartOffset(startOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStartOffsetBind, handle, startOffset)
     }
 
     fun getStartOffset(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStartOffsetBind, handle)
     }
 
     fun setLoopMode(loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
     fun getLoopMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }
 

@@ -576,6 +576,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_background
      */
     fun setBackground(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackgroundBind, handle, mode)
     }
 
@@ -585,6 +586,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_background
      */
     fun getBackground(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, handle)
     }
 
@@ -594,6 +596,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sky
      */
     fun setSky(sky: Sky?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSkyBind, handle, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -603,6 +606,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sky
      */
     fun getSky(): Sky? {
+        checkOpen()
         return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, handle))
     }
 
@@ -613,6 +617,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sky_custom_fov
      */
     fun setSkyCustomFov(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSkyCustomFovBind, handle, scale)
     }
 
@@ -623,6 +628,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sky_custom_fov
      */
     fun getSkyCustomFov(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCustomFovBind, handle)
     }
 
@@ -632,6 +638,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sky_rotation
      */
     fun setSkyRotation(eulerRadians: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSkyRotationBind, handle, eulerRadians)
     }
 
@@ -641,6 +648,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sky_rotation
      */
     fun getSkyRotation(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSkyRotationBind, handle)
     }
 
@@ -651,6 +659,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_bg_color
      */
     fun setBgColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBgColorBind, handle, color)
     }
 
@@ -661,6 +670,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_bg_color
      */
     fun getBgColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, handle)
     }
 
@@ -671,6 +681,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_bg_energy_multiplier
      */
     fun setBgEnergyMultiplier(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBgEnergyMultiplierBind, handle, energy)
     }
 
@@ -681,6 +692,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_bg_energy_multiplier
      */
     fun getBgEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBgEnergyMultiplierBind, handle)
     }
 
@@ -692,6 +704,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_bg_intensity
      */
     fun setBgIntensity(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBgIntensityBind, handle, energy)
     }
 
@@ -703,6 +716,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_bg_intensity
      */
     fun getBgIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBgIntensityBind, handle)
     }
 
@@ -712,6 +726,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_canvas_max_layer
      */
     fun setCanvasMaxLayer(layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCanvasMaxLayerBind, handle, layer)
     }
 
@@ -721,6 +736,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_canvas_max_layer
      */
     fun getCanvasMaxLayer(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCanvasMaxLayerBind, handle)
     }
 
@@ -730,6 +746,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_camera_feed_id
      */
     fun setCameraFeedId(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, id)
     }
 
@@ -739,6 +756,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_camera_feed_id
      */
     fun getCameraFeedId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
@@ -749,6 +767,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ambient_light_color
      */
     fun setAmbientLightColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setAmbientLightColorBind, handle, color)
     }
 
@@ -759,6 +778,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ambient_light_color
      */
     fun getAmbientLightColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getAmbientLightColorBind, handle)
     }
 
@@ -768,6 +788,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ambient_source
      */
     fun setAmbientSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, handle, source)
     }
 
@@ -777,6 +798,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ambient_source
      */
     fun getAmbientSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, handle)
     }
 
@@ -787,6 +809,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ambient_light_energy
      */
     fun setAmbientLightEnergy(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAmbientLightEnergyBind, handle, energy)
     }
 
@@ -797,6 +820,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ambient_light_energy
      */
     fun getAmbientLightEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightEnergyBind, handle)
     }
 
@@ -811,6 +835,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ambient_light_sky_contribution
      */
     fun setAmbientLightSkyContribution(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAmbientLightSkyContributionBind, handle, ratio)
     }
 
@@ -825,6 +850,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ambient_light_sky_contribution
      */
     fun getAmbientLightSkyContribution(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightSkyContributionBind, handle)
     }
 
@@ -834,6 +860,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_reflection_source
      */
     fun setReflectionSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, handle, source)
     }
 
@@ -843,6 +870,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_reflection_source
      */
     fun getReflectionSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, handle)
     }
 
@@ -853,6 +881,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_tonemapper
      */
     fun setTonemapper(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTonemapperBind, handle, mode)
     }
 
@@ -863,6 +892,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_tonemapper
      */
     fun getTonemapper(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, handle)
     }
 
@@ -876,6 +906,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_tonemap_exposure
      */
     fun setTonemapExposure(exposure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapExposureBind, handle, exposure)
     }
 
@@ -889,6 +920,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_tonemap_exposure
      */
     fun getTonemapExposure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapExposureBind, handle)
     }
 
@@ -906,6 +938,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_tonemap_white
      */
     fun setTonemapWhite(white: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapWhiteBind, handle, white)
     }
 
@@ -923,6 +956,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_tonemap_white
      */
     fun getTonemapWhite(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapWhiteBind, handle)
     }
 
@@ -941,6 +975,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_tonemap_agx_white
      */
     fun setTonemapAgxWhite(white: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxWhiteBind, handle, white)
     }
 
@@ -959,6 +994,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_tonemap_agx_white
      */
     fun getTonemapAgxWhite(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxWhiteBind, handle)
     }
 
@@ -970,6 +1006,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_tonemap_agx_contrast
      */
     fun setTonemapAgxContrast(contrast: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxContrastBind, handle, contrast)
     }
 
@@ -981,6 +1018,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_tonemap_agx_contrast
      */
     fun getTonemapAgxContrast(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxContrastBind, handle)
     }
 
@@ -994,6 +1032,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssr_enabled
      */
     fun setSsrEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSsrEnabledBind, handle, enabled)
     }
 
@@ -1007,6 +1046,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_ssr_enabled
      */
     fun isSsrEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSsrEnabledBind, handle)
     }
 
@@ -1016,6 +1056,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssr_max_steps
      */
     fun setSsrMaxSteps(maxSteps: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSsrMaxStepsBind, handle, maxSteps)
     }
 
@@ -1025,6 +1066,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssr_max_steps
      */
     fun getSsrMaxSteps(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSsrMaxStepsBind, handle)
     }
 
@@ -1036,6 +1078,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssr_fade_in
      */
     fun setSsrFadeIn(fadeIn: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsrFadeInBind, handle, fadeIn)
     }
 
@@ -1047,6 +1090,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssr_fade_in
      */
     fun getSsrFadeIn(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeInBind, handle)
     }
 
@@ -1058,6 +1102,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssr_fade_out
      */
     fun setSsrFadeOut(fadeOut: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsrFadeOutBind, handle, fadeOut)
     }
 
@@ -1069,6 +1114,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssr_fade_out
      */
     fun getSsrFadeOut(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeOutBind, handle)
     }
 
@@ -1078,6 +1124,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssr_depth_tolerance
      */
     fun setSsrDepthTolerance(depthTolerance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsrDepthToleranceBind, handle, depthTolerance)
     }
 
@@ -1087,6 +1134,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssr_depth_tolerance
      */
     fun getSsrDepthTolerance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsrDepthToleranceBind, handle)
     }
 
@@ -1102,6 +1150,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_enabled
      */
     fun setSsaoEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSsaoEnabledBind, handle, enabled)
     }
 
@@ -1117,6 +1166,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_ssao_enabled
      */
     fun isSsaoEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSsaoEnabledBind, handle)
     }
 
@@ -1128,6 +1178,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_radius
      */
     fun setSsaoRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoRadiusBind, handle, radius)
     }
 
@@ -1139,6 +1190,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_radius
      */
     fun getSsaoRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoRadiusBind, handle)
     }
 
@@ -1149,6 +1201,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_intensity
      */
     fun setSsaoIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoIntensityBind, handle, intensity)
     }
 
@@ -1159,6 +1212,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_intensity
      */
     fun getSsaoIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoIntensityBind, handle)
     }
 
@@ -1169,6 +1223,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_power
      */
     fun setSsaoPower(power: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoPowerBind, handle, power)
     }
 
@@ -1179,6 +1234,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_power
      */
     fun getSsaoPower(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoPowerBind, handle)
     }
 
@@ -1190,6 +1246,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_detail
      */
     fun setSsaoDetail(detail: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoDetailBind, handle, detail)
     }
 
@@ -1201,6 +1258,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_detail
      */
     fun getSsaoDetail(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDetailBind, handle)
     }
 
@@ -1212,6 +1270,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_horizon
      */
     fun setSsaoHorizon(horizon: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoHorizonBind, handle, horizon)
     }
 
@@ -1223,6 +1282,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_horizon
      */
     fun getSsaoHorizon(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoHorizonBind, handle)
     }
 
@@ -1234,6 +1294,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_sharpness
      */
     fun setSsaoSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoSharpnessBind, handle, sharpness)
     }
 
@@ -1245,6 +1306,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_sharpness
      */
     fun getSsaoSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoSharpnessBind, handle)
     }
 
@@ -1256,6 +1318,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_direct_light_affect
      */
     fun setSsaoDirectLightAffect(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoDirectLightAffectBind, handle, amount)
     }
 
@@ -1267,6 +1330,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_direct_light_affect
      */
     fun getSsaoDirectLightAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDirectLightAffectBind, handle)
     }
 
@@ -1277,6 +1341,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssao_ao_channel_affect
      */
     fun setSsaoAoChannelAffect(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsaoAoChannelAffectBind, handle, amount)
     }
 
@@ -1287,6 +1352,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssao_ao_channel_affect
      */
     fun getSsaoAoChannelAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoAoChannelAffectBind, handle)
     }
 
@@ -1302,6 +1368,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssil_enabled
      */
     fun setSsilEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSsilEnabledBind, handle, enabled)
     }
 
@@ -1317,6 +1384,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_ssil_enabled
      */
     fun isSsilEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSsilEnabledBind, handle)
     }
 
@@ -1328,6 +1396,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssil_radius
      */
     fun setSsilRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilRadiusBind, handle, radius)
     }
 
@@ -1339,6 +1408,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssil_radius
      */
     fun getSsilRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilRadiusBind, handle)
     }
 
@@ -1349,6 +1419,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssil_intensity
      */
     fun setSsilIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilIntensityBind, handle, intensity)
     }
 
@@ -1359,6 +1430,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssil_intensity
      */
     fun getSsilIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilIntensityBind, handle)
     }
 
@@ -1370,6 +1442,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssil_sharpness
      */
     fun setSsilSharpness(sharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilSharpnessBind, handle, sharpness)
     }
 
@@ -1381,6 +1454,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssil_sharpness
      */
     fun getSsilSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilSharpnessBind, handle)
     }
 
@@ -1395,6 +1469,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_ssil_normal_rejection
      */
     fun setSsilNormalRejection(normalRejection: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSsilNormalRejectionBind, handle, normalRejection)
     }
 
@@ -1409,6 +1484,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_ssil_normal_rejection
      */
     fun getSsilNormalRejection(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSsilNormalRejectionBind, handle)
     }
 
@@ -1430,6 +1506,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_enabled
      */
     fun setSdfgiEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSdfgiEnabledBind, handle, enabled)
     }
 
@@ -1451,6 +1528,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_sdfgi_enabled
      */
     fun isSdfgiEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiEnabledBind, handle)
     }
 
@@ -1463,6 +1541,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_cascades
      */
     fun setSdfgiCascades(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSdfgiCascadesBind, handle, amount)
     }
 
@@ -1475,6 +1554,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_cascades
      */
     fun getSdfgiCascades(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSdfgiCascadesBind, handle)
     }
 
@@ -1489,6 +1569,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_min_cell_size
      */
     fun setSdfgiMinCellSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiMinCellSizeBind, handle, size)
     }
 
@@ -1503,6 +1584,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_min_cell_size
      */
     fun getSdfgiMinCellSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMinCellSizeBind, handle)
     }
 
@@ -1515,6 +1597,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_max_distance
      */
     fun setSdfgiMaxDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiMaxDistanceBind, handle, distance)
     }
 
@@ -1527,6 +1610,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_max_distance
      */
     fun getSdfgiMaxDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMaxDistanceBind, handle)
     }
 
@@ -1537,6 +1621,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_cascade0_distance
      */
     fun setSdfgiCascade0Distance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiCascade0DistanceBind, handle, distance)
     }
 
@@ -1547,6 +1632,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_cascade0_distance
      */
     fun getSdfgiCascade0Distance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiCascade0DistanceBind, handle)
     }
 
@@ -1559,6 +1645,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_y_scale
      */
     fun setSdfgiYScale(scale: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, handle, scale)
     }
 
@@ -1571,6 +1658,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_y_scale
      */
     fun getSdfgiYScale(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, handle)
     }
 
@@ -1582,6 +1670,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_use_occlusion
      */
     fun setSdfgiUseOcclusion(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSdfgiUseOcclusionBind, handle, enable)
     }
 
@@ -1593,6 +1682,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_sdfgi_using_occlusion
      */
     fun isSdfgiUsingOcclusion(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiUsingOcclusionBind, handle)
     }
 
@@ -1607,6 +1697,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_bounce_feedback
      */
     fun setSdfgiBounceFeedback(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiBounceFeedbackBind, handle, amount)
     }
 
@@ -1621,6 +1712,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_bounce_feedback
      */
     fun getSdfgiBounceFeedback(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiBounceFeedbackBind, handle)
     }
 
@@ -1631,6 +1723,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_read_sky_light
      */
     fun setSdfgiReadSkyLight(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSdfgiReadSkyLightBind, handle, enable)
     }
 
@@ -1641,6 +1734,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_sdfgi_reading_sky_light
      */
     fun isSdfgiReadingSkyLight(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiReadingSkyLightBind, handle)
     }
 
@@ -1651,6 +1745,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_energy
      */
     fun setSdfgiEnergy(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiEnergyBind, handle, amount)
     }
 
@@ -1661,6 +1756,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_energy
      */
     fun getSdfgiEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiEnergyBind, handle)
     }
 
@@ -1671,6 +1767,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_normal_bias
      */
     fun setSdfgiNormalBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiNormalBiasBind, handle, bias)
     }
 
@@ -1681,6 +1778,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_normal_bias
      */
     fun getSdfgiNormalBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiNormalBiasBind, handle)
     }
 
@@ -1691,6 +1789,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_sdfgi_probe_bias
      */
     fun setSdfgiProbeBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSdfgiProbeBiasBind, handle, bias)
     }
 
@@ -1701,6 +1800,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_sdfgi_probe_bias
      */
     fun getSdfgiProbeBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiProbeBiasBind, handle)
     }
 
@@ -1717,6 +1817,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_enabled
      */
     fun setGlowEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGlowEnabledBind, handle, enabled)
     }
 
@@ -1733,6 +1834,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_glow_enabled
      */
     fun isGlowEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGlowEnabledBind, handle)
     }
 
@@ -1744,6 +1846,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_level
      */
     fun setGlowLevel(idx: Int, intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setGlowLevelBind, handle, idx, intensity)
     }
 
@@ -1755,6 +1858,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_level
      */
     fun getGlowLevel(idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getGlowLevelBind, handle, idx)
     }
 
@@ -1766,6 +1870,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_normalized
      */
     fun setGlowNormalized(normalize: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGlowNormalizedBind, handle, normalize)
     }
 
@@ -1777,6 +1882,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_glow_normalized
      */
     fun isGlowNormalized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGlowNormalizedBind, handle)
     }
 
@@ -1788,6 +1894,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_intensity
      */
     fun setGlowIntensity(intensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowIntensityBind, handle, intensity)
     }
 
@@ -1799,6 +1906,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_intensity
      */
     fun getGlowIntensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowIntensityBind, handle)
     }
 
@@ -1812,6 +1920,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_strength
      */
     fun setGlowStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowStrengthBind, handle, strength)
     }
 
@@ -1825,6 +1934,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_strength
      */
     fun getGlowStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowStrengthBind, handle)
     }
 
@@ -1838,6 +1948,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_mix
      */
     fun setGlowMix(mix: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowMixBind, handle, mix)
     }
 
@@ -1851,6 +1962,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_mix
      */
     fun getGlowMix(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMixBind, handle)
     }
 
@@ -1861,6 +1973,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_bloom
      */
     fun setGlowBloom(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowBloomBind, handle, amount)
     }
 
@@ -1871,6 +1984,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_bloom
      */
     fun getGlowBloom(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowBloomBind, handle)
     }
 
@@ -1881,6 +1995,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_blend_mode
      */
     fun setGlowBlendMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, handle, mode)
     }
 
@@ -1891,6 +2006,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_blend_mode
      */
     fun getGlowBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, handle)
     }
 
@@ -1903,6 +2019,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_hdr_bleed_threshold
      */
     fun setGlowHdrBleedThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedThresholdBind, handle, threshold)
     }
 
@@ -1915,6 +2032,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_hdr_bleed_threshold
      */
     fun getGlowHdrBleedThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedThresholdBind, handle)
     }
 
@@ -1926,6 +2044,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_hdr_bleed_scale
      */
     fun setGlowHdrBleedScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedScaleBind, handle, scale)
     }
 
@@ -1937,6 +2056,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_hdr_bleed_scale
      */
     fun getGlowHdrBleedScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedScaleBind, handle)
     }
 
@@ -1947,6 +2067,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_hdr_luminance_cap
      */
     fun setGlowHdrLuminanceCap(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowHdrLuminanceCapBind, handle, amount)
     }
 
@@ -1957,6 +2078,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_hdr_luminance_cap
      */
     fun getGlowHdrLuminanceCap(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrLuminanceCapBind, handle)
     }
 
@@ -1971,6 +2093,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_map_strength
      */
     fun setGlowMapStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlowMapStrengthBind, handle, strength)
     }
 
@@ -1985,6 +2108,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_map_strength
      */
     fun getGlowMapStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMapStrengthBind, handle)
     }
 
@@ -2000,6 +2124,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_glow_map
      */
     fun setGlowMap(mode: Texture?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, handle, listOf(mode?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -2015,6 +2140,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_glow_map
      */
     fun getGlowMap(): Texture? {
+        checkOpen()
         return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, handle))
     }
 
@@ -2024,6 +2150,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_enabled
      */
     fun setFogEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFogEnabledBind, handle, enabled)
     }
 
@@ -2033,6 +2160,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_fog_enabled
      */
     fun isFogEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFogEnabledBind, handle)
     }
 
@@ -2042,6 +2170,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_mode
      */
     fun setFogMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFogModeBind, handle, mode)
     }
 
@@ -2051,6 +2180,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_mode
      */
     fun getFogMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, handle)
     }
 
@@ -2060,6 +2190,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_light_color
      */
     fun setFogLightColor(lightColor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setFogLightColorBind, handle, lightColor)
     }
 
@@ -2069,6 +2200,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_light_color
      */
     fun getFogLightColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getFogLightColorBind, handle)
     }
 
@@ -2078,6 +2210,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_light_energy
      */
     fun setFogLightEnergy(lightEnergy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogLightEnergyBind, handle, lightEnergy)
     }
 
@@ -2087,6 +2220,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_light_energy
      */
     fun getFogLightEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogLightEnergyBind, handle)
     }
 
@@ -2097,6 +2231,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_sun_scatter
      */
     fun setFogSunScatter(sunScatter: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogSunScatterBind, handle, sunScatter)
     }
 
@@ -2107,6 +2242,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_sun_scatter
      */
     fun getFogSunScatter(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogSunScatterBind, handle)
     }
 
@@ -2120,6 +2256,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_density
      */
     fun setFogDensity(density: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDensityBind, handle, density)
     }
 
@@ -2133,6 +2270,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_density
      */
     fun getFogDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDensityBind, handle)
     }
 
@@ -2142,6 +2280,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_height
      */
     fun setFogHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogHeightBind, handle, height)
     }
 
@@ -2151,6 +2290,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_height
      */
     fun getFogHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightBind, handle)
     }
 
@@ -2161,6 +2301,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_height_density
      */
     fun setFogHeightDensity(heightDensity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogHeightDensityBind, handle, heightDensity)
     }
 
@@ -2171,6 +2312,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_height_density
      */
     fun getFogHeightDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightDensityBind, handle)
     }
 
@@ -2190,6 +2332,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_aerial_perspective
      */
     fun setFogAerialPerspective(aerialPerspective: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogAerialPerspectiveBind, handle, aerialPerspective)
     }
 
@@ -2209,6 +2352,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_aerial_perspective
      */
     fun getFogAerialPerspective(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogAerialPerspectiveBind, handle)
     }
 
@@ -2221,6 +2365,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_sky_affect
      */
     fun setFogSkyAffect(skyAffect: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogSkyAffectBind, handle, skyAffect)
     }
 
@@ -2233,6 +2378,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_sky_affect
      */
     fun getFogSkyAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogSkyAffectBind, handle)
     }
 
@@ -2243,6 +2389,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_depth_curve
      */
     fun setFogDepthCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDepthCurveBind, handle, curve)
     }
 
@@ -2253,6 +2400,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_depth_curve
      */
     fun getFogDepthCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthCurveBind, handle)
     }
 
@@ -2263,6 +2411,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_depth_begin
      */
     fun setFogDepthBegin(begin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDepthBeginBind, handle, begin)
     }
 
@@ -2273,6 +2422,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_depth_begin
      */
     fun getFogDepthBegin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthBeginBind, handle)
     }
 
@@ -2284,6 +2434,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_fog_depth_end
      */
     fun setFogDepthEnd(end: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFogDepthEndBind, handle, end)
     }
 
@@ -2295,6 +2446,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_fog_depth_end
      */
     fun getFogDepthEnd(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthEndBind, handle)
     }
 
@@ -2309,6 +2461,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_enabled
      */
     fun setVolumetricFogEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVolumetricFogEnabledBind, handle, enabled)
     }
 
@@ -2323,6 +2476,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_volumetric_fog_enabled
      */
     fun isVolumetricFogEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogEnabledBind, handle)
     }
 
@@ -2335,6 +2489,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_emission
      */
     fun setVolumetricFogEmission(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setVolumetricFogEmissionBind, handle, color)
     }
 
@@ -2347,6 +2502,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_emission
      */
     fun getVolumetricFogEmission(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogEmissionBind, handle)
     }
 
@@ -2357,6 +2513,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_albedo
      */
     fun setVolumetricFogAlbedo(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setVolumetricFogAlbedoBind, handle, color)
     }
 
@@ -2367,6 +2524,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_albedo
      */
     fun getVolumetricFogAlbedo(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogAlbedoBind, handle)
     }
 
@@ -2382,6 +2540,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_density
      */
     fun setVolumetricFogDensity(density: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDensityBind, handle, density)
     }
 
@@ -2397,6 +2556,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_density
      */
     fun getVolumetricFogDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDensityBind, handle)
     }
 
@@ -2406,6 +2566,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_emission_energy
      */
     fun setVolumetricFogEmissionEnergy(begin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogEmissionEnergyBind, handle, begin)
     }
 
@@ -2415,6 +2576,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_emission_energy
      */
     fun getVolumetricFogEmissionEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogEmissionEnergyBind, handle)
     }
 
@@ -2427,6 +2589,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_anisotropy
      */
     fun setVolumetricFogAnisotropy(anisotropy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAnisotropyBind, handle, anisotropy)
     }
 
@@ -2439,6 +2602,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_anisotropy
      */
     fun getVolumetricFogAnisotropy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAnisotropyBind, handle)
     }
 
@@ -2451,6 +2615,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_length
      */
     fun setVolumetricFogLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogLengthBind, handle, length)
     }
 
@@ -2463,6 +2628,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_length
      */
     fun getVolumetricFogLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogLengthBind, handle)
     }
 
@@ -2473,6 +2639,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_detail_spread
      */
     fun setVolumetricFogDetailSpread(detailSpread: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDetailSpreadBind, handle, detailSpread)
     }
 
@@ -2483,6 +2650,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_detail_spread
      */
     fun getVolumetricFogDetailSpread(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDetailSpreadBind, handle)
     }
 
@@ -2498,6 +2666,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_gi_inject
      */
     fun setVolumetricFogGiInject(giInject: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogGiInjectBind, handle, giInject)
     }
 
@@ -2513,6 +2682,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_gi_inject
      */
     fun getVolumetricFogGiInject(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogGiInjectBind, handle)
     }
 
@@ -2525,6 +2695,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_ambient_inject
      */
     fun setVolumetricFogAmbientInject(enabled: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAmbientInjectBind, handle, enabled)
     }
 
@@ -2537,6 +2708,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_ambient_inject
      */
     fun getVolumetricFogAmbientInject(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAmbientInjectBind, handle)
     }
 
@@ -2550,6 +2722,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_sky_affect
      */
     fun setVolumetricFogSkyAffect(skyAffect: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogSkyAffectBind, handle, skyAffect)
     }
 
@@ -2563,6 +2736,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_sky_affect
      */
     fun getVolumetricFogSkyAffect(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogSkyAffectBind, handle)
     }
 
@@ -2577,6 +2751,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_temporal_reprojection_enabled
      */
     fun setVolumetricFogTemporalReprojectionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVolumetricFogTemporalReprojectionEnabledBind, handle, enabled)
     }
 
@@ -2591,6 +2766,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_volumetric_fog_temporal_reprojection_enabled
      */
     fun isVolumetricFogTemporalReprojectionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogTemporalReprojectionEnabledBind, handle)
     }
 
@@ -2602,6 +2778,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_volumetric_fog_temporal_reprojection_amount
      */
     fun setVolumetricFogTemporalReprojectionAmount(temporalReprojectionAmount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogTemporalReprojectionAmountBind, handle, temporalReprojectionAmount)
     }
 
@@ -2613,6 +2790,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_volumetric_fog_temporal_reprojection_amount
      */
     fun getVolumetricFogTemporalReprojectionAmount(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogTemporalReprojectionAmountBind, handle)
     }
 
@@ -2623,6 +2801,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_adjustment_enabled
      */
     fun setAdjustmentEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAdjustmentEnabledBind, handle, enabled)
     }
 
@@ -2633,6 +2812,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.is_adjustment_enabled
      */
     fun isAdjustmentEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAdjustmentEnabledBind, handle)
     }
 
@@ -2644,6 +2824,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_adjustment_brightness
      */
     fun setAdjustmentBrightness(brightness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdjustmentBrightnessBind, handle, brightness)
     }
 
@@ -2655,6 +2836,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_adjustment_brightness
      */
     fun getAdjustmentBrightness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentBrightnessBind, handle)
     }
 
@@ -2667,6 +2849,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_adjustment_contrast
      */
     fun setAdjustmentContrast(contrast: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdjustmentContrastBind, handle, contrast)
     }
 
@@ -2679,6 +2862,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_adjustment_contrast
      */
     fun getAdjustmentContrast(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentContrastBind, handle)
     }
 
@@ -2690,6 +2874,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_adjustment_saturation
      */
     fun setAdjustmentSaturation(saturation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdjustmentSaturationBind, handle, saturation)
     }
 
@@ -2701,6 +2886,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_adjustment_saturation
      */
     fun getAdjustmentSaturation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentSaturationBind, handle)
     }
 
@@ -2713,6 +2899,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.set_adjustment_color_correction
      */
     fun setAdjustmentColorCorrection(colorCorrection: Texture?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, handle, listOf(colorCorrection?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -2725,6 +2912,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Environment.get_adjustment_color_correction
      */
     fun getAdjustmentColorCorrection(): Texture? {
+        checkOpen()
         return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, handle))
     }
 

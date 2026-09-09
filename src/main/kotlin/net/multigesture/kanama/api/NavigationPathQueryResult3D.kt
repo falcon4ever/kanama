@@ -50,6 +50,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.set_path
      */
     fun setPath(path: List<Vector3>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(setPathBind, handle, path)
     }
 
@@ -61,6 +62,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.get_path
      */
     fun getPath(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPathBind, handle)
     }
 
@@ -70,6 +72,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.set_path_types
      */
     fun setPathTypes(pathTypes: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setPathTypesBind, handle, pathTypes)
     }
 
@@ -79,6 +82,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.get_path_types
      */
     fun getPathTypes(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
     }
 
@@ -88,6 +92,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.set_path_rids
      */
     fun setPathRids(pathRids: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setPathRidsBind, handle, pathRids)
     }
 
@@ -97,6 +102,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.get_path_rids
      */
     fun getPathRids(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getPathRidsBind, handle)
     }
 
@@ -107,6 +113,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.set_path_owner_ids
      */
     fun setPathOwnerIds(pathOwnerIds: List<Long>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, handle, pathOwnerIds)
     }
 
@@ -117,6 +124,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.get_path_owner_ids
      */
     fun getPathOwnerIds(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, handle)
     }
 
@@ -126,6 +134,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.set_path_length
      */
     fun setPathLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, handle, length)
     }
 
@@ -135,6 +144,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.get_path_length
      */
     fun getPathLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, handle)
     }
 
@@ -145,6 +155,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: NavigationPathQueryResult3D.reset
      */
     fun reset() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 

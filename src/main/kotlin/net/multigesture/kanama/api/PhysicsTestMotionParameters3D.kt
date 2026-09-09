@@ -68,6 +68,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.get_from
      */
     fun getFrom(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getFromBind, handle)
     }
 
@@ -78,6 +79,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_from
      */
     fun setFrom(from: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setFromBind, handle, from)
     }
 
@@ -87,6 +89,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.get_motion
      */
     fun getMotion(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, handle)
     }
 
@@ -96,6 +99,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_motion
      */
     fun setMotion(motion: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setMotionBind, handle, motion)
     }
 
@@ -105,6 +109,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.get_margin
      */
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
@@ -114,6 +119,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_margin
      */
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
@@ -124,6 +130,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.get_max_collisions
      */
     fun getMaxCollisions(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxCollisionsBind, handle)
     }
 
@@ -134,6 +141,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_max_collisions
      */
     fun setMaxCollisions(maxCollisions: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxCollisionsBind, handle, maxCollisions)
     }
 
@@ -146,6 +154,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.is_collide_separation_ray_enabled
      */
     fun isCollideSeparationRayEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
     }
 
@@ -158,6 +167,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_collide_separation_ray_enabled
      */
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
     }
 
@@ -168,6 +178,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.get_exclude_bodies
      */
     fun getExcludeBodies(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, handle)
     }
 
@@ -178,6 +189,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_exclude_bodies
      */
     fun setExcludeBodies(excludeList: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, handle, excludeList)
     }
 
@@ -188,6 +200,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.get_exclude_objects
      */
     fun getExcludeObjects(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
     }
 
@@ -198,6 +211,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_exclude_objects
      */
     fun setExcludeObjects(excludeList: List<Long>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, handle, excludeList)
     }
 
@@ -210,6 +224,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.is_recovery_as_collision_enabled
      */
     fun isRecoveryAsCollisionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
     }
 
@@ -222,6 +237,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsTestMotionParameters3D.set_recovery_as_collision_enabled
      */
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
     }
 

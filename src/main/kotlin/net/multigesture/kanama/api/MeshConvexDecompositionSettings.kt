@@ -94,6 +94,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_max_concavity
      */
     fun setMaxConcavity(maxConcavity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxConcavityBind, handle, maxConcavity)
     }
 
@@ -103,6 +104,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_max_concavity
      */
     fun getMaxConcavity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxConcavityBind, handle)
     }
 
@@ -112,6 +114,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_symmetry_planes_clipping_bias
      */
     fun setSymmetryPlanesClippingBias(symmetryPlanesClippingBias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSymmetryPlanesClippingBiasBind, handle, symmetryPlanesClippingBias)
     }
 
@@ -121,6 +124,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_symmetry_planes_clipping_bias
      */
     fun getSymmetryPlanesClippingBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSymmetryPlanesClippingBiasBind, handle)
     }
 
@@ -130,6 +134,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_revolution_axes_clipping_bias
      */
     fun setRevolutionAxesClippingBias(revolutionAxesClippingBias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRevolutionAxesClippingBiasBind, handle, revolutionAxesClippingBias)
     }
 
@@ -139,6 +144,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_revolution_axes_clipping_bias
      */
     fun getRevolutionAxesClippingBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRevolutionAxesClippingBiasBind, handle)
     }
 
@@ -148,6 +154,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_min_volume_per_convex_hull
      */
     fun setMinVolumePerConvexHull(minVolumePerConvexHull: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinVolumePerConvexHullBind, handle, minVolumePerConvexHull)
     }
 
@@ -157,6 +164,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_min_volume_per_convex_hull
      */
     fun getMinVolumePerConvexHull(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinVolumePerConvexHullBind, handle)
     }
 
@@ -166,6 +174,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_resolution
      */
     fun setResolution(minVolumePerConvexHull: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setResolutionBind, handle, minVolumePerConvexHull)
     }
 
@@ -175,6 +184,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_resolution
      */
     fun getResolution(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getResolutionBind, handle)
     }
 
@@ -184,6 +194,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_max_num_vertices_per_convex_hull
      */
     fun setMaxNumVerticesPerConvexHull(maxNumVerticesPerConvexHull: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMaxNumVerticesPerConvexHullBind, handle, maxNumVerticesPerConvexHull)
     }
 
@@ -193,6 +204,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_max_num_vertices_per_convex_hull
      */
     fun getMaxNumVerticesPerConvexHull(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxNumVerticesPerConvexHullBind, handle)
     }
 
@@ -202,6 +214,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_plane_downsampling
      */
     fun setPlaneDownsampling(planeDownsampling: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setPlaneDownsamplingBind, handle, planeDownsampling)
     }
 
@@ -211,6 +224,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_plane_downsampling
      */
     fun getPlaneDownsampling(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getPlaneDownsamplingBind, handle)
     }
 
@@ -221,6 +235,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_convex_hull_downsampling
      */
     fun setConvexHullDownsampling(convexHullDownsampling: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setConvexHullDownsamplingBind, handle, convexHullDownsampling)
     }
 
@@ -231,6 +246,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_convex_hull_downsampling
      */
     fun getConvexHullDownsampling(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getConvexHullDownsamplingBind, handle)
     }
 
@@ -240,6 +256,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_normalize_mesh
      */
     fun setNormalizeMesh(normalizeMesh: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNormalizeMeshBind, handle, normalizeMesh)
     }
 
@@ -249,6 +266,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_normalize_mesh
      */
     fun getNormalizeMesh(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNormalizeMeshBind, handle)
     }
 
@@ -258,6 +276,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_mode
      */
     fun setMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
@@ -267,6 +286,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_mode
      */
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
@@ -276,6 +296,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_convex_hull_approximation
      */
     fun setConvexHullApproximation(convexHullApproximation: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConvexHullApproximationBind, handle, convexHullApproximation)
     }
 
@@ -285,6 +306,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_convex_hull_approximation
      */
     fun getConvexHullApproximation(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConvexHullApproximationBind, handle)
     }
 
@@ -294,6 +316,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_max_convex_hulls
      */
     fun setMaxConvexHulls(maxConvexHulls: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMaxConvexHullsBind, handle, maxConvexHulls)
     }
 
@@ -303,6 +326,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_max_convex_hulls
      */
     fun getMaxConvexHulls(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxConvexHullsBind, handle)
     }
 
@@ -313,6 +337,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_project_hull_vertices
      */
     fun setProjectHullVertices(projectHullVertices: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setProjectHullVerticesBind, handle, projectHullVertices)
     }
 
@@ -323,6 +348,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_project_hull_vertices
      */
     fun getProjectHullVertices(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, handle)
     }
 

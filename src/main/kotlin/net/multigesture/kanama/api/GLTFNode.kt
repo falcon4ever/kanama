@@ -97,130 +97,162 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
         set(value) = setVisible(value)
 
     fun getOriginalName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, handle)
     }
 
     fun setOriginalName(originalName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, handle, originalName)
     }
 
     fun getParent(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParentBind, handle)
     }
 
     fun setParent(parent: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParentBind, handle, parent)
     }
 
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
     fun setHeight(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
     }
 
     fun getXform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getXformBind, handle)
     }
 
     fun setXform(xform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setXformBind, handle, xform)
     }
 
     fun getMesh(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMeshBind, handle)
     }
 
     fun setMesh(mesh: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMeshBind, handle, mesh)
     }
 
     fun getCamera(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraBind, handle)
     }
 
     fun setCamera(camera: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCameraBind, handle, camera)
     }
 
     fun getSkin(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkinBind, handle)
     }
 
     fun setSkin(skin: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkinBind, handle, skin)
     }
 
     fun getSkeleton(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, handle)
     }
 
     fun setSkeleton(skeleton: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkeletonBind, handle, skeleton)
     }
 
     fun getPosition(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, handle)
     }
 
     fun setPosition(position: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setPositionBind, handle, position)
     }
 
     fun getRotation(): Quaternion {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetQuaternion(getRotationBind, handle)
     }
 
     fun setRotation(rotation: Quaternion) {
+        checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(setRotationBind, handle, rotation)
     }
 
     fun getScale(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, handle)
     }
 
     fun setScale(scale: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setScaleBind, handle, scale)
     }
 
     fun getChildren(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getChildrenBind, handle)
     }
 
     fun setChildren(children: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setChildrenBind, handle, children)
     }
 
     fun appendChildIndex(childIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(appendChildIndexBind, handle, childIndex)
     }
 
     fun getLight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLightBind, handle)
     }
 
     fun setLight(light: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLightBind, handle, light)
     }
 
     fun getVisible(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getVisibleBind, handle)
     }
 
     fun setVisible(visible: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
     }
 
     fun getSceneNodePath(gltfState: GLTFState?, handleSkeletons: Boolean = true): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getSceneNodePathBind, handle, gltfState?.requireOpenHandle() ?: MemorySegment.NULL, handleSkeletons)
     }
 

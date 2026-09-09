@@ -16,18 +16,22 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
         set(value) = setAllowUnpress(value)
 
     fun getPressedButton(): BaseButton? {
+        checkOpen()
         return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPressedButtonBind, handle))
     }
 
     fun getButtons(): List<BaseButton> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getButtonsBind, handle, BaseButton::fromHandle)
     }
 
     fun setAllowUnpress(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowUnpressBind, handle, enabled)
     }
 
     fun isAllowUnpress(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, handle)
     }
 

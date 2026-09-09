@@ -20,18 +20,22 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setPathLength(value)
 
     fun getPathTypes(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
     }
 
     fun setPathLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, handle, length)
     }
 
     fun getPathLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, handle)
     }
 
     fun reset() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 

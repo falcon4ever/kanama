@@ -101,6 +101,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sky_top_color
      */
     fun setSkyTopColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, handle, color)
     }
 
@@ -110,6 +111,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sky_top_color
      */
     fun getSkyTopColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, handle)
     }
 
@@ -119,6 +121,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sky_horizon_color
      */
     fun setSkyHorizonColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, handle, color)
     }
 
@@ -128,6 +131,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sky_horizon_color
      */
     fun getSkyHorizonColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, handle)
     }
 
@@ -137,6 +141,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sky_curve
      */
     fun setSkyCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, handle, curve)
     }
 
@@ -146,6 +151,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sky_curve
      */
     fun getSkyCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, handle)
     }
 
@@ -155,6 +161,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sky_energy_multiplier
      */
     fun setSkyEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, handle, multiplier)
     }
 
@@ -164,6 +171,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sky_energy_multiplier
      */
     fun getSkyEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, handle)
     }
 
@@ -177,6 +185,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sky_cover
      */
     fun setSkyCover(skyCover: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSkyCoverBind, handle, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -190,6 +199,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sky_cover
      */
     fun getSkyCover(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, handle))
     }
 
@@ -201,6 +211,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sky_cover_modulate
      */
     fun setSkyCoverModulate(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, handle, color)
     }
 
@@ -212,6 +223,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sky_cover_modulate
      */
     fun getSkyCoverModulate(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, handle)
     }
 
@@ -221,6 +233,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_ground_bottom_color
      */
     fun setGroundBottomColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, handle, color)
     }
 
@@ -230,6 +243,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_ground_bottom_color
      */
     fun getGroundBottomColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, handle)
     }
 
@@ -239,6 +253,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_ground_horizon_color
      */
     fun setGroundHorizonColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, handle, color)
     }
 
@@ -248,6 +263,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_ground_horizon_color
      */
     fun getGroundHorizonColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, handle)
     }
 
@@ -257,6 +273,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_ground_curve
      */
     fun setGroundCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, handle, curve)
     }
 
@@ -266,6 +283,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_ground_curve
      */
     fun getGroundCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, handle)
     }
 
@@ -275,6 +293,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_ground_energy_multiplier
      */
     fun setGroundEnergyMultiplier(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, handle, energy)
     }
 
@@ -284,6 +303,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_ground_energy_multiplier
      */
     fun getGroundEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, handle)
     }
 
@@ -293,6 +313,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sun_angle_max
      */
     fun setSunAngleMax(degrees: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, handle, degrees)
     }
 
@@ -302,6 +323,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sun_angle_max
      */
     fun getSunAngleMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, handle)
     }
 
@@ -311,6 +333,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_sun_curve
      */
     fun setSunCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, handle, curve)
     }
 
@@ -320,6 +343,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_sun_curve
      */
     fun getSunCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, handle)
     }
 
@@ -330,6 +354,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_use_debanding
      */
     fun setUseDebanding(useDebanding: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
     }
 
@@ -340,6 +365,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_use_debanding
      */
     fun getUseDebanding(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
     }
 
@@ -349,6 +375,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.set_energy_multiplier
      */
     fun setEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
@@ -358,6 +385,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: ProceduralSkyMaterial.get_energy_multiplier
      */
     fun getEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 

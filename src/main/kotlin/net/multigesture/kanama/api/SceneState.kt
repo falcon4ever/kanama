@@ -16,6 +16,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_path
      */
     fun getPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
     }
 
@@ -26,6 +27,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_base_scene_state
      */
     fun getBaseSceneState(): SceneState? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseSceneStateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -41,6 +43,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_count
      */
     fun getNodeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, handle)
     }
 
@@ -50,6 +53,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_type
      */
     fun getNodeType(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeTypeBind, handle, idx)
     }
 
@@ -59,6 +63,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_name
      */
     fun getNodeName(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeNameBind, handle, idx)
     }
 
@@ -69,6 +74,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_path
      */
     fun getNodePath(idx: Int, forParent: Boolean = false): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(getNodePathBind, handle, idx, forParent)
     }
 
@@ -78,6 +84,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_owner_path
      */
     fun getNodeOwnerPath(idx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getNodeOwnerPathBind, handle, idx)
     }
 
@@ -87,6 +94,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.is_node_instance_placeholder
      */
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, handle, idx)
     }
 
@@ -96,6 +104,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_instance_placeholder
      */
     fun getNodeInstancePlaceholder(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getNodeInstancePlaceholderBind, handle, idx)
     }
 
@@ -106,6 +115,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_instance
      */
     fun getNodeInstance(idx: Int): PackedScene? {
+        checkOpen()
         return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, handle, idx))
     }
 
@@ -115,6 +125,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_groups
      */
     fun getNodeGroups(idx: Int): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, handle, idx)
     }
 
@@ -127,6 +138,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_index
      */
     fun getNodeIndex(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getNodeIndexBind, handle, idx)
     }
 
@@ -138,6 +150,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_property_count
      */
     fun getNodePropertyCount(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getNodePropertyCountBind, handle, idx)
     }
 
@@ -147,6 +160,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_property_name
      */
     fun getNodePropertyName(idx: Int, propIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(getNodePropertyNameBind, handle, idx, propIdx)
     }
 
@@ -156,6 +170,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_node_property_value
      */
     fun getNodePropertyValue(idx: Int, propIdx: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, handle, idx, propIdx)
     }
 
@@ -167,6 +182,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_count
      */
     fun getConnectionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, handle)
     }
 
@@ -176,6 +192,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_source
      */
     fun getConnectionSource(idx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionSourceBind, handle, idx)
     }
 
@@ -185,6 +202,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_signal
      */
     fun getConnectionSignal(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionSignalBind, handle, idx)
     }
 
@@ -195,6 +213,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_target
      */
     fun getConnectionTarget(idx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionTargetBind, handle, idx)
     }
 
@@ -204,6 +223,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_method
      */
     fun getConnectionMethod(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionMethodBind, handle, idx)
     }
 
@@ -213,6 +233,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_flags
      */
     fun getConnectionFlags(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionFlagsBind, handle, idx)
     }
 
@@ -222,6 +243,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_binds
      */
     fun getConnectionBinds(idx: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getConnectionBindsBind, handle, idx)
     }
 
@@ -231,6 +253,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SceneState.get_connection_unbinds
      */
     fun getConnectionUnbinds(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, handle, idx)
     }
 

@@ -46,74 +46,92 @@ class WebXRInterface(handle: MemorySegment) : XRInterface(handle) {
         get() = getVisibilityState()
 
     fun isSessionSupported(sessionMode: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(isSessionSupportedBind, handle, sessionMode)
     }
 
     fun setSessionMode(sessionMode: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSessionModeBind, handle, sessionMode)
     }
 
     fun getSessionMode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSessionModeBind, handle)
     }
 
     fun setRequiredFeatures(requiredFeatures: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setRequiredFeaturesBind, handle, requiredFeatures)
     }
 
     fun getRequiredFeatures(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getRequiredFeaturesBind, handle)
     }
 
     fun setOptionalFeatures(optionalFeatures: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOptionalFeaturesBind, handle, optionalFeatures)
     }
 
     fun getOptionalFeatures(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOptionalFeaturesBind, handle)
     }
 
     fun getReferenceSpaceType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getReferenceSpaceTypeBind, handle)
     }
 
     fun getEnabledFeatures(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEnabledFeaturesBind, handle)
     }
 
     fun setRequestedReferenceSpaceTypes(requestedReferenceSpaceTypes: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setRequestedReferenceSpaceTypesBind, handle, requestedReferenceSpaceTypes)
     }
 
     fun getRequestedReferenceSpaceTypes(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getRequestedReferenceSpaceTypesBind, handle)
     }
 
     fun isInputSourceActive(inputSourceId: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputSourceActiveBind, handle, inputSourceId)
     }
 
     fun getInputSourceTracker(inputSourceId: Int): XRControllerTracker? {
+        checkOpen()
         return XRControllerTracker.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, handle, inputSourceId))
     }
 
     fun getInputSourceTargetRayMode(inputSourceId: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getInputSourceTargetRayModeBind, handle, inputSourceId)
     }
 
     fun getVisibilityState(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getVisibilityStateBind, handle)
     }
 
     fun getDisplayRefreshRate(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, handle)
     }
 
     fun setDisplayRefreshRate(refreshRate: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, handle, refreshRate)
     }
 
     fun getAvailableDisplayRefreshRates(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, handle)
     }
 

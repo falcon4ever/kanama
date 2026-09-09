@@ -91,6 +91,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_line_spacing
      */
     fun setLineSpacing(spacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, spacing)
     }
 
@@ -101,6 +102,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_line_spacing
      */
     fun getLineSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
@@ -110,6 +112,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_paragraph_spacing
      */
     fun setParagraphSpacing(spacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setParagraphSpacingBind, handle, spacing)
     }
 
@@ -119,6 +122,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_paragraph_spacing
      */
     fun getParagraphSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getParagraphSpacingBind, handle)
     }
 
@@ -128,6 +132,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_font
      */
     fun setFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -137,6 +142,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_font
      */
     fun getFont(): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
     }
 
@@ -146,6 +152,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_font_size
      */
     fun setFontSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, size)
     }
 
@@ -155,6 +162,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_font_size
      */
     fun getFontSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
     }
 
@@ -164,6 +172,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_font_color
      */
     fun setFontColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setFontColorBind, handle, color)
     }
 
@@ -173,6 +182,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_font_color
      */
     fun getFontColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getFontColorBind, handle)
     }
 
@@ -182,6 +192,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_outline_size
      */
     fun setOutlineSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, handle, size)
     }
 
@@ -191,6 +202,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_outline_size
      */
     fun getOutlineSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, handle)
     }
 
@@ -200,6 +212,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_outline_color
      */
     fun setOutlineColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setOutlineColorBind, handle, color)
     }
 
@@ -209,6 +222,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_outline_color
      */
     fun getOutlineColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getOutlineColorBind, handle)
     }
 
@@ -218,6 +232,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_shadow_size
      */
     fun setShadowSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, handle, size)
     }
 
@@ -227,6 +242,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_shadow_size
      */
     fun getShadowSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, handle)
     }
 
@@ -236,6 +252,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_shadow_color
      */
     fun setShadowColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, color)
     }
 
@@ -245,6 +262,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_shadow_color
      */
     fun getShadowColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
     }
 
@@ -254,6 +272,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_shadow_offset
      */
     fun setShadowOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, handle, offset)
     }
 
@@ -263,6 +282,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_shadow_offset
      */
     fun getShadowOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, handle)
     }
 
@@ -272,6 +292,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_outline_count
      */
     fun getStackedOutlineCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStackedOutlineCountBind, handle)
     }
 
@@ -281,6 +302,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_outline_count
      */
     fun setStackedOutlineCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStackedOutlineCountBind, handle, count)
     }
 
@@ -291,6 +313,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.add_stacked_outline
      */
     fun addStackedOutline(index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addStackedOutlineBind, handle, index)
     }
 
@@ -301,6 +324,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.move_stacked_outline
      */
     fun moveStackedOutline(fromIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveStackedOutlineBind, handle, fromIndex, toPosition)
     }
 
@@ -310,6 +334,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.remove_stacked_outline
      */
     fun removeStackedOutline(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeStackedOutlineBind, handle, index)
     }
 
@@ -319,6 +344,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_outline_size
      */
     fun setStackedOutlineSize(index: Int, size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setStackedOutlineSizeBind, handle, index, size)
     }
 
@@ -328,6 +354,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_outline_size
      */
     fun getStackedOutlineSize(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getStackedOutlineSizeBind, handle, index)
     }
 
@@ -337,6 +364,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_outline_color
      */
     fun setStackedOutlineColor(index: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setStackedOutlineColorBind, handle, index, color)
     }
 
@@ -346,6 +374,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_outline_color
      */
     fun getStackedOutlineColor(index: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getStackedOutlineColorBind, handle, index)
     }
 
@@ -355,6 +384,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_shadow_count
      */
     fun getStackedShadowCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStackedShadowCountBind, handle)
     }
 
@@ -364,6 +394,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_shadow_count
      */
     fun setStackedShadowCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStackedShadowCountBind, handle, count)
     }
 
@@ -374,6 +405,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.add_stacked_shadow
      */
     fun addStackedShadow(index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addStackedShadowBind, handle, index)
     }
 
@@ -383,6 +415,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.move_stacked_shadow
      */
     fun moveStackedShadow(fromIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveStackedShadowBind, handle, fromIndex, toPosition)
     }
 
@@ -392,6 +425,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.remove_stacked_shadow
      */
     fun removeStackedShadow(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeStackedShadowBind, handle, index)
     }
 
@@ -401,6 +435,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_shadow_offset
      */
     fun setStackedShadowOffset(index: Int, offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setStackedShadowOffsetBind, handle, index, offset)
     }
 
@@ -410,6 +445,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_shadow_offset
      */
     fun getStackedShadowOffset(index: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getStackedShadowOffsetBind, handle, index)
     }
 
@@ -419,6 +455,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_shadow_color
      */
     fun setStackedShadowColor(index: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setStackedShadowColorBind, handle, index, color)
     }
 
@@ -428,6 +465,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_shadow_color
      */
     fun getStackedShadowColor(index: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getStackedShadowColorBind, handle, index)
     }
 
@@ -437,6 +475,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.set_stacked_shadow_outline_size
      */
     fun setStackedShadowOutlineSize(index: Int, size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setStackedShadowOutlineSizeBind, handle, index, size)
     }
 
@@ -446,6 +485,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LabelSettings.get_stacked_shadow_outline_size
      */
     fun getStackedShadowOutlineSize(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getStackedShadowOutlineSizeBind, handle, index)
     }
 

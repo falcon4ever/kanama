@@ -22,6 +22,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.has_multiplayer_peer
      */
     fun hasMultiplayerPeer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMultiplayerPeerBind, handle)
     }
 
@@ -36,6 +37,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.get_multiplayer_peer
      */
     fun getMultiplayerPeer(): MultiplayerPeer? {
+        checkOpen()
         return MultiplayerPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, handle))
     }
 
@@ -50,6 +52,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.set_multiplayer_peer
      */
     fun setMultiplayerPeer(peer: MultiplayerPeer?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -59,6 +62,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.get_unique_id
      */
     fun getUniqueId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
     }
 
@@ -69,6 +73,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.is_server
      */
     fun isServer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
     }
 
@@ -80,6 +85,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.get_remote_sender_id
      */
     fun getRemoteSenderId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRemoteSenderIdBind, handle)
     }
 
@@ -92,6 +98,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.poll
      */
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
@@ -106,6 +113,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.rpc
      */
     fun rpc(peer: Int, objectValue: GodotObject, method: String, arguments: List<Any?> = emptyList()): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(rpcBind, handle, peer, objectValue.handle, method, arguments)
     }
 
@@ -120,6 +128,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.object_configuration_add
      */
     fun objectConfigurationAdd(objectValue: GodotObject, configuration: Any?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationAddBind, handle, objectValue.handle, configuration)
     }
 
@@ -134,6 +143,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.object_configuration_remove
      */
     fun objectConfigurationRemove(objectValue: GodotObject, configuration: Any?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationRemoveBind, handle, objectValue.handle, configuration)
     }
 
@@ -143,6 +153,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MultiplayerAPI.get_peers
      */
     fun getPeers(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPeersBind, handle)
     }
 

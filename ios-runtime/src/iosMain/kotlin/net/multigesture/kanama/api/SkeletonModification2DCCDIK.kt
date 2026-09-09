@@ -29,78 +29,97 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
         set(value) = setCcdikDataChainLength(value)
 
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
     fun setTipNode(tipNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTipNodeBind, handle, tipNodepath)
     }
 
     fun getTipNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTipNodeBind, handle)
     }
 
     fun setCcdikDataChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCcdikDataChainLengthBind, handle, length)
     }
 
     fun getCcdikDataChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCcdikDataChainLengthBind, handle)
     }
 
     fun setCcdikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setCcdikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
     }
 
     fun setCcdikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setCcdikJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
     fun getCcdikJointBoneIndex(jointIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getCcdikJointBoneIndexBind, handle, jointIdx)
     }
 
     fun setCcdikJointRotateFromJoint(jointIdx: Int, rotateFromJoint: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointRotateFromJointBind, handle, jointIdx, rotateFromJoint)
     }
 
     fun getCcdikJointRotateFromJoint(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointRotateFromJointBind, handle, jointIdx)
     }
 
     fun setCcdikJointEnableConstraint(jointIdx: Int, enableConstraint: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointEnableConstraintBind, handle, jointIdx, enableConstraint)
     }
 
     fun getCcdikJointEnableConstraint(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointEnableConstraintBind, handle, jointIdx)
     }
 
     fun setCcdikJointConstraintAngleMin(jointIdx: Int, angleMin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMinBind, handle, jointIdx, angleMin)
     }
 
     fun getCcdikJointConstraintAngleMin(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMinBind, handle, jointIdx)
     }
 
     fun setCcdikJointConstraintAngleMax(jointIdx: Int, angleMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMaxBind, handle, jointIdx, angleMax)
     }
 
     fun getCcdikJointConstraintAngleMax(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMaxBind, handle, jointIdx)
     }
 
     fun setCcdikJointConstraintAngleInvert(jointIdx: Int, invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointConstraintAngleInvertBind, handle, jointIdx, invert)
     }
 
     fun getCcdikJointConstraintAngleInvert(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointConstraintAngleInvertBind, handle, jointIdx)
     }
 

@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class TCPServer(handle: MemorySegment) : SocketServer(handle) {
     fun listen(port: Int, bindAddress: String = "*"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
     }
 
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
     fun takeConnection(): StreamPeerTCP? {
+        checkOpen()
         return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 

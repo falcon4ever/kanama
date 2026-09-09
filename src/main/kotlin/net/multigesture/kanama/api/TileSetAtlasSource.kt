@@ -49,6 +49,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_texture
      */
     fun setTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -58,6 +59,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_texture
      */
     fun getTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
@@ -67,6 +69,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_margins
      */
     fun setMargins(margins: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setMarginsBind, handle, margins)
     }
 
@@ -76,6 +79,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_margins
      */
     fun getMargins(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getMarginsBind, handle)
     }
 
@@ -85,6 +89,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_separation
      */
     fun setSeparation(separation: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSeparationBind, handle, separation)
     }
 
@@ -94,6 +99,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_separation
      */
     fun getSeparation(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSeparationBind, handle)
     }
 
@@ -104,6 +110,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_texture_region_size
      */
     fun setTextureRegionSize(textureRegionSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setTextureRegionSizeBind, handle, textureRegionSize)
     }
 
@@ -114,6 +121,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_texture_region_size
      */
     fun getTextureRegionSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureRegionSizeBind, handle)
     }
 
@@ -126,6 +134,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_use_texture_padding
      */
     fun setUseTexturePadding(useTexturePadding: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseTexturePaddingBind, handle, useTexturePadding)
     }
 
@@ -138,6 +147,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_use_texture_padding
      */
     fun getUseTexturePadding(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseTexturePaddingBind, handle)
     }
 
@@ -147,6 +157,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.create_tile
      */
     fun createTile(atlasCoords: Vector2i, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoVector2iArgs(createTileBind, handle, atlasCoords, size)
     }
 
@@ -156,6 +167,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.remove_tile
      */
     fun removeTile(atlasCoords: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(removeTileBind, handle, atlasCoords)
     }
 
@@ -169,6 +181,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.move_tile_in_atlas
      */
     fun moveTileInAtlas(atlasCoords: Vector2i, newAtlasCoords: Vector2i, newSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeVector2iArgs(moveTileInAtlasBind, handle, atlasCoords, newAtlasCoords, newSize)
     }
 
@@ -178,6 +191,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_size_in_atlas
      */
     fun getTileSizeInAtlas(atlasCoords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileSizeInAtlasBind, handle, atlasCoords)
     }
 
@@ -189,6 +203,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.has_room_for_tile
      */
     fun hasRoomForTile(atlasCoords: Vector2i, size: Vector2i, animationColumns: Int, animationSeparation: Vector2i, framesCount: Int, ignoredTile: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(hasRoomForTileBind, handle, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
     }
 
@@ -200,6 +215,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tiles_to_be_removed_on_change
      */
     fun getTilesToBeRemovedOnChange(texture: Texture2D?, margins: Vector2i, separation: Vector2i, textureRegionSize: Vector2i): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(getTilesToBeRemovedOnChangeBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, margins, separation, textureRegionSize)
     }
 
@@ -210,6 +226,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_at_coords
      */
     fun getTileAtCoords(atlasCoords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAtCoordsBind, handle, atlasCoords)
     }
 
@@ -220,6 +237,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.has_tiles_outside_texture
      */
     fun hasTilesOutsideTexture(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasTilesOutsideTextureBind, handle)
     }
 
@@ -230,6 +248,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.clear_tiles_outside_texture
      */
     fun clearTilesOutsideTexture() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearTilesOutsideTextureBind, handle)
     }
 
@@ -241,6 +260,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_columns
      */
     fun setTileAnimationColumns(atlasCoords: Vector2i, frameColumns: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationColumnsBind, handle, atlasCoords, frameColumns)
     }
 
@@ -250,6 +270,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_columns
      */
     fun getTileAnimationColumns(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationColumnsBind, handle, atlasCoords)
     }
 
@@ -260,6 +281,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_separation
      */
     fun setTileAnimationSeparation(atlasCoords: Vector2i, separation: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoVector2iArgs(setTileAnimationSeparationBind, handle, atlasCoords, separation)
     }
 
@@ -270,6 +292,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_separation
      */
     fun getTileAnimationSeparation(atlasCoords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAnimationSeparationBind, handle, atlasCoords)
     }
 
@@ -279,6 +302,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_speed
      */
     fun setTileAnimationSpeed(atlasCoords: Vector2i, speed: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(setTileAnimationSpeedBind, handle, atlasCoords, speed)
     }
 
@@ -288,6 +312,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_speed
      */
     fun getTileAnimationSpeed(atlasCoords: Vector2i): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationSpeedBind, handle, atlasCoords)
     }
 
@@ -298,6 +323,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_mode
      */
     fun setTileAnimationMode(atlasCoords: Vector2i, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, handle, atlasCoords, mode)
     }
 
@@ -308,6 +334,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_mode
      */
     fun getTileAnimationMode(atlasCoords: Vector2i): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, handle, atlasCoords)
     }
 
@@ -317,6 +344,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_frames_count
      */
     fun setTileAnimationFramesCount(atlasCoords: Vector2i, framesCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationFramesCountBind, handle, atlasCoords, framesCount)
     }
 
@@ -326,6 +354,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_frames_count
      */
     fun getTileAnimationFramesCount(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationFramesCountBind, handle, atlasCoords)
     }
 
@@ -336,6 +365,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_frame_duration
      */
     fun setTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int, duration: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iIntDoubleArgs(setTileAnimationFrameDurationBind, handle, atlasCoords, frameIndex, duration)
     }
 
@@ -346,6 +376,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_frame_duration
      */
     fun getTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(getTileAnimationFrameDurationBind, handle, atlasCoords, frameIndex)
     }
 
@@ -356,6 +387,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_total_duration
      */
     fun getTileAnimationTotalDuration(atlasCoords: Vector2i): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationTotalDurationBind, handle, atlasCoords)
     }
 
@@ -368,6 +400,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.create_alternative_tile
      */
     fun createAlternativeTile(atlasCoords: Vector2i, alternativeIdOverride: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(createAlternativeTileBind, handle, atlasCoords, alternativeIdOverride)
     }
 
@@ -378,6 +411,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.remove_alternative_tile
      */
     fun removeAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(removeAlternativeTileBind, handle, atlasCoords, alternativeTile)
     }
 
@@ -388,6 +422,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.set_alternative_tile_id
      */
     fun setAlternativeTileId(atlasCoords: Vector2i, alternativeTile: Int, newId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(setAlternativeTileIdBind, handle, atlasCoords, alternativeTile, newId)
     }
 
@@ -397,6 +432,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_next_alternative_tile_id
      */
     fun getNextAlternativeTileId(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getNextAlternativeTileIdBind, handle, atlasCoords)
     }
 
@@ -406,6 +442,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_data
      */
     fun getTileData(atlasCoords: Vector2i, alternativeTile: Int): TileData? {
+        checkOpen()
         return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(getTileDataBind, handle, atlasCoords, alternativeTile))
     }
 
@@ -416,6 +453,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_atlas_grid_size
      */
     fun getAtlasGridSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getAtlasGridSizeBind, handle)
     }
 
@@ -426,6 +464,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_tile_texture_region
      */
     fun getTileTextureRegion(atlasCoords: Vector2i, frame: Int = 0): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getTileTextureRegionBind, handle, atlasCoords, frame)
     }
 
@@ -436,6 +475,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_runtime_texture
      */
     fun getRuntimeTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, handle))
     }
 
@@ -447,6 +487,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      * Generated from Godot docs: TileSetAtlasSource.get_runtime_tile_texture_region
      */
     fun getRuntimeTileTextureRegion(atlasCoords: Vector2i, frame: Int): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, handle, atlasCoords, frame)
     }
 

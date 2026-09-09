@@ -8,46 +8,57 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 open class WebRTCPeerConnection(handle: MemorySegment) : RefCounted(handle) {
     fun initialize(configuration: Map<String, Any?> = emptyMap()): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetLong(initializeBind, handle, configuration)
     }
 
     fun createDataChannel(label: String, options: Map<String, Any?> = emptyMap()): WebRTCDataChannel? {
+        checkOpen()
         return WebRTCDataChannel.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(createDataChannelBind, handle, label, options))
     }
 
     fun createOffer(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(createOfferBind, handle)
     }
 
     fun setLocalDescription(type: String, sdp: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(setLocalDescriptionBind, handle, type, sdp)
     }
 
     fun setRemoteDescription(type: String, sdp: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(setRemoteDescriptionBind, handle, type, sdp)
     }
 
     fun addIceCandidate(media: String, index: Int, name: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringIntStringArgsRetLong(addIceCandidateBind, handle, media, index, name)
     }
 
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
     fun getConnectionState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStateBind, handle)
     }
 
     fun getGatheringState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getGatheringStateBind, handle)
     }
 
     fun getSignalingState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSignalingStateBind, handle)
     }
 

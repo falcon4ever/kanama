@@ -55,74 +55,92 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
         set(value) = setInterior(value)
 
     fun getBounds(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
     }
 
     fun getOctreeSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getOctreeSizeBind, handle)
     }
 
     fun getToCellXform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getToCellXformBind, handle)
     }
 
     fun getLevelCounts(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getLevelCountsBind, handle)
     }
 
     fun setDynamicRange(dynamicRange: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDynamicRangeBind, handle, dynamicRange)
     }
 
     fun getDynamicRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDynamicRangeBind, handle)
     }
 
     fun setEnergy(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, handle, energy)
     }
 
     fun getEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, handle)
     }
 
     fun setBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
     }
 
     fun getBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
     }
 
     fun setNormalBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setNormalBiasBind, handle, bias)
     }
 
     fun getNormalBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getNormalBiasBind, handle)
     }
 
     fun setPropagation(propagation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPropagationBind, handle, propagation)
     }
 
     fun getPropagation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPropagationBind, handle)
     }
 
     fun setInterior(interior: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setInteriorBind, handle, interior)
     }
 
     fun isInterior(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, handle)
     }
 
     fun setUseTwoBounces(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseTwoBouncesBind, handle, enable)
     }
 
     fun isUsingTwoBounces(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingTwoBouncesBind, handle)
     }
 

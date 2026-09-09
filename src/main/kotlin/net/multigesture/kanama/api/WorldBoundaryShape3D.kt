@@ -23,6 +23,7 @@ class WorldBoundaryShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: WorldBoundaryShape3D.set_plane
      */
     fun setPlane(plane: Plane) {
+        checkOpen()
         ObjectCalls.ptrcallWithPlaneArg(setPlaneBind, handle, plane)
     }
 
@@ -32,6 +33,7 @@ class WorldBoundaryShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: WorldBoundaryShape3D.get_plane
      */
     fun getPlane(): Plane {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, handle)
     }
 

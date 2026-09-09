@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class UDSServer(handle: MemorySegment) : SocketServer(handle) {
     fun listen(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(listenBind, handle, path)
     }
 
     fun takeConnection(): StreamPeerUDS? {
+        checkOpen()
         return StreamPeerUDS.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 

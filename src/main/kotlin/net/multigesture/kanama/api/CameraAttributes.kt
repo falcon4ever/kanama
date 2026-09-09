@@ -46,6 +46,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.set_exposure_multiplier
      */
     fun setExposureMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExposureMultiplierBind, handle, multiplier)
     }
 
@@ -55,6 +56,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.get_exposure_multiplier
      */
     fun getExposureMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getExposureMultiplierBind, handle)
     }
 
@@ -68,6 +70,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.set_exposure_sensitivity
      */
     fun setExposureSensitivity(sensitivity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExposureSensitivityBind, handle, sensitivity)
     }
 
@@ -81,6 +84,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.get_exposure_sensitivity
      */
     fun getExposureSensitivity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getExposureSensitivityBind, handle)
     }
 
@@ -93,6 +97,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.set_auto_exposure_enabled
      */
     fun setAutoExposureEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAutoExposureEnabledBind, handle, enabled)
     }
 
@@ -105,6 +110,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.is_auto_exposure_enabled
      */
     fun isAutoExposureEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoExposureEnabledBind, handle)
     }
 
@@ -115,6 +121,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.set_auto_exposure_speed
      */
     fun setAutoExposureSpeed(exposureSpeed: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureSpeedBind, handle, exposureSpeed)
     }
 
@@ -125,6 +132,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.get_auto_exposure_speed
      */
     fun getAutoExposureSpeed(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureSpeedBind, handle)
     }
 
@@ -134,6 +142,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.set_auto_exposure_scale
      */
     fun setAutoExposureScale(exposureGrey: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureScaleBind, handle, exposureGrey)
     }
 
@@ -143,6 +152,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CameraAttributes.get_auto_exposure_scale
      */
     fun getAutoExposureScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureScaleBind, handle)
     }
 

@@ -206,7 +206,9 @@ open class GodotObject(
     /** Returns true when both wrappers refer to the same Godot object instance. */
     fun isSameInstance(other: GodotObject): Boolean = handle.address() == other.handle.address()
 
-    fun requireOpenHandle(): MemorySegment = handle
+    // Argument-position handle check. Non-owning wrappers have nothing to refuse; the generated
+    // RefCounted overrides this with its closed-handle check (task 98 desktop mirror).
+    open fun requireOpenHandle(): MemorySegment = handle
 
     fun isClass(className: String): Boolean =
         className.isNotBlank() && IosGodot.objectIsClass(handle.address(), className)

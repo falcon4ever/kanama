@@ -21,18 +21,22 @@ class GLTFTexture(handle: MemorySegment) : Resource(handle) {
         set(value) = setSampler(value)
 
     fun getSrcImage(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSrcImageBind, handle)
     }
 
     fun setSrcImage(srcImage: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSrcImageBind, handle, srcImage)
     }
 
     fun getSampler(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSamplerBind, handle)
     }
 
     fun setSampler(sampler: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSamplerBind, handle, sampler)
     }
 

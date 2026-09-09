@@ -20,6 +20,7 @@ open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(hand
      * Generated from Godot docs: CompressedTextureLayered.load
      */
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
@@ -29,6 +30,7 @@ open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(hand
      * Generated from Godot docs: CompressedTextureLayered.get_load_path
      */
     fun getLoadPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }
 

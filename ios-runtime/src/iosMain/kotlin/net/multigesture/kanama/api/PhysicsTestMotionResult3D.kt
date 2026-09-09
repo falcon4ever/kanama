@@ -11,58 +11,72 @@ import net.multigesture.kanama.types.Vector3
  */
 class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
     fun getTravel(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
     }
 
     fun getRemainder(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
     }
 
     fun getCollisionSafeFraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, handle)
     }
 
     fun getCollisionUnsafeFraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, handle)
     }
 
     fun getCollisionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
     }
 
     fun getCollisionPoint(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, handle, collisionIndex)
     }
 
     fun getCollisionNormal(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, handle, collisionIndex)
     }
 
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
     }
 
     fun getColliderId(collisionIndex: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
     }
 
     fun getColliderRid(collisionIndex: Int = 0): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
     }
 
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
     }
 
     fun getColliderShape(collisionIndex: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, handle, collisionIndex)
     }
 
     fun getCollisionLocalShape(collisionIndex: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionLocalShapeBind, handle, collisionIndex)
     }
 
     fun getCollisionDepth(collisionIndex: Int = 0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCollisionDepthBind, handle, collisionIndex)
     }
 

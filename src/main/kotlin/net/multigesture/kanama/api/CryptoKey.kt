@@ -16,6 +16,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CryptoKey.save
      */
     fun save(path: String, publicOnly: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(saveBind, handle, path, publicOnly)
     }
 
@@ -26,6 +27,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CryptoKey.load
      */
     fun load(path: String, publicOnly: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, handle, path, publicOnly)
     }
 
@@ -35,6 +37,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CryptoKey.is_public_only
      */
     fun isPublicOnly(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPublicOnlyBind, handle)
     }
 
@@ -45,6 +48,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CryptoKey.save_to_string
      */
     fun saveToString(publicOnly: Boolean = false): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetString(saveToStringBind, handle, publicOnly)
     }
 
@@ -55,6 +59,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CryptoKey.load_from_string
      */
     fun loadFromString(stringKey: String, publicOnly: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, handle, stringKey, publicOnly)
     }
 

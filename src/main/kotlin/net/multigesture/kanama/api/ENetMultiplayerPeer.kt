@@ -13,30 +13,37 @@ class ENetMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
         get() = getHost()
 
     fun createServer(port: Int, maxClients: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithFiveIntArgsRetLong(createServerBind, handle, port, maxClients, maxChannels, inBandwidth, outBandwidth)
     }
 
     fun createClient(address: String, port: Int, channelCount: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0, localPort: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createClientBind, handle, address, port, channelCount, inBandwidth, outBandwidth, localPort)
     }
 
     fun createMesh(uniqueId: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(createMeshBind, handle, uniqueId)
     }
 
     fun addMeshPeer(peerId: Int, host: ENetConnection?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndObjectArgRetLong(addMeshPeerBind, handle, peerId, host?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setBindIp(ip: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setBindIpBind, handle, ip)
     }
 
     fun getHost(): ENetConnection? {
+        checkOpen()
         return ENetConnection.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, handle))
     }
 
     fun getPeer(id: Int): ENetPacketPeer? {
+        checkOpen()
         return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, handle, id))
     }
 

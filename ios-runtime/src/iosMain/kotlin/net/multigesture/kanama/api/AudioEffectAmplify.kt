@@ -22,18 +22,22 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setVolumeLinear(value)
 
     fun setVolumeDb(volume: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, volume)
     }
 
     fun getVolumeDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
     }
 
     fun setVolumeLinear(volume: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, handle, volume)
     }
 
     fun getVolumeLinear(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, handle)
     }
 

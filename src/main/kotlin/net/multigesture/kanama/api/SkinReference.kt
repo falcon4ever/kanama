@@ -16,6 +16,7 @@ class SkinReference(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SkinReference.get_skeleton
      */
     fun getSkeleton(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, handle)
     }
 
@@ -28,6 +29,7 @@ class SkinReference(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SkinReference.get_skin
      */
     fun getSkin(): Skin? {
+        checkOpen()
         return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
     }
 

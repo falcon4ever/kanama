@@ -21,18 +21,22 @@ class VisualShaderNodeUIntParameter(handle: MemorySegment) : VisualShaderNodePar
         set(value) = setDefaultValue(value)
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 
     fun setDefaultValue(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDefaultValueBind, handle, value)
     }
 
     fun getDefaultValue(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, handle)
     }
 

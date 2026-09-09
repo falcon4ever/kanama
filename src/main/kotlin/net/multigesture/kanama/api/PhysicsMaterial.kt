@@ -40,6 +40,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.set_friction
      */
     fun setFriction(friction: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, handle, friction)
     }
 
@@ -49,6 +50,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.get_friction
      */
     fun getFriction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, handle)
     }
 
@@ -61,6 +63,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.set_rough
      */
     fun setRough(rough: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRoughBind, handle, rough)
     }
 
@@ -73,6 +76,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.is_rough
      */
     fun isRough(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRoughBind, handle)
     }
 
@@ -86,6 +90,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.set_bounce
      */
     fun setBounce(bounce: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBounceBind, handle, bounce)
     }
 
@@ -99,6 +104,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.get_bounce
      */
     fun getBounce(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, handle)
     }
 
@@ -108,6 +114,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.set_absorbent
      */
     fun setAbsorbent(absorbent: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAbsorbentBind, handle, absorbent)
     }
 
@@ -117,6 +124,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PhysicsMaterial.is_absorbent
      */
     fun isAbsorbent(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAbsorbentBind, handle)
     }
 

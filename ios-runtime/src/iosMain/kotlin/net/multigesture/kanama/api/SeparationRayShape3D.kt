@@ -22,18 +22,22 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
         set(value) = setSlideOnSlope(value)
 
     fun setLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
     }
 
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
     fun setSlideOnSlope(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSlideOnSlopeBind, handle, active)
     }
 
     fun getSlideOnSlope(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSlideOnSlopeBind, handle)
     }
 

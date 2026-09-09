@@ -28,26 +28,32 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setRelease(value)
 
     fun setCeilingDb(ceiling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
     }
 
     fun getCeilingDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
     }
 
     fun setPreGainDb(preGain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPreGainDbBind, handle, preGain)
     }
 
     fun getPreGainDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainDbBind, handle)
     }
 
     fun setRelease(release: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setReleaseBind, handle, release)
     }
 
     fun getRelease(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseBind, handle)
     }
 

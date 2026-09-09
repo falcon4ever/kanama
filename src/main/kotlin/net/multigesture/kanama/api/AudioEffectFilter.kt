@@ -40,6 +40,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.set_cutoff
      */
     fun setCutoff(freq: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCutoffBind, handle, freq)
     }
 
@@ -49,6 +50,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.get_cutoff
      */
     fun getCutoff(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCutoffBind, handle)
     }
 
@@ -63,6 +65,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.set_resonance
      */
     fun setResonance(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setResonanceBind, handle, amount)
     }
 
@@ -77,6 +80,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.get_resonance
      */
     fun getResonance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getResonanceBind, handle)
     }
 
@@ -87,6 +91,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.set_gain
      */
     fun setGain(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, amount)
     }
 
@@ -97,6 +102,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.get_gain
      */
     fun getGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
     }
 
@@ -108,6 +114,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.set_db
      */
     fun setDb(amount: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDbBind, handle, amount)
     }
 
@@ -119,6 +126,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectFilter.get_db
      */
     fun getDb(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDbBind, handle)
     }
 

@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
     fun updateCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(updateCacheBind, handle)
     }
 
     fun clearHighlightingCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearHighlightingCacheBind, handle)
     }
 
     fun getTextEdit(): TextEdit? {
+        checkOpen()
         return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextEditBind, handle))
     }
 

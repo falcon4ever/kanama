@@ -19,6 +19,7 @@ open class ImageTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
      * Generated from Godot docs: ImageTextureLayered.create_from_images
      */
     fun createFromImages(images: List<Image>): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectListArgRetLong(createFromImagesBind, handle, images)
     }
 
@@ -31,6 +32,7 @@ open class ImageTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
      * Generated from Godot docs: ImageTextureLayered.update_layer
      */
     fun updateLayer(image: Image?, layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, layer)
     }
 

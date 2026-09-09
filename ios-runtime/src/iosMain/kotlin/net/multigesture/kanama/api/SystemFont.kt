@@ -98,126 +98,157 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
         set(value) = setOversampling(value)
 
     fun setAntialiasing(antialiasing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
     }
 
     fun getAntialiasing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
     }
 
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
     }
 
     fun getDisableEmbeddedBitmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
     }
 
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
     }
 
     fun getGenerateMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
     }
 
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
     }
 
     fun isAllowSystemFallback(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
     }
 
     fun setForceAutohinter(forceAutohinter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
     }
 
     fun isForceAutohinter(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
     }
 
     fun setModulateColorGlyphs(modulate: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
     }
 
     fun isModulateColorGlyphs(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
     }
 
     fun setHinting(hinting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
     }
 
     fun getHinting(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
     }
 
     fun setSubpixelPositioning(subpixelPositioning: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
     }
 
     fun getSubpixelPositioning(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
     }
 
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
     }
 
     fun getKeepRoundingRemainders(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
     }
 
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
     }
 
     fun isMultichannelSignedDistanceField(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
     }
 
     fun setMsdfPixelRange(msdfPixelRange: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
     }
 
     fun getMsdfPixelRange(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
     }
 
     fun setMsdfSize(msdfSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
     }
 
     fun getMsdfSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
     }
 
     fun setOversampling(oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
     }
 
     fun getOversampling(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
     }
 
     fun getFontNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontNamesBind, handle)
     }
 
     fun getFontItalic(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFontItalicBind, handle)
     }
 
     fun setFontItalic(italic: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFontItalicBind, handle, italic)
     }
 
     fun setFontWeight(weight: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
     }
 
     fun setFontStretch(stretch: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
     }
 

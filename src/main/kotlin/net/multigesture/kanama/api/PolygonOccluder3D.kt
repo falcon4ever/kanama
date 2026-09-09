@@ -25,6 +25,7 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: PolygonOccluder3D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
@@ -36,6 +37,7 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: PolygonOccluder3D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 

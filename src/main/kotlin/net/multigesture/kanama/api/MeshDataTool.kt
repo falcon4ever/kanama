@@ -19,6 +19,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -29,6 +30,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.create_from_surface
      */
     fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
@@ -38,6 +40,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.commit_to_surface
      */
     fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
     }
 
@@ -49,6 +52,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -58,6 +62,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_count
      */
     fun getVertexCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVertexCountBind, handle)
     }
 
@@ -67,6 +72,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_edge_count
      */
     fun getEdgeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEdgeCountBind, handle)
     }
 
@@ -76,6 +82,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_face_count
      */
     fun getFaceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFaceCountBind, handle)
     }
 
@@ -85,6 +92,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex
      */
     fun setVertex(idx: Int, vertex: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, handle, idx, vertex)
     }
 
@@ -94,6 +102,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex
      */
     fun getVertex(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexBind, handle, idx)
     }
 
@@ -103,6 +112,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_normal
      */
     fun setVertexNormal(idx: Int, normal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexNormalBind, handle, idx, normal)
     }
 
@@ -112,6 +122,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_normal
      */
     fun getVertexNormal(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, handle, idx)
     }
 
@@ -123,6 +134,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_tangent
      */
     fun setVertexTangent(idx: Int, tangent: Plane) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndPlaneArg(setVertexTangentBind, handle, idx, tangent)
     }
 
@@ -132,6 +144,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_tangent
      */
     fun getVertexTangent(idx: Int): Plane {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPlane(getVertexTangentBind, handle, idx)
     }
 
@@ -141,6 +154,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_uv
      */
     fun setVertexUv(idx: Int, uv: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUvBind, handle, idx, uv)
     }
 
@@ -150,6 +164,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_uv
      */
     fun getVertexUv(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUvBind, handle, idx)
     }
 
@@ -159,6 +174,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_uv2
      */
     fun setVertexUv2(idx: Int, uv2: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUv2Bind, handle, idx, uv2)
     }
 
@@ -168,6 +184,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_uv2
      */
     fun getVertexUv2(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUv2Bind, handle, idx)
     }
 
@@ -177,6 +194,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_color
      */
     fun setVertexColor(idx: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setVertexColorBind, handle, idx, color)
     }
 
@@ -186,6 +204,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_color
      */
     fun getVertexColor(idx: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, handle, idx)
     }
 
@@ -195,6 +214,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_bones
      */
     fun setVertexBones(idx: Int, bones: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(setVertexBonesBind, handle, idx, bones)
     }
 
@@ -204,6 +224,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_bones
      */
     fun getVertexBones(idx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, handle, idx)
     }
 
@@ -213,6 +234,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_weights
      */
     fun setVertexWeights(idx: Int, weights: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setVertexWeightsBind, handle, idx, weights)
     }
 
@@ -222,6 +244,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_weights
      */
     fun getVertexWeights(idx: Int): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getVertexWeightsBind, handle, idx)
     }
 
@@ -231,6 +254,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_vertex_meta
      */
     fun setVertexMeta(idx: Int, meta: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVariantArg(setVertexMetaBind, handle, idx, meta)
     }
 
@@ -240,6 +264,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_meta
      */
     fun getVertexMeta(idx: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getVertexMetaBind, handle, idx)
     }
 
@@ -249,6 +274,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_edges
      */
     fun getVertexEdges(idx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexEdgesBind, handle, idx)
     }
 
@@ -258,6 +284,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_vertex_faces
      */
     fun getVertexFaces(idx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexFacesBind, handle, idx)
     }
 
@@ -268,6 +295,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_edge_vertex
      */
     fun getEdgeVertex(idx: Int, vertex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, handle, idx, vertex)
     }
 
@@ -277,6 +305,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_edge_faces
      */
     fun getEdgeFaces(idx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getEdgeFacesBind, handle, idx)
     }
 
@@ -286,6 +315,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_edge_meta
      */
     fun setEdgeMeta(idx: Int, meta: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVariantArg(setEdgeMetaBind, handle, idx, meta)
     }
 
@@ -295,6 +325,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_edge_meta
      */
     fun getEdgeMeta(idx: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getEdgeMetaBind, handle, idx)
     }
 
@@ -305,6 +336,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_face_vertex
      */
     fun getFaceVertex(idx: Int, vertex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceVertexBind, handle, idx, vertex)
     }
 
@@ -315,6 +347,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_face_edge
      */
     fun getFaceEdge(idx: Int, edge: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceEdgeBind, handle, idx, edge)
     }
 
@@ -324,6 +357,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_face_meta
      */
     fun setFaceMeta(idx: Int, meta: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVariantArg(setFaceMetaBind, handle, idx, meta)
     }
 
@@ -333,6 +367,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_face_meta
      */
     fun getFaceMeta(idx: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getFaceMetaBind, handle, idx)
     }
 
@@ -342,6 +377,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_face_normal
      */
     fun getFaceNormal(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getFaceNormalBind, handle, idx)
     }
 
@@ -351,6 +387,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.set_material
      */
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -360,6 +397,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: MeshDataTool.get_material
      */
     fun getMaterial(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 

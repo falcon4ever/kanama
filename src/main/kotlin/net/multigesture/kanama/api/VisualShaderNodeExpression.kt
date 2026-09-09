@@ -15,10 +15,12 @@ open class VisualShaderNodeExpression(handle: MemorySegment) : VisualShaderNodeG
         set(value) = setExpression(value)
 
     fun setExpression(expression: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setExpressionBind, handle, expression)
     }
 
     fun getExpression(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getExpressionBind, handle)
     }
 

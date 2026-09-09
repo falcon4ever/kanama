@@ -22,18 +22,22 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setFftSize(value)
 
     fun setBufferLength(seconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
     }
 
     fun getBufferLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 
     fun setFftSize(size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
     fun getFftSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }
 

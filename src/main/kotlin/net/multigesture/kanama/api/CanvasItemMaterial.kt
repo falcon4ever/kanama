@@ -52,6 +52,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.set_blend_mode
      */
     fun setBlendMode(blendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
     }
 
@@ -61,6 +62,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.get_blend_mode
      */
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
@@ -70,6 +72,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.set_light_mode
      */
     fun setLightMode(lightMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLightModeBind, handle, lightMode)
     }
 
@@ -79,6 +82,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.get_light_mode
      */
     fun getLightMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, handle)
     }
 
@@ -92,6 +96,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.set_particles_animation
      */
     fun setParticlesAnimation(particlesAnim: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setParticlesAnimationBind, handle, particlesAnim)
     }
 
@@ -105,6 +110,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.get_particles_animation
      */
     fun getParticlesAnimation(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimationBind, handle)
     }
 
@@ -116,6 +122,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.set_particles_anim_h_frames
      */
     fun setParticlesAnimHFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, handle, frames)
     }
 
@@ -127,6 +134,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.get_particles_anim_h_frames
      */
     fun getParticlesAnimHFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, handle)
     }
 
@@ -138,6 +146,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.set_particles_anim_v_frames
      */
     fun setParticlesAnimVFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, handle, frames)
     }
 
@@ -149,6 +158,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.get_particles_anim_v_frames
      */
     fun getParticlesAnimVFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, handle)
     }
 
@@ -159,6 +169,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.set_particles_anim_loop
      */
     fun setParticlesAnimLoop(loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, handle, loop)
     }
 
@@ -169,6 +180,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: CanvasItemMaterial.get_particles_anim_loop
      */
     fun getParticlesAnimLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, handle)
     }
 

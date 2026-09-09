@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     fun supportsMesh2d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(supportsMesh2dBind, handle)
     }
 
     fun supportsPolygons(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(supportsPolygonsBind, handle)
     }
 
     fun supportsLabels(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(supportsLabelsBind, handle)
     }
 

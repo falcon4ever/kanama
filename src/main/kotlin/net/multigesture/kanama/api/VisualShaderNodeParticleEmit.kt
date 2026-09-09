@@ -15,10 +15,12 @@ class VisualShaderNodeParticleEmit(handle: MemorySegment) : VisualShaderNode(han
         set(value) = setFlags(value)
 
     fun setFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, flags)
     }
 
     fun getFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 

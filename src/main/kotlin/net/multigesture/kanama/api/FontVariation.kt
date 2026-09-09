@@ -90,6 +90,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_base_font
      */
     fun setBaseFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -99,6 +100,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_base_font
      */
     fun getBaseFont(): Font? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseFontBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -120,6 +122,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_variation_opentype
      */
     fun setVariationOpentype(coords: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setVariationOpentypeBind, handle, coords)
     }
 
@@ -136,6 +139,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_variation_opentype
      */
     fun getVariationOpentype(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getVariationOpentypeBind, handle)
     }
 
@@ -147,6 +151,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_variation_embolden
      */
     fun setVariationEmbolden(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVariationEmboldenBind, handle, strength)
     }
 
@@ -158,6 +163,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_variation_embolden
      */
     fun getVariationEmbolden(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVariationEmboldenBind, handle)
     }
 
@@ -167,6 +173,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_variation_face_index
      */
     fun setVariationFaceIndex(faceIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVariationFaceIndexBind, handle, faceIndex)
     }
 
@@ -176,6 +183,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_variation_face_index
      */
     fun getVariationFaceIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVariationFaceIndexBind, handle)
     }
 
@@ -187,6 +195,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_variation_transform
      */
     fun setVariationTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setVariationTransformBind, handle, transform)
     }
 
@@ -198,6 +207,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_variation_transform
      */
     fun getVariationTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getVariationTransformBind, handle)
     }
 
@@ -208,6 +218,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_opentype_features
      */
     fun setOpentypeFeatures(features: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeaturesBind, handle, features)
     }
 
@@ -217,6 +228,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_spacing
      */
     fun setSpacing(spacing: Long, value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, handle, spacing, value)
     }
 
@@ -226,6 +238,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_baseline_offset
      */
     fun setBaselineOffset(baselineOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBaselineOffsetBind, handle, baselineOffset)
     }
 
@@ -235,6 +248,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_baseline_offset
      */
     fun getBaselineOffset(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBaselineOffsetBind, handle)
     }
 
@@ -244,6 +258,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_palette_index
      */
     fun getPaletteIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPaletteIndexBind, handle)
     }
 
@@ -253,6 +268,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_palette_index
      */
     fun setPaletteIndex(paletteIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPaletteIndexBind, handle, paletteIndex)
     }
 
@@ -263,6 +279,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.get_palette_custom_colors
      */
     fun getPaletteCustomColors(): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPaletteCustomColorsBind, handle)
     }
 
@@ -273,6 +290,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontVariation.set_palette_custom_colors
      */
     fun setPaletteCustomColors(colors: List<Color>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedColorListArg(setPaletteCustomColorsBind, handle, colors)
     }
 

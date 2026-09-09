@@ -16,6 +16,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.set_disable_class
      */
     fun setDisableClass(className: String, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassBind, handle, className, disable)
     }
 
@@ -26,6 +27,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.is_class_disabled
      */
     fun isClassDisabled(className: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassDisabledBind, handle, className)
     }
 
@@ -37,6 +39,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.set_disable_class_editor
      */
     fun setDisableClassEditor(className: String, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassEditorBind, handle, className, disable)
     }
 
@@ -48,6 +51,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.is_class_editor_disabled
      */
     fun isClassEditorDisabled(className: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEditorDisabledBind, handle, className)
     }
 
@@ -59,6 +63,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.set_disable_class_property
      */
     fun setDisableClassProperty(className: String, property: String, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(setDisableClassPropertyBind, handle, className, property, disable)
     }
 
@@ -70,6 +75,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.is_class_property_disabled
      */
     fun isClassPropertyDisabled(className: String, property: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isClassPropertyDisabledBind, handle, className, property)
     }
 
@@ -80,6 +86,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.set_disable_feature
      */
     fun setDisableFeature(feature: Long, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, handle, feature, disable)
     }
 
@@ -90,6 +97,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.is_feature_disabled
      */
     fun isFeatureDisabled(feature: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, handle, feature)
     }
 
@@ -99,6 +107,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.get_feature_name
      */
     fun getFeatureName(feature: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, handle, feature)
     }
 
@@ -112,6 +121,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.save_to_file
      */
     fun saveToFile(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, handle, path)
     }
 
@@ -125,6 +135,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorFeatureProfile.load_from_file
      */
     fun loadFromFile(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, handle, path)
     }
 

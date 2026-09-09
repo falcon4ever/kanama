@@ -14,22 +14,27 @@ class JSON(handle: MemorySegment) : Resource(handle) {
         get() = getData()
 
     fun parse(jsonText: String, keepText: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, handle, jsonText, keepText)
     }
 
     fun getData(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getDataBind, handle)
     }
 
     fun getParsedText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, handle)
     }
 
     fun getErrorLine(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getErrorLineBind, handle)
     }
 
     fun getErrorMessage(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getErrorMessageBind, handle)
     }
 

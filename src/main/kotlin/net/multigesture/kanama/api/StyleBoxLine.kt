@@ -47,6 +47,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.set_color
      */
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
@@ -56,6 +57,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.get_color
      */
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
@@ -65,6 +67,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.set_thickness
      */
     fun setThickness(thickness: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setThicknessBind, handle, thickness)
     }
 
@@ -74,6 +77,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.get_thickness
      */
     fun getThickness(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getThicknessBind, handle)
     }
 
@@ -84,6 +88,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.set_grow_begin
      */
     fun setGrowBegin(offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGrowBeginBind, handle, offset)
     }
 
@@ -94,6 +99,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.get_grow_begin
      */
     fun getGrowBegin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBeginBind, handle)
     }
 
@@ -104,6 +110,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.set_grow_end
      */
     fun setGrowEnd(offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGrowEndBind, handle, offset)
     }
 
@@ -114,6 +121,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.get_grow_end
      */
     fun getGrowEnd(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowEndBind, handle)
     }
 
@@ -123,6 +131,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.set_vertical
      */
     fun setVertical(vertical: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
     }
 
@@ -132,6 +141,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxLine.is_vertical
      */
     fun isVertical(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
     }
 

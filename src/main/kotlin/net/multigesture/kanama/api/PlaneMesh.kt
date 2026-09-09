@@ -48,6 +48,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.set_size
      */
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
@@ -57,6 +58,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.get_size
      */
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
@@ -66,6 +68,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.set_subdivide_width
      */
     fun setSubdivideWidth(subdivide: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivide)
     }
 
@@ -75,6 +78,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.get_subdivide_width
      */
     fun getSubdivideWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
@@ -84,6 +88,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.set_subdivide_depth
      */
     fun setSubdivideDepth(subdivide: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, subdivide)
     }
 
@@ -93,6 +98,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.get_subdivide_depth
      */
     fun getSubdivideDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }
 
@@ -102,6 +108,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.set_center_offset
      */
     fun setCenterOffset(offset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setCenterOffsetBind, handle, offset)
     }
 
@@ -111,6 +118,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.get_center_offset
      */
     fun getCenterOffset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOffsetBind, handle)
     }
 
@@ -120,6 +128,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.set_orientation
      */
     fun setOrientation(orientation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
@@ -129,6 +138,7 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PlaneMesh.get_orientation
      */
     fun getOrientation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 

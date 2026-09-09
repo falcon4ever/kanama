@@ -18,6 +18,7 @@ class OptimizedTranslation(handle: MemorySegment) : Translation(handle) {
      * Generated from Godot docs: OptimizedTranslation.generate
      */
     fun generate(from: Translation?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, handle, from?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 

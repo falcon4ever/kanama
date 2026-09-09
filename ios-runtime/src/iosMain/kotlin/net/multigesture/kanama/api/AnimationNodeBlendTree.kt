@@ -17,10 +17,12 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
         set(value) = setGraphOffset(value)
 
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
     }
 
     fun getNode(name: String): AnimationNode? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, handle, name)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -30,42 +32,52 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
     }
 
     fun removeNode(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, handle, name)
     }
 
     fun renameNode(name: String, newName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, handle, name, newName)
     }
 
     fun hasNode(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, handle, name)
     }
 
     fun connectNode(inputNode: String, inputIndex: Int, outputNode: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameIntAndStringNameArgs(connectNodeBind, handle, inputNode, inputIndex, outputNode)
     }
 
     fun disconnectNode(inputNode: String, inputIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndIntArg(disconnectNodeBind, handle, inputNode, inputIndex)
     }
 
     fun getNodeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, handle)
     }
 
     fun setNodePosition(name: String, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, handle, name, position)
     }
 
     fun getNodePosition(name: String): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, handle, name)
     }
 
     fun setGraphOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
     }
 
     fun getGraphOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
     }
 

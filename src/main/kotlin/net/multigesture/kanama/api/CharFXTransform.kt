@@ -101,6 +101,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_transform
      */
     fun getTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
@@ -112,6 +113,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_transform
      */
     fun setTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
@@ -122,6 +124,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_range
      */
     fun getRange(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, handle)
     }
 
@@ -132,6 +135,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_range
      */
     fun setRange(range: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setRangeBind, handle, range)
     }
 
@@ -143,6 +147,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_elapsed_time
      */
     fun getElapsedTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getElapsedTimeBind, handle)
     }
 
@@ -154,6 +159,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_elapsed_time
      */
     fun setElapsedTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setElapsedTimeBind, handle, time)
     }
 
@@ -165,6 +171,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.is_visible
      */
     fun isVisible(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
     }
 
@@ -176,6 +183,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_visibility
      */
     fun setVisibility(visibility: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVisibilityBind, handle, visibility)
     }
 
@@ -186,6 +194,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.is_outline
      */
     fun isOutline(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isOutlineBind, handle)
     }
 
@@ -196,6 +205,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_outline
      */
     fun setOutline(outline: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setOutlineBind, handle, outline)
     }
 
@@ -205,6 +215,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_offset
      */
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
@@ -214,6 +225,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_offset
      */
     fun setOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
@@ -223,6 +235,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_color
      */
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
@@ -232,6 +245,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_color
      */
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
@@ -246,6 +260,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_environment
      */
     fun getEnvironment(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getEnvironmentBind, handle)
     }
 
@@ -260,6 +275,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_environment
      */
     fun setEnvironment(environment: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setEnvironmentBind, handle, environment)
     }
 
@@ -270,6 +286,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_glyph_index
      */
     fun getGlyphIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getGlyphIndexBind, handle)
     }
 
@@ -280,6 +297,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_glyph_index
      */
     fun setGlyphIndex(glyphIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setGlyphIndexBind, handle, glyphIndex)
     }
 
@@ -290,6 +308,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_relative_index
      */
     fun getRelativeIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRelativeIndexBind, handle)
     }
 
@@ -300,6 +319,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_relative_index
      */
     fun setRelativeIndex(relativeIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRelativeIndexBind, handle, relativeIndex)
     }
 
@@ -310,6 +330,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_glyph_count
      */
     fun getGlyphCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGlyphCountBind, handle)
     }
 
@@ -320,6 +341,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_glyph_count
      */
     fun setGlyphCount(glyphCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setGlyphCountBind, handle, glyphCount)
     }
 
@@ -330,6 +352,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_glyph_flags
      */
     fun getGlyphFlags(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGlyphFlagsBind, handle)
     }
 
@@ -340,6 +363,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_glyph_flags
      */
     fun setGlyphFlags(glyphFlags: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setGlyphFlagsBind, handle, glyphFlags)
     }
 
@@ -351,6 +375,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.get_font
      */
     fun getFont(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getFontBind, handle)
     }
 
@@ -362,6 +387,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CharFXTransform.set_font
      */
     fun setFont(font: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setFontBind, handle, font)
     }
 

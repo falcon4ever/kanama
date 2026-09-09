@@ -23,6 +23,7 @@ class BoxOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: BoxOccluder3D.set_size
      */
     fun setSize(size: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
@@ -32,6 +33,7 @@ class BoxOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: BoxOccluder3D.get_size
      */
     fun getSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 

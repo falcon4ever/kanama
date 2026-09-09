@@ -16,6 +16,7 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HashingContext.start
      */
     fun start(type: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(startBind, handle, type)
     }
 
@@ -25,6 +26,7 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HashingContext.update
      */
     fun update(chunk: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, chunk)
     }
 
@@ -34,6 +36,7 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HashingContext.finish
      */
     fun finish(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
     }
 

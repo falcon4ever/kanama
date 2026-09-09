@@ -27,26 +27,32 @@ class VisualShaderNodeDerivativeFunc(handle: MemorySegment) : VisualShaderNode(h
         set(value) = setPrecision(value)
 
     fun setOpType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, type)
     }
 
     fun getOpType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
     }
 
     fun setFunction(func: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
     }
 
     fun getFunction(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
     }
 
     fun setPrecision(precision: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPrecisionBind, handle, precision)
     }
 
     fun getPrecision(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPrecisionBind, handle)
     }
 

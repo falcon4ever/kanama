@@ -23,38 +23,47 @@ open class OpenXRSpatialEntityTracker(handle: MemorySegment) : XRPositionalTrack
         set(value) = setSpatialTrackingState(value)
 
     fun setSpatialContext(spatialContext: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setSpatialContextBind, handle, spatialContext)
     }
 
     fun getSpatialContext(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSpatialContextBind, handle)
     }
 
     fun setEntity(entity: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setEntityBind, handle, entity)
     }
 
     fun getEntity(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getEntityBind, handle)
     }
 
     fun setSpatialTrackingState(spatialTrackingState: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSpatialTrackingStateBind, handle, spatialTrackingState)
     }
 
     fun getSpatialTrackingState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSpatialTrackingStateBind, handle)
     }
 
     fun getNext(): OpenXRStructureBase? {
+        checkOpen()
         return OpenXRStructureBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextBind, handle))
     }
 
     fun addNext(next: OpenXRStructureBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addNextBind, handle, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeNext(next: OpenXRStructureBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeNextBind, handle, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

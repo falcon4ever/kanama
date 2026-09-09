@@ -58,6 +58,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
@@ -67,6 +68,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_enabled
      */
     fun getEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
@@ -77,6 +79,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_effect_callback_type
      */
     fun setEffectCallbackType(effectCallbackType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, handle, effectCallbackType)
     }
 
@@ -87,6 +90,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_effect_callback_type
      */
     fun getEffectCallbackType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, handle)
     }
 
@@ -97,6 +101,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_access_resolved_color
      */
     fun setAccessResolvedColor(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAccessResolvedColorBind, handle, enable)
     }
 
@@ -107,6 +112,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_access_resolved_color
      */
     fun getAccessResolvedColor(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedColorBind, handle)
     }
 
@@ -117,6 +123,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_access_resolved_depth
      */
     fun setAccessResolvedDepth(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAccessResolvedDepthBind, handle, enable)
     }
 
@@ -127,6 +134,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_access_resolved_depth
      */
     fun getAccessResolvedDepth(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedDepthBind, handle)
     }
 
@@ -137,6 +145,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_needs_motion_vectors
      */
     fun setNeedsMotionVectors(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeedsMotionVectorsBind, handle, enable)
     }
 
@@ -147,6 +156,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_needs_motion_vectors
      */
     fun getNeedsMotionVectors(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsMotionVectorsBind, handle)
     }
 
@@ -158,6 +168,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_needs_normal_roughness
      */
     fun setNeedsNormalRoughness(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeedsNormalRoughnessBind, handle, enable)
     }
 
@@ -169,6 +180,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_needs_normal_roughness
      */
     fun getNeedsNormalRoughness(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsNormalRoughnessBind, handle)
     }
 
@@ -179,6 +191,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.set_needs_separate_specular
      */
     fun setNeedsSeparateSpecular(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeedsSeparateSpecularBind, handle, enable)
     }
 
@@ -189,6 +202,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: CompositorEffect.get_needs_separate_specular
      */
     fun getNeedsSeparateSpecular(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, handle)
     }
 

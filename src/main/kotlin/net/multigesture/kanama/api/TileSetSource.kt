@@ -16,6 +16,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSetSource.get_tiles_count
      */
     fun getTilesCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTilesCountBind, handle)
     }
 
@@ -25,6 +26,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSetSource.get_tile_id
      */
     fun getTileId(index: Int): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2i(getTileIdBind, handle, index)
     }
 
@@ -34,6 +36,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSetSource.has_tile
      */
     fun hasTile(atlasCoords: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(hasTileBind, handle, atlasCoords)
     }
 
@@ -45,6 +48,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSetSource.get_alternative_tiles_count
      */
     fun getAlternativeTilesCount(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getAlternativeTilesCountBind, handle, atlasCoords)
     }
 
@@ -54,6 +58,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSetSource.get_alternative_tile_id
      */
     fun getAlternativeTileId(atlasCoords: Vector2i, index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(getAlternativeTileIdBind, handle, atlasCoords, index)
     }
 
@@ -64,6 +69,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: TileSetSource.has_alternative_tile
      */
     fun hasAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(hasAlternativeTileBind, handle, atlasCoords, alternativeTile)
     }
 

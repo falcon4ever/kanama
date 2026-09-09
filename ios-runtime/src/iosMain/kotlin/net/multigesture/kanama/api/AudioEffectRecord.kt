@@ -16,22 +16,27 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setFormat(value)
 
     fun setRecordingActive(record: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecordingActiveBind, handle, record)
     }
 
     fun isRecordingActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecordingActiveBind, handle)
     }
 
     fun setFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun getRecording(): AudioStreamWAV? {
+        checkOpen()
         return AudioStreamWAV.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRecordingBind, handle))
     }
 

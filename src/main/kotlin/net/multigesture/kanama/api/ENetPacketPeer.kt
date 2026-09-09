@@ -8,66 +8,82 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class ENetPacketPeer(handle: MemorySegment) : PacketPeer(handle) {
     fun peerDisconnect(data: Int = 0) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(peerDisconnectBind, handle, data)
     }
 
     fun peerDisconnectLater(data: Int = 0) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(peerDisconnectLaterBind, handle, data)
     }
 
     fun peerDisconnectNow(data: Int = 0) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(peerDisconnectNowBind, handle, data)
     }
 
     fun ping() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pingBind, handle)
     }
 
     fun pingInterval(pingInterval: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(pingIntervalBind, handle, pingInterval)
     }
 
     fun reset() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 
     fun send(channel: Int, packet: ByteArray, flags: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, handle, channel, packet, flags)
     }
 
     fun throttleConfigure(interval: Int, acceleration: Int, deceleration: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(throttleConfigureBind, handle, interval, acceleration, deceleration)
     }
 
     fun setTimeout(timeout: Int, timeoutMin: Int, timeoutMax: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(setTimeoutBind, handle, timeout, timeoutMin, timeoutMax)
     }
 
     fun getPacketFlags(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketFlagsBind, handle)
     }
 
     fun getRemoteAddress(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getRemoteAddressBind, handle)
     }
 
     fun getRemotePort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRemotePortBind, handle)
     }
 
     fun getStatistic(statistic: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getStatisticBind, handle, statistic)
     }
 
     fun getState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, handle)
     }
 
     fun getChannels(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getChannelsBind, handle)
     }
 
     fun isActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 

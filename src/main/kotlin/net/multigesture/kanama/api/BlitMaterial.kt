@@ -22,6 +22,7 @@ class BlitMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BlitMaterial.set_blend_mode
      */
     fun setBlendMode(blendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
     }
 
@@ -31,6 +32,7 @@ class BlitMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: BlitMaterial.get_blend_mode
      */
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 

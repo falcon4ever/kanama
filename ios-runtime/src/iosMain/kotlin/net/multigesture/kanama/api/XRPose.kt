@@ -48,54 +48,67 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setTrackingConfidence(value)
 
     fun setHasTrackingData(hasTrackingData: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasTrackingData)
     }
 
     fun getHasTrackingData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
     fun setName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setNameBind, handle, name)
     }
 
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
     }
 
     fun setTransform(transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
     }
 
     fun getTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
     fun getAdjustedTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getAdjustedTransformBind, handle)
     }
 
     fun setLinearVelocity(velocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, velocity)
     }
 
     fun getLinearVelocity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
     }
 
     fun setAngularVelocity(velocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, velocity)
     }
 
     fun getAngularVelocity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
     }
 
     fun setTrackingConfidence(trackingConfidence: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, handle, trackingConfidence)
     }
 
     fun getTrackingConfidence(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, handle)
     }
 

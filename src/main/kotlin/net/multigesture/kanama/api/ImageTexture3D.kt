@@ -16,6 +16,7 @@ class ImageTexture3D(handle: MemorySegment) : Texture3D(handle) {
      * Generated from Godot docs: ImageTexture3D.create
      */
     fun create(format: Long, width: Int, height: Int, depth: Int, useMipmaps: Boolean, data: List<Image>): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(createBind, handle, format, width, height, depth, useMipmaps, data)
     }
 
@@ -27,6 +28,7 @@ class ImageTexture3D(handle: MemorySegment) : Texture3D(handle) {
      * Generated from Godot docs: ImageTexture3D.update
      */
     fun update(data: List<Image>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(updateBind, handle, data)
     }
 

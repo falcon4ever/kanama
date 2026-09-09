@@ -9,58 +9,72 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle) {
     fun travel(toNode: String, resetOnTeleport: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(travelBind, handle, toNode, resetOnTeleport)
     }
 
     fun start(node: String, reset: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(startBind, handle, node, reset)
     }
 
     fun next() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(nextBind, handle)
     }
 
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
     fun isPlaying(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
 
     fun getCurrentNode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentNodeBind, handle)
     }
 
     fun getCurrentPlayPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentPlayPositionBind, handle)
     }
 
     fun getCurrentLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentLengthBind, handle)
     }
 
     fun getFadingFromNode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getFadingFromNodeBind, handle)
     }
 
     fun getFadingFromPlayPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromPlayPositionBind, handle)
     }
 
     fun getFadingFromLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromLengthBind, handle)
     }
 
     fun getFadingPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingPositionBind, handle)
     }
 
     fun getFadingLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadingLengthBind, handle)
     }
 
     fun getTravelPath(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, handle)
     }
 

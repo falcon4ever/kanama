@@ -23,6 +23,7 @@ class JointLimitationCone3D(handle: MemorySegment) : JointLimitation3D(handle) {
      * Generated from Godot docs: JointLimitationCone3D.set_angle
      */
     fun setAngle(angle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAngleBind, handle, angle)
     }
 
@@ -33,6 +34,7 @@ class JointLimitationCone3D(handle: MemorySegment) : JointLimitation3D(handle) {
      * Generated from Godot docs: JointLimitationCone3D.get_angle
      */
     fun getAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngleBind, handle)
     }
 

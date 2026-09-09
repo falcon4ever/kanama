@@ -10,18 +10,22 @@ import net.multigesture.kanama.types.RID
  */
 class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
     fun getColorTexture(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getColorTextureBind, handle)
     }
 
     fun getDepthTexture(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getDepthTextureBind, handle)
     }
 
     fun getVelocityTexture(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getVelocityTextureBind, handle)
     }
 
     fun getRenderTargetTexture(renderTarget: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetRID(getRenderTargetTextureBind, handle, renderTarget)
     }
 

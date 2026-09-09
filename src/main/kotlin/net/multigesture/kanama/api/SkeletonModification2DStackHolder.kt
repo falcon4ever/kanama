@@ -16,6 +16,7 @@ class SkeletonModification2DStackHolder(handle: MemorySegment) : SkeletonModific
      * Generated from Godot docs: SkeletonModification2DStackHolder.set_held_modification_stack
      */
     fun setHeldModificationStack(heldModificationStack: SkeletonModificationStack2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, handle, listOf(heldModificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -25,6 +26,7 @@ class SkeletonModification2DStackHolder(handle: MemorySegment) : SkeletonModific
      * Generated from Godot docs: SkeletonModification2DStackHolder.get_held_modification_stack
      */
     fun getHeldModificationStack(): SkeletonModificationStack2D? {
+        checkOpen()
         return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, handle))
     }
 

@@ -22,18 +22,22 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
         set(value) = setAxisValue(value)
 
     fun setAxis(axis: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAxisBind, handle, axis)
     }
 
     fun getAxis(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, handle)
     }
 
     fun setAxisValue(axisValue: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAxisValueBind, handle, axisValue)
     }
 
     fun getAxisValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAxisValueBind, handle)
     }
 

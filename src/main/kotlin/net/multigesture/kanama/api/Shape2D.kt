@@ -29,6 +29,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.set_custom_solver_bias
      */
     fun setCustomSolverBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, handle, bias)
     }
 
@@ -40,6 +41,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.get_custom_solver_bias
      */
     fun getCustomSolverBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, handle)
     }
 
@@ -51,6 +53,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.collide
      */
     fun collide(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
@@ -64,6 +67,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.collide_with_motion
      */
     fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
@@ -80,6 +84,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.collide_and_get_contacts
      */
     fun collideAndGetContacts(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(collideAndGetContactsBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
@@ -98,6 +103,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.collide_with_motion_and_get_contacts
      */
     fun collideWithMotionAndGetContacts(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(collideWithMotionAndGetContactsBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
@@ -108,6 +114,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.draw
      */
     fun draw(canvasItem: RID, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndColorArg(drawBind, handle, canvasItem, color)
     }
 
@@ -117,6 +124,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape2D.get_rect
      */
     fun getRect(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
     }
 

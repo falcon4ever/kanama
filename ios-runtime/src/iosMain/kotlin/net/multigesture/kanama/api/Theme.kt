@@ -29,234 +29,292 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         set(value) = setDefaultFontSize(value)
 
     fun setIcon(name: String, themeType: String, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, handle, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getIcon(name: String, themeType: String): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, handle, name, themeType))
     }
 
     fun hasIcon(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasIconBind, handle, name, themeType)
     }
 
     fun renameIcon(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameIconBind, handle, oldName, name, themeType)
     }
 
     fun clearIcon(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearIconBind, handle, name, themeType)
     }
 
     fun getIconTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getIconTypeListBind, handle)
     }
 
     fun setStylebox(name: String, themeType: String, texture: StyleBox?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, handle, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getStylebox(name: String, themeType: String): StyleBox? {
+        checkOpen()
         return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, handle, name, themeType))
     }
 
     fun hasStylebox(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasStyleboxBind, handle, name, themeType)
     }
 
     fun renameStylebox(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameStyleboxBind, handle, oldName, name, themeType)
     }
 
     fun clearStylebox(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearStyleboxBind, handle, name, themeType)
     }
 
     fun getStyleboxTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStyleboxTypeListBind, handle)
     }
 
     fun setFont(name: String, themeType: String, font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, handle, name, themeType, font?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getFont(name: String, themeType: String): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, handle, name, themeType))
     }
 
     fun hasFont(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontBind, handle, name, themeType)
     }
 
     fun renameFont(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontBind, handle, oldName, name, themeType)
     }
 
     fun clearFont(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontBind, handle, name, themeType)
     }
 
     fun getFontTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontTypeListBind, handle)
     }
 
     fun setFontSize(name: String, themeType: String, fontSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setFontSizeBind, handle, name, themeType, fontSize)
     }
 
     fun getFontSize(name: String, themeType: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getFontSizeBind, handle, name, themeType)
     }
 
     fun hasFontSize(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontSizeBind, handle, name, themeType)
     }
 
     fun renameFontSize(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontSizeBind, handle, oldName, name, themeType)
     }
 
     fun clearFontSize(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontSizeBind, handle, name, themeType)
     }
 
     fun getFontSizeTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontSizeTypeListBind, handle)
     }
 
     fun setColor(name: String, themeType: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndColorArg(setColorBind, handle, name, themeType, color)
     }
 
     fun getColor(name: String, themeType: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getColorBind, handle, name, themeType)
     }
 
     fun hasColor(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasColorBind, handle, name, themeType)
     }
 
     fun renameColor(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameColorBind, handle, oldName, name, themeType)
     }
 
     fun clearColor(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearColorBind, handle, name, themeType)
     }
 
     fun getColorTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getColorTypeListBind, handle)
     }
 
     fun setConstant(name: String, themeType: String, constant: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setConstantBind, handle, name, themeType, constant)
     }
 
     fun getConstant(name: String, themeType: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getConstantBind, handle, name, themeType)
     }
 
     fun hasConstant(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasConstantBind, handle, name, themeType)
     }
 
     fun renameConstant(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameConstantBind, handle, oldName, name, themeType)
     }
 
     fun clearConstant(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearConstantBind, handle, name, themeType)
     }
 
     fun getConstantTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getConstantTypeListBind, handle)
     }
 
     fun setDefaultBaseScale(baseScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDefaultBaseScaleBind, handle, baseScale)
     }
 
     fun getDefaultBaseScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBaseScaleBind, handle)
     }
 
     fun hasDefaultBaseScale(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultBaseScaleBind, handle)
     }
 
     fun setDefaultFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getDefaultFont(): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, handle))
     }
 
     fun hasDefaultFont(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontBind, handle)
     }
 
     fun setDefaultFontSize(fontSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDefaultFontSizeBind, handle, fontSize)
     }
 
     fun getDefaultFontSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDefaultFontSizeBind, handle)
     }
 
     fun hasDefaultFontSize(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontSizeBind, handle)
     }
 
     fun hasThemeItem(dataType: Long, name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, handle, dataType, name, themeType)
     }
 
     fun renameThemeItem(dataType: Long, oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, handle, dataType, oldName, name, themeType)
     }
 
     fun clearThemeItem(dataType: Long, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, handle, dataType, name, themeType)
     }
 
     fun setTypeVariation(themeType: String, baseType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(setTypeVariationBind, handle, themeType, baseType)
     }
 
     fun isTypeVariation(themeType: String, baseType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isTypeVariationBind, handle, themeType, baseType)
     }
 
     fun clearTypeVariation(themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(clearTypeVariationBind, handle, themeType)
     }
 
     fun getTypeVariationBase(themeType: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(getTypeVariationBaseBind, handle, themeType)
     }
 
     fun addType(themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(addTypeBind, handle, themeType)
     }
 
     fun removeType(themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeTypeBind, handle, themeType)
     }
 
     fun renameType(oldThemeType: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameTypeBind, handle, oldThemeType, themeType)
     }
 
     fun getTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTypeListBind, handle)
     }
 
     fun mergeWith(other: Theme?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, handle, listOf(other?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

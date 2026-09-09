@@ -15,6 +15,7 @@ class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerPlugin.get_session
      */
     fun getSession(id: Int): EditorDebuggerSession? {
+        checkOpen()
         return EditorDebuggerSession.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, handle, id))
     }
 
@@ -25,6 +26,7 @@ class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorDebuggerPlugin.get_sessions
      */
     fun getSessions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getSessionsBind, handle)
     }
 

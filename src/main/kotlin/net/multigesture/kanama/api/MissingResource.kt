@@ -28,6 +28,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MissingResource.set_original_class
      */
     fun setOriginalClass(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, handle, name)
     }
 
@@ -37,6 +38,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MissingResource.get_original_class
      */
     fun getOriginalClass(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, handle)
     }
 
@@ -47,6 +49,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MissingResource.set_recording_properties
      */
     fun setRecordingProperties(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, handle, enable)
     }
 
@@ -57,6 +60,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MissingResource.is_recording_properties
      */
     fun isRecordingProperties(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, handle)
     }
 

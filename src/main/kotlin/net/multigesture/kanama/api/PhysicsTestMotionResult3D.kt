@@ -17,6 +17,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_travel
      */
     fun getTravel(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
     }
 
@@ -26,6 +27,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_remainder
      */
     fun getRemainder(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
     }
 
@@ -36,6 +38,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_safe_fraction
      */
     fun getCollisionSafeFraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, handle)
     }
 
@@ -46,6 +49,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_unsafe_fraction
      */
     fun getCollisionUnsafeFraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, handle)
     }
 
@@ -55,6 +59,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_count
      */
     fun getCollisionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
     }
 
@@ -65,6 +70,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_point
      */
     fun getCollisionPoint(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, handle, collisionIndex)
     }
 
@@ -75,6 +81,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_normal
      */
     fun getCollisionNormal(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, handle, collisionIndex)
     }
 
@@ -85,6 +92,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_velocity
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
     }
 
@@ -95,6 +103,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_id
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
     }
 
@@ -105,6 +114,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_rid
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
     }
 
@@ -115,6 +125,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
     }
 
@@ -125,6 +136,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collider_shape
      */
     fun getColliderShape(collisionIndex: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, handle, collisionIndex)
     }
 
@@ -135,6 +147,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_local_shape
      */
     fun getCollisionLocalShape(collisionIndex: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionLocalShapeBind, handle, collisionIndex)
     }
 
@@ -145,6 +158,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsTestMotionResult3D.get_collision_depth
      */
     fun getCollisionDepth(collisionIndex: Int = 0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCollisionDepthBind, handle, collisionIndex)
     }
 

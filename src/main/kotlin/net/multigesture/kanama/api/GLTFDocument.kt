@@ -52,82 +52,102 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         set(value) = setVisibilityMode(value)
 
     fun setImageFormat(imageFormat: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setImageFormatBind, handle, imageFormat)
     }
 
     fun getImageFormat(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getImageFormatBind, handle)
     }
 
     fun setLossyQuality(lossyQuality: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLossyQualityBind, handle, lossyQuality)
     }
 
     fun getLossyQuality(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLossyQualityBind, handle)
     }
 
     fun setFallbackImageFormat(fallbackImageFormat: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFallbackImageFormatBind, handle, fallbackImageFormat)
     }
 
     fun getFallbackImageFormat(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFallbackImageFormatBind, handle)
     }
 
     fun setFallbackImageQuality(fallbackImageQuality: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFallbackImageQualityBind, handle, fallbackImageQuality)
     }
 
     fun getFallbackImageQuality(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFallbackImageQualityBind, handle)
     }
 
     fun setRootNodeMode(rootNodeMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRootNodeModeBind, handle, rootNodeMode)
     }
 
     fun getRootNodeMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRootNodeModeBind, handle)
     }
 
     fun setTextureMapMode(textureMapMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureMapModeBind, handle, textureMapMode)
     }
 
     fun getTextureMapMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureMapModeBind, handle)
     }
 
     fun setVisibilityMode(visibilityMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, handle, visibilityMode)
     }
 
     fun getVisibilityMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, handle)
     }
 
     fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, handle, path, state?.requireOpenHandle() ?: MemorySegment.NULL, flags, basePath)
     }
 
     fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, handle, bytes, basePath, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
     }
 
     fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, handle, node.handle, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
     }
 
     fun generateScene(state: GLTFState?, bakeFps: Double = 30.0, trimming: Boolean = false, removeImmutableTracks: Boolean = true): Node? {
+        checkOpen()
         return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL, bakeFps, trimming, removeImmutableTracks))
     }
 
     fun generateBuffer(state: GLTFState?): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun writeToFilesystem(state: GLTFState?, path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL, path)
     }
 

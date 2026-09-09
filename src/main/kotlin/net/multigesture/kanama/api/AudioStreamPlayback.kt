@@ -17,6 +17,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.set_sample_playback
      */
     fun setSamplePlayback(playbackSample: AudioSamplePlayback?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, handle, listOf(playbackSample?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -27,6 +28,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.get_sample_playback
      */
     fun getSamplePlayback(): AudioSamplePlayback? {
+        checkOpen()
         return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, handle))
     }
 
@@ -39,6 +41,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.mix_audio
      */
     fun mixAudio(rateScale: Double, frames: Int): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(mixAudioBind, handle, rateScale, frames)
     }
 
@@ -48,6 +51,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.start
      */
     fun start(fromPos: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(startBind, handle, fromPos)
     }
 
@@ -57,6 +61,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.seek
      */
     fun seek(time: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(seekBind, handle, time)
     }
 
@@ -66,6 +71,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.stop
      */
     fun stop() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopBind, handle)
     }
 
@@ -75,6 +81,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.get_loop_count
      */
     fun getLoopCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopCountBind, handle)
     }
 
@@ -84,6 +91,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.get_playback_position
      */
     fun getPlaybackPosition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, handle)
     }
 
@@ -93,6 +101,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AudioStreamPlayback.is_playing
      */
     fun isPlaying(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
     }
 

@@ -52,58 +52,72 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setCapBottom(value)
 
     fun setTopRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTopRadiusBind, handle, radius)
     }
 
     fun getTopRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTopRadiusBind, handle)
     }
 
     fun setBottomRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBottomRadiusBind, handle, radius)
     }
 
     fun getBottomRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBottomRadiusBind, handle)
     }
 
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
     fun setRadialSegments(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
     }
 
     fun getRadialSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
     fun setCapTop(capTop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
     }
 
     fun isCapTop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
     }
 
     fun setCapBottom(capBottom: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
     }
 
     fun isCapBottom(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
     }
 

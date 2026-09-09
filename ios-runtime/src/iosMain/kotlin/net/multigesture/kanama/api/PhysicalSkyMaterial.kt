@@ -77,90 +77,112 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setNightSky(value)
 
     fun setRayleighCoefficient(rayleigh: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRayleighCoefficientBind, handle, rayleigh)
     }
 
     fun getRayleighCoefficient(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRayleighCoefficientBind, handle)
     }
 
     fun setRayleighColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setRayleighColorBind, handle, color)
     }
 
     fun getRayleighColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getRayleighColorBind, handle)
     }
 
     fun setMieCoefficient(mie: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMieCoefficientBind, handle, mie)
     }
 
     fun getMieCoefficient(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMieCoefficientBind, handle)
     }
 
     fun setMieEccentricity(eccentricity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMieEccentricityBind, handle, eccentricity)
     }
 
     fun getMieEccentricity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMieEccentricityBind, handle)
     }
 
     fun setMieColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setMieColorBind, handle, color)
     }
 
     fun getMieColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getMieColorBind, handle)
     }
 
     fun setTurbidity(turbidity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbidityBind, handle, turbidity)
     }
 
     fun getTurbidity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbidityBind, handle)
     }
 
     fun setSunDiskScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSunDiskScaleBind, handle, scale)
     }
 
     fun getSunDiskScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunDiskScaleBind, handle)
     }
 
     fun setGroundColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setGroundColorBind, handle, color)
     }
 
     fun getGroundColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundColorBind, handle)
     }
 
     fun setEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
     fun getEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 
     fun setUseDebanding(useDebanding: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
     }
 
     fun getUseDebanding(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
     }
 
     fun setNightSky(nightSky: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNightSkyBind, handle, listOf(nightSky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNightSky(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNightSkyBind, handle))
     }
 

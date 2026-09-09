@@ -15,18 +15,22 @@ class AudioStreamSynchronized(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setStreamCount(value)
 
     fun setStreamCount(streamCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStreamCountBind, handle, streamCount)
     }
 
     fun getStreamCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, handle)
     }
 
     fun setSyncStream(streamIndex: Int, audioStream: AudioStream?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setSyncStreamBind, handle, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getSyncStream(streamIndex: Int): AudioStream? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getSyncStreamBind, handle, streamIndex)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -36,10 +40,12 @@ class AudioStreamSynchronized(handle: MemorySegment) : AudioStream(handle) {
     }
 
     fun setSyncStreamVolume(streamIndex: Int, volumeDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setSyncStreamVolumeBind, handle, streamIndex, volumeDb)
     }
 
     fun getSyncStreamVolume(streamIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getSyncStreamVolumeBind, handle, streamIndex)
     }
 

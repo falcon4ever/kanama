@@ -16,10 +16,12 @@ class VisualShaderNodeParticleAccelerator(handle: MemorySegment) : VisualShaderN
         set(value) = setMode(value)
 
     fun setMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 

@@ -34,6 +34,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PanoramaSkyMaterial.set_panorama
      */
     fun setPanorama(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -43,6 +44,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PanoramaSkyMaterial.get_panorama
      */
     fun getPanorama(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, handle))
     }
 
@@ -52,6 +54,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PanoramaSkyMaterial.set_filtering_enabled
      */
     fun setFilteringEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilteringEnabledBind, handle, enabled)
     }
 
@@ -61,6 +64,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PanoramaSkyMaterial.is_filtering_enabled
      */
     fun isFilteringEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFilteringEnabledBind, handle)
     }
 
@@ -70,6 +74,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PanoramaSkyMaterial.set_energy_multiplier
      */
     fun setEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
@@ -79,6 +84,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PanoramaSkyMaterial.get_energy_multiplier
      */
     fun getEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 

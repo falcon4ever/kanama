@@ -23,6 +23,7 @@ class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
      * Generated from Godot docs: AnimationNodeTimeSeek.set_explicit_elapse
      */
     fun setExplicitElapse(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setExplicitElapseBind, handle, enable)
     }
 
@@ -33,6 +34,7 @@ class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
      * Generated from Godot docs: AnimationNodeTimeSeek.is_explicit_elapse
      */
     fun isExplicitElapse(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isExplicitElapseBind, handle)
     }
 

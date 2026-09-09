@@ -72,82 +72,102 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
         set(value) = setAnisotropicFilteringLevel(value)
 
     fun getRenderTarget(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, handle)
     }
 
     fun setRenderTarget(renderTarget: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setRenderTargetBind, handle, renderTarget)
     }
 
     fun getInternalSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, handle)
     }
 
     fun setInternalSize(internalSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setInternalSizeBind, handle, internalSize)
     }
 
     fun getTargetSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, handle)
     }
 
     fun setTargetSize(targetSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setTargetSizeBind, handle, targetSize)
     }
 
     fun getViewCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
     fun setViewCount(viewCount: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setViewCountBind, handle, viewCount)
     }
 
     fun getScaling3dMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
     }
 
     fun setScaling3dMode(scaling3dMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, handle, scaling3dMode)
     }
 
     fun getMsaa3d(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
     }
 
     fun setMsaa3d(msaa3d: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, handle, msaa3d)
     }
 
     fun getScreenSpaceAa(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
     }
 
     fun setScreenSpaceAa(screenSpaceAa: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, handle, screenSpaceAa)
     }
 
     fun getFsrSharpness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
     }
 
     fun setFsrSharpness(fsrSharpness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, handle, fsrSharpness)
     }
 
     fun getTextureMipmapBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, handle)
     }
 
     fun setTextureMipmapBias(textureMipmapBias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, handle, textureMipmapBias)
     }
 
     fun getAnisotropicFilteringLevel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, handle)
     }
 
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, handle, anisotropicFilteringLevel)
     }
 

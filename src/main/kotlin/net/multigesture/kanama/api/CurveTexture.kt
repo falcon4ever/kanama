@@ -30,6 +30,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveTexture.set_width
      */
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
@@ -39,6 +40,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveTexture.set_curve
      */
     fun setCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -48,6 +50,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveTexture.get_curve
      */
     fun getCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 
@@ -58,6 +61,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveTexture.set_texture_mode
      */
     fun setTextureMode(textureMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureModeBind, handle, textureMode)
     }
 
@@ -68,6 +72,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveTexture.get_texture_mode
      */
     fun getTextureMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, handle)
     }
 

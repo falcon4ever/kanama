@@ -15,10 +15,12 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: MemorySegment) : Visua
         set(value) = setDegreesMode(value)
 
     fun setDegreesMode(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDegreesModeBind, handle, enabled)
     }
 
     fun isDegreesMode(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDegreesModeBind, handle)
     }
 

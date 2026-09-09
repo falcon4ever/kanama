@@ -22,6 +22,7 @@ open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventFromWindow.set_window_id
      */
     fun setWindowId(id: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setWindowIdBind, handle, id)
     }
 
@@ -31,6 +32,7 @@ open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventFromWindow.get_window_id
      */
     fun getWindowId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWindowIdBind, handle)
     }
 

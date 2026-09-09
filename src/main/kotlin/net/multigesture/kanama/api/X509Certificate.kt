@@ -15,6 +15,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: X509Certificate.save
      */
     fun save(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
     }
 
@@ -24,6 +25,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: X509Certificate.load
      */
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
@@ -34,6 +36,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: X509Certificate.save_to_string
      */
     fun saveToString(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(saveToStringBind, handle)
     }
 
@@ -43,6 +46,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: X509Certificate.load_from_string
      */
     fun loadFromString(string: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, handle, string)
     }
 

@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class X509Certificate(handle: MemorySegment) : Resource(handle) {
     fun save(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
     }
 
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
     fun saveToString(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(saveToStringBind, handle)
     }
 
     fun loadFromString(string: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, handle, string)
     }
 

@@ -23,6 +23,7 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamPolyphonic.set_polyphony
      */
     fun setPolyphony(voices: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, handle, voices)
     }
 
@@ -32,6 +33,7 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamPolyphonic.get_polyphony
      */
     fun getPolyphony(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, handle)
     }
 

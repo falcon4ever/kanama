@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class SkeletonModification2DStackHolder(handle: MemorySegment) : SkeletonModification2D(handle) {
     fun setHeldModificationStack(heldModificationStack: SkeletonModificationStack2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, handle, listOf(heldModificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getHeldModificationStack(): SkeletonModificationStack2D? {
+        checkOpen()
         return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, handle))
     }
 

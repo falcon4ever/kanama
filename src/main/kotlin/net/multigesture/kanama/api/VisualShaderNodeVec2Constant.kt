@@ -16,10 +16,12 @@ class VisualShaderNodeVec2Constant(handle: MemorySegment) : VisualShaderNodeCons
         set(value) = setConstant(value)
 
     fun setConstant(constant: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getConstantBind, handle)
     }
 

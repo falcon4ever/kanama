@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
     fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, handle, packetPeer?.requireOpenHandle() ?: MemorySegment.NULL, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
     fun disconnectFromPeer() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, handle)
     }
 

@@ -16,6 +16,7 @@ class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(hand
      * Generated from Godot docs: ImageFormatLoaderExtension.add_format_loader
      */
     fun addFormatLoader() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(addFormatLoaderBind, handle)
     }
 
@@ -25,6 +26,7 @@ class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(hand
      * Generated from Godot docs: ImageFormatLoaderExtension.remove_format_loader
      */
     fun removeFormatLoader() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(removeFormatLoaderBind, handle)
     }
 

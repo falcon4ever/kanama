@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
     fun getOptionValue(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionValueBind, handle, name)
     }
 

@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
     fun unreference(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)
     }
 
     fun getReferenceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, handle)
     }
 
@@ -23,12 +25,26 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle) {
     // fromHandle casts borrow — do not close those (see wrapper-maintenance.md
     // "RefCounted Return Ownership").
     private var wrapperReferenceReleased = false
+    private var closed = false
+
+    // Receiver-side use-after-close guard (task 98, desktop RefCounted.checkOpen mirror): every
+    // generated method on a RefCounted-derived wrapper calls this first, so a call through a
+    // handle whose close() destroyed the object is an IllegalStateException, not a native fault.
+    internal fun checkOpen() {
+        check(!closed) { "RefCounted handle is closed" }
+    }
+
+    override fun requireOpenHandle(): MemorySegment {
+        checkOpen()
+        return handle
+    }
 
     @ManualGodotLifetimeApi
     override fun close() {
         if (wrapperReferenceReleased) return
         wrapperReferenceReleased = true
         if (unreference()) {
+            closed = true
             ObjectCalls.destroyObject(handle)
         }
     }

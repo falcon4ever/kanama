@@ -21,30 +21,37 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
         get() = getStrings()
 
     fun getSubject(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSubjectBind, handle)
     }
 
     fun getGroupCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, handle)
     }
 
     fun getNames(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getNamesBind, handle)
     }
 
     fun getStrings(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStringsBind, handle)
     }
 
     fun getString(name: Any?): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetString(getStringBind, handle, name)
     }
 
     fun getStart(name: Any?): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetInt(getStartBind, handle, name)
     }
 
     fun getEnd(name: Any?): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetInt(getEndBind, handle, name)
     }
 

@@ -35,34 +35,42 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
         set(value) = setCollideWithAreas(value)
 
     fun setPosition(position: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setPositionBind, handle, position)
     }
 
     fun getPosition(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, handle)
     }
 
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 

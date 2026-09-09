@@ -28,6 +28,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadMotion.set_axis
      */
     fun setAxis(axis: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAxisBind, handle, axis)
     }
 
@@ -37,6 +38,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadMotion.get_axis
      */
     fun getAxis(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, handle)
     }
 
@@ -47,6 +49,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadMotion.set_axis_value
      */
     fun setAxisValue(axisValue: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAxisValueBind, handle, axisValue)
     }
 
@@ -57,6 +60,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadMotion.get_axis_value
      */
     fun getAxisValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAxisValueBind, handle)
     }
 

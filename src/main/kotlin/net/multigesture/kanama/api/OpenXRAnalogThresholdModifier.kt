@@ -33,34 +33,42 @@ class OpenXRAnalogThresholdModifier(handle: MemorySegment) : OpenXRActionBinding
         set(value) = setOffHaptic(value)
 
     fun setOnThreshold(onThreshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOnThresholdBind, handle, onThreshold)
     }
 
     fun getOnThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOnThresholdBind, handle)
     }
 
     fun setOffThreshold(offThreshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOffThresholdBind, handle, offThreshold)
     }
 
     fun getOffThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOffThresholdBind, handle)
     }
 
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, handle, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getOnHaptic(): OpenXRHapticBase? {
+        checkOpen()
         return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, handle))
     }
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, handle, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getOffHaptic(): OpenXRHapticBase? {
+        checkOpen()
         return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, handle))
     }
 

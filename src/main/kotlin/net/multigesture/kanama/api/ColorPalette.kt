@@ -24,6 +24,7 @@ class ColorPalette(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ColorPalette.set_colors
      */
     fun setColors(colors: List<Color>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
     }
 
@@ -33,6 +34,7 @@ class ColorPalette(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ColorPalette.get_colors
      */
     fun getColors(): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
     }
 

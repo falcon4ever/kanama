@@ -10,10 +10,12 @@ import net.multigesture.kanama.types.RID
  */
 class SkinReference(handle: MemorySegment) : RefCounted(handle) {
     fun getSkeleton(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, handle)
     }
 
     fun getSkin(): Skin? {
+        checkOpen()
         return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
     }
 

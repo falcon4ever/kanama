@@ -34,6 +34,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CameraTexture.set_camera_feed_id
      */
     fun setCameraFeedId(feedId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, feedId)
     }
 
@@ -43,6 +44,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CameraTexture.get_camera_feed_id
      */
     fun getCameraFeedId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
@@ -53,6 +55,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CameraTexture.set_which_feed
      */
     fun setWhichFeed(whichFeed: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, handle, whichFeed)
     }
 
@@ -63,6 +66,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CameraTexture.get_which_feed
      */
     fun getWhichFeed(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, handle)
     }
 
@@ -72,6 +76,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CameraTexture.set_camera_active
      */
     fun setCameraActive(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCameraActiveBind, handle, active)
     }
 
@@ -81,6 +86,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CameraTexture.get_camera_active
      */
     fun getCameraActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getCameraActiveBind, handle)
     }
 

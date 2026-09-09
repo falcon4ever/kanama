@@ -17,6 +17,7 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerUDS.bind
      */
     fun bind(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(bindBind, handle, path)
     }
 
@@ -26,6 +27,7 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerUDS.connect_to_host
      */
     fun connectToHost(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, handle, path)
     }
 
@@ -35,6 +37,7 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerUDS.get_connected_path
      */
     fun getConnectedPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedPathBind, handle)
     }
 

@@ -9,58 +9,72 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class XMLParser(handle: MemorySegment) : RefCounted(handle) {
     fun read(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(readBind, handle)
     }
 
     fun getNodeType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, handle)
     }
 
     fun getNodeName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNodeNameBind, handle)
     }
 
     fun getNodeData(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNodeDataBind, handle)
     }
 
     fun getNodeOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getNodeOffsetBind, handle)
     }
 
     fun getAttributeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAttributeCountBind, handle)
     }
 
     fun hasAttribute(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasAttributeBind, handle, name)
     }
 
     fun getNamedAttributeValue(name: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueBind, handle, name)
     }
 
     fun getNamedAttributeValueSafe(name: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueSafeBind, handle, name)
     }
 
     fun isEmpty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
     fun getCurrentLine(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentLineBind, handle)
     }
 
     fun skipSection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(skipSectionBind, handle)
     }
 
     fun seek(position: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(seekBind, handle, position)
     }
 
     fun open(file: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, file)
     }
 

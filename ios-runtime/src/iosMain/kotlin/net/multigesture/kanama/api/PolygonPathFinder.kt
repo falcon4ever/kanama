@@ -11,22 +11,27 @@ import net.multigesture.kanama.types.Vector2
  */
 class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
     fun getClosestPoint(point: Vector2): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, point)
     }
 
     fun isPointInside(point: Vector2): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetBool(isPointInsideBind, handle, point)
     }
 
     fun setPointPenalty(idx: Int, penalty: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointPenaltyBind, handle, idx, penalty)
     }
 
     fun getPointPenalty(idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointPenaltyBind, handle, idx)
     }
 
     fun getBounds(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
     }
 

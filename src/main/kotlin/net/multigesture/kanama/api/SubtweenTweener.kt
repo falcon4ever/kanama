@@ -16,6 +16,7 @@ class SubtweenTweener(handle: MemorySegment) : Tweener(handle) {
      * Generated from Godot docs: SubtweenTweener.set_delay
      */
     fun setDelay(delay: Double): SubtweenTweener? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

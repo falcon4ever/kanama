@@ -55,6 +55,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.set_binding
      */
     fun setBinding(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBindingBind, handle, pMember)
     }
 
@@ -67,6 +68,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.get_binding
      */
     fun getBinding(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBindingBind, handle)
     }
 
@@ -76,6 +78,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.set_location
      */
     fun setLocation(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setLocationBind, handle, pMember)
     }
 
@@ -85,6 +88,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.get_location
      */
     fun getLocation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getLocationBind, handle)
     }
 
@@ -95,6 +99,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.set_offset
      */
     fun setOffset(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setOffsetBind, handle, pMember)
     }
 
@@ -105,6 +110,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.get_offset
      */
     fun getOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getOffsetBind, handle)
     }
 
@@ -114,6 +120,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.set_format
      */
     fun setFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
@@ -123,6 +130,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -132,6 +140,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.set_stride
      */
     fun setStride(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setStrideBind, handle, pMember)
     }
 
@@ -141,6 +150,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.get_stride
      */
     fun getStride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getStrideBind, handle)
     }
 
@@ -150,6 +160,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.set_frequency
      */
     fun setFrequency(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrequencyBind, handle, pMember)
     }
 
@@ -159,6 +170,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDVertexAttribute.get_frequency
      */
     fun getFrequency(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, handle)
     }
 

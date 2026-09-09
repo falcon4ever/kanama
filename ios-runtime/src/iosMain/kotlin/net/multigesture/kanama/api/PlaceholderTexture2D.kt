@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Vector2
  */
 class PlaceholderTexture2D(handle: MemorySegment) : Texture2D(handle) {
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 

@@ -16,10 +16,12 @@ open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
         set(value) = setUseSync(value)
 
     fun setUseSync(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
     fun isUsingSync(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
     }
 

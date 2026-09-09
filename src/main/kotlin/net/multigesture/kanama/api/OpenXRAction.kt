@@ -27,26 +27,32 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
         set(value) = setToplevelPaths(value)
 
     fun setLocalizedName(localizedName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, handle, localizedName)
     }
 
     fun getLocalizedName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, handle)
     }
 
     fun setActionType(actionType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setActionTypeBind, handle, actionType)
     }
 
     fun getActionType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getActionTypeBind, handle)
     }
 
     fun setToplevelPaths(toplevelPaths: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(setToplevelPathsBind, handle, toplevelPaths)
     }
 
     fun getToplevelPaths(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getToplevelPathsBind, handle)
     }
 

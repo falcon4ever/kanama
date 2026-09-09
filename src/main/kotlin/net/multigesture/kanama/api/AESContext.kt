@@ -17,6 +17,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AESContext.start
      */
     fun start(mode: Long, key: ByteArray, iv: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, handle, mode, key, iv)
     }
 
@@ -28,6 +29,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AESContext.update
      */
     fun update(src: ByteArray): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, handle, src)
     }
 
@@ -39,6 +41,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AESContext.get_iv_state
      */
     fun getIvState(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getIvStateBind, handle)
     }
 
@@ -48,6 +51,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AESContext.finish
      */
     fun finish() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(finishBind, handle)
     }
 

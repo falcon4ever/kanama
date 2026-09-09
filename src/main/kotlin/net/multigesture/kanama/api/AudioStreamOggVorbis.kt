@@ -51,58 +51,72 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setLoopOffset(value)
 
     fun setPacketSequence(packetSequence: OggPacketSequence?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setPacketSequenceBind, handle, listOf(packetSequence?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getPacketSequence(): OggPacketSequence? {
+        checkOpen()
         return OggPacketSequence.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPacketSequenceBind, handle))
     }
 
     fun setLoop(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, enable)
     }
 
     fun hasLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
     }
 
     fun setLoopOffset(seconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLoopOffsetBind, handle, seconds)
     }
 
     fun getLoopOffset(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLoopOffsetBind, handle)
     }
 
     fun setBpm(bpm: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBpmBind, handle, bpm)
     }
 
     fun getBpm(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, handle)
     }
 
     fun setBeatCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBeatCountBind, handle, count)
     }
 
     fun getBeatCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBeatCountBind, handle)
     }
 
     fun setBarBeats(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBarBeatsBind, handle, count)
     }
 
     fun getBarBeats(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, handle)
     }
 
     fun setTags(tags: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, handle, tags)
     }
 
     fun getTags(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
     }
 

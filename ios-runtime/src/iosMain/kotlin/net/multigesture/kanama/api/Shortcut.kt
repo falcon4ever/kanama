@@ -14,18 +14,22 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
         get() = getEvents()
 
     fun getEvents(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getEventsBind, handle)
     }
 
     fun hasValidEvent(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasValidEventBind, handle)
     }
 
     fun matchesEvent(event: InputEvent?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getAsText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getAsTextBind, handle)
     }
 

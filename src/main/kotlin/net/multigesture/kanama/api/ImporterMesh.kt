@@ -18,6 +18,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.add_blend_shape
      */
     fun addBlendShape(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addBlendShapeBind, handle, name)
     }
 
@@ -27,6 +28,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_blend_shape_count
      */
     fun getBlendShapeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
     }
 
@@ -36,6 +38,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_blend_shape_name
      */
     fun getBlendShapeName(blendShapeIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getBlendShapeNameBind, handle, blendShapeIdx)
     }
 
@@ -45,6 +48,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.set_blend_shape_mode
      */
     fun setBlendShapeMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
     }
 
@@ -54,6 +58,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_blend_shape_mode
      */
     fun getBlendShapeMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
     }
 
@@ -86,6 +91,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.add_surface
      */
     fun addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, handle, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
     }
 
@@ -95,6 +101,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_count
      */
     fun getSurfaceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, handle)
     }
 
@@ -104,6 +111,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_primitive_type
      */
     fun getSurfacePrimitiveType(surfaceIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, handle, surfaceIdx)
     }
 
@@ -113,6 +121,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_name
      */
     fun getSurfaceName(surfaceIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getSurfaceNameBind, handle, surfaceIdx)
     }
 
@@ -123,6 +132,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_arrays
      */
     fun getSurfaceArrays(surfaceIdx: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getSurfaceArraysBind, handle, surfaceIdx)
     }
 
@@ -132,6 +142,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_blend_shape_arrays
      */
     fun getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetArray(getSurfaceBlendShapeArraysBind, handle, surfaceIdx, blendShapeIdx)
     }
 
@@ -141,6 +152,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_lod_count
      */
     fun getSurfaceLodCount(surfaceIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSurfaceLodCountBind, handle, surfaceIdx)
     }
 
@@ -150,6 +162,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_lod_size
      */
     fun getSurfaceLodSize(surfaceIdx: Int, lodIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getSurfaceLodSizeBind, handle, surfaceIdx, lodIdx)
     }
 
@@ -159,6 +172,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_lod_indices
      */
     fun getSurfaceLodIndices(surfaceIdx: Int, lodIdx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(getSurfaceLodIndicesBind, handle, surfaceIdx, lodIdx)
     }
 
@@ -168,6 +182,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_material
      */
     fun getSurfaceMaterial(surfaceIdx: Int): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, handle, surfaceIdx))
     }
 
@@ -177,6 +192,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_surface_format
      */
     fun getSurfaceFormat(surfaceIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getSurfaceFormatBind, handle, surfaceIdx)
     }
 
@@ -186,6 +202,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.set_surface_name
      */
     fun setSurfaceName(surfaceIdx: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setSurfaceNameBind, handle, surfaceIdx, name)
     }
 
@@ -195,6 +212,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.set_surface_material
      */
     fun setSurfaceMaterial(surfaceIdx: Int, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, handle, surfaceIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -211,6 +229,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.generate_lods
      */
     fun generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoDoubleArrayArgs(generateLodsBind, handle, normalMergeAngle, normalSplitAngle, boneTransformArray)
     }
 
@@ -222,6 +241,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_mesh
      */
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, handle, baseMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -231,6 +251,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -240,6 +261,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.set_lightmap_size_hint
      */
     fun setLightmapSizeHint(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, handle, size)
     }
 
@@ -249,6 +271,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ImporterMesh.get_lightmap_size_hint
      */
     fun getLightmapSizeHint(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, handle)
     }
 

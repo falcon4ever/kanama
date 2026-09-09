@@ -10,10 +10,12 @@ import net.multigesture.kanama.types.Transform3D
  */
 class OpenXRSpatialComponentMesh3DList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getTransform(index: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, handle, index)
     }
 
     fun getMesh(index: Long): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getMeshBind, handle, index))
     }
 

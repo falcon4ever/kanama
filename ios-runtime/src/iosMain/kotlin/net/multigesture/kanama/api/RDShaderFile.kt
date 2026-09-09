@@ -16,22 +16,27 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
         set(value) = setBaseError(value)
 
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, handle, bytecode?.requireOpenHandle() ?: MemorySegment.NULL, version)
     }
 
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
+        checkOpen()
         return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, handle, version))
     }
 
     fun getVersionList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getVersionListBind, handle)
     }
 
     fun setBaseError(error: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setBaseErrorBind, handle, error)
     }
 
     fun getBaseError(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getBaseErrorBind, handle)
     }
 

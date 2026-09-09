@@ -16,6 +16,7 @@ open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle)
      * Generated from Godot docs: EditorSceneFormatImporter.add_import_option
      */
     fun addImportOption(name: String, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, handle, name, value)
     }
 
@@ -25,6 +26,7 @@ open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle)
      * Generated from Godot docs: EditorSceneFormatImporter.add_import_option_advanced
      */
     fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, handle, type, name, defaultValue, hint, hintString, usageFlags)
     }
 

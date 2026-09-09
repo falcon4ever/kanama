@@ -23,26 +23,32 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setBinding(value)
 
     fun setUniformType(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, handle, pMember)
     }
 
     fun getUniformType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, handle)
     }
 
     fun setBinding(pMember: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBindingBind, handle, pMember)
     }
 
     fun getBinding(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBindingBind, handle)
     }
 
     fun addId(id: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(addIdBind, handle, id)
     }
 
     fun clearIds() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearIdsBind, handle)
     }
 

@@ -53,6 +53,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.set_sample_count
      */
     fun setSampleCount(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSampleCountBind, handle, pMember)
     }
 
@@ -63,6 +64,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.get_sample_count
      */
     fun getSampleCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, handle)
     }
 
@@ -76,6 +78,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.set_enable_sample_shading
      */
     fun setEnableSampleShading(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableSampleShadingBind, handle, pMember)
     }
 
@@ -89,6 +92,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.get_enable_sample_shading
      */
     fun getEnableSampleShading(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableSampleShadingBind, handle)
     }
 
@@ -102,6 +106,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.set_min_sample_shading
      */
     fun setMinSampleShading(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinSampleShadingBind, handle, pMember)
     }
 
@@ -115,6 +120,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.get_min_sample_shading
      */
     fun getMinSampleShading(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinSampleShadingBind, handle)
     }
 
@@ -126,6 +132,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.set_enable_alpha_to_coverage
      */
     fun setEnableAlphaToCoverage(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToCoverageBind, handle, pMember)
     }
 
@@ -137,6 +144,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.get_enable_alpha_to_coverage
      */
     fun getEnableAlphaToCoverage(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToCoverageBind, handle)
     }
 
@@ -147,6 +155,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.set_enable_alpha_to_one
      */
     fun setEnableAlphaToOne(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToOneBind, handle, pMember)
     }
 
@@ -157,6 +166,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.get_enable_alpha_to_one
      */
     fun getEnableAlphaToOne(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToOneBind, handle)
     }
 
@@ -168,6 +178,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.set_sample_masks
      */
     fun setSampleMasks(masks: List<Long>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedIntListArg(setSampleMasksBind, handle, masks)
     }
 
@@ -179,6 +190,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineMultisampleState.get_sample_masks
      */
     fun getSampleMasks(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getSampleMasksBind, handle)
     }
 

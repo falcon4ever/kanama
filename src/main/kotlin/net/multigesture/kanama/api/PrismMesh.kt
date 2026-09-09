@@ -48,6 +48,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.set_left_to_right
      */
     fun setLeftToRight(leftToRight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLeftToRightBind, handle, leftToRight)
     }
 
@@ -58,6 +59,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.get_left_to_right
      */
     fun getLeftToRight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLeftToRightBind, handle)
     }
 
@@ -67,6 +69,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.set_size
      */
     fun setSize(size: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
@@ -76,6 +79,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.get_size
      */
     fun getSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
@@ -85,6 +89,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.set_subdivide_width
      */
     fun setSubdivideWidth(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, segments)
     }
 
@@ -94,6 +99,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.get_subdivide_width
      */
     fun getSubdivideWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
@@ -103,6 +109,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.set_subdivide_height
      */
     fun setSubdivideHeight(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, segments)
     }
 
@@ -112,6 +119,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.get_subdivide_height
      */
     fun getSubdivideHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle)
     }
 
@@ -121,6 +129,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.set_subdivide_depth
      */
     fun setSubdivideDepth(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, segments)
     }
 
@@ -130,6 +139,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: PrismMesh.get_subdivide_depth
      */
     fun getSubdivideDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }
 

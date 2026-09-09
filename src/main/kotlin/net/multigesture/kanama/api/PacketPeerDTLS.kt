@@ -16,6 +16,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerDTLS.poll
      */
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
@@ -28,6 +29,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerDTLS.connect_to_peer
      */
     fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, handle, packetPeer?.requireOpenHandle() ?: MemorySegment.NULL, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -37,6 +39,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerDTLS.get_status
      */
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
@@ -46,6 +49,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerDTLS.disconnect_from_peer
      */
     fun disconnectFromPeer() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, handle)
     }
 

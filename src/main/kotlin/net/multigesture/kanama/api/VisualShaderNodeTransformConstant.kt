@@ -16,10 +16,12 @@ class VisualShaderNodeTransformConstant(handle: MemorySegment) : VisualShaderNod
         set(value) = setConstant(value)
 
     fun setConstant(constant: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getConstantBind, handle)
     }
 

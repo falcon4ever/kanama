@@ -16,6 +16,7 @@ class EditorResourceTooltipPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorResourceTooltipPlugin.request_thumbnail
      */
     fun requestThumbnail(path: String, control: TextureRect) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(requestThumbnailBind, handle, path, control.handle)
     }
 

@@ -25,6 +25,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.set_device
      */
     fun setDevice(device: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDeviceBind, handle, device)
     }
 
@@ -35,6 +36,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.get_device
      */
     fun getDevice(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDeviceBind, handle)
     }
 
@@ -46,6 +48,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_action
      */
     fun isAction(action: String, exactMatch: Boolean = false): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionBind, handle, action, exactMatch)
     }
 
@@ -62,6 +65,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_action_pressed
      */
     fun isActionPressed(action: String, allowEcho: Boolean = false, exactMatch: Boolean = false): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(isActionPressedBind, handle, action, allowEcho, exactMatch)
     }
 
@@ -74,6 +78,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_action_released
      */
     fun isActionReleased(action: String, exactMatch: Boolean = false): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionReleasedBind, handle, action, exactMatch)
     }
 
@@ -86,6 +91,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.get_action_strength
      */
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionStrengthBind, handle, action, exactMatch)
     }
 
@@ -95,6 +101,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_canceled
      */
     fun isCanceled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCanceledBind, handle)
     }
 
@@ -108,6 +115,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_pressed
      */
     fun isPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
     }
 
@@ -118,6 +126,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_released
      */
     fun isReleased(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isReleasedBind, handle)
     }
 
@@ -133,6 +142,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_echo
      */
     fun isEcho(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEchoBind, handle)
     }
 
@@ -142,6 +152,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.as_text
      */
     fun asText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(asTextBind, handle)
     }
 
@@ -157,6 +168,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_match
      */
     fun isMatch(event: InputEvent?, exactMatch: Boolean = true): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(isMatchBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
     }
 
@@ -168,6 +180,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.is_action_type
      */
     fun isActionType(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActionTypeBind, handle)
     }
 
@@ -180,6 +193,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.accumulate
      */
     fun accumulate(withEvent: InputEvent?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(accumulateBind, handle, withEvent?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -192,6 +206,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: InputEvent.xformed_by
      */
     fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, handle, xform, localOfs)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

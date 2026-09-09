@@ -42,162 +42,202 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
         set(value) = setUseTexturePadding(value)
 
     fun setTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
     fun setMargins(margins: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setMarginsBind, handle, margins)
     }
 
     fun getMargins(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getMarginsBind, handle)
     }
 
     fun setSeparation(separation: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSeparationBind, handle, separation)
     }
 
     fun getSeparation(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSeparationBind, handle)
     }
 
     fun setTextureRegionSize(textureRegionSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setTextureRegionSizeBind, handle, textureRegionSize)
     }
 
     fun getTextureRegionSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureRegionSizeBind, handle)
     }
 
     fun setUseTexturePadding(useTexturePadding: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseTexturePaddingBind, handle, useTexturePadding)
     }
 
     fun getUseTexturePadding(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseTexturePaddingBind, handle)
     }
 
     fun createTile(atlasCoords: Vector2i, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoVector2iArgs(createTileBind, handle, atlasCoords, size)
     }
 
     fun removeTile(atlasCoords: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(removeTileBind, handle, atlasCoords)
     }
 
     fun moveTileInAtlas(atlasCoords: Vector2i, newAtlasCoords: Vector2i, newSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeVector2iArgs(moveTileInAtlasBind, handle, atlasCoords, newAtlasCoords, newSize)
     }
 
     fun getTileSizeInAtlas(atlasCoords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileSizeInAtlasBind, handle, atlasCoords)
     }
 
     fun hasRoomForTile(atlasCoords: Vector2i, size: Vector2i, animationColumns: Int, animationSeparation: Vector2i, framesCount: Int, ignoredTile: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(hasRoomForTileBind, handle, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
     }
 
     fun getTileAtCoords(atlasCoords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAtCoordsBind, handle, atlasCoords)
     }
 
     fun hasTilesOutsideTexture(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasTilesOutsideTextureBind, handle)
     }
 
     fun clearTilesOutsideTexture() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearTilesOutsideTextureBind, handle)
     }
 
     fun setTileAnimationColumns(atlasCoords: Vector2i, frameColumns: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationColumnsBind, handle, atlasCoords, frameColumns)
     }
 
     fun getTileAnimationColumns(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationColumnsBind, handle, atlasCoords)
     }
 
     fun setTileAnimationSeparation(atlasCoords: Vector2i, separation: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoVector2iArgs(setTileAnimationSeparationBind, handle, atlasCoords, separation)
     }
 
     fun getTileAnimationSeparation(atlasCoords: Vector2i): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAnimationSeparationBind, handle, atlasCoords)
     }
 
     fun setTileAnimationSpeed(atlasCoords: Vector2i, speed: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(setTileAnimationSpeedBind, handle, atlasCoords, speed)
     }
 
     fun getTileAnimationSpeed(atlasCoords: Vector2i): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationSpeedBind, handle, atlasCoords)
     }
 
     fun setTileAnimationMode(atlasCoords: Vector2i, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, handle, atlasCoords, mode)
     }
 
     fun getTileAnimationMode(atlasCoords: Vector2i): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, handle, atlasCoords)
     }
 
     fun setTileAnimationFramesCount(atlasCoords: Vector2i, framesCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationFramesCountBind, handle, atlasCoords, framesCount)
     }
 
     fun getTileAnimationFramesCount(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationFramesCountBind, handle, atlasCoords)
     }
 
     fun setTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int, duration: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iIntDoubleArgs(setTileAnimationFrameDurationBind, handle, atlasCoords, frameIndex, duration)
     }
 
     fun getTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(getTileAnimationFrameDurationBind, handle, atlasCoords, frameIndex)
     }
 
     fun getTileAnimationTotalDuration(atlasCoords: Vector2i): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationTotalDurationBind, handle, atlasCoords)
     }
 
     fun createAlternativeTile(atlasCoords: Vector2i, alternativeIdOverride: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(createAlternativeTileBind, handle, atlasCoords, alternativeIdOverride)
     }
 
     fun removeAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(removeAlternativeTileBind, handle, atlasCoords, alternativeTile)
     }
 
     fun setAlternativeTileId(atlasCoords: Vector2i, alternativeTile: Int, newId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(setAlternativeTileIdBind, handle, atlasCoords, alternativeTile, newId)
     }
 
     fun getNextAlternativeTileId(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getNextAlternativeTileIdBind, handle, atlasCoords)
     }
 
     fun getTileData(atlasCoords: Vector2i, alternativeTile: Int): TileData? {
+        checkOpen()
         return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(getTileDataBind, handle, atlasCoords, alternativeTile))
     }
 
     fun getAtlasGridSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getAtlasGridSizeBind, handle)
     }
 
     fun getTileTextureRegion(atlasCoords: Vector2i, frame: Int = 0): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getTileTextureRegionBind, handle, atlasCoords, frame)
     }
 
     fun getRuntimeTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, handle))
     }
 
     fun getRuntimeTileTextureRegion(atlasCoords: Vector2i, frame: Int): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, handle, atlasCoords, frame)
     }
 

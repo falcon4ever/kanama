@@ -8,10 +8,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 open class OpenXRSpatialComponentData(handle: MemorySegment) : RefCounted(handle) {
     fun setCapacity(capacity: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCapacityBind, handle, capacity)
     }
 
     fun getComponentType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, handle)
     }
 

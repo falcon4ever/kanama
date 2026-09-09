@@ -43,6 +43,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_root_bone
      */
     fun setRootBone(boneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, handle, boneName)
     }
 
@@ -53,6 +54,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_root_bone
      */
     fun getRootBone(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, handle)
     }
 
@@ -63,6 +65,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_scale_base_bone
      */
     fun setScaleBaseBone(boneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setScaleBaseBoneBind, handle, boneName)
     }
 
@@ -73,6 +76,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_scale_base_bone
      */
     fun getScaleBaseBone(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getScaleBaseBoneBind, handle)
     }
 
@@ -84,6 +88,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_group_size
      */
     fun setGroupSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setGroupSizeBind, handle, size)
     }
 
@@ -95,6 +100,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_group_size
      */
     fun getGroupSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupSizeBind, handle)
     }
 
@@ -105,6 +111,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_group_name
      */
     fun getGroupName(groupIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupNameBind, handle, groupIdx)
     }
 
@@ -115,6 +122,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_group_name
      */
     fun setGroupName(groupIdx: Int, groupName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupNameBind, handle, groupIdx, groupName)
     }
 
@@ -125,6 +133,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_texture
      */
     fun getTexture(groupIdx: Int): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, handle, groupIdx))
     }
 
@@ -135,6 +144,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_texture
      */
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, handle, groupIdx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -146,6 +156,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_bone_size
      */
     fun setBoneSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBoneSizeBind, handle, size)
     }
 
@@ -157,6 +168,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_bone_size
      */
     fun getBoneSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneSizeBind, handle)
     }
 
@@ -166,6 +178,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.find_bone
      */
     fun findBone(boneName: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetInt(findBoneBind, handle, boneName)
     }
 
@@ -176,6 +189,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_bone_name
      */
     fun getBoneName(boneIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneNameBind, handle, boneIdx)
     }
 
@@ -186,6 +200,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_bone_name
      */
     fun setBoneName(boneIdx: Int, boneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, handle, boneIdx, boneName)
     }
 
@@ -196,6 +211,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_bone_parent
      */
     fun getBoneParent(boneIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneParentBind, handle, boneIdx)
     }
 
@@ -206,6 +222,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_bone_parent
      */
     fun setBoneParent(boneIdx: Int, boneParent: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneParentBind, handle, boneIdx, boneParent)
     }
 
@@ -215,6 +232,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_tail_direction
      */
     fun getTailDirection(boneIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, handle, boneIdx)
     }
 
@@ -226,6 +244,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_tail_direction
      */
     fun setTailDirection(boneIdx: Int, tailDirection: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, handle, boneIdx, tailDirection)
     }
 
@@ -235,6 +254,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_bone_tail
      */
     fun getBoneTail(boneIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneTailBind, handle, boneIdx)
     }
 
@@ -244,6 +264,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_bone_tail
      */
     fun setBoneTail(boneIdx: Int, boneTail: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneTailBind, handle, boneIdx, boneTail)
     }
 
@@ -253,6 +274,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_reference_pose
      */
     fun getReferencePose(boneIdx: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getReferencePoseBind, handle, boneIdx)
     }
 
@@ -262,6 +284,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_reference_pose
      */
     fun setReferencePose(boneIdx: Int, boneName: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setReferencePoseBind, handle, boneIdx, boneName)
     }
 
@@ -272,6 +295,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_handle_offset
      */
     fun getHandleOffset(boneIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getHandleOffsetBind, handle, boneIdx)
     }
 
@@ -282,6 +306,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_handle_offset
      */
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, handle, boneIdx, handleOffset)
     }
 
@@ -291,6 +316,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.get_group
      */
     fun getGroup(boneIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupBind, handle, boneIdx)
     }
 
@@ -300,6 +326,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_group
      */
     fun setGroup(boneIdx: Int, group: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupBind, handle, boneIdx, group)
     }
 
@@ -311,6 +338,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.is_required
      */
     fun isRequired(boneIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isRequiredBind, handle, boneIdx)
     }
 
@@ -320,6 +348,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SkeletonProfile.set_required
      */
     fun setRequired(boneIdx: Int, required: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, handle, boneIdx, required)
     }
 

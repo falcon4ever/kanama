@@ -104,382 +104,477 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         set(value) = setOversampling(value)
 
     fun loadBitmapFont(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, handle, path)
     }
 
     fun loadDynamicFont(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, handle, path)
     }
 
     fun setFontName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFontNameBind, handle, name)
     }
 
     fun setFontStyleName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFontStyleNameBind, handle, name)
     }
 
     fun setFontStyle(style: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFontStyleBind, handle, style)
     }
 
     fun setFontWeight(weight: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
     }
 
     fun setFontStretch(stretch: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
     }
 
     fun setAntialiasing(antialiasing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
     }
 
     fun getAntialiasing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
     }
 
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
     }
 
     fun getDisableEmbeddedBitmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
     }
 
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
     }
 
     fun getGenerateMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
     }
 
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
     }
 
     fun isMultichannelSignedDistanceField(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
     }
 
     fun setMsdfPixelRange(msdfPixelRange: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
     }
 
     fun getMsdfPixelRange(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
     }
 
     fun setMsdfSize(msdfSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
     }
 
     fun getMsdfSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
     }
 
     fun setFixedSize(fixedSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFixedSizeBind, handle, fixedSize)
     }
 
     fun getFixedSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFixedSizeBind, handle)
     }
 
     fun setFixedSizeScaleMode(fixedSizeScaleMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, handle, fixedSizeScaleMode)
     }
 
     fun getFixedSizeScaleMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, handle)
     }
 
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
     }
 
     fun isAllowSystemFallback(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
     }
 
     fun setForceAutohinter(forceAutohinter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
     }
 
     fun isForceAutohinter(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
     }
 
     fun setModulateColorGlyphs(modulate: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
     }
 
     fun isModulateColorGlyphs(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
     }
 
     fun setHinting(hinting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
     }
 
     fun getHinting(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
     }
 
     fun setSubpixelPositioning(subpixelPositioning: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
     }
 
     fun getSubpixelPositioning(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
     }
 
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
     }
 
     fun getKeepRoundingRemainders(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
     }
 
     fun setOversampling(oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
     }
 
     fun getOversampling(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
     }
 
     fun getCacheCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCacheCountBind, handle)
     }
 
     fun clearCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearCacheBind, handle)
     }
 
     fun removeCache(cacheIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeCacheBind, handle, cacheIndex)
     }
 
     fun clearSizeCache(cacheIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(clearSizeCacheBind, handle, cacheIndex)
     }
 
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, handle, cacheIndex, size)
     }
 
     fun setEmbolden(cacheIndex: Int, strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setEmboldenBind, handle, cacheIndex, strength)
     }
 
     fun getEmbolden(cacheIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getEmboldenBind, handle, cacheIndex)
     }
 
     fun setTransform(cacheIndex: Int, transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform2DArg(setTransformBind, handle, cacheIndex, transform)
     }
 
     fun getTransform(cacheIndex: Int): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform2D(getTransformBind, handle, cacheIndex)
     }
 
     fun setExtraSpacing(cacheIndex: Int, spacing: Long, value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, handle, cacheIndex, spacing, value)
     }
 
     fun getExtraSpacing(cacheIndex: Int, spacing: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, handle, cacheIndex, spacing)
     }
 
     fun setExtraBaselineOffset(cacheIndex: Int, baselineOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setExtraBaselineOffsetBind, handle, cacheIndex, baselineOffset)
     }
 
     fun getExtraBaselineOffset(cacheIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getExtraBaselineOffsetBind, handle, cacheIndex)
     }
 
     fun setFaceIndex(cacheIndex: Int, faceIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setFaceIndexBind, handle, cacheIndex, faceIndex)
     }
 
     fun getFaceIndex(cacheIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getFaceIndexBind, handle, cacheIndex)
     }
 
     fun setCacheAscent(cacheIndex: Int, size: Int, ascent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheAscentBind, handle, cacheIndex, size, ascent)
     }
 
     fun getCacheAscent(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheAscentBind, handle, cacheIndex, size)
     }
 
     fun setCacheDescent(cacheIndex: Int, size: Int, descent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheDescentBind, handle, cacheIndex, size, descent)
     }
 
     fun getCacheDescent(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheDescentBind, handle, cacheIndex, size)
     }
 
     fun setCacheUnderlinePosition(cacheIndex: Int, size: Int, underlinePosition: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlinePositionBind, handle, cacheIndex, size, underlinePosition)
     }
 
     fun getCacheUnderlinePosition(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlinePositionBind, handle, cacheIndex, size)
     }
 
     fun setCacheUnderlineThickness(cacheIndex: Int, size: Int, underlineThickness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlineThicknessBind, handle, cacheIndex, size, underlineThickness)
     }
 
     fun getCacheUnderlineThickness(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlineThicknessBind, handle, cacheIndex, size)
     }
 
     fun setCacheScale(cacheIndex: Int, size: Int, scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheScaleBind, handle, cacheIndex, size, scale)
     }
 
     fun getCacheScale(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheScaleBind, handle, cacheIndex, size)
     }
 
     fun getTextureCount(cacheIndex: Int, size: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(getTextureCountBind, handle, cacheIndex, size)
     }
 
     fun clearTextures(cacheIndex: Int, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(clearTexturesBind, handle, cacheIndex, size)
     }
 
     fun removeTexture(cacheIndex: Int, size: Vector2i, textureIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeTextureBind, handle, cacheIndex, size, textureIndex)
     }
 
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, handle, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, handle, cacheIndex, size, textureIndex))
     }
 
     fun clearGlyphs(cacheIndex: Int, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(clearGlyphsBind, handle, cacheIndex, size)
     }
 
     fun removeGlyph(cacheIndex: Int, size: Vector2i, glyph: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeGlyphBind, handle, cacheIndex, size, glyph)
     }
 
     fun setGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int, advance: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeIntAndVector2Arg(setGlyphAdvanceBind, handle, cacheIndex, size, glyph, advance)
     }
 
     fun getGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(getGlyphAdvanceBind, handle, cacheIndex, size, glyph)
     }
 
     fun setGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int, offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphOffsetBind, handle, cacheIndex, size, glyph, offset)
     }
 
     fun getGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphOffsetBind, handle, cacheIndex, size, glyph)
     }
 
     fun setGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int, glSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphSizeBind, handle, cacheIndex, size, glyph, glSize)
     }
 
     fun getGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphSizeBind, handle, cacheIndex, size, glyph)
     }
 
     fun setGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int, uvRect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntRect2Args(setGlyphUvRectBind, handle, cacheIndex, size, glyph, uvRect)
     }
 
     fun getGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(getGlyphUvRectBind, handle, cacheIndex, size, glyph)
     }
 
     fun setGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int, textureIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(setGlyphTextureIdxBind, handle, cacheIndex, size, glyph, textureIdx)
     }
 
     fun getGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(getGlyphTextureIdxBind, handle, cacheIndex, size, glyph)
     }
 
     fun clearKerningMap(cacheIndex: Int, size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(clearKerningMapBind, handle, cacheIndex, size)
     }
 
     fun removeKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndVector2iArg(removeKerningBind, handle, cacheIndex, size, glyphPair)
     }
 
     fun setKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i, kerning: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(setKerningBind, handle, cacheIndex, size, glyphPair, kerning)
     }
 
     fun getKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(getKerningBind, handle, cacheIndex, size, glyphPair)
     }
 
     fun renderRange(cacheIndex: Int, size: Vector2i, start: Int, end: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(renderRangeBind, handle, cacheIndex, size, start, end)
     }
 
     fun renderGlyph(cacheIndex: Int, size: Vector2i, index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(renderGlyphBind, handle, cacheIndex, size, index)
     }
 
     fun setLanguageSupportOverride(language: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(setLanguageSupportOverrideBind, handle, language, supported)
     }
 
     fun getLanguageSupportOverride(language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(getLanguageSupportOverrideBind, handle, language)
     }
 
     fun removeLanguageSupportOverride(language: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeLanguageSupportOverrideBind, handle, language)
     }
 
     fun getLanguageSupportOverrides(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLanguageSupportOverridesBind, handle)
     }
 
     fun setScriptSupportOverride(script: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(setScriptSupportOverrideBind, handle, script, supported)
     }
 
     fun getScriptSupportOverride(script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(getScriptSupportOverrideBind, handle, script)
     }
 
     fun removeScriptSupportOverride(script: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeScriptSupportOverrideBind, handle, script)
     }
 
     fun getScriptSupportOverrides(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getScriptSupportOverridesBind, handle)
     }
 
     fun getGlyphIndex(size: Int, char: Int, variationSelector: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeIntArgsRetInt(getGlyphIndexBind, handle, size, char, variationSelector)
     }
 
     fun getCharFromGlyphIndex(size: Int, glyphIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getCharFromGlyphIndexBind, handle, size, glyphIndex)
     }
 

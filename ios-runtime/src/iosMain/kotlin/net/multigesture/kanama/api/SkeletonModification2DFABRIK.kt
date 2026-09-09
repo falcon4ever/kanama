@@ -24,46 +24,57 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
         set(value) = setFabrikDataChainLength(value)
 
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
     fun setFabrikDataChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFabrikDataChainLengthBind, handle, length)
     }
 
     fun getFabrikDataChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFabrikDataChainLengthBind, handle)
     }
 
     fun setFabrikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setFabrikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
     }
 
     fun setFabrikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setFabrikJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
     fun getFabrikJointBoneIndex(jointIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getFabrikJointBoneIndexBind, handle, jointIdx)
     }
 
     fun setFabrikJointMagnetPosition(jointIdx: Int, magnetPosition: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setFabrikJointMagnetPositionBind, handle, jointIdx, magnetPosition)
     }
 
     fun getFabrikJointMagnetPosition(jointIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getFabrikJointMagnetPositionBind, handle, jointIdx)
     }
 
     fun setFabrikJointUseTargetRotation(jointIdx: Int, useTargetRotation: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setFabrikJointUseTargetRotationBind, handle, jointIdx, useTargetRotation)
     }
 
     fun getFabrikJointUseTargetRotation(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getFabrikJointUseTargetRotationBind, handle, jointIdx)
     }
 

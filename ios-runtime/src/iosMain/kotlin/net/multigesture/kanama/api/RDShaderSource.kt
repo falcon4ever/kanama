@@ -16,14 +16,17 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setLanguage(value)
 
     fun setStageSource(stage: Long, source: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, handle, stage, source)
     }
 
     fun setLanguage(language: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLanguageBind, handle, language)
     }
 
     fun getLanguage(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, handle)
     }
 

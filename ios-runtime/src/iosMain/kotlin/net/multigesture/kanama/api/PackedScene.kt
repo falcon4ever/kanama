@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class PackedScene(handle: MemorySegment) : Resource(handle) {
     fun pack(path: Node): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(packBind, handle, path.handle)
     }
 
     fun instantiate(editState: Long = 0L): Node? {
+        checkOpen()
         return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, handle, editState))
     }
 
     fun canInstantiate(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, handle)
     }
 
     fun getState(): SceneState? {
+        checkOpen()
         return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, handle))
     }
 

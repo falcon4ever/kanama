@@ -30,82 +30,102 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         set(value) = setShadowMesh(value)
 
     fun addBlendShape(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(addBlendShapeBind, handle, name)
     }
 
     fun getBlendShapeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
     }
 
     fun setBlendShapeName(index: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, handle, index, name)
     }
 
     fun clearBlendShapes() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBlendShapesBind, handle)
     }
 
     fun setBlendShapeMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
     }
 
     fun getBlendShapeMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
     }
 
     fun clearSurfaces() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
     }
 
     fun surfaceRemove(surfIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, handle, surfIdx)
     }
 
     fun surfaceGetArrayLen(surfIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, handle, surfIdx)
     }
 
     fun surfaceGetArrayIndexLen(surfIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayIndexLenBind, handle, surfIdx)
     }
 
     fun surfaceGetFormat(surfIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, handle, surfIdx)
     }
 
     fun surfaceGetPrimitiveType(surfIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, handle, surfIdx)
     }
 
     fun surfaceFindByName(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(surfaceFindByNameBind, handle, name)
     }
 
     fun surfaceSetName(surfIdx: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, handle, surfIdx, name)
     }
 
     fun regenNormalMaps() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, handle)
     }
 
     fun lightmapUnwrap(transform: Transform3D, texelSize: Double): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, handle, transform, texelSize)
     }
 
     fun setCustomAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
     fun getCustomAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
     fun setShadowMesh(mesh: ArrayMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getShadowMesh(): ArrayMesh? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

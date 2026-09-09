@@ -55,6 +55,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.set_has_tracking_data
      */
     fun setHasTrackingData(hasTrackingData: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasTrackingData)
     }
 
@@ -65,6 +66,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_has_tracking_data
      */
     fun getHasTrackingData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
@@ -80,6 +82,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.set_name
      */
     fun setName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setNameBind, handle, name)
     }
 
@@ -95,6 +98,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_name
      */
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
     }
 
@@ -104,6 +108,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.set_transform
      */
     fun setTransform(transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
     }
 
@@ -113,6 +118,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_transform
      */
     fun getTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
@@ -123,6 +129,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_adjusted_transform
      */
     fun getAdjustedTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getAdjustedTransformBind, handle)
     }
 
@@ -132,6 +139,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.set_linear_velocity
      */
     fun setLinearVelocity(velocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, velocity)
     }
 
@@ -141,6 +149,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_linear_velocity
      */
     fun getLinearVelocity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
     }
 
@@ -150,6 +159,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.set_angular_velocity
      */
     fun setAngularVelocity(velocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, velocity)
     }
 
@@ -159,6 +169,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_angular_velocity
      */
     fun getAngularVelocity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
     }
 
@@ -169,6 +180,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.set_tracking_confidence
      */
     fun setTrackingConfidence(trackingConfidence: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, handle, trackingConfidence)
     }
 
@@ -179,6 +191,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRPose.get_tracking_confidence
      */
     fun getTrackingConfidence(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, handle)
     }
 

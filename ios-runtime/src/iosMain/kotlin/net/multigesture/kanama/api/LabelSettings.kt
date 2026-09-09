@@ -84,162 +84,202 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
         set(value) = setStackedShadowCount(value)
 
     fun setLineSpacing(spacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, spacing)
     }
 
     fun getLineSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
     fun setParagraphSpacing(spacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setParagraphSpacingBind, handle, spacing)
     }
 
     fun getParagraphSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getParagraphSpacingBind, handle)
     }
 
     fun setFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getFont(): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
     }
 
     fun setFontSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, size)
     }
 
     fun getFontSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
     }
 
     fun setFontColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setFontColorBind, handle, color)
     }
 
     fun getFontColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getFontColorBind, handle)
     }
 
     fun setOutlineSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, handle, size)
     }
 
     fun getOutlineSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, handle)
     }
 
     fun setOutlineColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setOutlineColorBind, handle, color)
     }
 
     fun getOutlineColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getOutlineColorBind, handle)
     }
 
     fun setShadowSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, handle, size)
     }
 
     fun getShadowSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, handle)
     }
 
     fun setShadowColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, color)
     }
 
     fun getShadowColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
     }
 
     fun setShadowOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, handle, offset)
     }
 
     fun getShadowOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, handle)
     }
 
     fun getStackedOutlineCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStackedOutlineCountBind, handle)
     }
 
     fun setStackedOutlineCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStackedOutlineCountBind, handle, count)
     }
 
     fun addStackedOutline(index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addStackedOutlineBind, handle, index)
     }
 
     fun moveStackedOutline(fromIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveStackedOutlineBind, handle, fromIndex, toPosition)
     }
 
     fun removeStackedOutline(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeStackedOutlineBind, handle, index)
     }
 
     fun setStackedOutlineSize(index: Int, size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setStackedOutlineSizeBind, handle, index, size)
     }
 
     fun getStackedOutlineSize(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getStackedOutlineSizeBind, handle, index)
     }
 
     fun setStackedOutlineColor(index: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setStackedOutlineColorBind, handle, index, color)
     }
 
     fun getStackedOutlineColor(index: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getStackedOutlineColorBind, handle, index)
     }
 
     fun getStackedShadowCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStackedShadowCountBind, handle)
     }
 
     fun setStackedShadowCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStackedShadowCountBind, handle, count)
     }
 
     fun addStackedShadow(index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addStackedShadowBind, handle, index)
     }
 
     fun moveStackedShadow(fromIndex: Int, toPosition: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(moveStackedShadowBind, handle, fromIndex, toPosition)
     }
 
     fun removeStackedShadow(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeStackedShadowBind, handle, index)
     }
 
     fun setStackedShadowOffset(index: Int, offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setStackedShadowOffsetBind, handle, index, offset)
     }
 
     fun getStackedShadowOffset(index: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getStackedShadowOffsetBind, handle, index)
     }
 
     fun setStackedShadowColor(index: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setStackedShadowColorBind, handle, index, color)
     }
 
     fun getStackedShadowColor(index: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getStackedShadowColorBind, handle, index)
     }
 
     fun setStackedShadowOutlineSize(index: Int, size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setStackedShadowOutlineSizeBind, handle, index, size)
     }
 
     fun getStackedShadowOutlineSize(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getStackedShadowOutlineSizeBind, handle, index)
     }
 

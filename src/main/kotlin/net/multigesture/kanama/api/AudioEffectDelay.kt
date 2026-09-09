@@ -95,6 +95,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_dry
      */
     fun setDry(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
@@ -104,6 +105,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_dry
      */
     fun getDry(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 
@@ -113,6 +115,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap1_active
      */
     fun setTap1Active(amount: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTap1ActiveBind, handle, amount)
     }
 
@@ -122,6 +125,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.is_tap1_active
      */
     fun isTap1Active(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isTap1ActiveBind, handle)
     }
 
@@ -132,6 +136,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap1_delay_ms
      */
     fun setTap1DelayMs(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap1DelayMsBind, handle, amount)
     }
 
@@ -142,6 +147,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_tap1_delay_ms
      */
     fun getTap1DelayMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1DelayMsBind, handle)
     }
 
@@ -151,6 +157,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap1_level_db
      */
     fun setTap1LevelDb(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap1LevelDbBind, handle, amount)
     }
 
@@ -160,6 +167,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_tap1_level_db
      */
     fun getTap1LevelDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1LevelDbBind, handle)
     }
 
@@ -170,6 +178,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap1_pan
      */
     fun setTap1Pan(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap1PanBind, handle, amount)
     }
 
@@ -180,6 +189,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_tap1_pan
      */
     fun getTap1Pan(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap1PanBind, handle)
     }
 
@@ -189,6 +199,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap2_active
      */
     fun setTap2Active(amount: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTap2ActiveBind, handle, amount)
     }
 
@@ -198,6 +209,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.is_tap2_active
      */
     fun isTap2Active(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isTap2ActiveBind, handle)
     }
 
@@ -208,6 +220,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap2_delay_ms
      */
     fun setTap2DelayMs(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap2DelayMsBind, handle, amount)
     }
 
@@ -218,6 +231,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_tap2_delay_ms
      */
     fun getTap2DelayMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2DelayMsBind, handle)
     }
 
@@ -227,6 +241,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap2_level_db
      */
     fun setTap2LevelDb(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap2LevelDbBind, handle, amount)
     }
 
@@ -236,6 +251,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_tap2_level_db
      */
     fun getTap2LevelDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2LevelDbBind, handle)
     }
 
@@ -246,6 +262,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_tap2_pan
      */
     fun setTap2Pan(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTap2PanBind, handle, amount)
     }
 
@@ -256,6 +273,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_tap2_pan
      */
     fun getTap2Pan(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTap2PanBind, handle)
     }
 
@@ -265,6 +283,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_feedback_active
      */
     fun setFeedbackActive(amount: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFeedbackActiveBind, handle, amount)
     }
 
@@ -274,6 +293,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.is_feedback_active
      */
     fun isFeedbackActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isFeedbackActiveBind, handle)
     }
 
@@ -283,6 +303,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_feedback_delay_ms
      */
     fun setFeedbackDelayMs(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackDelayMsBind, handle, amount)
     }
 
@@ -292,6 +313,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_feedback_delay_ms
      */
     fun getFeedbackDelayMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackDelayMsBind, handle)
     }
 
@@ -301,6 +323,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_feedback_level_db
      */
     fun setFeedbackLevelDb(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackLevelDbBind, handle, amount)
     }
 
@@ -310,6 +333,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_feedback_level_db
      */
     fun getFeedbackLevelDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLevelDbBind, handle)
     }
 
@@ -320,6 +344,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.set_feedback_lowpass
      */
     fun setFeedbackLowpass(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackLowpassBind, handle, amount)
     }
 
@@ -330,6 +355,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectDelay.get_feedback_lowpass
      */
     fun getFeedbackLowpass(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLowpassBind, handle)
     }
 

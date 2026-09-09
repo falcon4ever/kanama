@@ -16,10 +16,12 @@ class CircleShape2D(handle: MemorySegment) : Shape2D(handle) {
         set(value) = setRadius(value)
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 

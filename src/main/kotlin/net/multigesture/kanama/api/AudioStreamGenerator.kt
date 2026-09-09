@@ -44,6 +44,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamGenerator.set_mix_rate
      */
     fun setMixRate(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMixRateBind, handle, hz)
     }
 
@@ -63,6 +64,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamGenerator.get_mix_rate
      */
     fun getMixRate(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMixRateBind, handle)
     }
 
@@ -73,6 +75,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamGenerator.set_mix_rate_mode
      */
     fun setMixRateMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, handle, mode)
     }
 
@@ -83,6 +86,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamGenerator.get_mix_rate_mode
      */
     fun getMixRateMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, handle)
     }
 
@@ -94,6 +98,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamGenerator.set_buffer_length
      */
     fun setBufferLength(seconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
     }
 
@@ -105,6 +110,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamGenerator.get_buffer_length
      */
     fun getBufferLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 

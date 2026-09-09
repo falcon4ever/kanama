@@ -21,18 +21,22 @@ class VisualShaderNodeBillboard(handle: MemorySegment) : VisualShaderNode(handle
         set(value) = setKeepScaleEnabled(value)
 
     fun setBillboardType(billboardType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBillboardTypeBind, handle, billboardType)
     }
 
     fun getBillboardType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBillboardTypeBind, handle)
     }
 
     fun setKeepScaleEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepScaleEnabledBind, handle, enabled)
     }
 
     fun isKeepScaleEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isKeepScaleEnabledBind, handle)
     }
 

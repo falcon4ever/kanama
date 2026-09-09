@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Semaphore(handle: MemorySegment) : RefCounted(handle) {
     fun waitBlocking() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(waitBlockingBind, handle)
     }
 
     fun tryWait(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, handle)
     }
 
     fun post(count: Int = 1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(postBind, handle, count)
     }
 

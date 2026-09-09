@@ -22,22 +22,27 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
         set(value) = setMargin(value)
 
     fun setCustomSolverBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, handle, bias)
     }
 
     fun getCustomSolverBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, handle)
     }
 
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
     fun getDebugMesh(): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, handle))
     }
 

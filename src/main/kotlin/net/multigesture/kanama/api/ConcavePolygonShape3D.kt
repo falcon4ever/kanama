@@ -30,6 +30,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: ConcavePolygonShape3D.set_faces
      */
     fun setFaces(faces: List<Vector3>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(setFacesBind, handle, faces)
     }
 
@@ -40,6 +41,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: ConcavePolygonShape3D.get_faces
      */
     fun getFaces(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
     }
 
@@ -50,6 +52,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: ConcavePolygonShape3D.set_backface_collision_enabled
      */
     fun setBackfaceCollisionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBackfaceCollisionEnabledBind, handle, enabled)
     }
 
@@ -60,6 +63,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: ConcavePolygonShape3D.is_backface_collision_enabled
      */
     fun isBackfaceCollisionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBackfaceCollisionEnabledBind, handle)
     }
 

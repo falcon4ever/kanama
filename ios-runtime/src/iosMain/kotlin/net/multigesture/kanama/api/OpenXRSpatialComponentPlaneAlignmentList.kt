@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class OpenXRSpatialComponentPlaneAlignmentList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getPlaneAlignment(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getPlaneAlignmentBind, handle, index)
     }
 

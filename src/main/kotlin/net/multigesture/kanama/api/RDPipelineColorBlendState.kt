@@ -41,6 +41,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.set_enable_logic_op
      */
     fun setEnableLogicOp(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableLogicOpBind, handle, pMember)
     }
 
@@ -50,6 +51,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.get_enable_logic_op
      */
     fun getEnableLogicOp(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableLogicOpBind, handle)
     }
 
@@ -59,6 +61,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.set_logic_op
      */
     fun setLogicOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLogicOpBind, handle, pMember)
     }
 
@@ -68,6 +71,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.get_logic_op
      */
     fun getLogicOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, handle)
     }
 
@@ -77,6 +81,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.set_blend_constant
      */
     fun setBlendConstant(pMember: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBlendConstantBind, handle, pMember)
     }
 
@@ -86,6 +91,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.get_blend_constant
      */
     fun getBlendConstant(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBlendConstantBind, handle)
     }
 
@@ -95,6 +101,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.set_attachments
      */
     fun setAttachments(attachments: List<RDPipelineColorBlendStateAttachment>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setAttachmentsBind, handle, attachments)
     }
 
@@ -104,6 +111,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineColorBlendState.get_attachments
      */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, handle, RDPipelineColorBlendStateAttachment::fromHandle)
     }
 

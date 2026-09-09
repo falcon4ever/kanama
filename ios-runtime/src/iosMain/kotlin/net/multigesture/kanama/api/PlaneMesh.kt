@@ -42,42 +42,52 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setOrientation(value)
 
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
     fun setSubdivideWidth(subdivide: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivide)
     }
 
     fun getSubdivideWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
     fun setSubdivideDepth(subdivide: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, subdivide)
     }
 
     fun getSubdivideDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }
 
     fun setCenterOffset(offset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setCenterOffsetBind, handle, offset)
     }
 
     fun getCenterOffset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOffsetBind, handle)
     }
 
     fun setOrientation(orientation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
     fun getOrientation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 

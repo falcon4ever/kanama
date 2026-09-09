@@ -9,26 +9,32 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
     fun isBreaked(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBreakedBind, handle)
     }
 
     fun isDebuggable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDebuggableBind, handle)
     }
 
     fun isActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
     fun addSessionTab(control: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addSessionTabBind, handle, listOf(control.handle))
     }
 
     fun removeSessionTab(control: Control) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeSessionTabBind, handle, listOf(control.handle))
     }
 
     fun setBreakpoint(path: String, line: Int, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, handle, path, line, enabled)
     }
 

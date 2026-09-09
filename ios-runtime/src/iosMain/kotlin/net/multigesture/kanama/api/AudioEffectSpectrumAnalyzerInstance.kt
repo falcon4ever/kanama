@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Vector2
  */
 class AudioEffectSpectrumAnalyzerInstance(handle: MemorySegment) : AudioEffectInstance(handle) {
     fun getMagnitudeForFrequencyRange(fromHz: Double, toHz: Double, mode: Long = 1L): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, handle, fromHz, toHz, mode)
     }
 

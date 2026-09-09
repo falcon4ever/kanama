@@ -33,6 +33,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_id
      */
     fun getId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, handle)
     }
 
@@ -42,6 +43,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.is_active
      */
     fun isActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
@@ -51,6 +53,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_active
      */
     fun setActive(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
     }
 
@@ -60,6 +63,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_name
      */
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
     }
 
@@ -69,6 +73,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_name
      */
     fun setName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
     }
 
@@ -78,6 +83,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_position
      */
     fun getPosition(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, handle)
     }
 
@@ -87,6 +93,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_position
      */
     fun setPosition(position: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPositionBind, handle, position)
     }
 
@@ -96,6 +103,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_transform
      */
     fun getTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
@@ -105,6 +113,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_transform
      */
     fun setTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
@@ -114,6 +123,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_rgb_image
      */
     fun setRgbImage(rgbImage: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, handle, listOf(rgbImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -123,6 +133,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_ycbcr_image
      */
     fun setYcbcrImage(ycbcrImage: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, handle, listOf(ycbcrImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -132,6 +143,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_ycbcr_images
      */
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, handle, yImage?.requireOpenHandle() ?: MemorySegment.NULL, cbcrImage?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -141,6 +153,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_external
      */
     fun setExternal(width: Int, height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setExternalBind, handle, width, height)
     }
 
@@ -151,6 +164,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_texture_tex_id
      */
     fun getTextureTexId(feedImageType: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, handle, feedImageType)
     }
 
@@ -160,6 +174,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_datatype
      */
     fun getDatatype(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, handle)
     }
 
@@ -169,6 +184,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.get_formats
      */
     fun getFormats(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, handle)
     }
 
@@ -182,6 +198,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: CameraFeed.set_format
      */
     fun setFormat(index: Int, parameters: Map<String, Any?>): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, handle, index, parameters)
     }
 

@@ -15,14 +15,17 @@ class VisualShaderNodeInput(handle: MemorySegment) : VisualShaderNode(handle) {
         set(value) = setInputName(value)
 
     fun setInputName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setInputNameBind, handle, name)
     }
 
     fun getInputName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getInputNameBind, handle)
     }
 
     fun getInputRealName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getInputRealNameBind, handle)
     }
 

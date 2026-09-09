@@ -37,6 +37,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.add_blend_shape
      */
     fun addBlendShape(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(addBlendShapeBind, handle, name)
     }
 
@@ -46,6 +47,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.get_blend_shape_count
      */
     fun getBlendShapeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
     }
 
@@ -55,6 +57,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.get_blend_shape_name
      */
     fun getBlendShapeName(index: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendShapeNameBind, handle, index)
     }
 
@@ -64,6 +67,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.set_blend_shape_name
      */
     fun setBlendShapeName(index: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, handle, index, name)
     }
 
@@ -73,6 +77,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.clear_blend_shapes
      */
     fun clearBlendShapes() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBlendShapesBind, handle)
     }
 
@@ -82,6 +87,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.set_blend_shape_mode
      */
     fun setBlendShapeMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
     }
 
@@ -91,6 +97,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.get_blend_shape_mode
      */
     fun getBlendShapeMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
     }
 
@@ -132,6 +139,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.clear_surfaces
      */
     fun clearSurfaces() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
     }
 
@@ -142,6 +150,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_remove
      */
     fun surfaceRemove(surfIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, handle, surfIdx)
     }
 
@@ -157,6 +166,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_update_vertex_region
      */
     fun surfaceUpdateVertexRegion(surfIdx: Int, offset: Int, data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateVertexRegionBind, handle, surfIdx, offset, data)
     }
 
@@ -173,6 +183,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_update_attribute_region
      */
     fun surfaceUpdateAttributeRegion(surfIdx: Int, offset: Int, data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateAttributeRegionBind, handle, surfIdx, offset, data)
     }
 
@@ -188,6 +199,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_update_skin_region
      */
     fun surfaceUpdateSkinRegion(surfIdx: Int, offset: Int, data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateSkinRegionBind, handle, surfIdx, offset, data)
     }
 
@@ -198,6 +210,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_get_array_len
      */
     fun surfaceGetArrayLen(surfIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, handle, surfIdx)
     }
 
@@ -208,6 +221,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_get_array_index_len
      */
     fun surfaceGetArrayIndexLen(surfIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayIndexLenBind, handle, surfIdx)
     }
 
@@ -217,6 +231,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_get_format
      */
     fun surfaceGetFormat(surfIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, handle, surfIdx)
     }
 
@@ -226,6 +241,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_get_primitive_type
      */
     fun surfaceGetPrimitiveType(surfIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, handle, surfIdx)
     }
 
@@ -236,6 +252,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_find_by_name
      */
     fun surfaceFindByName(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(surfaceFindByNameBind, handle, name)
     }
 
@@ -245,6 +262,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_set_name
      */
     fun surfaceSetName(surfIdx: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, handle, surfIdx, name)
     }
 
@@ -254,6 +272,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.surface_get_name
      */
     fun surfaceGetName(surfIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(surfaceGetNameBind, handle, surfIdx)
     }
 
@@ -263,6 +282,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.regen_normal_maps
      */
     fun regenNormalMaps() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, handle)
     }
 
@@ -272,6 +292,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.lightmap_unwrap
      */
     fun lightmapUnwrap(transform: Transform3D, texelSize: Double): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, handle, transform, texelSize)
     }
 
@@ -282,6 +303,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.set_custom_aabb
      */
     fun setCustomAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
@@ -292,6 +314,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.get_custom_aabb
      */
     fun getCustomAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
@@ -305,6 +328,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.set_shadow_mesh
      */
     fun setShadowMesh(mesh: ArrayMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -318,6 +342,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.get_shadow_mesh
      */
     fun getShadowMesh(): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, handle))
     }
 

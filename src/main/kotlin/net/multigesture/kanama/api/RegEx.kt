@@ -8,38 +8,47 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class RegEx(handle: MemorySegment) : RefCounted(handle) {
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun compile(pattern: String, showError: Boolean = true): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(compileBind, handle, pattern, showError)
     }
 
     fun search(subject: String, offset: Int = 0, end: Int = -1): RegExMatch? {
+        checkOpen()
         return RegExMatch.wrap(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(searchBind, handle, subject, offset, end))
     }
 
     fun searchAll(subject: String, offset: Int = 0, end: Int = -1): List<RegExMatch> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(searchAllBind, handle, subject, offset, end, RegExMatch::fromHandle)
     }
 
     fun sub(subject: String, replacement: String, all: Boolean = false, offset: Int = 0, end: Int = -1): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(subBind, handle, subject, replacement, all, offset, end)
     }
 
     fun isValid(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isValidBind, handle)
     }
 
     fun getPattern(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPatternBind, handle)
     }
 
     fun getGroupCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, handle)
     }
 
     fun getNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getNamesBind, handle)
     }
 

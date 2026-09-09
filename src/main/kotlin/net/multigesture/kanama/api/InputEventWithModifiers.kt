@@ -47,6 +47,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.set_command_or_control_autoremap
      */
     fun setCommandOrControlAutoremap(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCommandOrControlAutoremapBind, handle, enable)
     }
 
@@ -57,6 +58,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.is_command_or_control_autoremap
      */
     fun isCommandOrControlAutoremap(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlAutoremapBind, handle)
     }
 
@@ -67,6 +69,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.is_command_or_control_pressed
      */
     fun isCommandOrControlPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlPressedBind, handle)
     }
 
@@ -76,6 +79,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.set_alt_pressed
      */
     fun setAltPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAltPressedBind, handle, pressed)
     }
 
@@ -85,6 +89,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.is_alt_pressed
      */
     fun isAltPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAltPressedBind, handle)
     }
 
@@ -94,6 +99,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.set_shift_pressed
      */
     fun setShiftPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setShiftPressedBind, handle, pressed)
     }
 
@@ -103,6 +109,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.is_shift_pressed
      */
     fun isShiftPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isShiftPressedBind, handle)
     }
 
@@ -112,6 +119,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.set_ctrl_pressed
      */
     fun setCtrlPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCtrlPressedBind, handle, pressed)
     }
 
@@ -121,6 +129,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.is_ctrl_pressed
      */
     fun isCtrlPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCtrlPressedBind, handle)
     }
 
@@ -131,6 +140,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.set_meta_pressed
      */
     fun setMetaPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMetaPressedBind, handle, pressed)
     }
 
@@ -141,6 +151,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.is_meta_pressed
      */
     fun isMetaPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaPressedBind, handle)
     }
 
@@ -150,6 +161,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      * Generated from Godot docs: InputEventWithModifiers.get_modifiers_mask
      */
     fun getModifiersMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, handle)
     }
 

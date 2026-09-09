@@ -32,6 +32,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.create_from_image
      */
     fun createFromImage(image: Image?, compressionMode: Long, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, compressionMode, normalMap, lossyQuality)
     }
 
@@ -41,6 +42,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.get_compression_mode
      */
     fun getCompressionMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCompressionModeBind, handle)
     }
 
@@ -50,6 +52,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.set_size_override
      */
     fun setSizeOverride(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeOverrideBind, handle, size)
     }
 
@@ -59,6 +62,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.get_size_override
      */
     fun getSizeOverride(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeOverrideBind, handle)
     }
 
@@ -71,6 +75,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.set_keep_compressed_buffer
      */
     fun setKeepCompressedBuffer(keep: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepCompressedBufferBind, handle, keep)
     }
 
@@ -83,6 +88,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.is_keeping_compressed_buffer
      */
     fun isKeepingCompressedBuffer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isKeepingCompressedBufferBind, handle)
     }
 
@@ -94,6 +100,7 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PortableCompressedTexture2D.set_basisu_compressor_params
      */
     fun setBasisuCompressorParams(uastcLevel: Int, rdoQualityLoss: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBasisuCompressorParamsBind, handle, uastcLevel, rdoQualityLoss)
     }
 

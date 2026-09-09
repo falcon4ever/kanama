@@ -12,94 +12,117 @@ import net.multigesture.kanama.types.Vector3
  */
 class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
     fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
     }
 
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun getVertexCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVertexCountBind, handle)
     }
 
     fun getEdgeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEdgeCountBind, handle)
     }
 
     fun getFaceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFaceCountBind, handle)
     }
 
     fun setVertex(idx: Int, vertex: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, handle, idx, vertex)
     }
 
     fun getVertex(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexBind, handle, idx)
     }
 
     fun setVertexNormal(idx: Int, normal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexNormalBind, handle, idx, normal)
     }
 
     fun getVertexNormal(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, handle, idx)
     }
 
     fun setVertexUv(idx: Int, uv: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUvBind, handle, idx, uv)
     }
 
     fun getVertexUv(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUvBind, handle, idx)
     }
 
     fun setVertexUv2(idx: Int, uv2: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUv2Bind, handle, idx, uv2)
     }
 
     fun getVertexUv2(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUv2Bind, handle, idx)
     }
 
     fun setVertexColor(idx: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setVertexColorBind, handle, idx, color)
     }
 
     fun getVertexColor(idx: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, handle, idx)
     }
 
     fun getEdgeVertex(idx: Int, vertex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, handle, idx, vertex)
     }
 
     fun getFaceVertex(idx: Int, vertex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceVertexBind, handle, idx, vertex)
     }
 
     fun getFaceEdge(idx: Int, edge: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceEdgeBind, handle, idx, edge)
     }
 
     fun getFaceNormal(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getFaceNormalBind, handle, idx)
     }
 
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 

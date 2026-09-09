@@ -15,14 +15,17 @@ open class OpenXRStructureBase(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setNext(value)
 
     fun getStructureType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStructureTypeBind, handle)
     }
 
     fun setNext(entity: OpenXRStructureBase?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNextBind, handle, listOf(entity?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNext(): OpenXRStructureBase? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

@@ -34,34 +34,42 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setRingSegments(value)
 
     fun setInnerRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, handle, radius)
     }
 
     fun getInnerRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, handle)
     }
 
     fun setOuterRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, handle, radius)
     }
 
     fun getOuterRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, handle)
     }
 
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
     fun setRingSegments(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingSegmentsBind, handle, rings)
     }
 
     fun getRingSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingSegmentsBind, handle)
     }
 

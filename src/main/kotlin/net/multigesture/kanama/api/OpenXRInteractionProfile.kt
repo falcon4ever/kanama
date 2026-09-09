@@ -27,42 +27,52 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
         set(value) = setBindingModifiers(value)
 
     fun setInteractionProfilePath(interactionProfilePath: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setInteractionProfilePathBind, handle, interactionProfilePath)
     }
 
     fun getInteractionProfilePath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getInteractionProfilePathBind, handle)
     }
 
     fun getBindingCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBindingCountBind, handle)
     }
 
     fun getBinding(index: Int): OpenXRIPBinding? {
+        checkOpen()
         return OpenXRIPBinding.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, handle, index))
     }
 
     fun setBindings(bindings: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setBindingsBind, handle, bindings)
     }
 
     fun getBindings(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getBindingsBind, handle)
     }
 
     fun getBindingModifierCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, handle)
     }
 
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
+        checkOpen()
         return OpenXRIPBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, handle, index))
     }
 
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, handle, bindingModifiers)
     }
 
     fun getBindingModifiers(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, handle)
     }
 

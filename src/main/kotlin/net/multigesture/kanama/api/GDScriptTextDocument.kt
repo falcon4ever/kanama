@@ -8,78 +8,97 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class GDScriptTextDocument(handle: MemorySegment) : RefCounted(handle) {
     fun showNativeSymbolInEditor(symbolId: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(showNativeSymbolInEditorBind, handle, symbolId)
     }
 
     fun didOpen(params: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(didOpenBind, handle, params)
     }
 
     fun didClose(params: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(didCloseBind, handle, params)
     }
 
     fun didChange(params: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(didChangeBind, handle, params)
     }
 
     fun willSaveWaitUntil(params: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(willSaveWaitUntilBind, handle, params)
     }
 
     fun didSave(params: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(didSaveBind, handle, params)
     }
 
     fun nativeSymbol(params: Map<String, Any?>): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(nativeSymbolBind, handle, params)
     }
 
     fun documentSymbol(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(documentSymbolBind, handle, params)
     }
 
     fun completion(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(completionBind, handle, params)
     }
 
     fun prepareRename(params: Map<String, Any?>): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(prepareRenameBind, handle, params)
     }
 
     fun references(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(referencesBind, handle, params)
     }
 
     fun foldingRange(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(foldingRangeBind, handle, params)
     }
 
     fun codeLens(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(codeLensBind, handle, params)
     }
 
     fun documentLink(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(documentLinkBind, handle, params)
     }
 
     fun colorPresentation(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(colorPresentationBind, handle, params)
     }
 
     fun hover(params: Map<String, Any?>): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(hoverBind, handle, params)
     }
 
     fun definition(params: Map<String, Any?>): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetArray(definitionBind, handle, params)
     }
 
     fun declaration(params: Map<String, Any?>): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(declarationBind, handle, params)
     }
 
     fun signatureHelp(params: Map<String, Any?>): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(signatureHelpBind, handle, params)
     }
 
