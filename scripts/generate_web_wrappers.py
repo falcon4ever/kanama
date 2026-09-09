@@ -677,8 +677,10 @@ WRAPPER_POLICY: dict[int, dict] = {
             "val engineTarget = if (useModelFront) position - (target - position) else target",
         ],
     },
-    # ShapeCast3D.get_collision_count keeps the Long the ported corpus compares against.
+    # ShapeCast3D keeps the Long count/index the ported corpus spells (its loops index with it).
     172: {"ret": "Long"},
+    173: {"param_types": {"index": "Long"}},
+    174: {"param_types": {"index": "Long"}},
     # RID never crosses the Web seam: the excluded body itself is the argument.
     170: {"bind": [("body", "GodotObject", None, "body.requireOpenHandle()")], "doc": "Web adaptation: exclusion takes the collision OBJECT (the applier derives the RID engine-side)."},
     # Typed ProjectSettings read: the shape fixes Double, so the name says so.
@@ -1009,6 +1011,17 @@ val SceneTree.root: Viewport
   fun setParameter(path: String, value: Long) {
     set(path, value.toDouble())
   }
+""",
+        "top_level": """
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
+  getStateMachinePlayback(path)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun AnimationMixer.setParameter(path: String, value: Double) = setParameter(path, value)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, value)
 """,
     },
     "AnimationNodeStateMachinePlayback": {

@@ -14,18 +14,18 @@ class ShapeCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
   fun getCollisionCount(): Long =
     GodotBackendCalls.invokeNoArgsRetLong(D.SHAPECAST3D_GET_COLLISION_COUNT, requireOpenHandle())
 
-  fun getCollisionPoint(index: Int): Vector3 =
+  fun getCollisionPoint(index: Long): Vector3 =
     GodotBackendCalls.invokeLongRetVector3(
       D.SHAPECAST3D_GET_COLLISION_POINT,
       requireOpenHandle(),
-      index.toLong(),
+      index,
     ).toApi()
 
-  fun getCollider(index: Int): GodotObject? =
+  fun getCollider(index: Long): GodotObject? =
     GodotBackendCalls.invokeLongRetHandle(
       D.SHAPECAST3D_GET_COLLIDER,
       requireOpenHandle(),
-      index.toLong(),
+      index,
     )?.let { GodotObject(it.toWebId()) }
 
   fun setTargetPosition(localPoint: Vector3) {
@@ -51,10 +51,10 @@ class ShapeCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
 fun ShapeCast3D.getCollisionCount(): Long = getCollisionCount()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ShapeCast3D.getCollisionPoint(index: Int): Vector3 = getCollisionPoint(index)
+fun ShapeCast3D.getCollisionPoint(index: Long): Vector3 = getCollisionPoint(index)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ShapeCast3D.getCollider(index: Int): GodotObject? = getCollider(index)
+fun ShapeCast3D.getCollider(index: Long): GodotObject? = getCollider(index)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun ShapeCast3D.setTargetPosition(localPoint: Vector3) = setTargetPosition(localPoint)

@@ -84,3 +84,13 @@ var AnimationMixer.active: Boolean
   set(newValue) {
     active = newValue
   }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
+  getStateMachinePlayback(path)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun AnimationMixer.setParameter(path: String, value: Double) = setParameter(path, value)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, value)
