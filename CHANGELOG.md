@@ -7,6 +7,16 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — CI change filter skipped the mobile and Web lanes on large PRs
+
+- `ci.yml` and `web.yml` decide whether to run the Android/iOS lanes and the Web matrix
+  by grepping the PR's changed-file list. The step runs under `pipefail`, and
+  `printf | grep -q` exits on the first match, so on a diff larger than the pipe buffer
+  (about 900 files) `printf` died with SIGPIPE and the filter answered **false**: the
+  lanes were skipped exactly on the PRs that most needed them (kanama#217, 1,000 files,
+  every mobile lane skipped with `ios-runtime/` in the list). The filter now reads the
+  list from a here-string. Small PRs were never affected.
+
 ### Changed — one resource-ownership rule, and `close()` no longer needs an opt-in
 
 - **Getters are owned; the docs now say so in one place and nowhere contradicts

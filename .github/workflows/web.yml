@@ -84,7 +84,11 @@ jobs:
           # web-runtime and the shared contract are obvious; processor/ emits the
           # per-proxy GDScript, kanama-common-api carries the opcode table, and
           # scripts/web + the two smoke shells are the harness itself.
-          if printf '%s\n' "$changed" | grep -qE '^(web-runtime/|kanama-common-api/|processor/|annotations/|scripts/web/|scripts/web_.*\.sh|scripts/generate_web_backend\.py|scripts/platform_backend_calls\.json|gradle/|build\.gradle\.kts|settings\.gradle\.kts|gradle\.properties|\.github/workflows/web\.yml)'; then
+          # A here-string, not `printf | grep -q`: this step runs under `pipefail`, and `grep -q` exits on
+          # the first match, so on a diff larger than the pipe buffer (about 900 files) `printf` died with
+          # SIGPIPE, the pipeline reported 141, and the lanes were skipped exactly on the PRs that most
+          # needed them (kanama#217, 1,000 files: all mobile lanes skipped with `ios-runtime/` in the list).
+          if grep -qE '^(web-runtime/|kanama-common-api/|processor/|annotations/|scripts/web/|scripts/web_.*\.sh|scripts/generate_web_backend\.py|scripts/platform_backend_calls\.json|gradle/|build\.gradle\.kts|settings\.gradle\.kts|gradle\.properties|\.github/workflows/web\.yml)' <<<"$changed"; then
             echo "web=true" >> "$GITHUB_OUTPUT"
           else
             echo "web=false" >> "$GITHUB_OUTPUT"
