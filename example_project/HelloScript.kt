@@ -1,5 +1,7 @@
 package net.multigesture.kanama.example
 
+// Desktop-only wrapper members are extensions in `<Class>.jvm.kt` companions (task 103): the
+// package import makes them resolve alongside the explicit class imports below.
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.annotations.ExportCategory
@@ -18,8 +20,6 @@ import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.annotations.ToolButton
-// Desktop-only wrapper members are extensions in `<Class>.jvm.kt` companions (task 103): the
-// package import makes them resolve alongside the explicit class imports below.
 import net.multigesture.kanama.api.*
 import net.multigesture.kanama.api.AnimationMixer
 import net.multigesture.kanama.api.AnimationPlayer
