@@ -129,8 +129,14 @@ if [[ -f "$DOCS_VERSION_PY" ]]; then
   DOCS_VERSION="$(python3 - "$DOCS_VERSION_PY" <<'EOF'
 import re, sys
 text = open(sys.argv[1]).read()
-fields = {k: v.strip('"') for k, v in re.findall(r'^(major|minor|status)\s*=\s*(.+)$', text, re.MULTILINE)}
-print(f"{fields.get('major','?')}.{fields.get('minor','?')}.{fields.get('status','?')}")
+fields = {k: v.strip('"') for k, v in re.findall(r'^(major|minor|patch|status)\s*=\s*(.+)$', text, re.MULTILINE)}
+# Godot spells a .0 release without the patch component (4.7.stable) and a maintenance
+# release with it (4.7.2.stable); the pin follows the same convention.
+patch = fields.get('patch', '0')
+version = f"{fields.get('major','?')}.{fields.get('minor','?')}"
+if patch not in ('0', '?'):
+    version += f".{patch}"
+print(f"{version}.{fields.get('status','?')}")
 EOF
 )"
   if [[ "$DOCS_VERSION" != "$PIN" ]]; then
