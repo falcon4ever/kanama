@@ -291,7 +291,7 @@ rather than an FFI pointer boundary, but the rule is identical: `close()`/`use {
 emits a release-handle command that drops the engine-side reference, and the bridge
 does not GC handles for you either — so the same code, unchanged, is correct on
 Web. Only the mechanism differs; see
-[Web internals → RefCounted resource ownership](../contributing/web-internals.md).
+[Web internals → RefCounted resource ownership](../contributing/backends/web.md).
 
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).
 

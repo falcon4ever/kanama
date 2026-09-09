@@ -3,7 +3,7 @@
 How Kanama runs Kotlin game scripts on iOS: generated Godot API wrappers over a
 C-shim generic `ptrcall`, the same wrapper generator as desktop/Android. For the
 hand-written/stub registry see
-[ios-backend-handwritten.md](./ios-backend-handwritten.md).
+[ios-backend-handwritten.md](../../reference/generated/ios-backend-handwritten.md).
 
 > **Status:** Supported on 4.7 stable — the core smoke matrix and the iOS demo
 > ports are device-validated on real iPhones (iPhone 12 + iPhone 15 Pro). This

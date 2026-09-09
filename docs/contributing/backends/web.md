@@ -3,7 +3,7 @@
 This page records the current Web implementation path. Web is **Experimental
 (Kotlin/Wasm preview)** on the Godot 4.7 stable baseline — not a Supported target,
 with a source-checkout export workflow (no packaged addon) and a user-facing
-[export guide](../exporting/web.md). The API/build flow is less settled than
+[export guide](../../exporting/web.md). The API/build flow is less settled than
 desktop, Android, or iOS.
 
 ## Where Web Sits Relative to the Other Backends
@@ -45,7 +45,7 @@ representative members:
   swap, match/collapse/refill, particles, audio, restart, and two full
   zero-state teardowns.
 
-The full list is in [Exporting → Web](../exporting/web.md).
+The full list is in [Exporting → Web](../../exporting/web.md).
 
 Each run asserts gameplay deltas, crossing budgets, and handle/callback/scheduler
 teardown to baseline, and fails on stale-handle use.
@@ -211,7 +211,7 @@ gameplay and full scene teardown; stale handle use after teardown fails.
 ### RefCounted resource ownership (create/close on the handle bridge)
 
 The user-facing contract is the **same** as the pointer backends —
-[*close what you create*](../game-dev/properties-resources.md): a factory
+[*close what you create*](../../game-dev/properties-resources.md): a factory
 (`X.create()`) or a temporary load hands back an owning handle, you hand the value
 to the engine, then release your handle with `use { }`/`close()`; the engine keeps
 its own reference so the object lives on. The **implementation is different**, and
@@ -416,5 +416,5 @@ mkdocs build --strict
 
 No Web editor or compiler, no hot reload, no threads, no TeaVM or Kotlin/JS
 production path, and no Supported status. The user-facing export workflow lives
-in [Exporting → Web](../exporting/web.md); promotion past Experimental is a
+in [Exporting → Web](../../exporting/web.md); promotion past Experimental is a
 separate decision, gated on the browser matrix and budgets described there.

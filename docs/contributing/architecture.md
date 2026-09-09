@@ -113,7 +113,7 @@ into the app's `.xcframework`, and the C shim exposes a single generic typed
 wrapper API as desktop/Android runs on device with the platform seam isolated in
 `ObjectCalls`. iOS is Supported on 4.7 stable; see the
 [iOS](../exporting/ios.md) and
-[iOS backend architecture](../internals/reference/ios-backend-architecture.md) for the
+[iOS backend architecture](backends/ios.md) for the
 current validation state and remaining support gates.
 
 ## Initialization (one-time, when Godot loads us)

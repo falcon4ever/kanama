@@ -109,7 +109,7 @@ to Android 9 and release builds requiring Android 13+. The R8/release path
 depends on Kanama's PanamaPort fork rather than upstream.
 
 See [Android](../exporting/android.md) for the build/export
-workflow and [Android Internals](../contributing/android-internals.md) for
+workflow and [Android Internals](../contributing/backends/android.md) for
 implementation details.
 
 ## iOS
@@ -128,7 +128,7 @@ hot reload, and the FPS Audio autoload follow-up + task-26 multiplayer UI polish
 non-blocking.
 
 See the [iOS export workflow](../exporting/ios.md) and the
-[iOS backend architecture](../internals/reference/ios-backend-architecture.md) (guardrails, how it
+[iOS backend architecture](../contributing/backends/ios.md) (guardrails, how it
 stays in sync with desktop/Android).
 
 ## Web
@@ -150,7 +150,7 @@ protocol 22). <!-- kanama-claim: protocol --> The typed backend seam is shared w
 `scripts/platform_backend_calls.json`, and
 `scripts/generate_web_gameplay_coverage.py` fails loudly if a call the demo
 executes has no admitted backend family. See
-[Web Internals](../contributing/web-internals.md) for the architecture.
+[Web Internals](../contributing/backends/web.md) for the architecture.
 
 ### Validated evidence
 

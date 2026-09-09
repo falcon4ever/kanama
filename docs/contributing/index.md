@@ -19,10 +19,13 @@ you are changing:
   behavior or reload smoke checks.
 - [Demo Porting Rules](demo-porting-rules.md) before changing demo ports or
   gameplay parity checks.
-- [Android Internals](android-internals.md) before changing Android runtime or
-  export support.
-- [Web Internals](web-internals.md) before changing the in-development
-  Kotlin/Wasm Web backend, its generated proxy, or the versioned JS bridge.
+- The backend internals pages, one per non-desktop platform, before changing
+  that platform's runtime or export support:
+  [Android Internals](backends/android.md),
+  [iOS Backend Architecture](backends/ios.md), and
+  [Web Internals](backends/web.md) (the Kotlin/Wasm backend, its generated
+  proxy, and the versioned JS bridge). The user-facing export workflow for
+  each lives under Exporting; these pages hold the design and the gates.
 - [Gates Index](gates.md) to find what each `local_ci.sh` stage, CI job, and
   local-only device/browser gate proves and where it runs, and to see the
   `evidence/gates.json` ledger of when those local gates last ran on the

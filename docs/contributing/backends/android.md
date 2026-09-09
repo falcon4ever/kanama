@@ -66,8 +66,8 @@ package.
 The build tools are also separate from the runtime: Kanama itself builds on
 the desktop JDK, Godot's Android Gradle export flow runs on its own JDK, and
 the exported game runs on ART and PanamaPort, not on a desktop JVM. The
-versions are in [Version Support → Requirements](../reference/version-support.md#requirements)
-and the [Android toolchain table](../exporting/android.md#toolchain).
+versions are in [Version Support → Requirements](../../reference/version-support.md#requirements)
+and the [Android toolchain table](../../exporting/android.md#toolchain).
 
 ## Implementation Shape
 

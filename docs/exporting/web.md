@@ -44,7 +44,7 @@ made here (see Known Limitations and Testing On A Phone Or Tablet).
 
 This page is the reproducible export workflow. For the architecture — batching,
 snapshots, handle generations, the bridge protocol — see
-[Web Internals](../contributing/web-internals.md).
+[Web Internals](../contributing/backends/web.md).
 
 ## How Web Differs
 

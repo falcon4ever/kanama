@@ -67,9 +67,9 @@ nav:
       - Gates Index: contributing/gates.md
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Demo Porting Rules: contributing/demo-porting-rules.md
-      - Android Internals: contributing/android-internals.md
-      - Web Internals: contributing/web-internals.md
-  - Internals:
-      - Index: internals/README.md
-      - iOS Backend Architecture: internals/reference/ios-backend-architecture.md
-      - iOS Backend Hand-written Registry: internals/reference/ios-backend-handwritten.md
+      - Backends:
+          - Android Internals: contributing/backends/android.md
+          - iOS Backend Architecture: contributing/backends/ios.md
+          - Web Internals: contributing/backends/web.md
+      - Generated Reports:
+          - iOS Backend Hand-written Registry: reference/generated/ios-backend-handwritten.md
