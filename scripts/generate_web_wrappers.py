@@ -132,22 +132,535 @@ def kotlin_class_name(godot_name: str) -> str:
 
 
 # --------------------------------------------------------------------------------------------------
+# Type mapping. Kotlin public types follow the desktop generator (`wrapper_model.value_policy`):
+# int32-meta ints are Int, everything else Long, enums/bitfields Long, float Double. Conversions to
+# and from the SPI's contract value types are one-liners on the generated support file.
+# --------------------------------------------------------------------------------------------------
+
+INT32_METAS = {"int8", "int16", "int32", "char32", "uint8", "uint16"}
+VALUE_TYPES = {"Vector2", "Vector3", "Vector2i", "Vector3i", "Color", "Rect2", "Basis", "Transform3D"}
+STRING_TYPES = {"String", "StringName", "NodePath"}
+# SPI value type -> Kotlin API type, for Variant-typed arguments whose shape fixes the type.
+SPI_TO_API = {
+    "Boolean": "Boolean",
+    "Int": "Int",
+    "Long": "Long",
+    "Double": "Double",
+    "String": "String",
+    "GodotVector2": "Vector2",
+    "GodotVector3": "Vector3",
+    "GodotVector2i": "Vector2i",
+    "GodotVector3i": "Vector3i",
+    "GodotColor": "Color",
+    "GodotRect2": "Rect2",
+    "GodotBasis": "Basis",
+    "GodotTransform3D": "Transform3D",
+}
+
+
+def int_type(meta: str) -> str:
+    return "Int" if meta in INT32_METAS else "Long"
+
+
+@dataclass
+class Tree:
+    """The generated class set: every contract class plus its Godot ancestors plus EXTRA_CLASSES."""
+
+    api: Api
+    classes: set[str]
+
+    def wrapper_for(self, godot_type: str) -> str:
+        """Kotlin wrapper for an object-typed slot: the class, else its nearest generated ancestor."""
+        name = godot_type.split("::")[-1]
+        for owner in self.api.chain(name) if name in self.api.classes else ["Object"]:
+            if owner in self.classes or owner == "Object":
+                return kotlin_class_name(owner)
+        return "GodotObject"
+
+    def is_object(self, godot_type: str) -> bool:
+        return godot_type in self.api.classes or godot_type in ("Object", "Variant")
+
+
+def api_param_type(tree: Tree, godot_type: str, meta: str, spi_type: str) -> str:
+    """Kotlin parameter type for a Godot argument bound to an SPI slot of `spi_type`."""
+    if godot_type == "bool":
+        return "Boolean"
+    if godot_type == "int":
+        return int_type(meta)
+    if godot_type.startswith("enum::") or godot_type.startswith("bitfield::"):
+        return "Long"
+    if godot_type == "float":
+        return "Double"
+    if godot_type in STRING_TYPES:
+        return "String"
+    if godot_type in VALUE_TYPES:
+        return godot_type
+    if godot_type == "Variant":
+        if spi_type.startswith("GodotHandle"):
+            return "GodotObject" + ("?" if spi_type.endswith("?") else "")
+        return SPI_TO_API[spi_type]
+    if godot_type == "RID":
+        return "GodotObject"  # Web adaptation: the applier derives the RID engine-side.
+    if tree.is_object(godot_type):
+        return tree.wrapper_for(godot_type) + ("?" if spi_type.endswith("?") else "")
+    raise GenerationError(f"no Kotlin parameter type for Godot type {godot_type!r}")
+
+
+def to_backend(expr: str, kotlin_type: str, spi_type: str) -> str:
+    """Expression converting a Kotlin API value to the SPI slot type."""
+    if spi_type in ("GodotHandle", "GodotHandle?"):
+        return f"{expr}?.requireOpenHandle()" if kotlin_type.endswith("?") else f"{expr}.requireOpenHandle()"
+    if spi_type == "Long" and kotlin_type == "Int":
+        return f"{expr}.toLong()"
+    if spi_type.startswith("Godot"):
+        return f"{expr}.toBackend()"
+    return expr
+
+
+def api_return(tree: Tree, godot_type: str, meta: str, spi_ret: str) -> tuple[str, str]:
+    """(Kotlin return type, conversion suffix applied to the SPI result expression)."""
+    if spi_ret == "":
+        return "", ""
+    if spi_ret in ("Boolean", "Double", "String"):
+        return spi_ret, ""
+    if spi_ret == "Int":
+        return ("Long", ".toLong()") if godot_type == "int" and int_type(meta) == "Long" else ("Int", "")
+    if spi_ret == "Long":
+        if godot_type == "int" and int_type(meta) == "Int":
+            return "Int", ".toInt()"
+        return "Long", ""
+    if spi_ret == "List<String>":
+        return "List<String>", ""
+    if spi_ret == "List<GodotVector3i>":
+        return "List<Vector3i>", ".map { it.toApi() }"
+    if spi_ret in SPI_TO_API:
+        return SPI_TO_API[spi_ret], ".toApi()"
+    if spi_ret == "GodotHandle?":
+        wrapper = tree.wrapper_for(godot_type) if godot_type != "Variant" else "GodotObject"
+        return f"{wrapper}?", f"?.let {{ {wrapper}(it.toWebId()) }}"
+    if spi_ret == "List<GodotHandle>":
+        element = godot_type.split("::")[-1]
+        wrapper = tree.wrapper_for(element)
+        return f"List<{wrapper}>", f".map {{ {wrapper}(it.toWebId()) }}"
+    raise GenerationError(f"no Kotlin return mapping for SPI type {spi_ret!r}")
+
+
+def kotlin_default(godot_default: str, kotlin_type: str) -> str | None:
+    """Kotlin literal for a Godot default value, or None when it cannot be expressed."""
+    if godot_default in ("null", "[]", "{}"):
+        return None
+    if kotlin_type == "Boolean":
+        return godot_default
+    if kotlin_type == "Int":
+        return str(int(godot_default))
+    if kotlin_type == "Long":
+        return f"{int(godot_default)}L"
+    if kotlin_type == "Double":
+        return repr(float(godot_default))
+    if kotlin_type == "String":
+        return '"' + godot_default.lstrip("&").strip('"') + '"'
+    known = {
+        "Vector3(0, 0, 0)": "Vector3.ZERO",
+        "Vector3(0, 1, 0)": "Vector3.UP",
+        "Vector2(0, 0)": "Vector2.ZERO",
+        "Color(1, 1, 1, 1)": "Color(1f, 1f, 1f, 1f)",
+    }
+    if godot_default in known:
+        return known[godot_default]
+    raise GenerationError(f"no Kotlin default for {godot_default!r} as {kotlin_type}")
+
+
+# --------------------------------------------------------------------------------------------------
 # Rendering (filled in family by family)
 # --------------------------------------------------------------------------------------------------
 
 
 @dataclass
-class ClassFile:
+class Param:
     name: str
-    lines: list[str] = field(default_factory=list)
+    kotlin_type: str
+    default: str | None = None
+    backend_expr: str | None = None  # None for baked (not carried) arguments
+    guard: str | None = None
 
-    def render(self) -> str:
-        return HEADER + "\n".join(self.lines) + "\n"
+
+@dataclass
+class Member:
+    """One rendered class member plus its top-level import-compat alias."""
+
+    body: list[str]
+    alias: list[str] = field(default_factory=list)
+    name: str = ""
+
+
+def spi_slots(shape: str) -> tuple[bool, list[tuple[str, str]]]:
+    """(has receiver, [(slot name, slot type)]) for a call shape's GodotBackendCalls facade."""
+    params, _ = SIGNATURES[shape]
+    slots = [tuple(p.split(": ", 1)) for p in params]
+    has_receiver = bool(slots) and slots[0][0] == "receiver"
+    return has_receiver, [(n, t) for n, t in slots if n != "receiver"]
+
+
+def invoke_name(shape: str) -> str:
+    from generate_web_backend import _method_name
+
+    return _method_name(shape)
+
+
+def descriptor_name(call: BackendCallPolicy) -> str:
+    if call.descriptor_name:
+        return call.descriptor_name
+    owner = "UTILITY" if call.class_name == "@GlobalScope" else call.class_name.upper()
+    return f"{owner}_{call.method_name.upper()}"
+
+
+def member_name(call: BackendCallPolicy, policy: dict) -> str:
+    if "name" in policy:
+        return str(policy["name"])
+    return camel(call.method_name)
+
+
+def bind_arguments(tree: Tree, call: BackendCallPolicy, method: dict, policy: dict) -> list[Param]:
+    """Bind the shape's SPI slots to the Godot arguments positionally; the rest are baked."""
+    _, slots = spi_slots(call.shape)
+    godot_args = list(method.get("arguments", ()))
+    for i, tail_type in enumerate(call.typed_vararg_tail):
+        godot_args.append({"name": f"__tail{i}", "type": tail_type})
+    if len(slots) > len(godot_args):
+        raise GenerationError(
+            f"opcode {call.opcode}: shape {call.shape} carries {len(slots)} values but "
+            f"{call.class_name}.{call.method_name} has {len(godot_args)} arguments; add a `bind` policy"
+        )
+    params: list[Param] = []
+    tail_names = list(policy.get("tail_names", ()))
+    for (slot_name, slot_type), arg in zip(slots, godot_args):
+        if arg["name"].startswith("__tail"):
+            name = tail_names.pop(0) if tail_names else slot_name
+        else:
+            name = param_name(arg["name"])
+        kotlin_type = policy.get("param_types", {}).get(name) or api_param_type(
+            tree, arg["type"], arg.get("meta", ""), slot_type
+        )
+        default = kotlin_default(arg["default_value"], kotlin_type) if "default_value" in arg else None
+        params.append(Param(name, kotlin_type, default, to_backend(name, kotlin_type, slot_type)))
+    label = f"{call.class_name}.{call.method_name}"
+    baked_values = dict(policy.get("baked", {}))
+    for arg in godot_args[len(slots) :]:
+        name = param_name(arg["name"])
+        if name in policy.get("hide", ()):
+            continue
+        kotlin_type = api_param_type(tree, arg["type"], arg.get("meta", ""), "GodotHandle?")
+        if name in baked_values:
+            default = str(baked_values.pop(name))
+        elif "default_value" in arg:
+            default = kotlin_default(arg["default_value"], kotlin_type)
+            if default is None:
+                continue  # Variant/Array defaults the shape cannot carry are not exposed at all
+        else:
+            raise GenerationError(f"{label}: argument {name} is not carried and has no default; add `baked`")
+        guard = f'require({name} == {default}) {{ "Web {label} supports only {name} = {default}" }}'
+        params.append(Param(name, kotlin_type, default, None, guard))
+    if baked_values:
+        raise GenerationError(f"{label}: baked policy names unknown arguments {sorted(baked_values)}")
+    return params
+
+
+def render_signature(name: str, params: list[Param], ret: str, modifiers: str = "") -> str:
+    rendered = ", ".join(
+        f"{p.name}: {p.kotlin_type}" + (f" = {p.default}" if p.default is not None else "") for p in params
+    )
+    suffix = f": {ret}" if ret else ""
+    return f"{modifiers}fun {name}({rendered}){suffix}"
+
+
+def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
+    api = tree.api
+    method = api.method(call)
+    has_receiver, _ = spi_slots(call.shape)
+    name = member_name(call, policy)
+    if "bind" in policy:
+        params = [Param(*spec) for spec in policy["bind"]]
+    else:
+        params = bind_arguments(tree, call, method, policy)
+    godot_ret = method.get("return_value", {}).get("type", method.get("return_type", "void"))
+    ret_meta = method.get("return_value", {}).get("meta", "")
+    _, spi_ret = SIGNATURES[call.shape]
+    ret, convert = api_return(tree, godot_ret, ret_meta, spi_ret)
+    if "ret" in policy:
+        ret = str(policy["ret"])
+        convert = ""
+        if ret == "Unit":
+            ret = ""
+    if policy.get("raw_handle_return"):
+        ret, convert = "GodotHandle?", "?.let { it.toWebId() }"
+    nonnull = policy.get("nonnull")
+    call_args = [f"D.{descriptor_name(call)}"]
+    if has_receiver:
+        call_args.append("requireOpenHandle()")
+    if "args" in policy:
+        call_args += list(policy["args"])
+    else:
+        call_args += [p.backend_expr for p in params if p.backend_expr is not None]
+    call_args += list(policy.get("extra_args", ()))
+    invocation = f"GodotBackendCalls.{invoke_name(call.shape)}({', '.join(call_args)}){convert}"
+    if nonnull:
+        invocation = f'checkNotNull({invocation}) {{ "{nonnull}" }}'
+        ret = ret.rstrip("?")
+    guards = [p.guard for p in params if p.guard] + list(policy.get("guards", ()))
+    pre = list(policy.get("pre", ()))
+    modifiers = ""
+    if policy.get("visibility"):
+        modifiers += f"{policy['visibility']} "
+    if policy.get("open"):
+        modifiers += "open "
+    doc = policy.get("doc")
+    body: list[str] = []
+    if doc:
+        body.append(f"  /** {doc} */")
+    signature = render_signature(name, params, ret, modifiers)
+    if "body" in policy:
+        body.append(f"  {signature} {{")
+        body += [f"    {line}" for line in policy["body"]]
+        body.append("  }")
+    elif not guards and not pre:
+        if ret:
+            body.append(f"  {signature} =")
+            body.append(f"    {invocation}")
+        else:
+            body.append(f"  {signature} {{")
+            body.append(f"    {invocation}")
+            body.append("  }")
+    else:
+        body.append(f"  {signature} {{")
+        body += [f"    {line}" for line in pre]
+        body += [f"    {g}" for g in guards]
+        body.append(f"    {'return ' if ret else ''}{invocation}")
+        body.append("  }")
+    alias: list[str] = []
+    if policy.get("visibility") not in ("internal", "protected", "private"):
+        owner = kotlin_class_name(call.class_name) if call.class_name != "@GlobalScope" else "GD"
+        forward = ", ".join(p.name for p in params)
+        alias.append('@Suppress("EXTENSION_SHADOWED_BY_MEMBER")')
+        alias.append(f"{render_signature(f'{owner}.{name}', params, ret)} = {name}({forward})")
+    return Member(body, alias, name)
+
+
+# --------------------------------------------------------------------------------------------------
+# Web-local wrapper policy. Per-opcode overrides where the contract alone does not fix the Kotlin
+# spelling; per-class hand-shaped members (custom sections), factories, lifetimes and constants.
+# --------------------------------------------------------------------------------------------------
+
+_UNIT = 'section + "\\u001F" + key'  # the applier splits packed ConfigFile keys on the unit separator
+
+WRAPPER_POLICY: dict[int, dict] = {
+    # Callable-taking calls: the shape carries (target, method) in place of Godot's Callable.
+    22: {
+        "visibility": "internal",
+        "bind": [
+            ("signal", "String", None, "signal"),
+            ("target", "GodotObject", None, "target.requireOpenHandle()"),
+            ("method", "String", None, "method"),
+            ("flags", "Long", "0L", "flags"),
+        ],
+    },
+    34: {
+        "name": "connectBound",
+        "visibility": "internal",
+        "bind": [
+            ("signal", "String", None, "signal"),
+            ("target", "GodotObject", None, "target.requireOpenHandle()"),
+            ("method", "String", None, "method"),
+            ("boundValue", "Long", None, "boundValue"),
+            ("flags", "Long", "0L", "flags"),
+        ],
+    },
+    193: {
+        "name": "disconnectBound",
+        "visibility": "internal",
+        "ret": "Unit",
+        "bind": [
+            ("signal", "String", None, "signal"),
+            ("target", "GodotObject", None, "target.requireOpenHandle()"),
+            ("method", "String", None, "method"),
+            ("boundValue", "Long", None, "boundValue"),
+        ],
+        "extra_args": ["-1L"],
+    },
+    137: {
+        "ret": "Unit",
+        "doc": "Chain a callback step to a registered method on a Kanama script (FPS change_weapon).",
+        "bind": [("target", "GodotObject", None, "target.requireOpenHandle()"), ("method", "String", None, "method")],
+    },
+    192: {
+        "ret": "Unit",
+        "doc": "Tween a registered method with an interpolated double (the Callable binds proxy-side).",
+        "bind": [
+            ("target", "GodotObject", None, "target.requireOpenHandle()"),
+            ("method", "String", None, "method"),
+            ("from", "Double", None, "from"),
+            ("to", "Double", None, "to"),
+            ("duration", "Double", None, "duration"),
+        ],
+    },
+    # The shape carries the surface only; the material is baked to null (clear the override).
+    189: {"baked": {"material": "null"}, "doc": "Web supports only clearing an override (material baked null in the family)."},
+    # ConfigFile keys ride one StringName packed with a unit separator; values carry a type tag.
+    266: {"bind": [("section", "String", None, None), ("key", "String", None, None)], "args": [_UNIT]},
+    267: {
+        "bind": [("section", "String", None, None), ("key", "String", None, None), ("value", "Any?", None, None)],
+        "pre": [
+            "val tagged =",
+            "  when (value) {",
+            '    is Boolean -> "b:$value"',
+            '    is Long -> "i:$value"',
+            '    is Int -> "i:$value"',
+            '    is Double -> "f:$value"',
+            '    is String -> "s:$value"',
+            '    else -> error("Kanama Web ConfigFile does not carry ${value?.let { it::class }} values")',
+            "  }",
+        ],
+        "args": [_UNIT + ' + "\\u001F" + tagged'],
+    },
+    268: {
+        "ret": "Any?",
+        "bind": [("section", "String", None, None), ("key", "String", None, None)],
+        "body": [
+            "val tagged =",
+            f"  GodotBackendCalls.invokeStringNameRetString(D.CONFIGFILE_GET_VALUE, requireOpenHandle(), {_UNIT})",
+            "val body = tagged.drop(2)",
+            "return when {",
+            '  tagged.startsWith("b:") -> body == "true"',
+            '  tagged.startsWith("i:") -> body.toLong()',
+            '  tagged.startsWith("f:") -> body.toDouble()',
+            '  tagged.startsWith("s:") -> body',
+            "  else -> null",
+            "}",
+        ],
+    },
+    # propagate_call("set", [property, value]) with a Boolean value (the shadow-mapping sweep).
+    279: {
+        "name": "propagateSet",
+        "doc": 'Godot\'s `propagate_call("set", [property, value])` (the shadow-mapping sweep).',
+        "bind": [("property", "String", None, "property"), ("value", "Boolean", None, "value")],
+    },
+}
+CLASS_POLICY: dict[str, dict] = {}
+# Leaf and intermediate Godot classes the corpus types against that own no opcode themselves.
+EXTRA_CLASSES: tuple[str, ...] = (
+    "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ColorRect", "LightmapGIData",
+    "Marker2D", "Marker3D", "MultiMeshInstance3D", "OmniLight3D", "ProgressBar", "SpinBox",
+    "SpotLight3D", "StaticBody3D", "Texture2D", "TextureButton",
+)
+# Bespoke facades that stay hand-written under api/ (name -> why the generator cannot emit it).
+WEB_HANDSHAPED: dict[str, str] = {
+    "Window": "handle-less browser-window mirror shared with the handle-backed root window (tps settings menu)",
+    "PhysicsDirectSpaceState3D": "owner-bound facade; the ray query packs a Dictionary result into one string",
+}
+# Opcodes a hand-written facade in WEB_HANDSHAPED may dispatch directly.
+HANDSHAPED_OPCODES: frozenset[str] = frozenset(
+    {"WINDOW_SET_MODE", "WINDOW_GET_MODE", "PHYSICSDIRECTSPACESTATE3D_INTERSECT_RAY"}
+)
+
+PACKAGE_IMPORTS = {
+    "GodotBackendCalls": "net.multigesture.kanama.backend.GodotBackendCalls",
+    "D.": "net.multigesture.kanama.backend.InitialGodotCallDescriptors as D",
+    "BackendGodotHandle": "net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle",
+    "WebObjectId": "net.multigesture.kanama.web.WebObjectId",
+    "Vector2": "net.multigesture.kanama.types.Vector2",
+    "Vector3": "net.multigesture.kanama.types.Vector3",
+    "Vector2i": "net.multigesture.kanama.types.Vector2i",
+    "Vector3i": "net.multigesture.kanama.types.Vector3i",
+    "Color": "net.multigesture.kanama.types.Color",
+    "Rect2": "net.multigesture.kanama.types.Rect2",
+    "Basis": "net.multigesture.kanama.types.Basis",
+    "Transform3D": "net.multigesture.kanama.types.Transform3D",
+    "Quaternion": "net.multigesture.kanama.types.Quaternion",
+    "NodePath": "net.multigesture.kanama.types.NodePath",
+}
+
+
+def build_tree(api: Api) -> Tree:
+    classes: set[str] = set()
+    for call in INITIAL_BACKEND_CALLS:
+        if call.class_name != "@GlobalScope":
+            classes.update(api.chain(call.class_name))
+    for extra in EXTRA_CLASSES:
+        classes.update(api.chain(extra))
+    classes -= set(WEB_HANDSHAPED)
+    return Tree(api, classes)
+
+
+def imports_for(body: str, extra: list[str]) -> list[str]:
+    imports = set(extra)
+    for token, statement in PACKAGE_IMPORTS.items():
+        if re.search(r"(?<![A-Za-z0-9_.])" + re.escape(token), body):
+            imports.add(statement)
+    return sorted(imports)
+
+
+def file_text(body_lines: list[str], extra_imports: list[str]) -> str:
+    body = "\n".join(body_lines)
+    imports = imports_for(body, extra_imports)
+    parts = [HEADER.rstrip("\n"), "@file:OptIn(InternalKanamaBackendApi::class)", "", "package net.multigesture.kanama.api", ""]
+    parts += [f"import {i}" for i in imports]
+    parts.append("import net.multigesture.kanama.backend.InternalKanamaBackendApi")
+    parts += ["", body, ""]
+    return "\n".join(parts)
+
+
+def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) -> str:
+    api = tree.api
+    name = kotlin_class_name(godot_name)
+    class_policy = CLASS_POLICY.get(godot_name, {})
+    singleton = godot_name in api.singletons or godot_name == "@GlobalScope"
+    members = [emit_opcode(tree, call, WRAPPER_POLICY.get(call.opcode, {})) for call in calls]
+    lines: list[str] = []
+    if singleton:
+        object_name = "GD" if godot_name == "@GlobalScope" else name
+        visibility = class_policy.get("visibility", "")
+        lines.append(f"{visibility + ' ' if visibility else ''}object {object_name} {{")
+    else:
+        parent = api.parent(godot_name)
+        while parent is not None and parent not in tree.classes and parent != "Object":
+            parent = api.parent(parent)
+        has_children = any(api.parent(c) == godot_name for c in tree.classes)
+        open_ = "open " if has_children or class_policy.get("open") else ""
+        if godot_name == "Object":
+            lines.append(f"{open_}class GodotObject(godotObject: GodotHandle) {{")
+            lines.append("  internal val backendHandle: BackendGodotHandle = godotObject.toBackendHandle()")
+            lines.append("")
+            lines.append("  /** The live backend handle; guarded wrappers (closeable resources) override this. */")
+            lines.append("  internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle")
+            lines.append("")
+        else:
+            lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject) {{")
+    for i, member in enumerate(members):
+        if i or godot_name == "Object":
+            lines.append("")
+        lines += member.body
+    lines.append("}")
+    for member in members:
+        if member.alias:
+            lines.append("")
+            lines += member.alias
+    return file_text(lines, [])
 
 
 def render_all(api: Api) -> dict[str, str]:
     """Render every generated file: file name -> content."""
+    tree = build_tree(api)
+    by_class: dict[str, list[BackendCallPolicy]] = {c: [] for c in tree.classes}
+    by_class["@GlobalScope"] = []
+    for call in INITIAL_BACKEND_CALLS:
+        if call.class_name in WEB_HANDSHAPED:
+            if descriptor_name(call) not in HANDSHAPED_OPCODES:
+                raise GenerationError(f"opcode {call.opcode} belongs to hand-shaped {call.class_name} but is not allowlisted")
+            continue
+        by_class[call.class_name].append(call)
     files: dict[str, str] = {}
+    for godot_name, calls in by_class.items():
+        file_name = ("GD" if godot_name == "@GlobalScope" else kotlin_class_name(godot_name)) + ".kt"
+        files[file_name] = render_class(tree, godot_name, sorted(calls, key=lambda c: c.opcode))
     return files
 
 
