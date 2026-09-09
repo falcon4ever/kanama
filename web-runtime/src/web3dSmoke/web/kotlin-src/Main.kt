@@ -17,17 +17,21 @@ import net.multigesture.kanama.api.DirectionalLight3D
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Input
+import net.multigesture.kanama.api.InputEventKey
+import net.multigesture.kanama.api.InputMap
 import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.ManualGodotLifetimeApi
+import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.OS
 import net.multigesture.kanama.api.RenderingServer
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.SceneTree
+import net.multigesture.kanama.api.Window
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
@@ -415,6 +419,70 @@ class Main(godotObject: GodotHandle) :
       tween.tweenProperty(sun, "light_color", Color(1f, 1f, 1f, 1f), 0.05) ?: return 0L
     val chained = tweener.from(Color(0.5f, 0.5f, 0.5f, 1f))
     return if (chained.handle.value == tweener.handle.value) 1L else 0L
+  }
+
+  /**
+   * Task 64 tier 3: the InputMap / InputEventKey / process-mode / Window-mode families third-person's
+   * shared Player.kt and FullScreenHandler.kt need. Every bit proves a VALUE came back through the
+   * engine, not that a call dispatched:
+   * - 1: `has_action` is false before `add_action` and true after it.
+   * - 2: a constructed InputEventKey reads its keycode back as F11 and its physical keycode as F10
+   *   (two QUEUED setters landed before the immediate reads).
+   * - 4: `is_echo` is false on that event.
+   * - 8: `is_action` is false BEFORE `action_add_event` and true AFTER it, on the same event -- the
+   *   attach bound the key, rather than merely returning.
+   * - 16: `Input.action_press` on the new action reads back `is_action_pressed` true (the action is
+   *   real), then released.
+   * - 32: `erase_action` makes `has_action` false again.
+   * - 64: `set_process_mode(ALWAYS)` reads back 3 (then restored to INHERIT).
+   * - 128: `Window(getTree().getRoot()).getMode()` is a legal Window.Mode.
+   *
+   * A healthy run returns 255. The event handle is closed in `finally`, after the attach: the
+   * InputMap keeps its own reference (the create/close contract on Web, see web-internals).
+   *
+   * Ordering: the driver calls this AFTER generic_probe. Bit 128 tracks the root Window through
+   * the typed get_root path, and the generic probe's minting check needs that same window still
+   * untracked when it asks `get_window` -- see the driver comment.
+   */
+  @RegisterFunction("input_map_probe")
+  fun inputMapProbe(value: Long): Long {
+    var mask = 0L
+    val action = "kanama_probe_action"
+    val hadBefore = InputMap.hasAction(action)
+    InputMap.addAction(action)
+    if (!hadBefore && InputMap.hasAction(action)) mask = mask or 1L
+
+    val key = InputEventKey.create()
+    try {
+      key.keycode = InputEventKey.KEY_F11
+      key.physicalKeycode = InputEventKey.KEY_F10
+      if (
+        key.getKeycode() == InputEventKey.KEY_F11 && key.getPhysicalKeycode() == InputEventKey.KEY_F10
+      ) {
+        mask = mask or 2L
+      }
+      if (!key.isEcho()) mask = mask or 4L
+      val boundBefore = key.isAction(action)
+      InputMap.actionAddEvent(action, key)
+      if (!boundBefore && key.isAction(action)) mask = mask or 8L
+    } finally {
+      key.close()
+    }
+
+    Input.actionPress(action)
+    if (Input.isActionPressed(action)) mask = mask or 16L
+    Input.actionRelease(action)
+
+    InputMap.eraseAction(action)
+    if (!InputMap.hasAction(action)) mask = mask or 32L
+
+    self.setProcessMode(Node.PROCESS_MODE_ALWAYS)
+    if (self.getProcessMode() == Node.PROCESS_MODE_ALWAYS) mask = mask or 64L
+    self.setProcessMode(Node.PROCESS_MODE_INHERIT)
+
+    val root = Window(self.getTree().getRoot())
+    if (root.getMode() in Window.MODE_WINDOWED..Window.MODE_EXCLUSIVE_FULLSCREEN) mask = mask or 128L
+    return mask
   }
 
   @RegisterFunction("signal_probe")

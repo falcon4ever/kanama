@@ -233,6 +233,19 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`generic: ${JSON.stringify(generic)}`);
 
+  // Task 64 tier 3: InputMap / InputEventKey / process mode / Window mode (see Main.input_map_probe).
+  // Runs AFTER generic_probe on purpose: the probe wraps the root Window through the typed
+  // SceneTree.get_root path, which TRACKS that window in Main's handle table, and the generic
+  // probe's genericMintsNodeHandle check needs the same window still UNTRACKED when it asks
+  // get_window (an already-tracked object is reported "tracked", not minted). Same object, two
+  // proofs -- order is the coupling, stated here and in Main.kt.
+  const inputMapProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("input_map_probe")}, 0)`,
+    ),
+  );
+  trace(`inputMapProbe: ${inputMapProbe}`);
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -315,6 +328,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64 tier 2: from() returned the SAME tweener, which is what the fluent contract
     // promises -- a dropped call returns null and clears this.
     propertyTweenerFromDelivers: tweenerFrom === 1,
+    // Task 64 tier 3: every InputMap / InputEventKey / process-mode / Window-mode family delivered
+    // its VALUE -- has_action flips on add and erase, two queued keycodes read back, is_action
+    // flips on attach, the new action presses, process_mode reads 3, the root window reports a
+    // legal mode. Any dropped call clears a bit.
+    inputMapFamiliesDeliverValues: inputMapProbe === 255,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
     dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.
