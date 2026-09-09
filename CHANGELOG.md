@@ -7,6 +7,25 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web input-map, key-event, process-mode and window-mode families
+
+- **Web protocol 21 → 22.** The Kotlin/Wasm backend admits the call families the
+  third-person demo's shared `Player.kt` and `FullScreenHandler.kt` need so they
+  can later compile on Web without `web/kotlin-src` overrides (task 64 tier 3):
+  `InputMap.hasAction` / `addAction` / `actionAddEvent` / `eraseAction`,
+  `InputEventKey.create()` / `from()` with `keycode` / `physicalKeycode` and the
+  `KEY_*` constants, `InputEvent.isEcho()` / `isAction()`,
+  `InputEventWithModifiers.isAltPressed()`, `Node.setProcessMode` /
+  `getProcessMode` with `PROCESS_MODE_*`, `SceneTree.getRoot()`, and a
+  handle-taking `Window(...)` with `setMode` / `getMode`. `Node3D.setVisible` /
+  `show()` are now members and `InputEventMouseButton.MOUSE_BUTTON_RIGHT` exists.
+  One new contract shape (`STRINGNAME_OBJECT_ARG_SINGLETON`) carries the
+  action-plus-event call; `actionAddEvent` fails loud if the engine did not
+  attach the event. The in-repo `web3d` fixture proves every family delivered a
+  VALUE (`Main.input_map_probe`, required by the smoke gate, must return 255).
+  **Existing Web exports must be rebuilt**: a protocol-21 export refuses to load
+  against a protocol-22 bridge, and vice versa.
+
 ### Changed — Godot baseline
 
 - **Godot baseline re-pinned to 4.7.2 stable** (task 91). `scripts/upgrade_godot.sh`
