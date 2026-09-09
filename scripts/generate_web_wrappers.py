@@ -291,6 +291,8 @@ class Member:
     body: list[str]
     alias: list[str] = field(default_factory=list)
     name: str = ""
+    params: list[Param] = field(default_factory=list)
+    ret: str = ""
 
 
 def spi_slots(shape: str) -> tuple[bool, list[tuple[str, str]]]:
@@ -368,12 +370,12 @@ def bind_arguments(tree: Tree, call: BackendCallPolicy, method: dict, policy: di
 MAX_WIDTH = 100
 
 
-def wrap_call(prefix: str, args: list[str], suffix: str, indent: str) -> list[str]:
-    """`prefix(args)suffix` on one line when it fits, else one argument per line (ktfmt shape)."""
-    one_line = f"{indent}{prefix}({', '.join(args)}){suffix}"
+def wrap_call(prefix: str, args: list[str], suffix: str, indent: str, lead: str = "") -> list[str]:
+    """`lead prefix(args)suffix` on one line when it fits, else one argument per line (ktfmt shape)."""
+    one_line = f"{indent}{lead}{prefix}({', '.join(args)}){suffix}"
     if len(one_line) <= MAX_WIDTH or not args:
         return [one_line]
-    lines = [f"{indent}{prefix}("]
+    lines = [f"{indent}{lead}{prefix}("]
     lines += [f"{indent}  {arg}," for arg in args]
     lines.append(f"{indent}){suffix}")
     return lines
@@ -440,7 +442,7 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
     if expression_body and ret:
         body += signature[:-1] + [signature[-1] + " ="]
         body += wrap_call(invoke, call_args, convert, "    ")
-        return Member(body, _alias(owner, name, params, ret), name)
+        return Member(body, _alias(owner, name, params, ret), name, params, ret)
     body += signature[:-1] + [signature[-1] + " {"]
     if "body" in policy:
         body += [f"    {line}" for line in policy["body"]]
@@ -448,7 +450,7 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
         body += [f"    {line}" for line in pre]
         body += [f"    {g}" for g in guards]
         if fluent:
-            body += wrap_call(invoke, call_args, "", "    val returned = ")
+            body += wrap_call(invoke, call_args, "", "    ", "val returned = ")
             same = "returned.backendToken() == backendHandle.backendToken()"
             if fluent == "self":
                 body.append(f"    check(returned != null && {same}) {{ \"{owner}.{name} did not return its receiver\" }}")
@@ -456,16 +458,34 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
             else:
                 body.append(f"    return if (returned == null || {same}) this else {owner}(returned.toWebId())")
         elif nonnull:
-            body += wrap_call(invoke, call_args, convert, "    val returned = ")
+            body += wrap_call(invoke, call_args, convert, "    ", "val returned = ")
             body.append(f'    return checkNotNull(returned) {{ "{nonnull}" }}')
         elif post:
             body += wrap_call(invoke, call_args, convert, "    ")
             body += [f"    {line}" for line in post]
         else:
-            body += wrap_call(invoke, call_args, convert, "    return " if ret else "    ")
+            body += wrap_call(invoke, call_args, convert, "    ", "return " if ret else "")
     body.append("  }")
     alias = [] if policy.get("visibility") in ("internal", "protected", "private") else _alias(owner, name, params, ret)
-    return Member(body, alias, name)
+    return Member(body, alias, name, params, ret)
+
+
+def emit_extras(tree: Tree, call: BackendCallPolicy, policy: dict, primary: Member) -> list[Member]:
+    """Extra spellings a policy asks for: forwarding names and typed ResourceLoader loads."""
+    owner = kotlin_class_name(call.class_name) if call.class_name != "@GlobalScope" else "GD"
+    extras: list[Member] = []
+    forward = ", ".join(p.name for p in primary.params)
+    for extra in policy.get("extra_names", ()):
+        signature = render_signature(extra, primary.params, primary.ret)
+        body = signature[:-1] + [f"{signature[-1]} = {primary.name}({forward})"]
+        extras.append(Member(body, _alias(owner, extra, primary.params, primary.ret), extra, primary.params, primary.ret))
+    for godot_type, extra in policy.get("typed_loads", {}).items():
+        wrapper = tree.wrapper_for(godot_type)
+        params = [Param("path", "String"), Param("cacheMode", "Long", "1L")]
+        signature = render_signature(extra, params, f"{wrapper}?")
+        body = signature[:-1] + [f'{signature[-1]} = {primary.name}(path, "{godot_type}", cacheMode)?.let {{ {wrapper}(it.handle) }}']
+        extras.append(Member(body, _alias(owner, extra, params, f"{wrapper}?"), extra, params, f"{wrapper}?"))
+    return extras
 
 
 def _alias(owner: str, name: str, params: list[Param], ret: str) -> list[str]:
@@ -575,6 +595,94 @@ WRAPPER_POLICY: dict[int, dict] = {
         "doc": 'Godot\'s `propagate_call("set", [property, value])` (the shadow-mapping sweep).',
         "bind": [("property", "String", None, "property"), ("value", "Boolean", None, "value")],
     },
+    # Typed vararg arms: `emit_signal`/`call`/`call_deferred` keep the corpus's parameter names and
+    # the Unit return the hand-written dispatcher exposed.
+    8: {"ret": "Unit", "tail_names": ["value"]},
+    28: {"ret": "Unit", "tail_names": ["value"]},
+    35: {"ret": "Unit"},
+    148: {"ret": "Unit", "tail_names": ["value"]},
+    196: {"ret": "Unit", "tail_names": ["value"]},
+    105: {"tail_names": ["argument"], "doc": "Dynamic one-String-argument method call (e.g. a native GDScript autoload's play(path))."},
+    132: {"tail_names": ["value"], "doc": "Dynamic one-Double-argument method call (the FPS's damage(amount) on ray hits)."},
+    191: {"tail_names": ["first", "second"], "doc": "Dynamic two-Vector3 dispatch (the corpus's damage(impact, force) convention)."},
+    281: {"tail_names": ["argument"]},
+    # Object.get / set_indexed restricted to one value type each; the descriptor name says which.
+    149: {"name": "getObjectProperty", "doc": "Object.get restricted to object-valued properties; non-objects resolve to null."},
+    233: {"name": "getVector2", "doc": "Vector2-valued property read (the robot's aim blend position)."},
+    151: {"name": "set", "doc": "Property-path write (AnimationTree parameters); the typed overloads pick the transport."},
+    230: {"name": "set"},
+    231: {"name": "set"},
+    232: {"name": "set"},
+    # Owning construction stays behind the generated factories.
+    12: {"visibility": "internal", "ret": "BackendGodotHandle?"},
+    # Tween/Tweener fluent returns collapse onto the receiver (desktop's self-collapse policy).
+    37: {
+        "doc": "Desktop parity: kill() on a tween that already finished is a legal no-op (the FPS clears its weapon-swap tween on every swap and at exit_tree).",
+        "pre": ["if (!isWebBrowserHandleLive(handle.value)) return"],
+        "post": ["WebSignalCallbackRegistry.releaseSource(handle.value)"],
+    },
+    38: {"fluent": "self_or_wrap"},
+    134: {"fluent": "self"},
+    135: {"fluent": "self"},
+    41: {"fluent": "self_or_wrap"},
+    42: {"fluent": "self_or_wrap"},
+    290: {"fluent": "self_or_wrap", "doc": "Custom starting value, COLOR arm (task 64 tier 2); see the Any? overload for the arms that do not exist."},
+    # Non-null tree/environment reads: the corpus never handles the null.
+    51: {"nonnull": "Node is not inside a SceneTree"},
+    81: {"nonnull": "WorldEnvironment has no Environment resource"},
+    # SceneTree: the exit code must fit Godot's int32 ABI before any command is emitted; the root
+    # window stays a raw handle because Window is a hand-shaped facade (see WEB_HANDSHAPED).
+    52: {"param_types": {"exitCode": "Long"}, "guards": ['require(exitCode in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) { "SceneTree.quit exit code must fit Godot\'s int32 ABI" }']},
+    250: {"raw_handle_return": True, "nonnull": "SceneTree has no root window", "no_property": True, "doc": "Root window as a tracked handle; wrap it with [Window] to reach the mode calls, or use [root] for the Viewport view."},
+    168: {"extra_names": ["setPaused"]},
+    # AnimationMixer root-motion rotation crosses as euler angles (the applier converts).
+    235: {
+        "ret": "Quaternion",
+        "doc": "Web adaptation: the engine's Quaternion crosses as euler angles and is recomposed here.",
+        "body": [
+            "return Basis.fromEuler(",
+            "    GodotBackendCalls.invokeNoArgsRetVector3(",
+            "        D.ANIMATIONMIXER_GET_ROOT_MOTION_ROTATION,",
+            "        requireOpenHandle(),",
+            "      )",
+            "      .toApi()",
+            "  )",
+            "  .getRotationQuaternion()",
+        ],
+    },
+    # State-machine travel tracks the last target client-side and tolerates a freed playback.
+    150: {
+        "pre": [
+            "lastTravelled = toNode",
+            "// Children free before parents during scene teardown: a dying skin's playback handle",
+            "// may already be released while its owner still forwards states (Tween.kill precedent).",
+            "if (!isWebBrowserHandleLive(handle.value)) return",
+        ],
+    },
+    # AnimationPlayer.seek: the applier passes update=true, not Godot's default.
+    182: {"baked": {"update": "true"}},
+    # Node3D.look_at_from_position: use_model_front rides the same opcode by mirroring the target.
+    108: {
+        "doc": "Position the node and orient the forward axis at [target]: -Z by default, +Z when [useModelFront]. Web bakes the up vector to Godot's default; `Basis::looking_at(d, up, true)` equals `looking_at(-d, up, false)`, so the mirrored target is exact.",
+        "bind": [
+            ("position", "Vector3", None, "position.toBackend()"),
+            ("target", "Vector3", None, "engineTarget.toBackend()"),
+            ("up", "Vector3", "Vector3.UP", None),
+            ("useModelFront", "Boolean", "false", None),
+        ],
+        "pre": [
+            'require(up == Vector3.UP) { "Web look_at_from_position supports only the default up vector Vector3.UP" }',
+            "val engineTarget = if (useModelFront) position - (target - position) else target",
+        ],
+    },
+    # RID never crosses the Web seam: the excluded body itself is the argument.
+    170: {"bind": [("body", "GodotObject", None, "body.requireOpenHandle()")], "doc": "Web adaptation: exclusion takes the collision OBJECT (the applier derives the RID engine-side)."},
+    # Typed ProjectSettings read: the shape fixes Double, so the name says so.
+    187: {"name": "getSettingDouble", "doc": "Float-valued setting read (x1000 integer transport; millis precision)."},
+    # Camera getter: keep the corpus's `getCamera3D` spelling next to Godot's `getCamera3d`.
+    194: {"extra_names": ["getCamera3D"]},
+    # ResourceLoader.load: hand back the typed variants the corpus spells.
+    7: {"typed_loads": {"Texture2D": "loadTexture2D", "PackedScene": "loadPackedScene", "AudioStream": "loadAudioStream"}},
 }
 CLASS_POLICY: dict[str, dict] = {}
 # Leaf and intermediate Godot classes the corpus types against that own no opcode themselves.
@@ -798,7 +906,12 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
     name = kotlin_class_name(godot_name)
     class_policy = CLASS_POLICY.get(godot_name, {})
     singleton = godot_name in api.singletons or godot_name == "@GlobalScope"
-    members = [emit_opcode(tree, call, WRAPPER_POLICY.get(call.opcode, {})) for call in calls]
+    members: list[Member] = []
+    for call in calls:
+        policy = WRAPPER_POLICY.get(call.opcode, {})
+        primary = emit_opcode(tree, call, policy)
+        members.append(primary)
+        members += emit_extras(tree, call, policy, primary)
     members += emit_properties(tree, godot_name, calls)
     lines: list[str] = []
     if singleton:
