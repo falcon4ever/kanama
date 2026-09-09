@@ -172,7 +172,6 @@ configure<PublishingExtension> {
 
 dependencies {
   "implementation"(project(":annotations"))
-  "implementation"(project(":kanama-common-api"))
   "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
   "ksp"(project(":processor"))
   "testImplementation"(kotlin("test-junit5"))
