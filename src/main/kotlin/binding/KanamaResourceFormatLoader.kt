@@ -13,6 +13,7 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
 import net.multigesture.kanama.binding.runtime.VariantType
@@ -256,6 +257,8 @@ object KanamaResourceFormatLoader {
 
   @JvmStatic
   fun callLoad(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    // ResourceLoader.load_threaded_request runs _load on a worker thread; see the "Threads" note.
+    ThreadDiagnostics.noteCallback("KanamaResourceFormatLoader.callLoad")
     val argsArray = args.reinterpret(32)
     val path = GodotStrings.readString(argsArray.get(ADDRESS, 0))
     val basename = path.substringAfterLast('/').substringBeforeLast('.')

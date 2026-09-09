@@ -15,6 +15,7 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
 import net.multigesture.kanama.binding.runtime.VariantType
@@ -473,6 +474,7 @@ object ScriptBridge {
     rRet: MemorySegment,
     rError: MemorySegment,
   ) {
+    ThreadDiagnostics.noteCallback("ScriptBridge.siCall")
     val methodLong = method.reinterpret(8).get(JAVA_LONG, 0)
     val instance = si(data)
     val handled =

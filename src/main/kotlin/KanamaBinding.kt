@@ -16,6 +16,7 @@ import net.multigesture.kanama.binding.KanamaScript
 import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
+import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.ffi.GodotFFI
 import net.multigesture.kanama.ffi.NativeCallSurface
 
@@ -157,6 +158,7 @@ object KanamaBinding {
   @JvmStatic
   fun initializeCallback(userdata: MemorySegment, level: Int) {
     System.err.println("[kanama:kt] initialize: level=$level")
+    ThreadDiagnostics.noteInitializeThread()
     if (level == INITIALIZATION_SCENE) {
       try {
         // Register Script resource class before the language (language creates scripts).
