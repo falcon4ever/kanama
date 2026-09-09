@@ -62,10 +62,12 @@ nav:
           - Wrapper Generator Report: reference/generated/wrapper-generator-report.md
           - Gates Index: reference/generated/gates.md
           - iOS Backend Hand-written Registry: reference/generated/ios-backend-handwritten.md
+          - iOS Shape Gap: reference/generated/ios-shape-gap.md
   - Contributing:
       - Contributor Guide: contributing/index.md
       - Architecture: contributing/architecture.md
       - Wrapper Maintenance: contributing/wrapper-maintenance.md
+      - Shared Wrapper Tree Design Check: contributing/shared-wrapper-tree-design-check.md
       - Godot Upgrade Runbook: contributing/godot-upgrade.md
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Demo Porting Rules: contributing/demo-porting-rules.md

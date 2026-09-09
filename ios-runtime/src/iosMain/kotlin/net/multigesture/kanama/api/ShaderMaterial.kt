@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -37,6 +38,7 @@ class ShaderMaterial(handle: MemorySegment) : Material(handle) {
     }
 
     companion object {
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): ShaderMaterial? =
             wrap(handle)
 

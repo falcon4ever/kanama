@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # literals, so it is scanned through the string-literal reconstruction below.
 SCAN_ROOTS = (
     Path("src/main/kotlin"),
+    Path("src/commonMain/kotlin"),
     Path("processor/src/main/kotlin"),
 )
 

@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -90,6 +91,7 @@ open class Slider(handle: MemorySegment) : Range(handle) {
         const val TICK_POSITION_BOTH: Long = 2L
         const val TICK_POSITION_CENTER: Long = 3L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Slider? =
             wrap(handle)
 

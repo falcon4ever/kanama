@@ -27,7 +27,7 @@ from audit_wrapper_signatures import (
     helper_shape,
     parse_int_token,
 )
-from wrapper_model import ApiMethod, load_api_classes, load_api_method_index, object_type_names, value_policy
+from wrapper_model import ApiMethod, load_api_classes, load_api_method_index, object_type_names, value_policy, wrapper_source_files
 
 
 ACTUAL_STORAGE_ALIASES = {
@@ -165,7 +165,7 @@ def main() -> int:
     object_types = object_type_names(classes)
 
     findings: list[AbiFinding] = []
-    for path in sorted(args.api_dir.glob("*.kt")):
+    for path in wrapper_source_files(args.api_dir, companions=True):
         findings.extend(scan_file(path, api_methods, object_types))
 
     if not findings:

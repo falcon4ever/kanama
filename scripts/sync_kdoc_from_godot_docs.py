@@ -14,7 +14,11 @@ from pathlib import Path
 
 
 DEFAULT_GODOT_DOCS = Path(os.environ.get("GODOT_DOCS", "godot/doc/classes"))
-DEFAULT_API_DIR = Path("src/main/kotlin/net/multigesture/kanama/api")
+from wrapper_model import DESKTOP_API_DIR, wrapper_source_files
+
+# The api scope covers the shared wrapper tree plus the desktop per-platform files and their
+# generated companions (task 103); pass --api-dir to sync one directory only.
+DEFAULT_API_DIR = DESKTOP_API_DIR
 DEFAULT_TYPES_DIR = Path("src/main/kotlin/net/multigesture/kanama/types")
 GENERATED_MARKER = "Generated from Godot docs:"
 
@@ -23,7 +27,9 @@ METHOD_BIND_RE = re.compile(
     r'"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*([A-Z0-9_]+|\d+L?)',
     re.DOTALL,
 )
-FUN_RE = re.compile(r"^(\s*)(?:public\s+)?fun\s+(?:<[^>]+>\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*\(")
+# The optional receiver (`fun Time.getX(`, `fun X.Companion.create(`) is the generated desktop
+# companion form (`<Class>.jvm.kt`, task 103): extension members over a shared-tree class.
+FUN_RE = re.compile(r"^(\s*)(?:public\s+)?fun\s+(?:<[^>]+>\s+)?(?:[A-Za-z_][\w.]*\.)?([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 CLASS_RE = re.compile(r"^(\s*)(?:(?:open|abstract|sealed|data|value)\s+)*class\s+([A-Za-z_][A-Za-z0-9_]*)\b")
 OBJECT_RE = re.compile(r"^(\s*)object\s+([A-Za-z_][A-Za-z0-9_]*)\b")
 PROPERTY_RE = re.compile(r"^(\s*)(?:const\s+)?(?:val|var)\s+([A-Za-z_][A-Za-z0-9_]*)\b")
@@ -415,7 +421,7 @@ def main() -> int:
     class_filter = parse_class_filter(args.classes)
     targets: list[tuple[str, Path]] = []
     if args.scope in ("all", "api"):
-        targets.extend(("api", path) for path in sorted(args.api_dir.glob("*.kt")))
+        targets.extend(("api", path) for path in wrapper_source_files(args.api_dir, companions=True))
     if args.scope in ("all", "types"):
         targets.extend(("types", path) for path in sorted(args.types_dir.glob("*.kt")))
     changed: list[Path] = []
@@ -425,7 +431,7 @@ def main() -> int:
     missing_methods = 0
 
     for scope, path in targets:
-        class_name = path.stem
+        class_name = path.stem.split(".")[0]  # `Time.jvm.kt` documents Time
         if class_filter is not None and class_name not in class_filter:
             continue
         total_classes += 1

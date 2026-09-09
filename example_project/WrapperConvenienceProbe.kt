@@ -1,7 +1,10 @@
 package net.multigesture.kanama.example
 
+// Desktop-only wrapper members are extensions in `<Class>.jvm.kt` companions (task 103), so a
+// script that calls them needs the package import, not just the class imports below.
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.*
 import net.multigesture.kanama.api.AnimatedSprite2D
 import net.multigesture.kanama.api.AnimatedSprite3D
 import net.multigesture.kanama.api.AnimationMixer

@@ -10,6 +10,8 @@ you are changing:
   lifetime, ClassDB registration, or hot reload.
 - [Wrapper Maintenance](wrapper-maintenance.md) before changing generated
   wrappers, generator policy, ABI helpers, or generated KDoc.
+- [Shared Wrapper Tree: Design Check](shared-wrapper-tree-design-check.md)
+  before proposing to merge the desktop and iOS generated wrapper trees.
 - [Godot Upgrade Runbook](godot-upgrade.md) before bumping the Godot engine
   baseline.
 - [API Coverage](../reference/generated/api-coverage.md) and

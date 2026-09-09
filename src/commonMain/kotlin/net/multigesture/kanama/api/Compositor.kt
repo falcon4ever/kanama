@@ -1,0 +1,43 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Stores attributes used to customize how a Viewport is rendered.
+ *
+ * Generated from Godot docs: Compositor
+ */
+class Compositor(handle: MemorySegment) : Resource(handle) {
+    val compositorEffects: List<CompositorEffect>
+        @JvmName("compositorEffectsProperty")
+        get() = getCompositorEffects()
+
+    /**
+     * The custom `CompositorEffect`s that are applied during rendering of viewports using this
+     * compositor.
+     *
+     * Generated from Godot docs: Compositor.get_compositor_effects
+     */
+    fun getCompositorEffects(): List<CompositorEffect> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, handle, CompositorEffect::fromHandle)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): Compositor? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): Compositor? =
+            if (handle.address() == 0L) null else Compositor(handle)
+
+        private const val GET_COMPOSITOR_EFFECTS_HASH = 3995934104L
+        private val getCompositorEffectsBind by lazy {
+            ObjectCalls.getMethodBind("Compositor", "get_compositor_effects", GET_COMPOSITOR_EFFECTS_HASH)
+        }
+    }
+}

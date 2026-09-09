@@ -25,6 +25,7 @@ from generate_api_wrapper import (
     wrapper_has_wrap,
 )
 from wrapper_model import ApiClass, load_api_classes, load_api_singletons, object_type_names, scan_wrapper_classes
+from wrapper_model import SHARED_API_DIR
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,8 +38,11 @@ BLOCKED_OBJECT_TYPES = OWNERSHIP_SENSITIVE_OBJECT_TYPES
 
 
 def wrapper_file_text(type_name: str) -> str:
-    path = API_DIR / f"{type_name}.kt"
-    return path.read_text(encoding="utf-8") if path.exists() else ""
+    for directory in (SHARED_API_DIR, API_DIR):
+        path = directory / f"{type_name}.kt"
+        if path.exists():
+            return path.read_text(encoding="utf-8")
+    return ""
 
 
 def is_namespace_wrapper(type_name: str) -> bool:

@@ -35,24 +35,54 @@ generation. `Callable` stays blocked unless a helper has a bounded ownership
 shape; `DirAccess`, `FileAccess`, and `SceneTree` use dedicated handle aliases
 where factory methods return nullable object handles.
 
-Generated wrappers are held to a **full per-platform drift-gate**. The generator
-can emit selected classes with `--emit-class`, and `check_full_drift_gate` in
-`scripts/check_wrapper_generator.py` regenerates the *entire* committed wrapper
-set — every in-API class under `src/main/kotlin/.../api` (desktop/Android) and
-`ios-runtime/.../api` (iOS) — and fails if any committed file diverges from a
-fresh regen (behavior-comparable; `sync_kdoc_from_godot_docs.py` owns the prose).
-A hand-edit to a generated class, an un-adopted generator improvement, or a
-platform copy drifting from another all fail the gate, so the three wrapper trees
-cannot silently diverge. The only exemptions are the deliberately hand-shaped
-classes listed in `DESKTOP_HANDSHAPED`/`IOS_HANDSHAPED` (hand-authored facades,
-ergonomic helpers, aliases, and custom defaults the generator does not emit); a
-class joins that list only when the generator genuinely cannot reproduce it.
-Non-API files (`GodotObject`, `GD`, `DirAccessHandle`, …) are auto-excluded.
+Generated wrappers are held to a **single-tree drift gate**. There is one generated
+wrapper tree, `src/commonMain/kotlin/net/multigesture/kanama/api`, compiled by the
+root JVM module, by `:ios-runtime` (an `iosMain` source root) and by the Android
+plugin (copied through the PanamaPort remap next to the desktop sources). The shared
+file of a class carries the members both native backends can call: the method set is
+the iOS-audited helper-shape set (`IOS_AUDIT_ONLY`), the surface is desktop's
+(`@JvmStatic`, factory helpers). Members desktop can call but iOS cannot yet (no
+audited `ObjectCalls` helper for the ptrcall shape, or a wrapper type iOS does not
+host) are generated as extensions into a per-class desktop companion
+`src/main/kotlin/.../api/<Class>.jvm.kt`; the companion header names the helpers it
+waits on, and the generated [iOS Shape Gap](../reference/generated/ios-shape-gap.md)
+page lists the whole gap. When a helper lands on iOS the next regen moves the member
+back into the shared file. Because those members are extensions, a script that calls
+one needs the member imported by name (`import net.multigesture.kanama.api.<member>`), not only
+the class import. iOS-only sugar on a shared class (`IOS_EXTENSION_SECTIONS`) is
+generated the same way into `ios-runtime/.../api/<Class>.ios.kt`.
+
+The classes that are not shared are listed once, platform-tagged, in
+`PER_PLATFORM_WRAPPERS` (`scripts/generate_api_wrapper.py`): for each, what desktop
+does (`generated` into `src/main/kotlin/.../api`, or `hand`) and what iOS does
+(`generated` into `ios-runtime/.../api`, `hand`, `collision` for a class hand-written
+inside `IosGodotApi.kt` or a bespoke file, or `unsupported`). `DESKTOP_HANDSHAPED`,
+`IOS_HANDSHAPED`, `IOS_HANDWRITTEN_COLLISION_CLASSES` and `IOS_UNSUPPORTED_CLASSES` are
+views of that table. A class is per-platform only when the platforms genuinely host it
+differently, and a `hand` cell is the only thing the gate exempts; a class joins that
+table only when the generator genuinely cannot reproduce it on both platforms. Non-API
+files (`GodotObject`, `GD`, `DirAccessHandle`, …) are auto-excluded.
+
+`check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
+in-process (a few seconds) and fails if any generated file — a shared class, a
+per-platform generated class, a companion, the iOS `ObjectCallsGenerated.kt` (compared
+by helper set, since ktfmt reformats it), or the gap index — differs from a fresh regen
+(behavior-comparable; `sync_kdoc_from_godot_docs.py` owns the prose), if a committed
+companion is no longer produced (its gap closed), or if a shared class also has a copy
+in a platform directory. A hand edit to a generated file, an un-adopted generator
+improvement, or a platform-local shape change all fail here: there is one tree, so the
+platforms cannot drift from each other. Re-adopt with
+`python3 scripts/generate_api_wrapper.py --write-tree` followed by
+`sync_kdoc_from_godot_docs.py --godot-docs … --write` (the regen output carries no
+KDoc); `--emit-class <Class> --allow-overwrite` does the same for one class, writing it
+into its home (the shared file plus companions, or its per-platform directory).
 Android has no separate committed tree — `prepareAndroidKanamaSources` copies the
-desktop sources through the PanamaPort remap, so the desktop gate covers it
-transitively. Adopted classes with skipped methods are only accepted when every
-skip is a Godot virtual callback that belongs to the override-registration design
-rather than the public ptrcall wrapper surface.
+shared tree and the desktop sources through the PanamaPort remap, so the desktop side
+of the gate covers it transitively. Adopted classes with skipped methods are only
+accepted when every skip is a Godot virtual callback that belongs to the
+override-registration design rather than the public ptrcall wrapper surface. How the
+two trees were merged, and what the KMP `expect/actual` form would still take, is
+recorded in [Shared Wrapper Tree: Design Check](shared-wrapper-tree-design-check.md).
 
 ## RefCounted Return Ownership
 
@@ -94,9 +124,10 @@ The iOS island mirrors the same convention (task 30): the C-shim exposes
 `object_destroy` (`kanama_ios_godot_object_destroy`), `ObjectCalls.destroyObject`
 wraps it, and the generated iOS `RefCounted` carries `close()` (unreference +
 destroy at zero) plus the internal `releaseHandle` primitive via generator
-custom sections — so the collapse pattern above is emitted identically under
-`--ios-emit-class`. The base iOS `GodotObject.close()` stays a no-op (node/server
-returns are raw pointers with no reference transfer). Both the custom sections
+custom sections — so the collapse pattern above is emitted identically in the
+shared tree and the iOS-only generated files. The iOS `GodotObject` is not
+`AutoCloseable`, like desktop; the generated iOS `RefCounted` declares it and owns
+`close()` (node/server returns are raw pointers with no reference transfer). Both the custom sections
 and the collapse emission are locked by `check_ios_policies`, and the on-device
 self-test matrix carries a `refcounted-ret-owns-plus1` refcount probe
 (duplicate() → refcount 1 → close()).
@@ -181,8 +212,9 @@ so a Godot API refresh fails loudly if the committed name constants are stale.
 
 ## iOS Generator Policy
 
-The iOS island is emitted under `IOS_AUDIT_ONLY` and has extra policy so a regen stays
-honest instead of silently dropping or clashing. These are locked by `check_ios_policies`
+iOS-mode rendering (`IOS_AUDIT_ONLY`: it decides the shared tree's method set and renders
+the iOS-only generated files) has extra policy so a regen stays honest instead of silently
+dropping or clashing. These are locked by `check_ios_policies`
 in `scripts/check_wrapper_generator.py`:
 
 - **Bare-`Object` returns.** `get_collider()`-style methods that return the root Godot
@@ -194,21 +226,24 @@ in `scripts/check_wrapper_generator.py`:
 
 - **Subclass-override openness.** Where a hand-written iOS subclass overrides a generated
   method, the base method must be generated `open` — otherwise a regen drops the keyword and
-  the override stops compiling. `Node.createTween()` is emitted `open` (via the Node custom
-  member section) so the hand-written `SceneTree` subclass can override it with the correct
-  `SceneTree.create_tween` bind (the FPS F2 fix). Add such cases to the class's
-  `IOS_CUSTOM_MEMBER_SECTIONS` entry, not by hand-editing the generated file.
+  the override stops compiling. `Node.createTween()` is emitted `open` (via the Node
+  `IOS_MEMBER_SECTIONS` entry; the desktop hand-shaped `Node.kt` is `open` too, so both
+  platforms read the same) so the hand-written `SceneTree` subclass can override it with the
+  correct `SceneTree.create_tween` bind (the FPS F2 fix). Add such cases to the class's
+  `IOS_MEMBER_SECTIONS` entry (or `IOS_EXTENSION_SECTIONS` for a shared class), not by
+  hand-editing the generated file.
 
 - **Explicit class collisions.** Real Godot classes that are deliberately hand-written on iOS
-  (inside `IosGodotApi.kt` or a bespoke single-class file) are listed in
-  `IOS_HANDWRITTEN_COLLISION_CLASSES` with a reason. `--ios-emit-class <that class>` logs a
+  (inside `IosGodotApi.kt` or a bespoke single-class file) are the `collision` cells of
+  `PER_PLATFORM_WRAPPERS` (the `IOS_HANDWRITTEN_COLLISION_CLASSES` view), each with a reason. `--ios-emit-class <that class>` logs a
   `collision:` line and skips it, instead of writing a `<Class>.kt` that duplicate-declares
   the class and breaks the compile. When a class graduates to a real generated wrapper
   (as `Time`/`InputMap`/`PhysicsServer3D` did), delete its entry so generation is allowed.
   `FileAccess` lives here: iOS hosts it as a hand-written static facade plus its own
   `FileAccessHandle` in `ios-runtime/.../api/FileAccess.kt`.
 
-- **Explicit uncompilable classes.** `IOS_UNSUPPORTED_CLASSES` lists the classes whose
+- **Explicit uncompilable classes.** The `unsupported` cells of `PER_PLATFORM_WRAPPERS` (the
+  `IOS_UNSUPPORTED_CLASSES` view) list the classes whose
   generated draft cannot compile on iOS, each with its reason: `DirAccess` (its draft
   references the hand-authored `DirAccessHandle` desktop policy class iOS does not
   carry) and `MethodTweener` (its generated fluent methods clash with the
@@ -421,9 +456,10 @@ The script uses `$GODOT_DOCS` when set, otherwise it defaults to
 `--godot-docs /path/to/godot/doc/classes` when syncing against a different
 Godot checkout. Use `--classes Node,Node3D,Tween` for a focused refresh while
 working on one wrapper slice, or `--scope types --classes Vector3` when
-working on builtin values. Keep the default separate `--api-dir`
-(`.../kanama/api`) and `--types-dir` (`.../kanama/types`) — pointing `--types-dir`
-at the api dir mislabels node classes as value types.
+working on builtin values. By default the api scope covers the shared tree, the
+desktop per-platform files and their `<Class>.jvm.kt` companions; `--api-dir`
+narrows it to one directory. Keep `--types-dir` (`.../kanama/types`) separate —
+pointing it at an api dir mislabels node classes as value types.
 
 The refresh is **gate-neutral**: `check_full_drift_gate` strips
 `Generated from Godot docs:` blocks before comparing (`comparable_source`), so a

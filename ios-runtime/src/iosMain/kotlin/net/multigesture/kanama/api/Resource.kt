@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
@@ -163,6 +164,7 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
         const val DEEP_DUPLICATE_INTERNAL: Long = 1L
         const val DEEP_DUPLICATE_ALL: Long = 2L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Resource =
             Resource(handle)
 

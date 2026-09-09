@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
@@ -941,6 +942,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         const val VRS_UPDATE_ALWAYS: Long = 2L
         const val VRS_UPDATE_MAX: Long = 3L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Viewport? =
             wrap(handle)
 

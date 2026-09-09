@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Plane
@@ -311,6 +312,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
         const val DOPPLER_TRACKING_IDLE_STEP: Long = 1L
         const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Camera3D? =
             wrap(handle)
 

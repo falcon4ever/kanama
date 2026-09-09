@@ -7,6 +7,44 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — one shared generated wrapper tree (task 103)
+
+- **The generated Godot API wrappers are emitted once.** The shared tree
+  `src/commonMain/kotlin/net/multigesture/kanama/api` (979 classes) is compiled by the
+  desktop JVM module, by `:ios-runtime` and by the Android plugin; the iOS copies under
+  `ios-runtime/.../api` are gone. A shared file holds the members both native backends
+  can call; the members only desktop/Android can call (no audited iOS ptrcall helper
+  yet) are generated as extensions into per-class `<Class>.jvm.kt` companions (277
+  classes, 1,274 members) whose headers name the helpers they wait on, all listed in
+  the new generated page `docs/reference/generated/ios-shape-gap.md`. A helper landing
+  on iOS moves its members back into the shared file on the next regen.
+- **Scripts calling a desktop-only member import it by name.** Those members are
+  extension functions now, so a class import alone no longer brings them in: add
+  `import net.multigesture.kanama.api.getUsedCells` (one line per member), as the eight
+  affected demo scripts do (kanama-demos#48). Kanama code, demos and templates
+  import by name, never `net.multigesture.kanama.api.*`. Call syntax is unchanged; as
+  iOS helper shapes land (task 100) the members move back into the classes and the
+  imports become ordinary member imports.
+- **Aligned across platforms:** `@JvmStatic` is emitted on iOS too (harmless on
+  Kotlin/Native); `Node.createTween()` is `open` on both; the iOS `GodotObject` is no
+  longer `AutoCloseable` (like desktop; `RefCounted` still is and owns `close()`); iOS
+  `RefCounted.unreference()` is `internal`; the generated iOS `close()` no longer carries
+  the deprecated `@ManualGodotLifetimeApi`.
+- **Tooling.** One platform-tagged table, `PER_PLATFORM_WRAPPERS`, lists the 56 classes
+  that are not shared. `check_wrapper_generator.py` is a single-tree gate (every
+  generated file, companion and the gap index must equal a fresh in-process regen; a
+  per-platform copy of a shared class fails) and runs in about 5 s instead of 57 s.
+  `generate_api_wrapper.py --write-tree` re-adopts the whole tree (`upgrade_godot.sh`
+  step 5 uses it); the wrapper audits, property coverage, KDoc sync and iOS stub check
+  read the shared tree.
+- **Measured (one run each, same laptop, clean builds with the Gradle build cache off):**
+  wrapper sources 1,053 + 1,029 files / 302,193 + 181,056 lines in two trees →
+  979 shared + 351 desktop + 54 iOS files / 233,944 + 73,482 + 19,573 lines (the
+  desktop figure includes the 277 companions, 22,189 lines); drift gate 57.5 s → 4.7 s;
+  clean desktop `installAddonJar` 60 s → 73 s (24 % more Kotlin files to compile: the
+  companions), warm 4.6 s → 5.7 s; iOS `compileKotlinIosArm64` from clean 46.5 s → 46.3 s;
+  `linkDebugStaticIosArm64` 106 s → 103 s.
+
 ### Changed — docs consolidation (task 94)
 
 - **One page owns each fact.** Requirements (Godot pin, JDKs, host platforms,

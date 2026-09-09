@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -79,6 +80,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         const val DEBUG_FLAG_VIEW_COLLISIONS: Long = 8L
         const val DEBUG_FLAG_VIEW_NAVIGATION: Long = 16L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): EditorExportPlatform? =
             wrap(handle)
 

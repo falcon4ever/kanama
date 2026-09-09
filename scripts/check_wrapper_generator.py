@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Check conservative wrapper generator output against committed fixtures."""
+"""Check the wrapper generator: representative fixtures, the locked iOS policies, and the
+single-tree drift gate (committed generated wrappers == a fresh regen, on every platform)."""
 
 from __future__ import annotations
 
@@ -10,59 +11,36 @@ import tempfile
 from pathlib import Path
 
 
-from generate_api_wrapper import IOS_HANDWRITTEN_COLLISION_CLASSES
+from generate_api_wrapper import (
+    DESKTOP_COMPANION_SUFFIX,
+    DESKTOP_HANDSHAPED,
+    DESKTOP_ONLY_GENERATED,
+    GAP_INDEX_PATH,
+    IOS_COMPANION_SUFFIX,
+    IOS_HANDSHAPED,
+    IOS_HANDWRITTEN_COLLISION_CLASSES,
+    IOS_OBJECTCALLS_GENERATED,
+    IOS_ONLY_GENERATED,
+    IOS_UNSUPPORTED_CLASSES,
+    PER_PLATFORM_WRAPPERS,
+    TreeResult,
+    generated_companion_paths,
+    regenerate_tree,
+)
+from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR
 
-ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = ROOT / "scripts/fixtures/wrapper_generator"
-API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
-IOS_API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api"
+# Kept for importers (api_wrapper_coverage.py, check_property_coverage.py, upgrade_godot.sh):
+# the desktop per-platform directory. The shared tree is SHARED_API_DIR.
+API_DIR = DESKTOP_API_DIR
 
-# Full drift-gate exemptions (task 21). The committed generated wrapper trees must equal a fresh
-# regen for EVERY in-API class except these deliberately hand-shaped ones. A class belongs here
-# only if the generator cannot reproduce its committed source: hand-authored ergonomic helpers,
-# convenience aliases, custom parameter defaults, or non-generatable factory/lifetime policy the
-# generator does not emit. Everything else is a generated wrapper and re-drift fails the gate.
-# To retire an entry, teach the generator to emit the class losslessly (custom section) and delete
-# it here. Non-API files (GodotObject, GD, DirAccessHandle, ...) are auto-excluded (not in the API).
-DESKTOP_HANDSHAPED = frozenset({
-    # hand-authored static facades / lifetime & handle policy the generator does not emit
-    "DirAccess", "FileAccess", "RefCounted",
-    # generated base + hand ergonomic helpers / aliases / custom defaults
-    "AnimationPlayer", "Button", "LineEdit", "Light3D", "Range", "Slider", "Viewport",
-    "Node", "Node3D", "TabBar",
-    # hand factory/downcast helpers (`create` / `from*` / `node`) not emitted by desktop generator.
-    # `Resource` now extends `RefCounted` (task 51) — its refcount lifetime is inherited, not
-    # hand-written; it stays exempt only for its `create`/`fromObject`/`asObject` helpers, the same
-    # reason its factory-helper siblings below are here. (ROOT_CLASSES in the inheritance audit was
-    # retired for it, so the `: RefCounted` parent is now enforced there.)
-    "Resource",
-    "ArrayMesh", "AudioStreamPlayer", "BaseMaterial3D", "BoxMesh", "BoxShape3D", "ButtonGroup",
-    "Camera3D", "ConfigFile", "ENetMultiplayerPeer", "EditorExportPlatform", "Font",
-    "InputEventKey", "InputEventMouseButton", "InputEventMouseMotion", "LightmapGI", "Material",
-    "Mesh", "MeshDataTool", "MeshLibrary", "NoiseTexture2D", "OpenXRSpatialAnchorCapability",
-    "PackedScene", "PhysicsBody3D", "SceneMultiplayer", "ShaderMaterial", "StandardMaterial3D",
-    "SurfaceTool",
-    # hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry)
-    "CallbackTweener", "PropertyTweener", "SceneTree", "Tween", "ResourceLoader",
-    # hand-written singleton: registerSingleton keeps a RefCounted-rejection lifetime guard the
-    # generator does not emit (audit_singleton_refcounted_policy). Already iOS-hand-written via
-    # IOS_HANDWRITTEN_COLLISION_CLASSES; task 21 wrongly re-adopted the desktop copy as generated,
-    # dropping the guard. Restored + exempted here.
-    "Engine",
-})
-# iOS carries the same generator (audited subset); the collision-registry singletons
-# (Engine/ProjectSettings/...) are excluded via IOS_HANDWRITTEN_COLLISION_CLASSES.
-# These wrappers carry hand sugar the iOS generator does not emit yet (30c949a1, snowplow
-# enablement; device-validated 114/114): static-method dispatch bodies
-# (ImageTexture.createFromImage rides ptrcallStatic* — the generated NULL-instance form
-# silently returns null), PackedByteArray traffic (Image getData/loadPngFromBuffer/
-# createFromData), and desktop-parity create()/fromResource() factory helpers mirroring
-# the same classes' DESKTOP_HANDSHAPED entries. Retire an entry by teaching the generator
-# the static/byte-array shapes and re-adopting the class.
-IOS_HANDSHAPED = frozenset({
-    "BoxMesh", "BoxShape3D", "Image", "ImageTexture", "ParticleProcessMaterial",
-    "PlaneMesh", "ProceduralSkyMaterial", "StandardMaterial3D",
-})
+# Task 103 step 1 kept the iOS copies of the shared classes until :ios-runtime compiled the shared
+# tree (step 2); a copy under IOS_API_DIR is a gate failure now. Left as a switch for the next
+# platform that joins the tree in two steps.
+IOS_COPIES_PENDING_DELETION = False
+
+# The per-platform wrapper table lives in generate_api_wrapper.PER_PLATFORM_WRAPPERS (one table,
+# platform-tagged). DESKTOP_HANDSHAPED / IOS_HANDSHAPED are derived views of it, re-exported here.
 ADOPTED_CLASSES = ("Time", "ProjectSettings", "VirtualJoystick")
 ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS = ("AnimationMixer",)
 ADOPTED_RESOURCE_DOWNCAST_CLASSES = ("FastNoiseLite", "PlaneMesh", "SphereMesh")
@@ -317,49 +295,6 @@ def check_fixture(output_dir: Path, class_name: str, expected_skip_report: bool)
     return 0
 
 
-def check_adopted_source(output_dir: Path, class_name: str, allow_virtual_skips: bool = False) -> int:
-    skip_report = output_dir / f"{class_name}.adopted.skips.txt"
-    subprocess.run(
-        [
-            sys.executable,
-            str(ROOT / "scripts/generate_api_wrapper.py"),
-            "--class",
-            class_name,
-            "--output-dir",
-            str(output_dir),
-            "--skip-report",
-            str(skip_report),
-        ],
-        cwd=ROOT,
-        check=True,
-    )
-
-    expected = (output_dir / f"{class_name}.kt").read_text(encoding="utf-8")
-    actual_path = ROOT / "src/main/kotlin/net/multigesture/kanama/api" / f"{class_name}.kt"
-    actual = actual_path.read_text(encoding="utf-8")
-    if comparable_source(actual) != comparable_source(expected):
-        print(f"[wrapper_generator] FAIL adopted source {class_name}.kt is stale", file=sys.stderr)
-        print(
-            f"[wrapper_generator] run generate_api_wrapper.py --emit-class {class_name} --allow-overwrite",
-            file=sys.stderr,
-        )
-        return 1
-
-    actual_skips = skip_report.read_text(encoding="utf-8")
-    if actual_skips and not allow_virtual_skips:
-        print(f"[wrapper_generator] FAIL adopted source {class_name} has skipped methods", file=sys.stderr)
-        print(actual_skips, file=sys.stderr)
-        return 1
-    if allow_virtual_skips:
-        bad_skips = [line for line in actual_skips.splitlines() if VIRTUAL_SKIP_REASON not in line]
-        if bad_skips:
-            print(f"[wrapper_generator] FAIL adopted source {class_name} has non-virtual skipped methods", file=sys.stderr)
-            print("\n".join(bad_skips), file=sys.stderr)
-            return 1
-
-    return 0
-
-
 IOS_FIXTURE_CLASS = "Node3D"
 
 
@@ -522,84 +457,118 @@ def _api_class_names() -> set[str]:
     return {cls["name"] for cls in data["classes"]}
 
 
-def _batch_generate(output_dir: Path, flag: str, classes: list[str], *extra: str) -> None:
-    # Class names go through a list file, not argv: the full-union batch (~1000 names)
-    # exceeds the 32K CreateProcess command-line limit on Windows (WinError 206).
-    list_file = output_dir / "_class_list.txt"
-    list_file.write_text("\n".join(classes) + "\n", encoding="utf-8")
-    list_flag = "--class-list-file" if flag == "--class" else "--ios-class-list-file"
-    args = [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py"), list_flag, str(list_file)]
-    args += [*extra, "--output-dir" if flag == "--class" else "--ios-output-dir", str(output_dir)]
-    subprocess.run(args, cwd=ROOT, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+def check_adopted_skips(tree: TreeResult, class_name: str, allow_virtual_skips: bool = False) -> int:
+    """Adopted classes may only skip Godot virtual callbacks (override-registration design)."""
+    skips = tree.skips.get(class_name)
+    if skips is None:
+        print(f"[wrapper_generator] FAIL adopted class {class_name} is not in the generated tree", file=sys.stderr)
+        return 1
+    if skips and not allow_virtual_skips:
+        print(f"[wrapper_generator] FAIL adopted source {class_name} has skipped methods", file=sys.stderr)
+        print("\n".join(skips), file=sys.stderr)
+        return 1
+    if allow_virtual_skips:
+        bad_skips = [line for line in skips if VIRTUAL_SKIP_REASON not in line]
+        if bad_skips:
+            print(f"[wrapper_generator] FAIL adopted source {class_name} has non-virtual skipped methods", file=sys.stderr)
+            print("\n".join(bad_skips), file=sys.stderr)
+            return 1
+    return 0
 
 
-def check_full_drift_gate(output_dir: Path) -> int:
-    """The durable convergence gate (task 21): every committed generated wrapper, on every
-    platform, must equal a fresh regen (behavior-comparable, KDoc owned by sync). Hand-shaped
-    classes are the only exemptions. Re-drift, an un-adopted generator improvement, or a hand-edit
-    to a generated class all fail here — so the three platform trees can never silently diverge."""
-    api = _api_class_names()
+def _rel(path: Path) -> str:
+    return str(path.relative_to(ROOT))
+
+
+IOS_HELPER_NAME = re.compile(r"fun ObjectCalls\.(\w+)\(")
+
+
+def _ios_helper_names(source: str) -> set[str]:
+    return set(IOS_HELPER_NAME.findall(source))
+
+
+def check_single_tree(tree: TreeResult) -> int:
+    """The durable convergence gate (task 21, single-tree since task 103): every generated file the
+    generator produces -- the shared tree, the per-platform generated classes, the desktop/iOS
+    companions, the iOS ObjectCallsGenerated helpers and the gap index -- must equal a fresh regen
+    (behavior-comparable: sync_kdoc_from_godot_docs.py owns the KDoc prose). A hand edit to a
+    generated file, an un-adopted generator improvement, a stale companion, or a per-platform copy
+    of a shared class all fail here, so the platforms cannot drift: there is one tree to drift."""
     rc = 0
-
-    # Desktop (Android consumes these same sources via prepareAndroidKanamaSources, so the desktop
-    # gate transitively covers Android — there is no separate committed Android wrapper tree).
-    committed = {p.stem for p in API_DIR.glob("*.kt")}
-    rot = sorted(DESKTOP_HANDSHAPED - committed)
-    if rot:
-        print(f"[wrapper_generator] FAIL DESKTOP_HANDSHAPED names non-existent classes: {rot}", file=sys.stderr)
+    missing: list[str] = []
+    stale: list[str] = []
+    for rel, content in sorted(tree.files.items()):
+        path = ROOT / rel
+        if not path.exists():
+            missing.append(rel)
+            continue
+        committed = path.read_text(encoding="utf-8")
+        if rel == _rel(IOS_OBJECTCALLS_GENERATED):
+            # ktfmt reformats this file after every regen (it is outside the api/ exclusion), so
+            # compare the helper set, not the bytes: a helper added or dropped is drift, layout is not.
+            same = _ios_helper_names(committed) == _ios_helper_names(content)
+        elif rel.endswith(".md"):
+            same = committed == content
+        else:
+            same = comparable_source(committed) == comparable_source(content)
+        if not same:
+            stale.append(rel)
+    if missing:
         rc = 1
-    targets = sorted((committed & api) - DESKTOP_HANDSHAPED)
-    dtmp = output_dir / "drift-desktop"
-    dtmp.mkdir(parents=True, exist_ok=True)
-    _batch_generate(dtmp, "--class", targets)
-    stale = [
-        c for c in targets
-        if comparable_source((API_DIR / f"{c}.kt").read_text(encoding="utf-8"))
-        != comparable_source((dtmp / f"{c}.kt").read_text(encoding="utf-8"))
-    ]
+        print(f"[wrapper_generator] FAIL single-tree drift-gate: {len(missing)} generated files are not committed", file=sys.stderr)
+        for rel in missing[:40]:
+            print(f"    {rel}", file=sys.stderr)
     if stale:
-        print(f"[wrapper_generator] FAIL desktop drift-gate: {len(stale)} committed wrappers differ from fresh regen", file=sys.stderr)
-        for c in stale[:40]:
-            print(f"    {c}", file=sys.stderr)
-        print("    re-adopt: python3 scripts/generate_api_wrapper.py --emit-class <class> --allow-overwrite  (then sync_kdoc_from_godot_docs.py)", file=sys.stderr)
-        print("    or, if the class is deliberately hand-shaped, add it to DESKTOP_HANDSHAPED", file=sys.stderr)
         rc = 1
+        print(f"[wrapper_generator] FAIL single-tree drift-gate: {len(stale)} committed generated files differ from a fresh regen", file=sys.stderr)
+        for rel in stale[:40]:
+            print(f"    {rel}", file=sys.stderr)
+        print("    re-adopt: python3 scripts/generate_api_wrapper.py --write-tree  (then sync_kdoc_from_godot_docs.py --write)", file=sys.stderr)
+        print("    or, if the class is deliberately hand-shaped, add it to PER_PLATFORM_WRAPPERS in generate_api_wrapper.py", file=sys.stderr)
 
-    # iOS (same generator, IOS_AUDIT_ONLY subset). Collision-registry singletons are hand-written
-    # and never emitted; exclude them so the gate expects every remaining target to regenerate.
-    ios_committed = {p.stem for p in IOS_API_DIR.glob("*.kt")}
-    ios_rot = sorted(IOS_HANDSHAPED - ios_committed)
-    if ios_rot:
-        print(f"[wrapper_generator] FAIL IOS_HANDSHAPED names non-existent classes: {ios_rot}", file=sys.stderr)
+    orphan_companions = [_rel(p) for p in generated_companion_paths() if _rel(p) not in tree.files]
+    if orphan_companions:
         rc = 1
-    # The emit union must include IOS_HANDSHAPED (the generator emits methods returning a
-    # wrapper type only when that class is in the active set — AGENTS.md "Generator Gotcha");
-    # hand-shaped classes are only exempt from the comparison, not from the universe.
-    ios_emit = sorted((ios_committed & api) - set(IOS_HANDWRITTEN_COLLISION_CLASSES))
-    ios_targets = sorted(set(ios_emit) - IOS_HANDSHAPED)
-    itmp = output_dir / "drift-ios"
-    itmp.mkdir(parents=True, exist_ok=True)
-    _batch_generate(itmp, "--ios-emit-class", ios_emit)
-    ios_missing = [c for c in ios_targets if not (itmp / f"{c}.kt").exists()]
-    if ios_missing:
-        print(f"[wrapper_generator] FAIL iOS drift-gate: generator did not emit {ios_missing[:20]} (unexpected collision/skip)", file=sys.stderr)
+        print(f"[wrapper_generator] FAIL {len(orphan_companions)} committed companion files are no longer generated (gap closed?): {orphan_companions[:20]}", file=sys.stderr)
+        print("    remove them: python3 scripts/generate_api_wrapper.py --write-tree", file=sys.stderr)
+
+    desktop_copies = [name for name in tree.shared if (DESKTOP_API_DIR / f"{name}.kt").exists()]
+    ios_copies = [name for name in tree.shared if (IOS_API_DIR / f"{name}.kt").exists()]
+    if desktop_copies:
         rc = 1
-    ios_stale = [
-        c for c in ios_targets
-        if (itmp / f"{c}.kt").exists()
-        and comparable_source((IOS_API_DIR / f"{c}.kt").read_text(encoding="utf-8"))
-        != comparable_source((itmp / f"{c}.kt").read_text(encoding="utf-8"))
-    ]
-    if ios_stale:
-        print(f"[wrapper_generator] FAIL iOS drift-gate: {len(ios_stale)} committed iOS wrappers differ from fresh regen", file=sys.stderr)
-        for c in ios_stale[:40]:
-            print(f"    {c}", file=sys.stderr)
+        print(f"[wrapper_generator] FAIL {len(desktop_copies)} shared classes also have a desktop copy under {_rel(DESKTOP_API_DIR)}: {desktop_copies[:20]}", file=sys.stderr)
+    if ios_copies and not IOS_COPIES_PENDING_DELETION:
         rc = 1
+        print(f"[wrapper_generator] FAIL {len(ios_copies)} shared classes also have an iOS copy under {_rel(IOS_API_DIR)}: {ios_copies[:20]}", file=sys.stderr)
+
+    table_problems: list[str] = []
+    for name, home in sorted(PER_PLATFORM_WRAPPERS.items()):
+        if (SHARED_API_DIR / f"{name}.kt").exists():
+            table_problems.append(f"{name}: per-platform class has a file in the shared tree")
+        if home.desktop == "hand" and not (DESKTOP_API_DIR / f"{name}.kt").exists():
+            table_problems.append(f"{name}: desktop hand-shaped but {_rel(DESKTOP_API_DIR)}/{name}.kt is missing")
+        if home.ios == "hand" and not (IOS_API_DIR / f"{name}.kt").exists():
+            table_problems.append(f"{name}: iOS hand-shaped but {_rel(IOS_API_DIR)}/{name}.kt is missing")
+        if home.ios == "unsupported" and (IOS_API_DIR / f"{name}.kt").exists():
+            table_problems.append(f"{name}: iOS unsupported yet {_rel(IOS_API_DIR)}/{name}.kt exists")
+    if table_problems:
+        rc = 1
+        print("[wrapper_generator] FAIL PER_PLATFORM_WRAPPERS does not match the committed files:", file=sys.stderr)
+        for problem in table_problems:
+            print(f"    {problem}", file=sys.stderr)
 
     if rc == 0:
+        companions = sum(1 for rel in tree.files if rel.endswith(DESKTOP_COMPANION_SUFFIX))
+        members = sum(len(r.desktop_only_members) for r in tree.gap.values())
+        helpers = {token for r in tree.gap.values() for token in r.waits_on}
+        pending = f" ios-copies-pending-deletion={len(ios_copies)}" if ios_copies else ""
         print(
-            f"[wrapper_generator] PASS drift-gate desktop={len(targets)} ios={len(ios_targets)} "
-            f"(exempt: desktop={len(DESKTOP_HANDSHAPED)} ios={len(IOS_HANDSHAPED)} hand-shaped)"
+            f"[wrapper_generator] PASS single-tree drift-gate shared={len(tree.shared)} "
+            f"desktop-only={len(tree.desktop_only)} ios-only={len(tree.ios_only)} "
+            f"desktop-companions={companions} (gap: {members} members, {len(helpers)} helpers/wrappers) "
+            f"ios-companions={sum(1 for rel in tree.files if rel.endswith(IOS_COMPANION_SUFFIX))} "
+            f"(hand: desktop={len(DESKTOP_HANDSHAPED)} ios={len(IOS_HANDSHAPED)} "
+            f"collision={len(IOS_HANDWRITTEN_COLLISION_CLASSES)} unsupported={len(IOS_UNSUPPORTED_CLASSES)}){pending}"
         )
     return rc
 
@@ -618,21 +587,20 @@ def main() -> int:
             return 1
         if check_fixture(output_dir, "OptionButton", expected_skip_report=True) != 0:
             return 1
-        for class_name in ADOPTED_CLASSES + ADOPTED_RESOURCE_DOWNCAST_CLASSES + ADOPTED_SHELL_ONLY_CLASSES:
-            if check_adopted_source(output_dir, class_name) != 0:
-                return 1
-        for class_name in ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS:
-            if check_adopted_source(output_dir, class_name, allow_virtual_skips=True) != 0:
-                return 1
-        for class_name in ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS:
-            if check_adopted_source(output_dir, class_name, allow_virtual_skips=True) != 0:
-                return 1
         if check_ios_fixture(output_dir) != 0:
             return 1
         if check_ios_policies(output_dir) != 0:
             return 1
-        if check_full_drift_gate(output_dir) != 0:
+
+    tree = regenerate_tree(ROOT / "extension_api.json")
+    for class_name in ADOPTED_CLASSES + ADOPTED_RESOURCE_DOWNCAST_CLASSES + ADOPTED_SHELL_ONLY_CLASSES:
+        if check_adopted_skips(tree, class_name) != 0:
             return 1
+    for class_name in ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS + ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS:
+        if check_adopted_skips(tree, class_name, allow_virtual_skips=True) != 0:
+            return 1
+    if check_single_tree(tree) != 0:
+        return 1
 
     adopted = (
         ADOPTED_CLASSES

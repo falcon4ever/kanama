@@ -31,6 +31,7 @@ from pathlib import Path
 from generate_api_wrapper import PROPERTY_NAME_OVERRIDES, camel_name
 
 from check_wrapper_generator import API_DIR, DESKTOP_HANDSHAPED
+from wrapper_model import wrapper_source_files
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -85,10 +86,16 @@ KNOWN_UNWRAPPABLE_PROPERTIES: frozenset[tuple[str, str]] = frozenset(
 )
 
 _MEMBER_RE = re.compile(r"^    (?:open |override |final |lateinit )*(?:var|val) (\w+)\s*:", re.MULTILINE)
+# Extension properties in a generated desktop companion (`var Time.x: T`, task 103).
+_EXTENSION_MEMBER_RE = re.compile(r"^(?:var|val) \w+\.(\w+)\s*:", re.MULTILINE)
 
 
 def _wrapped_members() -> dict[str, set[str]]:
-    return {f.stem: set(_MEMBER_RE.findall(f.read_text(encoding="utf-8"))) for f in Path(API_DIR).glob("*.kt")}
+    members: dict[str, set[str]] = {}
+    for f in wrapper_source_files(API_DIR, companions=True):
+        text = f.read_text(encoding="utf-8")
+        members.setdefault(f.stem.split(".")[0], set()).update(_MEMBER_RE.findall(text), _EXTENSION_MEMBER_RE.findall(text))
+    return members
 
 
 def main() -> int:

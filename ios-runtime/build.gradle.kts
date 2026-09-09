@@ -60,6 +60,10 @@ kotlin {
         }
         val iosMain by creating {
             dependsOn(commonMain)
+            // The shared generated wrapper tree (task 103): the same files the root JVM module
+            // compiles, resolved here against the Kotlin/Native ObjectCalls, value types and the
+            // java.lang.foreign.MemorySegment shim. Per-platform wrappers stay under iosMain/.../api.
+            kotlin.srcDir(rootProject.file("src/commonMain/kotlin"))
         }
         val iosArm64Main by getting {
             dependsOn(iosMain)

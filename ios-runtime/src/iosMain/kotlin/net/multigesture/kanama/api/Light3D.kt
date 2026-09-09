@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
@@ -323,6 +324,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
         const val BAKE_STATIC: Long = 1L
         const val BAKE_DYNAMIC: Long = 2L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Light3D? =
             wrap(handle)
 

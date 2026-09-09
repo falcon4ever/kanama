@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -65,6 +66,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
         const val RENDER_PRIORITY_MAX: Long = 127L
         const val RENDER_PRIORITY_MIN: Long = -128L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Material? =
             wrap(handle)
 

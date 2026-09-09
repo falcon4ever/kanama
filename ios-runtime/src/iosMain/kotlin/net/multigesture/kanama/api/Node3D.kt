@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Basis
@@ -414,6 +415,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
         const val ROTATION_EDIT_MODE_QUATERNION: Long = 1L
         const val ROTATION_EDIT_MODE_BASIS: Long = 2L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Node3D? =
             wrap(handle)
 

@@ -15,6 +15,17 @@ package com.mygame.scripts
 Default-package scripts (no `package` declaration) cannot be referenced by
 other scripts and break generated registrars for global classes.
 
+## Imports
+
+Import by name; do not use wildcard imports (`net.multigesture.kanama.api.*`). This matters
+more since the generated wrappers became one shared tree (task 103): the members only
+desktop and Android can call are extension functions in per-class companion files, so
+`import net.multigesture.kanama.api.GridMap` brings in the class but not `getUsedCells()`;
+add `import net.multigesture.kanama.api.getUsedCells` beside it. The call site does not
+change, and when the member gains an iOS helper (task 100) it moves back into the class
+and the same import keeps working. The demos and templates follow this rule; an IDE's
+auto-import does it for you on completion.
+
 ## Script Class Structure
 
 Declare members in this order within a script class:

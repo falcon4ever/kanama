@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
@@ -79,6 +80,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         call("get_value", section, key, default)
 
     companion object {
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): ConfigFile? =
             wrap(handle)
 

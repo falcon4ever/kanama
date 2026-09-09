@@ -20,9 +20,9 @@ Steps:
                  virtual-signature table)
   3. classify    metadata-only vs real API change vs no-op
   4. constants   regenerate engine-wide name constants
-  5. re-adopt    regenerate every committed generated wrapper on every platform
-                 (desktop --emit-class, iOS --ios-emit-class + ObjectCallsGenerated)
-                 and re-sync KDoc  [skipped with --dry-run]
+  5. re-adopt    regenerate the whole generated wrapper tree (shared tree, per-platform
+                 files, desktop/iOS companions, iOS ObjectCallsGenerated, gap index:
+                 generate_api_wrapper.py --write-tree) and re-sync KDoc  [skipped with --dry-run]
   6. reports     refresh coverage + generator reports
   7. gates       full drift-gate, sync_kdoc --check, version-pin check
 
@@ -254,26 +254,14 @@ fi
 if [[ $DRY_RUN -eq 1 ]]; then
   echo "[upgrade_godot] step 5: skip re-adopt (--dry-run; the drift-gate performs the same full regen check-only)"
 else
-  echo "[upgrade_godot] step 5: re-adopt generated wrappers (desktop + iOS)"
+  echo "[upgrade_godot] step 5: re-adopt the generated wrapper tree (shared tree, per-platform files, companions, iOS ObjectCallsGenerated, gap index)"
+  python3 "$ROOT_DIR/scripts/generate_api_wrapper.py" --write-tree
   (cd "$ROOT_DIR" && PYTHONPATH="$ROOT_DIR/scripts" python3 - <<'EOF'
-import json, shutil, subprocess, sys
-from check_wrapper_generator import (
-    ROOT, API_DIR, IOS_API_DIR, DESKTOP_HANDSHAPED, IOS_HANDSHAPED, _api_class_names,
-)
-from generate_api_wrapper import IOS_HANDWRITTEN_COLLISION_CLASSES
+import json, subprocess
+from generate_api_wrapper import PER_PLATFORM_WRAPPERS
+from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR, is_companion_file
 
-IOS_OBJECTCALLS = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCallsGenerated.kt"
-
-
-def batch(flag: str, classes: list[str], *extra: str) -> None:
-    args = [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py")]
-    for name in classes:
-        args += [flag, name]
-    args += list(extra)
-    subprocess.run(args, cwd=ROOT, check=True, stdout=subprocess.DEVNULL)
-
-
-api = _api_class_names()
+api = {c["name"] for c in json.loads((ROOT / "extension_api.json").read_text(encoding="utf-8"))["classes"]}
 # "Removed from the API" means it was a class in the PREVIOUS dump and is not one now —
 # not "a .kt file in api/ that is not a Godot class" (GD, GodotObject, the handle aliases
 # are hand-written non-API files and are not removals).
@@ -282,51 +270,19 @@ old_dump = subprocess.run(
     check=True, capture_output=True, text=True,
 ).stdout
 old_api = {c["name"] for c in json.loads(old_dump).get("classes", [])}
-
-committed = {p.stem for p in API_DIR.glob("*.kt")}
+committed = {
+    p.stem for d in (SHARED_API_DIR, DESKTOP_API_DIR, IOS_API_DIR) for p in d.glob("*.kt") if not is_companion_file(p)
+}
 removed = sorted((committed & old_api) - api)
-targets = sorted((committed & api) - DESKTOP_HANDSHAPED)
-print(f"[upgrade_godot] desktop re-adopt: {len(targets)} classes "
-      f"(hand-shaped exempt: {len(DESKTOP_HANDSHAPED & committed)})")
-batch("--emit-class", targets, "--allow-overwrite")
-
-# iOS: the emit UNION must include IOS_HANDSHAPED. The generator emits a method returning a
-# wrapper type only when that class is in the active set (AGENTS.md "Looks Wrong But Isn't"),
-# so emitting just the non-hand-shaped targets silently drops every method returning Image
-# & co. and shrinks ObjectCallsGenerated.kt. Do what the drift-gate does: emit the full union
-# into a scratch dir, then copy back only the files that are ours to overwrite.
-ios_committed = {p.stem for p in IOS_API_DIR.glob("*.kt")}
-ios_removed = sorted((ios_committed & old_api) - api)
-ios_emit = sorted((ios_committed & api) - set(IOS_HANDWRITTEN_COLLISION_CLASSES))
-ios_targets = sorted(set(ios_emit) - IOS_HANDSHAPED)
-scratch = ROOT / "build/upgrade-godot/ios-regen"
-shutil.rmtree(scratch, ignore_errors=True)
-scratch.mkdir(parents=True)
-class_list = scratch / "_class_list.txt"
-class_list.write_text("\n".join(ios_emit) + "\n", encoding="utf-8")
-print(f"[upgrade_godot] iOS re-adopt: {len(ios_targets)} classes + ObjectCallsGenerated.kt "
-      f"(emit union {len(ios_emit)}, incl. {len(IOS_HANDSHAPED)} hand-shaped kept as committed)")
-subprocess.run(
-    [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py"),
-     "--ios-class-list-file", str(class_list),
-     "--ios-output-dir", str(scratch),
-     "--ios-objectcalls", str(scratch / "ObjectCallsGenerated.kt")],
-    cwd=ROOT, check=True, stdout=subprocess.DEVNULL,
-)
-missing = [c for c in ios_targets if not (scratch / f"{c}.kt").exists()]
-if missing:
-    sys.exit(f"[upgrade_godot] FAIL: the iOS regen did not emit {missing[:20]} (unexpected collision/skip)")
-for c in ios_targets:
-    shutil.copyfile(scratch / f"{c}.kt", IOS_API_DIR / f"{c}.kt")
-shutil.copyfile(scratch / "ObjectCallsGenerated.kt", IOS_OBJECTCALLS)
-
 new_classes = sorted(api - committed)
 print(f"[upgrade_godot] classes in the new API without a committed wrapper: {len(new_classes)} "
       f"(coverage/policy work — deliberately not auto-adopted)")
-for scope, names in (("desktop", removed), ("ios", ios_removed)):
-    if names:
-        print(f"[upgrade_godot] HUMAN: {scope} wrappers for classes REMOVED from the API "
-              f"(delete or hand-shape deliberately): {', '.join(names)}")
+if removed:
+    print("[upgrade_godot] HUMAN: wrappers for classes REMOVED from the API (delete the shared/per-platform "
+          f"file or hand-shape deliberately; PER_PLATFORM_WRAPPERS must not name them): {', '.join(removed)}")
+stale_table = sorted(set(PER_PLATFORM_WRAPPERS) - api)
+if stale_table:
+    raise SystemExit(f"[upgrade_godot] FAIL: PER_PLATFORM_WRAPPERS names classes no longer in the API: {stale_table}")
 EOF
   )
 
@@ -377,8 +333,9 @@ cat <<EOF
 [upgrade_godot] Remaining steps (full runbook: docs/contributing/godot-upgrade.md):
   1. Review the API diff classification above. New classes are coverage/policy
      work (generator policy, audits, adoption) — never bulk-adopt them blindly.
-  2. Run ./gradlew ktfmtFormat: step 5 re-emits ios-runtime/.../ObjectCallsGenerated.kt
-     unformatted (it is not ktfmt-exempt, unlike the api/** wrappers) and ktfmtCheck gates it.
+  2. Run ./gradlew ktfmtFormat: when the iOS helper set changed, step 5 rewrote
+     ios-runtime/.../ObjectCallsGenerated.kt unformatted (it is not ktfmt-exempt, unlike the
+     api/** wrappers) and ktfmtCheck gates it.
   3. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
   4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
      the internal task repo. This script does NOT change support claims; support

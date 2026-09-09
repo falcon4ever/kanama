@@ -89,6 +89,11 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
   jvmToolchain(25)
 
   sourceSets.named("main") {
+    // The shared generated wrapper tree (task 103): one set of generated Godot API wrappers,
+    // compiled by this JVM module, by :ios-runtime (iosMain srcDir) and by the Android plugin
+    // (copied through the PanamaPort remap). Laid out as a KMP commonMain so the root can become
+    // multiplatform later without moving files again.
+    kotlin.srcDir("src/commonMain/kotlin")
     kotlin.srcDir(layout.buildDirectory.dir("generated/sources/kanamaReal/main/kotlin"))
   }
 }

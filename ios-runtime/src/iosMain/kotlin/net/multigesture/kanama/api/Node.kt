@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
@@ -701,6 +702,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         const val AUTO_TRANSLATE_MODE_ALWAYS: Long = 1L
         const val AUTO_TRANSLATE_MODE_DISABLED: Long = 2L
 
+        @JvmStatic
         fun fromHandle(handle: MemorySegment): Node? =
             wrap(handle)
 

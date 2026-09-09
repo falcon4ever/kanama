@@ -1,0 +1,286 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Vector3
+
+/**
+ * Provides parameters for `PhysicsDirectSpaceState3D.intersect_ray`.
+ *
+ * Generated from Godot docs: PhysicsRayQueryParameters3D
+ */
+class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
+    var from: Vector3
+        @JvmName("fromProperty")
+        get() = getFrom()
+        @JvmName("setFromProperty")
+        set(value) = setFrom(value)
+
+    var to: Vector3
+        @JvmName("toProperty")
+        get() = getTo()
+        @JvmName("setToProperty")
+        set(value) = setTo(value)
+
+    var collisionMask: Long
+        @JvmName("collisionMaskProperty")
+        get() = getCollisionMask()
+        @JvmName("setCollisionMaskProperty")
+        set(value) = setCollisionMask(value)
+
+    var collideWithBodies: Boolean
+        @JvmName("collideWithBodiesProperty")
+        get() = isCollideWithBodiesEnabled()
+        @JvmName("setCollideWithBodiesProperty")
+        set(value) = setCollideWithBodies(value)
+
+    var collideWithAreas: Boolean
+        @JvmName("collideWithAreasProperty")
+        get() = isCollideWithAreasEnabled()
+        @JvmName("setCollideWithAreasProperty")
+        set(value) = setCollideWithAreas(value)
+
+    var hitFromInside: Boolean
+        @JvmName("hitFromInsideProperty")
+        get() = isHitFromInsideEnabled()
+        @JvmName("setHitFromInsideProperty")
+        set(value) = setHitFromInside(value)
+
+    var hitBackFaces: Boolean
+        @JvmName("hitBackFacesProperty")
+        get() = isHitBackFacesEnabled()
+        @JvmName("setHitBackFacesProperty")
+        set(value) = setHitBackFaces(value)
+
+    /**
+     * The starting point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_from
+     */
+    fun setFrom(from: Vector3) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVector3Arg(setFromBind, handle, from)
+    }
+
+    /**
+     * The starting point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_from
+     */
+    fun getFrom(): Vector3 {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, handle)
+    }
+
+    /**
+     * The ending point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_to
+     */
+    fun setTo(to: Vector3) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVector3Arg(setToBind, handle, to)
+    }
+
+    /**
+     * The ending point of the ray being queried for, in global coordinates.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_to
+     */
+    fun getTo(): Vector3 {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, handle)
+    }
+
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collision_mask
+     */
+    fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
+    }
+
+    /**
+     * The physics layers the query will detect (as a bitmask). By default, all collision layers are
+     * detected. See Collision layers and masks
+     * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
+     * documentation for more information.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.get_collision_mask
+     */
+    fun getCollisionMask(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+    }
+
+    /**
+     * If `true`, the query will take `PhysicsBody3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collide_with_bodies
+     */
+    fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+    }
+
+    /**
+     * If `true`, the query will take `PhysicsBody3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_collide_with_bodies_enabled
+     */
+    fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+    }
+
+    /**
+     * If `true`, the query will take `Area3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collide_with_areas
+     */
+    fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+    }
+
+    /**
+     * If `true`, the query will take `Area3D`s into account.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_collide_with_areas_enabled
+     */
+    fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+    }
+
+    /**
+     * If `true`, the query will detect a hit when starting inside shapes. In this case the collision
+     * normal will be `Vector3(0, 0, 0)`. Does not affect concave polygon shapes or heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_hit_from_inside
+     */
+    fun setHitFromInside(enable: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
+    }
+
+    /**
+     * If `true`, the query will detect a hit when starting inside shapes. In this case the collision
+     * normal will be `Vector3(0, 0, 0)`. Does not affect concave polygon shapes or heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_hit_from_inside_enabled
+     */
+    fun isHitFromInsideEnabled(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
+    }
+
+    /**
+     * If `true`, the query will hit back faces with concave polygon shapes with back face enabled or
+     * heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.set_hit_back_faces
+     */
+    fun setHitBackFaces(enable: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, handle, enable)
+    }
+
+    /**
+     * If `true`, the query will hit back faces with concave polygon shapes with back face enabled or
+     * heightmap shapes.
+     *
+     * Generated from Godot docs: PhysicsRayQueryParameters3D.is_hit_back_faces_enabled
+     */
+    fun isHitBackFacesEnabled(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, handle)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): PhysicsRayQueryParameters3D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): PhysicsRayQueryParameters3D? =
+            if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(handle)
+
+        private const val SET_FROM_HASH = 3460891852L
+        private val setFromBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_from", SET_FROM_HASH)
+        }
+
+        private const val GET_FROM_HASH = 3360562783L
+        private val getFromBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_from", GET_FROM_HASH)
+        }
+
+        private const val SET_TO_HASH = 3460891852L
+        private val setToBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_to", SET_TO_HASH)
+        }
+
+        private const val GET_TO_HASH = 3360562783L
+        private val getToBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_to", GET_TO_HASH)
+        }
+
+        private const val SET_COLLISION_MASK_HASH = 1286410249L
+        private val setCollisionMaskBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_collision_mask", SET_COLLISION_MASK_HASH)
+        }
+
+        private const val GET_COLLISION_MASK_HASH = 3905245786L
+        private val getCollisionMaskBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_collision_mask", GET_COLLISION_MASK_HASH)
+        }
+
+        private const val SET_COLLIDE_WITH_BODIES_HASH = 2586408642L
+        private val setCollideWithBodiesBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_collide_with_bodies", SET_COLLIDE_WITH_BODIES_HASH)
+        }
+
+        private const val IS_COLLIDE_WITH_BODIES_ENABLED_HASH = 36873697L
+        private val isCollideWithBodiesEnabledBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_collide_with_bodies_enabled", IS_COLLIDE_WITH_BODIES_ENABLED_HASH)
+        }
+
+        private const val SET_COLLIDE_WITH_AREAS_HASH = 2586408642L
+        private val setCollideWithAreasBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_collide_with_areas", SET_COLLIDE_WITH_AREAS_HASH)
+        }
+
+        private const val IS_COLLIDE_WITH_AREAS_ENABLED_HASH = 36873697L
+        private val isCollideWithAreasEnabledBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_collide_with_areas_enabled", IS_COLLIDE_WITH_AREAS_ENABLED_HASH)
+        }
+
+        private const val SET_HIT_FROM_INSIDE_HASH = 2586408642L
+        private val setHitFromInsideBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_hit_from_inside", SET_HIT_FROM_INSIDE_HASH)
+        }
+
+        private const val IS_HIT_FROM_INSIDE_ENABLED_HASH = 36873697L
+        private val isHitFromInsideEnabledBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_hit_from_inside_enabled", IS_HIT_FROM_INSIDE_ENABLED_HASH)
+        }
+
+        private const val SET_HIT_BACK_FACES_HASH = 2586408642L
+        private val setHitBackFacesBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_hit_back_faces", SET_HIT_BACK_FACES_HASH)
+        }
+
+        private const val IS_HIT_BACK_FACES_ENABLED_HASH = 36873697L
+        private val isHitBackFacesEnabledBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_hit_back_faces_enabled", IS_HIT_BACK_FACES_ENABLED_HASH)
+        }
+    }
+}

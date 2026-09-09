@@ -1,0 +1,197 @@
+package net.multigesture.kanama.api
+
+import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.*
+
+/**
+ * Base class for resources that operate on `Bone2D`s in a `Skeleton2D`.
+ *
+ * Generated from Godot docs: SkeletonModification2D
+ */
+open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
+    var enabled: Boolean
+        @JvmName("enabledProperty")
+        get() = getEnabled()
+        @JvmName("setEnabledProperty")
+        set(value) = setEnabled(value)
+
+    var executionMode: Int
+        @JvmName("executionModeProperty")
+        get() = getExecutionMode()
+        @JvmName("setExecutionModeProperty")
+        set(value) = setExecutionMode(value)
+
+    /**
+     * If `true`, the modification's `_execute` function will be called by the
+     * `SkeletonModificationStack2D`.
+     *
+     * Generated from Godot docs: SkeletonModification2D.set_enabled
+     */
+    fun setEnabled(enabled: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+    }
+
+    /**
+     * If `true`, the modification's `_execute` function will be called by the
+     * `SkeletonModificationStack2D`.
+     *
+     * Generated from Godot docs: SkeletonModification2D.get_enabled
+     */
+    fun getEnabled(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
+    }
+
+    /**
+     * Returns the `SkeletonModificationStack2D` that this modification is bound to. Through the
+     * modification stack, you can access the Skeleton2D the modification is operating on.
+     *
+     * Generated from Godot docs: SkeletonModification2D.get_modification_stack
+     */
+    fun getModificationStack(): SkeletonModificationStack2D? {
+        checkOpen()
+        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, handle))
+    }
+
+    /**
+     * Manually allows you to set the setup state of the modification. This function should only rarely
+     * be used, as the `SkeletonModificationStack2D` the modification is bound to should handle setting
+     * the modification up.
+     *
+     * Generated from Godot docs: SkeletonModification2D.set_is_setup
+     */
+    fun setIsSetup(isSetup: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, handle, isSetup)
+    }
+
+    /**
+     * Returns whether this modification has been successfully setup or not.
+     *
+     * Generated from Godot docs: SkeletonModification2D.get_is_setup
+     */
+    fun getIsSetup(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
+    }
+
+    /**
+     * The execution mode for the modification. This tells the modification stack when to execute the
+     * modification. Some modifications have settings that are only available in certain execution
+     * modes.
+     *
+     * Generated from Godot docs: SkeletonModification2D.set_execution_mode
+     */
+    fun setExecutionMode(executionMode: Int) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, handle, executionMode)
+    }
+
+    /**
+     * The execution mode for the modification. This tells the modification stack when to execute the
+     * modification. Some modifications have settings that are only available in certain execution
+     * modes.
+     *
+     * Generated from Godot docs: SkeletonModification2D.get_execution_mode
+     */
+    fun getExecutionMode(): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, handle)
+    }
+
+    /**
+     * Takes an angle and clamps it so it is within the passed-in `min` and `max` range. `invert` will
+     * inversely clamp the angle, clamping it to the range outside of the given bounds.
+     *
+     * Generated from Godot docs: SkeletonModification2D.clamp_angle
+     */
+    fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, handle, angle, min, max, invert)
+    }
+
+    /**
+     * Sets whether this modification will call `_draw_editor_gizmo` in the Godot editor to draw
+     * modification-specific gizmos.
+     *
+     * Generated from Godot docs: SkeletonModification2D.set_editor_draw_gizmo
+     */
+    fun setEditorDrawGizmo(drawGizmo: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, handle, drawGizmo)
+    }
+
+    /**
+     * Returns whether this modification will call `_draw_editor_gizmo` in the Godot editor to draw
+     * modification-specific gizmos.
+     *
+     * Generated from Godot docs: SkeletonModification2D.get_editor_draw_gizmo
+     */
+    fun getEditorDrawGizmo(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, handle)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: MemorySegment): SkeletonModification2D? =
+            wrap(handle)
+
+        internal fun wrap(handle: MemorySegment): SkeletonModification2D? =
+            if (handle.address() == 0L) null else SkeletonModification2D(handle)
+
+        private const val SET_ENABLED_HASH = 2586408642L
+        private val setEnabledBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "set_enabled", SET_ENABLED_HASH)
+        }
+
+        private const val GET_ENABLED_HASH = 2240911060L
+        private val getEnabledBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "get_enabled", GET_ENABLED_HASH)
+        }
+
+        private const val GET_MODIFICATION_STACK_HASH = 2137761694L
+        private val getModificationStackBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "get_modification_stack", GET_MODIFICATION_STACK_HASH)
+        }
+
+        private const val SET_IS_SETUP_HASH = 2586408642L
+        private val setIsSetupBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "set_is_setup", SET_IS_SETUP_HASH)
+        }
+
+        private const val GET_IS_SETUP_HASH = 36873697L
+        private val getIsSetupBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "get_is_setup", GET_IS_SETUP_HASH)
+        }
+
+        private const val SET_EXECUTION_MODE_HASH = 1286410249L
+        private val setExecutionModeBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "set_execution_mode", SET_EXECUTION_MODE_HASH)
+        }
+
+        private const val GET_EXECUTION_MODE_HASH = 3905245786L
+        private val getExecutionModeBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "get_execution_mode", GET_EXECUTION_MODE_HASH)
+        }
+
+        private const val CLAMP_ANGLE_HASH = 1229502682L
+        private val clampAngleBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "clamp_angle", CLAMP_ANGLE_HASH)
+        }
+
+        private const val SET_EDITOR_DRAW_GIZMO_HASH = 2586408642L
+        private val setEditorDrawGizmoBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "set_editor_draw_gizmo", SET_EDITOR_DRAW_GIZMO_HASH)
+        }
+
+        private const val GET_EDITOR_DRAW_GIZMO_HASH = 36873697L
+        private val getEditorDrawGizmoBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2D", "get_editor_draw_gizmo", GET_EDITOR_DRAW_GIZMO_HASH)
+        }
+    }
+}
