@@ -426,6 +426,10 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.contains("result = int((value as InputEventKey).physical_keycode)"))
     assertTrue(proxy.contains("elif opcode == 299 and value is InputEvent:"))
     assertTrue(proxy.contains("result = int((value as InputEvent).is_echo())"))
+    assertTrue(proxy.contains("elif opcode == 305 and value is InputEvent:"))
+    assertTrue(
+      proxy.contains("result = int((value as InputEvent).is_action(StringName(String(args[2]))))")
+    )
     assertTrue(proxy.contains("elif opcode == 300 and value is InputEventWithModifiers:"))
     assertTrue(proxy.contains("result = int((value as InputEventWithModifiers).alt_pressed)"))
     assertTrue(proxy.contains("elif opcode == 303 and value is Window:"))

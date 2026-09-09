@@ -3348,6 +3348,17 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val INPUTEVENT_IS_ACTION =
+    GodotCallDescriptor(
+      opcode = 305,
+      className = "InputEvent",
+      methodName = "is_action",
+      hash = 1558498928L,
+      shape = GodotCallShape.STRINGNAME_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 304
+  const val MAX_OPCODE = 305
 }

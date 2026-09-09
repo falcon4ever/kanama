@@ -71,6 +71,15 @@ open class InputEvent(godotObject: GodotHandle) : GodotObject(godotObject) {
 
   /** Key-repeat echo (task 64 tier 3: FullScreenHandler ignores echoes so a held F11 toggles once). */
   fun isEcho(): Boolean = InputEventBackendContractProbe(backendHandle).isEcho()
+
+  /**
+   * Is this event bound to [action] by the InputMap, pressed or not (task 64 tier 3)? Web bakes
+   * exact_match to Godot's default false, the only value the corpus passes.
+   */
+  fun isAction(action: String, exactMatch: Boolean = false): Boolean {
+    require(!exactMatch) { "Web InputEvent.is_action supports only exact_match=false" }
+    return InputEventBackendContractProbe(backendHandle).isAction(action)
+  }
 }
 
 internal expect fun releaseWebCollision(collisionHandle: Int)

@@ -3816,6 +3816,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEventKey).physical_keycode)")
     appendLine("\t\telif opcode == 299 and value is InputEvent:")
     appendLine("\t\t\tresult = int((value as InputEvent).is_echo())")
+    appendLine("\t\telif opcode == 305 and value is InputEvent:")
+    appendLine("\t\t\tresult = int((value as InputEvent).is_action(StringName(String(args[2]))))")
     appendLine("\t\telif opcode == 300 and value is InputEventWithModifiers:")
     appendLine("\t\t\tresult = int((value as InputEventWithModifiers).alt_pressed)")
     appendLine("\t\telif opcode == 303 and value is Window:")

@@ -4783,6 +4783,23 @@
       "returnOwnership": "BORROWED",
       "semantics": "Read a node's process mode back from the engine. Exists so the web3d probe proves set_process_mode delivered its VALUE rather than trusting a Kotlin-side mirror.",
       "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 305,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "is_action",
+      "hash": 1558498928,
+      "arguments": [
+        "StringName",
+        "bool"
+      ],
+      "returnType": "bool",
+      "shape": "STRINGNAME_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Does the InputMap bind this event to the named action (exact_match baked to Godot's default false)? Unlike is_action_pressed it ignores the pressed flag, so a freshly constructed, never-pressed InputEventKey answers true right after action_add_event -- the VALUE proof that the attach landed.",
+      "introducedBy": "64-tier3-inputmap"
     }
   ],
   "compositions": [

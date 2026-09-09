@@ -3001,6 +3001,14 @@ class InputEventBackendContractProbe(private val handle: GodotHandle) {
   /** Task 64 tier 3: key-repeat echo flag (FullScreenHandler ignores echoes). */
   fun isEcho(): Boolean =
     GodotBackendCalls.invokeNoArgsRetBool(InitialGodotCallDescriptors.INPUTEVENT_IS_ECHO, handle)
+
+  /** Task 64 tier 3: is this event bound to [action] (pressed or not)? exact_match baked false. */
+  fun isAction(action: String): Boolean =
+    GodotBackendCalls.invokeStringNameRetBool(
+      InitialGodotCallDescriptors.INPUTEVENT_IS_ACTION,
+      handle,
+      action,
+    )
 }
 
 /** Typed modifier-state read on a key/mouse event (task 64 tier 3: alt+Enter fullscreen). */
