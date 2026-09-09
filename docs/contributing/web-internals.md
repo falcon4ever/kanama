@@ -25,8 +25,10 @@ iOS, not with the JVM platforms:
   or trade raw pointers, so calls cross as **typed commands over a JavaScript
   bridge** rather than as direct FFI.
 
-Web therefore reuses the same generated wrapper surface as the other platforms
-but pays the highest marshalling cost, which shapes everything below: it batches
+Web therefore exposes the same Godot classes as the other platforms but does not
+share their generated ptrcall wrappers: its wrappers are hand-written today
+(task 96 will generate them from the Web call contract described below) and pay
+the highest marshalling cost, which shapes everything below: it batches
 crossings, mirrors state in snapshots, and tracks handles by generation.
 
 ## What Works
@@ -53,7 +55,7 @@ teardown to baseline, and fails on stale-handle use.
 ### Kotlin/Wasm backend
 
 Gameplay and the Kanama Web runtime live in `web-runtime/` and compile to the
-`wasmJs` target. The platform-neutral API and gameplay proxies are in
+`wasmJs` target. The Web API wrappers and gameplay proxies are in
 `src/commonMain`; the Wasm entry point, command interop, and the Godot-facing
 backend are in `src/wasmJsMain` (`Main.kt`, `WebCommandInterop.kt`). The backend
 is split three ways: `WebCommonGodotBackend.generated.kt` (generated opcode
@@ -71,10 +73,20 @@ and a backend built from different revisions fail loudly instead of drifting.
 
 ### Typed backend seam and fail-loud coverage
 
-The typed per-call families are shared with the other platforms through
-`scripts/platform_backend_calls.json` — the same contract desktop, Android, and
-iOS use. `scripts/generate_web_gameplay_coverage.py` harvests the calls each
-demo actually executes and **fails if a demo call has no admitted backend
+One source feeds two mechanisms. `extension_api.json` drives the native wrapper
+generator (`scripts/generate_api_wrapper.py`: typed ptrcall wrappers that let
+desktop, Android, and iOS call Godot in-process) and, separately, the **Web call
+contract**: `scripts/platform_backend_calls.json` is Web's opcode table — which
+engine methods Web can reach, each with its pinned hash, call shape, execution
+mode, and return ownership — compiled into `kanama-common-api` as
+`InitialGodotCallDescriptors` and dispatched as typed commands over the bridge.
+`./gradlew :kanama-common-api:checkPlatformBackendContract` validates every
+entry's hash and signature against the same `extension_api.json`, so both
+mechanisms pin the same engine methods. No native backend dispatches through the
+contract (task 95 removed the never-called desktop/iOS adapters); its one
+implementer is the generated Kotlin/Wasm backend.
+`scripts/generate_web_gameplay_coverage.py` harvests the calls each demo
+actually executes and **fails if a demo call has no admitted backend
 family**, so coverage metadata cannot be silently erased. The current report has
 zero blocking calls, and the families a demo calls that the backend does not
 model (`GodotObject.emit_signal_typed` among them) stay listed as explicit
@@ -90,10 +102,10 @@ reach full class coverage.
 
 **Decision (Task 60a, 2026-07-23): generate the mechanical dispatch, keep
 Web-only stateful bookkeeping hand-written next to it ("Option A").** The
-generator (`scripts/generate_web_backend.py`) reads the shared
-`platform_backend_calls.json` (via `scripts/platform_backend_contract.py`, the
-same policy loader desktop/iOS use) joined with a **Web-local** per-opcode policy
-declared in the generator, and emits `WebCommonGodotBackend.generated.kt`: the
+generator (`scripts/generate_web_backend.py`) reads
+`platform_backend_calls.json` (via `scripts/platform_backend_contract.py`)
+joined with a per-opcode transport/bookkeeping policy declared in the generator,
+and emits `WebCommonGodotBackend.generated.kt`: the
 `when (opcode)` routing, the execution-mode / argument-range guards, and calls to
 the `js(...)` bridge externs. The genuinely Web-specific bookkeeping — property
 snapshots and read-your-write updates, browser handle-kind tracking (RESOURCE /
@@ -106,21 +118,26 @@ plus a transport implementation."
 Regenerate with `./gradlew :web-runtime:generateWebBackendDispatch` (then
 `ktfmtFormat`). `./gradlew :web-runtime:checkWebBackendDispatch` (also in
 `local_ci.sh` and wired into `check`) fails loud if the committed dispatch drifts
-from the shared contract; it compares token streams, so it is insensitive to
+from the contract; it compares token streams, so it is insensitive to
 ktfmt reflow but catches any changed arm, opcode, extern, or guard.
 
 **Why not fully data-driven ("Option B" — encode the snapshot/handle policy into
 `platform_backend_calls.json` and generate the entire file byte-for-byte):**
-`platform_backend_calls.json` is the **platform-neutral** contract that desktop,
-Android, and iOS also consume (via the generated `InitialGodotCallDescriptors`).
-Those backends call Godot in-process and do none of Web's caching; folding Web-only
-snapshot/handle rules into the shared file would stop it being neutral and over-fit
-it to the Web demo corpus. Option A keeps the shared model clean.
+`platform_backend_calls.json` is a **call table** — which engine methods Web can
+reach, with their pinned hashes, shapes, execution modes, and return ownership —
+and that is exactly what `checkPlatformBackendContract` and the contract test
+validate against `extension_api.json`. Snapshot slots, handle-kind tracking, and
+cache-clearing hooks are Web runtime state, not facts about engine methods;
+folding them into the table would over-fit it to the demo corpus and put data the
+engine cannot validate behind the hash gate. (The original argument — keeping the
+table neutral for native backends that "also consume" it — no longer applies:
+task 95 recorded that no native backend ever dispatched through it.) Option A
+keeps the call table a call table.
 
 **When to reconsider Option B:** if the hand-written bookkeeping companion grows
 faster than the generated dispatch — i.e. if "admitting a family" routinely means
 non-trivial new hand-written state rather than a near-mechanical hook wiring —
-revisit encoding a Web-side (not shared-model) policy layer so more of the
+revisit encoding a policy layer beside the call table so more of the
 bookkeeping generates. Through the full twelve-demo corpus (protocol 15, 286
 opcodes) that did not happen: the largest single admission (tps-demo) brought in
 61 opcodes with exactly one new extern, so Option A stands. Record any change

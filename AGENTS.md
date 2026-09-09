@@ -68,8 +68,9 @@ task, then use targeted `rg` searches.
   (gitignored; produced by `scripts/refresh_godot_api.sh`).
 - `bootstrap`: the native C GDExtension bootstrap shared by desktop and Android.
 - `gdextension`: the pinned `gdextension_interface.h` input.
-- `kanama-common-api`: the platform-neutral backend call contract shared by
-  every backend (`InitialGodotCallDescriptors`).
+- `kanama-common-api`: the Web call contract (opcodes, shapes,
+  `InitialGodotCallDescriptors`) derived from `extension_api.json`; consumed by
+  `web-runtime` and the processor's Web emitter. Native backends do not use it.
 - `android`: the Godot Android plugin (runtime + scripts AARs) and the
   PanamaPort source remap.
 - `ios` and `ios-runtime`: the iOS C shim and the Kotlin/Native runtime with
